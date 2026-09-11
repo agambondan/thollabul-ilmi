@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPage,
     PanelPagination,
     PanelTable,
@@ -174,86 +173,173 @@ const AdminUsersPage = () => {
                 </div>
             )}
 
-            <PanelTable
-                head={
-                    <>
-                        <Th>{t("admin.field.name")}</Th>
-                        <Th>Email</Th>
-                        <Th>Role</Th>
-                        <Th>{t("admin.users.change_role")}</Th>
-                        <Th align='right'>{t("admin.field.actions")}</Th>
-                    </>
-                }
-            >
-                {visible.length === 0 && users.length === 0 && (
-                    <Tr>
-                        <Td
-                            colSpan={5}
-                            className='px-4 py-8 text-center text-gray-400 dark:text-gray-600'
-                        >
-                            {t("admin.users.empty")}
-                        </Td>
-                    </Tr>
-                )}
-                {visible.map((u) => {
-                    const isSelf = u.id === currentUser?.id;
-                    return (
-                        <Tr
-                            key={u.id}
-                            className='hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors'
-                        >
-                            <Td className='text-gray-900 dark:text-white font-medium'>
-                                {u.name}
-                                {isSelf && (
-                                    <span className='ml-2 text-xs text-emerald-600 dark:text-emerald-400'>
-                                        ({t("admin.users.you")})
-                                    </span>
-                                )}
-                            </Td>
-                            <Td className='text-gray-600 dark:text-gray-400'>
-                                {u.email}
-                            </Td>
-                            <Td>
-                                <RoleBadge role={u.role} t={t} />
-                            </Td>
-                            <Td>
-                                <select
-                                    value={u.role}
-                                    onChange={(e) =>
-                                        handleChangeRole(u, e.target.value)
-                                    }
-                                    disabled={isSelf || changingId === u.id}
-                                    className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
+            {visible.length === 0 && users.length === 0 ? (
+                <p className='px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-600'>
+                    {t("admin.users.empty")}
+                </p>
+            ) : (
+                <>
+                    {/* Mobile: stacked cards so every field is reachable
+                        without horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
+                        {visible.map((u) => {
+                            const isSelf = u.id === currentUser?.id;
+                            return (
+                                <div
+                                    key={u.id}
+                                    className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
                                 >
-                                    {ROLES.map((r) => (
-                                        <option key={r.value} value={r.value}>
-                                            {t(`admin.role.${r.value}`)}
-                                        </option>
-                                    ))}
-                                </select>
-                                {changingId === u.id && (
-                                    <span className='ml-2 text-xs text-gray-400'>
-                                        {t("common.saving")}
-                                    </span>
-                                )}
-                            </Td>
-                            <Td>
-                                <div className='flex justify-end'>
-                                    <button
-                                        onClick={() => handleDelete(u)}
-                                        disabled={isSelf}
-                                        title={t("admin.users.delete_user")}
-                                        className='flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
-                                    >
-                                        <BsTrash className='text-sm' />
-                                        {t("common.delete")}
-                                    </button>
+                                    <div className='flex items-start justify-between gap-2 mb-2'>
+                                        <div>
+                                            <p className='font-medium text-gray-900 dark:text-white'>
+                                                {u.name}
+                                                {isSelf && (
+                                                    <span className='ml-2 text-xs text-emerald-600 dark:text-emerald-400'>
+                                                        ({t("admin.users.you")})
+                                                    </span>
+                                                )}
+                                            </p>
+                                            <p className='text-xs text-gray-600 dark:text-gray-400'>
+                                                {u.email}
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => handleDelete(u)}
+                                            disabled={isSelf}
+                                            title={t("admin.users.delete_user")}
+                                            className='shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
+                                        >
+                                            <BsTrash className='text-sm' />
+                                            {t("common.delete")}
+                                        </button>
+                                    </div>
+                                    <div className='flex items-center gap-2 flex-wrap'>
+                                        <RoleBadge role={u.role} t={t} />
+                                        <select
+                                            value={u.role}
+                                            onChange={(e) =>
+                                                handleChangeRole(
+                                                    u,
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={
+                                                isSelf || changingId === u.id
+                                            }
+                                            className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
+                                        >
+                                            {ROLES.map((r) => (
+                                                <option
+                                                    key={r.value}
+                                                    value={r.value}
+                                                >
+                                                    {t(`admin.role.${r.value}`)}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {changingId === u.id && (
+                                            <span className='text-xs text-gray-400'>
+                                                {t("common.saving")}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
-                            </Td>
-                        </Tr>
-                    );
-                })}
-            </PanelTable>
+                            );
+                        })}
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th>{t("admin.field.name")}</Th>
+                                    <Th>Email</Th>
+                                    <Th>Role</Th>
+                                    <Th>{t("admin.users.change_role")}</Th>
+                                    <Th align='right'>
+                                        {t("admin.field.actions")}
+                                    </Th>
+                                </>
+                            }
+                        >
+                            {visible.map((u) => {
+                                const isSelf = u.id === currentUser?.id;
+                                return (
+                                    <Tr
+                                        key={u.id}
+                                        className='hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors'
+                                    >
+                                        <Td className='text-gray-900 dark:text-white font-medium'>
+                                            {u.name}
+                                            {isSelf && (
+                                                <span className='ml-2 text-xs text-emerald-600 dark:text-emerald-400'>
+                                                    ({t("admin.users.you")})
+                                                </span>
+                                            )}
+                                        </Td>
+                                        <Td className='text-gray-600 dark:text-gray-400'>
+                                            {u.email}
+                                        </Td>
+                                        <Td>
+                                            <RoleBadge role={u.role} t={t} />
+                                        </Td>
+                                        <Td>
+                                            <select
+                                                value={u.role}
+                                                onChange={(e) =>
+                                                    handleChangeRole(
+                                                        u,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                disabled={
+                                                    isSelf ||
+                                                    changingId === u.id
+                                                }
+                                                className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
+                                            >
+                                                {ROLES.map((r) => (
+                                                    <option
+                                                        key={r.value}
+                                                        value={r.value}
+                                                    >
+                                                        {t(
+                                                            `admin.role.${r.value}`,
+                                                        )}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {changingId === u.id && (
+                                                <span className='ml-2 text-xs text-gray-400'>
+                                                    {t("common.saving")}
+                                                </span>
+                                            )}
+                                        </Td>
+                                        <Td>
+                                            <div className='flex justify-end'>
+                                                <button
+                                                    onClick={() =>
+                                                        handleDelete(u)
+                                                    }
+                                                    disabled={isSelf}
+                                                    title={t(
+                                                        "admin.users.delete_user",
+                                                    )}
+                                                    className='flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
+                                                >
+                                                    <BsTrash className='text-sm' />
+                                                    {t("common.delete")}
+                                                </button>
+                                            </div>
+                                        </Td>
+                                    </Tr>
+                                );
+                            })}
+                        </PanelTable>
+                    </div>
+                </>
+            )}
 
             <PanelPagination
                 page={currentPage}

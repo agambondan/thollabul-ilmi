@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -204,39 +203,25 @@ const AdminHistoryPage = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>
                     {t("common.loading")}
                 </p>
+            ) : filtered.length === 0 ? (
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("admin.crud.no_data")}
+                </p>
             ) : (
                 <>
-                    <PanelTable
-                        head={
-                            <>
-                                <Th className='w-20'>
-                                    {t("admin.history.year_h")}
-                                </Th>
-                                <Th>{t("admin.history.event")}</Th>
-                                <Th className='w-32'>
-                                    {t("admin.field.category")}
-                                </Th>
-                                <Th className='w-20'></Th>
-                            </>
-                        }
-                    >
+                    {/* Mobile: stacked cards so every field is reachable
+                        without horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
                         {visible.map((item) => (
-                            <Tr key={item.id ?? item._id}>
-                                <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                    {item.year_hijri
-                                        ? `${item.year_hijri} H`
-                                        : "-"}
-                                </Td>
-                                <Td className='text-gray-900 dark:text-white font-medium'>
-                                    {getLocalizedField(item, "title", lang)}
-                                </Td>
-                                <Td>
-                                    <span className='px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs capitalize'>
-                                        {item.category}
-                                    </span>
-                                </Td>
-                                <Td>
-                                    <div className='flex items-center gap-2 justify-end'>
+                            <div
+                                key={item.id ?? item._id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
+                                    <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                                        {getLocalizedField(item, "title", lang)}
+                                    </p>
+                                    <div className='flex items-center gap-1 shrink-0'>
                                         <button
                                             onClick={() => openEdit(item)}
                                             aria-label={t("common.edit")}
@@ -256,33 +241,99 @@ const AdminHistoryPage = () => {
                                             <BsTrash />
                                         </button>
                                     </div>
-                                </Td>
-                            </Tr>
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                    <span className='px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs capitalize'>
+                                        {item.category}
+                                    </span>
+                                    <span className='text-xs text-gray-500 dark:text-gray-400 font-mono'>
+                                        {item.year_hijri
+                                            ? `${item.year_hijri} H`
+                                            : "-"}
+                                    </span>
+                                </div>
+                            </div>
                         ))}
-                        {filtered.length === 0 && (
-                            <PanelEmpty colSpan={4}>
-                                {t("admin.crud.no_data")}
-                            </PanelEmpty>
-                        )}
-                    </PanelTable>
-                    <PanelPagination
-                        page={currentPage}
-                        pageCount={pageCount}
-                        total={filtered.length}
-                        onChange={setPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newSize) => {
-                            setPageSize(newSize);
-                            setPage(1);
-                        }}
-                        pageSizeOptions={[10, 20, 50]}
-                        labels={{
-                            prev: t("common.prev"),
-                            next: t("common.next"),
-                        }}
-                    />
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th className='w-20'>
+                                        {t("admin.history.year_h")}
+                                    </Th>
+                                    <Th>{t("admin.history.event")}</Th>
+                                    <Th className='w-32'>
+                                        {t("admin.field.category")}
+                                    </Th>
+                                    <Th className='w-20'></Th>
+                                </>
+                            }
+                        >
+                            {visible.map((item) => (
+                                <Tr key={item.id ?? item._id}>
+                                    <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
+                                        {item.year_hijri
+                                            ? `${item.year_hijri} H`
+                                            : "-"}
+                                    </Td>
+                                    <Td className='text-gray-900 dark:text-white font-medium'>
+                                        {getLocalizedField(item, "title", lang)}
+                                    </Td>
+                                    <Td>
+                                        <span className='px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs capitalize'>
+                                            {item.category}
+                                        </span>
+                                    </Td>
+                                    <Td>
+                                        <div className='flex items-center gap-2 justify-end'>
+                                            <button
+                                                onClick={() => openEdit(item)}
+                                                aria-label={t("common.edit")}
+                                                title={t("common.edit")}
+                                                className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                            >
+                                                <BsPencil />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteId(
+                                                        item.id ?? item._id,
+                                                    )
+                                                }
+                                                aria-label={t("common.delete")}
+                                                title={t("common.delete")}
+                                                className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                            >
+                                                <BsTrash />
+                                            </button>
+                                        </div>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
                 </>
             )}
+
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={filtered.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
 
             {showModal && (
                 <ModalShell

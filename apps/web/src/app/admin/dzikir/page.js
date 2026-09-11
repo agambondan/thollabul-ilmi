@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -180,47 +179,29 @@ const AdminDhikrPage = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>
                     {t("common.loading")}
                 </p>
+            ) : filtered.length === 0 ? (
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("admin.crud.no_data")}
+                </p>
             ) : (
                 <>
-                    <PanelTable
-                        head={
-                            <>
-                                <Th>{t("admin.field.title")}</Th>
-                                <Th className='w-32'>
-                                    {t("admin.field.category")}
-                                </Th>
-                                <Th className='w-20 hidden md:table-cell'>
-                                    {t("admin.field.repetition")}
-                                </Th>
-                                <Th className='w-20'></Th>
-                            </>
-                        }
-                    >
+                    {/* Mobile: stacked cards so every field is reachable without
+                        horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
                         {visible.map((item) => (
-                            <Tr key={item.id ?? item._id}>
-                                <Td className='text-gray-900 dark:text-white font-medium'>
-                                    <div>
+                            <div
+                                key={item.id ?? item._id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
+                                    <p className='font-medium text-gray-900 dark:text-white'>
                                         {getLocalizedField(item, "title", lang)}
-                                    </div>
-                                    {item.source && (
-                                        <SourceBadges source={item.source} />
-                                    )}
-                                </Td>
-                                <Td>
-                                    <span className='px-2 py-0.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded text-xs'>
-                                        {item.category}
-                                    </span>
-                                </Td>
-                                <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                    {item.count ? `${item.count}x` : "-"}
-                                </Td>
-                                <Td>
-                                    <div className='flex items-center gap-2 justify-end'>
+                                    </p>
+                                    <div className='flex items-center gap-1 shrink-0'>
                                         <button
                                             onClick={() => openEdit(item)}
                                             aria-label={t("common.edit")}
-                                            title={t("common.edit")}
-                                            className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                            className='p-1 text-blue-600 hover:text-blue-700 dark:hover:text-blue-400'
                                         >
                                             <BsPencil />
                                         </button>
@@ -229,39 +210,116 @@ const AdminDhikrPage = () => {
                                                 setDeleteId(item.id ?? item._id)
                                             }
                                             aria-label={t("common.delete")}
-                                            title={t("common.delete")}
-                                            className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                            className='p-1 text-red-600 hover:text-red-700 dark:hover:text-red-400'
                                         >
                                             <BsTrash />
                                         </button>
                                     </div>
-                                </Td>
-                            </Tr>
+                                </div>
+                                <div className='flex items-center gap-2 mb-2'>
+                                    <span className='px-2 py-0.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded text-xs'>
+                                        {item.category}
+                                    </span>
+                                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                                        {item.count ? `${item.count}x` : "-"}
+                                    </span>
+                                </div>
+                                {item.source && (
+                                    <div className='text-xs'>
+                                        <SourceBadges source={item.source} />
+                                    </div>
+                                )}
+                            </div>
                         ))}
-                        {filtered.length === 0 && (
-                            <PanelEmpty colSpan={4}>
-                                {t("admin.crud.no_data")}
-                            </PanelEmpty>
-                        )}
-                    </PanelTable>
-                    <PanelPagination
-                        page={currentPage}
-                        pageCount={pageCount}
-                        total={filtered.length}
-                        onChange={setPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newSize) => {
-                            setPageSize(newSize);
-                            setPage(1);
-                        }}
-                        pageSizeOptions={[10, 20, 50]}
-                        labels={{
-                            prev: t("common.prev"),
-                            next: t("common.next"),
-                        }}
-                    />
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th>{t("admin.field.title")}</Th>
+                                    <Th className='w-32'>
+                                        {t("admin.field.category")}
+                                    </Th>
+                                    <Th className='w-20 hidden md:table-cell'>
+                                        {t("admin.field.repetition")}
+                                    </Th>
+                                    <Th className='w-20'></Th>
+                                </>
+                            }
+                        >
+                            {visible.map((item) => (
+                                <Tr key={item.id ?? item._id}>
+                                    <Td className='text-gray-900 dark:text-white font-medium'>
+                                        <div>
+                                            {getLocalizedField(
+                                                item,
+                                                "title",
+                                                lang,
+                                            )}
+                                        </div>
+                                        {item.source && (
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
+                                        )}
+                                    </Td>
+                                    <Td>
+                                        <span className='px-2 py-0.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded text-xs'>
+                                            {item.category}
+                                        </span>
+                                    </Td>
+                                    <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell'>
+                                        {item.count ? `${item.count}x` : "-"}
+                                    </Td>
+                                    <Td>
+                                        <div className='flex items-center gap-2 justify-end'>
+                                            <button
+                                                onClick={() => openEdit(item)}
+                                                aria-label={t("common.edit")}
+                                                title={t("common.edit")}
+                                                className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                            >
+                                                <BsPencil />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteId(
+                                                        item.id ?? item._id,
+                                                    )
+                                                }
+                                                aria-label={t("common.delete")}
+                                                title={t("common.delete")}
+                                                className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                            >
+                                                <BsTrash />
+                                            </button>
+                                        </div>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
                 </>
             )}
+
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={filtered.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
 
             {showModal && (
                 <ModalShell

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -192,91 +191,154 @@ export default function AdminAmalanPage() {
                 </select>
             </div>
 
-            <PanelTable
-                head={
-                    <>
-                        <Th>Nama Amalan</Th>
-                        <Th>Kategori</Th>
-                        <Th>Deskripsi</Th>
-                        <Th>Sumber / Rujukan</Th>
-                        <Th className='w-20 text-center'>Status</Th>
-                        <Th className='text-right w-24'>Aksi</Th>
-                    </>
-                }
-            >
-                {loading ? (
-                    <Tr>
-                        <Td
-                            colSpan={6}
-                            className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'
-                        >
-                            Memuat data…
-                        </Td>
-                    </Tr>
-                ) : paginated.length === 0 ? (
-                    <PanelEmpty colSpan={6}>
-                        {search || categoryFilter !== "all"
-                            ? t("admin.empty.search")
-                            : "Belum ada data master amalan."}
-                    </PanelEmpty>
-                ) : (
-                    paginated.map((item) => (
-                        <Tr key={item.id}>
-                            <Td className='font-medium text-gray-900 dark:text-white'>
-                                {item.name}
-                            </Td>
-                            <Td>
-                                <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
-                                    {item.category}
-                                </span>
-                            </Td>
-                            <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
-                                <div className='line-clamp-2'>
+            {loading ? (
+                <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
+                    Memuat data…
+                </p>
+            ) : paginated.length === 0 ? (
+                <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
+                    {search || categoryFilter !== "all"
+                        ? t("admin.empty.search")
+                        : "Belum ada data master amalan."}
+                </p>
+            ) : (
+                <>
+                    {/* Mobile: stacked cards so every field is reachable without
+                        horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
+                        {paginated.map((item) => (
+                            <div
+                                key={item.id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
+                                    <p className='font-medium text-gray-900 dark:text-white'>
+                                        {item.name}
+                                    </p>
+                                    <div className='flex items-center gap-1 shrink-0'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
+                                            aria-label='Edit'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() => setDeleteId(item.id)}
+                                            className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
+                                            aria-label='Hapus'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className='flex items-center gap-2 mb-2'>
+                                    <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                        {item.category}
+                                    </span>
+                                    <span
+                                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                            item.is_active !== false
+                                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                                                : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                                        }`}
+                                    >
+                                        {item.is_active !== false
+                                            ? "Aktif"
+                                            : "Nonaktif"}
+                                    </span>
+                                </div>
+                                <p className='text-xs text-gray-600 dark:text-gray-300 mb-2'>
                                     {item.description || "—"}
+                                </p>
+                                <div className='text-xs'>
+                                    {item.source ? (
+                                        <SourceBadges source={item.source} />
+                                    ) : (
+                                        "—"
+                                    )}
                                 </div>
-                            </Td>
-                            <Td className='text-xs'>
-                                {item.source ? (
-                                    <SourceBadges source={item.source} />
-                                ) : (
-                                    "—"
-                                )}
-                            </Td>
-                            <Td className='text-center'>
-                                <span
-                                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                                        item.is_active !== false
-                                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                            : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-                                    }`}
-                                >
-                                    {item.is_active !== false
-                                        ? "Aktif"
-                                        : "Nonaktif"}
-                                </span>
-                            </Td>
-                            <Td className='text-right'>
-                                <div className='flex items-center justify-end gap-2'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
-                                        aria-label='Edit'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() => setDeleteId(item.id)}
-                                        className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
-                                        aria-label='Hapus'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))
-                )}
-            </PanelTable>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th>Nama Amalan</Th>
+                                    <Th>Kategori</Th>
+                                    <Th>Deskripsi</Th>
+                                    <Th>Sumber / Rujukan</Th>
+                                    <Th className='w-20 text-center'>Status</Th>
+                                    <Th className='text-right w-24'>Aksi</Th>
+                                </>
+                            }
+                        >
+                            {paginated.map((item) => (
+                                <Tr key={item.id}>
+                                    <Td className='font-medium text-gray-900 dark:text-white'>
+                                        {item.name}
+                                    </Td>
+                                    <Td>
+                                        <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                            {item.category}
+                                        </span>
+                                    </Td>
+                                    <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
+                                        <div className='line-clamp-2'>
+                                            {item.description || "—"}
+                                        </div>
+                                    </Td>
+                                    <Td className='text-xs'>
+                                        {item.source ? (
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </Td>
+                                    <Td className='text-center'>
+                                        <span
+                                            className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                                item.is_active !== false
+                                                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                                                    : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                                            }`}
+                                        >
+                                            {item.is_active !== false
+                                                ? "Aktif"
+                                                : "Nonaktif"}
+                                        </span>
+                                    </Td>
+                                    <Td className='text-right'>
+                                        <div className='flex items-center justify-end gap-2'>
+                                            <button
+                                                onClick={() => openEdit(item)}
+                                                className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
+                                                aria-label='Edit'
+                                            >
+                                                <BsPencil />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteId(item.id)
+                                                }
+                                                className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
+                                                aria-label='Hapus'
+                                            >
+                                                <BsTrash />
+                                            </button>
+                                        </div>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
+                </>
+            )}
 
             <PanelPagination
                 page={page}

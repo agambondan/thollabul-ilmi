@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -250,41 +249,25 @@ const AdminAsbabunNuzulPage = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>
                     {t("common.loading")}
                 </p>
+            ) : filtered.length === 0 ? (
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("admin.crud.no_data")}
+                </p>
             ) : (
                 <>
-                    <PanelTable
-                        head={
-                            <>
-                                <Th className='w-20'>Surah</Th>
-                                <Th className='w-16'>{t("common.verse")}</Th>
-                                <Th>{t("admin.field.title")}</Th>
-                                <Th className='hidden md:table-cell'>
-                                    {t("common.source")}
-                                </Th>
-                                <Th className='w-20'></Th>
-                            </>
-                        }
-                    >
+                    {/* Mobile: stacked cards so every field is reachable
+                        without horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
                         {visible.map((item) => (
-                            <Tr key={item.id ?? item._id}>
-                                <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                    {getSurahNumber(item)}
-                                </Td>
-                                <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                    {formatAyahRange(item)}
-                                </Td>
-                                <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
-                                    {getLocalizedField(item, "title", lang)}
-                                </Td>
-                                <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
-                                    {item.source ? (
-                                        <SourceBadges source={item.source} />
-                                    ) : (
-                                        "-"
-                                    )}
-                                </Td>
-                                <Td>
-                                    <div className='flex items-center gap-2 justify-end'>
+                            <div
+                                key={item.id ?? item._id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
+                                    <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                                        {getLocalizedField(item, "title", lang)}
+                                    </p>
+                                    <div className='flex items-center gap-1 shrink-0'>
                                         <button
                                             onClick={() => openEdit(item)}
                                             aria-label={t("common.edit")}
@@ -304,34 +287,109 @@ const AdminAsbabunNuzulPage = () => {
                                             <BsTrash />
                                         </button>
                                     </div>
-                                </Td>
-                            </Tr>
+                                </div>
+                                <div className='flex items-center gap-2 mb-2 text-xs text-gray-500 dark:text-gray-400 font-mono'>
+                                    <span>Surah {getSurahNumber(item)}</span>
+                                    <span>
+                                        {t("common.verse")}{" "}
+                                        {formatAyahRange(item)}
+                                    </span>
+                                </div>
+                                <div className='text-xs text-gray-400'>
+                                    {item.source ? (
+                                        <SourceBadges source={item.source} />
+                                    ) : (
+                                        "-"
+                                    )}
+                                </div>
+                            </div>
                         ))}
-                        {filtered.length === 0 && (
-                            <PanelEmpty colSpan={5}>
-                                {t("admin.crud.no_data")}
-                            </PanelEmpty>
-                        )}
-                    </PanelTable>
+                    </div>
 
-                    <PanelPagination
-                        page={currentPage}
-                        pageCount={pageCount}
-                        total={filtered.length}
-                        onChange={setPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newSize) => {
-                            setPageSize(newSize);
-                            setPage(1);
-                        }}
-                        pageSizeOptions={[10, 20, 50]}
-                        labels={{
-                            prev: t("common.prev"),
-                            next: t("common.next"),
-                        }}
-                    />
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th className='w-20'>Surah</Th>
+                                    <Th className='w-16'>
+                                        {t("common.verse")}
+                                    </Th>
+                                    <Th>{t("admin.field.title")}</Th>
+                                    <Th className='hidden md:table-cell'>
+                                        {t("common.source")}
+                                    </Th>
+                                    <Th className='w-20'></Th>
+                                </>
+                            }
+                        >
+                            {visible.map((item) => (
+                                <Tr key={item.id ?? item._id}>
+                                    <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
+                                        {getSurahNumber(item)}
+                                    </Td>
+                                    <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
+                                        {formatAyahRange(item)}
+                                    </Td>
+                                    <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
+                                        {getLocalizedField(item, "title", lang)}
+                                    </Td>
+                                    <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
+                                        {item.source ? (
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </Td>
+                                    <Td>
+                                        <div className='flex items-center gap-2 justify-end'>
+                                            <button
+                                                onClick={() => openEdit(item)}
+                                                aria-label={t("common.edit")}
+                                                title={t("common.edit")}
+                                                className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                            >
+                                                <BsPencil />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteId(
+                                                        item.id ?? item._id,
+                                                    )
+                                                }
+                                                aria-label={t("common.delete")}
+                                                title={t("common.delete")}
+                                                className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                            >
+                                                <BsTrash />
+                                            </button>
+                                        </div>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
                 </>
             )}
+
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={filtered.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
 
             {showModal && (
                 <ModalShell

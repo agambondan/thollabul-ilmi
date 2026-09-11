@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -186,65 +185,25 @@ const AdminRemindersPage = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>
                     {t("common.loading")}
                 </p>
+            ) : filtered.length === 0 ? (
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("admin.crud.no_data")}
+                </p>
             ) : (
                 <>
-                    <PanelTable
-                        head={
-                            <>
-                                <Th className='font-medium text-gray-600 dark:text-gray-300'>
-                                    Judul
-                                </Th>
-                                <Th className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
-                                    Ulama / Author
-                                </Th>
-                                <Th className='font-medium text-gray-600 dark:text-gray-300'>
-                                    Tipe
-                                </Th>
-                                <Th className='hidden font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
-                                    Status
-                                </Th>
-                                <Th align='right'>Aksi</Th>
-                            </>
-                        }
-                    >
+                    {/* Mobile: stacked cards so every field is reachable without
+                        horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
                         {visible.map((item) => (
-                            <Tr key={item.id ?? item._id}>
-                                <Td>
+                            <div
+                                key={item.id ?? item._id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
                                     <p className='font-medium text-gray-900 dark:text-white'>
                                         {item.title}
                                     </p>
-                                    <p className='mt-1 line-clamp-1 text-xs text-gray-500 dark:text-gray-400'>
-                                        {item.text}
-                                    </p>
-                                </Td>
-                                <Td className='hidden text-gray-600 dark:text-gray-300 md:table-cell'>
-                                    <p>{item.author || "-"}</p>
-                                    {item.source ? (
-                                        <SourceBadges source={item.source} />
-                                    ) : (
-                                        <p className='text-xs text-gray-400'>
-                                            -
-                                        </p>
-                                    )}
-                                </Td>
-                                <Td>
-                                    <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30'>
-                                        {item.type}
-                                    </span>
-                                </Td>
-                                <Td className='hidden lg:table-cell'>
-                                    <span
-                                        className={`rounded px-2 py-0.5 text-xs ${
-                                            item.is_active
-                                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                                : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400"
-                                        }`}
-                                    >
-                                        {item.is_active ? "Aktif" : "Nonaktif"}
-                                    </span>
-                                </Td>
-                                <Td>
-                                    <div className='flex justify-end gap-2'>
+                                    <div className='flex items-center gap-1 shrink-0'>
                                         <button
                                             onClick={() => openEdit(item)}
                                             aria-label={t("common.edit")}
@@ -264,33 +223,144 @@ const AdminRemindersPage = () => {
                                             <BsTrash />
                                         </button>
                                     </div>
-                                </Td>
-                            </Tr>
+                                </div>
+                                <p className='mb-2 line-clamp-2 text-xs text-gray-500 dark:text-gray-400'>
+                                    {item.text}
+                                </p>
+                                <div className='mb-2 flex items-center gap-2 flex-wrap'>
+                                    <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30'>
+                                        {item.type}
+                                    </span>
+                                    <span
+                                        className={`rounded px-2 py-0.5 text-xs ${
+                                            item.is_active
+                                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                                                : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400"
+                                        }`}
+                                    >
+                                        {item.is_active ? "Aktif" : "Nonaktif"}
+                                    </span>
+                                </div>
+                                <p className='text-xs text-gray-600 dark:text-gray-300'>
+                                    {item.author || "-"}
+                                </p>
+                                {item.source ? (
+                                    <SourceBadges source={item.source} />
+                                ) : (
+                                    <p className='text-xs text-gray-400'>-</p>
+                                )}
+                            </div>
                         ))}
-                        {filtered.length === 0 && (
-                            <PanelEmpty colSpan={5}>
-                                {t("admin.crud.no_data")}
-                            </PanelEmpty>
-                        )}
-                    </PanelTable>
-                    <PanelPagination
-                        page={currentPage}
-                        pageCount={pageCount}
-                        total={filtered.length}
-                        onChange={setPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newSize) => {
-                            setPageSize(newSize);
-                            setPage(1);
-                        }}
-                        pageSizeOptions={[10, 20, 50]}
-                        labels={{
-                            prev: t("common.prev"),
-                            next: t("common.next"),
-                        }}
-                    />
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th className='font-medium text-gray-600 dark:text-gray-300'>
+                                        Judul
+                                    </Th>
+                                    <Th className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
+                                        Ulama / Author
+                                    </Th>
+                                    <Th className='font-medium text-gray-600 dark:text-gray-300'>
+                                        Tipe
+                                    </Th>
+                                    <Th className='hidden font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
+                                        Status
+                                    </Th>
+                                    <Th align='right'>Aksi</Th>
+                                </>
+                            }
+                        >
+                            {visible.map((item) => (
+                                <Tr key={item.id ?? item._id}>
+                                    <Td>
+                                        <p className='font-medium text-gray-900 dark:text-white'>
+                                            {item.title}
+                                        </p>
+                                        <p className='mt-1 line-clamp-1 text-xs text-gray-500 dark:text-gray-400'>
+                                            {item.text}
+                                        </p>
+                                    </Td>
+                                    <Td className='hidden text-gray-600 dark:text-gray-300 md:table-cell'>
+                                        <p>{item.author || "-"}</p>
+                                        {item.source ? (
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
+                                        ) : (
+                                            <p className='text-xs text-gray-400'>
+                                                -
+                                            </p>
+                                        )}
+                                    </Td>
+                                    <Td>
+                                        <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30'>
+                                            {item.type}
+                                        </span>
+                                    </Td>
+                                    <Td className='hidden lg:table-cell'>
+                                        <span
+                                            className={`rounded px-2 py-0.5 text-xs ${
+                                                item.is_active
+                                                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                                                    : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400"
+                                            }`}
+                                        >
+                                            {item.is_active
+                                                ? "Aktif"
+                                                : "Nonaktif"}
+                                        </span>
+                                    </Td>
+                                    <Td>
+                                        <div className='flex justify-end gap-2'>
+                                            <button
+                                                onClick={() => openEdit(item)}
+                                                aria-label={t("common.edit")}
+                                                title={t("common.edit")}
+                                                className='rounded p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                                            >
+                                                <BsPencil />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteId(
+                                                        item.id ?? item._id,
+                                                    )
+                                                }
+                                                aria-label={t("common.delete")}
+                                                title={t("common.delete")}
+                                                className='rounded p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                                            >
+                                                <BsTrash />
+                                            </button>
+                                        </div>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
                 </>
             )}
+
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={filtered.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
 
             {showModal && (
                 <ModalShell

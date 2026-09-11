@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -183,93 +182,158 @@ export default function AdminPanduanSholatPage() {
                 />
             </div>
 
-            <PanelTable
-                head={
-                    <>
-                        <Th className='w-16'>Step</Th>
-                        <Th>Judul</Th>
-                        <Th>Lafaz Arab / Latin</Th>
-                        <Th>Terjemahan / Keterangan</Th>
-                        <Th>Sumber / Rujukan</Th>
-                        <Th className='text-right w-24'>Aksi</Th>
-                    </>
-                }
-            >
-                {loading ? (
-                    <Tr>
-                        <Td
-                            colSpan={6}
-                            className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'
-                        >
-                            Memuat data…
-                        </Td>
-                    </Tr>
-                ) : paginated.length === 0 ? (
-                    <PanelEmpty colSpan={6}>
-                        {search
-                            ? t("admin.empty.search")
-                            : "Belum ada langkah panduan sholat."}
-                    </PanelEmpty>
-                ) : (
-                    paginated.map((item) => (
-                        <Tr key={item.id}>
-                            <Td className='font-bold text-emerald-700 dark:text-emerald-400'>
-                                #{item.step}
-                            </Td>
-                            <Td className='font-medium text-gray-900 dark:text-white'>
-                                {item.title}
-                            </Td>
-                            <Td className='max-w-xs'>
+            {loading ? (
+                <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
+                    Memuat data…
+                </p>
+            ) : paginated.length === 0 ? (
+                <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
+                    {search
+                        ? t("admin.empty.search")
+                        : "Belum ada langkah panduan sholat."}
+                </p>
+            ) : (
+                <>
+                    {/* Mobile: stacked cards so every field is reachable without
+                        horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
+                        {paginated.map((item) => (
+                            <div
+                                key={item.id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
+                                    <p className='font-medium text-gray-900 dark:text-white'>
+                                        <span className='font-bold text-emerald-700 dark:text-emerald-400'>
+                                            #{item.step}
+                                        </span>{" "}
+                                        {item.title}
+                                    </p>
+                                    <div className='flex items-center gap-1 shrink-0'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
+                                            aria-label='Edit'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() => setDeleteId(item.id)}
+                                            className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
+                                            aria-label='Hapus'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </div>
                                 {item.arabic && (
                                     <div
                                         dir='rtl'
-                                        className='font-arabic text-sm text-gray-800 dark:text-gray-200 line-clamp-1'
+                                        className='font-arabic text-sm text-gray-800 dark:text-gray-200 mb-1'
                                     >
                                         {item.arabic}
                                     </div>
                                 )}
                                 {item.latin && (
-                                    <div className='text-xs italic text-gray-500 dark:text-gray-400 line-clamp-1'>
+                                    <div className='text-xs italic text-gray-500 dark:text-gray-400 mb-2'>
                                         {item.latin}
                                     </div>
                                 )}
-                            </Td>
-                            <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
-                                <div className='line-clamp-2'>
+                                <p className='text-xs text-gray-600 dark:text-gray-300 mb-2'>
                                     {item.translation ||
                                         item.description ||
                                         "—"}
+                                </p>
+                                <div className='text-xs'>
+                                    {item.source ? (
+                                        <SourceBadges source={item.source} />
+                                    ) : (
+                                        "—"
+                                    )}
                                 </div>
-                            </Td>
-                            <Td className='text-xs'>
-                                {item.source ? (
-                                    <SourceBadges source={item.source} />
-                                ) : (
-                                    "—"
-                                )}
-                            </Td>
-                            <Td className='text-right'>
-                                <div className='flex items-center justify-end gap-2'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
-                                        aria-label='Edit'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() => setDeleteId(item.id)}
-                                        className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
-                                        aria-label='Hapus'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))
-                )}
-            </PanelTable>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th className='w-16'>Step</Th>
+                                    <Th>Judul</Th>
+                                    <Th>Lafaz Arab / Latin</Th>
+                                    <Th>Terjemahan / Keterangan</Th>
+                                    <Th>Sumber / Rujukan</Th>
+                                    <Th className='text-right w-24'>Aksi</Th>
+                                </>
+                            }
+                        >
+                            {paginated.map((item) => (
+                                <Tr key={item.id}>
+                                    <Td className='font-bold text-emerald-700 dark:text-emerald-400'>
+                                        #{item.step}
+                                    </Td>
+                                    <Td className='font-medium text-gray-900 dark:text-white'>
+                                        {item.title}
+                                    </Td>
+                                    <Td className='max-w-xs'>
+                                        {item.arabic && (
+                                            <div
+                                                dir='rtl'
+                                                className='font-arabic text-sm text-gray-800 dark:text-gray-200 line-clamp-1'
+                                            >
+                                                {item.arabic}
+                                            </div>
+                                        )}
+                                        {item.latin && (
+                                            <div className='text-xs italic text-gray-500 dark:text-gray-400 line-clamp-1'>
+                                                {item.latin}
+                                            </div>
+                                        )}
+                                    </Td>
+                                    <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
+                                        <div className='line-clamp-2'>
+                                            {item.translation ||
+                                                item.description ||
+                                                "—"}
+                                        </div>
+                                    </Td>
+                                    <Td className='text-xs'>
+                                        {item.source ? (
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
+                                        ) : (
+                                            "—"
+                                        )}
+                                    </Td>
+                                    <Td className='text-right'>
+                                        <div className='flex items-center justify-end gap-2'>
+                                            <button
+                                                onClick={() => openEdit(item)}
+                                                className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
+                                                aria-label='Edit'
+                                            >
+                                                <BsPencil />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    setDeleteId(item.id)
+                                                }
+                                                className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
+                                                aria-label='Hapus'
+                                            >
+                                                <BsTrash />
+                                            </button>
+                                        </div>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
+                </>
+            )}
 
             <PanelPagination
                 page={page}

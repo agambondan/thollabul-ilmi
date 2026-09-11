@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    PanelEmpty,
     PanelPagination,
     PanelTable,
     Td,
@@ -162,71 +161,112 @@ export default function AdminLessonsPage() {
                 </button>
             </div>
 
-            <PanelTable
-                head={
-                    <>
-                        <Th>Urutan</Th>
-                        <Th>Judul</Th>
-                        <Th>Slug</Th>
-                        <Th>Langkah</Th>
-                        <Th align='right'>Aksi</Th>
-                    </>
-                }
-            >
-                {loading ? (
-                    <Tr>
-                        <Td colSpan={5} className='text-center text-gray-400'>
-                            Memuat data...
-                        </Td>
-                    </Tr>
-                ) : modules.length === 0 ? (
-                    <Tr>
-                        <Td colSpan={5} className='text-center text-gray-400'>
-                            <div className='py-6'>
-                                <p className='mb-3'>Belum ada modul</p>
-                                <button
-                                    onClick={() => handleOpen()}
-                                    className='inline-flex items-center px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition-colors'
-                                >
-                                    Tambah Modul
-                                </button>
+            {loading ? (
+                <p className='text-center text-sm text-gray-400 py-6'>
+                    Memuat data...
+                </p>
+            ) : modules.length === 0 ? (
+                <div className='text-center text-gray-400 py-6'>
+                    <p className='mb-3'>Belum ada modul</p>
+                    <button
+                        onClick={() => handleOpen()}
+                        className='inline-flex items-center px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition-colors'
+                    >
+                        Tambah Modul
+                    </button>
+                </div>
+            ) : (
+                <>
+                    {/* Mobile: stacked cards so every field is reachable without
+                        horizontal scrolling. */}
+                    <div className='space-y-3 md:hidden'>
+                        {visible.map((m) => (
+                            <div
+                                key={m.id}
+                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                            >
+                                <div className='flex items-start justify-between gap-2 mb-2'>
+                                    <div>
+                                        <p className='font-bold text-xs text-gray-500 dark:text-gray-400 mb-0.5'>
+                                            Urutan {m.order}
+                                        </p>
+                                        <p className='font-semibold text-gray-900 dark:text-white'>
+                                            {m.title}
+                                        </p>
+                                    </div>
+                                    <div className='flex items-center gap-1 shrink-0'>
+                                        <button
+                                            onClick={() => handleOpen(m)}
+                                            className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-blue-600'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(m.id)}
+                                            className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-rose-600'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </div>
+                                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                                    {m.slug}
+                                </p>
+                                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                                    {m.steps?.length || 0} langkah
+                                </p>
                             </div>
-                        </Td>
-                    </Tr>
-                ) : (
-                    visible.map((m) => (
-                        <Tr
-                            key={m.id}
-                            className='hover:bg-gray-50 dark:hover:bg-slate-700/30'
+                        ))}
+                    </div>
+
+                    {/* Desktop: full table. */}
+                    <div className='hidden md:block'>
+                        <PanelTable
+                            head={
+                                <>
+                                    <Th>Urutan</Th>
+                                    <Th>Judul</Th>
+                                    <Th>Slug</Th>
+                                    <Th>Langkah</Th>
+                                    <Th align='right'>Aksi</Th>
+                                </>
+                            }
                         >
-                            <Td className='font-bold'>{m.order}</Td>
-                            <Td className='font-semibold text-gray-900 dark:text-white'>
-                                {m.title}
-                            </Td>
-                            <Td className='text-gray-500 dark:text-gray-300'>
-                                {m.slug}
-                            </Td>
-                            <Td className='text-gray-500 dark:text-gray-300'>
-                                {m.steps?.length || 0} langkah
-                            </Td>
-                            <Td className='text-right space-x-2'>
-                                <button
-                                    onClick={() => handleOpen(m)}
-                                    className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-blue-600'
+                            {visible.map((m) => (
+                                <Tr
+                                    key={m.id}
+                                    className='hover:bg-gray-50 dark:hover:bg-slate-700/30'
                                 >
-                                    <BsPencil />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(m.id)}
-                                    className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-rose-600'
-                                >
-                                    <BsTrash />
-                                </button>
-                            </Td>
-                        </Tr>
-                    ))
-                )}
-            </PanelTable>
+                                    <Td className='font-bold'>{m.order}</Td>
+                                    <Td className='font-semibold text-gray-900 dark:text-white'>
+                                        {m.title}
+                                    </Td>
+                                    <Td className='text-gray-500 dark:text-gray-300'>
+                                        {m.slug}
+                                    </Td>
+                                    <Td className='text-gray-500 dark:text-gray-300'>
+                                        {m.steps?.length || 0} langkah
+                                    </Td>
+                                    <Td className='text-right space-x-2'>
+                                        <button
+                                            onClick={() => handleOpen(m)}
+                                            className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-blue-600'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(m.id)}
+                                            className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-rose-600'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </PanelTable>
+                    </div>
+                </>
+            )}
             <PanelPagination
                 page={currentPage}
                 pageCount={pageCount}
