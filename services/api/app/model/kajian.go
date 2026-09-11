@@ -25,7 +25,7 @@ type Kajian struct {
 	// a plain unique index on a field that can repeat blocks every later
 	// insert that legitimately shares it, and a non-partial one keeps
 	// blocking on a soft-deleted row forever.
-	VideoID       string             `json:"video_id" gorm:"type:varchar(64);index;uniqueIndex:idx_kajian_video_id,where:video_id <> '' AND deleted_at IS NULL"`
+	VideoID       string             `json:"video_id" gorm:"type:varchar(64);uniqueIndex:idx_kajian_video_id,where:video_id <> '' AND deleted_at IS NULL"`
 	Duration      int                `json:"duration_seconds" gorm:"default:0"`
 	ThumbnailURL  string             `json:"thumbnail_url" gorm:"type:varchar(1024)"`
 	ViewCount     int                `json:"view_count" gorm:"default:0"`

@@ -372,6 +372,18 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
     },
+    "4ZVtUfc5mSE": {
+      "attempted_at": "2026-09-10T13:15:36.983239207Z",
+      "retry_after": "2026-09-24T13:15:36.983239207Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@haritsabunaufalofficial8588"
+    },
+    "4_YOk4oycOQ": {
+      "attempted_at": "2026-09-10T13:15:36.983239207Z",
+      "retry_after": "2026-09-24T13:15:36.983239207Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
+    },
     "4bObTtE7riY": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
       "retry_after": "2026-09-22T17:49:59.024031229Z",
@@ -1866,6 +1878,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AshiilTV"
     },
+    "RHWBjaoUIzs": {
+      "attempted_at": "2026-09-11T07:30:39.070682688Z",
+      "retry_after": "2026-09-25T07:30:39.070682688Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
+    },
     "RNv5xEbX-Ak": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -3126,6 +3144,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
     },
+    "hCzQXLXj6E8": {
+      "attempted_at": "2026-09-10T13:15:36.983239207Z",
+      "retry_after": "2026-09-24T13:15:36.983239207Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@haritsabunaufalofficial8588"
+    },
     "hDZ5dhlA9kE": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
       "retry_after": "2026-09-22T17:49:59.024031229Z",
@@ -3702,6 +3726,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AbdullahRoy"
     },
+    "r_RSu6k0Cuw": {
+      "attempted_at": "2026-09-11T07:30:39.070682688Z",
+      "retry_after": "2026-09-25T07:30:39.070682688Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
+    },
     "rpZVGrhKXZ8": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -3929,6 +3959,12 @@
       "retry_after": "2026-09-23T07:00:53.013797524Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
+    },
+    "vM6yt5xYeRM": {
+      "attempted_at": "2026-09-10T13:15:36.983239207Z",
+      "retry_after": "2026-09-24T13:15:36.983239207Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@haritsabunaufalofficial8588"
     },
     "vNglLuItya0": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",

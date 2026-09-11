@@ -444,8 +444,13 @@ func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confir
 		// --dump-json rides along on that same request to also pull the
 		// real upload date, instead of leaving every row on the
 		// "2024-01-01" placeholder or paying for a second yt-dlp call
-		// per video just for metadata.
+		// per video just for metadata. --dump-json alone puts yt-dlp in
+		// simulate mode (per its own --help), which silently skips
+		// --write-subs/--write-auto-subs entirely -- every video looked
+		// like it had no captions until --no-simulate forced the actual
+		// write to still happen alongside the JSON dump.
 		"--dump-json",
+		"--no-simulate",
 		"-o", stem,
 		"https://www.youtube.com/watch?v=" + videoID,
 	}

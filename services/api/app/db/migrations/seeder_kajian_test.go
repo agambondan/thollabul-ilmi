@@ -42,7 +42,11 @@ func TestSeedKajianFromFileIntegration(t *testing.T) {
 	// Regression: distinct videos that happen to share the exact same
 	// title+speaker (a channel's recurring "Khutbah Jum'at" livestream, a
 	// reposted clip) must not collapse into one row. Every scraped row is
-	// keyed by video_id, so the seeded count must equal the source count.
+	// keyed by video_id, so the seeded count must equal the number of
+	// *distinct* video ids in the source data -- not the raw row count,
+	// since the same physical video can legitimately appear in two
+	// channels' files (e.g. a scholar's lecture re-hosted on an aggregator
+	// channel like RodjaTV) and should still collapse to one row.
 	type row struct {
 		VideoID string `json:"video_id"`
 	}
@@ -50,7 +54,11 @@ func TestSeedKajianFromFileIntegration(t *testing.T) {
 	if len(sourceRows) == 0 {
 		t.Fatal("expected the static kajian dataset to be non-empty for this assertion")
 	}
-	if int(count) != len(sourceRows) {
-		t.Errorf("expected %d kajian (one per scraped video), got %d — a title+speaker collision merged some videos into one row", len(sourceRows), count)
+	uniqueVideoIDs := make(map[string]struct{}, len(sourceRows))
+	for _, r := range sourceRows {
+		uniqueVideoIDs[r.VideoID] = struct{}{}
+	}
+	if int(count) != len(uniqueVideoIDs) {
+		t.Errorf("expected %d kajian (one per distinct video id), got %d — a dedup key collision merged some videos into one row", len(uniqueVideoIDs), count)
 	}
 }
