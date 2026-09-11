@@ -11,7 +11,7 @@ import {
 import { adminAchievementApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
-import { BsPencil, BsPlusCircle, BsTrash } from "react-icons/bs";
+import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
 const EMPTY_FORM = {
@@ -187,16 +187,6 @@ export default function AdminAchievementsPage() {
             </div>
 
             <PanelTable
-                loading={loading}
-                empty={
-                    <PanelEmpty
-                        message={
-                            search
-                                ? t("admin.empty.search")
-                                : "Belum ada master achievement."
-                        }
-                    />
-                }
                 head={
                     <>
                         <Th className='w-14 text-center'>Icon</Th>
@@ -208,77 +198,104 @@ export default function AdminAchievementsPage() {
                         <Th className='text-right w-24'>Aksi</Th>
                     </>
                 }
-                pagination={
-                    <PanelPagination
-                        page={page}
-                        totalPages={totalPages}
-                        pageSize={pageSize}
-                        totalItems={filtered.length}
-                        onPageChange={setPage}
-                        onPageSizeChange={(sz) => {
-                            setPageSize(sz);
-                            setPage(1);
-                        }}
-                    />
-                }
             >
-                {paginated.map((item) => (
-                    <Tr key={item.id}>
-                        <Td className='text-center text-2xl'>
-                            {item.icon || "🏆"}
-                        </Td>
-                        <Td className='font-mono text-xs text-emerald-700 dark:text-emerald-400 font-bold'>
-                            {item.code}
-                        </Td>
-                        <Td className='font-medium text-gray-900 dark:text-white'>
-                            <div>{item.name}</div>
-                            {item.name_en && (
-                                <div className='text-xs text-gray-400'>
-                                    {item.name_en}
-                                </div>
-                            )}
-                        </Td>
-                        <Td>
-                            <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
-                                {item.category || "general"}
-                            </span>
-                        </Td>
-                        <Td className='text-center font-bold text-gray-800 dark:text-gray-200'>
-                            {item.threshold}
-                        </Td>
-                        <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
-                            <div className='line-clamp-2'>
-                                {item.description || item.desc_en || "—"}
-                            </div>
-                        </Td>
-                        <Td className='text-right'>
-                            <div className='flex items-center justify-end gap-2'>
-                                <button
-                                    onClick={() => openEdit(item)}
-                                    className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
-                                    aria-label='Edit'
-                                >
-                                    <BsPencil />
-                                </button>
-                                <button
-                                    onClick={() => setDeleteId(item.id)}
-                                    className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
-                                    aria-label='Hapus'
-                                >
-                                    <BsTrash />
-                                </button>
-                            </div>
+                {loading ? (
+                    <Tr>
+                        <Td
+                            colSpan={7}
+                            className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'
+                        >
+                            Memuat data…
                         </Td>
                     </Tr>
-                ))}
+                ) : paginated.length === 0 ? (
+                    <PanelEmpty colSpan={7}>
+                        {search
+                            ? t("admin.empty.search")
+                            : "Belum ada master achievement."}
+                    </PanelEmpty>
+                ) : (
+                    paginated.map((item) => (
+                        <Tr key={item.id}>
+                            <Td className='text-center text-2xl'>
+                                {item.icon || "🏆"}
+                            </Td>
+                            <Td className='font-mono text-xs text-emerald-700 dark:text-emerald-400 font-bold'>
+                                {item.code}
+                            </Td>
+                            <Td className='font-medium text-gray-900 dark:text-white'>
+                                <div>{item.name}</div>
+                                {item.name_en && (
+                                    <div className='text-xs text-gray-400'>
+                                        {item.name_en}
+                                    </div>
+                                )}
+                            </Td>
+                            <Td>
+                                <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                    {item.category || "general"}
+                                </span>
+                            </Td>
+                            <Td className='text-center font-bold text-gray-800 dark:text-gray-200'>
+                                {item.threshold}
+                            </Td>
+                            <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
+                                <div className='line-clamp-2'>
+                                    {item.description || item.desc_en || "—"}
+                                </div>
+                            </Td>
+                            <Td className='text-right'>
+                                <div className='flex items-center justify-end gap-2'>
+                                    <button
+                                        onClick={() => openEdit(item)}
+                                        className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
+                                        aria-label='Edit'
+                                    >
+                                        <BsPencil />
+                                    </button>
+                                    <button
+                                        onClick={() => setDeleteId(item.id)}
+                                        className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
+                                        aria-label='Hapus'
+                                    >
+                                        <BsTrash />
+                                    </button>
+                                </div>
+                            </Td>
+                        </Tr>
+                    ))
+                )}
             </PanelTable>
+
+            <PanelPagination
+                page={page}
+                pageCount={totalPages}
+                pageSize={pageSize}
+                total={filtered.length}
+                onChange={setPage}
+                onPageSizeChange={(sz) => {
+                    setPageSize(sz);
+                    setPage(1);
+                }}
+            />
 
             {/* Create/Edit Modal */}
             <ModalShell
-                open={showModal}
+                isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                title={editId ? "Edit Achievement" : "Tambah Achievement"}
+                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
             >
+                <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-700'>
+                    <h2 className='font-bold text-gray-900 dark:text-white'>
+                        {editId ? "Edit Achievement" : "Tambah Achievement"}
+                    </h2>
+                    <button
+                        onClick={() => setShowModal(false)}
+                        className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    >
+                        <BsX className='text-xl' />
+                    </button>
+                </div>
                 <div className='space-y-4 p-4'>
                     <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
                         <div className='sm:col-span-2'>
@@ -444,10 +461,21 @@ export default function AdminAchievementsPage() {
 
             {/* Delete Confirmation Modal */}
             <ModalShell
-                open={deleteId !== null}
+                isOpen={deleteId !== null}
                 onClose={() => setDeleteId(null)}
-                title='Hapus Achievement'
+                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md'
             >
+                <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-700'>
+                    <h2 className='font-bold text-gray-900 dark:text-white'>
+                        Hapus Achievement
+                    </h2>
+                    <button
+                        onClick={() => setDeleteId(null)}
+                        className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    >
+                        <BsX className='text-xl' />
+                    </button>
+                </div>
                 <div className='p-4 space-y-4'>
                     <p className='text-sm text-gray-600 dark:text-gray-300'>
                         Apakah Anda yakin ingin menghapus achievement ini?

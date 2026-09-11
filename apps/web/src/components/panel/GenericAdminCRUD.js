@@ -275,88 +275,80 @@ export default function GenericAdminCRUD({
                 </div>
             </div>
 
-            <PanelTable>
-                <thead>
-                    <tr>
+            <PanelTable
+                head={
+                    <>
                         {fields.map((f) => (
                             <Th key={f.key}>{f.label}</Th>
                         ))}
                         <Th className='text-right'>Aksi</Th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loading ? (
-                        <Tr>
-                            <Td
-                                colSpan={fields.length + 1}
-                                className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'
-                            >
-                                Memuat data…
-                            </Td>
-                        </Tr>
-                    ) : error ? (
-                        <Tr>
-                            <Td
-                                colSpan={fields.length + 1}
-                                className='text-center text-sm text-red-500 py-6'
-                            >
-                                {error}
-                            </Td>
-                        </Tr>
-                    ) : visible.length === 0 ? (
-                        <Tr>
-                            <Td
-                                colSpan={fields.length + 1}
-                                className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'
-                            >
-                                <PanelEmpty>
-                                    {search
-                                        ? "Tidak ada data yang cocok dengan pencarian."
-                                        : "Belum ada data."}
-                                </PanelEmpty>
-                            </Td>
-                        </Tr>
-                    ) : (
-                        visible.map((item) => (
-                            <Tr key={item[idField]}>
-                                {fields.map((f) => (
-                                    <Td key={f.key}>
-                                        {f.render
-                                            ? f.render(item?.[f.key], item)
-                                            : f.type === TYPE_BOOLEAN
-                                              ? item?.[f.key]
-                                                  ? "Aktif"
-                                                  : "Nonaktif"
-                                              : formatValue(item?.[f.key])}
-                                    </Td>
-                                ))}
-                                <Td className='text-right whitespace-nowrap'>
-                                    <button
-                                        type='button'
-                                        onClick={() => openEdit(item)}
-                                        className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
-                                    >
-                                        <BsPencil /> Edit
-                                    </button>
-                                    <button
-                                        type='button'
-                                        onClick={() => setDeleting(item)}
-                                        className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold ml-1'
-                                    >
-                                        <BsTrash /> Hapus
-                                    </button>
+                    </>
+                }
+            >
+                {loading ? (
+                    <Tr>
+                        <Td
+                            colSpan={fields.length + 1}
+                            className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'
+                        >
+                            Memuat data…
+                        </Td>
+                    </Tr>
+                ) : error ? (
+                    <Tr>
+                        <Td
+                            colSpan={fields.length + 1}
+                            className='text-center text-sm text-red-500 py-6'
+                        >
+                            {error}
+                        </Td>
+                    </Tr>
+                ) : visible.length === 0 ? (
+                    <PanelEmpty colSpan={fields.length + 1}>
+                        {search
+                            ? "Tidak ada data yang cocok dengan pencarian."
+                            : "Belum ada data."}
+                    </PanelEmpty>
+                ) : (
+                    visible.map((item) => (
+                        <Tr key={item[idField]}>
+                            {fields.map((f) => (
+                                <Td key={f.key}>
+                                    {f.render
+                                        ? f.render(item?.[f.key], item)
+                                        : f.type === TYPE_BOOLEAN
+                                          ? item?.[f.key]
+                                              ? "Aktif"
+                                              : "Nonaktif"
+                                          : formatValue(item?.[f.key])}
                                 </Td>
-                            </Tr>
-                        ))
-                    )}
-                </tbody>
+                            ))}
+                            <Td className='text-right whitespace-nowrap'>
+                                <button
+                                    type='button'
+                                    onClick={() => openEdit(item)}
+                                    className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
+                                >
+                                    <BsPencil /> Edit
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={() => setDeleting(item)}
+                                    className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold ml-1'
+                                >
+                                    <BsTrash /> Hapus
+                                </button>
+                            </Td>
+                        </Tr>
+                    ))
+                )}
             </PanelTable>
 
             <PanelPagination
                 page={currentPage}
                 pageCount={pageCount}
                 pageSize={pageSize}
-                onPageChange={setPage}
+                onChange={setPage}
                 onPageSizeChange={(size) => {
                     setPageSize(size);
                     setPage(1);
