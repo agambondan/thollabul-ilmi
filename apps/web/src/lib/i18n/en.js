@@ -426,6 +426,9 @@ const en = {
     "home.group.quran": "Al-Quran",
     "home.group.hadith": "Hadith",
     "home.group.tracker": "Worship & Tracker",
+    "home.group.tracker_summary_d":
+        "Track memorization, recitation, daily deeds, study streaks, personal stats, prayers, self-reflection, learning goals, and reminders — all in one personal dashboard.",
+    "home.group.tracker_cta": "Sign Up Free to Start Tracking",
     "home.group.konten": "Islamic Content",
     "home.group.tools": "Tools & Utilities",
     "home.group.daily": "Daily Worship",

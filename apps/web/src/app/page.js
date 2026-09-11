@@ -172,6 +172,7 @@ export default async function Home() {
                     labelKey: "home.f.asbabun",
                     descKey: "home.f.asbabun_d",
                     href: "/asbabun-nuzul",
+                    keepDescMobile: true,
                 },
             ],
         },
@@ -190,12 +191,14 @@ export default async function Home() {
                     labelKey: "home.f.perawi",
                     descKey: "home.f.perawi_d",
                     href: "/perawi",
+                    keepDescMobile: true,
                 },
                 {
                     icon: <BsPeopleFill />,
                     labelKey: "home.f.jarh_tadil",
                     descKey: "home.f.jarh_tadil_d",
                     href: "/perawi",
+                    keepDescMobile: true,
                 },
                 {
                     icon: <MdBookmark />,
@@ -209,6 +212,10 @@ export default async function Home() {
         {
             groupKey: "home.group.tracker",
             color: "teal",
+            // Every feature is personal (register-gated); collapse to one
+            // summary card instead of 9 near-identical "sign up" prompts.
+            collapsed: true,
+            collapsedHref: "/dashboard/stats",
             features: [
                 {
                     icon: <MdBookmark />,
@@ -457,6 +464,7 @@ export default async function Home() {
                     descKey: "home.f.muroja_d",
                     href: "/dashboard/muroja-ah",
                     personal: true,
+                    keepDescMobile: true,
                 },
                 {
                     icon: <MdOutlineDirectionsWalk />,
@@ -489,9 +497,9 @@ export default async function Home() {
                 <div className='absolute top-16 right-16 w-80 h-80 rounded-full bg-emerald-700 opacity-25 blur-3xl pointer-events-none' />
                 <div className='absolute top-2/3 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
 
-                <div className='relative z-10 mx-auto max-w-3xl px-6 py-20 text-center text-white'>
+                <div className='relative z-10 mx-auto max-w-3xl px-6 py-14 md:py-20 text-center text-white'>
                     <p
-                        className='min-h-[7.5rem] sm:min-h-[6rem] text-4xl md:text-5xl text-gold-300 mb-6 leading-loose'
+                        className='min-h-[4.5rem] md:min-h-[6rem] text-4xl md:text-5xl text-gold-300 mb-4 leading-loose'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
                     >
                         بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ
@@ -507,7 +515,7 @@ export default async function Home() {
                         Thullaabul &apos;Ilmi
                     </h1>
                     <p
-                        className='min-h-[3rem] text-2xl md:text-3xl text-gold-300 mb-5 leading-relaxed'
+                        className='min-h-[2.5rem] md:min-h-[3rem] text-2xl md:text-3xl text-gold-300 mb-5 leading-relaxed'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
                     >
                         طُلَّابُ الْعِلْمِ
@@ -590,55 +598,99 @@ export default async function Home() {
                                             {t(group.groupKey)}
                                         </span>
                                     </div>
-                                    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3'>
-                                        {group.features.map((feat) => (
-                                            <Link
-                                                key={feat.labelKey}
-                                                href={
-                                                    feat.personal
-                                                        ? buildRegisterHref(
-                                                              feat.href,
-                                                          )
-                                                        : feat.href
-                                                }
-                                                data-personal-href={
-                                                    feat.personal
-                                                        ? feat.href
-                                                        : undefined
-                                                }
-                                                className='group flex items-start gap-3 bg-white dark:bg-slate-800 rounded-xl p-4 border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-slate-500 hover:shadow-sm transition-all hover:-translate-y-0.5'
-                                            >
+                                    {group.collapsed ? (
+                                        <Link
+                                            href={buildRegisterHref(
+                                                group.collapsedHref,
+                                            )}
+                                            data-personal-href={
+                                                group.collapsedHref
+                                            }
+                                            className='group flex flex-col sm:flex-row sm:items-center gap-4 bg-white dark:bg-slate-800 rounded-xl p-5 border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-slate-500 hover:shadow-sm transition-all'
+                                        >
+                                            <div className='flex -space-x-2 shrink-0'>
+                                                {group.features
+                                                    .slice(0, 5)
+                                                    .map((feat) => (
+                                                        <span
+                                                            key={feat.labelKey}
+                                                            className={`w-9 h-9 rounded-lg flex items-center justify-center text-base ring-2 ring-white dark:ring-slate-800 ${c.icon}`}
+                                                        >
+                                                            {feat.icon}
+                                                        </span>
+                                                    ))}
                                                 <span
-                                                    className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-base ${c.icon}`}
+                                                    className={`w-9 h-9 rounded-lg flex items-center justify-center text-[11px] font-bold ring-2 ring-white dark:ring-slate-800 ${c.icon}`}
                                                 >
-                                                    {feat.icon}
+                                                    +{group.features.length - 5}
                                                 </span>
-                                                <div className='min-w-0'>
-                                                    <p className='text-sm font-semibold text-gray-800 dark:text-white leading-tight'>
-                                                        {t(feat.labelKey)}
-                                                    </p>
-                                                    <span
-                                                        className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                                                            feat.personal
-                                                                ? "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
-                                                                : "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-                                                        }`}
-                                                    >
-                                                        {feat.personal
-                                                            ? t(
-                                                                  "home.feature_personal",
+                                            </div>
+                                            <p className='min-w-0 flex-1 text-sm text-gray-600 dark:text-gray-300 leading-relaxed'>
+                                                {t(
+                                                    `${group.groupKey}_summary_d`,
+                                                )}
+                                            </p>
+                                            <span className='shrink-0 inline-flex items-center justify-center rounded-full bg-emerald-700 group-hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 text-center transition-colors'>
+                                                {t(`${group.groupKey}_cta`)}
+                                            </span>
+                                        </Link>
+                                    ) : (
+                                        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3'>
+                                            {group.features.map((feat) => (
+                                                <Link
+                                                    key={feat.labelKey}
+                                                    href={
+                                                        feat.personal
+                                                            ? buildRegisterHref(
+                                                                  feat.href,
                                                               )
-                                                            : t(
-                                                                  "home.feature_public",
-                                                              )}
+                                                            : feat.href
+                                                    }
+                                                    data-personal-href={
+                                                        feat.personal
+                                                            ? feat.href
+                                                            : undefined
+                                                    }
+                                                    className='group flex items-start gap-3 bg-white dark:bg-slate-800 rounded-xl p-4 border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-slate-500 hover:shadow-sm transition-all hover:-translate-y-0.5'
+                                                >
+                                                    <span
+                                                        className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-base ${c.icon}`}
+                                                    >
+                                                        {feat.icon}
                                                     </span>
-                                                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed'>
-                                                        {t(feat.descKey)}
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
+                                                    <div className='min-w-0'>
+                                                        <p className='text-sm font-semibold text-gray-800 dark:text-white leading-tight'>
+                                                            {t(feat.labelKey)}
+                                                        </p>
+                                                        <span
+                                                            className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                                                                feat.personal
+                                                                    ? "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                                                                    : "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                                            }`}
+                                                        >
+                                                            {feat.personal
+                                                                ? t(
+                                                                      "home.feature_personal",
+                                                                  )
+                                                                : t(
+                                                                      "home.feature_public",
+                                                                  )}
+                                                        </span>
+                                                        <p
+                                                            className={`text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed ${
+                                                                feat.keepDescMobile
+                                                                    ? ""
+                                                                    : "hidden md:block"
+                                                            }`}
+                                                        >
+                                                            {t(feat.descKey)}
+                                                        </p>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}

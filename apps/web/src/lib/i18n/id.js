@@ -423,6 +423,9 @@ const id = {
     "home.group.quran": "Al-Quran",
     "home.group.hadith": "Hadith",
     "home.group.tracker": "Ibadah & Tracker",
+    "home.group.tracker_summary_d":
+        "Lacak hafalan, tilawah, amalan harian, streak belajar, statistik pribadi, sholat, muhasabah, target belajar, dan notifikasi pengingat — semua dalam satu dashboard personal.",
+    "home.group.tracker_cta": "Daftar Gratis untuk Mulai Tracking",
     "home.group.konten": "Konten Islam",
     "home.group.tools": "Tools & Utilitas",
     "home.group.daily": "Ibadah Harian",
