@@ -90,6 +90,24 @@ type PushTokenStatusResponse struct {
 	ActiveCount int               `json:"active_count"`
 }
 
+// AdminPushTokenItem is the redacted, admin-facing view of a PushToken row —
+// it deliberately omits Token/KeyP256DH/KeyAuth so the raw push credentials
+// never reach the browser's network tab.
+type AdminPushTokenItem struct {
+	ID          *int      `json:"id"`
+	UserID      uuid.UUID `json:"user_id"`
+	UserName    string    `json:"user_name,omitempty"`
+	UserEmail   string    `json:"user_email,omitempty"`
+	Platform    string    `json:"platform"`
+	Provider    string    `json:"provider"`
+	DeviceID    string    `json:"device_id,omitempty"`
+	CityName    string    `json:"city_name,omitempty"`
+	Timezone    string    `json:"timezone,omitempty"`
+	IsActive    bool      `json:"is_active"`
+	LastSeenAt  time.Time `json:"last_seen_at"`
+	TokenSuffix string    `json:"token_suffix,omitempty"`
+}
+
 type PushTestResponse struct {
 	Message string `json:"message"`
 	Sent    int    `json:"sent"`

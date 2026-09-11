@@ -9,6 +9,7 @@ import {
     BsCheckCircle,
     BsExclamationTriangle,
 } from "react-icons/bs";
+import PushTokenList from "./PushTokenList";
 
 export default function AdminPushNotificationPage() {
     const { t } = useLocale();
@@ -166,6 +167,8 @@ export default function AdminPushNotificationPage() {
                     </button>
                 </div>
             </form>
+
+            <PushTokenList />
         </div>
     );
 }

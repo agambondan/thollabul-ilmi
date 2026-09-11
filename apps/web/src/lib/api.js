@@ -613,6 +613,12 @@ export const notificationApi = {
             method: "POST",
             body: JSON.stringify(data),
         }),
+    listAllPushTokens: () =>
+        authFetch("/api/v1/notifications/admin/push-tokens"),
+    deletePushToken: (id) =>
+        authFetch(`/api/v1/notifications/admin/push-tokens/${id}`, {
+            method: "DELETE",
+        }),
 };
 
 export const notesApi = {

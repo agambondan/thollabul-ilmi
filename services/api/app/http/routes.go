@@ -395,6 +395,8 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/notifications/push-token", jwt, newNotificationController.UnregisterPushToken)
 	master.Post("/notifications/push-test", jwt, newNotificationController.SendTestPush)
 	master.Post("/notifications/admin/broadcast", admin, newNotificationController.BroadcastPush)
+	master.Get("/notifications/admin/push-tokens", admin, newNotificationController.FindAllPushTokensAdmin)
+	master.Delete("/notifications/admin/push-tokens/:id", admin, newNotificationController.DeletePushTokenAdmin)
 	// Notification inbox
 	master.Get("/notifications/inbox", jwt, newNotificationInboxController.List)
 	master.Put("/notifications/inbox/read-all", jwt, newNotificationInboxController.MarkAllRead)

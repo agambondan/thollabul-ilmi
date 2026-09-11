@@ -15,9 +15,11 @@ type NotificationRepository interface {
 	UpsertPushToken(token model.PushToken) (model.PushToken, error)
 	FindActivePushTokens(userID uuid.UUID) ([]model.PushToken, error)
 	FindAllActivePushTokens() ([]model.PushToken, error)
+	FindAllPushTokens() ([]model.PushToken, error)
 	FindPushTokensByUser(userID uuid.UUID) ([]model.PushToken, error)
 	DeactivatePushToken(id int) error
 	DeactivatePushTokenByToken(userID uuid.UUID, token string) error
+	DeletePushToken(id int) error
 	FindDue(now time.Time) ([]model.NotificationSetting, error)
 	MarkSent(id int, sentAt time.Time) error
 }
@@ -104,6 +106,20 @@ func (r *notificationRepository) FindAllActivePushTokens() ([]model.PushToken, e
 		Limit(1000).
 		Find(&items).Error
 	return items, err
+}
+
+func (r *notificationRepository) FindAllPushTokens() ([]model.PushToken, error) {
+	var items []model.PushToken
+	err := r.db.
+		Preload("User").
+		Order("last_seen_at DESC").
+		Limit(500).
+		Find(&items).Error
+	return items, err
+}
+
+func (r *notificationRepository) DeletePushToken(id int) error {
+	return r.db.Delete(&model.PushToken{}, id).Error
 }
 
 func (r *notificationRepository) FindPushTokensByUser(userID uuid.UUID) ([]model.PushToken, error) {

@@ -24,6 +24,8 @@ type NotificationService interface {
 	SendTestPush(userID uuid.UUID) (model.PushTestResponse, error)
 	BroadcastPush(adminID uuid.UUID, req *model.BroadcastPushRequest) (model.BroadcastPushResponse, error)
 	UnregisterPushToken(userID uuid.UUID, token string) error
+	FindAllPushTokensAdmin() ([]model.AdminPushTokenItem, error)
+	DeletePushTokenAdmin(id int) error
 	DispatchDueReminders(now time.Time) (int, error)
 	DispatchDueAdzanPush(now time.Time) (int, error)
 	StartReminderScheduler(ctx context.Context, interval time.Duration)
@@ -47,6 +49,43 @@ func NewNotificationService(repo repository.NotificationRepository, inboxRepo re
 
 func (s *notificationService) FindSettings(userID uuid.UUID) ([]model.NotificationSetting, error) {
 	return s.repo.FindByUser(userID)
+}
+
+func (s *notificationService) FindAllPushTokensAdmin() ([]model.AdminPushTokenItem, error) {
+	tokens, err := s.repo.FindAllPushTokens()
+	if err != nil {
+		return nil, err
+	}
+
+	items := make([]model.AdminPushTokenItem, 0, len(tokens))
+	for _, token := range tokens {
+		item := model.AdminPushTokenItem{
+			ID:          token.ID,
+			UserID:      token.UserID,
+			Platform:    token.Platform,
+			Provider:    token.Provider,
+			DeviceID:    token.DeviceID,
+			CityName:    token.CityName,
+			Timezone:    token.Timezone,
+			IsActive:    token.IsActive,
+			LastSeenAt:  token.LastSeenAt,
+			TokenSuffix: tokenSuffix(token.Token),
+		}
+		if token.User != nil {
+			if token.User.Name != nil {
+				item.UserName = *token.User.Name
+			}
+			if token.User.Email != nil {
+				item.UserEmail = *token.User.Email
+			}
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+func (s *notificationService) DeletePushTokenAdmin(id int) error {
+	return s.repo.DeletePushToken(id)
 }
 
 func (s *notificationService) FindPushTokenStatus(userID uuid.UUID) (model.PushTokenStatusResponse, error) {

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	service "github.com/agambondan/islamic-explorer/app/services"
@@ -17,6 +19,8 @@ type NotificationController interface {
 	BroadcastPush(ctx *fiber.Ctx) error
 	GetVapidPublicKey(ctx *fiber.Ctx) error
 	UpsertSettings(ctx *fiber.Ctx) error
+	FindAllPushTokensAdmin(ctx *fiber.Ctx) error
+	DeletePushTokenAdmin(ctx *fiber.Ctx) error
 }
 
 type notificationController struct {
@@ -44,6 +48,38 @@ func (c *notificationController) FindSettings(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, items)
+}
+
+// @Summary List all registered push tokens (admin)
+// @Tags Admin
+// @Produce json
+// @Success 200 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /notifications/admin/push-tokens [get]
+func (c *notificationController) FindAllPushTokensAdmin(ctx *fiber.Ctx) error {
+	items, err := c.svc.FindAllPushTokensAdmin()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, items)
+}
+
+// @Summary Delete a registered push token (admin)
+// @Tags Admin
+// @Produce json
+// @Param id path int true "Push Token ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Router /notifications/admin/push-tokens/{id} [delete]
+func (c *notificationController) DeletePushTokenAdmin(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	if err := c.svc.DeletePushTokenAdmin(id); err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx)
 }
 
 // @Summary Get registered push tokens
