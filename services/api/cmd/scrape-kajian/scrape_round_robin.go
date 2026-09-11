@@ -153,7 +153,7 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 		return false
 	}
 
-	snippets, confirmedAbsent := fetchTranscript(video.VideoID, cookies)
+	snippets, confirmedAbsent, publishedAt := fetchTranscript(video.VideoID, cookies)
 	chunks := chunkTranscript(snippets, 60)
 	if onlyWithTranscript && len(chunks) == 0 {
 		if !confirmedAbsent {
@@ -179,6 +179,9 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 	delete(skipCache.Entries, video.VideoID)
 	cacheMu.Unlock()
 
+	if publishedAt == "" {
+		publishedAt = "2024-01-01"
+	}
 	item := KajianItem{
 		Title:        video.Title,
 		Speaker:      work.channel.Name,
@@ -189,7 +192,7 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 		Description:  fmt.Sprintf("Kajian oleh %s: %s", work.channel.Name, video.Title),
 		Duration:     video.Duration,
 		ThumbnailURL: video.ThumbnailURL,
-		PublishedAt:  "2024-01-01",
+		PublishedAt:  publishedAt,
 		Transcripts:  chunks,
 	}
 	work.mu.Lock()

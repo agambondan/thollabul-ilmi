@@ -426,10 +426,10 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 // means we simply don't know yet, and treating it as "confirmed absent"
 // would park a perfectly normal video in the skip-cache for
 // -skip-retry-days over what was really a connectivity blip.
-func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confirmedAbsent bool) {
+func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confirmedAbsent bool, publishedAt string) {
 	dir, err := os.MkdirTemp("", "kajian-caption-*")
 	if err != nil {
-		return nil, false
+		return nil, false, ""
 	}
 	defer os.RemoveAll(dir)
 
@@ -440,6 +440,12 @@ func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confir
 		"--sub-format", "vtt/best",
 		"--extractor-args", "youtube:player_client=android,ios,web",
 		"--no-warnings",
+		// This call already fetches the video once for its captions --
+		// --dump-json rides along on that same request to also pull the
+		// real upload date, instead of leaving every row on the
+		// "2024-01-01" placeholder or paying for a second yt-dlp call
+		// per video just for metadata.
+		"--dump-json",
 		"-o", stem,
 		"https://www.youtube.com/watch?v=" + videoID,
 	}
@@ -448,20 +454,50 @@ func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confir
 		args := append([]string{}, cookieArgs(cookies)...)
 		args = append(args, mode)
 		args = append(args, base...)
-		_, err := runCmdWithRetry(60*time.Second, 4, 15*time.Second, "yt-dlp", args...)
+		stdout, err := runCmdWithRetry(60*time.Second, 4, 15*time.Second, "yt-dlp", args...)
+		if publishedAt == "" {
+			publishedAt = parseUploadDate(stdout)
+		}
 		files, _ := filepath.Glob(filepath.Join(dir, "caption_tmp*.vtt"))
 		if len(files) > 0 {
 			// yt-dlp can exit non-zero after partially succeeding (e.g. one
 			// requested language 429s after another already downloaded) —
 			// a real transcript in hand always counts as success regardless
 			// of the exit code.
-			return dedupeRollingCaptions(parseVTT(pickVTT(files))), false
+			return dedupeRollingCaptions(parseVTT(pickVTT(files))), false, publishedAt
 		}
 		if err != nil {
 			sawFetchError = true
 		}
 	}
-	return nil, !sawFetchError
+	return nil, !sawFetchError, publishedAt
+}
+
+// parseUploadDate pulls "upload_date" (yt-dlp's YYYYMMDD) out of a
+// --dump-json response and reformats it as YYYY-MM-DD to match the
+// Kajian.PublishedAt column. Best-effort: returns "" on anything
+// unexpected rather than erroring, since the caption fetch itself already
+// succeeded or failed independently of this.
+func parseUploadDate(stdout []byte) string {
+	var payload struct {
+		UploadDate string `json:"upload_date"`
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(stdout))
+	// A video's full --dump-json line (every format/thumbnail/subtitle
+	// variant included) routinely runs past bufio.Scanner's 64KB default,
+	// which makes Scan() silently give up on the line entirely -- seen
+	// hitting ~550KB for a single video during testing.
+	scanner.Buffer(make([]byte, 0, 64*1024), 4*1024*1024)
+	for scanner.Scan() {
+		line := bytes.TrimSpace(scanner.Bytes())
+		if len(line) == 0 || line[0] != '{' {
+			continue
+		}
+		if err := json.Unmarshal(line, &payload); err == nil && len(payload.UploadDate) == 8 {
+			return payload.UploadDate[0:4] + "-" + payload.UploadDate[4:6] + "-" + payload.UploadDate[6:8]
+		}
+	}
+	return ""
 }
 
 func parseVTT(path string) []Snippet {
