@@ -58,6 +58,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
     const [isDesktop, setIsDesktop] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const splitRef = useRef(null);
+    const lastHandleMouseDownRef = useRef(0);
 
     useEffect(() => {
         const mql = window.matchMedia("(min-width: 1024px)");
@@ -512,9 +513,21 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                 {showPreview && (
                     <div
                         className='hidden select-none lg:flex lg:h-[calc(100vh-2rem)] lg:cursor-col-resize lg:items-stretch lg:justify-center lg:self-stretch lg:sticky lg:top-4'
-                        onDoubleClick={() => setPreviewPct(50)}
                         onMouseDown={(event) => {
                             event.preventDefault();
+                            // Detected manually (rather than a native
+                            // onDoubleClick) because the full-screen drag
+                            // overlay sits on top of this handle the instant
+                            // isDragging flips true, so the first click's
+                            // mouseup lands on the overlay and the browser
+                            // never pairs the two clicks into a dblclick.
+                            const now = Date.now();
+                            if (now - lastHandleMouseDownRef.current < 400) {
+                                lastHandleMouseDownRef.current = 0;
+                                setPreviewPct(50);
+                                return;
+                            }
+                            lastHandleMouseDownRef.current = now;
                             setIsDragging(true);
                         }}
                         title={
