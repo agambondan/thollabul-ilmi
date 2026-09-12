@@ -10,12 +10,34 @@ const (
 	KajianTypeText  KajianType = "text"
 )
 
+// KajianCategory groups a kajian by Islamic-knowledge domain, independent of
+// Topic (which is the scraped channel's free-text focus tags, one string per
+// ustadz — not a filterable taxonomy). Assigned automatically at seed time
+// from the video's title (see classifyKajianCategory in the migrations
+// package), so it is a coarse v1 grouping for browsing/filtering, not a
+// scholarly classification.
+type KajianCategory string
+
+const (
+	KajianAkidahTauhid      KajianCategory = "akidah_tauhid"
+	KajianTafsirQuran       KajianCategory = "tafsir_quran"
+	KajianHadisSunnah       KajianCategory = "hadis_sunnah"
+	KajianFikihIbadah       KajianCategory = "fikih_ibadah"
+	KajianFikihMuamalah     KajianCategory = "fikih_muamalah"
+	KajianAkhlakAdab        KajianCategory = "akhlak_adab"
+	KajianTazkiyatunNufus   KajianCategory = "tazkiyatun_nufus"
+	KajianSirahSejarah      KajianCategory = "sirah_sejarah"
+	KajianKeluargaParenting KajianCategory = "keluarga_parenting"
+	KajianUmum              KajianCategory = "umum"
+)
+
 type Kajian struct {
 	BaseID
 	Title       string `json:"title" gorm:"type:varchar(512);not null;index:idx_kajian_title_speaker_published"`
 	Description string `json:"description" gorm:"type:text"`
 	Speaker     string `json:"speaker" gorm:"type:varchar(256);index;index:idx_kajian_title_speaker_published"`
 	Topic       string `json:"topic" gorm:"type:varchar(256);index"`
+	Category    KajianCategory `json:"category" gorm:"type:varchar(50);not null;default:'umum';index"`
 	Type        KajianType `json:"type" gorm:"type:varchar(20);not null;default:'video'"`
 	URL         string     `json:"url" gorm:"type:varchar(1024)"`
 	// The true identity of a video — title alone is not reliable, since
@@ -105,13 +127,14 @@ type SearchTranscriptMeta struct {
 }
 
 type CreateKajianRequest struct {
-	Title        string     `json:"title" validate:"required"`
-	Description  string     `json:"description"`
-	Speaker      string     `json:"speaker"`
-	Topic        string     `json:"topic"`
-	Type         KajianType `json:"type" validate:"required,oneof=video audio text"`
-	URL          string     `json:"url"`
-	Duration     int        `json:"duration_seconds"`
-	ThumbnailURL string     `json:"thumbnail_url"`
-	PublishedAt  string     `json:"published_at"`
+	Title        string         `json:"title" validate:"required"`
+	Description  string         `json:"description"`
+	Speaker      string         `json:"speaker"`
+	Topic        string         `json:"topic"`
+	Category     KajianCategory `json:"category"`
+	Type         KajianType     `json:"type" validate:"required,oneof=video audio text"`
+	URL          string         `json:"url"`
+	Duration     int            `json:"duration_seconds"`
+	ThumbnailURL string         `json:"thumbnail_url"`
+	PublishedAt  string         `json:"published_at"`
 }

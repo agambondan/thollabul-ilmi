@@ -13,7 +13,7 @@ import (
 )
 
 type KajianRepository interface {
-	FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page
+	FindAll(ctx *fiber.Ctx, topic, kajianType, speaker, category string) *paginate.Page
 	FindByID(id int) (*model.Kajian, error)
 	Create(k *model.Kajian) (*model.Kajian, error)
 	Update(id int, k *model.Kajian) (*model.Kajian, error)
@@ -21,6 +21,7 @@ type KajianRepository interface {
 	IncrementView(id int) error
 	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, model.SearchTranscriptMeta, error)
 	GetSpeakers() ([]string, error)
+	GetCategories() ([]string, error)
 	GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error)
 }
 
@@ -61,7 +62,7 @@ type searchTranscriptRow struct {
 	MatchedGroups int
 }
 
-func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page {
+func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker, category string) *paginate.Page {
 	var list []model.Kajian
 	q := r.db.Model(&model.Kajian{}).Preload("Translation").Order("published_at DESC, id DESC")
 	likeOp := "ILIKE"
@@ -73,6 +74,9 @@ func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker st
 	}
 	if kajianType != "" {
 		q = q.Where("type = ?", kajianType)
+	}
+	if category != "" {
+		q = q.Where("category = ?", category)
 	}
 	if speaker != "" {
 		parts := strings.Split(speaker, "||")
@@ -130,6 +134,15 @@ func (r *kajianRepository) GetSpeakers() ([]string, error) {
 		Distinct("speaker").
 		Pluck("speaker", &speakers).Error
 	return speakers, err
+}
+
+func (r *kajianRepository) GetCategories() ([]string, error) {
+	var categories []string
+	err := r.db.Model(&model.Kajian{}).
+		Where("category IS NOT NULL AND category != ''").
+		Distinct("category").
+		Pluck("category", &categories).Error
+	return categories, err
 }
 
 // ── Transcript search ─────────────────────────────────────────────────────────

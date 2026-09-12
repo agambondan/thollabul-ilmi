@@ -634,6 +634,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/kajian", newKajianController.FindAll)
 	master.Get("/kajian/search", newKajianController.SearchTranscripts)
 	master.Get("/kajian/speakers", newKajianController.GetSpeakers)
+	master.Get("/kajian/categories", newKajianController.GetCategories)
 	master.Get("/kajian/:id/transcripts", newKajianController.GetTranscripts)
 	master.Get("/kajian/:id", newKajianController.FindByID)
 	master.Post("/kajian", middlewares.EditorOrAdminMiddleware(), newKajianController.Create)

@@ -17,6 +17,7 @@ type KajianController interface {
 	Delete(ctx *fiber.Ctx) error
 	SearchTranscripts(ctx *fiber.Ctx) error
 	GetSpeakers(ctx *fiber.Ctx) error
+	GetCategories(ctx *fiber.Ctx) error
 	GetTranscripts(ctx *fiber.Ctx) error
 }
 
@@ -35,6 +36,7 @@ func NewKajianController(services *service.Services) KajianController {
 // @Param topic query string false "Filter by topic"
 // @Param type query string false "Filter by type"
 // @Param speaker query string false "Filter by speaker"
+// @Param category query string false "Filter by category"
 // @Param page query int false "Page number"
 // @Param size query int false "Page size"
 // @Success 200 {object} lib.Response
@@ -44,7 +46,8 @@ func (c *kajianController) FindAll(ctx *fiber.Ctx) error {
 	topic := ctx.Query("topic")
 	kajianType := ctx.Query("type")
 	speaker := ctx.Query("speaker")
-	page := c.svc.FindAll(ctx, topic, kajianType, speaker)
+	category := ctx.Query("category")
+	page := c.svc.FindAll(ctx, topic, kajianType, speaker, category)
 	lang := lib.GetPreferredLang(ctx)
 	lib.ApplyToPageItems(page, func(k *model.Kajian) {
 		if k.Translation != nil {
@@ -205,6 +208,21 @@ func (c *kajianController) GetSpeakers(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, speakers)
+}
+
+// @Summary Get distinct kajian categories in use
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Success 200 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /kajian/categories [get]
+func (c *kajianController) GetCategories(ctx *fiber.Ctx) error {
+	categories, err := c.svc.GetCategories()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, categories)
 }
 
 // @Summary Get full transcripts for a specific kajian

@@ -24,7 +24,9 @@ import {
 } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
-const CATEGORIES = [
+// Quick-pick values for the free-text `topic` field (channel focus tags) —
+// not the same as the real `category` enum below.
+const TOPIC_QUICK_OPTIONS = [
     "aqidah",
     "fiqh",
     "akhlak",
@@ -32,6 +34,19 @@ const CATEGORIES = [
     "hadits",
     "sirah",
     "tahsin",
+    "umum",
+];
+// Mirrors model.KajianCategory in services/api/app/model/kajian.go.
+const CATEGORIES = [
+    "akidah_tauhid",
+    "tafsir_quran",
+    "hadis_sunnah",
+    "fikih_ibadah",
+    "fikih_muamalah",
+    "akhlak_adab",
+    "tazkiyatun_nufus",
+    "sirah_sejarah",
+    "keluarga_parenting",
     "umum",
 ];
 const TYPES = ["video", "audio", "text"];
@@ -103,6 +118,7 @@ const EMPTY_FORM = {
     title: "",
     speaker: "",
     topic: "umum",
+    category: "umum",
     type: "video",
     url: "",
     duration_seconds: "",
@@ -121,6 +137,7 @@ const AdminStudiesPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [topicFilters, setTopicFilters] = useState([]);
+    const [categoryFilters, setCategoryFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
@@ -155,7 +172,8 @@ const AdminStudiesPage = () => {
         setForm({
             title: item.title ?? "",
             speaker: item.speaker ?? item.ustadz ?? "",
-            topic: item.topic ?? item.category ?? "umum",
+            topic: item.topic ?? "umum",
+            category: item.category ?? "umum",
             type: item.type ?? "video",
             url: item.url ?? "",
             duration_seconds: item.duration_seconds ?? item.duration ?? "",
@@ -181,6 +199,7 @@ const AdminStudiesPage = () => {
                 title: form.title,
                 speaker: form.speaker,
                 topic: form.topic,
+                category: form.category,
                 type: form.type,
                 url: form.url,
                 duration_seconds: parseDurationSeconds(form.duration_seconds),
@@ -244,6 +263,15 @@ const AdminStudiesPage = () => {
             .map((value) => ({ value, label: value }));
     }, [items]);
 
+    const categoryOptions = useMemo(
+        () =>
+            CATEGORIES.map((value) => ({
+                value,
+                label: t(`admin.kajian.category_${value}`),
+            })),
+        [t],
+    );
+
     const filtered = items.filter((i) => {
         const q = search.toLowerCase();
         const matchesSearch =
@@ -256,7 +284,10 @@ const AdminStudiesPage = () => {
         const matchesTopic =
             topicFilters.length === 0 ||
             topicFilters.some((segment) => i.topic?.includes(segment));
-        return matchesSearch && matchesTopic;
+        const matchesCategory =
+            categoryFilters.length === 0 ||
+            categoryFilters.includes(i.category ?? "umum");
+        return matchesSearch && matchesTopic && matchesCategory;
     });
 
     const sorted = applySort(filtered, sort, {
@@ -265,6 +296,8 @@ const AdminStudiesPage = () => {
                 getLocalizedField(b, "title", lang) ?? "",
             ),
         topic: (a, b) => (a.topic ?? "").localeCompare(b.topic ?? ""),
+        category: (a, b) =>
+            (a.category ?? "").localeCompare(b.category ?? ""),
     });
 
     const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
@@ -307,6 +340,15 @@ const AdminStudiesPage = () => {
                 />
                 <PanelFilterCheckboxGroup
                     label={t("admin.field.category")}
+                    selected={categoryFilters}
+                    onChange={(values) => {
+                        setCategoryFilters(values);
+                        setPage(1);
+                    }}
+                    options={categoryOptions}
+                />
+                <PanelFilterCheckboxGroup
+                    label={t("admin.field.topic")}
                     selected={topicFilters}
                     onChange={(values) => {
                         setTopicFilters(values);
@@ -417,9 +459,14 @@ const AdminStudiesPage = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className='flex items-center gap-2 mb-1'>
+                                <div className='flex flex-wrap items-center gap-2 mb-1'>
                                     <span className='px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs capitalize'>
                                         {item.type ?? "-"}
+                                    </span>
+                                    <span className='px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded text-xs'>
+                                        {t(
+                                            `admin.kajian.category_${item.category ?? "umum"}`,
+                                        )}
                                     </span>
                                     <span className='text-xs text-gray-500 dark:text-gray-400 capitalize'>
                                         {item.topic}
@@ -452,6 +499,16 @@ const AdminStudiesPage = () => {
                                     </Th>
                                     <Th className='w-24'>Tipe</Th>
                                     <Th
+                                        className='w-32 hidden lg:table-cell'
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.category")}
+                                    </Th>
+                                    <Th
                                         className='w-24 hidden lg:table-cell'
                                         sortKey='topic'
                                         activeSort={sort}
@@ -459,7 +516,7 @@ const AdminStudiesPage = () => {
                                             setSort((s) => toggleSort(s, key))
                                         }
                                     >
-                                        {t("admin.field.category")}
+                                        {t("admin.field.topic")}
                                     </Th>
                                     <Th className='w-24'></Th>
                                 </>
@@ -505,6 +562,13 @@ const AdminStudiesPage = () => {
                                     <Td>
                                         <span className='px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs capitalize'>
                                             {item.type ?? "-"}
+                                        </span>
+                                    </Td>
+                                    <Td className='text-gray-500 dark:text-gray-400 hidden lg:table-cell'>
+                                        <span className='px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded text-xs'>
+                                            {t(
+                                                `admin.kajian.category_${item.category ?? "umum"}`,
+                                            )}
                                         </span>
                                     </Td>
                                     <Td className='text-gray-500 dark:text-gray-400 hidden lg:table-cell capitalize'>
@@ -671,22 +735,47 @@ const AdminStudiesPage = () => {
                                 </label>
                                 <select
                                     id='page-category'
-                                    value={form.topic}
+                                    value={form.category}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            topic: e.target.value,
+                                            category: e.target.value,
                                         })
                                     }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 >
                                     {CATEGORIES.map((c) => (
                                         <option key={c} value={c}>
-                                            {c}
+                                            {t(`admin.kajian.category_${c}`)}
                                         </option>
                                     ))}
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-topic'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.field.topic")}
+                            </label>
+                            <select
+                                id='page-topic'
+                                value={form.topic}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        topic: e.target.value,
+                                    })
+                                }
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            >
+                                {TOPIC_QUICK_OPTIONS.map((c) => (
+                                    <option key={c} value={c}>
+                                        {c}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div>
                             <label

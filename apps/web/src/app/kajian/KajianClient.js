@@ -49,45 +49,32 @@ const getYouTubeId = (url) => {
     return m ? m[1] : null;
 };
 
+// Mirrors model.KajianCategory in services/api/app/model/kajian.go, seeded
+// automatically per video (see classifyKajianCategory). "semua" isn't a real
+// backend value -- it means "no category filter", i.e. omit the param.
 const CATEGORIES = [
     { key: "semua", labelKey: "common.all" },
-    { key: "aqidah", labelKey: "kajian.category_aqidah" },
-    { key: "fiqh", labelKey: "kajian.category_fiqh" },
-    { key: "tazkiyah", labelKey: "kajian.category_tazkiyah" },
-    { key: "sirah", labelKey: "kajian.category_sirah" },
-    { key: "tafsir", labelKey: "kajian.category_tafsir" },
-    { key: "hadith", labelKey: "kajian.category_hadith" },
-    { key: "lainnya", labelKey: "kajian.category_lainnya" },
+    { key: "akidah_tauhid", labelKey: "kajian.category_akidah_tauhid" },
+    { key: "tafsir_quran", labelKey: "kajian.category_tafsir_quran" },
+    { key: "hadis_sunnah", labelKey: "kajian.category_hadis_sunnah" },
+    { key: "fikih_ibadah", labelKey: "kajian.category_fikih_ibadah" },
+    { key: "fikih_muamalah", labelKey: "kajian.category_fikih_muamalah" },
+    { key: "akhlak_adab", labelKey: "kajian.category_akhlak_adab" },
+    {
+        key: "tazkiyatun_nufus",
+        labelKey: "kajian.category_tazkiyatun_nufus",
+    },
+    { key: "sirah_sejarah", labelKey: "kajian.category_sirah_sejarah" },
+    {
+        key: "keluarga_parenting",
+        labelKey: "kajian.category_keluarga_parenting",
+    },
+    { key: "umum", labelKey: "kajian.category_umum" },
 ];
 
-// The API's `topic` field is a free-text, comma-separated description (e.g.
-// "Fikih muamalah dasar, Fikih ibadah harian, Konsultasi fatwa syariah
-// praktis"), not a fixed taxonomy — there is no `category` field. These
-// keyword patterns map each fixed category chip onto that free text so the
-// filter actually narrows results instead of always matching zero.
-const CATEGORY_KEYWORDS = {
-    aqidah: /akidah|aqidah|tauhid|manhaj/i,
-    fiqh: /fikih|fiqih|fiqh|fatwa|muamalah/i,
-    tazkiyah: /tazkiyah|tazkiyatun|akhlak|adab|nasihat/i,
-    sirah: /sirah/i,
-    tafsir: /tafsir|qur.?an|tahsin|tartil/i,
-    hadith: /hadit|hadith|bukhari|muslim|syarah/i,
-};
-
-const matchesCategory = (topic, categoryKey) => {
+const matchesCategory = (category, categoryKey) => {
     if (categoryKey === "semua") return true;
-    if (categoryKey === "lainnya") {
-        // Catch-all: topics that don't hit any of the specific keyword
-        // patterns above (mostly regional/logistics descriptions like
-        // "Jadwal live streaming kajian masjid ...") still need a home,
-        // otherwise they'd be invisible under every specific filter chip.
-        return !Object.values(CATEGORY_KEYWORDS).some((pattern) =>
-            topic ? pattern.test(topic) : false,
-        );
-    }
-    if (!topic) return false;
-    const pattern = CATEGORY_KEYWORDS[categoryKey];
-    return pattern ? pattern.test(topic) : false;
+    return (category || "umum") === categoryKey;
 };
 
 export default function KajianClient({
@@ -95,6 +82,7 @@ export default function KajianClient({
     initialTotal = 0,
     initialTab = "list",
     initialQuery = "",
+    initialCategory = "semua",
 }) {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
@@ -107,7 +95,7 @@ export default function KajianClient({
     const [hasMore, setHasMore] = useState(
         initialKajian.length < (initialTotal || initialKajian.length),
     );
-    const [activeCategory, setActiveCategory] = useState("semua");
+    const [activeCategory, setActiveCategory] = useState(initialCategory);
     const [search, setSearch] = useState("");
     const [selectedSpeakers, setSelectedSpeakers] = useState([]);
     const [playingKajian, setPlayingKajian] = useState(null);
@@ -147,10 +135,19 @@ export default function KajianClient({
     }, []);
 
     useEffect(() => {
-        if (selectedSpeakers.length === 0 && !ustadzFetchedRef.current) return;
+        // The very first render already has SSR-provided data matching the
+        // initial filters (no speaker, initialCategory), so skip re-fetching
+        // that same page again on mount.
+        if (
+            selectedSpeakers.length === 0 &&
+            activeCategory === initialCategory &&
+            !ustadzFetchedRef.current
+        ) {
+            return;
+        }
         ustadzFetchedRef.current = true;
         let cancelled = false;
-        const fetchBySpeaker = async () => {
+        const fetchFiltered = async () => {
             setLoadingMore(true);
             try {
                 const apiUrl =
@@ -159,6 +156,9 @@ export default function KajianClient({
                 const params = new URLSearchParams({ page: "0", size: "12" });
                 if (selectedSpeakers.length > 0) {
                     params.set("speaker", selectedSpeakers.join("||"));
+                }
+                if (activeCategory !== "semua") {
+                    params.set("category", activeCategory);
                 }
                 const res = await fetch(
                     `${apiUrl}/api/v1/kajian?${params.toString()}`,
@@ -180,11 +180,14 @@ export default function KajianClient({
                 if (!cancelled) setLoadingMore(false);
             }
         };
-        fetchBySpeaker();
+        fetchFiltered();
         return () => {
             cancelled = true;
         };
-    }, [selectedSpeakers]);
+        // initialCategory only matters for the one-time mount check above,
+        // not as a re-fetch trigger -- it can't change after mount.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedSpeakers, activeCategory]);
 
     const loadMore = async () => {
         if (loadingMore || !hasMore) return;
@@ -200,6 +203,9 @@ export default function KajianClient({
             });
             if (selectedSpeakers.length > 0) {
                 params.set("speaker", selectedSpeakers.join("||"));
+            }
+            if (activeCategory !== "semua") {
+                params.set("category", activeCategory);
             }
             const res = await fetch(
                 `${apiUrl}/api/v1/kajian?${params.toString()}`,
@@ -359,7 +365,7 @@ export default function KajianClient({
     const filtered = useMemo(
         () =>
             kajian.filter((k) => {
-                if (!matchesCategory(k.topic, activeCategory)) {
+                if (!matchesCategory(k.category, activeCategory)) {
                     return false;
                 }
                 if (
@@ -389,12 +395,14 @@ export default function KajianClient({
     // total — not `kajian.length`, which is only however many pages have
     // been loaded into this client so far.
     const youtubeCount = totalKajian;
+    // A fixed, known set of categories (see model.KajianCategory) — every one
+    // of them has content, so this is just the option count, not something
+    // that needs to be derived from whatever page of `kajian` happens to be
+    // loaded (which, once a category filter is active, only ever contains
+    // that one category anyway).
     const categoryCount = useMemo(
-        () =>
-            CATEGORIES.filter((c) => c.key !== "semua").filter((c) =>
-                kajian.some((item) => matchesCategory(item.topic, c.key)),
-            ).length,
-        [kajian],
+        () => CATEGORIES.length - 1,
+        [],
     );
     const ustadzOptions = useMemo(() => {
         if (speakers.length > 0) return speakers;
@@ -536,7 +544,7 @@ export default function KajianClient({
                     selectedSpeakers={selectedSpeakers}
                     setSelectedSpeakers={setSelectedSpeakers}
                     ustadzOptions={ustadzOptions}
-                    hasMore={hasMore && !search && activeCategory === "semua"}
+                    hasMore={hasMore && !search}
                     loadingMore={loadingMore}
                     onLoadMore={loadMore}
                     onPlay={setPlayingKajian}

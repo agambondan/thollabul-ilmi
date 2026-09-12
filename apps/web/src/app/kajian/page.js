@@ -9,9 +9,13 @@ const API_URL =
     process.env.NEXT_PUBLIC_API_URL ||
     "https://api-thollabul.jangkauin.site";
 
-async function getInitialData() {
+async function getInitialData(category) {
     try {
-        const res = await fetch(`${API_URL}/api/v1/kajian?page=0&size=10`, {
+        const params = new URLSearchParams({ page: "0", size: "10" });
+        if (category && category !== "semua") {
+            params.set("category", category);
+        }
+        const res = await fetch(`${API_URL}/api/v1/kajian?${params}`, {
             next: { revalidate: 3600 },
         });
         if (!res.ok) return { items: [], total: 0 };
@@ -29,7 +33,8 @@ export default async function KajianPage(props) {
     const searchParams = await props.searchParams;
     const tab = searchParams?.tab || (searchParams?.q ? "transcript" : "list");
     const q = searchParams?.q || "";
-    const { items, total } = await getInitialData();
+    const category = searchParams?.category || "semua";
+    const { items, total } = await getInitialData(category);
 
     return (
         <main className='min-h-screen flex flex-col'>
@@ -39,6 +44,7 @@ export default async function KajianPage(props) {
                     initialTotal={total}
                     initialTab={tab}
                     initialQuery={q}
+                    initialCategory={category}
                 />
             </Section>
         </main>

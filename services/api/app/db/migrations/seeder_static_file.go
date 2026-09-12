@@ -616,10 +616,12 @@ func seedKajianFromFile(db *gorm.DB) {
 		if published == "" {
 			published = "2024-01-01"
 		}
+		category := classifyKajianCategory(r.Title, r.Topic)
 		item := model.Kajian{
 			Title:        r.Title,
 			Speaker:      r.Speaker,
 			Topic:        r.Topic,
+			Category:     category,
 			Type:         model.KajianType(r.Type),
 			URL:          r.URL,
 			VideoID:      r.VideoID,
@@ -653,6 +655,7 @@ func seedKajianFromFile(db *gorm.DB) {
 				"title":         r.Title,
 				"speaker":       r.Speaker,
 				"topic":         r.Topic,
+				"category":      category,
 				"type":          model.KajianType(r.Type),
 				"url":           r.URL,
 				"video_id":      r.VideoID,

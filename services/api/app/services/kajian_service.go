@@ -9,7 +9,7 @@ import (
 )
 
 type KajianService interface {
-	FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page
+	FindAll(ctx *fiber.Ctx, topic, kajianType, speaker, category string) *paginate.Page
 	FindByID(id int) (*model.Kajian, error)
 	Create(req *model.CreateKajianRequest) (*model.Kajian, error)
 	Update(id int, req *model.CreateKajianRequest) (*model.Kajian, error)
@@ -17,6 +17,7 @@ type KajianService interface {
 	IncrementView(id int)
 	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, model.SearchTranscriptMeta, error)
 	GetSpeakers() ([]string, error)
+	GetCategories() ([]string, error)
 	GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error)
 }
 
@@ -33,17 +34,17 @@ func NewKajianServiceWithCache(repo repository.KajianRepository, cache *lib.Cach
 	return &kajianService{repo: repo, cache: cache}
 }
 
-func (s *kajianService) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page {
+func (s *kajianService) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker, category string) *paginate.Page {
 	if s.cache == nil {
-		return s.repo.FindAll(ctx, topic, kajianType, speaker)
+		return s.repo.FindAll(ctx, topic, kajianType, speaker, category)
 	}
 	var result *paginate.Page
 	key := lib.RequestCacheKey("kajian:all", ctx)
 	err := s.cache.Remember(key, &result, func() (interface{}, error) {
-		return s.repo.FindAll(ctx, topic, kajianType, speaker), nil
+		return s.repo.FindAll(ctx, topic, kajianType, speaker, category), nil
 	})
 	if err != nil {
-		return s.repo.FindAll(ctx, topic, kajianType, speaker)
+		return s.repo.FindAll(ctx, topic, kajianType, speaker, category)
 	}
 	return result
 }
@@ -58,6 +59,7 @@ func (s *kajianService) Create(req *model.CreateKajianRequest) (*model.Kajian, e
 		Description:  req.Description,
 		Speaker:      req.Speaker,
 		Topic:        req.Topic,
+		Category:     req.Category,
 		Type:         req.Type,
 		URL:          req.URL,
 		Duration:     req.Duration,
@@ -77,6 +79,7 @@ func (s *kajianService) Update(id int, req *model.CreateKajianRequest) (*model.K
 		Description:  req.Description,
 		Speaker:      req.Speaker,
 		Topic:        req.Topic,
+		Category:     req.Category,
 		Type:         req.Type,
 		URL:          req.URL,
 		Duration:     req.Duration,
@@ -108,6 +111,10 @@ func (s *kajianService) SearchTranscripts(query, speaker, mode string, limit, of
 
 func (s *kajianService) GetSpeakers() ([]string, error) {
 	return s.repo.GetSpeakers()
+}
+
+func (s *kajianService) GetCategories() ([]string, error) {
+	return s.repo.GetCategories()
 }
 
 func (s *kajianService) GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error) {
