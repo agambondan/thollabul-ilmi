@@ -133,6 +133,7 @@ const buildLayout = (context, blocks, maxWidth, styles) => {
         wrapped.forEach((value, rowIndex) => {
             rows.push({
                 value,
+                role: block.role,
                 font: style.font,
                 direction: style.direction,
                 color: style.color,
@@ -148,22 +149,46 @@ const buildLayout = (context, blocks, maxWidth, styles) => {
     return { rows, totalHeight };
 };
 
+// Saat konten kepanjangan (mis. hadis dengan riwayat Arab yang sangat panjang),
+// prioritaskan menjaga sitasi/link (meta) dan terjemahan (latin) tetap utuh.
+// Blok Arab dipotong lebih dulu karena pembacanya masih bisa buka link ke
+// halaman aslinya, sedangkan sitasi & terjemahan adalah inti dari gambar share.
+const CLIP_ROLE_PRIORITY = ["meta", "latin", "arabic"];
+
 const clipRows = (rows, availableHeight) => {
-    const kept = [];
+    if (!rows.length) return rows;
+
+    const rowsByRole = { meta: [], latin: [], arabic: [] };
+    rows.forEach((row) => {
+        (rowsByRole[row.role] ?? rowsByRole.latin).push(row);
+    });
+
+    const kept = new Set();
+    const truncatedAt = new Map();
     let used = 0;
 
-    for (const row of rows) {
-        if (used + row.lineHeight > availableHeight) break;
-        kept.push(row);
-        used += row.lineHeight + row.gapAfter;
+    for (const role of CLIP_ROLE_PRIORITY) {
+        const roleRows = rowsByRole[role];
+        for (let i = 0; i < roleRows.length; i++) {
+            const row = roleRows[i];
+            if (used + row.lineHeight > availableHeight) {
+                if (i > 0) truncatedAt.set(role, roleRows[i - 1]);
+                break;
+            }
+            kept.add(row);
+            used += row.lineHeight + row.gapAfter;
+        }
     }
 
-    if (kept.length && kept.length < rows.length) {
-        const last = kept[kept.length - 1];
-        kept[kept.length - 1] = { ...last, value: `${last.value} …` };
-    }
+    if (kept.size === rows.length) return rows;
 
-    return kept;
+    return rows
+        .filter((row) => kept.has(row))
+        .map((row) =>
+            truncatedAt.get(row.role) === row
+                ? { ...row, value: `${row.value} …` }
+                : row,
+        );
 };
 
 /**
