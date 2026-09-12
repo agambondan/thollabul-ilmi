@@ -1311,7 +1311,9 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                     displayedTranscripts.map((chunk, idx) => {
                                         const isCurrent =
                                             transcripts.indexOf(chunk) === activeIndex;
-                                        const isBookmarked = bookmarked.has(chunk.id);
+                                        const isBookmarked = bookmarked.has(
+                                            chunk.start_seconds,
+                                        );
                                         return (
                                             <div
                                                 key={chunk.id || idx}
@@ -1329,7 +1331,9 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                                     type='button'
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        toggleBookmark(chunk.id);
+                                                        toggleBookmark(
+                                                            chunk.start_seconds,
+                                                        );
                                                     }}
                                                     className={`shrink-0 text-sm transition-opacity ${
                                                         isBookmarked

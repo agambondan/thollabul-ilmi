@@ -84,6 +84,29 @@ LFS commands needed for a routine content update.
 - **The Kajian hybrid/semantic search takes several seconds** (server-side
   embedding rerank over the full transcript corpus) — don't cut the wait
   short after typing a query or you'll screenshot/record a loading skeleton.
+- **The share-image flow needs time to actually show its confirmation
+  label, and its clipboard step needs permission granted up front.**
+  Clicking a background thumbnail builds a canvas (loads the font +
+  background image, then draws the ayah text) before it can share/copy it.
+  Both scripts call `context.grantPermissions(['clipboard-read',
+  'clipboard-write'])` right after creating the browser context - without
+  it, headless Chromium has no clipboard access and the flow falls through
+  to its worst-case fallback, a red "Clipboard tidak didukung. Gambar
+  diunduh." error, instead of the intended "Gambar tersalin ke clipboard!"
+  success label. Even with the permission granted, don't assume which one
+  you'll get - both scripts wait for text matching `/tersalin|diunduh|Gagal/i`
+  (instead of a blind fixed pause) before closing the modal, so the
+  recording shows whichever label actually renders rather than cutting away
+  while the canvas is still being generated.
+- **Kajian's transcript bookmark is per-sentence, not per-video, and lives
+  in `localStorage`, not the account.** It can only be created from inside
+  the video player (the ⚪ icon next to a transcript line, which turns into
+  🔖 once bookmarked, title `Tambah bookmark`/`Hapus bookmark`) — the "🔖
+  Bookmark" tab itself is read-only, it just lists what's already saved,
+  grouped per video, with a jump-to-timestamp link. Since it's
+  `localStorage`-scoped, it only shows up in the same browser/device that
+  created it (irrelevant here since the whole recording runs in one
+  browser context, but worth knowing if you ever check it manually).
 - Both scripts are resilient to transient production flakiness (popups
   appearing at slightly different times, etc.) but not infinitely so — if a
   run fails partway through, it's almost always safe to just re-run it.

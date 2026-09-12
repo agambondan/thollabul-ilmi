@@ -88,6 +88,11 @@ async function closeAnyModal(page) {
     viewport: { width: 1600, height: 900 },
     recordVideo: { dir: OUT_DIR, size: { width: 1600, height: 900 } },
   });
+  // Without this, the ayah share-image flow's clipboard-copy path fails in
+  // headless Chromium (no clipboard permission granted by default) and
+  // falls back to a "Clipboard tidak didukung. Gambar diunduh." error
+  // instead of the nicer "Gambar tersalin ke clipboard!" success label.
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   const page = await context.newPage();
   const nav = page.getByRole('navigation').first();
   const scrollToTop = () => page.evaluate(() => window.scrollTo(0, 0));
@@ -241,7 +246,19 @@ async function closeAnyModal(page) {
   await page.waitForTimeout(2200);
   const bgThumb = page.locator('text=Pilih Gambar Latar').locator('xpath=following::img[1]');
   await bgThumb.click({ force: true }).catch(() => {});
-  await page.waitForTimeout(1200);
+  // Wait for whatever confirmation/error label the canvas-generation flow
+  // ends up showing (canvas build + share/clipboard/download fallback takes
+  // a beat) instead of a blind fixed pause. Headless Chromium usually can't
+  // use the OS share sheet or Clipboard-image API, so this often lands on
+  // the "Clipboard tidak didukung. Gambar diunduh." download fallback
+  // rather than "tersalin" - match either so the recording doesn't cut away
+  // before whichever label actually renders.
+  await page
+    .getByText(/tersalin|diunduh|Gagal/i)
+    .first()
+    .waitFor({ state: 'visible', timeout: 8000 })
+    .catch(() => {});
+  await page.waitForTimeout(1500);
   await page.keyboard.press('Escape').catch(() => {});
   await page.waitForTimeout(800);
 
@@ -365,6 +382,25 @@ async function closeAnyModal(page) {
   if (await playResult.isVisible().catch(() => false)) {
     await playResult.click();
     await page.waitForTimeout(2400);
+
+    // Bookmark per-kalimat transkrip (⚪ -> 🔖) di dalam player - beda dari
+    // bookmark ayat/hadis: ini disimpan di localStorage, bukan di akun, dan
+    // cuma bisa dibuat dari sini, bukan dari tab "🔖 Bookmark" itu sendiri
+    // (tab itu cuma menampilkan yang sudah kesimpan). The transcript panel
+    // fetches its own data after the player opens, so wait for the button
+    // to actually render instead of a fixed 2.4s pause - a quick
+    // isVisible() check right after click() can miss it while the
+    // transcript list is still loading, silently skipping the whole step.
+    const transcriptBookmarkBtn = page.getByTitle(/Tambah bookmark/).first();
+    const gotBookmarkBtn = await transcriptBookmarkBtn
+      .waitFor({ state: 'visible', timeout: 8000 })
+      .then(() => true)
+      .catch(() => false);
+    if (gotBookmarkBtn) {
+      await transcriptBookmarkBtn.click();
+      await page.waitForTimeout(1400);
+    }
+
     const catatMomen = page.getByText('+ Catat Momen');
     if (await catatMomen.isVisible().catch(() => false)) {
       await catatMomen.click();
@@ -387,6 +423,8 @@ async function closeAnyModal(page) {
 
   await page.getByRole('button', { name: '🔖 Bookmark', exact: true }).click();
   await page.waitForTimeout(1800);
+  await smoothScroll(page, 400, 4, 260);
+  await page.waitForTimeout(1200);
 
   // 7. Closing
   await page.goto(BASE + '/', { waitUntil: 'load' });
