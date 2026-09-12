@@ -90,7 +90,7 @@ export const PanelTable = ({
 export const Th = ({ children, className, align = "left" }) => (
     <th
         className={classNames(
-            "px-4 py-3 font-medium text-gray-600 dark:text-gray-300",
+            "px-5 py-3.5 font-medium text-gray-600 dark:text-gray-300 whitespace-nowrap",
             align === "left" && "text-left",
             align === "right" && "text-right",
             align === "center" && "text-center",
@@ -102,7 +102,10 @@ export const Th = ({ children, className, align = "left" }) => (
 );
 
 export const Td = ({ children, className, ...rest }) => (
-    <td className={classNames("px-4 py-3", className)} {...rest}>
+    <td
+        className={classNames("px-5 py-4 leading-relaxed align-top", className)}
+        {...rest}
+    >
         {children}
     </td>
 );

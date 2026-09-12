@@ -150,18 +150,14 @@ export default function AdminAuditLogsPage() {
                     <table className='w-full text-sm'>
                         <thead className='bg-gray-50 dark:bg-slate-800/60 text-xs uppercase text-gray-500 dark:text-gray-400'>
                             <tr>
-                                <th className='px-3 py-2.5 text-left'>
-                                    Target
-                                </th>
-                                <th className='px-3 py-2.5 text-left'>Field</th>
-                                <th className='px-3 py-2.5 text-left'>
-                                    Before
-                                </th>
-                                <th className='px-3 py-2.5 text-left'>After</th>
-                                <th className='px-3 py-2.5 text-left'>
+                                <th className='px-5 py-4 text-left'>Target</th>
+                                <th className='px-5 py-4 text-left'>Field</th>
+                                <th className='px-5 py-4 text-left'>Before</th>
+                                <th className='px-5 py-4 text-left'>After</th>
+                                <th className='px-5 py-4 text-left'>
                                     Modifier
                                 </th>
-                                <th className='px-3 py-2.5 text-left'>
+                                <th className='px-5 py-4 text-left'>
                                     Timestamp
                                 </th>
                             </tr>
@@ -194,7 +190,7 @@ export default function AdminAuditLogsPage() {
                                     key={it.id}
                                     className='border-t border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50'
                                 >
-                                    <td className='px-3 py-2.5'>
+                                    <td className='px-5 py-4'>
                                         <p className='font-semibold text-gray-800 dark:text-gray-200 text-xs'>
                                             {TARGET_LABELS[it.target_type] ||
                                                 it.target_type}
@@ -203,16 +199,16 @@ export default function AdminAuditLogsPage() {
                                             {it.target_title || it.target_id}
                                         </p>
                                     </td>
-                                    <td className='px-3 py-2.5 text-xs text-gray-600 dark:text-gray-400 font-mono'>
+                                    <td className='px-5 py-4 text-xs text-gray-600 dark:text-gray-400 font-mono'>
                                         {it.field}
                                     </td>
-                                    <td className='px-3 py-2.5 text-xs text-red-600 dark:text-red-400 max-w-xs line-clamp-2'>
+                                    <td className='px-5 py-4 text-xs text-red-600 dark:text-red-400 max-w-xs line-clamp-2'>
                                         {it.old_value || "(kosong)"}
                                     </td>
-                                    <td className='px-3 py-2.5 text-xs text-emerald-600 dark:text-emerald-400 max-w-xs line-clamp-2 font-medium'>
+                                    <td className='px-5 py-4 text-xs text-emerald-600 dark:text-emerald-400 max-w-xs line-clamp-2 font-medium'>
                                         {it.new_value}
                                     </td>
-                                    <td className='px-3 py-2.5 text-xs text-gray-700 dark:text-gray-300'>
+                                    <td className='px-5 py-4 text-xs text-gray-700 dark:text-gray-300'>
                                         {it.modifier?.name || "Admin"}
                                         {it.reason && (
                                             <p className='text-[10px] text-gray-400 italic'>
@@ -220,7 +216,7 @@ export default function AdminAuditLogsPage() {
                                             </p>
                                         )}
                                     </td>
-                                    <td className='px-3 py-2.5 text-xs text-gray-500 dark:text-gray-400'>
+                                    <td className='px-5 py-4 text-xs text-gray-500 dark:text-gray-400'>
                                         {formatDate(it.created_at)}
                                     </td>
                                 </tr>

@@ -354,21 +354,25 @@ export default function GenericAdminCRUD({
                                             {renderFieldValue(f, item)}
                                         </Td>
                                     ))}
-                                    <Td className='text-right whitespace-nowrap'>
-                                        <button
-                                            type='button'
-                                            onClick={() => openEdit(item)}
-                                            className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
-                                        >
-                                            <BsPencil /> Edit
-                                        </button>
-                                        <button
-                                            type='button'
-                                            onClick={() => setDeleting(item)}
-                                            className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold ml-1'
-                                        >
-                                            <BsTrash /> Hapus
-                                        </button>
+                                    <Td className='text-right whitespace-nowrap align-middle'>
+                                        <div className='inline-flex items-center gap-2'>
+                                            <button
+                                                type='button'
+                                                onClick={() => openEdit(item)}
+                                                className='inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
+                                            >
+                                                <BsPencil /> Edit
+                                            </button>
+                                            <button
+                                                type='button'
+                                                onClick={() =>
+                                                    setDeleting(item)
+                                                }
+                                                className='inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold'
+                                            >
+                                                <BsTrash /> Hapus
+                                            </button>
+                                        </div>
                                     </Td>
                                 </Tr>
                             ))}
