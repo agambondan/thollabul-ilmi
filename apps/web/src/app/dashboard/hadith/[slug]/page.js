@@ -70,6 +70,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
     const [showSanad, setShowSanad] = useState(false);
     const [showTakhrij, setShowTakhrij] = useState(false);
     const [clipboardPopUp, setClipboardPopUp] = useState(false);
+    const [imageErrorMsg, setImageErrorMsg] = useState("");
     const [shareImagePopUp, setShareImagePopUp] = useState(false);
     const [settingPopUp, setSettingPopUp] = useState(false);
     const [isCopied, setIsCopied] = useState(false);
@@ -148,16 +149,25 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                     {t("hadith.copy_success")}
                 </div>
             )}
+            {imageErrorMsg && (
+                <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
+                    {imageErrorMsg}
+                </div>
+            )}
             {shareImagePopUp && (
                 <ShareAyah
                     images={listMasjidImage}
                     isCopiedCallback={() => setShareImagePopUp(false)}
-                    text={`${arabicText}\n`.concat(`${hadithText}\n`).concat(
-                        `${t("hadith.citation", {
-                            slug,
-                            number: h.number,
-                        })}\n${t("hadith.via")} ${getCardUrl()}`,
-                    )}
+                    title={t("hadith.share_title")}
+                    filename='hadis.png'
+                    text={`${arabicText}\n\n`
+                        .concat(`${hadithText}\n\n`)
+                        .concat(
+                            `${t("hadith.citation", {
+                                slug,
+                                number: h.number,
+                            })}\n${t("hadith.via")} ${getCardUrl()}`,
+                        )}
                 />
             )}
 
@@ -179,7 +189,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
 
                 {/* Action toolbar */}
                 {!actionsHidden && (
-                    <div className='flex items-center gap-1'>
+                    <div className='hadith-capture-ignore flex items-center gap-1'>
                         {detailPath && (
                             <Link
                                 href={detailPath}
@@ -409,15 +419,31 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                             onClick={() => {
                                                 setSettingPopUp(false);
                                                 setTimeout(async () => {
+                                                    const target =
+                                                        document.getElementById(
+                                                            cardId,
+                                                        );
+                                                    if (!target) return;
                                                     const {
                                                         default: html2canvas,
                                                     } =
                                                         await import("html2canvas");
-                                                    html2canvas(
-                                                        document.getElementById(
-                                                            cardId,
-                                                        ),
-                                                    ).then((canvas) => {
+                                                    if (document.fonts) {
+                                                        await document.fonts
+                                                            .ready;
+                                                    }
+                                                    try {
+                                                        const canvas =
+                                                            await html2canvas(
+                                                                target,
+                                                                {
+                                                                    ignoreElements:
+                                                                        (el) =>
+                                                                            el.classList?.contains(
+                                                                                "hadith-capture-ignore",
+                                                                            ),
+                                                                },
+                                                            );
                                                         CopyImageToClipboard(
                                                             canvas,
                                                         );
@@ -429,7 +455,20 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                                 ),
                                                             1000,
                                                         );
-                                                    });
+                                                    } catch {
+                                                        setImageErrorMsg(
+                                                            t(
+                                                                "hadith.copy_image_error",
+                                                            ),
+                                                        );
+                                                        setTimeout(
+                                                            () =>
+                                                                setImageErrorMsg(
+                                                                    "",
+                                                                ),
+                                                            2200,
+                                                        );
+                                                    }
                                                 }, 500);
                                             }}
                                         >
@@ -491,7 +530,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
 
             {/* Sanad & Takhrij toggles */}
             {h.id && (
-                <div className='mt-5 pt-4 border-t border-amber-200/70 dark:border-amber-900/40'>
+                <div className='hadith-capture-ignore mt-5 pt-4 border-t border-amber-200/70 dark:border-amber-900/40'>
                     <div className='flex gap-2'>
                         <button
                             type='button'

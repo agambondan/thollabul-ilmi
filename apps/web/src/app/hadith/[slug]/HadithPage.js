@@ -328,6 +328,7 @@ const HadithPage = ({
         .filter(Boolean);
     const firstAudioSource = audioSources[0] ?? "";
     const hadithTranslation = getLocalizedTranslation(hadith.translation, lang);
+    const hadithArabic = hadith.translation?.ar ?? "";
     const detailPath = hadith?.number
         ? `${basePath}/${params.slug}/${hadith.number}`
         : "";
@@ -444,8 +445,10 @@ const HadithPage = ({
                 <ShareAyah
                     images={listMasjidImage}
                     isCopiedCallback={toggleShareImagePopUp}
-                    text={`${hadith.translation.ar}\n`
-                        .concat(`${hadithTranslation}\n`)
+                    title={t("hadith.share_title")}
+                    filename='hadis.png'
+                    text={`${hadithArabic}\n\n`
+                        .concat(`${hadithTranslation}\n\n`)
                         .concat(
                             `${t("hadith.citation", { slug: params.slug, number: hadith.number })}\n`.concat(
                                 `${t("hadith.via")} ${detailUrl() || window.location.href}`,
@@ -468,7 +471,7 @@ const HadithPage = ({
             >
                 {!actionsHidden && (
                     <ul
-                        className='flex flex-row flex-wrap items-center w-full gap-0.5 pb-1 md:flex-col md:flex-nowrap md:w-auto md:gap-1 md:p-2 md:pb-2'
+                        className='hadith-capture-ignore flex flex-row flex-wrap items-center w-full gap-0.5 pb-1 md:flex-col md:flex-nowrap md:w-auto md:gap-1 md:p-2 md:pb-2'
                         style={{ direction: "ltr" }}
                     >
                         <li
@@ -686,15 +689,31 @@ const HadithPage = ({
                                             onClick={() => {
                                                 SetSettingPopUp(false);
                                                 setTimeout(async () => {
+                                                    const target =
+                                                        document.getElementById(
+                                                            `${params.slug}-${hadith.number}`,
+                                                        );
+                                                    if (!target) return;
                                                     const {
                                                         default: html2canvas,
                                                     } =
                                                         await import("html2canvas");
-                                                    html2canvas(
-                                                        document.getElementById(
-                                                            `${params.slug}-${hadith.number}`,
-                                                        ),
-                                                    ).then((canvas) => {
+                                                    if (document.fonts) {
+                                                        await document.fonts
+                                                            .ready;
+                                                    }
+                                                    try {
+                                                        const canvas =
+                                                            await html2canvas(
+                                                                target,
+                                                                {
+                                                                    ignoreElements:
+                                                                        (el) =>
+                                                                            el.classList?.contains(
+                                                                                "hadith-capture-ignore",
+                                                                            ),
+                                                                },
+                                                            );
                                                         CopyImageToClipboard(
                                                             canvas,
                                                         );
@@ -702,7 +721,13 @@ const HadithPage = ({
                                                         setTimeout(() => {
                                                             SetIsCopied(false);
                                                         }, 1000);
-                                                    });
+                                                    } catch {
+                                                        showStatus(
+                                                            t(
+                                                                "hadith.copy_image_error",
+                                                            ),
+                                                        );
+                                                    }
                                                 }, 1000);
                                             }}
                                         >
@@ -724,9 +749,9 @@ const HadithPage = ({
                                             className={actionMenuButtonClass}
                                             onClick={() => {
                                                 copyText(
-                                                    `${hadith.translation.ar}\n`
+                                                    `${hadithArabic}\n\n`
                                                         .concat(
-                                                            `${hadithTranslation}\n`,
+                                                            `${hadithTranslation}\n\n`,
                                                         )
                                                         .concat(
                                                             `${t("hadith.citation", { slug: params.slug, number: hadith.number })}\n`.concat(
@@ -755,7 +780,7 @@ const HadithPage = ({
                         className={`${fontCls} leading-[2.25]`}
                         style={{ fontSize: `${arabicFontSize}px` }}
                     >
-                        {hadith.translation.ar}
+                        {hadithArabic}
                     </li>
                     <li
                         className='text-left py-2 md:p-2'
