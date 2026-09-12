@@ -44,15 +44,37 @@ const parseDurationSeconds = (value) => {
         .reduce((total, part) => total * 60 + part, 0);
 };
 
-const KajianThumbnail = ({ src, alt, className, onClick }) => {
+const formatDuration = (value) => {
+    const totalSeconds = parseDurationSeconds(value);
+    if (!totalSeconds) return "";
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+    const mm = hours > 0 ? String(minutes).padStart(2, "0") : minutes;
+    const ss = String(seconds).padStart(2, "0");
+    return hours > 0 ? `${hours}:${mm}:${ss}` : `${mm}:${ss}`;
+};
+
+const DurationBadge = ({ duration }) => {
+    const label = formatDuration(duration);
+    if (!label) return null;
+    return (
+        <span className='absolute bottom-0.5 right-0.5 px-1 rounded bg-black/75 text-white text-[10px] leading-tight font-medium'>
+            {label}
+        </span>
+    );
+};
+
+const KajianThumbnail = ({ src, alt, className, duration, onClick }) => {
     const [failed, setFailed] = useState(false);
 
     if (!src || failed) {
         return (
             <div
-                className={`flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 ${className}`}
+                className={`relative flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 ${className}`}
             >
                 <BsCameraVideo />
+                <DurationBadge duration={duration} />
             </div>
         );
     }
@@ -61,7 +83,7 @@ const KajianThumbnail = ({ src, alt, className, onClick }) => {
         <button
             type='button'
             onClick={onClick}
-            className={`block overflow-hidden ${className}`}
+            className={`relative block overflow-hidden ${className}`}
         >
             <img
                 src={src}
@@ -69,6 +91,7 @@ const KajianThumbnail = ({ src, alt, className, onClick }) => {
                 onError={() => setFailed(true)}
                 className='w-full h-full object-cover'
             />
+            <DurationBadge duration={duration} />
         </button>
     );
 };
@@ -291,6 +314,10 @@ const AdminStudiesPage = () => {
                                                 item.thumbnail
                                             }
                                             alt=''
+                                            duration={
+                                                item.duration_seconds ??
+                                                item.duration
+                                            }
                                             className='w-16 h-10 rounded-lg shrink-0'
                                             onClick={() =>
                                                 setPreviewImage({
@@ -302,6 +329,9 @@ const AdminStudiesPage = () => {
                                                         "title",
                                                         lang,
                                                     ),
+                                                    duration:
+                                                        item.duration_seconds ??
+                                                        item.duration,
                                                 })
                                             }
                                         />
@@ -384,6 +414,10 @@ const AdminStudiesPage = () => {
                                                 item.thumbnail
                                             }
                                             alt=''
+                                            duration={
+                                                item.duration_seconds ??
+                                                item.duration
+                                            }
                                             className='w-20 h-12 rounded-lg'
                                             onClick={() =>
                                                 setPreviewImage({
@@ -395,6 +429,9 @@ const AdminStudiesPage = () => {
                                                         "title",
                                                         lang,
                                                     ),
+                                                    duration:
+                                                        item.duration_seconds ??
+                                                        item.duration,
                                                 })
                                             }
                                         />
@@ -727,6 +764,12 @@ const AdminStudiesPage = () => {
                     {previewImage.title && (
                         <p className='mt-2 text-center text-sm text-white'>
                             {previewImage.title}
+                            {formatDuration(previewImage.duration) && (
+                                <span className='text-gray-300'>
+                                    {" "}
+                                    · {formatDuration(previewImage.duration)}
+                                </span>
+                            )}
                         </p>
                     )}
                 </ModalShell>
