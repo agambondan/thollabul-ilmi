@@ -1229,6 +1229,7 @@ const id = {
     "kajian.category_sirah": "Sirah",
     "kajian.category_tafsir": "Tafsir",
     "kajian.category_hadith": "Hadith",
+    "kajian.category_lainnya": "Lainnya",
     "kajian.tab_all": "📚 Semua Kajian",
     "kajian.tab_search": "🔍 Cari di Transkrip",
     "kajian.tab_bookmarks": "🔖 Bookmark",

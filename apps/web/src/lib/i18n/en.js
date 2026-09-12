@@ -1246,6 +1246,7 @@ const en = {
     "kajian.category_sirah": "Sirah",
     "kajian.category_tafsir": "Tafsir",
     "kajian.category_hadith": "Hadith",
+    "kajian.category_lainnya": "Other",
     "kajian.tab_all": "📚 All Studies",
     "kajian.tab_search": "🔍 Search in Transcript",
     "kajian.tab_bookmarks": "🔖 Bookmarks",

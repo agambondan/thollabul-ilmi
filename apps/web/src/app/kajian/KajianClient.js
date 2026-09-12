@@ -57,6 +57,7 @@ const CATEGORIES = [
     { key: "sirah", labelKey: "kajian.category_sirah" },
     { key: "tafsir", labelKey: "kajian.category_tafsir" },
     { key: "hadith", labelKey: "kajian.category_hadith" },
+    { key: "lainnya", labelKey: "kajian.category_lainnya" },
 ];
 
 // The API's `topic` field is a free-text, comma-separated description (e.g.
@@ -75,6 +76,15 @@ const CATEGORY_KEYWORDS = {
 
 const matchesCategory = (topic, categoryKey) => {
     if (categoryKey === "semua") return true;
+    if (categoryKey === "lainnya") {
+        // Catch-all: topics that don't hit any of the specific keyword
+        // patterns above (mostly regional/logistics descriptions like
+        // "Jadwal live streaming kajian masjid ...") still need a home,
+        // otherwise they'd be invisible under every specific filter chip.
+        return !Object.values(CATEGORY_KEYWORDS).some((pattern) =>
+            topic ? pattern.test(topic) : false,
+        );
+    }
     if (!topic) return false;
     const pattern = CATEGORY_KEYWORDS[categoryKey];
     return pattern ? pattern.test(topic) : false;
