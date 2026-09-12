@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminKajianApi, parseApiError } from "@/lib/api";
@@ -117,6 +120,8 @@ const AdminStudiesPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [topicFilter, setTopicFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
     const [page, setPage] = useState(1);
@@ -219,21 +224,30 @@ const AdminStudiesPage = () => {
         }
     };
 
-    const filtered = items.filter(
-        (i) =>
-            getLocalizedField(i, "title", lang)
-                ?.toLowerCase()
-                .includes(search.toLowerCase()) ||
+    const filtered = items.filter((i) => {
+        const q = search.toLowerCase();
+        const matchesSearch =
+            getLocalizedField(i, "title", lang)?.toLowerCase().includes(q) ||
             getLocalizedField(i, "description", lang)
                 ?.toLowerCase()
-                .includes(search.toLowerCase()) ||
-            i.speaker?.toLowerCase().includes(search.toLowerCase()) ||
-            i.topic?.toLowerCase().includes(search.toLowerCase()),
-    );
+                .includes(q) ||
+            i.speaker?.toLowerCase().includes(q) ||
+            i.topic?.toLowerCase().includes(q);
+        const matchesTopic = !topicFilter || i.topic === topicFilter;
+        return matchesSearch && matchesTopic;
+    });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        title: (a, b) =>
+            (getLocalizedField(a, "title", lang) ?? "").localeCompare(
+                getLocalizedField(b, "title", lang) ?? "",
+            ),
+        topic: (a, b) => (a.topic ?? "").localeCompare(b.topic ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -258,7 +272,7 @@ const AdminStudiesPage = () => {
                 </button>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <input
                     type='text'
                     placeholder={t("admin.kajian.search_placeholder")}
@@ -268,6 +282,15 @@ const AdminStudiesPage = () => {
                         setPage(1);
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                />
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
+                    value={topicFilter}
+                    onChange={(value) => {
+                        setTopicFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -393,12 +416,27 @@ const AdminStudiesPage = () => {
                             head={
                                 <>
                                     <Th className='w-24'></Th>
-                                    <Th>{t("admin.field.title")}</Th>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.title")}
+                                    </Th>
                                     <Th className='hidden md:table-cell'>
                                         Ustadz
                                     </Th>
                                     <Th className='w-24'>Tipe</Th>
-                                    <Th className='w-24 hidden lg:table-cell'>
+                                    <Th
+                                        className='w-24 hidden lg:table-cell'
+                                        sortKey='topic'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.category")}
                                     </Th>
                                     <Th className='w-24'></Th>

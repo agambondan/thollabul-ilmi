@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminKamusApi, parseApiError } from "@/lib/api";
@@ -43,6 +46,8 @@ const AdminDictionaryPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -129,19 +134,27 @@ const AdminDictionaryPage = () => {
 
     const filtered = items.filter((i) => {
         const q = search.toLowerCase();
-        return (
+        const matchesSearch =
             i.term?.toLowerCase().includes(q) ||
             i.definition?.toLowerCase().includes(q) ||
             i.category?.toLowerCase().includes(q) ||
             i.arabic?.includes(search) ||
             i.latin?.toLowerCase().includes(q) ||
-            i.meaning?.toLowerCase().includes(q)
-        );
+            i.meaning?.toLowerCase().includes(q);
+        const matchesCategory =
+            !categoryFilter || i.category === categoryFilter;
+        return matchesSearch && matchesCategory;
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        term: (a, b) =>
+            (a.term ?? a.arabic ?? "").localeCompare(b.term ?? b.arabic ?? ""),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -166,7 +179,7 @@ const AdminDictionaryPage = () => {
                 </button>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <input
                     type='text'
                     placeholder={t("admin.kamus.search_placeholder")}
@@ -176,6 +189,15 @@ const AdminDictionaryPage = () => {
                         setPage(1);
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                />
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
+                    value={categoryFilter}
+                    onChange={(value) => {
+                        setCategoryFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -258,8 +280,24 @@ const AdminDictionaryPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>Istilah</Th>
-                                    <Th>{t("admin.field.category")}</Th>
+                                    <Th
+                                        sortKey='term'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Istilah
+                                    </Th>
+                                    <Th
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.category")}
+                                    </Th>
                                     <Th>Definisi</Th>
                                     <Th className='hidden md:table-cell'>
                                         Asal/Sumber

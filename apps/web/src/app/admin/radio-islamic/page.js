@@ -22,7 +22,12 @@ export default function AdminRadioIslamicPage() {
                     hint: "Mis. 106.0 FM, atau “Digital Stream” untuk radio online.",
                 },
                 { key: "city", label: "Kota", type: "text", required: true },
-                { key: "province", label: "Provinsi", type: "text" },
+                {
+                    key: "province",
+                    label: "Provinsi",
+                    type: "text",
+                    filterable: true,
+                },
                 {
                     key: "stream_url",
                     label: "URL Streaming",

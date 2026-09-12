@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminSejarahApi, parseApiError } from "@/lib/api";
@@ -56,6 +59,8 @@ const AdminHistoryPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
 
     const load = async () => {
@@ -151,17 +156,29 @@ const AdminHistoryPage = () => {
 
     const filtered = items.filter((i) => {
         const q = search.toLowerCase();
-        return (
+        const matchesSearch =
             getLocalizedField(i, "title", lang).toLowerCase().includes(q) ||
             i.category?.toLowerCase().includes(q) ||
             String(i.year_hijri ?? "").includes(q) ||
-            String(i.year_miladi ?? "").includes(q)
-        );
+            String(i.year_miladi ?? "").includes(q);
+        const matchesCategory =
+            !categoryFilter || i.category === categoryFilter;
+        return matchesSearch && matchesCategory;
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        title: (a, b) =>
+            getLocalizedField(a, "title", lang).localeCompare(
+                getLocalizedField(b, "title", lang),
+            ),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
+        year_hijri: (a, b) =>
+            (Number(a.year_hijri) || 0) - (Number(b.year_hijri) || 0),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -186,7 +203,7 @@ const AdminHistoryPage = () => {
                 </button>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <input
                     type='text'
                     placeholder={t("admin.history.search_placeholder")}
@@ -196,6 +213,15 @@ const AdminHistoryPage = () => {
                         setPage(1);
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                />
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
+                    value={categoryFilter}
+                    onChange={(value) => {
+                        setCategoryFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -278,11 +304,33 @@ const AdminHistoryPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='w-20'>
+                                    <Th
+                                        className='w-20'
+                                        sortKey='year_hijri'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.history.year_h")}
                                     </Th>
-                                    <Th>{t("admin.history.event")}</Th>
-                                    <Th className='w-32'>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.history.event")}
+                                    </Th>
+                                    <Th
+                                        className='w-32'
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.category")}
                                     </Th>
                                     <Th className='w-20'></Th>

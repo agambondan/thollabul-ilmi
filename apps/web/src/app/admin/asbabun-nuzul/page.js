@@ -1,10 +1,12 @@
 "use client";
 
 import {
+    applySort,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminAsbabunNuzulApi, parseApiError } from "@/lib/api";
@@ -80,6 +82,7 @@ const AdminAsbabunNuzulPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -203,11 +206,22 @@ const AdminAsbabunNuzulPage = () => {
                 .includes(search.toLowerCase()),
     );
 
+    const sorted = applySort(filtered, sort, {
+        surah: (a, b) =>
+            (Number(getSurahNumber(a)) || 0) - (Number(getSurahNumber(b)) || 0),
+        ayah: (a, b) =>
+            (Number(getAyahStart(a)) || 0) - (Number(getAyahStart(b)) || 0),
+        title: (a, b) =>
+            getLocalizedField(a, "title", lang).localeCompare(
+                getLocalizedField(b, "title", lang),
+            ),
+    });
+
     // 216 rows rendered at once produced a page ~11.700px tall. Search still
     // runs over everything; only the slice reaches the DOM.
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -328,11 +342,35 @@ const AdminAsbabunNuzulPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='w-20'>Surah</Th>
-                                    <Th className='w-16'>
+                                    <Th
+                                        className='w-20'
+                                        sortKey='surah'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Surah
+                                    </Th>
+                                    <Th
+                                        className='w-16'
+                                        sortKey='ayah'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("common.verse")}
                                     </Th>
-                                    <Th>{t("admin.field.title")}</Th>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.title")}
+                                    </Th>
                                     <Th className='hidden md:table-cell'>
                                         {t("common.source")}
                                     </Th>

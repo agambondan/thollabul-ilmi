@@ -1,6 +1,11 @@
 "use client";
 
-import { PanelPagination } from "@/components/panel/DataPanel";
+import {
+    applySort,
+    PanelFilterSelect,
+    PanelPagination,
+    toggleSort,
+} from "@/components/panel/DataPanel";
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
 import { adminSirohApi, parseApiError } from "@/lib/api";
@@ -34,6 +39,8 @@ const AdminSirahPage = () => {
     const [editCatOrder, setEditCatOrder] = useState("");
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
 
     const load = useCallback(async () => {
         setIsLoading(true);
@@ -151,9 +158,22 @@ const AdminSirahPage = () => {
 
     if (isLoading) return <Spinner3 />;
 
-    const pageCount = Math.max(1, Math.ceil(contents.length / pageSize));
+    const filteredContents = contents.filter(
+        (item) =>
+            !categoryFilter || String(item.category_id) === categoryFilter,
+    );
+
+    const sortedContents = applySort(filteredContents, sort, {
+        title: (a, b) =>
+            (getLocalizedField(a, "title", lang) ?? "").localeCompare(
+                getLocalizedField(b, "title", lang) ?? "",
+            ),
+        order: (a, b) => (a.order ?? 0) - (b.order ?? 0),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sortedContents.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visibleContents = contents.slice(
+    const visibleContents = sortedContents.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -331,10 +351,56 @@ const AdminSirahPage = () => {
                     <h2 className='text-base font-bold text-gray-900 dark:text-white mb-4'>
                         {t("admin.field.content")}
                     </h2>
+                    <div className='mb-3 flex flex-wrap items-center justify-between gap-3'>
+                        <PanelFilterSelect
+                            label={t("admin.field.category")}
+                            value={categoryFilter}
+                            onChange={(value) => {
+                                setCategoryFilter(value);
+                                setPage(1);
+                            }}
+                            options={categories.map((cat) => ({
+                                value: String(cat.id),
+                                label: getLocalizedField(cat, "title", lang),
+                            }))}
+                        />
+                        <div className='flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
+                            <span>{t("admin.crud.sort_by", "Urutkan")}:</span>
+                            {[
+                                { key: "title", label: t("admin.field.title") },
+                                { key: "order", label: t("admin.field.order") },
+                            ].map(({ key, label }) => {
+                                const isActive = sort?.key === key;
+                                return (
+                                    <button
+                                        key={key}
+                                        type='button'
+                                        onClick={() =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                        className={`inline-flex items-center gap-1 hover:text-gray-900 dark:hover:text-white ${
+                                            isActive
+                                                ? "text-gray-900 dark:text-white"
+                                                : ""
+                                        }`}
+                                    >
+                                        {label}
+                                        <span className='text-[10px] leading-none opacity-70'>
+                                            {isActive
+                                                ? sort.dir === "asc"
+                                                    ? "▲"
+                                                    : "▼"
+                                                : "⇅"}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
                     <PanelPagination
                         page={currentPage}
                         pageCount={pageCount}
-                        total={contents.length}
+                        total={sortedContents.length}
                         onChange={setPage}
                         pageSize={pageSize}
                         onPageSizeChange={(newSize) => {
@@ -347,7 +413,7 @@ const AdminSirahPage = () => {
                             next: t("common.next"),
                         }}
                     />
-                    <div className='space-y-2'>
+                    <div className='space-y-2' data-testid='sirah-contents-list'>
                         {contents.length === 0 && (
                             <div className='p-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 text-center'>
                                 <p className='text-sm text-gray-400 mb-3'>
@@ -361,6 +427,13 @@ const AdminSirahPage = () => {
                                     {t("admin.sirah.add_content") ??
                                         "Tambah Konten"}
                                 </Link>
+                            </div>
+                        )}
+                        {contents.length > 0 && sortedContents.length === 0 && (
+                            <div className='p-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 text-center'>
+                                <p className='text-sm text-gray-400'>
+                                    {t("admin.crud.no_data")}
+                                </p>
                             </div>
                         )}
                         {visibleContents.map((item) => {

@@ -1,10 +1,12 @@
 "use client";
 
 import {
+    applySort,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
@@ -33,6 +35,7 @@ export default function AdminLessonsPage() {
     });
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
+    const [sort, setSort] = useState(null);
 
     const fetchModules = async () => {
         try {
@@ -140,9 +143,15 @@ export default function AdminLessonsPage() {
         });
     };
 
-    const pageCount = Math.max(1, Math.ceil(modules.length / pageSize));
+    const sorted = applySort(modules, sort, {
+        title: (a, b) => (a.title ?? "").localeCompare(b.title ?? ""),
+        slug: (a, b) => (a.slug ?? "").localeCompare(b.slug ?? ""),
+        order: (a, b) => (a.order ?? 0) - (b.order ?? 0),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = modules.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -164,7 +173,7 @@ export default function AdminLessonsPage() {
             <PanelPagination
                 page={currentPage}
                 pageCount={pageCount}
-                total={modules.length}
+                total={sorted.length}
                 onChange={setPage}
                 pageSize={pageSize}
                 onPageSizeChange={(newSize) => {
@@ -241,9 +250,33 @@ export default function AdminLessonsPage() {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>Urutan</Th>
-                                    <Th>Judul</Th>
-                                    <Th>Slug</Th>
+                                    <Th
+                                        sortKey='order'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Urutan
+                                    </Th>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Judul
+                                    </Th>
+                                    <Th
+                                        sortKey='slug'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Slug
+                                    </Th>
                                     <Th>Langkah</Th>
                                     <Th align='right'>Aksi</Th>
                                 </>

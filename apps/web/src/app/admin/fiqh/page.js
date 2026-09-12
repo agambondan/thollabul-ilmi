@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminFiqhApi, parseApiError } from "@/lib/api";
@@ -53,6 +56,7 @@ const AdminFiqhPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [catFilter, setCatFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -157,9 +161,17 @@ const AdminFiqhPage = () => {
                     .includes(search.toLowerCase())),
     );
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        title: (a, b) =>
+            getLocalizedField(a, "title", lang).localeCompare(
+                getLocalizedField(b, "title", lang),
+            ),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -192,18 +204,13 @@ const AdminFiqhPage = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
-                <select
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
                     value={catFilter}
-                    onChange={(e) => setCatFilter(e.target.value)}
-                    className='px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
-                >
-                    <option value=''>{t("admin.crud.all_categories")}</option>
-                    {CATEGORIES.map((c) => (
-                        <option key={c} value={c}>
-                            {c}
-                        </option>
-                    ))}
-                </select>
+                    onChange={setCatFilter}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    allLabel={t("admin.crud.all_categories")}
+                />
             </div>
 
             <PanelPagination
@@ -289,8 +296,23 @@ const AdminFiqhPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>{t("admin.field.title")}</Th>
-                                    <Th className='w-28'>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.title")}
+                                    </Th>
+                                    <Th
+                                        className='w-28'
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.category")}
                                     </Th>
                                     <Th className='hidden md:table-cell'>

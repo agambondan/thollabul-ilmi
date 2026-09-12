@@ -22,7 +22,12 @@ export default function AdminMasjidPage() {
                 },
                 { key: "city", label: "Kota", type: "text", required: true },
                 { key: "district", label: "Kecamatan", type: "text" },
-                { key: "province", label: "Provinsi", type: "text" },
+                {
+                    key: "province",
+                    label: "Provinsi",
+                    type: "text",
+                    filterable: true,
+                },
                 {
                     key: "latitude",
                     label: "Latitude",

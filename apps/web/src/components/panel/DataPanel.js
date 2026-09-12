@@ -87,18 +87,113 @@ export const PanelTable = ({
     </PanelCard>
 );
 
-export const Th = ({ children, className, align = "left" }) => (
-    <th
+/**
+ * `sortKey` + `onSort` turn the header into a toggle button; omit both for a
+ * plain (non-sortable) header, unchanged from before this pair existed.
+ * `activeSort` is the page's current `{ key, dir }` state — compare it against
+ * this header's own `sortKey` to know whether to show the active arrow.
+ */
+export const Th = ({
+    children,
+    className,
+    align = "left",
+    sortKey,
+    activeSort,
+    onSort,
+}) => {
+    const isSortable = Boolean(sortKey && onSort);
+    const isActive = isSortable && activeSort?.key === sortKey;
+
+    return (
+        <th
+            className={classNames(
+                "px-5 py-3.5 font-medium text-gray-600 dark:text-gray-300 whitespace-nowrap",
+                align === "left" && "text-left",
+                align === "right" && "text-right",
+                align === "center" && "text-center",
+                className,
+            )}
+        >
+            {isSortable ? (
+                <button
+                    type='button'
+                    onClick={() => onSort(sortKey)}
+                    className={classNames(
+                        "inline-flex items-center gap-1 hover:text-gray-900 dark:hover:text-white",
+                        isActive && "text-gray-900 dark:text-white",
+                    )}
+                >
+                    {children}
+                    <span className='text-[10px] leading-none opacity-70'>
+                        {isActive ? (activeSort.dir === "asc" ? "▲" : "▼") : "⇅"}
+                    </span>
+                </button>
+            ) : (
+                children
+            )}
+        </th>
+    );
+};
+
+/**
+ * Toggle helper for a page's own sort state: same key flips direction, a new
+ * key starts ascending. Pages own the state (`useState(null)` or a default
+ * column) and call `setSort((s) => toggleSort(s, key))` from `Th`'s `onSort`.
+ */
+export const toggleSort = (current, key) => {
+    if (current?.key === key) {
+        return { key, dir: current.dir === "asc" ? "desc" : "asc" };
+    }
+    return { key, dir: "asc" };
+};
+
+/**
+ * Apply a page's sort state to its item list using per-key comparators the
+ * page supplies (string/number/date fields all differ, so there is no single
+ * generic comparator). Returns `items` unchanged if there's no active sort or
+ * no comparator registered for the active key.
+ */
+export const applySort = (items, sort, comparators) => {
+    if (!sort?.key || !comparators?.[sort.key]) return items;
+    const compare = comparators[sort.key];
+    const sorted = [...items].sort(compare);
+    return sort.dir === "desc" ? sorted.reverse() : sorted;
+};
+
+/**
+ * A single "Semua" + option-list filter dropdown, styled to match
+ * `PanelPagination`'s page-size select. `options` is `[{value, label}]`;
+ * `value === ""` means "no filter" (the `allLabel` option).
+ */
+export const PanelFilterSelect = ({
+    label,
+    value,
+    onChange,
+    options,
+    allLabel = "Semua",
+    className,
+}) => (
+    <div
         className={classNames(
-            "px-5 py-3.5 font-medium text-gray-600 dark:text-gray-300 whitespace-nowrap",
-            align === "left" && "text-left",
-            align === "right" && "text-right",
-            align === "center" && "text-center",
+            "flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400",
             className,
         )}
     >
-        {children}
-    </th>
+        {label ? <span>{label}:</span> : null}
+        <select
+            aria-label={label}
+            value={value ?? ""}
+            onChange={(e) => onChange(e.target.value)}
+            className='px-2 py-1.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg text-xs text-gray-700 dark:text-gray-200 outline-none cursor-pointer'
+        >
+            <option value=''>{allLabel}</option>
+            {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                </option>
+            ))}
+        </select>
+    </div>
 );
 
 export const Td = ({ children, className, ...rest }) => (

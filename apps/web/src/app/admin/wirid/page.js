@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminWiridApi, parseApiError } from "@/lib/api";
@@ -34,6 +37,8 @@ const AdminWirdPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -122,15 +127,26 @@ const AdminWirdPage = () => {
 
     const filtered = items.filter((i) => {
         const title = getLocalizedField(i, "title", lang);
-        return (
+        const matchesSearch =
             title?.toLowerCase().includes(search.toLowerCase()) ||
-            i.category?.toLowerCase().includes(search.toLowerCase())
-        );
+            i.category?.toLowerCase().includes(search.toLowerCase());
+        const matchesCategory =
+            !categoryFilter || i.category === categoryFilter;
+        return matchesSearch && matchesCategory;
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        title: (a, b) =>
+            (getLocalizedField(a, "title", lang) ?? "").localeCompare(
+                getLocalizedField(b, "title", lang) ?? "",
+            ),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
+        count: (a, b) => (Number(a.count) || 0) - (Number(b.count) || 0),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -155,7 +171,7 @@ const AdminWirdPage = () => {
                 </button>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <input
                     type='text'
                     placeholder={t("admin.crud.search_title_category")}
@@ -165,6 +181,15 @@ const AdminWirdPage = () => {
                         setPage(1);
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                />
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
+                    value={categoryFilter}
+                    onChange={(value) => {
+                        setCategoryFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -243,11 +268,33 @@ const AdminWirdPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>{t("admin.field.title")}</Th>
-                                    <Th className='w-32'>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.title")}
+                                    </Th>
+                                    <Th
+                                        className='w-32'
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.category")}
                                     </Th>
-                                    <Th className='w-20 hidden md:table-cell'>
+                                    <Th
+                                        className='w-20 hidden md:table-cell'
+                                        sortKey='count'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.repetition")}
                                     </Th>
                                     <Th className='w-20'></Th>

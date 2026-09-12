@@ -2,7 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
-import { PanelPagination, PanelTable, Td, Th, Tr } from "./DataPanel";
+import {
+    applySort,
+    PanelFilterSelect,
+    PanelPagination,
+    PanelTable,
+    Td,
+    Th,
+    toggleSort,
+    Tr,
+} from "./DataPanel";
 import ModalShell from "../ModalShell";
 import { parseApiError } from "@/lib/api";
 
@@ -72,6 +81,66 @@ const renderFieldValue = (f, item) =>
               : "Nonaktif"
           : formatValue(item?.[f.key]);
 
+const optionEntries = (options) =>
+    (options ?? []).map((opt) =>
+        typeof opt === "string" ? { value: opt, label: opt } : opt,
+    );
+
+const BOOLEAN_FILTER_OPTIONS = [
+    { value: "true", label: "Aktif" },
+    { value: "false", label: "Nonaktif" },
+];
+
+/**
+ * Which fields get a filter dropdown, and what its options are.
+ *
+ * `select` fields reuse the same options already declared for the edit form
+ * — the whole point is that each admin screen's own field config decides
+ * what's filterable, not a one-size rule here. `boolean` fields always get an
+ * Aktif/Nonaktif filter. A plain field can opt in with `filterable: true`;
+ * its options are whatever distinct values actually exist in the loaded rows
+ * (deriving a static list would drift the moment new data comes in).
+ */
+const useFilterableFields = (fields, items) =>
+    useMemo(
+        () =>
+            fields
+                .map((f) => {
+                    if (f.type === TYPE_SELECT) {
+                        return { field: f, options: optionEntries(f.options) };
+                    }
+                    if (f.type === TYPE_BOOLEAN) {
+                        return { field: f, options: BOOLEAN_FILTER_OPTIONS };
+                    }
+                    if (f.filterable) {
+                        const seen = new Set();
+                        for (const item of items) {
+                            const value = item?.[f.key];
+                            if (value !== null && value !== undefined && value !== "") {
+                                seen.add(String(value));
+                            }
+                        }
+                        return {
+                            field: f,
+                            options: [...seen]
+                                .sort((a, b) => a.localeCompare(b))
+                                .map((value) => ({ value, label: value })),
+                        };
+                    }
+                    return null;
+                })
+                .filter((entry) => entry && entry.options.length > 0),
+        [fields, items],
+    );
+
+const compareByField = (f) => (a, b) => {
+    const av = a?.[f.key];
+    const bv = b?.[f.key];
+    if (f.type === TYPE_NUMBER) return (av ?? 0) - (bv ?? 0);
+    if (f.type === TYPE_BOOLEAN) return (av ? 1 : 0) - (bv ? 1 : 0);
+    return String(av ?? "").localeCompare(String(bv ?? ""));
+};
+
 export default function GenericAdminCRUD({
     title,
     description,
@@ -88,6 +157,8 @@ export default function GenericAdminCRUD({
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
+    const [filters, setFilters] = useState({});
+    const [sort, setSort] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(defaultPageSize);
     const [editing, setEditing] = useState(null);
@@ -124,21 +195,35 @@ export default function GenericAdminCRUD({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const filterableFields = useFilterableFields(fields, items);
+
     const filtered = useMemo(() => {
         const needle = search.trim().toLowerCase();
-        if (!needle) return items;
-        return items.filter((it) =>
-            searchableFields.some((key) => {
-                const value = it?.[key];
-                if (value === null || value === undefined) return false;
-                return String(value).toLowerCase().includes(needle);
-            }),
-        );
-    }, [items, search, searchableFields]);
+        return items.filter((it) => {
+            const matchesSearch =
+                !needle ||
+                searchableFields.some((key) => {
+                    const value = it?.[key];
+                    if (value === null || value === undefined) return false;
+                    return String(value).toLowerCase().includes(needle);
+                });
+            const matchesFilters = Object.entries(filters).every(
+                ([key, value]) => !value || String(it?.[key]) === value,
+            );
+            return matchesSearch && matchesFilters;
+        });
+    }, [items, search, searchableFields, filters]);
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sortComparators = useMemo(
+        () =>
+            Object.fromEntries(fields.map((f) => [f.key, compareByField(f)])),
+        [fields],
+    );
+    const sorted = applySort(filtered, sort, sortComparators);
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -267,6 +352,21 @@ export default function GenericAdminCRUD({
                         placeholder='Cari...'
                         className='px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none'
                     />
+                    {filterableFields.map(({ field: f, options }) => (
+                        <PanelFilterSelect
+                            key={f.key}
+                            label={f.label}
+                            value={filters[f.key] ?? ""}
+                            onChange={(value) => {
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    [f.key]: value,
+                                }));
+                                setPage(1);
+                            }}
+                            options={options}
+                        />
+                    ))}
                     <button
                         type='button'
                         onClick={openCreate}
@@ -286,8 +386,8 @@ export default function GenericAdminCRUD({
                 <p className='text-center text-sm text-red-500 py-6'>{error}</p>
             ) : visible.length === 0 ? (
                 <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
-                    {search
-                        ? "Tidak ada data yang cocok dengan pencarian."
+                    {search || Object.values(filters).some(Boolean)
+                        ? "Tidak ada data yang cocok dengan pencarian/filter."
                         : "Belum ada data."}
                 </p>
             ) : (
@@ -341,7 +441,18 @@ export default function GenericAdminCRUD({
                             head={
                                 <>
                                     {fields.map((f) => (
-                                        <Th key={f.key}>{f.label}</Th>
+                                        <Th
+                                            key={f.key}
+                                            sortKey={f.key}
+                                            activeSort={sort}
+                                            onSort={(key) =>
+                                                setSort((s) =>
+                                                    toggleSort(s, key),
+                                                )
+                                            }
+                                        >
+                                            {f.label}
+                                        </Th>
                                     ))}
                                     <Th className='text-right'>Aksi</Th>
                                 </>

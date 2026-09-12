@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
@@ -104,6 +107,10 @@ const AdminLibraryPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
+    const [formatFilter, setFormatFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -285,17 +292,31 @@ const AdminLibraryPage = () => {
 
     const filtered = items.filter((item) => {
         const query = search.trim().toLowerCase();
-        if (!query) return true;
-        return [item.title, item.author, item.category, item.level, item.tags]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase()
-            .includes(query);
+        const matchesSearch =
+            !query ||
+            [item.title, item.author, item.category, item.level, item.tags]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase()
+                .includes(query);
+        const matchesCategory =
+            !categoryFilter || item.category === categoryFilter;
+        const matchesStatus = !statusFilter || item.status === statusFilter;
+        const matchesFormat = !formatFilter || item.format === formatFilter;
+        return (
+            matchesSearch && matchesCategory && matchesStatus && matchesFormat
+        );
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        title: (a, b) => (a.title ?? "").localeCompare(b.title ?? ""),
+        author: (a, b) => (a.author ?? "").localeCompare(b.author ?? ""),
+        status: (a, b) => (a.status ?? "").localeCompare(b.status ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -320,7 +341,7 @@ const AdminLibraryPage = () => {
                 </button>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <input
                     className='w-full max-w-xs rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                     onChange={(event) => {
@@ -331,12 +352,39 @@ const AdminLibraryPage = () => {
                     type='text'
                     value={search}
                 />
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
+                    value={categoryFilter}
+                    onChange={(value) => {
+                        setCategoryFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                />
+                <PanelFilterSelect
+                    label={t("admin.library.status")}
+                    value={statusFilter}
+                    onChange={(value) => {
+                        setStatusFilter(value);
+                        setPage(1);
+                    }}
+                    options={STATUSES.map((s) => ({ value: s, label: s }))}
+                />
+                <PanelFilterSelect
+                    label={t("admin.library.format")}
+                    value={formatFilter}
+                    onChange={(value) => {
+                        setFormatFilter(value);
+                        setPage(1);
+                    }}
+                    options={FORMATS.map((f) => ({ value: f, label: f }))}
+                />
             </div>
 
             <PanelPagination
                 page={currentPage}
                 pageCount={pageCount}
-                total={filtered.length}
+                total={sorted.length}
                 onChange={setPage}
                 pageSize={pageSize}
                 onPageSizeChange={(newSize) => {
@@ -449,10 +497,24 @@ const AdminLibraryPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='font-medium text-gray-600 dark:text-gray-300'>
+                                    <Th
+                                        className='font-medium text-gray-600 dark:text-gray-300'
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.title")}
                                     </Th>
-                                    <Th className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
+                                    <Th
+                                        className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'
+                                        sortKey='author'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.library.author")}
                                     </Th>
                                     <Th className='hidden font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
@@ -464,7 +526,14 @@ const AdminLibraryPage = () => {
                                     <Th className='hidden font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
                                         {t("admin.library.license_status")}
                                     </Th>
-                                    <Th className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
+                                    <Th
+                                        className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'
+                                        sortKey='status'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.library.status")}
                                     </Th>
                                     <Th className='w-24'></Th>

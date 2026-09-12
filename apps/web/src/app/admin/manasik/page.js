@@ -1,10 +1,12 @@
 "use client";
 
 import {
+    applySort,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminManasikApi, parseApiError } from "@/lib/api";
@@ -39,6 +41,7 @@ const AdminManasikPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [filter, setFilter] = useState("haji");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -152,9 +155,25 @@ const AdminManasikPage = () => {
 
     const filtered = items.filter((i) => i.type === filter);
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        step: (a, b) => (a.step ?? 0) - (b.step ?? 0),
+        title: (a, b) =>
+            (
+                a.title ||
+                a.translation?.idn ||
+                getLocalizedField(a, "title", lang) ||
+                ""
+            ).localeCompare(
+                b.title ||
+                    b.translation?.idn ||
+                    getLocalizedField(b, "title", lang) ||
+                    "",
+            ),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -295,10 +314,25 @@ const AdminManasikPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='w-16'>
+                                    <Th
+                                        className='w-16'
+                                        sortKey='step'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.manasik.step")}
                                     </Th>
-                                    <Th>{t("admin.field.title")}</Th>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.title")}
+                                    </Th>
                                     <Th className='hidden md:table-cell'>
                                         {t("admin.field.description")}
                                     </Th>

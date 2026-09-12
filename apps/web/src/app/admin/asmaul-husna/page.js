@@ -1,10 +1,12 @@
 "use client";
 
 import {
+    applySort,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminAsmaulHusnaApi, parseApiError } from "@/lib/api";
@@ -34,6 +36,7 @@ const AdminAsmaulHusnaPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -135,9 +138,15 @@ const AdminAsmaulHusnaPage = () => {
         );
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        number: (a, b) => (Number(a.number) || 0) - (Number(b.number) || 0),
+        transliteration: (a, b) =>
+            (a.transliteration ?? "").localeCompare(b.transliteration ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -263,11 +272,26 @@ const AdminAsmaulHusnaPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='w-12'>
+                                    <Th
+                                        className='w-12'
+                                        sortKey='number'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.number")}
                                     </Th>
                                     <Th>{t("admin.field.arabic")}</Th>
-                                    <Th>{t("admin.field.latin")}</Th>
+                                    <Th
+                                        sortKey='transliteration'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.latin")}
+                                    </Th>
                                     <Th className='hidden md:table-cell'>
                                         {t("admin.asmaul.meaning")}
                                     </Th>

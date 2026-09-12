@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminAchievementApi, parseApiError } from "@/lib/api";
@@ -48,6 +51,8 @@ export default function AdminAchievementsPage() {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -140,17 +145,25 @@ export default function AdminAchievementsPage() {
 
     const filtered = items.filter((item) => {
         const q = search.toLowerCase();
-        return (
+        const matchesSearch =
             item.code?.toLowerCase().includes(q) ||
             item.name?.toLowerCase().includes(q) ||
             item.name_en?.toLowerCase().includes(q) ||
             item.category?.toLowerCase().includes(q) ||
-            item.description?.toLowerCase().includes(q)
-        );
+            item.description?.toLowerCase().includes(q);
+        const matchesCategory =
+            !categoryFilter || item.category === categoryFilter;
+        return matchesSearch && matchesCategory;
     });
 
-    const totalPages = Math.ceil(filtered.length / pageSize) || 1;
-    const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+    const sorted = applySort(filtered, sort, {
+        name: (a, b) => (a.name ?? "").localeCompare(b.name ?? ""),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
+        threshold: (a, b) => (a.threshold ?? 0) - (b.threshold ?? 0),
+    });
+
+    const totalPages = Math.ceil(sorted.length / pageSize) || 1;
+    const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
 
     return (
         <div className='p-6'>
@@ -183,13 +196,22 @@ export default function AdminAchievementsPage() {
                     }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
+                <PanelFilterSelect
+                    label='Kategori'
+                    value={categoryFilter}
+                    onChange={(value) => {
+                        setCategoryFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES}
+                />
             </div>
 
             <PanelPagination
                 page={page}
                 pageCount={totalPages}
                 pageSize={pageSize}
-                total={filtered.length}
+                total={sorted.length}
                 onChange={setPage}
                 onPageSizeChange={(sz) => {
                     setPageSize(sz);
@@ -275,9 +297,34 @@ export default function AdminAchievementsPage() {
                                 <>
                                     <Th className='w-14 text-center'>Icon</Th>
                                     <Th>Kode</Th>
-                                    <Th>Nama (ID / EN)</Th>
-                                    <Th>Kategori</Th>
-                                    <Th className='w-20 text-center'>Target</Th>
+                                    <Th
+                                        sortKey='name'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Nama (ID / EN)
+                                    </Th>
+                                    <Th
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Kategori
+                                    </Th>
+                                    <Th
+                                        className='w-20 text-center'
+                                        sortKey='threshold'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Target
+                                    </Th>
                                     <Th>Deskripsi</Th>
                                     <Th className='text-right w-24'>Aksi</Th>
                                 </>

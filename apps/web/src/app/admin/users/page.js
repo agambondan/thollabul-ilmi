@@ -1,11 +1,14 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPage,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { useEffect, useState } from "react";
@@ -56,6 +59,8 @@ const AdminUsersPage = () => {
     const [error, setError] = useState("");
     const [actionError, setActionError] = useState("");
     const [changingId, setChangingId] = useState(null);
+    const [roleFilter, setRoleFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -124,9 +129,16 @@ const AdminUsersPage = () => {
         );
     }
 
-    const pageCount = Math.max(1, Math.ceil(users.length / pageSize));
+    const filtered = users.filter((u) => !roleFilter || u.role === roleFilter);
+
+    const sorted = applySort(filtered, sort, {
+        name: (a, b) => (a.name ?? "").localeCompare(b.name ?? ""),
+        email: (a, b) => (a.email ?? "").localeCompare(b.email ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = users.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -173,10 +185,25 @@ const AdminUsersPage = () => {
                 </div>
             )}
 
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
+                <PanelFilterSelect
+                    label='Role'
+                    value={roleFilter}
+                    onChange={(value) => {
+                        setRoleFilter(value);
+                        setPage(1);
+                    }}
+                    options={ROLES.map((r) => ({
+                        value: r.value,
+                        label: t(`admin.role.${r.value}`),
+                    }))}
+                />
+            </div>
+
             <PanelPagination
                 page={currentPage}
                 pageCount={pageCount}
-                total={users.length}
+                total={sorted.length}
                 onChange={setPage}
                 pageSize={pageSize}
                 onPageSizeChange={(newSize) => {
@@ -190,7 +217,7 @@ const AdminUsersPage = () => {
                 }}
             />
 
-            {visible.length === 0 && users.length === 0 ? (
+            {sorted.length === 0 ? (
                 <p className='px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-600'>
                     {t("admin.users.empty")}
                 </p>
@@ -270,8 +297,24 @@ const AdminUsersPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>{t("admin.field.name")}</Th>
-                                    <Th>Email</Th>
+                                    <Th
+                                        sortKey='name'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.field.name")}
+                                    </Th>
+                                    <Th
+                                        sortKey='email'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Email
+                                    </Th>
                                     <Th>Role</Th>
                                     <Th>{t("admin.users.change_role")}</Th>
                                     <Th align='right'>

@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminQuizApi, parseApiError } from "@/lib/api";
@@ -48,6 +51,8 @@ const AdminQuizPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -156,19 +161,38 @@ const AdminQuizPage = () => {
         }
     };
 
-    const filtered = items.filter(
-        (i) =>
+    const filtered = items.filter((i) => {
+        const q = search.toLowerCase();
+        const matchesSearch =
             getLocalizedField(i, "question", lang, ["question_text", "text"])
                 .toLowerCase()
-                .includes(search.toLowerCase()) ||
-            (i.category ?? i.type)
-                ?.toLowerCase()
-                .includes(search.toLowerCase()),
-    );
+                .includes(q) ||
+            (i.category ?? i.type)?.toLowerCase().includes(q);
+        const matchesCategory =
+            !categoryFilter || (i.category ?? i.type) === categoryFilter;
+        return matchesSearch && matchesCategory;
+    });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        question: (a, b) =>
+            getLocalizedField(a, "question", lang, [
+                "question_text",
+                "text",
+            ]).localeCompare(
+                getLocalizedField(b, "question", lang, [
+                    "question_text",
+                    "text",
+                ]),
+            ),
+        category: (a, b) =>
+            (a.category ?? a.type ?? "").localeCompare(
+                b.category ?? b.type ?? "",
+            ),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -204,7 +228,7 @@ const AdminQuizPage = () => {
                 </button>
             </div>
 
-            <div className='mb-4'>
+            <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <input
                     type='text'
                     placeholder={t("admin.quiz.search_placeholder")}
@@ -214,6 +238,15 @@ const AdminQuizPage = () => {
                         setPage(1);
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                />
+                <PanelFilterSelect
+                    label={t("admin.field.category")}
+                    value={categoryFilter}
+                    onChange={(value) => {
+                        setCategoryFilter(value);
+                        setPage(1);
+                    }}
+                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -299,8 +332,23 @@ const AdminQuizPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>{t("admin.quiz.question")}</Th>
-                                    <Th className='w-28'>
+                                    <Th
+                                        sortKey='question'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        {t("admin.quiz.question")}
+                                    </Th>
+                                    <Th
+                                        className='w-28'
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         {t("admin.field.category")}
                                     </Th>
                                     <Th className='hidden md:table-cell'>

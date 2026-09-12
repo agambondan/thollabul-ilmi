@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminReminderApi, parseApiError } from "@/lib/api";
@@ -46,6 +49,8 @@ const AdminRemindersPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [typeFilter, setTypeFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -136,14 +141,27 @@ const AdminRemindersPage = () => {
 
     const filtered = items.filter((item) => {
         const q = search.toLowerCase();
-        return [item.title, item.text, item.author, item.source, item.type]
+        const matchesSearch = [
+            item.title,
+            item.text,
+            item.author,
+            item.source,
+            item.type,
+        ]
             .filter(Boolean)
             .some((value) => String(value).toLowerCase().includes(q));
+        const matchesType = !typeFilter || item.type === typeFilter;
+        return matchesSearch && matchesType;
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const sorted = applySort(filtered, sort, {
+        title: (a, b) => (a.title ?? "").localeCompare(b.title ?? ""),
+        type: (a, b) => (a.type ?? "").localeCompare(b.type ?? ""),
+    });
+
+    const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
-    const visible = filtered.slice(
+    const visible = sorted.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize,
     );
@@ -179,12 +197,21 @@ const AdminRemindersPage = () => {
                     }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
+                <PanelFilterSelect
+                    label='Tipe'
+                    value={typeFilter}
+                    onChange={(value) => {
+                        setTypeFilter(value);
+                        setPage(1);
+                    }}
+                    options={TYPES}
+                />
             </div>
 
             <PanelPagination
                 page={currentPage}
                 pageCount={pageCount}
-                total={filtered.length}
+                total={sorted.length}
                 onChange={setPage}
                 pageSize={pageSize}
                 onPageSizeChange={(newSize) => {
@@ -275,13 +302,27 @@ const AdminRemindersPage = () => {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='font-medium text-gray-600 dark:text-gray-300'>
+                                    <Th
+                                        className='font-medium text-gray-600 dark:text-gray-300'
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         Judul
                                     </Th>
                                     <Th className='hidden font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
                                         Ulama / Author
                                     </Th>
-                                    <Th className='font-medium text-gray-600 dark:text-gray-300'>
+                                    <Th
+                                        className='font-medium text-gray-600 dark:text-gray-300'
+                                        sortKey='type'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
                                         Tipe
                                     </Th>
                                     <Th className='hidden font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>

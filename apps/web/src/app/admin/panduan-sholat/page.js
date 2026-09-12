@@ -1,10 +1,12 @@
 "use client";
 
 import {
+    applySort,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminPanduanSholatApi, parseApiError } from "@/lib/api";
@@ -40,6 +42,7 @@ export default function AdminPanduanSholatPage() {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -147,8 +150,13 @@ export default function AdminPanduanSholatPage() {
         );
     });
 
-    const totalPages = Math.ceil(filtered.length / pageSize) || 1;
-    const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+    const sorted = applySort(filtered, sort, {
+        step: (a, b) => (Number(a.step) || 0) - (Number(b.step) || 0),
+        title: (a, b) => (a.title ?? "").localeCompare(b.title ?? ""),
+    });
+
+    const totalPages = Math.ceil(sorted.length / pageSize) || 1;
+    const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
 
     return (
         <div className='p-6'>
@@ -272,8 +280,25 @@ export default function AdminPanduanSholatPage() {
                         <PanelTable
                             head={
                                 <>
-                                    <Th className='w-16'>Step</Th>
-                                    <Th>Judul</Th>
+                                    <Th
+                                        className='w-16'
+                                        sortKey='step'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Step
+                                    </Th>
+                                    <Th
+                                        sortKey='title'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Judul
+                                    </Th>
                                     <Th>Lafaz Arab / Latin</Th>
                                     <Th>Terjemahan / Keterangan</Th>
                                     <Th>Sumber / Rujukan</Th>

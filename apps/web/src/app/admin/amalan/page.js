@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    applySort,
+    PanelFilterSelect,
     PanelPagination,
     PanelTable,
     Td,
     Th,
+    toggleSort,
     Tr,
 } from "@/components/panel/DataPanel";
 import { adminAmalanApi, parseApiError } from "@/lib/api";
@@ -45,7 +48,8 @@ export default function AdminAmalanPage() {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -131,7 +135,7 @@ export default function AdminAmalanPage() {
 
     const filtered = items.filter((item) => {
         const matchesCategory =
-            categoryFilter === "all" || item.category === categoryFilter;
+            !categoryFilter || item.category === categoryFilter;
         const q = search.toLowerCase();
         const matchesSearch =
             !q ||
@@ -141,8 +145,13 @@ export default function AdminAmalanPage() {
         return matchesCategory && matchesSearch;
     });
 
-    const totalPages = Math.ceil(filtered.length / pageSize) || 1;
-    const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+    const sorted = applySort(filtered, sort, {
+        name: (a, b) => (a.name ?? "").localeCompare(b.name ?? ""),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
+    });
+
+    const totalPages = Math.ceil(sorted.length / pageSize) || 1;
+    const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
 
     return (
         <div className='p-6'>
@@ -174,21 +183,16 @@ export default function AdminAmalanPage() {
                     }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
-                <select
+                <PanelFilterSelect
+                    label='Kategori'
                     value={categoryFilter}
-                    onChange={(e) => {
-                        setCategoryFilter(e.target.value);
+                    onChange={(value) => {
+                        setCategoryFilter(value);
                         setPage(1);
                     }}
-                    className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
-                >
-                    <option value='all'>Semua Kategori</option>
-                    {CATEGORIES.map((c) => (
-                        <option key={c.value} value={c.value}>
-                            {c.label}
-                        </option>
-                    ))}
-                </select>
+                    options={CATEGORIES}
+                    allLabel='Semua Kategori'
+                />
             </div>
 
             <PanelPagination
@@ -209,7 +213,7 @@ export default function AdminAmalanPage() {
                 </p>
             ) : paginated.length === 0 ? (
                 <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
-                    {search || categoryFilter !== "all"
+                    {search || categoryFilter
                         ? t("admin.empty.search")
                         : "Belum ada data master amalan."}
                 </p>
@@ -279,8 +283,24 @@ export default function AdminAmalanPage() {
                         <PanelTable
                             head={
                                 <>
-                                    <Th>Nama Amalan</Th>
-                                    <Th>Kategori</Th>
+                                    <Th
+                                        sortKey='name'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Nama Amalan
+                                    </Th>
+                                    <Th
+                                        sortKey='category'
+                                        activeSort={sort}
+                                        onSort={(key) =>
+                                            setSort((s) => toggleSort(s, key))
+                                        }
+                                    >
+                                        Kategori
+                                    </Th>
                                     <Th>Deskripsi</Th>
                                     <Th>Sumber / Rujukan</Th>
                                     <Th className='w-20 text-center'>Status</Th>
