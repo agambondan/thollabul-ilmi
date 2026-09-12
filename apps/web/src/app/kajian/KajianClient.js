@@ -14,12 +14,16 @@ const SpeakerMultiSelectDropdown = dynamic(
 );
 
 const SavedBookmarksView = dynamic(() => import("./SavedBookmarksView"), {
-    loading: () => <div className='h-32 rounded-xl bg-amber-900/10 animate-pulse' />,
+    loading: () => (
+        <div className='h-32 rounded-xl bg-amber-900/10 animate-pulse' />
+    ),
     ssr: false,
 });
 
 const SavedNotesView = dynamic(() => import("./SavedNotesView"), {
-    loading: () => <div className='h-32 rounded-xl bg-emerald-900/10 animate-pulse' />,
+    loading: () => (
+        <div className='h-32 rounded-xl bg-emerald-900/10 animate-pulse' />
+    ),
     ssr: false,
 });
 const TranscriptPlayerModal = dynamic(
@@ -54,6 +58,27 @@ const CATEGORIES = [
     { key: "tafsir", labelKey: "kajian.category_tafsir" },
     { key: "hadith", labelKey: "kajian.category_hadith" },
 ];
+
+// The API's `topic` field is a free-text, comma-separated description (e.g.
+// "Fikih muamalah dasar, Fikih ibadah harian, Konsultasi fatwa syariah
+// praktis"), not a fixed taxonomy — there is no `category` field. These
+// keyword patterns map each fixed category chip onto that free text so the
+// filter actually narrows results instead of always matching zero.
+const CATEGORY_KEYWORDS = {
+    aqidah: /akidah|aqidah|tauhid|manhaj/i,
+    fiqh: /fikih|fiqih|fiqh|fatwa|muamalah/i,
+    tazkiyah: /tazkiyah|tazkiyatun|akhlak|adab|nasihat/i,
+    sirah: /sirah/i,
+    tafsir: /tafsir|qur.?an|tahsin|tartil/i,
+    hadith: /hadit|hadith|bukhari|muslim|syarah/i,
+};
+
+const matchesCategory = (topic, categoryKey) => {
+    if (categoryKey === "semua") return true;
+    if (!topic) return false;
+    const pattern = CATEGORY_KEYWORDS[categoryKey];
+    return pattern ? pattern.test(topic) : false;
+};
 
 export default function KajianClient({
     kajian: initialKajian = [],
@@ -195,7 +220,8 @@ export default function KajianClient({
     // Transcript search state
     const [transcriptQuery, setTranscriptQuery] = useState(initialQuery);
     const [searchMode, setSearchMode] = useState("hybrid");
-    const [transcriptSelectedSpeakers, setTranscriptSelectedSpeakers] = useState([]);
+    const [transcriptSelectedSpeakers, setTranscriptSelectedSpeakers] =
+        useState([]);
     const [transcriptResults, setTranscriptResults] = useState([]);
     const [transcriptLoading, setTranscriptLoading] = useState(false);
     const [transcriptLoadingMore, setTranscriptLoadingMore] = useState(false);
@@ -323,7 +349,7 @@ export default function KajianClient({
     const filtered = useMemo(
         () =>
             kajian.filter((k) => {
-                if (activeCategory !== "semua" && k.category !== activeCategory) {
+                if (!matchesCategory(k.topic, activeCategory)) {
                     return false;
                 }
                 if (
@@ -337,7 +363,7 @@ export default function KajianClient({
                     getLocalizedField(k, "title", lang),
                     k.ustadz,
                     getLocalizedField(k, "description", lang),
-                    k.category,
+                    k.topic,
                     k.duration,
                 ]
                     .filter(Boolean)
@@ -348,15 +374,16 @@ export default function KajianClient({
         [activeCategory, kajian, lang, searchText, selectedSpeakerSet],
     );
 
-    const youtubeCount = useMemo(
-        () =>
-            kajian.filter(
-                (item) => item.platform === "youtube" || item.type === "video",
-            ).length,
-        [kajian],
-    );
+    // Every kajian entry in this app is a YouTube video (there is no other
+    // platform in the dataset), so the true count is just the paginator's
+    // total — not `kajian.length`, which is only however many pages have
+    // been loaded into this client so far.
+    const youtubeCount = totalKajian;
     const categoryCount = useMemo(
-        () => new Set(kajian.map((item) => item.category)).size,
+        () =>
+            CATEGORIES.filter((c) => c.key !== "semua").filter((c) =>
+                kajian.some((item) => matchesCategory(item.topic, c.key)),
+            ).length,
         [kajian],
     );
     const ustadzOptions = useMemo(() => {
@@ -662,7 +689,9 @@ function ListView({
                                             alt={k.title}
                                             loading={idx < 4 ? "eager" : "lazy"}
                                             decoding='async'
-                                            fetchPriority={idx < 4 ? "high" : "low"}
+                                            fetchPriority={
+                                                idx < 4 ? "high" : "low"
+                                            }
                                             className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
                                         />
                                         <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
