@@ -44,7 +44,7 @@ const parseDurationSeconds = (value) => {
         .reduce((total, part) => total * 60 + part, 0);
 };
 
-const KajianThumbnail = ({ src, alt, className }) => {
+const KajianThumbnail = ({ src, alt, className, onClick }) => {
     const [failed, setFailed] = useState(false);
 
     if (!src || failed) {
@@ -58,12 +58,18 @@ const KajianThumbnail = ({ src, alt, className }) => {
     }
 
     return (
-        <img
-            src={src}
-            alt={alt}
-            onError={() => setFailed(true)}
-            className={`object-cover ${className}`}
-        />
+        <button
+            type='button'
+            onClick={onClick}
+            className={`block overflow-hidden ${className}`}
+        >
+            <img
+                src={src}
+                alt={alt}
+                onError={() => setFailed(true)}
+                className='w-full h-full object-cover'
+            />
+        </button>
     );
 };
 
@@ -89,6 +95,7 @@ const AdminStudiesPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -285,6 +292,18 @@ const AdminStudiesPage = () => {
                                             }
                                             alt=''
                                             className='w-16 h-10 rounded-lg shrink-0'
+                                            onClick={() =>
+                                                setPreviewImage({
+                                                    src:
+                                                        item.thumbnail_url ??
+                                                        item.thumbnail,
+                                                    title: getLocalizedField(
+                                                        item,
+                                                        "title",
+                                                        lang,
+                                                    ),
+                                                })
+                                            }
                                         />
                                         <p className='font-medium text-gray-900 dark:text-white'>
                                             {getLocalizedField(
@@ -366,6 +385,18 @@ const AdminStudiesPage = () => {
                                             }
                                             alt=''
                                             className='w-20 h-12 rounded-lg'
+                                            onClick={() =>
+                                                setPreviewImage({
+                                                    src:
+                                                        item.thumbnail_url ??
+                                                        item.thumbnail,
+                                                    title: getLocalizedField(
+                                                        item,
+                                                        "title",
+                                                        lang,
+                                                    ),
+                                                })
+                                            }
                                         />
                                     </Td>
                                     <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
@@ -671,6 +702,33 @@ const AdminStudiesPage = () => {
                             {t("common.delete")}
                         </button>
                     </div>
+                </ModalShell>
+            )}
+
+            {previewImage && (
+                <ModalShell
+                    onClose={() => setPreviewImage(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4'
+                    panelClassName='relative w-full max-w-3xl max-h-[85vh]'
+                    label={previewImage.title}
+                >
+                    <button
+                        onClick={() => setPreviewImage(null)}
+                        aria-label={t("common.close")}
+                        className='absolute -top-3 -right-3 z-10 p-1.5 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 rounded-full shadow-lg'
+                    >
+                        <BsX className='text-xl' />
+                    </button>
+                    <img
+                        src={previewImage.src}
+                        alt={previewImage.title}
+                        className='w-full max-h-[85vh] object-contain rounded-xl bg-black'
+                    />
+                    {previewImage.title && (
+                        <p className='mt-2 text-center text-sm text-white'>
+                            {previewImage.title}
+                        </p>
+                    )}
                 </ModalShell>
             )}
         </div>
