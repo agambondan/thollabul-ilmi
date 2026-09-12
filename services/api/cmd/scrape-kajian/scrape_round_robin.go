@@ -32,7 +32,7 @@ type channelWork struct {
 // whichever channels have reported their video list so far by one video
 // each pass, folding newly-listed channels into the rotation as they
 // arrive instead of waiting for the slowest one.
-func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyWithTranscript bool, outDir string, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string, concurrency int, listingCache ListingCache, listingCachePath string, listingCacheTTL time.Duration) (totalNew, totalAll int) {
+func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyWithTranscript bool, outDir string, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string, concurrency int, listingCache ListingCache, listingCachePath string, listingCacheTTL time.Duration, minDurationSeconds int) (totalNew, totalAll int) {
 	workers := concurrency
 	if workers < 1 {
 		workers = 1
@@ -105,7 +105,7 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 		go func() {
 			defer fetchWg.Done()
 			for j := range jobCh {
-				if processVideo(j.work, j.video, j.pos, j.total, cookies, onlyWithTranscript, skipCache, &cacheMu, retryInterval, now, skipCachePath) {
+				if processVideo(j.work, j.video, j.pos, j.total, cookies, onlyWithTranscript, skipCache, &cacheMu, retryInterval, now, skipCachePath, minDurationSeconds) {
 					totalsMu.Lock()
 					totalNew++
 					totalsMu.Unlock()
@@ -159,7 +159,7 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 // have some left) -- so every read/write of work.items and its file is
 // behind work.mu, unlike the old one-goroutine-per-channel model where a
 // channel's own map was only ever touched sequentially by itself.
-func processVideo(work *channelWork, video Video, pos, total int, cookies string, onlyWithTranscript bool, skipCache SkipCache, cacheMu *sync.Mutex, retryInterval time.Duration, now *time.Time, skipCachePath *string) bool {
+func processVideo(work *channelWork, video Video, pos, total int, cookies string, onlyWithTranscript bool, skipCache SkipCache, cacheMu *sync.Mutex, retryInterval time.Duration, now *time.Time, skipCachePath *string, minDurationSeconds int) bool {
 	tag := "[" + channelSlug(work.channel) + "]"
 
 	work.mu.Lock()
@@ -205,8 +205,32 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 	}
 	cacheMu.Unlock()
 	if shouldSkip {
-		fmt.Printf("%s        [%d/%d] ↷ %s... (Tanpa transkrip, retry %s)\n", tag, pos, total, trim(video.Title, 45), deferEntry.RetryAfter.Format("2006-01-02"))
+		if deferEntry.Reason == "too_short" {
+			fmt.Printf("%s        [%d/%d] ↷ %s... (Durasi pendek - skip)\n", tag, pos, total, trim(video.Title, 45))
+		} else {
+			fmt.Printf("%s        [%d/%d] ↷ %s... (Tanpa transkrip, retry %s)\n", tag, pos, total, trim(video.Title, 45), deferEntry.RetryAfter.Format("2006-01-02"))
+		}
 		return false
+	}
+
+	// Cheap guard against wasting a full caption download on a short clip:
+	// checked via a lightweight single-video metadata fetch (fetchVideoDuration,
+	// no subtitle request), not video.Duration from the --flat-playlist listing
+	// -- that field is the same one found to sometimes report a bogus, much
+	// smaller duration than reality (see fix_durations.go), so trusting it
+	// here would risk silently dropping a legitimate long lecture instead of
+	// just mis-recording its length. Cached permanently (a video's real
+	// duration never changes) so the lightweight fetch only ever runs once
+	// per video.
+	if onlyWithTranscript && minDurationSeconds > 0 {
+		if shortDuration, ok := fetchVideoDuration(video.VideoID); ok && shortDuration < minDurationSeconds {
+			cacheMu.Lock()
+			skipCache.Entries[video.VideoID] = SkipEntry{AttemptedAt: *now, RetryAfter: now.AddDate(50, 0, 0), Reason: "too_short", Channel: work.channel.ChannelURL}
+			_ = saveSkipCache(*skipCachePath, skipCache)
+			cacheMu.Unlock()
+			fmt.Printf("%s        [%d/%d] ↷ %s... (Durasi %ds, di bawah %ds - skip)\n", tag, pos, total, trim(video.Title, 45), shortDuration, minDurationSeconds)
+			return false
+		}
 	}
 
 	snippets, confirmedAbsent, publishedAt, duration := fetchTranscript(video.VideoID, cookies)

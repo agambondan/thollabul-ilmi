@@ -129,6 +129,7 @@ func main() {
 	listingCacheTTL := flag.Duration("listing-cache-ttl", 6*time.Hour, "Reuse a channel's cached listing instead of re-querying yt-dlp if it was listed more recently than this. Set 0 to always re-list.")
 	fixDurations := flag.Bool("fix-durations", false, "Scan every already-scraped video for a duration shorter than its own transcript's last chunk (proof the --flat-playlist listing gave a bogus duration estimate) and correct it via a lightweight per-video metadata fetch. Does not touch titles or transcripts.")
 	fixDurationsConcurrency := flag.Int("fix-durations-concurrency", 5, "Concurrent metadata lookups during -fix-durations")
+	minDurationMinutes := flag.Int("min-duration-minutes", 5, "Skip a new video without downloading its transcript if it's shorter than this many minutes (checked via a lightweight metadata fetch, not the unreliable --flat-playlist listing duration -- see fetchVideoDuration). 0 disables the guard.")
 	flag.Parse()
 
 	targets := []Channel{}
@@ -184,7 +185,9 @@ func main() {
 	now := time.Now().UTC()
 	listingCache := loadListingCache(*listingCachePath)
 
-	totalNew, totalAll := scrapeAllRoundRobin(targets, *maxVideos, *cookies, !*allowEmptyTranscript, *outDir, skipCache, retryInterval, &now, &skipCachePathPtr, *concurrency, listingCache, *listingCachePath, *listingCacheTTL)
+	minDurationSeconds := *minDurationMinutes * 60
+
+	totalNew, totalAll := scrapeAllRoundRobin(targets, *maxVideos, *cookies, !*allowEmptyTranscript, *outDir, skipCache, retryInterval, &now, &skipCachePathPtr, *concurrency, listingCache, *listingCachePath, *listingCacheTTL, minDurationSeconds)
 	writeManifest(*outDir, targets)
 
 	if err := saveSkipCache(*skipCachePath, skipCache); err != nil {
