@@ -32,7 +32,7 @@ type channelWork struct {
 // whichever channels have reported their video list so far by one video
 // each pass, folding newly-listed channels into the rotation as they
 // arrive instead of waiting for the slowest one.
-func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyWithTranscript bool, outDir string, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string, concurrency int) (totalNew, totalAll int) {
+func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyWithTranscript bool, outDir string, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string, concurrency int, listingCache ListingCache, listingCachePath string, listingCacheTTL time.Duration) (totalNew, totalAll int) {
 	workers := concurrency
 	if workers < 1 {
 		workers = 1
@@ -46,6 +46,7 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 	var readyMu sync.Mutex
 	ready := make([]channelData, 0, len(targets))
 	remaining := len(targets)
+	var listingCacheMu sync.Mutex
 
 	listSem := make(chan struct{}, workers)
 	var listWg sync.WaitGroup
@@ -61,9 +62,26 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 			defer listWg.Done()
 			defer func() { <-listSem }()
 			tag := "[" + channelSlug(target) + "]"
-			fmt.Printf("\n%s [SCAN] %s (%s)...\n", tag, target.Name, target.ChannelURL)
-			videos := getChannelVideos(target.ChannelURL, maxVideos, cookies)
-			fmt.Printf("%s        Ditemukan %d video.\n", tag, len(videos))
+
+			slug := channelSlug(target)
+			listingCacheMu.Lock()
+			cached, hasCached := listingCache.Entries[slug]
+			listingCacheMu.Unlock()
+
+			var videos []Video
+			if hasCached && listingCacheTTL > 0 && time.Since(cached.ListedAt) < listingCacheTTL {
+				videos = cached.Videos
+				fmt.Printf("\n%s [CACHE] %s -- %d video (listed %s ago, reused instead of re-listing)\n", tag, target.Name, len(videos), time.Since(cached.ListedAt).Round(time.Minute))
+			} else {
+				fmt.Printf("\n%s [SCAN] %s (%s)...\n", tag, target.Name, target.ChannelURL)
+				videos = getChannelVideos(target.ChannelURL, maxVideos, cookies)
+				fmt.Printf("%s        Ditemukan %d video.\n", tag, len(videos))
+
+				listingCacheMu.Lock()
+				listingCache.Entries[slug] = ListingCacheEntry{ListedAt: time.Now().UTC(), Videos: videos}
+				_ = saveListingCache(listingCachePath, listingCache)
+				listingCacheMu.Unlock()
+			}
 
 			readyMu.Lock()
 			ready = append(ready, channelData{work: work, videos: videos})

@@ -75,6 +75,22 @@ type SkipEntry struct {
 	Channel     string    `json:"channel"`
 }
 
+// ListingCache remembers each channel's flat-playlist result (video id,
+// title, duration, thumbnail for every video, not just already-fetched
+// ones) so a run started shortly after the last one doesn't pay for a
+// full re-listing again. Paginating a prolific channel's history (Yufid,
+// 20k+ videos) can take 10+ minutes; on a laptop that isn't left running
+// 24/7, every restart used to redo that in full before any new fetching
+// could even start.
+type ListingCache struct {
+	Entries map[string]ListingCacheEntry `json:"entries"`
+}
+
+type ListingCacheEntry struct {
+	ListedAt time.Time `json:"listed_at"`
+	Videos   []Video   `json:"videos"`
+}
+
 type Snippet struct {
 	Text     string
 	Start    float64
@@ -109,6 +125,8 @@ func main() {
 	refreshTitles := flag.Bool("refresh-titles", false, "Fast path: look up each already-scraped video's title via YouTube oEmbed (plain HTTP, no yt-dlp) instead of re-listing whole channels. Only updates title/description on rows that already exist; does not discover new videos or fetch transcripts.")
 	refreshConcurrency := flag.Int("refresh-concurrency", 6, "Concurrent oEmbed lookups during -refresh-titles")
 	fixVideoID := flag.String("fix-video", "", "Re-fetch and upsert one specific video id into its channel's file (use with -channel/-speaker to identify the channel), bypassing listing and the round-robin queue entirely. For patching a single corrupted/fabricated/incomplete entry without a full re-scrape.")
+	listingCachePath := flag.String("listing-cache", defaultListingCacheFile(), "Path to the per-channel listing cache JSON (video id/title/duration/thumbnail for every video, not just fetched ones)")
+	listingCacheTTL := flag.Duration("listing-cache-ttl", 6*time.Hour, "Reuse a channel's cached listing instead of re-querying yt-dlp if it was listed more recently than this. Set 0 to always re-list.")
 	flag.Parse()
 
 	targets := []Channel{}
@@ -157,8 +175,9 @@ func main() {
 	skipCachePathPtr := *skipCachePath
 	retryInterval := time.Duration(*skipRetryDays) * 24 * time.Hour
 	now := time.Now().UTC()
+	listingCache := loadListingCache(*listingCachePath)
 
-	totalNew, totalAll := scrapeAllRoundRobin(targets, *maxVideos, *cookies, !*allowEmptyTranscript, *outDir, skipCache, retryInterval, &now, &skipCachePathPtr, *concurrency)
+	totalNew, totalAll := scrapeAllRoundRobin(targets, *maxVideos, *cookies, !*allowEmptyTranscript, *outDir, skipCache, retryInterval, &now, &skipCachePathPtr, *concurrency, listingCache, *listingCachePath, *listingCacheTTL)
 	writeManifest(*outDir, targets)
 
 	if err := saveSkipCache(*skipCachePath, skipCache); err != nil {
@@ -241,6 +260,10 @@ func defaultChannelsFile() string {
 
 func defaultSkipCacheFile() string {
 	return filepath.Join(repoRoot(), "services", "api", "data", "static", "kajian_scrape_state.json")
+}
+
+func defaultListingCacheFile() string {
+	return filepath.Join(repoRoot(), "services", "api", "data", "static", "kajian_listing_cache.json")
 }
 
 func repoRoot() string {
@@ -333,6 +356,32 @@ func loadSkipCache(path string) SkipCache {
 func saveSkipCache(path string, cache SkipCache) error {
 	if cache.Entries == nil {
 		cache.Entries = map[string]SkipEntry{}
+	}
+	data, err := json.MarshalIndent(cache, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(path, append(data, '\n'), 0o644)
+}
+
+func loadListingCache(path string) ListingCache {
+	cache := ListingCache{Entries: map[string]ListingCacheEntry{}}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return cache
+	}
+	if err := json.Unmarshal(data, &cache); err != nil || cache.Entries == nil {
+		return ListingCache{Entries: map[string]ListingCacheEntry{}}
+	}
+	return cache
+}
+
+func saveListingCache(path string, cache ListingCache) error {
+	if cache.Entries == nil {
+		cache.Entries = map[string]ListingCacheEntry{}
 	}
 	data, err := json.MarshalIndent(cache, "", "  ")
 	if err != nil {
