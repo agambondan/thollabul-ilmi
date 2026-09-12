@@ -485,7 +485,7 @@ export default async function Home() {
     return (
         <main className='bg-parchment-50 dark:bg-slate-900'>
             {/* ── Hero ─────────────────────────────────────────────── */}
-            <section className='pt-navbar relative flex min-h-[78svh] items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800'>
+            <section className='pt-navbar relative flex min-h-[78svh] md:min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800'>
                 <div
                     className='absolute inset-0 opacity-5'
                     style={{
@@ -497,34 +497,34 @@ export default async function Home() {
                 <div className='absolute top-16 right-16 w-80 h-80 rounded-full bg-emerald-700 opacity-25 blur-3xl pointer-events-none' />
                 <div className='absolute top-2/3 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
 
-                <div className='relative z-10 mx-auto max-w-3xl px-6 py-14 md:py-20 text-center text-white'>
+                <div className='relative z-10 mx-auto max-w-3xl px-6 py-14 md:py-6 text-center text-white'>
                     <p
-                        className='min-h-[4.5rem] md:min-h-[6rem] text-4xl md:text-5xl text-gold-300 mb-4 leading-loose'
+                        className='min-h-[4.5rem] md:min-h-[3.5rem] text-4xl md:text-5xl text-gold-300 mb-4 md:mb-2 leading-loose'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
                     >
                         بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ
                     </p>
 
-                    <div className='flex items-center justify-center gap-3 mb-6'>
+                    <div className='flex items-center justify-center gap-3 mb-6 md:mb-3'>
                         <div className='h-px bg-gold-400 opacity-50 w-16' />
                         <span className='text-gold-400'>✦</span>
                         <div className='h-px bg-gold-400 opacity-50 w-16' />
                     </div>
 
-                    <h1 className='text-5xl md:text-7xl font-extrabold mb-3 text-white tracking-tight'>
+                    <h1 className='text-5xl md:text-7xl font-extrabold mb-3 md:mb-1 text-white tracking-tight'>
                         Thullaabul &apos;Ilmi
                     </h1>
                     <p
-                        className='min-h-[2.5rem] md:min-h-[3rem] text-2xl md:text-3xl text-gold-300 mb-5 leading-relaxed'
+                        className='min-h-[2.5rem] md:min-h-[2rem] text-2xl md:text-3xl text-gold-300 mb-5 md:mb-2 leading-relaxed'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
                     >
                         طُلَّابُ الْعِلْمِ
                     </p>
-                    <p className='text-base md:text-lg text-emerald-200 mb-10 max-w-xl mx-auto leading-relaxed'>
+                    <p className='text-base md:text-lg text-emerald-200 mb-10 md:mb-4 max-w-xl mx-auto leading-relaxed'>
                         {t("home.hero_desc")}
                     </p>
 
-                    <div className='relative mx-auto mb-10 max-w-xl min-h-[280px]'>
+                    <div className='relative mx-auto mb-10 md:mb-4 max-w-xl min-h-[280px] md:min-h-[240px]'>
                         <HomeClock />
                     </div>
 
@@ -533,7 +533,7 @@ export default async function Home() {
                         {STATS.map((s) => (
                             <div
                                 key={s.labelKey}
-                                className='bg-white/10 backdrop-blur-sm rounded-xl px-3 py-3 border border-white/10'
+                                className='bg-white/10 backdrop-blur-sm rounded-xl px-3 py-3 md:py-2 border border-white/10'
                             >
                                 <p className='text-2xl font-extrabold text-gold-300'>
                                     {s.value}
