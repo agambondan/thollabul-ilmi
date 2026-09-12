@@ -1,19 +1,14 @@
+import ContentWidth from "@/components/layout/ContentWidth";
+import { buildRegisterHref } from "@/lib/authRedirect";
+import en from "@/lib/i18n/en";
+import id from "@/lib/i18n/id";
+import { openGraphFor } from "@/lib/site";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import ContentWidth from "@/components/layout/ContentWidth";
-import { openGraphFor } from "@/lib/site";
-import { buildRegisterHref } from "@/lib/authRedirect";
-import id from "@/lib/i18n/id";
-import en from "@/lib/i18n/en";
-import HomeClock from "./home/HomeClock";
-import DashboardCTA from "./home/DashboardCTA";
-import TajweedSection from "./home/TajweedSection";
-import PersonalLinksAuthFix from "./home/PersonalLinksAuthFix";
 import {
     BsBarChart,
     BsBell,
     BsBook,
-    BsBookHalf,
     BsBookmark,
     BsCalendar3,
     BsChatDots,
@@ -28,7 +23,6 @@ import {
     FaBrain,
     FaCalculator,
     FaGraduationCap,
-    FaMosque,
     FaQuran,
 } from "react-icons/fa";
 import { GiCompass, GiOpenBook, GiPrayerBeads } from "react-icons/gi";
@@ -52,6 +46,10 @@ import {
     MdTimeline,
     MdTranslate,
 } from "react-icons/md";
+import DashboardCTA from "./home/DashboardCTA";
+import HomeClock from "./home/HomeClock";
+import PersonalLinksAuthFix from "./home/PersonalLinksAuthFix";
+import TajweedSection from "./home/TajweedSection";
 
 export const metadata = {
     alternates: { canonical: "/" },
@@ -497,7 +495,7 @@ export default async function Home() {
                 <div className='absolute top-16 right-16 w-80 h-80 rounded-full bg-emerald-700 opacity-25 blur-3xl pointer-events-none' />
                 <div className='absolute top-2/3 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
 
-                <div className='relative z-10 mx-auto w-full max-w-6xl px-6 py-14 md:py-6 text-center text-white'>
+                <div className='relative z-10 mx-auto w-full max-w-6xl px-6 py-10 md:py-2 text-center text-white'>
                     <p
                         className='min-h-[4.5rem] md:min-h-[3.5rem] text-4xl md:text-5xl text-gold-300 mb-4 md:mb-2 leading-loose'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
@@ -515,7 +513,7 @@ export default async function Home() {
                         Thullaabul &apos;Ilmi
                     </h1>
                     <p
-                        className='min-h-[2.5rem] md:min-h-[2rem] text-2xl md:text-3xl text-gold-300 mb-5 md:mb-2 leading-relaxed'
+                        className='min-h-[2.5rem] md:min-h-[2rem] text-2xl md:text-3xl text-gold-300 my-5 md:my-2 leading-relaxed'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
                     >
                         طُلَّابُ الْعِلْمِ

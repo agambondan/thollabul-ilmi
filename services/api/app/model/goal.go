@@ -21,7 +21,7 @@ type StudyGoal struct {
 	Target      int       `json:"target" gorm:"default:0"`
 	Progress    int       `json:"progress" gorm:"default:0"`
 	StartDate   string    `json:"start_date" gorm:"type:date;not null"`
-	EndDate     string    `json:"end_date" gorm:"type:date"`
+	EndDate     *string   `json:"end_date" gorm:"type:date"`
 	IsCompleted bool      `json:"is_completed" gorm:"default:false"`
 }
 

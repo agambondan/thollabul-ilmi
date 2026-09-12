@@ -29,9 +29,16 @@ func (s *goalService) Create(userID uuid.UUID, req *model.CreateGoalRequest) (*m
 		Description: req.Description,
 		Target:      req.Target,
 		StartDate:   req.StartDate,
-		EndDate:     req.EndDate,
+		EndDate:     nonEmptyDate(req.EndDate),
 	}
 	return s.repo.Create(g)
+}
+
+func nonEmptyDate(date string) *string {
+	if date == "" {
+		return nil
+	}
+	return &date
 }
 
 func (s *goalService) FindAll(userID uuid.UUID) ([]model.StudyGoal, error) {
@@ -44,7 +51,7 @@ func (s *goalService) Update(id int, userID uuid.UUID, req *model.UpdateGoalRequ
 		Description: req.Description,
 		Target:      req.Target,
 		Progress:    req.Progress,
-		EndDate:     req.EndDate,
+		EndDate:     nonEmptyDate(req.EndDate),
 	}
 	if req.IsCompleted != nil {
 		g.IsCompleted = *req.IsCompleted
