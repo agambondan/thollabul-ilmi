@@ -4,7 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import DeveloperKeyManager from "./DeveloperKeyManager";
 
-const BASE_URL = "https://api.tholabul-ilmi.com";
+const BASE_URL = "https://api.thollabulilmi.site";
 
 const groupsByLang = {
     ID: [
