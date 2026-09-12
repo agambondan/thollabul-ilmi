@@ -497,8 +497,8 @@ const InfiniteScrollAyahPage = ({
                                 strokeLinejoin='round'
                                 aria-hidden='true'
                             >
-                                <path d='M21 5v14' />
-                                <path d='M17 12L3 5v14l14-7z' />
+                                <path d='M3 5v14' />
+                                <path d='M7 12l14-7v14l-14-7z' />
                             </svg>
                             <span className='max-w-[75px] sm:max-w-[120px] truncate'>
                                 {getSurahName(surah?.prev_surah, lang) ??
@@ -518,8 +518,8 @@ const InfiniteScrollAyahPage = ({
                                 strokeLinejoin='round'
                                 aria-hidden='true'
                             >
-                                <path d='M21 5v14' />
-                                <path d='M17 12L3 5v14l14-7z' />
+                                <path d='M3 5v14' />
+                                <path d='M7 12l14-7v14l-14-7z' />
                             </svg>
                             <span>{t("quran.prev")}</span>
                         </span>
@@ -551,8 +551,8 @@ const InfiniteScrollAyahPage = ({
                                 strokeLinejoin='round'
                                 aria-hidden='true'
                             >
-                                <path d='M3 5v14' />
-                                <path d='M7 12l14-7v14l-14-7z' />
+                                <path d='M21 5v14' />
+                                <path d='M17 12L3 5v14l14-7z' />
                             </svg>
                         </Link>
                     ) : (
@@ -569,8 +569,8 @@ const InfiniteScrollAyahPage = ({
                                 strokeLinejoin='round'
                                 aria-hidden='true'
                             >
-                                <path d='M3 5v14' />
-                                <path d='M7 12l14-7v14l-14-7z' />
+                                <path d='M21 5v14' />
+                                <path d='M17 12L3 5v14l14-7z' />
                             </svg>
                         </span>
                     )}
