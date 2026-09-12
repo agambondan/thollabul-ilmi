@@ -28,52 +28,52 @@ const QARI_CATALOG = {
     "mishary-rashid-alafasy": {
         name: "Mishary Rashid Al-Afasy",
         country: "Kuwait",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Mishary_bin_Rashid_Al-Afasy.jpg/220px-Mishary_bin_Rashid_Al-Afasy.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/%D0%9C%D0%B8%D1%88%D0%B0%D1%80%D0%B8_%D0%A0%D0%B0%D1%88%D0%B8%D0%B4.jpg/250px-%D0%9C%D0%B8%D1%88%D0%B0%D1%80%D0%B8_%D0%A0%D0%B0%D1%88%D0%B8%D0%B4.jpg",
     },
     "abdurrahman-as-sudais": {
         name: "Abdurrahman As-Sudais",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Abdul_Rahman_Al-Sudais.jpg/220px-Abdul_Rahman_Al-Sudais.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Abdul-Rahman_Al-Sudais_%28Cropped%2C_2011%29.jpg/250px-Abdul-Rahman_Al-Sudais_%28Cropped%2C_2011%29.jpg",
     },
     "abdul-basit": {
         name: "Abdul Basit Abdul Samad",
         country: "Mesir",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Abdul_Basit_Abdul_Samad.jpg/220px-Abdul_Basit_Abdul_Samad.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Abdul_Basit_%27Abd_us-Samad_with_King_Faisal.jpg/250px-Abdul_Basit_%27Abd_us-Samad_with_King_Faisal.jpg",
     },
     "saad-al-ghamidi": {
         name: "Sa'ad Al-Ghamidi",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Saad_Al-Ghamidi.jpg/220px-Saad_Al-Ghamidi.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Saad_al_Ghamdi.jpg/250px-Saad_al_Ghamdi.jpg",
     },
     "yasser-al-dosari": {
         name: "Yasser Al-Dosari",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Yasser_Al-Dosari.jpg/220px-Yasser_Al-Dosari.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Yasser_Al-Dosari.jpg/250px-Yasser_Al-Dosari.jpg",
     },
     "maher-al-muaiqly": {
         name: "Maher Al-Muaiqly",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Maher_Al-Muaiqly.jpg/220px-Maher_Al-Muaiqly.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Maher_Al_Mueaqly.jpg/250px-Maher_Al_Mueaqly.jpg",
     },
     "hani-ar-rifai": {
         name: "Hani Ar-Rifai",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hani_Ar-Rifai.jpg/220px-Hani_Ar-Rifai.jpg",
+        photo: QARI_FALLBACK_AVATAR,
     },
     "salah-bukhatir": {
         name: "Salah Bukhatir",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salah_Bukhatir.jpg/220px-Salah_Bukhatir.jpg",
+        photo: QARI_FALLBACK_AVATAR,
     },
     "abdullah-al-juhany": {
         name: "Abdullah Al-Juhany",
         country: "Arab Saudi",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Abdullah_Al-Juhany.jpg/220px-Abdullah_Al-Juhany.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Abdullah_Al_Juhany_%28Cropped%29.png/250px-Abdullah_Al_Juhany_%28Cropped%29.png",
     },
     "ali-al-hudhaify": {
         name: "Ali Abdurrahman Al-Hudhaify",
         country: "Yaman",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ali_Al-Hudhaify.jpg/220px-Ali_Al-Hudhaify.jpg",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ali_al-Hudhayfi.jpg/250px-Ali_al-Hudhayfi.jpg",
     },
 };
 

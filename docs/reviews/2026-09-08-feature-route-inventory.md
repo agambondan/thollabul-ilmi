@@ -251,62 +251,62 @@ prioritaskan investigasi kenapa sebelum review mendalam.
 | # | Feature Domain | Backend | Web | Mobile |
 |---|---|---|---|---|
 | 1 | Auth & Users (register/login/google/session/profile) | [ ] | [ ] | [ ] |
-| 2 | Al-Quran core (surah/ayah/juz/mufrodat/reader) | [ ] | [ ] | [ ] |
-| 3 | Tafsir | [ ] | [ ] | [ ] |
-| 4 | Asbabun Nuzul | [ ] | [ ] | [ ] |
-| 5 | **Munasabah** (backend ada, web/mobile UI belum ketemu — cek dulu apakah memang belum dibangun) | [ ] | [ ] | [ ] |
-| 6 | Audio Murotal + Adzan Sounds | [ ] | [ ] | [ ] |
-| 7 | Hadith (books/chapters/themes/reader) | [ ] | [ ] | [ ] |
-| 8 | Perawi & Ilmu Rijal (sanad/jarh-tadil/takhrij) | [ ] | [ ] | [ ] |
-| 9 | **Hadith-Ayah cross-reference** (cek apakah benar terpakai di UI Hadith "Ayat" tab / Quran) | [ ] | [ ] | [ ] |
-| 10 | Doa | [ ] | [ ] | [ ] |
-| 11 | Dzikir + Dzikir Log | [ ] | [ ] | [ ] |
-| 12 | Wirid + User Custom Wirid | [ ] | [ ] | [ ] |
-| 13 | Asmaul Husna (+ Flashcard + Wirid mode) | [ ] | [ ] | [ ] |
-| 14 | Siroh | [ ] | [ ] | [ ] |
-| 15 | Sejarah / History Timeline | [ ] | [ ] | [ ] |
-| 16 | Tokoh Tarikh | [ ] | [ ] | [ ] |
-| 17 | Peta Islam / Locations | [ ] | [ ] | [ ] |
-| 18 | Fiqh Ringkas | [ ] | [ ] | [ ] |
-| 19 | Kamus Istilah Islam | [ ] | [ ] | [ ] |
-| 20 | Manasik Haji & Umrah | [ ] | [ ] | [ ] |
-| 21 | Belajar / Lessons (Modul) | [ ] | [ ] | [ ] |
-| 22 | Quiz & Flashcard | [ ] | [ ] | [ ] |
-| 23 | Kajian (list + search + bookmarks + notes + player) | [ ] | [ ] | [ ] |
+| 2 | Al-Quran core (surah/ayah/juz/mufrodat/reader) | [x] | [x] | [ ] |
+| 3 | Tafsir | [x] | [x] | [ ] |
+| 4 | Asbabun Nuzul | [x] | [ ] | [ ] |
+| 5 | **Munasabah** — RESOLVED: web UI exists (`AyahPage.js` "Ayat Terkait" panel, correct loading/error/empty states via `useAsyncResource`). Backend route works. But **zero rows seeded** — tested 6 different ayah ids (1,2,6,50,100,255,500), all return `{"items":[]}`. Content gap, not a code bug. | [x] | [x] | [ ] |
+| 6 | Audio Murotal + Adzan Sounds | [x] (murotal only; adzan-sounds is JWT, not exercised) | [ ] | [ ] |
+| 7 | Hadith (books/chapters/themes/reader) | [x] | [ ] | [ ] |
+| 8 | Perawi & Ilmu Rijal (sanad/jarh-tadil/takhrij) | [x] (perawi list OK; sanad/takhrij empty for hadith id 1 — likely just unseeded for that hadith, not re-tested across more ids) | [ ] | [ ] |
+| 9 | **Hadith-Ayah cross-reference** — BUG FOUND & FIXED. Both `/hadiths/:id/ayahs` and `/ayahs/:id/hadiths` returned HTTP 500 for every id tried. Root cause: `model.HadithAyah.Hadith`/`.Ayah` fields were tagged `gorm:"-"` (fully ignored by GORM) while the repository still called `.Preload("Hadith")`/`.Preload("Ayah")` on them — preloading a non-association field errors out. Fixed in `services/api/app/model/hadith_ayah.go` by dropping the `gorm:"-"` tags (matches how `Hadith.Book`/`Ayah.Surah` are wired elsewhere). Web UI (`AyahPage.js` + `HadithPage.js` `HadithAyahPanel`) was already correctly wired to consume it — just blocked by the backend 500. **Needs API container rebuild/restart to verify live**, not done in this pass (shared docker container, out of scope for a read-only audit). | [x] (fixed, not yet re-verified live) | [x] | [ ] |
+| 10 | Doa | [x] | [x] | [ ] |
+| 11 | Dzikir + Dzikir Log | [x] (list only; log is JWT, not exercised) | [ ] | [ ] |
+| 12 | Wirid + User Custom Wirid | [x] (list only; user-wird is JWT, not exercised) | [ ] | [ ] |
+| 13 | Asmaul Husna (+ Flashcard + Wirid mode) | [x] | [ ] | [ ] |
+| 14 | Siroh | [x] | [x] | [ ] |
+| 15 | Sejarah / History Timeline | [x] | [ ] | [ ] |
+| 16 | Tokoh Tarikh | [x] | [ ] | [ ] |
+| 17 | Peta Islam / Locations | [x] | [ ] | [ ] |
+| 18 | Fiqh Ringkas | [x] | [ ] | [ ] |
+| 19 | Kamus Istilah Islam | [x] | [ ] | [ ] |
+| 20 | Manasik Haji & Umrah | [x] | [ ] | [ ] |
+| 21 | Belajar / Lessons (Modul) | [x] | [ ] | [ ] |
+| 22 | Quiz & Flashcard | [ ] (GET `/quiz` returns 405 — quiz session likely POST-based; not investigated further this pass) | [ ] | [ ] |
+| 23 | Kajian (list + search + bookmarks + notes + player) | [x] (list only; bookmarks/notes are JWT, not exercised) | [ ] | [ ] |
 | 24 | Masjid (reviewed + admin CRUD + mobile screen all added 2026-09-08 — not yet tried on a physical device) | [x] | [x] | [x] |
 | 25 | Radio Islamic (reviewed + admin CRUD + mobile screen all added 2026-09-08 — not yet tried on a physical device) | [x] | [x] | [x] |
-| 26 | Blog | [ ] | [ ] | [ ] |
-| 27 | Library / Perpustakaan | [ ] | [ ] | [ ] |
-| 28 | Forum Q&A | [ ] | [ ] | [ ] |
-| 29 | Komunitas Chat | [ ] | [ ] | [ ] |
-| 30 | Feed / Community activity share | [ ] | [ ] | [ ] |
+| 26 | Blog | [x] | [x] | [ ] |
+| 27 | Library / Perpustakaan | [x] | [ ] | [ ] |
+| 28 | Forum Q&A | [x] (empty result set, but shape is correct `{items,page,size,total}` — no data seeded, not a bug) | [ ] | [ ] |
+| 29 | Komunitas Chat | [x] (empty `{items:[]}` — no data seeded) | [ ] | [ ] |
+| 30 | Feed / Community activity share | [x] (empty but correct paginated shape) | [ ] | [ ] |
 | 31 | **Comments/Diskusi** (generic ref-based — cek dipakai di mana saja) | [ ] | [ ] | [ ] |
-| 32 | Bookmark (generic, lintas konten) | [ ] | [ ] | [ ] |
-| 33 | Reading Progress | [ ] | [ ] | [ ] |
-| 34 | Hafalan | [ ] | [ ] | [ ] |
+| 32 | Bookmark (generic, lintas konten) | [x] (JWT, 401 as expected without token) | [x] (`dashboard/bookmarks/page.js` unwraps `data?.items ?? data ?? []` correctly) | [ ] |
+| 33 | Reading Progress | [ ] (used indirectly via `/khatam` page — `progressApi.getQuran()` consumed correctly there) | [ ] | [ ] |
+| 34 | Hafalan | [ ] (JWT, 401 as expected) | [ ] | [ ] |
 | 35 | Streak & Activity | [ ] | [ ] | [ ] |
-| 36 | Tilawah Tracker | [ ] | [ ] | [ ] |
-| 37 | Amalan Harian | [ ] | [ ] | [ ] |
-| 38 | Muroja'ah | [ ] | [ ] | [ ] |
-| 39 | Muhasabah Harian | [ ] | [ ] | [ ] |
-| 40 | Target Belajar / Goals | [ ] | [ ] | [ ] |
-| 41 | **Khatam** (web+mobile ada, backend route belum ketemu — cek client-local only atau ada endpoint tersembunyi) | [ ] | [ ] | [ ] |
-| 42 | Stats | [ ] | [ ] | [ ] |
-| 43 | Leaderboard | [ ] | [ ] | [ ] |
-| 44 | Achievements & Points | [ ] | [ ] | [ ] |
-| 45 | Prayer Tracker + Panduan Sholat | [ ] | [ ] | [ ] |
-| 46 | Jadwal Sholat / Imsakiyah / Hijri Calendar | [ ] | [ ] | [ ] |
-| 47 | Kiblat Finder | [ ] | [ ] | [ ] |
-| 48 | Zakat Calculator + History | [ ] | [ ] | [ ] |
-| 49 | Faraidh Calculator + History | [ ] | [ ] | [ ] |
-| 50 | Notifications / Push / Reminders + Templates | [ ] | [ ] | [ ] |
+| 36 | Tilawah Tracker | [ ] (JWT, 401 as expected) | [ ] | [ ] |
+| 37 | Amalan Harian | [x] | [ ] | [ ] |
+| 38 | Muroja'ah | [ ] (JWT-only, no bare list route — by design, not a gap) | [ ] | [ ] |
+| 39 | Muhasabah Harian | [ ] (JWT, 401 as expected) | [ ] | [ ] |
+| 40 | Target Belajar / Goals | [ ] (JWT, 401 as expected) | [ ] | [ ] |
+| 41 | **Khatam** — RESOLVED: confirmed client-local by design, not a gap. `apps/web/src/app/khatam/page.js` computes progress from `progressApi.getQuran()` (reading position) + `khatamHelper.js` (pure ayah/juz math) and stores only the user's target date in `localStorage`. No dedicated backend table needed; `GoalType "khatam"` exists in `/goals` for anyone who wants a tracked goal instead. Code reviewed, no bug found. Minor (non-bug) note: target date is per-device localStorage only, doesn't sync across devices. | [x] | [x] | [ ] |
+| 42 | Stats | [ ] (JWT, 401 as expected) | [ ] | [ ] |
+| 43 | Leaderboard | [x] (`/leaderboard/streak`, `/leaderboard/hafalan` return real ranked data; note route has no bare `/leaderboard` root, only sub-paths — matches routes.go, not a bug) | [ ] | [ ] |
+| 44 | Achievements & Points | [x] (public list has real data; `/achievements/mine` correctly 401s without auth) | [ ] | [ ] |
+| 45 | Prayer Tracker + Panduan Sholat | [x] (Panduan Sholat public list OK; Prayer tracker is JWT, not exercised) | [ ] | [ ] |
+| 46 | Jadwal Sholat / Imsakiyah / Hijri Calendar | [x] | [ ] | [ ] |
+| 47 | Kiblat Finder | [x] | [ ] | [ ] |
+| 48 | Zakat Calculator + History | [ ] — skipped this pass, handled by another session today per instructions | [ ] | [ ] |
+| 49 | Faraidh Calculator + History | [ ] — skipped this pass, handled by another session today per instructions | [ ] | [ ] |
+| 50 | Notifications / Push / Reminders + Templates | [x] (Reminders public list OK; `/notifications/vapid-public-key` exists — my first guess at the path was wrong, not a bug; push/settings are JWT, not exercised) | [ ] | [ ] |
 | 51 | Content Correction Reports (+ Apply Correction) | [ ] | [ ] | [ ] |
 | 52 | Admin Audit Logs | [ ] | — (admin only) | — |
-| 53 | Notes & Annotations | [ ] | [ ] | [ ] |
-| 54 | User Settings (sync) | [ ] | [ ] | [ ] |
-| 55 | Search (global) | [ ] | [ ] | [ ] |
+| 53 | Notes & Annotations | [ ] | [x] (`dashboard/notes/page.js` — solid: fetches from API when authenticated via `notesApi.list`, falls back to a synced local-storage copy with a visible "belum tersinkron" error state, well-structured with shared `personalSync.js` helpers) | [ ] |
+| 54 | User Settings (sync) | [x] (`/sync` returns full initial dataset) | [ ] | [ ] |
+| 55 | Search (global) | [x] | [x] BUG FOUND & FIXED — `SearchClient.js` `mergeResults()` (pagination "load more" merge) checked wrong keys `"ayah"`/`"hadith"` (singular) while the actual API response uses `"ayahs"`/`"hadiths"` (plural, confirmed via live response). Because of the mismatch, appending more Ayah/Hadith search results silently **dropped the previously loaded items** instead of accumulating them (Dictionary/Doa/Kajian/Perawi were unaffected — those 4 keys were already correct). Confirmed by cross-referencing the file's own defensive `getItems()` helper, which already falls back to the plural form. Fixed the two keys in `apps/web/src/app/search/SearchClient.js`. | [ ] |
 | 56 | Mobile Initial Sync | [ ] | — (mobile only) | [ ] |
-| 57 | Analytics (page-view tracking) | [ ] | [ ] | [ ] |
+| 57 | Analytics (page-view tracking) | [ ] (write-only POST endpoint, `curl GET` correctly 405s; not exercised with a real POST) | [ ] | [ ] |
 | 58 | Open API / Developer Partner Integration | [ ] | [ ] | — (web/API only) |
 | 59 | Admin: User Management | [ ] | [ ] | — |
 

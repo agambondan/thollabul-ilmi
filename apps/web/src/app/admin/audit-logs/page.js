@@ -1,6 +1,6 @@
 "use client";
 
-import { contentAuditLogApi, parseApiError } from "@/lib/api";
+import { contentAuditLogApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsClockHistory, BsDownload, BsSearch } from "react-icons/bs";
@@ -45,7 +45,7 @@ export default function AdminAuditLogsPage() {
             const data = await r.json();
             setItems(data?.items || data?.data?.items || []);
         } catch (err) {
-            fb("admin:toast-error", parseApiError(err) || "Gagal memuat log");
+            fb("admin:mutation-error", err.message || "Gagal memuat log");
         } finally {
             setLoading(false);
         }
@@ -71,9 +71,9 @@ export default function AdminAuditLogsPage() {
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
-            fb("admin:toast-success", "Audit log CSV berhasil diunduh");
+            fb("admin:success", "Audit log CSV berhasil diunduh");
         } catch (err) {
-            fb("admin:toast-error", err.message || "Gagal export CSV");
+            fb("admin:mutation-error", err.message || "Gagal export CSV");
         }
     };
 

@@ -19,7 +19,7 @@ func newNotificationTestDB(t *testing.T) *gorm.DB {
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}
-	if err := db.AutoMigrate(&model.PushToken{}); err != nil {
+	if err := db.AutoMigrate(&model.PushToken{}, &model.NotificationSetting{}); err != nil {
 		t.Fatalf("automigrate: %v", err)
 	}
 	return db
@@ -112,5 +112,31 @@ func TestUpsertPushTokenSameUserDoesNotDeactivateItself(t *testing.T) {
 	}
 	if active[0].Platform != "ios" {
 		t.Fatalf("expected re-registration to update platform, got %q", active[0].Platform)
+	}
+}
+
+func TestFindDisabledUserIDsReturnsOnlyExplicitOptOuts(t *testing.T) {
+	db := newNotificationTestDB(t)
+	repo := NewNotificationRepository(db)
+
+	optedOutUser := uuid.New()
+	optedInUser := uuid.New()
+	otherTypeOptedOutUser := uuid.New()
+
+	settings := []model.NotificationSetting{
+		{UserID: optedOutUser, Type: model.NotificationTypeAdzan, Time: "04:30", IsActive: false},
+		{UserID: optedInUser, Type: model.NotificationTypeAdzan, Time: "04:30", IsActive: true},
+		{UserID: otherTypeOptedOutUser, Type: model.NotificationTypeDoa, Time: "04:30", IsActive: false},
+	}
+	if _, err := repo.UpsertMany(settings); err != nil {
+		t.Fatalf("seed settings: %v", err)
+	}
+
+	disabled, err := repo.FindDisabledUserIDs(model.NotificationTypeAdzan)
+	if err != nil {
+		t.Fatalf("find disabled user ids: %v", err)
+	}
+	if len(disabled) != 1 || disabled[0] != optedOutUser {
+		t.Fatalf("disabled user ids = %v, want [%v]", disabled, optedOutUser)
 	}
 }

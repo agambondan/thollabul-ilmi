@@ -380,8 +380,8 @@ export default function SearchClient({
         if (!prev) return next;
         const merged = { ...next };
         [
-            "ayah",
-            "hadith",
+            "ayahs",
+            "hadiths",
             "dictionaries",
             "doas",
             "kajians",

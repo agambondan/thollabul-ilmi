@@ -5,8 +5,8 @@ type HadithAyah struct {
 	HadithID *int    `json:"hadith_id" gorm:"not null;uniqueIndex:idx_hadith_ayah"`
 	AyahID   *int    `json:"ayah_id" gorm:"not null;uniqueIndex:idx_hadith_ayah"`
 	Catatan  string  `json:"catatan,omitempty" gorm:"type:varchar(500)"`
-	Hadith   *Hadith `json:"hadith,omitempty" gorm:"-"`
-	Ayah     *Ayah   `json:"ayah,omitempty" gorm:"-"`
+	Hadith   *Hadith `json:"hadith,omitempty"`
+	Ayah     *Ayah   `json:"ayah,omitempty"`
 }
 
 type CreateHadithAyahRequest struct {

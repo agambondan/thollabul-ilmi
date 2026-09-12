@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,6 +25,7 @@ type fakeNotificationRepo struct {
 	due                []model.NotificationSetting
 	marked             []int
 	tokens             []model.PushToken
+	disabledUserIDs    []uuid.UUID
 }
 
 func (f *fakeNotificationRepo) FindByUser(userID uuid.UUID) ([]model.NotificationSetting, error) {
@@ -39,7 +41,13 @@ func (f *fakeNotificationRepo) UpsertPushToken(token model.PushToken) (model.Pus
 }
 
 func (f *fakeNotificationRepo) FindActivePushTokens(userID uuid.UUID) ([]model.PushToken, error) {
-	return f.tokens, nil
+	matched := make([]model.PushToken, 0, len(f.tokens))
+	for _, token := range f.tokens {
+		if token.UserID == userID {
+			matched = append(matched, token)
+		}
+	}
+	return matched, nil
 }
 
 func (f *fakeNotificationRepo) FindAllActivePushTokens() ([]model.PushToken, error) {
@@ -76,6 +84,26 @@ func (f *fakeNotificationRepo) FindDue(now time.Time) ([]model.NotificationSetti
 func (f *fakeNotificationRepo) MarkSent(id int, sentAt time.Time) error {
 	f.marked = append(f.marked, id)
 	return nil
+}
+
+func (f *fakeNotificationRepo) FindDisabledUserIDs(notifType model.NotificationType) ([]uuid.UUID, error) {
+	return f.disabledUserIDs, nil
+}
+
+type fakePrayerTimesService struct{}
+
+func (f *fakePrayerTimesService) GetByDate(lat, lng float64, date time.Time, method, madhab string) (*model.PrayerTimesResponse, error) {
+	return &model.PrayerTimesResponse{
+		Prayers: model.PrayerTime{Dhuhr: date.Format("15:04")},
+	}, nil
+}
+
+func (f *fakePrayerTimesService) GetWeekly(lat, lng float64, method, madhab string) ([]model.PrayerTimesResponse, error) {
+	return nil, nil
+}
+
+func (f *fakePrayerTimesService) GetImsakiyah(lat, lng float64, year, month int, method, madhab string) (*model.ImsakiyahResponse, error) {
+	return nil, nil
 }
 
 type fakeNotificationInboxRepo struct {
@@ -247,5 +275,66 @@ func TestUnregisterPushTokenRejectsEmptyToken(t *testing.T) {
 	}
 	if len(repo.deactivatedByToken) != 0 {
 		t.Fatalf("expected no repo call for blank token, got %v", repo.deactivatedByToken)
+	}
+}
+
+func TestDispatchDueAdzanPushSkipsUsersWhoDisabledAdzan(t *testing.T) {
+	defer viper.Reset()
+
+	enabledUserID := uuid.New()
+	disabledUserID := uuid.New()
+	enabledTokenID := 21
+	disabledTokenID := 22
+
+	repo := &fakeNotificationRepo{
+		tokens: []model.PushToken{
+			{
+				BaseID:   model.BaseID{ID: &enabledTokenID},
+				UserID:   enabledUserID,
+				Token:    "ExponentPushToken[enabled]",
+				Provider: "expo",
+				IsActive: true,
+			},
+			{
+				BaseID:   model.BaseID{ID: &disabledTokenID},
+				UserID:   disabledUserID,
+				Token:    "ExponentPushToken[disabled]",
+				Provider: "expo",
+				IsActive: true,
+			},
+		},
+		disabledUserIDs: []uuid.UUID{disabledUserID},
+	}
+
+	var received []map[string]interface{}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var batch []map[string]interface{}
+		if err := json.NewDecoder(r.Body).Decode(&batch); err != nil {
+			t.Fatalf("decode push payload: %v", err)
+		}
+		received = append(received, batch...)
+		tickets := make([]map[string]string, len(batch))
+		for i := range batch {
+			tickets[i] = map[string]string{"status": "ok", "id": fmt.Sprintf("ticket-%d", i)}
+		}
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"data": tickets})
+	}))
+	defer server.Close()
+
+	viper.Set("EXPO_PUSH_ENDPOINT", server.URL)
+
+	svc := NewNotificationService(repo, &fakeNotificationInboxRepo{}, &fakePrayerTimesService{})
+	sent, err := svc.DispatchDueAdzanPush(time.Now())
+	if err != nil {
+		t.Fatalf("dispatch adzan push: %v", err)
+	}
+	if sent != 1 {
+		t.Fatalf("sent = %d, want 1", sent)
+	}
+	if len(received) != 1 {
+		t.Fatalf("push payload count = %d, want 1", len(received))
+	}
+	if got := received[0]["to"]; got != "ExponentPushToken[enabled]" {
+		t.Fatalf("push recipient = %v, want the opted-in user's token", got)
 	}
 }

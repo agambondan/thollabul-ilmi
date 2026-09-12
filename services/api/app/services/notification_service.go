@@ -33,10 +33,10 @@ type NotificationService interface {
 }
 
 type notificationService struct {
-	inboxRepo       repository.NotificationInboxRepository
-	repo            repository.NotificationRepository
-	prayerTimesSvc  PrayerTimesService
-	adzanSentMap    sync.Map
+	inboxRepo      repository.NotificationInboxRepository
+	repo           repository.NotificationRepository
+	prayerTimesSvc PrayerTimesService
+	adzanSentMap   sync.Map
 }
 
 func NewNotificationService(repo repository.NotificationRepository, inboxRepo repository.NotificationInboxRepository, prayerTimesSvc PrayerTimesService) NotificationService {
@@ -331,6 +331,15 @@ func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
 		return 0, err
 	}
 
+	disabledUserIDs, err := s.repo.FindDisabledUserIDs(model.NotificationTypeAdzan)
+	if err != nil {
+		return 0, err
+	}
+	adzanDisabled := make(map[uuid.UUID]bool, len(disabledUserIDs))
+	for _, id := range disabledUserIDs {
+		adzanDisabled[id] = true
+	}
+
 	sent := 0
 	type prayerMatch struct {
 		Name string
@@ -339,6 +348,9 @@ func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
 
 	for _, token := range tokens {
 		if !token.IsActive {
+			continue
+		}
+		if adzanDisabled[token.UserID] {
 			continue
 		}
 

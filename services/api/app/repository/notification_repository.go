@@ -22,6 +22,7 @@ type NotificationRepository interface {
 	DeletePushToken(id int) error
 	FindDue(now time.Time) ([]model.NotificationSetting, error)
 	MarkSent(id int, sentAt time.Time) error
+	FindDisabledUserIDs(notifType model.NotificationType) ([]uuid.UUID, error)
 }
 
 type notificationRepository struct {
@@ -155,6 +156,14 @@ func (r *notificationRepository) FindDue(now time.Time) ([]model.NotificationSet
 
 func (r *notificationRepository) MarkSent(id int, sentAt time.Time) error {
 	return r.db.Model(&model.NotificationSetting{}).Where("id = ?", id).Update("last_sent_at", sentAt).Error
+}
+
+func (r *notificationRepository) FindDisabledUserIDs(notifType model.NotificationType) ([]uuid.UUID, error) {
+	var ids []uuid.UUID
+	err := r.db.Model(&model.NotificationSetting{}).
+		Where("type = ? AND is_active = false", notifType).
+		Pluck("user_id", &ids).Error
+	return ids, err
 }
 
 // Inbox repository
