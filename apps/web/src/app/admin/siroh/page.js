@@ -331,6 +331,22 @@ const AdminSirahPage = () => {
                     <h2 className='text-base font-bold text-gray-900 dark:text-white mb-4'>
                         {t("admin.field.content")}
                     </h2>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={contents.length}
+                        onChange={setPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newSize) => {
+                            setPageSize(newSize);
+                            setPage(1);
+                        }}
+                        pageSizeOptions={[10, 20, 50]}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
                     <div className='space-y-2'>
                         {contents.length === 0 && (
                             <div className='p-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 text-center'>
@@ -399,22 +415,6 @@ const AdminSirahPage = () => {
                             );
                         })}
                     </div>
-                    <PanelPagination
-                        page={currentPage}
-                        pageCount={pageCount}
-                        total={contents.length}
-                        onChange={setPage}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newSize) => {
-                            setPageSize(newSize);
-                            setPage(1);
-                        }}
-                        pageSizeOptions={[10, 20, 50]}
-                        labels={{
-                            prev: t("common.prev"),
-                            next: t("common.next"),
-                        }}
-                    />
                 </div>
             </div>
         </div>

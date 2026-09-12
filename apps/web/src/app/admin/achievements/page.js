@@ -185,6 +185,18 @@ export default function AdminAchievementsPage() {
                 />
             </div>
 
+            <PanelPagination
+                page={page}
+                pageCount={totalPages}
+                pageSize={pageSize}
+                total={filtered.length}
+                onChange={setPage}
+                onPageSizeChange={(sz) => {
+                    setPageSize(sz);
+                    setPage(1);
+                }}
+            />
+
             {loading ? (
                 <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
                     Memuat data…
@@ -328,18 +340,6 @@ export default function AdminAchievementsPage() {
                     </div>
                 </>
             )}
-
-            <PanelPagination
-                page={page}
-                pageCount={totalPages}
-                pageSize={pageSize}
-                total={filtered.length}
-                onChange={setPage}
-                onPageSizeChange={(sz) => {
-                    setPageSize(sz);
-                    setPage(1);
-                }}
-            />
 
             {/* Create/Edit Modal */}
             <ModalShell

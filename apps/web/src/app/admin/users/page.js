@@ -173,6 +173,23 @@ const AdminUsersPage = () => {
                 </div>
             )}
 
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={users.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
+
             {visible.length === 0 && users.length === 0 ? (
                 <p className='px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-600'>
                     {t("admin.users.empty")}
@@ -340,23 +357,6 @@ const AdminUsersPage = () => {
                     </div>
                 </>
             )}
-
-            <PanelPagination
-                page={currentPage}
-                pageCount={pageCount}
-                total={users.length}
-                onChange={setPage}
-                pageSize={pageSize}
-                onPageSizeChange={(newSize) => {
-                    setPageSize(newSize);
-                    setPage(1);
-                }}
-                pageSizeOptions={[10, 20, 50]}
-                labels={{
-                    prev: t("common.prev"),
-                    next: t("common.next"),
-                }}
-            />
 
             <div className='mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs'>
                 <strong>{t("admin.users.role_notes_title")}:</strong>{" "}

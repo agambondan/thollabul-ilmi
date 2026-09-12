@@ -161,6 +161,23 @@ export default function AdminLessonsPage() {
                 </button>
             </div>
 
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={modules.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
+
             {loading ? (
                 <p className='text-center text-sm text-gray-400 py-6'>
                     Memuat data...
@@ -267,22 +284,6 @@ export default function AdminLessonsPage() {
                     </div>
                 </>
             )}
-            <PanelPagination
-                page={currentPage}
-                pageCount={pageCount}
-                total={modules.length}
-                onChange={setPage}
-                pageSize={pageSize}
-                onPageSizeChange={(newSize) => {
-                    setPageSize(newSize);
-                    setPage(1);
-                }}
-                pageSizeOptions={[10, 20, 50]}
-                labels={{
-                    prev: t("common.prev"),
-                    next: t("common.next"),
-                }}
-            />
 
             {/* Modal */}
             {modalOpen && (

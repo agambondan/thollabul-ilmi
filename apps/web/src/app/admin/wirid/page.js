@@ -168,6 +168,23 @@ const AdminWirdPage = () => {
                 />
             </div>
 
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={filtered.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
+
             {loading ? (
                 <p className='text-sm text-gray-500 dark:text-gray-300'>
                     {t("common.loading")}
@@ -280,23 +297,6 @@ const AdminWirdPage = () => {
                     </div>
                 </>
             )}
-
-            <PanelPagination
-                page={currentPage}
-                pageCount={pageCount}
-                total={filtered.length}
-                onChange={setPage}
-                pageSize={pageSize}
-                onPageSizeChange={(newSize) => {
-                    setPageSize(newSize);
-                    setPage(1);
-                }}
-                pageSizeOptions={[10, 20, 50]}
-                labels={{
-                    prev: t("common.prev"),
-                    next: t("common.next"),
-                }}
-            />
 
             {showModal && (
                 <ModalShell
