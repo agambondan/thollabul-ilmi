@@ -1,7 +1,8 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
-import { useLayoutMode } from "@/lib/useLayoutMode";
+import { BsInfoCircle } from "react-icons/bs";
 import AsbabunNuzulForm from "./AsbabunNuzulForm";
 
 export const AsbabunNuzulContent = ({
@@ -10,15 +11,10 @@ export const AsbabunNuzulContent = ({
     initialSurahNumber = "",
 }) => {
     const { t } = useLocale();
-    const { isWide } = useLayoutMode();
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
-            }
-        >
-            <div className='text-center mb-8'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
+            <div className='text-center mb-6'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
                     style={{ fontFamily: "Amiri, serif" }}
@@ -33,12 +29,21 @@ export const AsbabunNuzulContent = ({
                         "Latar belakang dan sebab diturunkannya ayat-ayat Al-Quran"}
                 </p>
             </div>
+
+            <div className='bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4 mb-6 flex items-start gap-3'>
+                <BsInfoCircle className='text-amber-600 dark:text-amber-400 text-lg shrink-0 mt-0.5' />
+                <p className='text-xs text-amber-800 dark:text-amber-300 leading-relaxed'>
+                    {t("asbabun.intro") ??
+                        "Riwayat sebab turunnya ayat membantu memahami konteks Al-Quran secara lebih utuh. Cari berdasarkan surah untuk melihat seluruh riwayat asbabun nuzul yang tercatat di dalamnya, lengkap dengan perawi dan rujukan kitabnya."}
+                </p>
+            </div>
+
             <AsbabunNuzulForm
                 quranBasePath={quranBasePath}
                 initialResults={initialResults}
                 initialSurahNumber={initialSurahNumber}
             />
-        </div>
+        </ContentWidth>
     );
 };
 

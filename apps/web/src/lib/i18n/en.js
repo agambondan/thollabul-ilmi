@@ -1394,6 +1394,8 @@ const en = {
     "hadith.copy_image": "Copy Image",
     "hadith.copy_text": "Copy Text",
     "hadith.copy_success": "Copied to clipboard!",
+    "hadith.copy_image_error": "Failed to generate the hadith image.",
+    "hadith.share_title": "Share Hadith",
     "hadith.audio_tafsir_note":
         "Audio plays when the hadith media is available. The hadith tafsir is still being prepared.",
     "hadith.via": "Via Thullaabul 'Ilmi",
@@ -1737,7 +1739,9 @@ const en = {
     "asbabun.title": "Asbabun Nuzul",
     "asbabun.subtitle":
         "Causes of revelation of Quranic verses. Search by surah number.",
-    "asbabun.placeholder": "Surah number (1–114)...",
+    "asbabun.intro":
+        "Knowing why a verse was revealed helps you understand the Quran's context more fully. Search by surah to see every recorded occasion of revelation in it, complete with the narrator and book reference.",
+    "asbabun.placeholder": "Search surah name or number...",
     "asbabun.quick_example": "Quick examples",
     "asbabun.surah_prefix": "Surah",
     "asbabun.search_btn": "Search",
@@ -1750,6 +1754,10 @@ const en = {
         "Enter a surah number to see the causes of revelation",
     "asbabun.source": "Source: Asbabun Nuzul by Al-Wahidi & As-Suyuti",
     "asbabun.ayah_prefix": "Ayah",
+    "asbabun.narrator_prefix": "Narrated by",
+    "asbabun.reference": "Reference:",
+    "asbabun.results_found": "narrations found",
+    "asbabun.no_match": "Surah not found.",
     "notes.empty_hint2":
         "Record your favorite ayahs, hadiths, or lessons you learned",
     "notes.first_btn": "Create First Note",

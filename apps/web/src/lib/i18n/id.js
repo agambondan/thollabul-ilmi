@@ -1383,6 +1383,8 @@ const id = {
     "hadith.copy_image": "Salin Gambar",
     "hadith.copy_text": "Salin Teks",
     "hadith.copy_success": "Tersalin ke clipboard!",
+    "hadith.copy_image_error": "Gagal membuat gambar hadis.",
+    "hadith.share_title": "Bagikan Hadis",
     "hadith.audio_tafsir_note":
         "Audio diputar bila media hadis tersedia. Tafsir hadis masih dalam tahap persiapan.",
     "hadith.via": "Via Thullaabul 'Ilmi",
@@ -1832,7 +1834,9 @@ const id = {
     "asbabun.title": "Asbabun Nuzul",
     "asbabun.subtitle":
         "Sebab-sebab turunnya ayat Al-Quran. Cari berdasarkan nomor surah.",
-    "asbabun.placeholder": "Nomor surah (1–114)...",
+    "asbabun.intro":
+        "Riwayat sebab turunnya ayat membantu memahami konteks Al-Quran secara lebih utuh. Cari berdasarkan surah untuk melihat seluruh riwayat asbabun nuzul yang tercatat di dalamnya, lengkap dengan perawi dan rujukan kitabnya.",
+    "asbabun.placeholder": "Cari nama atau nomor surah...",
     "asbabun.quick_example": "Contoh cepat",
     "asbabun.surah_prefix": "Surah",
     "asbabun.search_btn": "Cari",
@@ -1845,6 +1849,10 @@ const id = {
         "Masukkan nomor surah untuk melihat sebab turunnya ayat",
     "asbabun.source": "Sumber: Kitab Asbabun Nuzul Al-Wahidi & As-Suyuti",
     "asbabun.ayah_prefix": "Ayah",
+    "asbabun.narrator_prefix": "Diriwayatkan oleh",
+    "asbabun.reference": "Rujukan:",
+    "asbabun.results_found": "riwayat ditemukan",
+    "asbabun.no_match": "Surah tidak ditemukan.",
     "notes.empty_hint2":
         "Catat ayah favorit, hadith, atau pelajaran yang kamu dapat",
     "notes.first_btn": "Buat Catatan Pertama",
