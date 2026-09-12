@@ -19,8 +19,8 @@ describe("linksMenu", () => {
     test("does not expose the dev page", () => {
         expect(linksMenu.some((item) => item.href === "/dev")).toBe(false);
     });
-    test("contains Contact", () => {
-        expect(linksMenu[2].href).toBe("/contact");
+    test("contains Kajian", () => {
+        expect(linksMenu[2].href).toBe("/kajian");
     });
     test("all items have href and label", () => {
         linksMenu.forEach((item) => {

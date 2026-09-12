@@ -25,7 +25,6 @@ import {
     MdMenuBook,
     MdMosque,
     MdOutlineAutoStories,
-    MdOutlineContactPhone,
     MdOutlineDirectionsWalk,
     MdOutlinePlayLesson,
     MdRefresh,
@@ -48,10 +47,10 @@ export const linksMenu = [
         icon: <ImBook />,
     },
     {
-        label: "Contact",
-        labelKey: "link.contact",
-        href: "/contact",
-        icon: <MdOutlineContactPhone />,
+        label: "Kajian",
+        labelKey: "link.kajian_short",
+        href: "/kajian",
+        icon: <MdOutlinePlayLesson />,
     },
 ];
 
