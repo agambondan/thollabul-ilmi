@@ -12,7 +12,7 @@ ARG NEXT_PUBLIC_API_URL=
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 # Baked into the bundle: canonical origin used for metadataBase, og:url,
 # canonical links, robots.txt and sitemap.xml. Must match the public domain.
-ARG NEXT_PUBLIC_SITE_URL=https://thollabul.jangkauin.site
+ARG NEXT_PUBLIC_SITE_URL=https://thollabulilmi.site
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 # npm resolves sharp's optional deps for both libc flavours, so the standalone
 # output ships a glibc libvips (~16MB) that can never load on this musl runtime.

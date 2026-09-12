@@ -1,7 +1,7 @@
 const RAW_SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL ??
     process.env.SITE_URL ??
-    "https://thollabul.jangkauin.site";
+    "https://thollabulilmi.site";
 
 /** Canonical origin of the deployed site, never with a trailing slash. */
 export const SITE_URL = RAW_SITE_URL.replace(/\/+$/, "");

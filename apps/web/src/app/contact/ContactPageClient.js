@@ -9,8 +9,8 @@ const contactsByLang = {
         {
             icon: BsEnvelope,
             label: "Email",
-            value: "admin@tholabul-ilmi.com",
-            href: "mailto:admin@tholabul-ilmi.com",
+            value: "halo@thollabulilmi.site",
+            href: "mailto:halo@thollabulilmi.site",
             desc: "Untuk pertanyaan, saran, atau laporan bug",
         },
         {
@@ -39,8 +39,8 @@ const contactsByLang = {
         {
             icon: BsEnvelope,
             label: "Email",
-            value: "admin@tholabul-ilmi.com",
-            href: "mailto:admin@tholabul-ilmi.com",
+            value: "halo@thollabulilmi.site",
+            href: "mailto:halo@thollabulilmi.site",
             desc: "For questions, feedback, or bug reports",
         },
         {

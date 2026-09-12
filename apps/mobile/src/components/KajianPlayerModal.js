@@ -24,7 +24,7 @@ import {
 } from "../api/explore";
 
 const API_URL =
-    process.env.EXPO_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site";
+    process.env.EXPO_PUBLIC_API_URL || "https://api.thollabulilmi.site";
 
 function formatTime(seconds) {
     const s = Math.floor(seconds || 0);

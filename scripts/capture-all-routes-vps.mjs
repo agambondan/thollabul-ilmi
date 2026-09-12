@@ -3,7 +3,7 @@ import path from "node:path";
 import pkg from "/home/firman/works/me/thollabul-ilmi/apps/web/node_modules/playwright/index.js";
 const { chromium } = pkg;
 
-const BASE = process.env.BASE || "https://thollabul.jangkauin.site";
+const BASE = process.env.BASE || "https://thollabulilmi.site";
 const OUT = path.join(process.cwd(), "screenshots");
 fs.mkdirSync(OUT, { recursive: true });
 

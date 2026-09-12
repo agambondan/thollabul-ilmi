@@ -89,7 +89,7 @@ export function PanduanSholatContent({ initialSteps = [] }) {
     useEffect(() => {
         if (initialSteps.length > 0) return;
         fetch(
-            `${process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/panduan-sholat`,
+            `${process.env.NEXT_PUBLIC_API_URL || "https://api.thollabulilmi.site"}/api/v1/panduan-sholat`,
         )
             .then((r) => r.json())
             .then((data) => {

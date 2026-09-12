@@ -348,7 +348,7 @@ export function WebAppLessonsRoute({
                             onPress={() => {
                                 const target = step.audio_url.startsWith("http")
                                     ? step.audio_url
-                                    : `https://thollabul.jangkauin.site${step.audio_url}`;
+                                    : `https://thollabulilmi.site${step.audio_url}`;
                                 playAudioUrl(target).catch(() => {});
                             }}
                             style={[

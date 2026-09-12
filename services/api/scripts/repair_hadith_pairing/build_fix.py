@@ -45,7 +45,7 @@ AUDIT = os.path.join(
 sys.path.insert(0, os.path.abspath(AUDIT))
 from pairing_score import score  # noqa: E402
 
-API = "https://api-thollabul.jangkauin.site"
+API = "https://api.thollabulilmi.site"
 GADING = "https://raw.githubusercontent.com/gadingnst/hadith-api/master/books"
 
 # slug di database -> nama berkas di gadingnst

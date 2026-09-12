@@ -31,7 +31,7 @@ node scripts/demo-recording/record-mobile.js
 ```
 
 Optional: `DEMO_BASE_URL` (defaults to the production site,
-`https://thollabul.jangkauin.site`) if you want to record against a
+`https://thollabulilmi.site`) if you want to record against a
 different environment instead (e.g. a local `next dev` server).
 
 Each script writes one `.webm` file under `scripts/demo-recording/output/

@@ -2,7 +2,7 @@
 // Fitur: Jadwal sholat + Countdown, Rotasi background masjid, Checklist harian (local + server sync), Auth web sync.
 
 const ALADHAN_BASE = "https://api.aladhan.com/v1";
-const WEB_API_BASE = "https://thollabul.jangkauin.site";
+const WEB_API_BASE = "https://thollabulilmi.site";
 const DEFAULT_LOC = { lat: -6.2088, lng: 106.8456, name: "Jakarta (Default)" };
 
 const BG_IMAGES = [
@@ -678,7 +678,7 @@ async function renderQuoteToBlob() {
     // Footer: URL
     ctx.font = "500 22px sans-serif".replace("500", "");
     ctx.fillStyle = "rgba(167, 243, 208, 0.85)";
-    ctx.fillText("thollabul.jangkauin.site", W / 2, H - 80);
+    ctx.fillText("thollabulilmi.site", W / 2, H - 80);
 
     return new Promise((resolve) =>
         canvas.toBlob((blob) => resolve(blob), "image/png"),

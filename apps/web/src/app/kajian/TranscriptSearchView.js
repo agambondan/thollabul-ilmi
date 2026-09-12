@@ -659,7 +659,7 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             try {
                 const apiUrl =
                     process.env.NEXT_PUBLIC_API_URL ||
-                    "https://api-thollabul.jangkauin.site";
+                    "https://api.thollabulilmi.site";
                 const res = await fetch(
                     `${apiUrl}/api/v1/kajian/${item.kajian_id}/transcripts`,
                 );

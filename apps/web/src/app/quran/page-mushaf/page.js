@@ -15,7 +15,7 @@ const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://api-thollabul.jangkauin.site";
+    "https://api.thollabulilmi.site";
 
 const getItems = (data) =>
     Array.isArray(data) ? data : (data?.items ?? data?.data?.items ?? []);

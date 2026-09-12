@@ -4,7 +4,7 @@ const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://api-thollabul.jangkauin.site";
+    "https://api.thollabulilmi.site";
 
 const getQuestion = async (slug) => {
     try {

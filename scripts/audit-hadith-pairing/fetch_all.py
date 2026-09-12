@@ -1,6 +1,6 @@
 import json, os, sys, urllib.request
 from concurrent.futures import ThreadPoolExecutor
-API = "https://api-thollabul.jangkauin.site"
+API = "https://api.thollabulilmi.site"
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 
 def fetch(book, page, size=500):

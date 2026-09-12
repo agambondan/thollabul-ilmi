@@ -112,7 +112,7 @@ export default function KajianClient({
             try {
                 const apiUrl =
                     process.env.NEXT_PUBLIC_API_URL ||
-                    "https://api-thollabul.jangkauin.site";
+                    "https://api.thollabulilmi.site";
                 const res = await fetch(`${apiUrl}/api/v1/kajian/speakers`);
                 if (!res.ok) return;
                 const data = await res.json();
@@ -152,7 +152,7 @@ export default function KajianClient({
             try {
                 const apiUrl =
                     process.env.NEXT_PUBLIC_API_URL ||
-                    "https://api-thollabul.jangkauin.site";
+                    "https://api.thollabulilmi.site";
                 const params = new URLSearchParams({ page: "0", size: "12" });
                 if (selectedSpeakers.length > 0) {
                     params.set("speaker", selectedSpeakers.join("||"));
@@ -196,7 +196,7 @@ export default function KajianClient({
         try {
             const apiUrl =
                 process.env.NEXT_PUBLIC_API_URL ||
-                "https://api-thollabul.jangkauin.site";
+                "https://api.thollabulilmi.site";
             const params = new URLSearchParams({
                 page: String(nextPage),
                 size: "12",
@@ -276,7 +276,7 @@ export default function KajianClient({
             try {
                 const apiUrl =
                     process.env.NEXT_PUBLIC_API_URL ||
-                    "https://api-thollabul.jangkauin.site";
+                    "https://api.thollabulilmi.site";
                 const params = buildTranscriptParams(1);
 
                 const res = await fetch(
@@ -331,7 +331,7 @@ export default function KajianClient({
         try {
             const apiUrl =
                 process.env.NEXT_PUBLIC_API_URL ||
-                "https://api-thollabul.jangkauin.site";
+                "https://api.thollabulilmi.site";
             const params = buildTranscriptParams(nextPage);
             const res = await fetch(
                 `${apiUrl}/api/v1/kajian/search?${params.toString()}`,

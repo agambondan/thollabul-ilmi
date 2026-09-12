@@ -5,7 +5,7 @@ const { chromium } = require(
   path.join(__dirname, '../../apps/web/node_modules/playwright'),
 );
 
-const BASE = process.env.DEMO_BASE_URL || 'https://thollabul.jangkauin.site';
+const BASE = process.env.DEMO_BASE_URL || 'https://thollabulilmi.site';
 const OUT_DIR = path.join(__dirname, 'output', 'desktop');
 const LOGIN_IDENTIFIER = process.env.DEMO_LOGIN_IDENTIFIER;
 const LOGIN_PASSWORD = process.env.DEMO_LOGIN_PASSWORD;

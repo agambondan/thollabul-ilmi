@@ -13,7 +13,7 @@ export default function DashboardKajianPage() {
     useEffect(() => {
         const apiUrl =
             process.env.NEXT_PUBLIC_API_URL ||
-            "https://api-thollabul.jangkauin.site";
+            "https://api.thollabulilmi.site";
         fetch(`${apiUrl}/api/v1/kajian?page=0&size=10`)
             .then((res) => res.json())
             .then((data) => {

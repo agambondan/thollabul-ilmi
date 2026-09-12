@@ -16,7 +16,7 @@ const ByBook = ({ basePath = "/hadith", initialBooks = null }) => {
 
     const fetchBooks = async () => {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/books`,
+            `${process.env.NEXT_PUBLIC_API_URL || "https://api.thollabulilmi.site"}/api/v1/books`,
         );
         return await res.json();
     };

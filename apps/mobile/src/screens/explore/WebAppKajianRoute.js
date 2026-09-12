@@ -316,7 +316,7 @@ function KajianStat({ accent = "#047857", formatValue, label, value }) {
 }
 
 export function WebAppKajianRoute({
-    apiUrl = "https://api-thollabul.jangkauin.site",
+    apiUrl = "https://api.thollabulilmi.site",
     categories,
     error,
     filteredItems,

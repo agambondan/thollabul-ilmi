@@ -29,7 +29,7 @@ func NewGoogleAuthController(user service.UserService) *googleAuthController {
 func (c *googleAuthController) googleOAuthConfig() *oauth2.Config {
 	redirect := os.Getenv("GOOGLE_REDIRECT_URL")
 	if redirect == "" {
-		redirect = "https://api-thollabul.jangkauin.site/api/v1/auth/google/callback"
+		redirect = "https://api.thollabulilmi.site/api/v1/auth/google/callback"
 	}
 	return &oauth2.Config{
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
@@ -154,7 +154,7 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 
 	frontend := os.Getenv("FRONTEND_URL")
 	if frontend == "" {
-		frontend = "https://thollabul.jangkauin.site"
+		frontend = "https://thollabulilmi.site"
 	}
 	return ctx.Redirect(frontend+"/auth/google/callback", fiber.StatusTemporaryRedirect)
 }
@@ -162,7 +162,7 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 func (c *googleAuthController) renderErrorPage(ctx *fiber.Ctx, msg string) error {
 	frontend := os.Getenv("FRONTEND_URL")
 	if frontend == "" {
-		frontend = "https://thollabul.jangkauin.site"
+		frontend = "https://thollabulilmi.site"
 	}
 	u, _ := url.Parse(frontend + "/auth/google/callback")
 	q := u.Query()

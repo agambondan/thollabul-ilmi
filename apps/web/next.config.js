@@ -20,6 +20,17 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: "/:path*",
+                has: [
+                    {
+                        type: "host",
+                        value: "thollabul.jangkauin.site",
+                    },
+                ],
+                destination: "https://thollabulilmi.site/:path*",
+                permanent: true,
+            },
+            {
                 source: "/sholat-tracker",
                 destination: "/dashboard/sholat-tracker",
                 permanent: true,

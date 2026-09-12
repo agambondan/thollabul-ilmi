@@ -31,7 +31,7 @@ EDUPLAY_WEB := DEPLOY_REPO=games \
                DEPLOY_SERVICE=web \
                DEPLOY_BUILD_ARGS="NEXT_PUBLIC_API_URL=https://api-games.jangkauin.site/api/v1 NEXT_PUBLIC_SITE_URL=https://games.jangkauin.site NEXT_PUBLIC_GOOGLE_CLIENT_ID=@json:eduplay-oauth.json:web.client_id"
 
-# ---------- Thullaabul 'Ilmi — thollabul.jangkauin.site ----------
+# ---------- Thullaabul 'Ilmi — thollabulilmi.site ----------
 THOLLABUL_API := DEPLOY_REPO=thollabul-ilmi \
                  DEPLOY_CONTEXT=services/api \
                  DEPLOY_IMAGE=tholabul-ilmi-api:prod \
@@ -45,7 +45,7 @@ THOLLABUL_WEB := DEPLOY_REPO=thollabul-ilmi \
                  DEPLOY_IMAGE=tholabul-ilmi-web:prod \
                  DEPLOY_REMOTE_DIR=/works/me/thollabul-ilmi \
                  DEPLOY_SERVICE=tholabul-ilmi-web \
-                 DEPLOY_BUILD_ARGS="NEXT_PUBLIC_API_URL=https://api-thollabul.jangkauin.site NEXT_PUBLIC_SITE_URL=https://thollabul.jangkauin.site"
+                 DEPLOY_BUILD_ARGS="NEXT_PUBLIC_API_URL=https://api.thollabulilmi.site NEXT_PUBLIC_SITE_URL=https://thollabulilmi.site"
 
 # ---------- Wedding — wedding.jangkauin.site ----------
 # The VPS directory and image still carry the old "vercel" name; only the local

@@ -268,7 +268,7 @@ const RegisterPage = () => {
                     </div>
 
                     <a
-                        href={`${process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/auth/google`}
+                        href={`${process.env.NEXT_PUBLIC_API_URL || "https://api.thollabulilmi.site"}/api/v1/auth/google`}
                         className='w-full inline-flex items-center justify-center gap-2 py-2.5 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-800 dark:text-white font-semibold rounded-lg text-sm transition-colors'
                     >
                         <svg
