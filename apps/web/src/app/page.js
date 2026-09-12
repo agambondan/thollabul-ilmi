@@ -497,7 +497,7 @@ export default async function Home() {
                 <div className='absolute top-16 right-16 w-80 h-80 rounded-full bg-emerald-700 opacity-25 blur-3xl pointer-events-none' />
                 <div className='absolute top-2/3 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
 
-                <div className='relative z-10 mx-auto max-w-3xl px-6 py-14 md:py-6 text-center text-white'>
+                <div className='relative z-10 mx-auto w-full max-w-6xl px-6 py-14 md:py-6 text-center text-white'>
                     <p
                         className='min-h-[4.5rem] md:min-h-[3.5rem] text-4xl md:text-5xl text-gold-300 mb-4 md:mb-2 leading-loose'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
@@ -524,7 +524,7 @@ export default async function Home() {
                         {t("home.hero_desc")}
                     </p>
 
-                    <div className='relative mx-auto mb-10 md:mb-4 max-w-xl min-h-[280px] md:min-h-[240px]'>
+                    <div className='relative mx-auto mb-10 md:mb-4 max-w-6xl min-h-[92px]'>
                         <HomeClock />
                     </div>
 

@@ -400,12 +400,7 @@ const en = {
         "Complete with color-coded Tajweed, transliteration, and translation",
     "home.hero_desc":
         "Complete Islamic Learning Portal — color-coded Tajweed Quran, 9 Hadith Books, Prayer Schedule, Qibla, Zakat, Memorization Tracker, Quiz, Notes, and 40+ more features.",
-    "home.hero_read_quran": "Read Al-Quran",
-    "home.hero_read_hadith": "Read Hadith",
     "home.date_today": "Today",
-    "home.date_current_time": "Current Time",
-    "home.date_hijri": "Hijri Date",
-    "home.date_gregorian": "Gregorian Date",
     "home.features_badge": "50+ Features Available",
     "home.features_heading": "Everything You Need",
     "home.features_subheading":

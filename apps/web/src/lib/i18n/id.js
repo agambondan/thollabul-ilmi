@@ -397,12 +397,7 @@ const id = {
         "Lengkap dengan Tajweed berwarna, transliterasi, dan terjemahan",
     "home.hero_desc":
         "Portal Ilmu Islam lengkap — Al-Quran Tajweed berwarna, 9 Kitab Hadith, Jadwal Sholat, Kiblat, Zakat, Hafalan Tracker, Quiz, Catatan, dan 40+ fitur lainnya.",
-    "home.hero_read_quran": "Baca Al-Quran",
-    "home.hero_read_hadith": "Baca Hadith",
     "home.date_today": "Hari Ini",
-    "home.date_current_time": "Waktu Sekarang",
-    "home.date_hijri": "Tanggal Hijriah",
-    "home.date_gregorian": "Tanggal Masehi",
     "home.features_badge": "50+ Fitur Tersedia",
     "home.features_heading": "Semua yang Kamu Butuhkan",
     "home.features_subheading":
