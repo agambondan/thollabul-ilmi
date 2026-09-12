@@ -8,7 +8,19 @@ import { libraryApi, libraryProgressApi } from "@/lib/api";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { BsBook, BsBoxArrowUpRight, BsSearch } from "react-icons/bs";
+import {
+    BsBook,
+    BsBoxArrowUpRight,
+    BsDownload,
+    BsSearch,
+} from "react-icons/bs";
+
+const formatFileSize = (bytes) => {
+    const value = Number(bytes);
+    if (!Number.isFinite(value) || value <= 0) return "";
+    if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
+    return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+};
 
 const PAGE_SIZE = 24;
 
@@ -66,6 +78,10 @@ const BookMeta = ({ book }) => (
         {book.category && <span>{book.category}</span>}
         {book.level && <span>{book.level}</span>}
         {book.format && <span className='uppercase'>{book.format}</span>}
+        {book.source_type === "uploaded" &&
+            formatFileSize(book.file_size_bytes) && (
+                <span>{formatFileSize(book.file_size_bytes)}</span>
+            )}
     </div>
 );
 
@@ -382,12 +398,36 @@ export const LibraryContent = ({
                             key={book.id ?? book.slug}
                         >
                             <div className='mb-4 flex items-start justify-between gap-3'>
-                                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/40'>
-                                    <BsBook />
-                                </div>
-                                {book.source_url && (
-                                    <BsBoxArrowUpRight className='mt-1 text-gray-300 transition group-hover:text-emerald-600 dark:text-slate-600 dark:group-hover:text-emerald-300' />
+                                {book.cover_url ? (
+                                    <img
+                                        alt=''
+                                        className='h-10 w-10 shrink-0 rounded-lg object-cover'
+                                        src={book.cover_url}
+                                    />
+                                ) : (
+                                    <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/40'>
+                                        <BsBook />
+                                    </div>
                                 )}
+                                {book.source_url &&
+                                    (book.source_type === "uploaded" ? (
+                                        <BsDownload
+                                            className='mt-1 text-gray-300 transition group-hover:text-emerald-600 dark:text-slate-600 dark:group-hover:text-emerald-300'
+                                            title={
+                                                t("library.download_pdf") ||
+                                                "Unduh PDF"
+                                            }
+                                        />
+                                    ) : (
+                                        <BsBoxArrowUpRight
+                                            className='mt-1 text-gray-300 transition group-hover:text-emerald-600 dark:text-slate-600 dark:group-hover:text-emerald-300'
+                                            title={
+                                                t(
+                                                    "library.external_source",
+                                                ) || "Sumber eksternal"
+                                            }
+                                        />
+                                    ))}
                             </div>
                             {showProgressSummary &&
                                 isAuthenticated &&

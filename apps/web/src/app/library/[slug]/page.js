@@ -172,10 +172,18 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
 
     if (loading) return <SkeletonList title={false} rows={4} />;
 
+    const showPreview =
+        book &&
+        book.source_type === "uploaded" &&
+        book.format === "pdf" &&
+        book.source_url;
+
     return (
         <div
             className={
-                isWide ? "w-full px-4" : "container mx-auto max-w-4xl px-4"
+                isWide
+                    ? "w-full px-4"
+                    : `container mx-auto px-4 ${showPreview ? "max-w-6xl" : "max-w-4xl"}`
             }
         >
             <Link
@@ -191,6 +199,13 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         "Buku tidak ditemukan atau belum bisa dimuat."}
                 </div>
             ) : (
+                <div
+                    className={
+                        showPreview
+                            ? "grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,440px)] lg:items-start"
+                            : ""
+                    }
+                >
                 <article className='rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900'>
                     <div className='p-5 md:p-8'>
                         <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
@@ -450,6 +465,16 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         </div>
                     </div>
                 </article>
+                {showPreview && (
+                    <div className='h-[70vh] overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]'>
+                        <iframe
+                            className='h-full w-full'
+                            src={book.source_url}
+                            title={book.title}
+                        />
+                    </div>
+                )}
+                </div>
             )}
         </div>
     );
