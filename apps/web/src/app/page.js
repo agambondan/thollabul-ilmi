@@ -528,20 +528,6 @@ export default async function Home() {
                         <HomeClock />
                     </div>
 
-                    <div className='flex gap-4 justify-center flex-wrap mb-12'>
-                        <DashboardCTA
-                            className='bg-gold-500 hover:bg-gold-400 text-emerald-950 dark:text-emerald-300 px-8 py-3 rounded-full font-bold text-base transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 inline-flex items-center gap-2'
-                            icon={<FaQuran />}
-                        />
-                        <Link
-                            href='/quran'
-                            className='border-2 border-emerald-300 text-emerald-100 hover:bg-emerald-300 hover:text-emerald-950 hover:dark:text-emerald-300 px-8 py-3 rounded-full font-bold text-base transition-all inline-flex items-center gap-2'
-                        >
-                            <FaQuran />
-                            {t("home.hero_read_quran")}
-                        </Link>
-                    </div>
-
                     {/* Stats bar */}
                     <div className='grid grid-cols-2 md:grid-cols-4 gap-4 max-w-xl mx-auto'>
                         {STATS.map((s) => (
