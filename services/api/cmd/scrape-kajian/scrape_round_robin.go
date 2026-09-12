@@ -173,10 +173,18 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 		// auto-translated English title instead of the uploader's real one)
 		// can still be stale from an earlier run. Refresh it without
 		// touching the transcript.
-		if existingItem.Title != video.Title || existingItem.Duration != video.Duration || existingItem.ThumbnailURL != video.ThumbnailURL {
+		//
+		// Duration is deliberately excluded here: video.Duration comes from
+		// that same --flat-playlist listing, which is also the source of a
+		// real bug (a bogus, much-smaller duration estimate for some
+		// videos -- see fix_durations.go). Comparing/overwriting against it
+		// here would silently re-corrupt a duration -fix-durations already
+		// corrected the moment this channel's next listing repeats the same
+		// bogus estimate. Duration only ever comes from the full
+		// single-video extraction in fetchTranscript/-fix-durations now.
+		if existingItem.Title != video.Title || existingItem.ThumbnailURL != video.ThumbnailURL {
 			existingItem.Title = video.Title
 			existingItem.Description = fmt.Sprintf("Kajian oleh %s: %s", work.channel.Name, video.Title)
-			existingItem.Duration = video.Duration
 			existingItem.ThumbnailURL = video.ThumbnailURL
 			work.mu.Lock()
 			work.items[video.VideoID] = existingItem
