@@ -56,8 +56,8 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
     const [progressMessage, setProgressMessage] = useState("");
     const [previewPct, setPreviewPct] = useState(50);
     const [isDesktop, setIsDesktop] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
     const splitRef = useRef(null);
-    const draggingRef = useRef(false);
 
     useEffect(() => {
         const mql = window.matchMedia("(min-width: 1024px)");
@@ -76,20 +76,20 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
     }, []);
 
     useEffect(() => {
-        const onMove = (event) => {
-            if (!draggingRef.current) return;
-            updatePreviewPct(event.clientX);
-        };
-        const onUp = () => {
-            draggingRef.current = false;
-        };
+        if (!isDragging) return;
+        // While dragging, the pointer often crosses over the PDF <iframe>,
+        // whose own document swallows mousemove/mouseup before they reach
+        // this window — the overlay rendered during drag keeps the pointer
+        // over ordinary DOM instead of the iframe's separate context.
+        const onMove = (event) => updatePreviewPct(event.clientX);
+        const onUp = () => setIsDragging(false);
         window.addEventListener("mousemove", onMove);
         window.addEventListener("mouseup", onUp);
         return () => {
             window.removeEventListener("mousemove", onMove);
             window.removeEventListener("mouseup", onUp);
         };
-    }, [updatePreviewPct]);
+    }, [isDragging, updatePreviewPct]);
 
     useEffect(() => {
         let active = true;
@@ -512,13 +512,14 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                 {showPreview && (
                     <div
                         className='hidden select-none lg:flex lg:h-[calc(100vh-2rem)] lg:cursor-col-resize lg:items-stretch lg:justify-center lg:self-stretch lg:sticky lg:top-4'
+                        onDoubleClick={() => setPreviewPct(50)}
                         onMouseDown={(event) => {
                             event.preventDefault();
-                            draggingRef.current = true;
+                            setIsDragging(true);
                         }}
                         title={
                             t("library.drag_to_resize") ||
-                            "Geser untuk mengubah lebar preview"
+                            "Geser untuk mengubah lebar preview, klik dua kali untuk reset"
                         }
                     >
                         <div className='w-1 rounded-full bg-emerald-100 transition hover:bg-emerald-300 dark:bg-slate-700 dark:hover:bg-emerald-700' />
@@ -532,6 +533,12 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                             title={book.title}
                         />
                     </div>
+                )}
+                {isDragging && (
+                    <div
+                        className='fixed inset-0 z-50 cursor-col-resize'
+                        onMouseUp={() => setIsDragging(false)}
+                    />
                 )}
                 </div>
             )}

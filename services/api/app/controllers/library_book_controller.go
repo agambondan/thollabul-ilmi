@@ -24,6 +24,8 @@ type LibraryBookController interface {
 	Update(ctx *fiber.Ctx) error
 	UploadResource(ctx *fiber.Ctx) error
 	ClearResource(ctx *fiber.Ctx) error
+	UploadCover(ctx *fiber.Ctx) error
+	ClearCover(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -224,6 +226,96 @@ func (c *libraryBookController) ClearResource(ctx *fiber.Ctx) error {
 	return lib.OK(ctx, book)
 }
 
+// @Summary Upload library book cover image
+// @Tags Belajar
+// @Accept multipart/form-data
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Param file formData file true "Cover image"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /library/books/{id}/cover [post]
+func (c *libraryBookController) UploadCover(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	existingBook, err := c.svc.FindByIDAny(id)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	header, err := ctx.FormFile("file")
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "file is required")
+	}
+	maxBytes := viper.GetInt64("LIBRARY_COVER_MAX_BYTES")
+	if maxBytes <= 0 {
+		maxBytes = 5 * 1024 * 1024
+	}
+	if header.Size > maxBytes {
+		return lib.ErrorBadRequest(ctx, fmt.Sprintf("file max size is %d bytes", maxBytes))
+	}
+
+	contentType, err := inferLibraryCoverImage(header.Filename, header.Header.Get("Content-Type"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, err.Error())
+	}
+	file, err := header.Open()
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "file cannot be opened")
+	}
+	defer file.Close()
+
+	objectKey := fmt.Sprintf("library/books/%d/cover-%d-%s", id, time.Now().Unix(), safeLibraryFilename(header.Filename))
+	coverURL, err := lib.UploadPublicObject(ctx.UserContext(), objectKey, file, header.Size, contentType)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	book, err := c.svc.UpdateCover(id, &model.LibraryBookCover{
+		CoverURL:  coverURL,
+		ObjectKey: objectKey,
+	})
+	if err != nil {
+		_ = lib.DeletePublicObject(ctx.UserContext(), objectKey)
+		return lib.ErrorNotFound(ctx)
+	}
+	if existingBook.CoverObjectKey != "" && existingBook.CoverObjectKey != objectKey {
+		_ = lib.DeletePublicObject(ctx.UserContext(), existingBook.CoverObjectKey)
+	}
+	return lib.OK(ctx, book)
+}
+
+// @Summary Clear library book cover image
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /library/books/{id}/cover [delete]
+func (c *libraryBookController) ClearCover(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	book, err := c.svc.FindByIDAny(id)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	if err := lib.DeletePublicObject(ctx.UserContext(), book.CoverObjectKey); err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	book, err = c.svc.ClearCover(id)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, book)
+}
+
 // @Summary Delete library book
 // @Tags Belajar
 // @Accept json
@@ -267,6 +359,32 @@ func inferLibraryResource(filename string, contentType string) (model.LibraryBoo
 		return model.LibraryBookFormatHTML, contentType, nil
 	default:
 		return "", "", fmt.Errorf("unsupported resource file type")
+	}
+}
+
+func inferLibraryCoverImage(filename string, contentType string) (string, error) {
+	ext := strings.ToLower(filepath.Ext(filename))
+	if contentType == "" || contentType == "application/octet-stream" {
+		contentType = mime.TypeByExtension(ext)
+	}
+	switch ext {
+	case ".jpg", ".jpeg":
+		if contentType == "" {
+			contentType = "image/jpeg"
+		}
+		return contentType, nil
+	case ".png":
+		if contentType == "" {
+			contentType = "image/png"
+		}
+		return contentType, nil
+	case ".webp":
+		if contentType == "" {
+			contentType = "image/webp"
+		}
+		return contentType, nil
+	default:
+		return "", fmt.Errorf("unsupported cover image type")
 	}
 }
 

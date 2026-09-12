@@ -945,6 +945,16 @@ export const adminLibraryApi = {
     },
     clearResource: (id) =>
         authFetch(`/api/v1/library/books/${id}/resource`, { method: "DELETE" }),
+    uploadCover: (id, file) => {
+        const data = new FormData();
+        data.append("file", file);
+        return authFetch(`/api/v1/library/books/${id}/cover`, {
+            method: "POST",
+            body: data,
+        });
+    },
+    clearCover: (id) =>
+        authFetch(`/api/v1/library/books/${id}/cover`, { method: "DELETE" }),
     delete: (id) =>
         authFetch(`/api/v1/library/books/${id}`, { method: "DELETE" }),
 };

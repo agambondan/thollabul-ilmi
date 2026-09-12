@@ -297,6 +297,15 @@ const enAdmin = {
     "admin.library.clearing_resource": "Clearing...",
     "admin.library.resource_file_save_first":
         "Save the book before uploading a file.",
+    "admin.library.cover_file": "Cover File",
+    "admin.library.upload_cover": "Upload Cover",
+    "admin.library.uploading_cover": "Uploading...",
+    "admin.library.clear_cover": "Clear Cover",
+    "admin.library.clearing_cover": "Clearing...",
+    "admin.library.cover_file_save_first":
+        "Save the book before uploading a cover.",
+    "admin.library.cover_or_url":
+        "Upload an image or fill in the cover URL below.",
     "admin.library.pages": "Pages",
     "admin.library.tags": "Tags",
     "admin.library.status": "Status",

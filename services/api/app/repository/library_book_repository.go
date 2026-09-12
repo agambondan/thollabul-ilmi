@@ -18,6 +18,8 @@ type LibraryBookRepository interface {
 	Update(id int, book *model.LibraryBook) (*model.LibraryBook, error)
 	UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error)
 	ClearResource(id int) (*model.LibraryBook, error)
+	UpdateCover(id int, cover *model.LibraryBookCover) (*model.LibraryBook, error)
+	ClearCover(id int) (*model.LibraryBook, error)
 	Delete(id int) error
 }
 
@@ -183,6 +185,39 @@ func (r *libraryBookRepo) ClearResource(id int) (*model.LibraryBook, error) {
 		"file_mime_type":  "",
 		"file_size_bytes": int64(0),
 		"file_object_key": "",
+	}
+	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+	return &existing, nil
+}
+
+func (r *libraryBookRepo) UpdateCover(id int, cover *model.LibraryBookCover) (*model.LibraryBook, error) {
+	var existing model.LibraryBook
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
+	updates := map[string]interface{}{
+		"cover_url":        cover.CoverURL,
+		"cover_object_key": cover.ObjectKey,
+	}
+	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
+	return &existing, nil
+}
+
+func (r *libraryBookRepo) ClearCover(id int) (*model.LibraryBook, error) {
+	var existing model.LibraryBook
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
+	updates := map[string]interface{}{
+		"cover_url":        "",
+		"cover_object_key": "",
 	}
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err

@@ -420,6 +420,8 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Put("/library/books/:id", admin, newLibraryBookController.Update)
 	master.Post("/library/books/:id/resource", admin, newLibraryBookController.UploadResource)
 	master.Delete("/library/books/:id/resource", admin, newLibraryBookController.ClearResource)
+	master.Post("/library/books/:id/cover", admin, newLibraryBookController.UploadCover)
+	master.Delete("/library/books/:id/cover", admin, newLibraryBookController.ClearCover)
 	master.Delete("/library/books/:id", admin, newLibraryBookController.Delete)
 	master.Get("/library/progress", jwt, newLibraryBookProgressController.FindAll)
 	master.Get("/library/progress/:bookId", jwt, newLibraryBookProgressController.FindByBook)

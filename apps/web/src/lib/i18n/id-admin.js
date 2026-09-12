@@ -300,6 +300,15 @@ const idAdmin = {
     "admin.library.clearing_resource": "Menghapus...",
     "admin.library.resource_file_save_first":
         "Simpan buku dulu sebelum upload file.",
+    "admin.library.cover_file": "File Sampul",
+    "admin.library.upload_cover": "Upload Sampul",
+    "admin.library.uploading_cover": "Mengupload...",
+    "admin.library.clear_cover": "Hapus Sampul",
+    "admin.library.clearing_cover": "Menghapus...",
+    "admin.library.cover_file_save_first":
+        "Simpan buku dulu sebelum upload sampul.",
+    "admin.library.cover_or_url":
+        "Upload gambar atau isi URL sampul di bawah.",
     "admin.library.pages": "Halaman",
     "admin.library.tags": "Tag",
     "admin.library.status": "Status",

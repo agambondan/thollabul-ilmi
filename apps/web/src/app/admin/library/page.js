@@ -111,6 +111,10 @@ const AdminLibraryPage = () => {
     const [uploadingResource, setUploadingResource] = useState(false);
     const [resourceUploadProgress, setResourceUploadProgress] = useState(0);
     const [clearingResource, setClearingResource] = useState(false);
+    const [coverFile, setCoverFile] = useState(null);
+    const [uploadingCover, setUploadingCover] = useState(false);
+    const [coverUploadProgress, setCoverUploadProgress] = useState(0);
+    const [clearingCover, setClearingCover] = useState(false);
 
     const load = async () => {
         setLoading(true);
@@ -133,6 +137,7 @@ const AdminLibraryPage = () => {
         setEditId(null);
         setForm(EMPTY_FORM);
         setResourceFile(null);
+        setCoverFile(null);
         setShowModal(true);
     };
 
@@ -140,6 +145,7 @@ const AdminLibraryPage = () => {
         setEditId(item.id ?? item._id);
         setForm(toForm(item));
         setResourceFile(null);
+        setCoverFile(null);
         setShowModal(true);
     };
 
@@ -229,6 +235,51 @@ const AdminLibraryPage = () => {
             fb("admin:mutation-error", err.message || "Gagal hapus resource.");
         } finally {
             setClearingResource(false);
+        }
+    };
+
+    const uploadCover = async () => {
+        if (!editId || !coverFile) return;
+        setUploadingCover(true);
+        setCoverUploadProgress(1);
+        try {
+            const fd = new FormData();
+            fd.append("file", coverFile);
+            const res = await uploadWithProgress(
+                `/api/v1/library/books/${editId}/cover`,
+                fd,
+                (percent) => setCoverUploadProgress(percent),
+            );
+            setCoverUploadProgress(0);
+            if (!res.ok) throw new Error("upload failed");
+            const data = await res.json();
+            const book = data?.data ?? data;
+            setForm(toForm(book));
+            setCoverFile(null);
+            load();
+        } catch (err) {
+            fb("admin:mutation-error", err.message || "Gagal unggah sampul.");
+        } finally {
+            setUploadingCover(false);
+            setCoverUploadProgress(0);
+        }
+    };
+
+    const clearCover = async () => {
+        if (!editId || !form.cover_url) return;
+        setClearingCover(true);
+        try {
+            const res = await adminLibraryApi.clearCover(editId);
+            if (!res.ok) throw new Error("clear cover failed");
+            const data = await res.json();
+            const book = data?.data ?? data;
+            setForm(toForm(book));
+            setCoverFile(null);
+            load();
+        } catch (err) {
+            fb("admin:mutation-error", err.message || "Gagal hapus sampul.");
+        } finally {
+            setClearingCover(false);
         }
     };
 
@@ -826,6 +877,81 @@ const AdminLibraryPage = () => {
                             </div>
                         </Field>
                         <Field label={t("admin.library.cover_url")}>
+                            <p className='mb-2 text-xs text-gray-500 dark:text-gray-400'>
+                                {t("admin.library.cover_or_url")}
+                            </p>
+                            <div className='mb-2 rounded-lg border border-dashed border-gray-300 p-3 dark:border-slate-600'>
+                                {editId ? (
+                                    <div className='space-y-2'>
+                                        <input
+                                            accept='.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp'
+                                            className='block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-800 hover:file:bg-emerald-100 dark:text-gray-300 dark:file:bg-slate-700 dark:file:text-emerald-200'
+                                            onChange={(e) =>
+                                                setCoverFile(
+                                                    e.target.files?.[0] ?? null,
+                                                )
+                                            }
+                                            type='file'
+                                        />
+                                        <div className='flex flex-wrap items-center gap-2'>
+                                            <button
+                                                className='rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50'
+                                                disabled={
+                                                    !coverFile || uploadingCover
+                                                }
+                                                onClick={uploadCover}
+                                                type='button'
+                                            >
+                                                {uploadingCover
+                                                    ? `${t("admin.library.uploading_cover")} ${coverUploadProgress}%`
+                                                    : t(
+                                                          "admin.library.upload_cover",
+                                                      )}
+                                            </button>
+                                            {uploadingCover &&
+                                                coverUploadProgress > 0 && (
+                                                    <div className='w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden'>
+                                                        <div
+                                                            className='bg-emerald-600 h-1.5 rounded-full transition-all duration-200'
+                                                            style={{
+                                                                width: `${coverUploadProgress}%`,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            {form.cover_url ? (
+                                                <>
+                                                    <img
+                                                        alt=''
+                                                        className='h-10 w-10 rounded-md object-cover'
+                                                        src={form.cover_url}
+                                                    />
+                                                    <button
+                                                        className='rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 dark:text-red-400 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/60 dark:hover:bg-red-950/30'
+                                                        disabled={clearingCover}
+                                                        onClick={clearCover}
+                                                        type='button'
+                                                    >
+                                                        {clearingCover
+                                                            ? t(
+                                                                  "admin.library.clearing_cover",
+                                                              )
+                                                            : t(
+                                                                  "admin.library.clear_cover",
+                                                              )}
+                                                    </button>
+                                                </>
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                        {t(
+                                            "admin.library.cover_file_save_first",
+                                        )}
+                                    </p>
+                                )}
+                            </div>
                             <input
                                 className={inputClass}
                                 onChange={(e) =>
