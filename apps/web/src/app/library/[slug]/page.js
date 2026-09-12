@@ -8,7 +8,7 @@ import { useLocale } from "@/context/Locale";
 import { bookmarkApi, libraryApi, libraryProgressApi } from "@/lib/api";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import { BsBookmark, BsBookmarkFill, BsBoxArrowUpRight } from "react-icons/bs";
 
 const normalizeBook = (data) => data?.data ?? data;
@@ -54,6 +54,42 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
     });
     const [savingProgress, setSavingProgress] = useState(false);
     const [progressMessage, setProgressMessage] = useState("");
+    const [previewPct, setPreviewPct] = useState(50);
+    const [isDesktop, setIsDesktop] = useState(false);
+    const splitRef = useRef(null);
+    const draggingRef = useRef(false);
+
+    useEffect(() => {
+        const mql = window.matchMedia("(min-width: 1024px)");
+        const update = () => setIsDesktop(mql.matches);
+        update();
+        mql.addEventListener("change", update);
+        return () => mql.removeEventListener("change", update);
+    }, []);
+
+    const updatePreviewPct = useCallback((clientX) => {
+        const el = splitRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const pct = ((rect.right - clientX) / rect.width) * 100;
+        setPreviewPct(Math.min(70, Math.max(30, pct)));
+    }, []);
+
+    useEffect(() => {
+        const onMove = (event) => {
+            if (!draggingRef.current) return;
+            updatePreviewPct(event.clientX);
+        };
+        const onUp = () => {
+            draggingRef.current = false;
+        };
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("mouseup", onUp);
+        return () => {
+            window.removeEventListener("mousemove", onMove);
+            window.removeEventListener("mouseup", onUp);
+        };
+    }, [updatePreviewPct]);
 
     useEffect(() => {
         let active = true;
@@ -183,7 +219,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
             className={
                 isWide
                     ? "w-full px-4"
-                    : `container mx-auto px-4 ${showPreview ? "max-w-6xl" : "max-w-4xl"}`
+                    : `container mx-auto px-4 ${showPreview ? "max-w-7xl" : "max-w-4xl"}`
             }
         >
             <Link
@@ -202,8 +238,16 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                 <div
                     className={
                         showPreview
-                            ? "grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,440px)] lg:items-start"
+                            ? "grid gap-6 lg:gap-0 lg:grid-cols-[minmax(0,1fr)_8px_minmax(280px,1fr)] lg:items-start"
                             : ""
+                    }
+                    ref={splitRef}
+                    style={
+                        showPreview && isDesktop
+                            ? {
+                                  gridTemplateColumns: `minmax(0,1fr) 8px ${previewPct}%`,
+                              }
+                            : undefined
                     }
                 >
                 <article className='rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900'>
@@ -465,6 +509,21 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         </div>
                     </div>
                 </article>
+                {showPreview && (
+                    <div
+                        className='hidden select-none lg:flex lg:h-[calc(100vh-2rem)] lg:cursor-col-resize lg:items-stretch lg:justify-center lg:self-stretch lg:sticky lg:top-4'
+                        onMouseDown={(event) => {
+                            event.preventDefault();
+                            draggingRef.current = true;
+                        }}
+                        title={
+                            t("library.drag_to_resize") ||
+                            "Geser untuk mengubah lebar preview"
+                        }
+                    >
+                        <div className='w-1 rounded-full bg-emerald-100 transition hover:bg-emerald-300 dark:bg-slate-700 dark:hover:bg-emerald-700' />
+                    </div>
+                )}
                 {showPreview && (
                     <div className='h-[70vh] overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]'>
                         <iframe
