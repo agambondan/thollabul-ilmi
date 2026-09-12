@@ -1,6 +1,8 @@
 import ContentWidth from "@/components/layout/ContentWidth";
 import HadithPage from "@/app/hadith/[slug]/HadithPage";
 import HadithNumberHeader from "./HadithNumberHeader";
+import HadithNumberPager from "./HadithNumberPager";
+import { getBooks } from "@/lib/api";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { notFound } from "next/navigation";
 
@@ -62,7 +64,10 @@ export default async function HadithNumberContent({
     basePath = "/hadith",
 }) {
     const number = normalizeHadithNumber(params.number);
-    const hadith = await fetchHadithByBookNumber(params.slug, number);
+    const [hadith, books] = await Promise.all([
+        fetchHadithByBookNumber(params.slug, number),
+        getBooks(),
+    ]);
 
     if (!hadith) {
         notFound();
@@ -70,6 +75,7 @@ export default async function HadithNumberContent({
 
     const book = hadith.book ?? { slug: params.slug };
     const sunnahUrl = getSunnahComUrl(book.slug ?? params.slug, number);
+    const total = books.find((b) => b.slug === params.slug)?.count ?? null;
 
     return (
         <ContentWidth compact='max-w-4xl' className='p-4'>
@@ -84,6 +90,12 @@ export default async function HadithNumberContent({
                 book={book}
                 hadith={hadith}
                 basePath={basePath}
+            />
+            <HadithNumberPager
+                basePath={basePath}
+                slug={params.slug}
+                number={number}
+                total={total}
             />
         </ContentWidth>
     );

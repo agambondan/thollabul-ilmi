@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import SourceBadges from "@/components/SourceBadges";
 import ContentReportModal from "@/components/ContentReportModal";
+import DetailPagerNav from "@/components/DetailPagerNav";
 import { BsExclamationTriangleFill } from "react-icons/bs";
 
 export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
@@ -18,6 +19,7 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
     const [reportOpen, setReportOpen] = useState(false);
+    const [nav, setNav] = useState({ prev: null, next: null });
 
     useEffect(() => {
         if (!slug) return;
@@ -34,6 +36,26 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
             })
             .catch(() => setError(true))
             .finally(() => setIsLoading(false));
+    }, [slug, lang]);
+
+    useEffect(() => {
+        if (!slug) return;
+        sirohApi
+            .list(0, 1000, lang)
+            .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+            .then((data) => {
+                const items = data?.items ?? [];
+                const index = items.findIndex((item) => item.slug === slug);
+                if (index === -1) {
+                    setNav({ prev: null, next: null });
+                    return;
+                }
+                setNav({
+                    prev: index > 0 ? items[index - 1] : null,
+                    next: index < items.length - 1 ? items[index + 1] : null,
+                });
+            })
+            .catch(() => setNav({ prev: null, next: null }));
     }, [slug, lang]);
 
     if (isLoading) return <SkeletonList title={false} rows={5} />;
@@ -106,6 +128,34 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
                             {t("report.correction_btn") ?? "Laporkan Kesalahan"}
                         </button>
                     </div>
+                    <DetailPagerNav
+                        prevChrome={t("common.prev")}
+                        nextChrome={t("common.next")}
+                        prev={
+                            nav.prev
+                                ? {
+                                      href: `${basePath}/${nav.prev.slug}`,
+                                      label: getLocalizedField(
+                                          nav.prev,
+                                          "title",
+                                          lang,
+                                      ),
+                                  }
+                                : null
+                        }
+                        next={
+                            nav.next
+                                ? {
+                                      href: `${basePath}/${nav.next.slug}`,
+                                      label: getLocalizedField(
+                                          nav.next,
+                                          "title",
+                                          lang,
+                                      ),
+                                  }
+                                : null
+                        }
+                    />
                 </article>
             )}
 

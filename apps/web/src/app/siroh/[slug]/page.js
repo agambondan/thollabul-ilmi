@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import Section from "@/components/Section";
 import ContentWidth from "@/components/layout/ContentWidth";
+import DetailPagerNav from "@/components/DetailPagerNav";
 import SourceBadges from "@/components/SourceBadges";
 import SirohReportButton from "@/components/SirohReportButton";
 import { getLocalizedField } from "@/lib/translation";
@@ -26,12 +27,35 @@ async function getSirohContent(slug) {
     }
 }
 
+async function getSirohNav(slug, lang) {
+    try {
+        const res = await fetch(
+            `${API_URL}/api/v1/siroh/contents?size=1000${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+            { next: { revalidate: 86400 } },
+        );
+        if (!res.ok) return { prev: null, next: null };
+        const data = await res.json();
+        const items = data?.items ?? [];
+        const index = items.findIndex((item) => item.slug === slug);
+        if (index === -1) return { prev: null, next: null };
+        return {
+            prev: index > 0 ? items[index - 1] : null,
+            next: index < items.length - 1 ? items[index + 1] : null,
+        };
+    } catch {
+        return { prev: null, next: null };
+    }
+}
+
 export default async function SirohDetailPage(props) {
     const params = await props.params;
     const cookieStore = await cookies();
     const lang =
         cookieStore.get("lang")?.value?.toUpperCase() === "EN" ? "EN" : "ID";
-    const content = await getSirohContent(params.slug);
+    const [content, nav] = await Promise.all([
+        getSirohContent(params.slug),
+        getSirohNav(params.slug, lang),
+    ]);
 
     const title = getLocalizedField(content, "title", lang);
     const subtitle = getLocalizedField(content, "subtitle", lang);
@@ -98,6 +122,26 @@ export default async function SirohDetailPage(props) {
                                 targetTitle={title || "Siroh"}
                                 snippet={body}
                                 label='Laporkan Kesalahan'
+                            />
+                            <DetailPagerNav
+                                prevChrome='Sebelumnya'
+                                nextChrome='Selanjutnya'
+                                prev={
+                                    nav.prev
+                                        ? {
+                                              href: `/siroh/${nav.prev.slug}`,
+                                              label: nav.prev.title,
+                                          }
+                                        : null
+                                }
+                                next={
+                                    nav.next
+                                        ? {
+                                              href: `/siroh/${nav.next.slug}`,
+                                              label: nav.next.title,
+                                          }
+                                        : null
+                                }
                             />
                         </article>
                     )}

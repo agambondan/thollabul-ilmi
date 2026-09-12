@@ -1,6 +1,7 @@
 "use client";
 
 import Section from "@/components/Section";
+import DetailPagerNav from "@/components/DetailPagerNav";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { tafsirApi } from "@/lib/api";
@@ -447,6 +448,29 @@ export const TafsirSurahContent = ({
                         );
                     })}
                 </div>
+            )}
+
+            {!isLoading && (surah?.prev_surah || surah?.next_surah) && (
+                <DetailPagerNav
+                    prevChrome={t("common.prev")}
+                    nextChrome={t("common.next")}
+                    prev={
+                        surah?.prev_surah?.translation?.latin_en
+                            ? {
+                                  href: `${tafsirBasePath}/${encodeURIComponent(surah.prev_surah.translation.latin_en)}`,
+                                  label: getSurahName(surah.prev_surah, lang),
+                              }
+                            : null
+                    }
+                    next={
+                        surah?.next_surah?.translation?.latin_en
+                            ? {
+                                  href: `${tafsirBasePath}/${encodeURIComponent(surah.next_surah.translation.latin_en)}`,
+                                  label: getSurahName(surah.next_surah, lang),
+                              }
+                            : null
+                    }
+                />
             )}
 
             {!isLoading && ayahs.length > 0 && visibleAyahs.length === 0 && (

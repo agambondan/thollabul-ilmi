@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Section from "@/components/Section";
 import SourceBadges from "@/components/SourceBadges";
+import DetailPagerNav from "@/components/DetailPagerNav";
 
 const API_URL =
     process.env.API_INTERNAL_URL ||
@@ -22,11 +23,33 @@ async function getFiqhItem(slug) {
     }
 }
 
+async function getFiqhNav(slug) {
+    try {
+        const res = await fetch(`${API_URL}/api/v1/fiqh/items?size=500`, {
+            next: { revalidate: 86400 },
+        });
+        if (!res.ok) return { prev: null, next: null };
+        const data = await res.json();
+        const items = data?.items ?? [];
+        const index = items.findIndex((item) => item.slug === slug);
+        if (index === -1) return { prev: null, next: null };
+        return {
+            prev: index > 0 ? items[index - 1] : null,
+            next: index < items.length - 1 ? items[index + 1] : null,
+        };
+    } catch {
+        return { prev: null, next: null };
+    }
+}
+
 export const revalidate = 86400;
 
 export default async function FiqhItemPage(props) {
     const params = await props.params;
-    const item = await getFiqhItem(params.slug);
+    const [item, nav] = await Promise.all([
+        getFiqhItem(params.slug),
+        getFiqhNav(params.slug),
+    ]);
 
     if (!item) notFound();
 
@@ -58,6 +81,26 @@ export default async function FiqhItemPage(props) {
                             <SourceBadges source={item.source} />
                         </div>
                     )}
+                    <DetailPagerNav
+                        prevChrome='Sebelumnya'
+                        nextChrome='Selanjutnya'
+                        prev={
+                            nav.prev
+                                ? {
+                                      href: `/fiqh/${nav.prev.slug}`,
+                                      label: nav.prev.title,
+                                  }
+                                : null
+                        }
+                        next={
+                            nav.next
+                                ? {
+                                      href: `/fiqh/${nav.next.slug}`,
+                                      label: nav.next.title,
+                                  }
+                                : null
+                        }
+                    />
                 </div>
             </Section>
         </main>
