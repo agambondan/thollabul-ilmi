@@ -510,6 +510,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
     },
+    "5WzenJ1umhE": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
+    },
     "5Xs5HBsBNWw": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -882,6 +888,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
     },
+    "B2zgCDc3FPc": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@insantvofficial"
+    },
     "B48BABYyGWo": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
       "retry_after": "2026-09-22T17:49:59.024031229Z",
@@ -1056,6 +1068,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
     },
+    "DNa4DrhlgcU": {
+      "attempted_at": "2026-09-12T15:16:49.595809029Z",
+      "retry_after": "2026-09-26T15:16:49.595809029Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@insantvofficial"
+    },
     "DTrP4VFcmoA": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -1187,6 +1205,12 @@
       "retry_after": "2026-09-25T17:35:05.004414465Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@yufid"
+    },
+    "Ef67veVuaZg": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@insantvofficial"
     },
     "EoTVcSf0axY": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
@@ -2285,6 +2309,12 @@
       "retry_after": "2026-09-22T17:49:59.024031229Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AshiilTV"
+    },
+    "TpYyW6gVFCU": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@SalamTVOfficial"
     },
     "TrpkVSrp7sM": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
@@ -3438,6 +3468,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
     },
+    "hUCBRlsneB8": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
+    },
     "hVe8u7hfHOg": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -3485,6 +3521,12 @@
       "retry_after": "2026-09-23T07:00:53.013797524Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
+    },
+    "i2PZgh3aiTQ": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@SalamTVOfficial"
     },
     "i49XAvrdwvQ": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
@@ -3930,6 +3972,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
     },
+    "oVuHMcJxuC4": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@SalamTVOfficial"
+    },
     "oeoM7bOo2qs": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -4157,6 +4205,12 @@
       "retry_after": "2026-09-23T07:00:53.013797524Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
+    },
+    "saC4AbosLkM": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
     },
     "shgXhisi0ek": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
@@ -4428,11 +4482,23 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
     },
+    "wa7SarMAtCs": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@SurauTVOfficial"
+    },
     "wkkUlu69dgg": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
       "retry_after": "2026-09-22T17:49:59.024031229Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AshiilTV"
+    },
+    "wmPVQt4Mcgg": {
+      "attempted_at": "2026-09-12T15:36:31.317470506Z",
+      "retry_after": "2026-09-26T15:36:31.317470506Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@yufid"
     },
     "wmiMwnvOi5o": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
