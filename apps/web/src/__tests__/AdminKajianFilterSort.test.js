@@ -25,26 +25,30 @@ jest.mock("@/context/Locale", () => ({
     }),
 }));
 
+// Real `topic` values are comma-joined multi-phrase blurbs scraped per
+// channel (e.g. "Fikih muamalah dasar, Adab islami harian"), not a clean
+// single category — the filter must match by substring against each
+// comma-segment, not by exact string equality.
 const ITEMS = [
     {
         id: 1,
         title: "Zikir Pagi dan Petang",
         speaker: "Ustadz A",
-        topic: "akhlak",
+        topic: "Adab islami harian, Akhlak keseharian",
         type: "video",
     },
     {
         id: 2,
         title: "Fiqih Muamalah",
         speaker: "Ustadz B",
-        topic: "fiqh",
+        topic: "Fikih muamalah dasar, Fatwa kontemporer",
         type: "audio",
     },
     {
         id: 3,
         title: "Adab Menuntut Ilmu",
         speaker: "Ustadz C",
-        topic: "akhlak",
+        topic: "Adab islami harian, Fatwa kontemporer",
         type: "text",
     },
 ];
@@ -59,6 +63,16 @@ const tableTitles = () =>
         .slice(1) // skip the header row
         .map((row) => within(row).getAllByRole("cell")[1].textContent);
 
+// The "Kategori" sortable column header is also a <button> whose accessible
+// name contains "admin.field.category", same as the filter toggle's
+// aria-label — disambiguate by picking the one that isn't inside the table.
+const openTopicFilter = () => {
+    const matches = screen.getAllByRole("button", {
+        name: /admin\.field\.category/,
+    });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Kajian page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -68,7 +82,7 @@ describe("Admin Kajian page — filter and sort", () => {
         });
     });
 
-    test("category filter narrows the list to a single topic", async () => {
+    test("checking one topic segment narrows the list by substring match", async () => {
         render(<AdminStudiesPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -79,12 +93,46 @@ describe("Admin Kajian page — filter and sort", () => {
             "Adab Menuntut Ilmu",
         ]);
 
-        const select = screen.getByRole("combobox", {
-            name: "admin.field.category",
-        });
-        fireEvent.change(select, { target: { value: "fiqh" } });
+        openTopicFilter();
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Fikih muamalah dasar" }),
+        );
 
         expect(tableTitles()).toEqual(["Fiqih Muamalah"]);
+    });
+
+    test("checking two segments matches either (OR), unchecking clears the filter", async () => {
+        render(<AdminStudiesPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        openTopicFilter();
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Adab islami harian" }),
+        );
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Fikih muamalah dasar" }),
+        );
+        expect(tableTitles()).toEqual([
+            "Zikir Pagi dan Petang",
+            "Fiqih Muamalah",
+            "Adab Menuntut Ilmu",
+        ]);
+
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Adab islami harian" }),
+        );
+        expect(tableTitles()).toEqual(["Fiqih Muamalah"]);
+
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Fikih muamalah dasar" }),
+        );
+        expect(tableTitles()).toEqual([
+            "Zikir Pagi dan Petang",
+            "Fiqih Muamalah",
+            "Adab Menuntut Ilmu",
+        ]);
     });
 
     test("clicking the Title header sorts the list alphabetically, then reverses", async () => {

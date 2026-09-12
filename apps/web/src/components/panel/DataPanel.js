@@ -1,6 +1,7 @@
 "use client";
 
 import classNames from "classnames";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Shared chrome for the admin and dashboard panels.
@@ -295,6 +296,104 @@ export const PanelPagination = ({
                     {labels?.next ?? "Next"}
                 </button>
             </div>
+        </div>
+    );
+};
+
+/**
+ * Multi-select filter — a button that opens a checkbox list. Use this instead
+ * of `PanelFilterSelect` when a row can plausibly match more than one option
+ * at once (free-text/multi-tag fields), or when the page just wants an "OR
+ * across several values" filter. `selected` is the array of currently-checked
+ * values; `onChange` receives the whole next array on every toggle.
+ */
+export const PanelFilterCheckboxGroup = ({
+    label,
+    selected = [],
+    onChange,
+    options,
+    allLabel = "Semua",
+    className,
+}) => {
+    const [open, setOpen] = useState(false);
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const onOutsideClick = (e) => {
+            if (
+                containerRef.current &&
+                !containerRef.current.contains(e.target)
+            ) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", onOutsideClick);
+        return () =>
+            document.removeEventListener("mousedown", onOutsideClick);
+    }, [open]);
+
+    const toggleValue = (value) => {
+        onChange(
+            selected.includes(value)
+                ? selected.filter((v) => v !== value)
+                : [...selected, value],
+        );
+    };
+
+    const summary =
+        selected.length === 0
+            ? allLabel
+            : selected.length === 1
+              ? (options.find((o) => o.value === selected[0])?.label ??
+                selected[0])
+              : `${selected.length} dipilih`;
+
+    return (
+        <div
+            ref={containerRef}
+            className={classNames("relative", className)}
+        >
+            <div className='flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400'>
+                {label ? <span>{label}:</span> : null}
+                <button
+                    type='button'
+                    aria-label={label ? `${label}: ${summary}` : summary}
+                    aria-expanded={open}
+                    onClick={() => setOpen((o) => !o)}
+                    className='flex items-center gap-1.5 px-2 py-1.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg text-xs text-gray-700 dark:text-gray-200 outline-none cursor-pointer max-w-[12rem] truncate'
+                >
+                    <span className='truncate'>{summary}</span>
+                    <span className='shrink-0 opacity-60'>▾</span>
+                </button>
+            </div>
+            {open && (
+                <div className='absolute z-20 mt-1 max-h-64 w-64 overflow-y-auto rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 p-2 shadow-lg'>
+                    {selected.length > 0 && (
+                        <button
+                            type='button'
+                            onClick={() => onChange([])}
+                            className='mb-1 w-full rounded px-2 py-1 text-left text-xs text-emerald-700 dark:text-emerald-400 hover:bg-gray-50 dark:hover:bg-slate-700'
+                        >
+                            Hapus semua ({selected.length})
+                        </button>
+                    )}
+                    {options.map((opt) => (
+                        <label
+                            key={opt.value}
+                            className='flex cursor-pointer items-start gap-2 rounded px-2 py-1 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700'
+                        >
+                            <input
+                                type='checkbox'
+                                checked={selected.includes(opt.value)}
+                                onChange={() => toggleValue(opt.value)}
+                                className='mt-0.5 shrink-0'
+                            />
+                            <span>{opt.label}</span>
+                        </label>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

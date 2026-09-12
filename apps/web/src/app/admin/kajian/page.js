@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -13,7 +13,7 @@ import {
 import { adminKajianApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     BsBoxArrowUpRight,
     BsCameraVideo,
@@ -120,7 +120,7 @@ const AdminStudiesPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [topicFilter, setTopicFilter] = useState("");
+    const [topicFilters, setTopicFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
@@ -224,6 +224,26 @@ const AdminStudiesPage = () => {
         }
     };
 
+    // `topic` isn't a clean single category — it's a comma-joined set of
+    // sub-topic phrases scraped per channel (e.g. "Fikih muamalah dasar,
+    // Fikih ibadah harian, ..."), matching how the backend itself treats it
+    // (`topic ILIKE '%<value>%'` in kajian_repository.go), so the filter
+    // checks substring containment against each distinct segment rather than
+    // exact equality — an exact match against the whole string would never
+    // hit since no video's `topic` equals a single short label.
+    const topicOptions = useMemo(() => {
+        const segments = new Set();
+        for (const item of items) {
+            for (const part of (item.topic ?? "").split(",")) {
+                const trimmed = part.trim();
+                if (trimmed) segments.add(trimmed);
+            }
+        }
+        return [...segments]
+            .sort((a, b) => a.localeCompare(b))
+            .map((value) => ({ value, label: value }));
+    }, [items]);
+
     const filtered = items.filter((i) => {
         const q = search.toLowerCase();
         const matchesSearch =
@@ -233,7 +253,9 @@ const AdminStudiesPage = () => {
                 .includes(q) ||
             i.speaker?.toLowerCase().includes(q) ||
             i.topic?.toLowerCase().includes(q);
-        const matchesTopic = !topicFilter || i.topic === topicFilter;
+        const matchesTopic =
+            topicFilters.length === 0 ||
+            topicFilters.some((segment) => i.topic?.includes(segment));
         return matchesSearch && matchesTopic;
     });
 
@@ -283,14 +305,14 @@ const AdminStudiesPage = () => {
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label={t("admin.field.category")}
-                    value={topicFilter}
-                    onChange={(value) => {
-                        setTopicFilter(value);
+                    selected={topicFilters}
+                    onChange={(values) => {
+                        setTopicFilters(values);
                         setPage(1);
                     }}
-                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    options={topicOptions}
                 />
             </div>
 
