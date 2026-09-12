@@ -52,6 +52,16 @@ const tableTitles = () =>
         .slice(1)
         .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
+// The "Kategori" sortable column header is also a <button> whose accessible
+// name contains "admin.field.category", same as the filter toggle's
+// aria-label — disambiguate by picking the one that isn't inside the table.
+const openCategoryFilter = () => {
+    const matches = screen.getAllByRole("button", {
+        name: /admin\.field\.category/,
+    });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Wirid page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -61,7 +71,7 @@ describe("Admin Wirid page — filter and sort", () => {
         });
     });
 
-    test("category filter narrows the list to a single category", async () => {
+    test("checking one category narrows the list to that category", async () => {
         render(<AdminWirdPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -72,12 +82,23 @@ describe("Admin Wirid page — filter and sort", () => {
             "Awal Wirid Tidur",
         ]);
 
-        const select = screen.getByRole("combobox", {
-            name: "admin.field.category",
-        });
-        fireEvent.change(select, { target: { value: "pagi" } });
+        openCategoryFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "pagi" }));
 
         expect(tableTitles()).toEqual(["Wirid Pagi"]);
+    });
+
+    test("checking two categories matches either (OR)", async () => {
+        render(<AdminWirdPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        openCategoryFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "pagi" }));
+        fireEvent.click(screen.getByRole("checkbox", { name: "tidur" }));
+
+        expect(tableTitles()).toEqual(["Wirid Pagi", "Awal Wirid Tidur"]);
     });
 
     test("clicking the Title header sorts the list alphabetically, then reverses", async () => {

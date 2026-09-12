@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -107,9 +107,9 @@ const AdminLibraryPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("");
-    const [statusFilter, setStatusFilter] = useState("");
-    const [formatFilter, setFormatFilter] = useState("");
+    const [categoryFilters, setCategoryFilters] = useState([]);
+    const [statusFilters, setStatusFilters] = useState([]);
+    const [formatFilters, setFormatFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -300,9 +300,12 @@ const AdminLibraryPage = () => {
                 .toLowerCase()
                 .includes(query);
         const matchesCategory =
-            !categoryFilter || item.category === categoryFilter;
-        const matchesStatus = !statusFilter || item.status === statusFilter;
-        const matchesFormat = !formatFilter || item.format === formatFilter;
+            categoryFilters.length === 0 ||
+            categoryFilters.includes(item.category);
+        const matchesStatus =
+            statusFilters.length === 0 || statusFilters.includes(item.status);
+        const matchesFormat =
+            formatFilters.length === 0 || formatFilters.includes(item.format);
         return (
             matchesSearch && matchesCategory && matchesStatus && matchesFormat
         );
@@ -352,29 +355,29 @@ const AdminLibraryPage = () => {
                     type='text'
                     value={search}
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label={t("admin.field.category")}
-                    value={categoryFilter}
-                    onChange={(value) => {
-                        setCategoryFilter(value);
+                    selected={categoryFilters}
+                    onChange={(values) => {
+                        setCategoryFilters(values);
                         setPage(1);
                     }}
                     options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label={t("admin.library.status")}
-                    value={statusFilter}
-                    onChange={(value) => {
-                        setStatusFilter(value);
+                    selected={statusFilters}
+                    onChange={(values) => {
+                        setStatusFilters(values);
                         setPage(1);
                     }}
                     options={STATUSES.map((s) => ({ value: s, label: s }))}
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label={t("admin.library.format")}
-                    value={formatFilter}
-                    onChange={(value) => {
-                        setFormatFilter(value);
+                    selected={formatFilters}
+                    onChange={(values) => {
+                        setFormatFilters(values);
                         setPage(1);
                     }}
                     options={FORMATS.map((f) => ({ value: f, label: f }))}

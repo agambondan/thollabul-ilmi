@@ -59,6 +59,14 @@ const tableNames = () =>
         .slice(1) // skip the header row
         .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
+// The "Kategori" sortable column header is also a <button> whose accessible
+// name contains "Kategori", same as the filter toggle's aria-label —
+// disambiguate by picking the one that isn't inside the table.
+const openCategoryFilter = () => {
+    const matches = screen.getAllByRole("button", { name: /Kategori/ });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Amalan page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -68,7 +76,7 @@ describe("Admin Amalan page — filter and sort", () => {
         });
     });
 
-    test("category filter narrows the list to a single category", async () => {
+    test("checking one category narrows the list to that category", async () => {
         render(<AdminAmalanPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -79,10 +87,27 @@ describe("Admin Amalan page — filter and sort", () => {
             "Puasa Senin Kamis",
         ]);
 
-        const select = screen.getByRole("combobox", { name: "Kategori" });
-        fireEvent.change(select, { target: { value: "sedekah" } });
+        openCategoryFilter();
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Sedekah & Infaq" }),
+        );
 
         expect(tableNames()).toEqual(["Sedekah Subuh"]);
+    });
+
+    test("checking two categories matches either (OR)", async () => {
+        render(<AdminAmalanPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        openCategoryFilter();
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Sedekah & Infaq" }),
+        );
+        fireEvent.click(screen.getByRole("checkbox", { name: "Puasa Sunnah" }));
+
+        expect(tableNames()).toEqual(["Sedekah Subuh", "Puasa Senin Kamis"]);
     });
 
     test("clicking the Nama Amalan header sorts the list alphabetically, then reverses", async () => {

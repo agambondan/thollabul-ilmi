@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -49,7 +49,7 @@ const AdminRemindersPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [typeFilter, setTypeFilter] = useState("");
+    const [typeFilters, setTypeFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -150,7 +150,8 @@ const AdminRemindersPage = () => {
         ]
             .filter(Boolean)
             .some((value) => String(value).toLowerCase().includes(q));
-        const matchesType = !typeFilter || item.type === typeFilter;
+        const matchesType =
+            typeFilters.length === 0 || typeFilters.includes(item.type);
         return matchesSearch && matchesType;
     });
 
@@ -197,11 +198,11 @@ const AdminRemindersPage = () => {
                     }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label='Tipe'
-                    value={typeFilter}
-                    onChange={(value) => {
-                        setTypeFilter(value);
+                    selected={typeFilters}
+                    onChange={(values) => {
+                        setTypeFilters(values);
                         setPage(1);
                     }}
                     options={TYPES}

@@ -61,7 +61,7 @@ describe("Admin Siroh page — filter and sort contents", () => {
         });
     });
 
-    test("category filter narrows the contents list to a single category", async () => {
+    test("checking one category narrows the contents list to that category", async () => {
         render(<AdminSirahPage />);
         await waitFor(() => {
             expect(
@@ -74,12 +74,39 @@ describe("Admin Siroh page — filter and sort contents", () => {
             "Fathu Makkah",
         ]);
 
-        const select = screen.getByRole("combobox", {
-            name: "admin.field.category",
-        });
-        fireEvent.change(select, { target: { value: "2" } });
+        fireEvent.click(
+            screen.getByRole("button", { name: /^admin\.field\.category:/ }),
+        );
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Periode Madinah" }),
+        );
 
         expect(contentTitles()).toEqual(["Hijrah ke Madinah"]);
+    });
+
+    test("checking two categories matches either (OR)", async () => {
+        render(<AdminSirahPage />);
+        await waitFor(() => {
+            expect(
+                screen.getByTestId("sirah-contents-list"),
+            ).toBeInTheDocument();
+        });
+
+        fireEvent.click(
+            screen.getByRole("button", { name: /^admin\.field\.category:/ }),
+        );
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Periode Madinah" }),
+        );
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Periode Makkah" }),
+        );
+
+        expect(contentTitles()).toEqual([
+            "Kelahiran Nabi",
+            "Hijrah ke Madinah",
+            "Fathu Makkah",
+        ]);
     });
 
     test("clicking the title sort toggle sorts alphabetically, then reverses", async () => {

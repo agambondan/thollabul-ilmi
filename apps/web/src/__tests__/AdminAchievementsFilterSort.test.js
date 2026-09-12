@@ -59,6 +59,14 @@ const tableNames = () =>
         .slice(1)
         .map((row) => within(row).getAllByRole("cell")[2].textContent);
 
+// The "Kategori" sortable column header is also a <button> whose accessible
+// name contains "Kategori", same as the filter toggle's aria-label —
+// disambiguate by picking the one that isn't inside the table.
+const openCategoryFilter = () => {
+    const matches = screen.getAllByRole("button", { name: /Kategori/ });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Achievements page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -68,7 +76,7 @@ describe("Admin Achievements page — filter and sort", () => {
         });
     });
 
-    test("category filter narrows the list to a single category", async () => {
+    test("checking one category narrows the list to that category", async () => {
         render(<AdminAchievementsPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -79,10 +87,23 @@ describe("Admin Achievements page — filter and sort", () => {
             "Kolektor Ayat",
         ]);
 
-        const select = screen.getByRole("combobox", { name: "Kategori" });
-        fireEvent.change(select, { target: { value: "hafalan" } });
+        openCategoryFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "Hafalan" }));
 
         expect(tableNames()).toEqual(["Hafiz Pemula"]);
+    });
+
+    test("checking two categories matches either (OR)", async () => {
+        render(<AdminAchievementsPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        openCategoryFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "Hafalan" }));
+        fireEvent.click(screen.getByRole("checkbox", { name: "Bookmark" }));
+
+        expect(tableNames()).toEqual(["Hafiz Pemula", "Kolektor Ayat"]);
     });
 
     test("clicking the Nama header sorts the list alphabetically, then reverses", async () => {

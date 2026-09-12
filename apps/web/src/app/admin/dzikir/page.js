@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -45,7 +45,7 @@ const AdminDhikrPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("");
+    const [categoryFilters, setCategoryFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -139,7 +139,8 @@ const AdminDhikrPage = () => {
             i.title?.toLowerCase().includes(search.toLowerCase()) ||
             i.category?.toLowerCase().includes(search.toLowerCase());
         const matchesCategory =
-            !categoryFilter || i.category === categoryFilter;
+            categoryFilters.length === 0 ||
+            categoryFilters.includes(i.category);
         return matchesSearch && matchesCategory;
     });
 
@@ -190,11 +191,11 @@ const AdminDhikrPage = () => {
                     }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label={t("admin.field.category")}
-                    value={categoryFilter}
-                    onChange={(value) => {
-                        setCategoryFilter(value);
+                    selected={categoryFilters}
+                    onChange={(values) => {
+                        setCategoryFilters(values);
                         setPage(1);
                     }}
                     options={CATEGORIES.map((c) => ({ value: c, label: c }))}

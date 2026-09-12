@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -55,7 +55,7 @@ const AdminFiqhPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [catFilter, setCatFilter] = useState("");
+    const [catFilters, setCatFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -152,7 +152,7 @@ const AdminFiqhPage = () => {
 
     const filtered = items.filter(
         (i) =>
-            (!catFilter || i.category === catFilter) &&
+            (catFilters.length === 0 || catFilters.includes(i.category)) &&
             (getLocalizedField(i, "title", lang)
                 .toLowerCase()
                 .includes(search.toLowerCase()) ||
@@ -204,10 +204,10 @@ const AdminFiqhPage = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label={t("admin.field.category")}
-                    value={catFilter}
-                    onChange={setCatFilter}
+                    selected={catFilters}
+                    onChange={setCatFilters}
                     options={CATEGORIES.map((c) => ({ value: c, label: c }))}
                     allLabel={t("admin.crud.all_categories")}
                 />

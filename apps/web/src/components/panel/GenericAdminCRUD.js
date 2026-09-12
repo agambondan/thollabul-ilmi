@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -208,7 +208,10 @@ export default function GenericAdminCRUD({
                     return String(value).toLowerCase().includes(needle);
                 });
             const matchesFilters = Object.entries(filters).every(
-                ([key, value]) => !value || String(it?.[key]) === value,
+                ([key, values]) =>
+                    !values ||
+                    values.length === 0 ||
+                    values.includes(String(it?.[key])),
             );
             return matchesSearch && matchesFilters;
         });
@@ -353,14 +356,14 @@ export default function GenericAdminCRUD({
                         className='px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none'
                     />
                     {filterableFields.map(({ field: f, options }) => (
-                        <PanelFilterSelect
+                        <PanelFilterCheckboxGroup
                             key={f.key}
                             label={f.label}
-                            value={filters[f.key] ?? ""}
-                            onChange={(value) => {
+                            selected={filters[f.key] ?? []}
+                            onChange={(values) => {
                                 setFilters((prev) => ({
                                     ...prev,
-                                    [f.key]: value,
+                                    [f.key]: values,
                                 }));
                                 setPage(1);
                             }}
@@ -386,7 +389,8 @@ export default function GenericAdminCRUD({
                 <p className='text-center text-sm text-red-500 py-6'>{error}</p>
             ) : visible.length === 0 ? (
                 <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
-                    {search || Object.values(filters).some(Boolean)
+                    {search ||
+                    Object.values(filters).some((v) => v?.length > 0)
                         ? "Tidak ada data yang cocok dengan pencarian/filter."
                         : "Belum ada data."}
                 </p>

@@ -71,6 +71,16 @@ const tableTitles = () =>
         .slice(1)
         .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
+// The "Status" sortable column header is also a <button> whose accessible
+// name contains "admin.library.status", same as the status filter toggle's
+// aria-label — disambiguate by picking the one that isn't inside the table.
+const openStatusFilter = () => {
+    const matches = screen.getAllByRole("button", {
+        name: /admin\.library\.status/,
+    });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Library page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -80,7 +90,7 @@ describe("Admin Library page — filter and sort", () => {
         });
     });
 
-    test("category filter narrows the list to a single category", async () => {
+    test("checking one category narrows the list to that category", async () => {
         render(<AdminLibraryPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -91,24 +101,41 @@ describe("Admin Library page — filter and sort", () => {
             "Bulughul Marambulughul-maram",
         ]);
 
-        const select = screen.getByRole("combobox", {
-            name: "admin.field.category",
-        });
-        fireEvent.change(select, { target: { value: "Fiqh" } });
+        fireEvent.click(
+            screen.getByRole("button", { name: /admin\.field\.category/ }),
+        );
+        fireEvent.click(screen.getByRole("checkbox", { name: "Fiqh" }));
 
         expect(tableTitles()).toEqual(["Al Wajizal-wajiz"]);
     });
 
-    test("status filter narrows the list to a single status", async () => {
+    test("checking two categories matches either (OR)", async () => {
         render(<AdminLibraryPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
         });
 
-        const select = screen.getByRole("combobox", {
-            name: "admin.library.status",
+        fireEvent.click(
+            screen.getByRole("button", { name: /admin\.field\.category/ }),
+        );
+        fireEvent.click(screen.getByRole("checkbox", { name: "Fiqh" }));
+        fireEvent.click(screen.getByRole("checkbox", { name: "Hadith" }));
+
+        expect(tableTitles()).toEqual([
+            "Riyadhus Shalihinriyadhus-shalihin",
+            "Al Wajizal-wajiz",
+            "Bulughul Marambulughul-maram",
+        ]);
+    });
+
+    test("checking one status narrows the list to that status", async () => {
+        render(<AdminLibraryPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
         });
-        fireEvent.change(select, { target: { value: "draft" } });
+
+        openStatusFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "draft" }));
 
         expect(tableTitles()).toEqual(["Al Wajizal-wajiz"]);
     });

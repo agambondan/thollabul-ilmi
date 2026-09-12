@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     toggleSort,
 } from "@/components/panel/DataPanel";
@@ -39,7 +39,7 @@ const AdminSirahPage = () => {
     const [editCatOrder, setEditCatOrder] = useState("");
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [categoryFilter, setCategoryFilter] = useState("");
+    const [categoryFilters, setCategoryFilters] = useState([]);
     const [sort, setSort] = useState(null);
 
     const load = useCallback(async () => {
@@ -160,7 +160,8 @@ const AdminSirahPage = () => {
 
     const filteredContents = contents.filter(
         (item) =>
-            !categoryFilter || String(item.category_id) === categoryFilter,
+            categoryFilters.length === 0 ||
+            categoryFilters.includes(String(item.category_id)),
     );
 
     const sortedContents = applySort(filteredContents, sort, {
@@ -352,11 +353,11 @@ const AdminSirahPage = () => {
                         {t("admin.field.content")}
                     </h2>
                     <div className='mb-3 flex flex-wrap items-center justify-between gap-3'>
-                        <PanelFilterSelect
+                        <PanelFilterCheckboxGroup
                             label={t("admin.field.category")}
-                            value={categoryFilter}
-                            onChange={(value) => {
-                                setCategoryFilter(value);
+                            selected={categoryFilters}
+                            onChange={(values) => {
+                                setCategoryFilters(values);
                                 setPage(1);
                             }}
                             options={categories.map((cat) => ({
@@ -413,7 +414,10 @@ const AdminSirahPage = () => {
                             next: t("common.next"),
                         }}
                     />
-                    <div className='space-y-2' data-testid='sirah-contents-list'>
+                    <div
+                        className='space-y-2'
+                        data-testid='sirah-contents-list'
+                    >
                         {contents.length === 0 && (
                             <div className='p-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 text-center'>
                                 <p className='text-sm text-gray-400 mb-3'>

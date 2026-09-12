@@ -63,6 +63,14 @@ const tableTitles = () =>
                     .textContent,
         );
 
+// The "Tipe" sortable column header is also a <button> whose accessible
+// name contains "Tipe", same as the filter toggle's aria-label —
+// disambiguate by picking the one that isn't inside the table.
+const openTypeFilter = () => {
+    const matches = screen.getAllByRole("button", { name: /Tipe/ });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Reminders page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -72,7 +80,7 @@ describe("Admin Reminders page — filter and sort", () => {
         });
     });
 
-    test("type filter narrows the list to a single type", async () => {
+    test("checking one type narrows the list to that type", async () => {
         render(<AdminRemindersPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -83,10 +91,23 @@ describe("Admin Reminders page — filter and sort", () => {
             "Ingat Kematian",
         ]);
 
-        const select = screen.getByRole("combobox", { name: "Tipe" });
-        fireEvent.change(select, { target: { value: "quote" } });
+        openTypeFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "Quote" }));
 
         expect(tableTitles()).toEqual(["Jangan Menunda"]);
+    });
+
+    test("checking two types matches either (OR)", async () => {
+        render(<AdminRemindersPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        openTypeFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "Quote" }));
+        fireEvent.click(screen.getByRole("checkbox", { name: "Pengingat" }));
+
+        expect(tableTitles()).toEqual(["Jangan Menunda", "Ingat Kematian"]);
     });
 
     test("clicking the Judul header sorts the list alphabetically, then reverses", async () => {

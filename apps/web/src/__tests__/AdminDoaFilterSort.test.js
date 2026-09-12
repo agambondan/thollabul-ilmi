@@ -59,6 +59,16 @@ const tableTitles = () =>
         .slice(1) // skip the header row
         .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
+// The "Kategori" sortable column header is also a <button> whose accessible
+// name contains "admin.field.category", same as the filter toggle's
+// aria-label — disambiguate by picking the one that isn't inside the table.
+const openCategoryFilter = () => {
+    const matches = screen.getAllByRole("button", {
+        name: /admin\.field\.category/,
+    });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("Admin Doa page — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -68,7 +78,7 @@ describe("Admin Doa page — filter and sort", () => {
         });
     });
 
-    test("category filter narrows the list to a single category", async () => {
+    test("checking one category narrows the list to that category", async () => {
         render(<AdminPrayersPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -79,12 +89,23 @@ describe("Admin Doa page — filter and sort", () => {
             "Awal Makan",
         ]);
 
-        const select = screen.getByRole("combobox", {
-            name: "admin.field.category",
-        });
-        fireEvent.change(select, { target: { value: "masjid" } });
+        openCategoryFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "masjid" }));
 
         expect(tableTitles()).toEqual(["Doa Masuk Masjid"]);
+    });
+
+    test("checking two categories matches either (OR)", async () => {
+        render(<AdminPrayersPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        openCategoryFilter();
+        fireEvent.click(screen.getByRole("checkbox", { name: "masjid" }));
+        fireEvent.click(screen.getByRole("checkbox", { name: "makan" }));
+
+        expect(tableTitles()).toEqual(["Doa Masuk Masjid", "Awal Makan"]);
     });
 
     test("clicking the Title header sorts the list alphabetically, then reverses", async () => {

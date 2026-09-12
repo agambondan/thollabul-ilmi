@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPagination,
     PanelTable,
     Td,
@@ -51,7 +51,7 @@ export default function AdminAchievementsPage() {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("");
+    const [categoryFilters, setCategoryFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
@@ -152,7 +152,8 @@ export default function AdminAchievementsPage() {
             item.category?.toLowerCase().includes(q) ||
             item.description?.toLowerCase().includes(q);
         const matchesCategory =
-            !categoryFilter || item.category === categoryFilter;
+            categoryFilters.length === 0 ||
+            categoryFilters.includes(item.category);
         return matchesSearch && matchesCategory;
     });
 
@@ -196,11 +197,11 @@ export default function AdminAchievementsPage() {
                     }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label='Kategori'
-                    value={categoryFilter}
-                    onChange={(value) => {
-                        setCategoryFilter(value);
+                    selected={categoryFilters}
+                    onChange={(values) => {
+                        setCategoryFilters(values);
                         setPage(1);
                     }}
                     options={CATEGORIES}

@@ -43,6 +43,17 @@ const tableNames = () =>
         .slice(1)
         .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
+// A field's own sortable column header is also a <button> whose accessible
+// name is the plain field label ("Tabaqah", "Provinsi"), same text the
+// filter toggle's aria-label starts with — disambiguate by excluding
+// whichever button sits inside the table.
+const openFilter = (label) => {
+    const matches = screen.getAllByRole("button", {
+        name: new RegExp(`^${label}`),
+    });
+    fireEvent.click(matches.find((el) => !el.closest("table")));
+};
+
 describe("GenericAdminCRUD — filter and sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -52,7 +63,7 @@ describe("GenericAdminCRUD — filter and sort", () => {
         });
     });
 
-    test("a select-type field's own options become a filter dropdown", async () => {
+    test("a select-type field's own options become a checkbox filter", async () => {
         render(<GenericAdminCRUD title='Perawi' api={api} fields={fields} />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
@@ -63,31 +74,41 @@ describe("GenericAdminCRUD — filter and sort", () => {
             "Perawi Malik",
         ]);
 
-        fireEvent.change(
-            screen.getByRole("combobox", { name: "Tabaqah" }),
-            { target: { value: "tabiin" } },
-        );
+        openFilter("Tabaqah");
+        fireEvent.click(screen.getByRole("checkbox", { name: "tabiin" }));
         expect(tableNames()).toEqual(["Perawi Amr"]);
     });
 
-    test("a `filterable: true` text field derives its options from loaded rows", async () => {
+    test("checking two values on the same filter matches either (OR)", async () => {
         render(<GenericAdminCRUD title='Perawi' api={api} fields={fields} />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
         });
 
-        const provinceFilter = screen.getByRole("combobox", {
-            name: "Provinsi",
+        openFilter("Tabaqah");
+        fireEvent.click(screen.getByRole("checkbox", { name: "sahabat" }));
+        fireEvent.click(screen.getByRole("checkbox", { name: "tabiin" }));
+        expect(tableNames()).toEqual([
+            "Perawi Zaid",
+            "Perawi Amr",
+            "Perawi Malik",
+        ]);
+    });
+
+    test("a `filterable: true` text field derives its checkbox options from loaded rows", async () => {
+        render(<GenericAdminCRUD title='Perawi' api={api} fields={fields} />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
         });
+
+        openFilter("Provinsi");
         expect(
-            within(provinceFilter).getByRole("option", {
-                name: "DKI Jakarta",
-            }),
+            screen.getByRole("checkbox", { name: "DKI Jakarta" }),
         ).toBeInTheDocument();
 
-        fireEvent.change(provinceFilter, {
-            target: { value: "Jawa Barat" },
-        });
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "Jawa Barat" }),
+        );
         expect(tableNames()).toEqual(["Perawi Amr"]);
     });
 

@@ -52,17 +52,36 @@ describe("Admin Users page — filter and sort", () => {
         });
     });
 
-    test("role filter narrows the list to a single role", async () => {
+    test("checking one role narrows the list to that role", async () => {
         render(<AdminUsersPage />);
         await waitFor(() => {
             expect(screen.getByRole("table")).toBeInTheDocument();
         });
         expect(tableNames()).toEqual(["Zaid", "Aisyah", "Bilal"]);
 
-        const select = screen.getByRole("combobox", { name: "Role" });
-        fireEvent.change(select, { target: { value: "admin" } });
+        fireEvent.click(screen.getByRole("button", { name: /^Role/ }));
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "admin.role.admin" }),
+        );
 
         expect(tableNames()).toEqual(["Aisyah"]);
+    });
+
+    test("checking two roles matches either (OR)", async () => {
+        render(<AdminUsersPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByRole("button", { name: /^Role/ }));
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "admin.role.admin" }),
+        );
+        fireEvent.click(
+            screen.getByRole("checkbox", { name: "admin.role.editor" }),
+        );
+
+        expect(tableNames()).toEqual(["Aisyah", "Bilal"]);
     });
 
     test("clicking the Name header sorts the list alphabetically, then reverses", async () => {

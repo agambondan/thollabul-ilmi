@@ -2,7 +2,7 @@
 
 import {
     applySort,
-    PanelFilterSelect,
+    PanelFilterCheckboxGroup,
     PanelPage,
     PanelPagination,
     PanelTable,
@@ -59,7 +59,7 @@ const AdminUsersPage = () => {
     const [error, setError] = useState("");
     const [actionError, setActionError] = useState("");
     const [changingId, setChangingId] = useState(null);
-    const [roleFilter, setRoleFilter] = useState("");
+    const [roleFilters, setRoleFilters] = useState([]);
     const [sort, setSort] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -129,7 +129,9 @@ const AdminUsersPage = () => {
         );
     }
 
-    const filtered = users.filter((u) => !roleFilter || u.role === roleFilter);
+    const filtered = users.filter(
+        (u) => roleFilters.length === 0 || roleFilters.includes(u.role),
+    );
 
     const sorted = applySort(filtered, sort, {
         name: (a, b) => (a.name ?? "").localeCompare(b.name ?? ""),
@@ -186,11 +188,11 @@ const AdminUsersPage = () => {
             )}
 
             <div className='mb-4 flex flex-wrap items-center gap-3'>
-                <PanelFilterSelect
+                <PanelFilterCheckboxGroup
                     label='Role'
-                    value={roleFilter}
-                    onChange={(value) => {
-                        setRoleFilter(value);
+                    selected={roleFilters}
+                    onChange={(values) => {
+                        setRoleFilters(values);
                         setPage(1);
                     }}
                     options={ROLES.map((r) => ({
