@@ -127,6 +127,8 @@ func main() {
 	fixVideoID := flag.String("fix-video", "", "Re-fetch and upsert one specific video id into its channel's file (use with -channel/-speaker to identify the channel), bypassing listing and the round-robin queue entirely. For patching a single corrupted/fabricated/incomplete entry without a full re-scrape.")
 	listingCachePath := flag.String("listing-cache", defaultListingCacheFile(), "Path to the per-channel listing cache JSON (video id/title/duration/thumbnail for every video, not just fetched ones)")
 	listingCacheTTL := flag.Duration("listing-cache-ttl", 6*time.Hour, "Reuse a channel's cached listing instead of re-querying yt-dlp if it was listed more recently than this. Set 0 to always re-list.")
+	fixDurations := flag.Bool("fix-durations", false, "Scan every already-scraped video for a duration shorter than its own transcript's last chunk (proof the --flat-playlist listing gave a bogus duration estimate) and correct it via a lightweight per-video metadata fetch. Does not touch titles or transcripts.")
+	fixDurationsConcurrency := flag.Int("fix-durations-concurrency", 5, "Concurrent metadata lookups during -fix-durations")
 	flag.Parse()
 
 	targets := []Channel{}
@@ -168,6 +170,11 @@ func main() {
 			fatalf("-fix-video requires -channel (and -speaker) to identify which channel file to update")
 		}
 		fixSingleVideo(targets[0], strings.TrimSpace(*fixVideoID), *cookies, *outDir)
+		return
+	}
+
+	if *fixDurations {
+		fixDurationsOnly(targets, *outDir, *fixDurationsConcurrency)
 		return
 	}
 
@@ -412,7 +419,7 @@ func fixSingleVideo(channel Channel, videoID string, cookies string, outDir stri
 	path := filepath.Join(outDir, channelSlug(channel)+".json")
 	_, existing := loadExisting(path)
 
-	snippets, confirmedAbsent, publishedAt := fetchTranscript(videoID, cookies)
+	snippets, confirmedAbsent, publishedAt, duration := fetchTranscript(videoID, cookies)
 	chunks := chunkTranscript(snippets, 60)
 	if len(chunks) == 0 {
 		fmt.Printf("[fix-video] %s: no transcript found (confirmedAbsent=%v) -- left unchanged\n", videoID, confirmedAbsent)
@@ -426,6 +433,9 @@ func fixSingleVideo(channel Channel, videoID string, cookies string, outDir stri
 	if publishedAt == "" {
 		publishedAt = "2024-01-01"
 	}
+	if duration == 0 {
+		duration = existingItem.Duration
+	}
 	title := existingItem.Title
 	item := KajianItem{
 		Title:        title,
@@ -435,7 +445,7 @@ func fixSingleVideo(channel Channel, videoID string, cookies string, outDir stri
 		URL:          "https://www.youtube.com/watch?v=" + videoID,
 		VideoID:      videoID,
 		Description:  fmt.Sprintf("Kajian oleh %s: %s", channel.Name, title),
-		Duration:     existingItem.Duration,
+		Duration:     duration,
 		ThumbnailURL: existingItem.ThumbnailURL,
 		PublishedAt:  publishedAt,
 		Transcripts:  chunks,
@@ -531,10 +541,10 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 // means we simply don't know yet, and treating it as "confirmed absent"
 // would park a perfectly normal video in the skip-cache for
 // -skip-retry-days over what was really a connectivity blip.
-func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confirmedAbsent bool, publishedAt string) {
+func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confirmedAbsent bool, publishedAt string, duration int) {
 	dir, err := os.MkdirTemp("", "kajian-caption-*")
 	if err != nil {
-		return nil, false, ""
+		return nil, false, "", 0
 	}
 	defer os.RemoveAll(dir)
 
@@ -565,8 +575,14 @@ func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confir
 		args = append(args, mode)
 		args = append(args, base...)
 		stdout, err := runCmdWithRetry(60*time.Second, 4, 15*time.Second, "yt-dlp", args...)
-		if publishedAt == "" {
-			publishedAt = parseUploadDate(stdout)
+		if publishedAt == "" || duration == 0 {
+			metaDate, metaDuration := parseVideoMeta(stdout)
+			if publishedAt == "" {
+				publishedAt = metaDate
+			}
+			if duration == 0 {
+				duration = metaDuration
+			}
 		}
 		files, _ := filepath.Glob(filepath.Join(dir, "caption_tmp*.vtt"))
 		if len(files) > 0 {
@@ -574,23 +590,30 @@ func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confir
 			// requested language 429s after another already downloaded) —
 			// a real transcript in hand always counts as success regardless
 			// of the exit code.
-			return dedupeRollingCaptions(parseVTT(pickVTT(files))), false, publishedAt
+			return dedupeRollingCaptions(parseVTT(pickVTT(files))), false, publishedAt, duration
 		}
 		if err != nil {
 			sawFetchError = true
 		}
 	}
-	return nil, !sawFetchError, publishedAt
+	return nil, !sawFetchError, publishedAt, duration
 }
 
-// parseUploadDate pulls "upload_date" (yt-dlp's YYYYMMDD) out of a
-// --dump-json response and reformats it as YYYY-MM-DD to match the
-// Kajian.PublishedAt column. Best-effort: returns "" on anything
-// unexpected rather than erroring, since the caption fetch itself already
-// succeeded or failed independently of this.
-func parseUploadDate(stdout []byte) string {
+// parseVideoMeta pulls "upload_date" (yt-dlp's YYYYMMDD, reformatted to
+// YYYY-MM-DD to match Kajian.PublishedAt) and "duration" out of a
+// --dump-json response. This is a full single-video extraction (the URL
+// passed to yt-dlp here is the direct watch URL, not a channel/tab
+// listing), which reports both fields accurately -- unlike the
+// --flat-playlist channel listing used to discover new videos, which
+// sometimes hands back a bogus, much-smaller duration for the same
+// video (observed e.g. 6s instead of the real 385s). Best-effort:
+// returns zero values on anything unexpected rather than erroring,
+// since the caption fetch itself already succeeded or failed
+// independently of this.
+func parseVideoMeta(stdout []byte) (publishedAt string, duration int) {
 	var payload struct {
-		UploadDate string `json:"upload_date"`
+		UploadDate string  `json:"upload_date"`
+		Duration   float64 `json:"duration"`
 	}
 	scanner := bufio.NewScanner(bytes.NewReader(stdout))
 	// A video's full --dump-json line (every format/thumbnail/subtitle
@@ -603,11 +626,20 @@ func parseUploadDate(stdout []byte) string {
 		if len(line) == 0 || line[0] != '{' {
 			continue
 		}
-		if err := json.Unmarshal(line, &payload); err == nil && len(payload.UploadDate) == 8 {
-			return payload.UploadDate[0:4] + "-" + payload.UploadDate[4:6] + "-" + payload.UploadDate[6:8]
+		if err := json.Unmarshal(line, &payload); err != nil {
+			continue
+		}
+		if len(payload.UploadDate) == 8 {
+			publishedAt = payload.UploadDate[0:4] + "-" + payload.UploadDate[4:6] + "-" + payload.UploadDate[6:8]
+		}
+		if payload.Duration > 0 {
+			duration = int(payload.Duration)
+		}
+		if publishedAt != "" && duration > 0 {
+			return
 		}
 	}
-	return ""
+	return
 }
 
 func parseVTT(path string) []Snippet {

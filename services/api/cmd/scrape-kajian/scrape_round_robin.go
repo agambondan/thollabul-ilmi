@@ -201,7 +201,7 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 		return false
 	}
 
-	snippets, confirmedAbsent, publishedAt := fetchTranscript(video.VideoID, cookies)
+	snippets, confirmedAbsent, publishedAt, duration := fetchTranscript(video.VideoID, cookies)
 	chunks := chunkTranscript(snippets, 60)
 	if onlyWithTranscript && len(chunks) == 0 {
 		if !confirmedAbsent {
@@ -230,6 +230,14 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 	if publishedAt == "" {
 		publishedAt = "2024-01-01"
 	}
+	// duration comes from the full single-video extraction fetchTranscript
+	// just did for captions, not the listing's video.Duration -- the
+	// --flat-playlist channel listing sometimes hands back a bogus, much
+	// smaller duration for the same video (observed e.g. 6s instead of the
+	// real 385s), which this replaces whenever it managed to get a real one.
+	if duration == 0 {
+		duration = video.Duration
+	}
 	item := KajianItem{
 		Title:        video.Title,
 		Speaker:      work.channel.Name,
@@ -238,7 +246,7 @@ func processVideo(work *channelWork, video Video, pos, total int, cookies string
 		URL:          video.URL,
 		VideoID:      video.VideoID,
 		Description:  fmt.Sprintf("Kajian oleh %s: %s", work.channel.Name, video.Title),
-		Duration:     video.Duration,
+		Duration:     duration,
 		ThumbnailURL: video.ThumbnailURL,
 		PublishedAt:  publishedAt,
 		Transcripts:  chunks,
