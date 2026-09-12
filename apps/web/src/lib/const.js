@@ -27,6 +27,7 @@ import {
     MdOutlineAutoStories,
     MdOutlineDirectionsWalk,
     MdOutlinePlayLesson,
+    MdRadio,
     MdRefresh,
     MdSelfImprovement,
     MdStar,
@@ -247,6 +248,18 @@ export const linksMenuContent = [
         href: "/zakat",
         icon: <BsCalculator />,
     },
+    {
+        label: "Masjid",
+        labelKey: "link.masjid",
+        href: "/masjid",
+        icon: <MdMosque />,
+    },
+    {
+        label: "Radio Islam",
+        labelKey: "link.radio_islamic",
+        href: "/radio-islamic",
+        icon: <MdRadio />,
+    },
 ];
 
 const pickContentLinks = (hrefs) =>
@@ -291,6 +304,7 @@ export const linksMenuContentGroups = [
             "/peta",
             "/blog",
             "/kajian",
+            "/radio-islamic",
             "/manasik",
         ]),
     },
@@ -301,6 +315,7 @@ export const linksMenuContentGroups = [
             "/hijri",
             "/imsakiyah",
             "/kiblat",
+            "/masjid",
             "/tasbih",
             "/faraidh",
             "/zakat",
