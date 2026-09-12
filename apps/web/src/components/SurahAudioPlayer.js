@@ -24,6 +24,9 @@ const DEFAULT_QARI = "mishary-rashid-alafasy";
 const MIN_SURAH_NUMBER = 1;
 const MAX_SURAH_NUMBER = 114;
 
+const QARI_FALLBACK_AVATAR =
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2310b981"/><text x="50%25" y="55%25" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="white">Q</text></svg>';
+
 const QARI_CATALOG = {
     "mishary-rashid-alafasy": {
         name: "Mishary Rashid Al-Afasy",
@@ -76,9 +79,6 @@ const QARI_CATALOG = {
         photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ali_al-Hudhayfi.jpg/250px-Ali_al-Hudhayfi.jpg",
     },
 };
-
-const QARI_FALLBACK_AVATAR =
-    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2310b981"/><text x="50%25" y="55%25" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="white">Q</text></svg>';
 
 const getQariInfo = (slug) =>
     QARI_CATALOG[slug] || {
