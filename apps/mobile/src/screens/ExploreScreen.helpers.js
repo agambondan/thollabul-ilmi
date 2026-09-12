@@ -869,13 +869,13 @@ export const normalizePrayerLog = (payload = {}) => {
 export const getItemRef = (feature, item) => {
     if (feature?.type === "feed") {
         return {
-            refId: String(item?.raw?.ref_id ?? item?.id ?? ""),
+            refId: Number(item?.raw?.ref_id ?? item?.id ?? 0),
             refType: item?.raw?.ref_type ?? "feed",
         };
     }
     return {
         refType: feature?.refType ?? feature?.key ?? "explore",
-        refId: String(
+        refId: Number(
             item?.id ?? item?.raw?.id ?? item?.raw?.slug ?? item?.title,
         ),
     };

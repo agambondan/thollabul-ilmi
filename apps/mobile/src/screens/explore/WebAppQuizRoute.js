@@ -262,8 +262,11 @@ export function WebAppQuizRoute({
                     <Text style={styles.emptyText}>
                         {error || t("explore.quiz.emptyText")}
                     </Text>
-                    <Pressable onPress={restart} style={styles.primaryButton}>
+                    <Pressable
                         accessibilityRole='button'
+                        onPress={restart}
+                        style={styles.primaryButton}
+                    >
                         <Text style={styles.primaryButtonText}>
                             {t("explore.quiz.retry")}
                         </Text>
@@ -413,8 +416,11 @@ export function WebAppQuizRoute({
                             />
                         ))}
                     </View>
-                    <Pressable onPress={restart} style={styles.primaryButton}>
+                    <Pressable
                         accessibilityRole='button'
+                        onPress={restart}
+                        style={styles.primaryButton}
+                    >
                         <RotateCcw
                             color='#ffffff'
                             size={16}

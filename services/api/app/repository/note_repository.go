@@ -10,7 +10,7 @@ type NoteRepository interface {
 	FindByUser(userID uuid.UUID, refType model.NoteRefType, refID int) ([]model.Note, error)
 	FindByID(id int) (*model.Note, error)
 	Create(n *model.Note) (*model.Note, error)
-	Update(id int, n *model.Note) (*model.Note, error)
+	Update(id int, userID uuid.UUID, n *model.Note) (*model.Note, error)
 	Delete(id int, userID uuid.UUID) error
 }
 
@@ -41,8 +41,8 @@ func (r *noteRepository) Create(n *model.Note) (*model.Note, error) {
 	return n, r.db.Create(n).Error
 }
 
-func (r *noteRepository) Update(id int, n *model.Note) (*model.Note, error) {
-	return n, r.db.Model(&model.Note{}).Where("id = ?", id).Updates(n).Error
+func (r *noteRepository) Update(id int, userID uuid.UUID, n *model.Note) (*model.Note, error) {
+	return n, r.db.Model(&model.Note{}).Where("id = ? AND user_id = ?", id, userID).Updates(n).Error
 }
 
 func (r *noteRepository) Delete(id int, userID uuid.UUID) error {

@@ -26,7 +26,7 @@ type KalkulasiZakat struct {
 	NilaiHarta   float64    `json:"nilai_harta" gorm:"default:0"`
 	Nisab        float64    `json:"nisab" gorm:"default:0"`
 	Rate         float64    `json:"rate" gorm:"default:2.5"`
-	Haul         bool       `json:"haul" gorm:"default:true"`
+	Haul         bool       `json:"haul"`
 	Catatan      string     `json:"catatan,omitempty" gorm:"type:varchar(500)"`
 	SudahDibayar bool       `json:"sudah_dibayar" gorm:"default:false"`
 	TanggalBayar string     `json:"tanggal_bayar,omitempty" gorm:"type:varchar(10)"`

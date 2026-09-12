@@ -233,8 +233,11 @@ export function WebAppTasbihRoute({
                 ) : null}
 
                 <View style={styles.actionRow}>
-                    <Pressable onPress={reset} style={styles.neutralButton}>
+                    <Pressable
                         accessibilityRole='button'
+                        onPress={reset}
+                        style={styles.neutralButton}
+                    >
                         <RotateCcw
                             color='#374151'
                             size={15}
@@ -244,8 +247,11 @@ export function WebAppTasbihRoute({
                             {t("explore.tasbih.reset")}
                         </Text>
                     </Pressable>
-                    <Pressable onPress={resetAll} style={styles.dangerButton}>
+                    <Pressable
                         accessibilityRole='button'
+                        onPress={resetAll}
+                        style={styles.dangerButton}
+                    >
                         <RefreshCcw
                             color='#dc2626'
                             size={15}

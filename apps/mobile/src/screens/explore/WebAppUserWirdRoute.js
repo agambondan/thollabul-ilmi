@@ -70,8 +70,11 @@ function LoginPrompt({ onOpenProfile, t }) {
             <Text style={styles.loginText}>
                 {t("explore.userWird.loginText")}
             </Text>
-            <Pressable onPress={onOpenProfile} style={styles.primaryButton}>
+            <Pressable
                 accessibilityRole='button'
+                onPress={onOpenProfile}
+                style={styles.primaryButton}
+            >
                 <Text style={styles.primaryButtonText}>
                     {t("explore.userWird.login")}
                 </Text>

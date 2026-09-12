@@ -47,7 +47,7 @@ func (s *noteService) Update(id int, userID uuid.UUID, req *model.UpdateNoteRequ
 	if n.UserID != userID {
 		return nil, fmt.Errorf("forbidden")
 	}
-	return s.repo.Update(id, &model.Note{Content: req.Content})
+	return s.repo.Update(id, userID, &model.Note{Content: req.Content})
 }
 
 func (s *noteService) Delete(id int, userID uuid.UUID) error {

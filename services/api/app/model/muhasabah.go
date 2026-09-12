@@ -8,7 +8,7 @@ type Muhasabah struct {
 	Date      string    `json:"date" gorm:"type:date;not null;index:idx_muhasabah_uid_date"`
 	Content   string    `json:"content" gorm:"type:text;not null"`
 	MoodScore int       `json:"mood_score" gorm:"default:3"`
-	IsPrivate bool      `json:"is_private" gorm:"default:true"`
+	IsPrivate bool      `json:"is_private"`
 }
 
 type CreateMuhasabahRequest struct {

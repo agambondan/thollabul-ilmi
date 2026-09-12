@@ -2,6 +2,16 @@ import { Platform } from "react-native";
 
 export const SMART_REMINDER_CHANNEL_ID = "smart-reminders";
 
+const SMART_REMINDER_DEEP_LINKS = {
+    adzan: "thullaabulilmi://ibadah/prayer",
+    daily_hadith: "thullaabulilmi://hadith",
+    daily_quran: "thullaabulilmi://quran",
+    doa: "thullaabulilmi://explore/doa",
+    kajian: "thullaabulilmi://explore/kajian",
+    murojaah: "thullaabulilmi://explore/murojaah",
+    streak_risk: "thullaabulilmi://belajar",
+};
+
 let Notifications;
 let handlerReady = false;
 
@@ -157,7 +167,11 @@ export const scheduleSmartReminders = async ({
         const id = await nativeNotifications.scheduleNotificationAsync({
             content: {
                 body: item.body ?? `Saatnya ${item.label.toLowerCase()}.`,
-                data: { reminder_type: item.type, type: "smart_reminder" },
+                data: {
+                    reminder_type: item.type,
+                    type: "smart_reminder",
+                    url: SMART_REMINDER_DEEP_LINKS[item.type],
+                },
                 sound: "default",
                 title: item.label,
             },

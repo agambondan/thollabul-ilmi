@@ -299,6 +299,21 @@ export function PrayerScreen({ isActive, navigation }) {
             setPrayers(next);
             await loadPrayerOfflineStatus(currentCoords);
         } catch (error) {
+            try {
+                const offlinePrayers = await getOfflinePrayerForDate({
+                    ...currentCoords,
+                    method,
+                    madhab,
+                    date: today(),
+                });
+                if (offlinePrayers) {
+                    setPrayers(offlinePrayers);
+                    setMessage(t("prayer.offline.todayLoaded"));
+                    return;
+                }
+            } catch {
+                // fall through to the live-fetch error below
+            }
             setPrayers(null);
             setMessage(error?.message ?? t("prayer.scheduleUnavailable"));
         } finally {

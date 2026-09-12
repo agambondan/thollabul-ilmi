@@ -719,7 +719,7 @@ Tidak ada perubahan kode. Ini false positive ketiga dari audit awal, setelah
 | `/dashboard/fiqh` kontrak endpoint | ⏸️ butuh keputusan produk |
 | Duplikasi 9 route publik/dashboard | ⏸️ belum |
 | AutoMigrate saat deploy | ⏸️ tugas ops |
-| Ganti password admin produksi | ⏸️ tugas ops, **mendesak** |
+| Ganti password admin produksi | ✅ selesai (dikonfirmasi user 2026-09-13) |
 
 ## Catatan: ada pekerjaan lain berjalan di working tree
 
@@ -817,4 +817,4 @@ pageerror       tidak ada
 - `/fiqh` publik masih menampilkan "0 topik" sebelum kategori dibuka
 - Duplikasi 9 route publik/dashboard
 - AutoMigrate saat deploy
-- **Ganti password admin produksi** (mendesak — sudah ada di histori git)
+- ~~Ganti password admin produksi~~ — ✅ sudah diganti (dikonfirmasi user 2026-09-13); password lama tetap ada di histori git tapi sudah tidak valid

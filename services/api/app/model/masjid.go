@@ -15,7 +15,7 @@ type Masjid struct {
 	Facilities  string  `json:"facilities" gorm:"type:text"`
 	ImageURL    string  `json:"image_url,omitempty" gorm:"type:varchar(500)"`
 	Website     string  `json:"website" gorm:"type:varchar(256)"`
-	IsActive    bool    `json:"is_active" gorm:"type:boolean;default:true;index"`
+	IsActive    bool    `json:"is_active" gorm:"type:boolean;index"`
 }
 
 type CreateMasjidRequest struct {
@@ -67,7 +67,7 @@ type RadioIslamic struct {
 	Description string `json:"description" gorm:"type:text"`
 	LogoURL     string `json:"logo_url,omitempty" gorm:"type:varchar(500)"`
 	Website     string `json:"website" gorm:"type:varchar(256)"`
-	IsActive    bool   `json:"is_active" gorm:"type:boolean;default:true;index"`
+	IsActive    bool   `json:"is_active" gorm:"type:boolean;index"`
 	Tags        string `json:"tags" gorm:"type:varchar(256)"`
 }
 

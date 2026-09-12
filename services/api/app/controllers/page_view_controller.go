@@ -31,8 +31,8 @@ func NewPageViewController(services *service.Services) PageViewController {
 // @Router /analytics/page-view [post]
 func (c *pageViewController) Record(ctx *fiber.Ctx) error {
 	req := new(model.CreatePageViewRequest)
-	if err := ctx.BodyParser(req); err != nil {
-		return lib.ErrorBadRequest(ctx)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
 	}
 
 	var userID *uuid.UUID

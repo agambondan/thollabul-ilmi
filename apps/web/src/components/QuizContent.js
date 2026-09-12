@@ -186,7 +186,11 @@ export default function QuizContent({ initialType = "" }) {
 
             // Submit to backend if logged in
             if (isAuthenticated) {
-                quizApi.submit(newAnswers).catch((e) => console.error(e));
+                const payload = newAnswers.map((a, i) => ({
+                    quiz_id: a.question_id,
+                    answer: questions[i]?.options?.[a.selected_answer] ?? "",
+                }));
+                quizApi.submit(payload).catch((e) => console.error(e));
             }
 
             setPhase("result");

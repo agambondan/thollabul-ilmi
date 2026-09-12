@@ -2096,8 +2096,11 @@ export function createQuranScreenRenderers(context) {
         }
 
         return (
-            <Pressable onPress={() => openSurah(surah)} style={styles.surahRow}>
+            <Pressable
                 accessibilityRole='button'
+                onPress={() => openSurah(surah)}
+                style={styles.surahRow}
+            >
                 <View style={styles.surahLeft}>
                     <View style={styles.surahNumberWrap}>
                         <View style={styles.surahNumberDiamond}>

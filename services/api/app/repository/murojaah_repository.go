@@ -62,7 +62,7 @@ func (r *murojaahRepository) Stats(userID uuid.UUID) (*model.MurojaahStats, erro
 	var r2 raw
 	r.db.Model(&model.MurojaahSession{}).
 		Where("user_id = ?", userID).
-		Select("COUNT(*) AS total, COALESCE(AVG(score),0) AS avg_score, COALESCE(SUM(duration_seconds),0) AS total_dur, COUNT(DISTINCT surah_id) AS surahs").
+		Select("COUNT(*) AS total, COALESCE(AVG(score),0) AS avg_score, COALESCE(SUM(duration),0) AS total_dur, COUNT(DISTINCT surah_id) AS surahs").
 		Scan(&r2)
 	stats.TotalSessions = r2.Total
 	stats.AvgScore = r2.AvgScore

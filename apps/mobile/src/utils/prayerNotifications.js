@@ -141,7 +141,11 @@ export const schedulePrayerReminders = async ({
                     leadMinutes > 0
                         ? `${label} starts at ${time}.`
                         : `${label} time is now.`,
-                data: { prayer: key, type: "prayer_reminder" },
+                data: {
+                    prayer: key,
+                    type: "prayer_reminder",
+                    url: "thullaabulilmi://prayer",
+                },
                 sound: true,
             },
             trigger: {
@@ -172,7 +176,11 @@ export const showPrayerTimeNotification = async ({ label, prayer }) => {
         content: {
             title: `Waktu Sholat: ${label}`,
             body: `Sudah masuk waktu ${label}.`,
-            data: { prayer, type: "prayer_time" },
+            data: {
+                prayer,
+                type: "prayer_time",
+                url: "thullaabulilmi://prayer",
+            },
             sound: true,
         },
         trigger: null,
