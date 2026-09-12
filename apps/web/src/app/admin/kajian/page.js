@@ -13,6 +13,7 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import {
     BsBoxArrowUpRight,
+    BsCameraVideo,
     BsPencil,
     BsPlusCircle,
     BsTrash,
@@ -41,6 +42,29 @@ const parseDurationSeconds = (value) => {
         .split(":")
         .map((part) => Number(part) || 0)
         .reduce((total, part) => total * 60 + part, 0);
+};
+
+const KajianThumbnail = ({ src, alt, className }) => {
+    const [failed, setFailed] = useState(false);
+
+    if (!src || failed) {
+        return (
+            <div
+                className={`flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500 ${className}`}
+            >
+                <BsCameraVideo />
+            </div>
+        );
+    }
+
+    return (
+        <img
+            src={src}
+            alt={alt}
+            onError={() => setFailed(true)}
+            className={`object-cover ${className}`}
+        />
+    );
 };
 
 const EMPTY_FORM = {
@@ -236,9 +260,23 @@ const AdminStudiesPage = () => {
                                 className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
                             >
                                 <div className='flex items-start justify-between gap-2 mb-2'>
-                                    <p className='font-medium text-gray-900 dark:text-white'>
-                                        {getLocalizedField(item, "title", lang)}
-                                    </p>
+                                    <div className='flex items-start gap-3 min-w-0'>
+                                        <KajianThumbnail
+                                            src={
+                                                item.thumbnail_url ??
+                                                item.thumbnail
+                                            }
+                                            alt=''
+                                            className='w-16 h-10 rounded-lg shrink-0'
+                                        />
+                                        <p className='font-medium text-gray-900 dark:text-white'>
+                                            {getLocalizedField(
+                                                item,
+                                                "title",
+                                                lang,
+                                            )}
+                                        </p>
+                                    </div>
                                     <div className='flex items-center gap-1 shrink-0'>
                                         {item.url && (
                                             <a
@@ -288,6 +326,7 @@ const AdminStudiesPage = () => {
                         <PanelTable
                             head={
                                 <>
+                                    <Th className='w-24'></Th>
                                     <Th>{t("admin.field.title")}</Th>
                                     <Th className='hidden md:table-cell'>
                                         Ustadz
@@ -302,6 +341,16 @@ const AdminStudiesPage = () => {
                         >
                             {visible.map((item) => (
                                 <Tr key={item.id ?? item._id}>
+                                    <Td>
+                                        <KajianThumbnail
+                                            src={
+                                                item.thumbnail_url ??
+                                                item.thumbnail
+                                            }
+                                            alt=''
+                                            className='w-20 h-12 rounded-lg'
+                                        />
+                                    </Td>
                                     <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
                                         {getLocalizedField(item, "title", lang)}
                                     </Td>
