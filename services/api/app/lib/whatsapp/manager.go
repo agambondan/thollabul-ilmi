@@ -243,10 +243,17 @@ func (m *Manager) Logout(ctx context.Context) error {
 // SendOTP sends a one-time verification code to phone (E.164, e.g.
 // "+6281234567890") as a plain WhatsApp text message.
 func (m *Manager) SendOTP(phone, code string) error {
+	text := fmt.Sprintf("Kode verifikasi kamu: %s\nKode ini berlaku 10 menit. Jangan bagikan kepada siapa pun.", code)
+	return m.SendText(phone, text)
+}
+
+// SendText sends an arbitrary plain-text WhatsApp message to phone (E.164,
+// e.g. "+6281234567890") — used for OTP codes and, more generally, for any
+// reminder notification the user has opted into via the WhatsApp channel.
+func (m *Manager) SendText(phone, text string) error {
 	if !m.IsConnected() {
 		return ErrNotConnected
 	}
-	text := fmt.Sprintf("Kode verifikasi kamu: %s\nKode ini berlaku 10 menit. Jangan bagikan kepada siapa pun.", code)
 	digits := strings.TrimPrefix(strings.TrimSpace(phone), "+")
 	jid := types.NewJID(digits, types.DefaultUserServer)
 

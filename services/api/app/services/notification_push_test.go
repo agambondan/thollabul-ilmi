@@ -177,7 +177,7 @@ func TestNotificationDispatchSendsExpoPushAndInbox(t *testing.T) {
 	viper.Set("EXPO_PUSH_ENDPOINT", server.URL)
 	viper.Set("EXPO_PUSH_ACCESS_TOKEN", "secret-token")
 
-	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService())
+	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService(), nil, nil)
 	sent, err := svc.DispatchDueReminders(time.Now())
 	if err != nil {
 		t.Fatalf("dispatch reminders: %v", err)
@@ -246,7 +246,7 @@ func TestUnregisterPushTokenDeactivatesGivenToken(t *testing.T) {
 	userID := uuid.New()
 	repo := &fakeNotificationRepo{}
 	inboxRepo := &fakeNotificationInboxRepo{}
-	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService())
+	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService(), nil, nil)
 
 	if err := svc.UnregisterPushToken(userID, "  ExponentPushToken[mine]  "); err != nil {
 		t.Fatalf("UnregisterPushToken: %v", err)
@@ -268,7 +268,7 @@ func TestUnregisterPushTokenRejectsEmptyToken(t *testing.T) {
 	userID := uuid.New()
 	repo := &fakeNotificationRepo{}
 	inboxRepo := &fakeNotificationInboxRepo{}
-	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService())
+	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService(), nil, nil)
 
 	if err := svc.UnregisterPushToken(userID, "   "); err == nil {
 		t.Fatalf("expected error for blank token")
@@ -323,7 +323,7 @@ func TestDispatchDueAdzanPushSkipsUsersWhoDisabledAdzan(t *testing.T) {
 
 	viper.Set("EXPO_PUSH_ENDPOINT", server.URL)
 
-	svc := NewNotificationService(repo, &fakeNotificationInboxRepo{}, &fakePrayerTimesService{})
+	svc := NewNotificationService(repo, &fakeNotificationInboxRepo{}, &fakePrayerTimesService{}, nil, nil)
 	sent, err := svc.DispatchDueAdzanPush(time.Now())
 	if err != nil {
 		t.Fatalf("dispatch adzan push: %v", err)

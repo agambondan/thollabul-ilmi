@@ -102,6 +102,7 @@ func (r *notificationRepository) FindActivePushTokens(userID uuid.UUID) ([]model
 func (r *notificationRepository) FindAllActivePushTokens() ([]model.PushToken, error) {
 	var items []model.PushToken
 	err := r.db.
+		Preload("User").
 		Where("is_active = true").
 		Order("last_seen_at DESC").
 		Limit(1000).

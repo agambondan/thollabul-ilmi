@@ -21,6 +21,8 @@ type NotificationController interface {
 	UpsertSettings(ctx *fiber.Ctx) error
 	FindAllPushTokensAdmin(ctx *fiber.Ctx) error
 	DeletePushTokenAdmin(ctx *fiber.Ctx) error
+	FindChannelPreferences(ctx *fiber.Ctx) error
+	UpdateChannelPreferences(ctx *fiber.Ctx) error
 }
 
 type notificationController struct {
@@ -213,4 +215,47 @@ func (c *notificationController) UpsertSettings(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	return lib.OK(ctx, items)
+}
+
+// @Summary Get notification channel preferences (email/whatsapp/push)
+// @Tags Personal
+// @Produce json
+// @Success 200 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Router /notifications/channels [get]
+func (c *notificationController) FindChannelPreferences(ctx *fiber.Ctx) error {
+	userID, err := extractUserID(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	prefs, err := c.svc.FindChannelPreferences(userID)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, prefs)
+}
+
+// @Summary Update notification channel preferences (email/whatsapp/push)
+// @Tags Personal
+// @Accept json
+// @Produce json
+// @Param body body model.NotificationChannelPreferences true "Channel preferences"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Router /notifications/channels [put]
+func (c *notificationController) UpdateChannelPreferences(ctx *fiber.Ctx) error {
+	userID, err := extractUserID(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	req := new(model.NotificationChannelPreferences)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	prefs, err := c.svc.UpdateChannelPreferences(userID, *req)
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	return lib.OK(ctx, prefs)
 }

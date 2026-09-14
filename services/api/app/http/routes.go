@@ -390,6 +390,8 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/notifications/vapid-public-key", newNotificationController.GetVapidPublicKey)
 	master.Get("/notifications/settings", jwt, newNotificationController.FindSettings)
 	master.Put("/notifications/settings", jwt, newNotificationController.UpsertSettings)
+	master.Get("/notifications/channels", jwt, newNotificationController.FindChannelPreferences)
+	master.Put("/notifications/channels", jwt, newNotificationController.UpdateChannelPreferences)
 	master.Get("/notifications/push-tokens", jwt, newNotificationController.FindPushTokens)
 	master.Put("/notifications/push-token", jwt, newNotificationController.RegisterPushToken)
 	master.Delete("/notifications/push-token", jwt, newNotificationController.UnregisterPushToken)

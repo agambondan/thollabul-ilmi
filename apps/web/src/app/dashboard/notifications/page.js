@@ -57,7 +57,7 @@ const saveLocalRead = (id) => {
 
 const NotificationsPage = () => {
     const { t, lang } = useLocale();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const [notifs, setNotifs] = useState([]);
     const [pushState, setPushState] = useState({
         supported: false,
@@ -73,6 +73,10 @@ const NotificationsPage = () => {
     const [settingsLoading, setSettingsLoading] = useState(false);
     const [settingsSaving, setSettingsSaving] = useState(false);
     const [saveMsg, setSaveMsg] = useState("");
+    const [channelPrefs, setChannelPrefs] = useState(null);
+    const [channelSaving, setChannelSaving] = useState(false);
+    const [channelError, setChannelError] = useState("");
+    const phoneVerified = Boolean(user?.phone_verified_at);
 
     const REMINDER_TYPES = [
         {
@@ -113,6 +117,46 @@ const NotificationsPage = () => {
             .catch(() => setReminderSettings({}))
             .finally(() => setSettingsLoading(false));
     }, [isAuthenticated]);
+
+    // --- Load channel preferences (email / whatsapp / push) ---
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        notificationApi
+            .getChannels()
+            .then((r) => r.json())
+            .then((data) =>
+                setChannelPrefs({
+                    email: data?.email ?? true,
+                    whatsapp: data?.whatsapp ?? false,
+                    push: data?.push ?? true,
+                }),
+            )
+            .catch(() =>
+                setChannelPrefs({ email: true, whatsapp: false, push: true }),
+            );
+    }, [isAuthenticated]);
+
+    const handleToggleChannel = async (channel, checked) => {
+        if (!channelPrefs) return;
+        const previous = channelPrefs;
+        const next = { ...channelPrefs, [channel]: checked };
+        setChannelPrefs(next);
+        setChannelSaving(true);
+        setChannelError("");
+        try {
+            await notificationApi.updateChannels(next);
+        } catch (err) {
+            setChannelPrefs(previous);
+            const text = await err.text?.().catch(() => "");
+            setChannelError(
+                text ||
+                    t("notifications.channel_save_error") ||
+                    "Gagal menyimpan preferensi channel.",
+            );
+        } finally {
+            setChannelSaving(false);
+        }
+    };
 
     const handleToggleReminder = (typeKey, active) => {
         setReminderSettings((prev) => ({
@@ -513,6 +557,107 @@ const NotificationsPage = () => {
                                 </div>
                             ) : reminderSettings ? (
                                 <>
+                                    {/* Channel preferences */}
+                                    {channelPrefs && (
+                                        <div className='rounded-lg border border-gray-100 dark:border-slate-700 bg-gray-50/40 dark:bg-slate-800/50 p-3 space-y-2'>
+                                            <p className='text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                                {t(
+                                                    "notifications.channels_title",
+                                                ) || "Kirim notifikasi via"}
+                                            </p>
+                                            <div className='flex flex-wrap gap-x-5 gap-y-2'>
+                                                <label className='flex items-center gap-2 cursor-pointer'>
+                                                    <input
+                                                        type='checkbox'
+                                                        checked={
+                                                            channelPrefs.email
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleToggleChannel(
+                                                                "email",
+                                                                e.target
+                                                                    .checked,
+                                                            )
+                                                        }
+                                                        className='w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600 focus:ring-emerald-500'
+                                                    />
+                                                    <span className='text-sm text-gray-700 dark:text-gray-300'>
+                                                        Email
+                                                    </span>
+                                                </label>
+                                                <label
+                                                    className={`flex items-center gap-2 ${phoneVerified ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
+                                                    title={
+                                                        phoneVerified
+                                                            ? undefined
+                                                            : t(
+                                                                  "notifications.whatsapp_requires_phone",
+                                                              ) ||
+                                                              "Verifikasi nomor WhatsApp terlebih dahulu"
+                                                    }
+                                                >
+                                                    <input
+                                                        type='checkbox'
+                                                        disabled={
+                                                            !phoneVerified
+                                                        }
+                                                        checked={
+                                                            channelPrefs.whatsapp
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleToggleChannel(
+                                                                "whatsapp",
+                                                                e.target
+                                                                    .checked,
+                                                            )
+                                                        }
+                                                        className='w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600 focus:ring-emerald-500'
+                                                    />
+                                                    <span className='text-sm text-gray-700 dark:text-gray-300'>
+                                                        WhatsApp
+                                                    </span>
+                                                </label>
+                                                <label className='flex items-center gap-2 cursor-pointer'>
+                                                    <input
+                                                        type='checkbox'
+                                                        checked={
+                                                            channelPrefs.push
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleToggleChannel(
+                                                                "push",
+                                                                e.target
+                                                                    .checked,
+                                                            )
+                                                        }
+                                                        className='w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600 focus:ring-emerald-500'
+                                                    />
+                                                    <span className='text-sm text-gray-700 dark:text-gray-300'>
+                                                        Push / PWA
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            {!phoneVerified && (
+                                                <p className='text-[11px] text-gray-400'>
+                                                    {t(
+                                                        "notifications.whatsapp_requires_phone",
+                                                    ) ||
+                                                        "Verifikasi nomor WhatsApp terlebih dahulu untuk mengaktifkan channel ini."}
+                                                </p>
+                                            )}
+                                            {channelSaving && (
+                                                <p className='text-[11px] text-gray-400'>
+                                                    Menyimpan...
+                                                </p>
+                                            )}
+                                            {channelError && (
+                                                <p className='text-[11px] text-red-500'>
+                                                    {channelError}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
                                     {/* Bulk actions */}
                                     <div className='flex gap-2'>
                                         <button

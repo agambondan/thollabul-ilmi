@@ -392,6 +392,10 @@ const en = {
     "notifications.bulk_save_success": "All notification settings saved.",
     "notifications.bulk_save_error": "Failed to save all settings",
     "notifications.bulk_save_partial_error": "Some settings failed to save",
+    "notifications.channels_title": "Send notifications via",
+    "notifications.whatsapp_requires_phone":
+        "Verify your WhatsApp number first to enable this channel.",
+    "notifications.channel_save_error": "Failed to save channel preferences.",
     "quran.error_title": "Failed to Load Al-Quran",
     "quran.error_desc":
         "This surah could not be loaded right now. Try reloading in a moment.",

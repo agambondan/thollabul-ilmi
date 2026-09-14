@@ -35,6 +35,7 @@ type UserRepository interface {
 	DeleteVerificationTokensByUserChannel(userID, channel string) error
 	MarkEmailVerified(userID string) error
 	MarkPhoneVerified(userID string) error
+	UpdateNotificationChannels(userID string, prefs model.NotificationChannelPreferences) error
 }
 
 type userRepo struct {
@@ -195,4 +196,15 @@ func (r *userRepo) MarkEmailVerified(userID string) error {
 func (r *userRepo) MarkPhoneVerified(userID string) error {
 	now := time.Now()
 	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("phone_verified_at", now).Error
+}
+
+// UpdateNotificationChannels sets all three channel toggles at once via a
+// map, not a struct — a struct passed to Updates() would make GORM skip any
+// field left at its zero value, silently dropping "false" writes.
+func (r *userRepo) UpdateNotificationChannels(userID string, prefs model.NotificationChannelPreferences) error {
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Updates(map[string]interface{}{
+		"notify_via_email":    prefs.Email,
+		"notify_via_whatsapp": prefs.Whatsapp,
+		"notify_via_push":     prefs.Push,
+	}).Error
 }

@@ -596,6 +596,12 @@ export const notificationApi = {
             method: "PUT",
             body: JSON.stringify(settings),
         }),
+    getChannels: () => authFetch("/api/v1/notifications/channels"),
+    updateChannels: (channels) =>
+        authFetch("/api/v1/notifications/channels", {
+            method: "PUT",
+            body: JSON.stringify(channels),
+        }),
     getPushTokens: () => authFetch("/api/v1/notifications/push-tokens"),
     registerPushToken: (data) =>
         authFetch("/api/v1/notifications/push-token", {

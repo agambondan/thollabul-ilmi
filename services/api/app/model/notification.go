@@ -37,6 +37,16 @@ type NotificationSettingsUpsertRequest struct {
 	Settings []NotificationSettingRequest `json:"settings" validate:"required,dive"`
 }
 
+// NotificationChannelPreferences controls which channels reminder
+// notifications go out on. It doubles as the update request body — every
+// field is sent together from the settings checkboxes, so there is no
+// partial-update ambiguity to worry about.
+type NotificationChannelPreferences struct {
+	Email    bool `json:"email"`
+	Whatsapp bool `json:"whatsapp"`
+	Push     bool `json:"push"`
+}
+
 type PushToken struct {
 	BaseID
 	UserID          uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_push_user_token"`

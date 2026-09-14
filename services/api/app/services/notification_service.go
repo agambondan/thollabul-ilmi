@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/lib/whatsapp"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/google/uuid"
@@ -20,6 +21,8 @@ type NotificationService interface {
 	FindSettings(userID uuid.UUID) ([]model.NotificationSetting, error)
 	FindPushTokenStatus(userID uuid.UUID) (model.PushTokenStatusResponse, error)
 	UpsertSettings(userID uuid.UUID, req *model.NotificationSettingsUpsertRequest) ([]model.NotificationSetting, error)
+	FindChannelPreferences(userID uuid.UUID) (model.NotificationChannelPreferences, error)
+	UpdateChannelPreferences(userID uuid.UUID, req model.NotificationChannelPreferences) (model.NotificationChannelPreferences, error)
 	RegisterPushToken(userID uuid.UUID, req *model.PushTokenRegisterRequest) (model.PushToken, error)
 	SendTestPush(userID uuid.UUID) (model.PushTestResponse, error)
 	BroadcastPush(adminID uuid.UUID, req *model.BroadcastPushRequest) (model.BroadcastPushResponse, error)
@@ -35,15 +38,19 @@ type NotificationService interface {
 type notificationService struct {
 	inboxRepo      repository.NotificationInboxRepository
 	repo           repository.NotificationRepository
+	userRepo       repository.UserRepository
+	wa             *whatsapp.Manager
 	prayerTimesSvc PrayerTimesService
 	adzanSentMap   sync.Map
 }
 
-func NewNotificationService(repo repository.NotificationRepository, inboxRepo repository.NotificationInboxRepository, prayerTimesSvc PrayerTimesService) NotificationService {
+func NewNotificationService(repo repository.NotificationRepository, inboxRepo repository.NotificationInboxRepository, prayerTimesSvc PrayerTimesService, userRepo repository.UserRepository, wa *whatsapp.Manager) NotificationService {
 	return &notificationService{
 		repo:           repo,
 		inboxRepo:      inboxRepo,
 		prayerTimesSvc: prayerTimesSvc,
+		userRepo:       userRepo,
+		wa:             wa,
 	}
 }
 
@@ -145,6 +152,34 @@ func (s *notificationService) UpsertSettings(userID uuid.UUID, req *model.Notifi
 	return s.repo.UpsertMany(items)
 }
 
+func (s *notificationService) FindChannelPreferences(userID uuid.UUID) (model.NotificationChannelPreferences, error) {
+	user, err := s.userRepo.FindById(userID.String())
+	if err != nil {
+		return model.NotificationChannelPreferences{}, err
+	}
+	return model.NotificationChannelPreferences{
+		Email:    user.NotifyViaEmail,
+		Whatsapp: user.NotifyViaWhatsapp,
+		Push:     user.NotifyViaPush,
+	}, nil
+}
+
+func (s *notificationService) UpdateChannelPreferences(userID uuid.UUID, req model.NotificationChannelPreferences) (model.NotificationChannelPreferences, error) {
+	if req.Whatsapp {
+		user, err := s.userRepo.FindById(userID.String())
+		if err != nil {
+			return model.NotificationChannelPreferences{}, err
+		}
+		if user.Phone == nil || strings.TrimSpace(*user.Phone) == "" || user.PhoneVerifiedAt == nil {
+			return model.NotificationChannelPreferences{}, fmt.Errorf("verifikasi nomor WhatsApp terlebih dahulu sebelum mengaktifkan channel ini")
+		}
+	}
+	if err := s.userRepo.UpdateNotificationChannels(userID.String(), req); err != nil {
+		return model.NotificationChannelPreferences{}, err
+	}
+	return req, nil
+}
+
 func (s *notificationService) RegisterPushToken(userID uuid.UUID, req *model.PushTokenRegisterRequest) (model.PushToken, error) {
 	token := strings.TrimSpace(req.Token)
 	platform := strings.ToLower(strings.TrimSpace(req.Platform))
@@ -229,6 +264,9 @@ func (s *notificationService) BroadcastPush(adminID uuid.UUID, req *model.Broadc
 		if !token.IsActive {
 			continue
 		}
+		if token.User != nil && !token.User.NotifyViaPush {
+			continue
+		}
 		switch strings.ToLower(token.Provider) {
 		case "web":
 			if token.KeyP256DH == "" || token.KeyAuth == "" {
@@ -291,7 +329,7 @@ func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {
 			}
 		}
 
-		if setting.User != nil && setting.User.Email != nil && strings.TrimSpace(*setting.User.Email) != "" {
+		if setting.User != nil && setting.User.NotifyViaEmail && setting.User.Email != nil && strings.TrimSpace(*setting.User.Email) != "" {
 			if err := lib.SendHTMLEmail(*setting.User.Email, content.Title, content.EmailHTML); err != nil {
 				slog.Warn("notification email reminder failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
 			} else {
@@ -299,9 +337,22 @@ func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {
 			}
 		}
 
-		pushSent, err := s.sendPushReminder(setting, content)
-		if err != nil {
-			slog.Warn("notification push reminder failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
+		if setting.User != nil && setting.User.NotifyViaWhatsapp && s.wa != nil &&
+			setting.User.Phone != nil && strings.TrimSpace(*setting.User.Phone) != "" && setting.User.PhoneVerifiedAt != nil {
+			if err := s.wa.SendText(*setting.User.Phone, content.WhatsAppText); err != nil {
+				slog.Warn("notification whatsapp reminder failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
+			} else {
+				delivered = true
+			}
+		}
+
+		pushSent := 0
+		if setting.User == nil || setting.User.NotifyViaPush {
+			var err error
+			pushSent, err = s.sendPushReminder(setting, content)
+			if err != nil {
+				slog.Warn("notification push reminder failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
+			}
 		}
 		if pushSent > 0 {
 			delivered = true
@@ -351,6 +402,9 @@ func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
 			continue
 		}
 		if adzanDisabled[token.UserID] {
+			continue
+		}
+		if token.User != nil && !token.User.NotifyViaPush {
 			continue
 		}
 
@@ -515,10 +569,11 @@ func tokenSuffix(token string) string {
 }
 
 type reminderContent struct {
-	Description string
-	EmailHTML   string
-	Title       string
-	URL         string
+	Description  string
+	EmailHTML    string
+	WhatsAppText string
+	Title        string
+	URL          string
 }
 
 func reminderMessage(notificationType model.NotificationType) reminderContent {
@@ -554,9 +609,12 @@ func reminderMessage(notificationType model.NotificationType) reminderContent {
 <p>Buka aplikasi: <a href="%s">%s</a></p>
 `, title, description, appURL, appURL)
 
+	waText := fmt.Sprintf("Assalamu'alaikum,\n\n*%s*\n%s\n\nBuka aplikasi: %s", title, description, appURL)
+
 	return reminderContent{
-		Description: description,
-		EmailHTML:   body,
-		Title:       title,
+		Description:  description,
+		EmailHTML:    body,
+		WhatsAppText: waText,
+		Title:        title,
 	}
 }

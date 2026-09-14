@@ -387,6 +387,10 @@ const id = {
     "notifications.save_error": "Gagal menyimpan pengaturan",
     "notifications.bulk_save_success": "Semua pengaturan notifikasi tersimpan.",
     "notifications.bulk_save_error": "Gagal menyimpan semua pengaturan",
+    "notifications.channels_title": "Kirim notifikasi via",
+    "notifications.whatsapp_requires_phone":
+        "Verifikasi nomor WhatsApp terlebih dahulu untuk mengaktifkan channel ini.",
+    "notifications.channel_save_error": "Gagal menyimpan preferensi channel.",
     "notifications.bulk_save_partial_error":
         "Masih ada pengaturan yang gagal disimpan",
     "quran.error_title": "Gagal Memuat Al-Quran",

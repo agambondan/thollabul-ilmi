@@ -32,6 +32,17 @@ type User struct {
 	VerificationChannel *string    `json:"verification_channel,omitempty" gorm:"type:varchar(20)"`
 	EmailVerifiedAt     *time.Time `json:"email_verified_at,omitempty"`
 	PhoneVerifiedAt     *time.Time `json:"phone_verified_at,omitempty"`
+	// NotifyViaEmail/NotifyViaWhatsapp/NotifyViaPush choose which channels
+	// reminder notifications (daily quran/hadith, doa, streak, adzan) go out
+	// on. Email and push default on to preserve behavior for accounts that
+	// existed before per-channel choice did; WhatsApp defaults off since it
+	// also requires a verified phone number. omitempty here isn't just
+	// cosmetic: User.ToPublic() below builds a fresh literal that never sets
+	// these fields, relying on the bool zero value plus omitempty to keep a
+	// public blog byline etc. from ever exposing another user's preferences.
+	NotifyViaEmail    bool `json:"notify_via_email,omitempty" gorm:"not null;default:true"`
+	NotifyViaWhatsapp bool `json:"notify_via_whatsapp,omitempty" gorm:"not null;default:false"`
+	NotifyViaPush     bool `json:"notify_via_push,omitempty" gorm:"not null;default:true"`
 }
 
 // IsVerified reports whether the user has completed whichever verification

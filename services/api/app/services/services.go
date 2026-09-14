@@ -120,7 +120,7 @@ func NewServices(repo *repository.Repositories) *Services {
 	dzikirSvc := NewDzikirServiceWithCache(repo.Dzikir, cache)
 	asmaulHusnaSvc := NewAsmaUlHusnaServiceWithCache(repo.AsmaUlHusna, cache)
 	prayerTimesSvc := NewPrayerTimesService()
-	notificationSvc := NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc)
+	notificationSvc := NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc, repo.User, waManager)
 	svc := &Services{
 		User:                 NewUserService(repo.User, waManager),
 		Ayah:                 NewAyahServiceWithCache(repo.Ayah, cache),
