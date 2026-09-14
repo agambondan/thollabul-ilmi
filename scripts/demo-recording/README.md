@@ -40,9 +40,14 @@ rule). Convert and replace the committed videos:
 
 ```bash
 cd scripts/demo-recording
-ffmpeg -y -i output/desktop/*.webm -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../docs/media/demo-desktop.mp4
-ffmpeg -y -i output/mobile/*.webm  -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../docs/media/demo-mobile.mp4
+ffmpeg -y -ss 0.8 -i output/desktop/*.webm -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../docs/media/demo-desktop.mp4
+ffmpeg -y -ss 0.8 -i output/mobile/*.webm  -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../docs/media/demo-mobile.mp4
 ```
+
+The `-ss 0.8` trims the first ~0.8s: Playwright's `recordVideo` starts
+capturing the instant the page is created, which is a blank white frame
+until the first `goto()` actually paints - without the trim, every
+recording opens on a brief blank flash before the homepage appears.
 
 `docs/media/*.mp4` is tracked via Git LFS (see the repo's `.gitattributes`),
 so just `git add`/`git commit`/`git push` the two files normally — no special
