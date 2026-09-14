@@ -76,6 +76,13 @@ export default function AsbabunNuzulForm({
         initialSurah ? surahLabel(initialSurah, lang) : "",
     );
     const [showSuggestions, setShowSuggestions] = useState(false);
+    // The field is pre-filled with whatever surah is currently selected
+    // (e.g. "2. Al-Baqarah (Sapi Betina)"), so filtering by that whole label
+    // on focus would just match nothing. Focusing sets this so the dropdown
+    // shows the full browsable list regardless of the stale text already
+    // sitting in the field; typing a new character turns it back into a
+    // normal type-to-filter search.
+    const [browseAll, setBrowseAll] = useState(false);
     const [results, setResults] = useState(initialResults);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
@@ -83,14 +90,14 @@ export default function AsbabunNuzulForm({
 
     const suggestions = useMemo(() => {
         const q = query.trim().toLowerCase();
-        if (!q) return [];
+        if (!q || browseAll) return SURAH_LIST;
         return SURAH_LIST.filter(
             (s) =>
                 String(s.number) === q ||
                 s.name.toLowerCase().includes(q) ||
                 s.name_en.toLowerCase().includes(q),
         ).slice(0, 8);
-    }, [query]);
+    }, [query, browseAll]);
 
     const runSearch = async (num) => {
         if (!num || num < 1 || num > SURAH_COUNT) {
@@ -139,10 +146,15 @@ export default function AsbabunNuzulForm({
                             value={query}
                             onChange={(e) => {
                                 setQuery(e.target.value);
+                                setBrowseAll(false);
                                 setShowSuggestions(true);
                                 if (!e.target.value) setSurahNumber("");
                             }}
-                            onFocus={() => setShowSuggestions(true)}
+                            onFocus={(e) => {
+                                e.target.select();
+                                setBrowseAll(true);
+                                setShowSuggestions(true);
+                            }}
                             placeholder={
                                 t("asbabun.placeholder") || placeholderLabel
                             }
@@ -150,7 +162,7 @@ export default function AsbabunNuzulForm({
                         />
                     </div>
 
-                    {showSuggestions && query.trim() && (
+                    {showSuggestions && (
                         <div className='absolute z-20 mt-1 w-full max-h-72 overflow-y-auto bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg py-1'>
                             {suggestions.length === 0 ? (
                                 <p className='px-3 py-2.5 text-xs text-gray-400'>

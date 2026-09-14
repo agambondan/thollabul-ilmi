@@ -3,7 +3,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 const ACTION_POSITION_KEY = "actionPosition";
-const DEFAULT_POSITION = "side";
+const DEFAULT_POSITION = "menu";
 const VALID_POSITIONS = ["side", "menu", "hidden"];
 
 /*
