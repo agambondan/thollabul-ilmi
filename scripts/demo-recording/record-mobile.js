@@ -166,7 +166,8 @@ async function closeAnyModal(page) {
   const hadithTab = page.getByRole('button', { name: 'Hadith' }).first();
   if (await hadithTab.isVisible().catch(() => false)) {
     await hadithTab.click();
-    await page.waitForTimeout(1500);
+    // Give the tab real read time instead of a quick flash.
+    await page.waitForTimeout(2400);
   }
 
   // 4. Al-Quran - baca, atur tampilan lewat floating settings, tafsir, bookmark, catatan
@@ -247,7 +248,9 @@ async function closeAnyModal(page) {
   await page.waitForTimeout(500);
   await dismissPopup(page);
   await page.getByText('Dengar Surah').first().click();
-  await page.waitForTimeout(2200);
+  // Long enough to actually notice the qari picker and speed control, not
+  // just a flash of the player sheet.
+  await page.waitForTimeout(4200);
   await page.keyboard.press('Escape').catch(() => {});
   await page.waitForTimeout(800);
 
@@ -283,7 +286,9 @@ async function closeAnyModal(page) {
   await page.waitForTimeout(500);
   await dismissPopup(page);
   await page.getByTitle(/Simpan Bookmark|Hapus Bookmark/).first().click();
-  await page.waitForTimeout(1000);
+  // Hold on the Warna/Label popover long enough to actually register the
+  // color swatches and label field before closing it.
+  await page.waitForTimeout(2400);
   await closeBookmarkColorPopover(page);
   await page.waitForTimeout(1400);
 
@@ -295,10 +300,19 @@ async function closeAnyModal(page) {
   await page.waitForTimeout(1200);
   await page.locator('textarea').first().click();
   await page.waitForTimeout(400);
-  await page.locator('textarea').first().fill(
+  // This ayah may already have a note from a previous run (editing, not
+  // creating) - clear it first, since pressSequentially() types at the
+  // current cursor position rather than replacing content the way fill()
+  // does, and would otherwise append after whatever text is already there.
+  await page.locator('textarea').first().fill('');
+  await page.waitForTimeout(300);
+  // pressSequentially (not fill()) so the note visibly types out instead of
+  // snapping in all at once.
+  await page.locator('textarea').first().pressSequentially(
     'Al-Baqarah ayat 1-2: petunjuk bagi orang bertakwa.',
+    { delay: 30 },
   );
-  await page.waitForTimeout(1400);
+  await page.waitForTimeout(1000);
   // Scoped to the dialog: the bookmark color popover above can also have a
   // "Simpan" button visible at the same time, which is otherwise ambiguous.
   await page.getByRole('dialog').getByRole('button', { name: 'Simpan', exact: true }).click();
@@ -404,7 +418,7 @@ async function closeAnyModal(page) {
   await page.waitForTimeout(1600);
 
   await page.getByTitle(/Simpan Bookmark|Hapus Bookmark/).first().click();
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(2400);
   await closeBookmarkColorPopover(page);
   await page.waitForTimeout(1400);
   await smoothScroll(page, 600, 4, 300);
@@ -470,10 +484,14 @@ async function closeAnyModal(page) {
       await page.waitForTimeout(1000);
       await page.locator('textarea').first().click();
       await page.waitForTimeout(400);
-      await page.locator('textarea').first().fill(
+      // Same append-not-replace caveat as the ayah note above.
+      await page.locator('textarea').first().fill('');
+      await page.waitForTimeout(300);
+      await page.locator('textarea').first().pressSequentially(
         'Poin penting: jangan menunda taubat dan hijrah menuju kebaikan.',
+        { delay: 30 },
       );
-      await page.waitForTimeout(1400);
+      await page.waitForTimeout(1000);
       await page.getByRole('button', { name: 'Simpan Catatan' }).click();
       await page.waitForTimeout(2000);
     }

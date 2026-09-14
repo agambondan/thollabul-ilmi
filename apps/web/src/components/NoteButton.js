@@ -5,7 +5,7 @@ import { useLocale } from "@/context/Locale";
 import { notesApi } from "@/lib/api";
 import { buildLoginHref } from "@/lib/authRedirect";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     BsSticky,
     BsStickyFill,
@@ -53,9 +53,14 @@ const NoteButton = ({ refType, refId, className = "" }) => {
     const [content, setContent] = useState("");
     const [saving, setSaving] = useState(false);
     const textareaRef = useRef(null);
+    // useModalA11y's focus-trap effect depends on this callback's identity -
+    // an inline arrow here would recreate it on every keystroke (content
+    // changes trigger a re-render), tearing down and rebuilding the focus
+    // trap each time and stealing focus away from the textarea mid-typing.
+    const closeModal = useCallback(() => setShowModal(false), []);
     const modalA11y = useModalA11y({
         open: showModal,
-        onClose: () => setShowModal(false),
+        onClose: closeModal,
     });
 
     const insertFormat = (prefix, suffix = "") => {

@@ -112,6 +112,21 @@ LFS commands needed for a routine content update.
   `localStorage`-scoped, it only shows up in the same browser/device that
   created it (irrelevant here since the whole recording runs in one
   browser context, but worth knowing if you ever check it manually).
+- **Typed note text needs the field cleared first.** Both scripts type the
+  ayah/kajian note text with `pressSequentially()` (so it visibly types out
+  instead of snapping in all at once like `fill()` does) — but the ayah note
+  in particular re-opens as an *edit* once this account has annotated that
+  ayah in a previous run, pre-filled with the old content, and
+  `pressSequentially()` types at the current cursor position rather than
+  replacing it. Both scripts call `fill('')` right before typing to clear
+  whatever's already there; skipping that step silently appends run after
+  run until the note is several copies of the same sentence concatenated
+  together.
 - Both scripts are resilient to transient production flakiness (popups
   appearing at slightly different times, etc.) but not infinitely so — if a
   run fails partway through, it's almost always safe to just re-run it.
+  This machine also runs other heavy jobs concurrently (other agent
+  sessions, `yt-dlp` scraping, Docker Desktop's VM) - if a run fails with
+  timeouts at random, unrelated points (not the same step twice), check
+  `uptime`/`free -h` before assuming it's a real site bug; a severely
+  loaded local machine makes headless Chromium miss timing everywhere.
