@@ -77,10 +77,22 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 				videos = getChannelVideos(target.ChannelURL, maxVideos, cookies)
 				fmt.Printf("%s        Ditemukan %d video.\n", tag, len(videos))
 
-				listingCacheMu.Lock()
-				listingCache.Entries[slug] = ListingCacheEntry{ListedAt: time.Now().UTC(), Videos: videos}
-				_ = saveListingCache(listingCachePath, listingCache)
-				listingCacheMu.Unlock()
+				// A listing failure (network blip, a transparent proxy like
+				// BBG's intercepting the TLS handshake mid-scan) also comes
+				// back as an empty/nil slice from getChannelVideos, same as
+				// a channel that's genuinely empty -- there's no way to tell
+				// them apart here. Caching the failure would memorize "0
+				// videos" for the full TTL (hours), silently starving that
+				// channel of every video until the cache expires. Every
+				// channel in this dataset is a curated, active ustadz
+				// channel that always has content, so only a successful,
+				// non-empty listing is worth remembering.
+				if len(videos) > 0 {
+					listingCacheMu.Lock()
+					listingCache.Entries[slug] = ListingCacheEntry{ListedAt: time.Now().UTC(), Videos: videos}
+					_ = saveListingCache(listingCachePath, listingCache)
+					listingCacheMu.Unlock()
+				}
 			}
 
 			readyMu.Lock()
