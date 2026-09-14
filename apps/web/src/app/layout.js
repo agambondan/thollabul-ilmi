@@ -82,6 +82,9 @@ export const metadata = {
             "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, and 30+ more features.",
         images: [OG_IMAGE.url],
     },
+    other: {
+        "google-adsense-account": "ca-pub-2005235442054436",
+    },
 };
 
 export default async function RootLayout({ children }) {
@@ -104,6 +107,12 @@ export default async function RootLayout({ children }) {
                         })(window,document,'script','dataLayer','GTM-5KG4F8QG');
                     `}
                 </Script>
+                <Script
+                    async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2005235442054436"
+                    crossOrigin="anonymous"
+                    strategy="afterInteractive"
+                />
                 <link
                     rel='preconnect'
                     href='https://i.ytimg.com'
