@@ -108,4 +108,5 @@ var ModelMigrations []interface{} = []interface{}{
 	model.AdzanSound{},
 	model.ContentReport{},
 	model.ContentAuditLog{},
+	model.Ad{},
 }

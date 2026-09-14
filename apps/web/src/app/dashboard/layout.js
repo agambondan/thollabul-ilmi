@@ -1,6 +1,7 @@
 "use client";
 
 import AdminMutationToast from "@/components/admin/AdminMutationToast";
+import BannerAd from "@/components/ads/BannerAd";
 import MobileMenuDrawer from "@/components/layout/MobileMenuDrawer";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -583,6 +584,9 @@ const DashboardLayout = ({ children }) => {
                     forms, not prose, so the reading-width toggle used by the
                     public pages would only waste horizontal space here. */}
                 <div className='w-full'>{children}</div>
+                <div className='px-4 sm:px-6 pb-20 md:pb-6'>
+                    <BannerAd slot='banner' />
+                </div>
 
                 <MobileMenuDrawer
                     open={mobileMenuOpen}

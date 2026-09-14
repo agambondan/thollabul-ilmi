@@ -1,6 +1,7 @@
 "use client";
 
 import Footer from "@/components/Footer";
+import BannerAd from "@/components/ads/BannerAd";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import { usePathname } from "next/navigation";
 import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
@@ -34,5 +35,12 @@ export function PublicFooter() {
     const pathname = usePathname();
     const { isFullscreen } = useQuranFullscreen();
     if (hasOwnChrome(pathname) || isFullscreen) return null;
-    return <Footer />;
+    return (
+        <>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                <BannerAd slot="banner" />
+            </div>
+            <Footer />
+        </>
+    );
 }

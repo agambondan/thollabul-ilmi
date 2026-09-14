@@ -89,6 +89,7 @@ type Repositories struct {
 	ContentReport        ContentReportRepository
 	ContentAuditLog      ContentAuditLogRepository
 	ContentEmbedding     ContentEmbeddingRepository
+	Ad                   AdRepository
 	db                   *gorm.DB
 	pg                   *paginate.Pagination
 	redis                *redis.Client
@@ -183,6 +184,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		ContentReport:        NewContentReportRepository(db),
 		ContentAuditLog:      NewContentAuditLogRepository(db),
 		ContentEmbedding:     NewContentEmbeddingRepository(db),
+		Ad:                   NewAdRepository(db),
 		db:                   db,
 		pg:                   pg,
 		redis:                client,

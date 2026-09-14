@@ -240,6 +240,11 @@ const NAV_GROUPS = [
                 label: "Audit Log Dalil",
                 icon: <BsClock />,
             },
+            {
+                href: "/admin/ads",
+                label: "Iklan Langsung",
+                icon: <BsStar />,
+            },
             { href: "/", labelKey: "admin.back_to_app", icon: <BsGrid /> },
         ],
     },

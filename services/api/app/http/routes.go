@@ -145,7 +145,9 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newAdzanSoundController := controllers.NewAdzanSoundController(newServices)
 	newContentReportController := controllers.NewContentReportController(newServices)
 	newSemanticSearchController := controllers.NewSemanticSearchController(newServices)
+	newAdController := controllers.NewAdController(newServices)
 
+	app.Static("/uploads", "./uploads")
 	app.Use(middlewares.MetricsMiddleware())
 	app.Get("/health", func(c *fiber.Ctx) error {
 		health := fiber.Map{
@@ -929,6 +931,14 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newContentAuditLogController := controllers.NewContentAuditLogController(repo)
 	master.Get("/admin/audit-logs", admin, newContentAuditLogController.FindAll)
 	master.Get("/admin/audit-logs/export", admin, newContentAuditLogController.Export)
+
+	// Direct Ads (public read active by slot, admin CRUD)
+	master.Get("/ads", newAdController.GetActiveAd)
+	master.Get("/admin/ads", admin, newAdController.List)
+	master.Post("/admin/ads", admin, newAdController.Create)
+	master.Patch("/admin/ads/:id", admin, newAdController.Update)
+	master.Put("/admin/ads/:id", admin, newAdController.Update)
+	master.Delete("/admin/ads/:id", admin, newAdController.Delete)
 
 	if viper.GetString("ENVIRONMENT") != "production" {
 		pprofGroup := app.Group("/debug/pprof")

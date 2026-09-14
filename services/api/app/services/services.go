@@ -88,6 +88,7 @@ type Services struct {
 	AdzanSound           AdzanSoundService
 	ContentReport        ContentReportService
 	ContentEmbedding     ContentEmbeddingService
+	Ad                   AdService
 	WhatsApp             *whatsapp.Manager
 }
 
@@ -197,6 +198,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		AdzanSound:           NewAdzanSoundService(repo.AdzanSound),
 		ContentReport:        NewContentReportService(repo.ContentReport, repo.NotificationInbox, repo, notificationSvc),
 		ContentEmbedding:     NewContentEmbeddingService(repo.ContentEmbedding),
+		Ad:                   NewAdService(repo.Ad),
 		Sync:                 NewSyncService(db, cache, doaSvc, dzikirSvc, asmaulHusnaSvc),
 		WhatsApp:             waManager,
 	}

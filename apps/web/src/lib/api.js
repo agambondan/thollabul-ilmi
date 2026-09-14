@@ -1075,8 +1075,28 @@ export const adminMasjidApi = buildResourceApi({
 
 export const adminRadioIslamicApi = buildResourceApi({
     listPath: "/api/v1/radio-islamic",
-    listParam: "page=1&size=100",
+    listParam: "size=100",
 });
+
+export const adminAdsApi = {
+    list: () => authFetch("/api/v1/admin/ads"),
+    create: (data) => {
+        const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
+        return authFetch("/api/v1/admin/ads", {
+            method: "POST",
+            body: isFormData ? data : JSON.stringify(data),
+        });
+    },
+    update: (id, data) =>
+        authFetch(`/api/v1/admin/ads/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    delete: (id) =>
+        authFetch(`/api/v1/admin/ads/${id}`, {
+            method: "DELETE",
+        }),
+};
 
 export const adminKamusApi = {
     list: (page = 0, size = 100) =>
@@ -1541,4 +1561,29 @@ export const radioIslamicApi = {
     },
     get: (id) =>
         fetch(`${API_URL}/api/v1/radio-islamic/${id}`).then(parseApiJson),
+};
+
+export const adsApi = {
+    getActiveSlot: async (slot = "banner") => {
+        const res = await fetch(`${API_URL}/api/v1/ads?slot=${slot}`);
+        if (!res.ok) throw new Error("No active ad");
+        return parseApiJson(res);
+    },
+    list: () => authFetch("/api/v1/admin/ads").then(parseApiJson),
+    create: (formOrData) => {
+        const isFormData = typeof FormData !== "undefined" && formOrData instanceof FormData;
+        return authFetch("/api/v1/admin/ads", {
+            method: "POST",
+            body: isFormData ? formOrData : JSON.stringify(formOrData),
+        }).then(parseApiJson);
+    },
+    update: (id, data) =>
+        authFetch(`/api/v1/admin/ads/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }).then(parseApiJson),
+    delete: (id) =>
+        authFetch(`/api/v1/admin/ads/${id}`, {
+            method: "DELETE",
+        }).then(parseApiJson),
 };
