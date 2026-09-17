@@ -163,6 +163,21 @@ body.quran-fullscreen .pt-navbar {
     background: #10b981;
 }
 
+/* Opt out of the custom scrollbar above — for small rounded containers
+   (popovers, sheets, chip rows) where the thick green thumb either pokes
+   past the border-radius or is just visual noise. Already referenced by
+   several components; defining it here is what actually makes it work. */
+.scrollbar-hide,
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
 /* ─── Ornament Divider ─────────────────────────────────────────── */
 .ornament-divider {
     display: flex;

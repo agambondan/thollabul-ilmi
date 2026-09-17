@@ -127,7 +127,7 @@ const SettingButton = () => {
 
             {showPopup && !isMobileSheet && (
                 // Desktop popover (sm+)
-                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-64 sm:w-72 max-h-[calc(100vh-8rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
+                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-64 sm:w-72 max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-hide p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
                     <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
                         {t("settings.title")}
                     </p>
@@ -168,7 +168,7 @@ const SettingButton = () => {
                             </button>
                         </div>
                         {/* Scrollable content */}
-                        <div className='flex-1 overflow-y-auto p-4 space-y-4 text-sm text-emerald-900 dark:text-white pb-8'>
+                        <div className='flex-1 overflow-y-auto scrollbar-hide p-4 space-y-4 text-sm text-emerald-900 dark:text-white pb-8'>
                             {renderSettingsContent()}
                         </div>
                     </div>
