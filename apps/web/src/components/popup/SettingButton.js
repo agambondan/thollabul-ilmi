@@ -18,6 +18,7 @@ import {
     BsFullscreen,
     BsFullscreenExit,
 } from "react-icons/bs";
+import { MdClose } from "react-icons/md";
 import { RiSettings3Fill } from "react-icons/ri";
 
 const SettingButton = () => {
@@ -47,8 +48,9 @@ const SettingButton = () => {
         readerMode === "mushaf" ? showMushafTranslation : showAyahTranslation;
     const { isFullscreen, toggle: toggleQuranFullscreen } =
         useQuranFullscreen();
-    const popupRef = useRef(null);
+    const panelRef = useRef(null);
     const [isCompactViewport, setIsCompactViewport] = useState(false);
+    const [isMobileSheet, setIsMobileSheet] = useState(false);
     const label = (key, fallback) => {
         const val = t(key);
         return !val || val === key ? fallback : val;
@@ -57,7 +59,7 @@ const SettingButton = () => {
     useEffect(() => {
         if (!showPopup) return;
         const handler = (e) => {
-            if (popupRef.current && !popupRef.current.contains(e.target)) {
+            if (panelRef.current && !panelRef.current.contains(e.target)) {
                 setShowPopup(false);
             }
         };
@@ -65,10 +67,7 @@ const SettingButton = () => {
         return () => document.removeEventListener("mousedown", handler);
     }, [showPopup]);
 
-    // The compact/wide "Lebar Konten" toggle below is desktop-only
-    // (`hidden md:block`); on a route with no Quran/Hadith controls either,
-    // that leaves nothing in the panel on a narrow viewport, so this tracks
-    // viewport width to decide whether the whole button should render.
+    // Track compact viewport for button visibility logic
     useEffect(() => {
         const media = window.matchMedia("(max-width: 767px)");
         const updateViewport = () => setIsCompactViewport(media.matches);
@@ -76,6 +75,15 @@ const SettingButton = () => {
         media.addEventListener("change", updateViewport);
         return () => media.removeEventListener("change", updateViewport);
     }, []);
+
+    // Track whether we should use bottom-sheet layout on mobile
+    useEffect(() => {
+        const media = window.matchMedia("(max-width: 639px)");
+        const updateSheet = () => setIsMobileSheet(showPopup && media.matches);
+        updateSheet();
+        media.addEventListener("change", updateSheet);
+        return () => media.removeEventListener("change", updateSheet);
+    }, [showPopup]);
 
     const isDashboard = pathname?.startsWith("/dashboard");
     const isQuranRoute =
@@ -88,10 +96,6 @@ const SettingButton = () => {
         pathname?.startsWith("/hadith/") ||
         pathname === "/dashboard/hadith" ||
         pathname?.startsWith("/dashboard/hadith/");
-    // Action position, Arabic/translation font size, and the Arabic font
-    // picker only affect the Quran ayah and Hadith readers (useActionPosition
-    // / useQuranFont have no other consumers) — showing them anywhere else
-    // is dead UI.
     const hasRouteScopedSettings = isQuranRoute || isHadithRoute;
     const bottomClass = isFullscreen
         ? "bottom-4"
@@ -106,7 +110,7 @@ const SettingButton = () => {
 
     return (
         <div
-            ref={popupRef}
+            ref={panelRef}
             data-testid='global-setting-control'
             className={`fixed right-2 z-30 transition-opacity duration-200 ${bottomClass} opacity-90 hover:opacity-100`}
         >
@@ -121,190 +125,234 @@ const SettingButton = () => {
                 <RiSettings3Fill size={24} />
             </button>
 
-            {showPopup && (
+            {showPopup && !isMobileSheet && (
+                // Desktop popover (sm+)
                 <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-64 sm:w-72 max-h-[calc(100vh-8rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
                     <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
                         {t("settings.title")}
                     </p>
+                    {renderSettingsContent()}
+                </div>
+            )}
 
-                    {isQuranRoute && (
-                        <>
-                            {/* Mode Hafalan */}
-                            <div className='mb-3'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                                    {label(
-                                        "hafalan.mode_label",
-                                        "Mode Hafalan",
-                                    )}
-                                </p>
-                                <div className='grid grid-cols-2 gap-1.5'>
-                                    {[
-                                        {
-                                            value: "off",
-                                            label: label(
-                                                "hafalan.mode_off",
-                                                "Mati",
-                                            ),
-                                        },
-                                        {
-                                            value: "hide_arabic",
-                                            label: label(
-                                                "hafalan.mode_hide_arabic",
-                                                "Sembunyikan Arab",
-                                            ),
-                                        },
-                                        {
-                                            value: "hide_translation",
-                                            label: label(
-                                                "hafalan.mode_hide_translation",
-                                                "Sembunyikan Terjemahan",
-                                            ),
-                                        },
-                                        {
-                                            value: "hide_all",
-                                            label: label(
-                                                "hafalan.mode_hide_all",
-                                                "Sembunyikan Semua",
-                                            ),
-                                        },
-                                    ].map((m) => (
-                                        <button
-                                            key={m.value}
-                                            type='button'
-                                            onClick={() =>
-                                                updateSetting(
-                                                    "quranHafalanMode",
-                                                    m.value,
-                                                )
-                                            }
-                                            className={classNames(
-                                                "py-1.5 px-2 rounded-lg border text-[11px] sm:text-xs leading-snug text-center transition-all",
-                                                {
-                                                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                        hafalanMode === m.value,
-                                                    "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                        hafalanMode !== m.value,
-                                                },
-                                            )}
-                                        >
-                                            {m.label}
-                                        </button>
-                                    ))}
-                                </div>
+            {showPopup && isMobileSheet && (
+                // Mobile bottom sheet
+                <div
+                    className='fixed inset-0 z-50 flex flex-col justify-end'
+                    role='dialog'
+                    aria-modal='true'
+                    aria-label={t("settings.title")}
+                >
+                    {/* Backdrop */}
+                    <div
+                        className='fixed inset-0 bg-slate-950/50 backdrop-blur-sm'
+                        onClick={() => setShowPopup(false)}
+                        aria-hidden='true'
+                    />
+                    {/* Sheet */}
+                    <div className='relative z-10 w-full max-h-[80vh] bg-white dark:bg-slate-900 rounded-t-2xl shadow-2xl border-t border-gray-100 dark:border-slate-800 flex flex-col overflow-hidden'>
+                        {/* Header with drag handle and close button */}
+                        <div className='flex items-center justify-between px-4 pt-3 pb-2 border-b border-gray-100 dark:border-slate-800'>
+                            <div>
+                                <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                    {t("settings.title")}
+                                </h2>
                             </div>
-
-                            {/* Tampilan (Daftar / Alur Mushaf) */}
-                            <div className='mb-3'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                                    {label("mushaf.view", "Tampilan")}
-                                </p>
-                                <div className='flex gap-2'>
-                                    {[
-                                        {
-                                            value: "ayah",
-                                            label: label(
-                                                "mushaf.list",
-                                                "Daftar",
-                                            ),
-                                        },
-                                        {
-                                            value: "mushaf",
-                                            label: label(
-                                                "mushaf.continuous",
-                                                "Alur (Mushaf)",
-                                            ),
-                                        },
-                                    ].map((m) => (
-                                        <button
-                                            key={m.value}
-                                            type='button'
-                                            onClick={() =>
-                                                updateSetting(
-                                                    "quranReaderMode",
-                                                    m.value,
-                                                )
-                                            }
-                                            className={classNames(
-                                                "flex-1 py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
-                                                {
-                                                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                        readerMode === m.value,
-                                                    "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                        readerMode !== m.value,
-                                                },
-                                            )}
-                                        >
-                                            {m.label}
-                                        </button>
-                                    ))}
-                                </div>
-                                <button
-                                    type='button'
-                                    onClick={() =>
-                                        updateSetting(
-                                            readerMode === "mushaf"
-                                                ? "quranMushafTranslation"
-                                                : "quranShowTranslation",
-                                            !currentShowTranslation,
-                                        )
-                                    }
-                                    className={classNames(
-                                        "mt-1.5 w-full py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
-                                        {
-                                            "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                currentShowTranslation,
-                                            "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                !currentShowTranslation,
-                                        },
-                                    )}
-                                >
-                                    {currentShowTranslation
-                                        ? label(
-                                              "mushaf.translation_off",
-                                              "Sembunyikan Terjemahan",
-                                          )
-                                        : label(
-                                              "mushaf.translation_on",
-                                              "Tampilkan Terjemahan",
-                                          )}
-                                </button>
-                            </div>
-
-                            {/* Quran fullscreen toggle */}
                             <button
                                 type='button'
-                                onClick={toggleQuranFullscreen}
+                                onClick={() => setShowPopup(false)}
+                                className='h-8 w-8 inline-flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'
+                                aria-label='Tutup'
+                            >
+                                <MdClose className='text-lg' />
+                            </button>
+                        </div>
+                        {/* Scrollable content */}
+                        <div className='flex-1 overflow-y-auto p-4 space-y-4 text-sm text-emerald-900 dark:text-white pb-8'>
+                            {renderSettingsContent()}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+
+    function renderSettingsContent() {
+        return (
+            <>
+                {isQuranRoute && (
+                    <>
+                        {/* Mode Hafalan */}
+                        <div className='mb-3'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                                {label("hafalan.mode_label", "Mode Hafalan")}
+                            </p>
+                            <div className='grid grid-cols-2 gap-1.5'>
+                                {[
+                                    {
+                                        value: "off",
+                                        label: label(
+                                            "hafalan.mode_off",
+                                            "Mati",
+                                        ),
+                                    },
+                                    {
+                                        value: "hide_arabic",
+                                        label: label(
+                                            "hafalan.mode_hide_arabic",
+                                            "Sembunyikan Arab",
+                                        ),
+                                    },
+                                    {
+                                        value: "hide_translation",
+                                        label: label(
+                                            "hafalan.mode_hide_translation",
+                                            "Sembunyikan Terjemahan",
+                                        ),
+                                    },
+                                    {
+                                        value: "hide_all",
+                                        label: label(
+                                            "hafalan.mode_hide_all",
+                                            "Sembunyikan Semua",
+                                        ),
+                                    },
+                                ].map((m) => (
+                                    <button
+                                        key={m.value}
+                                        type='button'
+                                        onClick={() =>
+                                            updateSetting(
+                                                "quranHafalanMode",
+                                                m.value,
+                                            )
+                                        }
+                                        className={classNames(
+                                            "py-1.5 px-2 rounded-lg border text-[11px] sm:text-xs leading-snug text-center transition-all",
+                                            {
+                                                "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                    hafalanMode === m.value,
+                                                "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                    hafalanMode !== m.value,
+                                            },
+                                        )}
+                                    >
+                                        {m.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Tampilan (Daftar / Alur Mushaf) */}
+                        <div className='mb-3'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                                {label("mushaf.view", "Tampilan")}
+                            </p>
+                            <div className='flex gap-2'>
+                                {[
+                                    {
+                                        value: "ayah",
+                                        label: label("mushaf.list", "Daftar"),
+                                    },
+                                    {
+                                        value: "mushaf",
+                                        label: label(
+                                            "mushaf.continuous",
+                                            "Alur (Mushaf)",
+                                        ),
+                                    },
+                                ].map((m) => (
+                                    <button
+                                        key={m.value}
+                                        type='button'
+                                        onClick={() =>
+                                            updateSetting(
+                                                "quranReaderMode",
+                                                m.value,
+                                            )
+                                        }
+                                        className={classNames(
+                                            "flex-1 py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
+                                            {
+                                                "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                    readerMode === m.value,
+                                                "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                    readerMode !== m.value,
+                                            },
+                                        )}
+                                    >
+                                        {m.label}
+                                    </button>
+                                ))}
+                            </div>
+                            <button
+                                type='button'
+                                onClick={() =>
+                                    updateSetting(
+                                        readerMode === "mushaf"
+                                            ? "quranMushafTranslation"
+                                            : "quranShowTranslation",
+                                        !currentShowTranslation,
+                                    )
+                                }
                                 className={classNames(
-                                    "w-full flex items-center justify-center gap-2 py-1.5 px-2 rounded-lg border text-xs transition-all",
+                                    "mt-1.5 w-full py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
                                     {
                                         "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                            isFullscreen,
+                                            currentShowTranslation,
                                         "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                            !isFullscreen,
+                                            !currentShowTranslation,
                                     },
                                 )}
                             >
-                                {isFullscreen ? (
-                                    <BsFullscreenExit size={14} />
-                                ) : (
-                                    <BsFullscreen size={14} />
-                                )}
-                                {isFullscreen
+                                {currentShowTranslation
                                     ? label(
-                                          "quran.fullscreen_off",
-                                          "Keluar Layar Penuh",
+                                          "mushaf.translation_off",
+                                          "Sembunyikan Terjemahan",
                                       )
                                     : label(
-                                          "quran.fullscreen_on",
-                                          "Layar Penuh (Tanpa Navbar)",
+                                          "mushaf.translation_on",
+                                          "Tampilkan Terjemahan",
                                       )}
                             </button>
+                        </div>
 
-                            <div className='my-3 border-t border-gray-100 dark:border-slate-700' />
-                        </>
-                    )}
+                        {/* Quran fullscreen toggle */}
+                        <button
+                            type='button'
+                            onClick={toggleQuranFullscreen}
+                            className={classNames(
+                                "w-full flex items-center justify-center gap-2 py-1.5 px-2 rounded-lg border text-xs transition-all",
+                                {
+                                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                        isFullscreen,
+                                    "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                        !isFullscreen,
+                                },
+                            )}
+                        >
+                            {isFullscreen ? (
+                                <BsFullscreenExit size={14} />
+                            ) : (
+                                <BsFullscreen size={14} />
+                            )}
+                            {isFullscreen
+                                ? label(
+                                      "quran.fullscreen_off",
+                                      "Keluar Layar Penuh",
+                                  )
+                                : label(
+                                      "quran.fullscreen_on",
+                                      "Layar Penuh (Tanpa Navbar)",
+                                  )}
+                        </button>
 
-                    {/* Layout toggle */}
+                        <div className='my-3 border-t border-gray-100 dark:border-slate-700' />
+                    </>
+                )}
+
+                {/* Layout toggle - only on desktop */}
+                {!isMobileSheet && (
                     <div className='hidden md:block mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
                             {t("settings.content_width")}
@@ -344,202 +392,202 @@ const SettingButton = () => {
                             </button>
                         </div>
                     </div>
+                )}
 
-                    {hasRouteScopedSettings && (
-                        <>
-                            {/* Action layout */}
-                            <div className='mb-3'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                                    {label(
-                                        "settings.action_position",
-                                        "Aksi Ayat/Hadith",
+                {hasRouteScopedSettings && (
+                    <>
+                        {/* Action layout */}
+                        <div className='mb-3'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                                {label(
+                                    "settings.action_position",
+                                    "Aksi Ayat/Hadith",
+                                )}
+                            </p>
+                            <div className='grid grid-cols-3 gap-2'>
+                                <button
+                                    onClick={() => setPosition("side")}
+                                    title={label(
+                                        "settings.action_side",
+                                        "Samping",
                                     )}
-                                </p>
-                                <div className='grid grid-cols-3 gap-2'>
+                                    aria-label={label(
+                                        "settings.action_side",
+                                        "Samping",
+                                    )}
+                                    className={classNames(
+                                        "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
+                                        {
+                                            "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                position === "side",
+                                            "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                position !== "side",
+                                        },
+                                    )}
+                                >
+                                    <BsLayoutTextSidebarReverse size={16} />
+                                </button>
+                                <button
+                                    onClick={() => setPosition("menu")}
+                                    title={label(
+                                        "settings.action_menu",
+                                        "Menu",
+                                    )}
+                                    aria-label={label(
+                                        "settings.action_menu",
+                                        "Menu",
+                                    )}
+                                    className={classNames(
+                                        "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
+                                        {
+                                            "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                isMenu,
+                                            "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                !isMenu,
+                                        },
+                                    )}
+                                >
+                                    <BsMenuButtonWide size={16} />
+                                </button>
+                                <button
+                                    onClick={() => setPosition("hidden")}
+                                    title={label(
+                                        "settings.action_hidden",
+                                        "Sembunyikan",
+                                    )}
+                                    aria-label={label(
+                                        "settings.action_hidden",
+                                        "Sembunyikan",
+                                    )}
+                                    className={classNames(
+                                        "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
+                                        {
+                                            "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                position === "hidden",
+                                            "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                position !== "hidden",
+                                        },
+                                    )}
+                                >
+                                    <BsEyeSlash size={16} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Arabic font size */}
+                        <div className='mb-3'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                                {label(
+                                    "settings.arabic_size",
+                                    "Ukuran Arab (Quran/Hadis)",
+                                )}
+                            </p>
+                            <div className='flex items-center gap-2'>
+                                <button
+                                    type='button'
+                                    onClick={decreaseArabicFontSize}
+                                    className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                    aria-label={t(
+                                        "settings.decrease_arabic_size",
+                                    )}
+                                >
+                                    A-
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={resetArabicFontSize}
+                                    className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                >
+                                    {arabicFontSize}px
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={increaseArabicFontSize}
+                                    className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                    aria-label={t(
+                                        "settings.increase_arabic_size",
+                                    )}
+                                >
+                                    A+
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Translation font size */}
+                        <div className='mb-3'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                                {label(
+                                    "settings.translation_size",
+                                    "Ukuran Terjemahan",
+                                )}
+                            </p>
+                            <div className='flex items-center gap-2'>
+                                <button
+                                    type='button'
+                                    onClick={decreaseTranslationFontSize}
+                                    className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                    aria-label={t(
+                                        "settings.decrease_translation_size",
+                                    )}
+                                >
+                                    T-
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={resetTranslationFontSize}
+                                    className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                >
+                                    {translationFontSize}px
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={increaseTranslationFontSize}
+                                    className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                    aria-label={t(
+                                        "settings.increase_translation_size",
+                                    )}
+                                >
+                                    T+
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Arabic font selector */}
+                        <div>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                                {t("settings.arabic_font")}
+                            </p>
+                            <div className='flex flex-col gap-1'>
+                                {QURAN_FONTS.map((font) => (
                                     <button
-                                        onClick={() => setPosition("side")}
-                                        title={label(
-                                            "settings.action_side",
-                                            "Samping",
-                                        )}
-                                        aria-label={label(
-                                            "settings.action_side",
-                                            "Samping",
-                                        )}
+                                        key={font.id}
+                                        onClick={() => setFont(font.id)}
                                         className={classNames(
-                                            "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
+                                            "flex items-center justify-between px-3 py-2 rounded-lg border text-xs transition-all",
                                             {
                                                 "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                    position === "side",
+                                                    fontId === font.id,
                                                 "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                    position !== "side",
+                                                    fontId !== font.id,
                                             },
                                         )}
                                     >
-                                        <BsLayoutTextSidebarReverse size={16} />
-                                    </button>
-                                    <button
-                                        onClick={() => setPosition("menu")}
-                                        title={label(
-                                            "settings.action_menu",
-                                            "Menu",
-                                        )}
-                                        aria-label={label(
-                                            "settings.action_menu",
-                                            "Menu",
-                                        )}
-                                        className={classNames(
-                                            "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
-                                            {
-                                                "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                    isMenu,
-                                                "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                    !isMenu,
-                                            },
-                                        )}
-                                    >
-                                        <BsMenuButtonWide size={16} />
-                                    </button>
-                                    <button
-                                        onClick={() => setPosition("hidden")}
-                                        title={label(
-                                            "settings.action_hidden",
-                                            "Hide",
-                                        )}
-                                        aria-label={label(
-                                            "settings.action_hidden",
-                                            "Hide",
-                                        )}
-                                        className={classNames(
-                                            "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
-                                            {
-                                                "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                    position === "hidden",
-                                                "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                    position !== "hidden",
-                                            },
-                                        )}
-                                    >
-                                        <BsEyeSlash size={16} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Arabic font size */}
-                            <div className='mb-3'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                                    {label(
-                                        "settings.arabic_size",
-                                        "Ukuran Arab (Quran/Hadis)",
-                                    )}
-                                </p>
-                                <div className='flex items-center gap-2'>
-                                    <button
-                                        type='button'
-                                        onClick={decreaseArabicFontSize}
-                                        className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                        aria-label={t(
-                                            "settings.decrease_arabic_size",
-                                        )}
-                                    >
-                                        A-
-                                    </button>
-                                    <button
-                                        type='button'
-                                        onClick={resetArabicFontSize}
-                                        className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                    >
-                                        {arabicFontSize}px
-                                    </button>
-                                    <button
-                                        type='button'
-                                        onClick={increaseArabicFontSize}
-                                        className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                        aria-label={t(
-                                            "settings.increase_arabic_size",
-                                        )}
-                                    >
-                                        A+
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Translation font size */}
-                            <div className='mb-3'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                                    {label(
-                                        "settings.translation_size",
-                                        "Ukuran Terjemahan",
-                                    )}
-                                </p>
-                                <div className='flex items-center gap-2'>
-                                    <button
-                                        type='button'
-                                        onClick={decreaseTranslationFontSize}
-                                        className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                        aria-label={t(
-                                            "settings.decrease_translation_size",
-                                        )}
-                                    >
-                                        T-
-                                    </button>
-                                    <button
-                                        type='button'
-                                        onClick={resetTranslationFontSize}
-                                        className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                    >
-                                        {translationFontSize}px
-                                    </button>
-                                    <button
-                                        type='button'
-                                        onClick={increaseTranslationFontSize}
-                                        className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                        aria-label={t(
-                                            "settings.increase_translation_size",
-                                        )}
-                                    >
-                                        T+
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Arabic font selector */}
-                            <div>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                                    {t("settings.arabic_font")}
-                                </p>
-                                <div className='flex flex-col gap-1'>
-                                    {QURAN_FONTS.map((font) => (
-                                        <button
-                                            key={font.id}
-                                            onClick={() => setFont(font.id)}
-                                            className={classNames(
-                                                "flex items-center justify-between px-3 py-2 rounded-lg border text-xs transition-all",
-                                                {
-                                                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                        fontId === font.id,
-                                                    "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                        fontId !== font.id,
-                                                },
-                                            )}
+                                        <span>{font.label}</span>
+                                        <span
+                                            className={`${font.cls} text-base leading-none`}
+                                            style={{ direction: "rtl" }}
                                         >
-                                            <span>{font.label}</span>
-                                            <span
-                                                className={`${font.cls} text-base leading-none`}
-                                                style={{ direction: "rtl" }}
-                                            >
-                                                بِسْمِ
-                                            </span>
-                                        </button>
-                                    ))}
-                                </div>
+                                            بِسْمِ
+                                        </span>
+                                    </button>
+                                ))}
                             </div>
-                        </>
-                    )}
-                </div>
-            )}
-        </div>
-    );
+                        </div>
+                    </>
+                )}
+            </>
+        );
+    }
 };
 
 export default SettingButton;
