@@ -27,7 +27,7 @@ func (r *lessonRepository) FindAll() ([]model.LessonModule, error) {
 	var items []model.LessonModule
 	err := r.db.Preload("Steps", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("step_order ASC")
-	}).Order("\"order\" ASC, id ASC").Find(&items).Error
+	}).Preload("RelatedBook").Order("\"order\" ASC, id ASC").Find(&items).Error
 	return items, err
 }
 
@@ -35,7 +35,7 @@ func (r *lessonRepository) FindBySlug(slug string) (*model.LessonModule, error) 
 	var m model.LessonModule
 	err := r.db.Preload("Steps", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("step_order ASC")
-	}).Where("slug = ?", slug).First(&m).Error
+	}).Preload("RelatedBook").Where("slug = ?", slug).First(&m).Error
 	return &m, err
 }
 
@@ -74,6 +74,7 @@ func (r *lessonRepository) CreateModule(m *model.LessonModule) (*model.LessonMod
 func (r *lessonRepository) UpdateModule(id int, m *model.LessonModule) (*model.LessonModule, error) {
 	if err := r.db.Model(&model.LessonModule{}).Where("id = ?", id).Updates(map[string]interface{}{
 		"slug": m.Slug, "title": m.Title, "description": m.Description, "icon": m.Icon, "\"order\"": m.Order,
+		"related_book_id": m.RelatedBookID,
 	}).Error; err != nil {
 		return nil, err
 	}
@@ -102,6 +103,6 @@ func (r *lessonRepository) FindByID(id int) (*model.LessonModule, error) {
 	var m model.LessonModule
 	err := r.db.Preload("Steps", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("step_order ASC")
-	}).First(&m, id).Error
+	}).Preload("RelatedBook").First(&m, id).Error
 	return &m, err
 }

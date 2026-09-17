@@ -12,6 +12,8 @@ type LessonModule struct {
 	EstimatedMinutes int          `json:"estimated_minutes" gorm:"default:0"`
 	Icon             string       `json:"icon" gorm:"type:varchar(50)"`
 	Order            int          `json:"order" gorm:"default:0"`
+	RelatedBookID    *int         `json:"related_book_id" gorm:"index"`
+	RelatedBook      *LibraryBook `json:"related_book,omitempty" gorm:"foreignKey:RelatedBookID;-:migration"`
 	Steps            []LessonStep `json:"steps" gorm:"foreignKey:ModuleID"`
 }
 

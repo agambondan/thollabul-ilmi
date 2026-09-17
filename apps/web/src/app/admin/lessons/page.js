@@ -10,7 +10,7 @@ import {
     Tr,
 } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
-import { authFetch, parseApiError } from "@/lib/api";
+import { adminLibraryApi, authFetch, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { BsPlus, BsTrash, BsPencil } from "react-icons/bs";
 import toast from "react-hot-toast";
@@ -23,6 +23,7 @@ const API_URL =
 export default function AdminLessonsPage() {
     const { t } = useLocale();
     const [modules, setModules] = useState([]);
+    const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
     const [editing, setEditing] = useState(null);
@@ -32,6 +33,7 @@ export default function AdminLessonsPage() {
         description: "",
         icon: "book",
         order: 1,
+        related_book_id: "",
         steps: [],
     });
     const [page, setPage] = useState(1);
@@ -54,6 +56,11 @@ export default function AdminLessonsPage() {
 
     useEffect(() => {
         fetchModules();
+        adminLibraryApi
+            .list(0, 500)
+            .then((res) => res.json())
+            .then((data) => setBooks(data?.data?.items ?? data?.items ?? []))
+            .catch(() => setBooks([]));
     }, []);
 
     const handleOpen = (m = null) => {
@@ -65,6 +72,7 @@ export default function AdminLessonsPage() {
                 description: m.description || "",
                 icon: m.icon || "book",
                 order: m.order || 1,
+                related_book_id: m.related_book_id ?? "",
                 steps: m.steps || [],
             });
         } else {
@@ -75,6 +83,7 @@ export default function AdminLessonsPage() {
                 description: "",
                 icon: "book",
                 order: modules.length + 1,
+                related_book_id: "",
                 steps: [{ step_order: 1, title: "", body: "" }],
             });
         }
@@ -90,7 +99,12 @@ export default function AdminLessonsPage() {
             const method = editing ? "PUT" : "POST";
             const res = await authFetch(url, {
                 method,
-                body: JSON.stringify(form),
+                body: JSON.stringify({
+                    ...form,
+                    related_book_id: form.related_book_id
+                        ? Number(form.related_book_id)
+                        : null,
+                }),
             });
             if (!res.ok)
                 throw new Error(await parseApiError(res, "Gagal simpan"));
@@ -393,6 +407,33 @@ export default function AdminLessonsPage() {
                                 className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
                                 rows={2}
                             />
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor='page-field-related-book'
+                                className='block text-xs font-semibold mb-1'
+                            >
+                                Bacaan Lanjutan (Opsional)
+                            </label>
+                            <select
+                                id='page-field-related-book'
+                                value={form.related_book_id}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        related_book_id: e.target.value,
+                                    })
+                                }
+                                className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
+                            >
+                                <option value=''>Tidak ada</option>
+                                {books.map((book) => (
+                                    <option key={book.id} value={book.id}>
+                                        {book.title}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         {/* Langkah-langkah */}

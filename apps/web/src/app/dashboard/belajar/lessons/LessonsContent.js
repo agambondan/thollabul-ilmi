@@ -9,6 +9,7 @@ import { renderBlogContent } from "@/lib/blogContent";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
+    BsBook,
     BsCheckCircle,
     BsChevronLeft,
     BsChevronRight,
@@ -223,6 +224,23 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                     )}
                 </div>
             </div>
+
+            {activeModule.related_book && (
+                <Link
+                    className='mb-5 flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4 transition hover:border-emerald-300 dark:border-slate-700 dark:bg-slate-800'
+                    href={`${root}/library/${activeModule.related_book.slug}`}
+                >
+                    <BsBook className='shrink-0 text-xl text-emerald-700 dark:text-emerald-400' />
+                    <div className='min-w-0'>
+                        <p className='text-xs font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-400'>
+                            {t("belajar.further_reading") || "Bacaan Lanjutan"}
+                        </p>
+                        <p className='truncate text-sm font-semibold text-emerald-950 dark:text-white'>
+                            {activeModule.related_book.title}
+                        </p>
+                    </div>
+                </Link>
+            )}
 
             <div className='grid grid-cols-1 lg:grid-cols-[18rem_1fr] gap-4'>
                 <div className='space-y-3'>

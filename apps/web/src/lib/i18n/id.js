@@ -107,6 +107,7 @@ const id = {
     "belajar.back_to_learn": "Kembali ke Belajar",
     "belajar.select_module": "Pilih Materi Belajar",
     "belajar.module_progress": "Progres Materi",
+    "belajar.further_reading": "Bacaan Lanjutan",
     "library.all_categories": "Semua kategori",
     "library.all_levels": "Semua level",
     "library.all_progress": "Semua progress",
