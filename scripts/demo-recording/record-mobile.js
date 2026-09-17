@@ -89,6 +89,30 @@ async function closeAnyModal(page) {
   await page.keyboard.press('Escape').catch(() => {});
 }
 
+// With the site-wide default action position now "menu" (⋮ "Lainnya"), the
+// per-ayah/hadith action row is a single collapsed button instead of
+// individually visible icons - every action (Tafsir, Bagikan, Bookmark,
+// Catatan) has to be opened through it first. Both AyahPage and HadithPage
+// render the panel as the very next sibling <div> after the "Lainnya"
+// button (only when open), so scoping through that relationship works on
+// either page without depending on page-specific class names.
+async function openMoreMenu(page) {
+  const trigger = page.getByTitle('Lainnya').first();
+  const panel = trigger.locator('xpath=following-sibling::div[1]');
+  if (!(await panel.isVisible().catch(() => false))) {
+    await trigger.click();
+    await panel.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
+  }
+  return panel;
+}
+
+// Bookmark/Catatan don't close the "Lainnya" panel themselves (unlike
+// Tafsir/Bagikan, which do) - clean it up explicitly via an outside click.
+async function closeMoreMenu(page) {
+  await page.mouse.click(5, 5).catch(() => {});
+  await page.waitForTimeout(300);
+}
+
 (async () => {
   const browser = await chromium.launch({ slowMo: 140 });
   const context = await browser.newContext({
@@ -238,9 +262,11 @@ async function closeAnyModal(page) {
   await scrollToTop();
   await page.waitForTimeout(500);
   await dismissPopup(page);
-  await page.getByTitle('Tafsir Al-Quran').first().click();
+  let moreMenu = await openMoreMenu(page);
+  await moreMenu.getByText('Tafsir Al-Quran', { exact: true }).click();
   await page.waitForTimeout(2400);
-  await page.getByTitle('Tafsir Al-Quran').first().click();
+  moreMenu = await openMoreMenu(page);
+  await moreMenu.getByText('Tafsir Al-Quran', { exact: true }).click();
   await page.waitForTimeout(600);
 
   // Audio qari - bottom sheet pemutar dengan pilihan qari & kecepatan.
@@ -259,7 +285,8 @@ async function closeAnyModal(page) {
   await scrollToTop();
   await page.waitForTimeout(500);
   await dismissPopup(page);
-  await page.getByTitle('Bagikan').first().click();
+  moreMenu = await openMoreMenu(page);
+  await moreMenu.getByText('Bagikan', { exact: true }).click();
   await page.waitForTimeout(2200);
   const bgThumb = page.locator('text=Pilih Gambar Latar').locator('xpath=following::img[1]');
   await bgThumb.click({ force: true }).catch(() => {});
@@ -285,18 +312,23 @@ async function closeAnyModal(page) {
   await scrollToTop();
   await page.waitForTimeout(500);
   await dismissPopup(page);
-  await page.getByTitle(/Simpan Bookmark|Hapus Bookmark/).first().click();
+  moreMenu = await openMoreMenu(page);
+  await moreMenu.getByTitle(/Simpan Bookmark|Hapus Bookmark/).click();
   // Hold on the Warna/Label popover long enough to actually register the
   // color swatches and label field before closing it.
   await page.waitForTimeout(2400);
   await closeBookmarkColorPopover(page);
+  // Bookmark doesn't close the "Lainnya" panel on its own - clean it up
+  // before the next action reopens it.
+  await closeMoreMenu(page);
   await page.waitForTimeout(1400);
 
   // Same idea: "Tulis Catatan" becomes "Edit Catatan" once a note exists.
   await scrollToTop();
   await page.waitForTimeout(500);
   await dismissPopup(page);
-  await page.getByTitle(/Tulis Catatan|Edit Catatan/).first().click();
+  moreMenu = await openMoreMenu(page);
+  await moreMenu.getByTitle(/Tulis Catatan|Edit Catatan/).click();
   await page.waitForTimeout(1200);
   await page.locator('textarea').first().click();
   await page.waitForTimeout(400);
@@ -318,6 +350,8 @@ async function closeAnyModal(page) {
   await page.getByRole('dialog').getByRole('button', { name: 'Simpan', exact: true }).click();
   await page.waitForTimeout(1600);
   await closeAnyModal(page);
+  // Catatan doesn't close the "Lainnya" panel on its own either.
+  await closeMoreMenu(page);
   await page.waitForTimeout(900);
 
   // 4b. Asbabun Nuzul - perkenalkan fitur dulu (baca judul + kartu info)
@@ -339,12 +373,19 @@ async function closeAnyModal(page) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(700);
 
-  // Lalu tunjukkan search box beneran (cara kedua: ketik nama/nomor surah).
+  // Cara kedua: klik langsung ke field pencarian - dropdown-nya langsung
+  // menampilkan semua 114 surah (gak perlu ketik apa pun dulu), scroll
+  // sampai ketemu satu surah yang bukan bagian dari pil "Contoh cepat" di
+  // atas, lalu klik langsung buat menegaskan ini bukan cuma daftar pendek.
   const asbabunInput = page.getByPlaceholder('Cari nama atau nomor surah...');
   await asbabunInput.click();
-  await asbabunInput.pressSequentially('yasin', { delay: 140 });
-  await page.waitForTimeout(1500);
-  await page.getByRole('button', { name: /Yasin/i }).first().click();
+  await page.waitForTimeout(1200);
+  const asbabunDropdown = page.locator('div.absolute.z-20');
+  await asbabunDropdown.evaluate((el) =>
+    el.scrollTo({ top: 900, behavior: 'smooth' }),
+  );
+  await page.waitForTimeout(1600);
+  await asbabunDropdown.getByRole('button', { name: /Ar-Rahman/ }).click();
   await page.waitForTimeout(2200);
   await smoothScroll(page, 500, 4, 280);
   await page.waitForTimeout(1400);
@@ -417,9 +458,11 @@ async function closeAnyModal(page) {
   await page.waitForTimeout(1000);
   await page.waitForTimeout(1600);
 
-  await page.getByTitle(/Simpan Bookmark|Hapus Bookmark/).first().click();
+  moreMenu = await openMoreMenu(page);
+  await moreMenu.getByTitle(/Simpan Bookmark|Hapus Bookmark/).click();
   await page.waitForTimeout(2400);
   await closeBookmarkColorPopover(page);
+  await closeMoreMenu(page);
   await page.waitForTimeout(1400);
   await smoothScroll(page, 600, 4, 300);
   await page.waitForTimeout(1000);
