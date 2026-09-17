@@ -106,6 +106,108 @@ async function closeMoreMenu(page) {
   await page.waitForTimeout(300);
 }
 
+// Playwright drives real pointer input (click/hover dispatch real
+// mousemove/down/up events) but never paints a visible cursor, so every
+// click in a raw recording looks like a jump-cut instead of something being
+// clicked. This paints a small dot that rides those real events - injected
+// as an init script so it survives every page.goto() in this flow.
+const injectCursor = (context) =>
+  context.addInitScript(() => {
+    const cursor = document.createElement('div');
+    cursor.id = '__demo_cursor__';
+    Object.assign(cursor.style, {
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      width: '18px',
+      height: '18px',
+      borderRadius: '50%',
+      background: 'rgba(16, 185, 129, 0.55)',
+      border: '2px solid rgba(6, 95, 70, 0.9)',
+      boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.15)',
+      pointerEvents: 'none',
+      zIndex: '2147483647',
+      opacity: '0',
+      transform: 'translate(-50%, -50%)',
+      transition: 'transform 90ms ease-out, opacity 150ms linear, background 90ms linear',
+    });
+    const mount = () => document.documentElement.appendChild(cursor);
+    if (document.documentElement) mount();
+    else document.addEventListener('DOMContentLoaded', mount);
+    document.addEventListener(
+      'mousemove',
+      (e) => {
+        cursor.style.opacity = '1';
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      },
+      { capture: true, passive: true },
+    );
+    document.addEventListener(
+      'mousedown',
+      () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(0.65)';
+        cursor.style.background = 'rgba(16, 185, 129, 0.9)';
+      },
+      { capture: true },
+    );
+    document.addEventListener(
+      'mouseup',
+      () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursor.style.background = 'rgba(16, 185, 129, 0.55)';
+      },
+      { capture: true },
+    );
+  });
+
+// Short lower-third caption announcing the section being demoed next, so a
+// viewer who skips around the video (or misses the narration-free flow)
+// still knows what feature is on screen. Self-removes after holdMs.
+async function showCaption(page, text, holdMs = 1800) {
+  await page
+    .evaluate(
+      ({ text, holdMs }) => {
+        const prev = document.getElementById('__demo_caption__');
+        if (prev) prev.remove();
+        const el = document.createElement('div');
+        el.id = '__demo_caption__';
+        el.textContent = text;
+        Object.assign(el.style, {
+          position: 'fixed',
+          left: '50%',
+          bottom: '36px',
+          transform: 'translate(-50%, 10px)',
+          background: 'rgba(6, 78, 59, 0.94)',
+          color: '#fff',
+          padding: '11px 22px',
+          borderRadius: '999px',
+          fontSize: '16px',
+          fontWeight: '600',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          boxShadow: '0 10px 28px rgba(0, 0, 0, 0.28)',
+          zIndex: '2147483647',
+          pointerEvents: 'none',
+          opacity: '0',
+          whiteSpace: 'nowrap',
+          transition: 'opacity 260ms ease, transform 260ms ease',
+        });
+        document.documentElement.appendChild(el);
+        requestAnimationFrame(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translate(-50%, 0)';
+        });
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transform = 'translate(-50%, 10px)';
+          setTimeout(() => el.remove(), 320);
+        }, holdMs);
+      },
+      { text, holdMs },
+    )
+    .catch(() => {});
+}
+
 (async () => {
   const browser = await chromium.launch({ slowMo: 140 });
   const context = await browser.newContext({
@@ -117,12 +219,14 @@ async function closeMoreMenu(page) {
   // falls back to a "Clipboard tidak didukung. Gambar diunduh." error
   // instead of the nicer "Gambar tersalin ke clipboard!" success label.
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await injectCursor(context);
   const page = await context.newPage();
   const nav = page.getByRole('navigation').first();
   const scrollToTop = () => page.evaluate(() => window.scrollTo(0, 0));
 
   // 1. Home
   await page.goto(BASE + '/', { waitUntil: 'load' });
+  await showCaption(page, '🏠 Beranda');
   await page.waitForTimeout(2200);
   await dismissPopup(page);
   await page.waitForTimeout(1200);
@@ -150,6 +254,7 @@ async function closeMoreMenu(page) {
   // 3. Cari - lintas kategori + ganti tab
   await nav.getByRole('link', { name: 'Cari' }).click();
   await page.waitForLoadState('load');
+  await showCaption(page, '🔍 Cari Lintas Kategori');
   await page.waitForTimeout(800);
   await dismissPopup(page);
   const searchBox = page.getByPlaceholder('Cari ayah, hadith, atau terjemahan...');
@@ -173,6 +278,7 @@ async function closeMoreMenu(page) {
   // 4. Al-Quran - baca, atur tampilan lewat floating settings, tafsir, bookmark, catatan
   await nav.getByRole('link', { name: 'Al-Quran' }).click();
   await page.waitForLoadState('load');
+  await showCaption(page, '📖 Al-Quran');
   await page.waitForTimeout(800);
   await dismissPopup(page);
   await page.waitForTimeout(900);
@@ -348,6 +454,7 @@ async function closeMoreMenu(page) {
   await nav.getByRole('button', { name: /Konten/i }).click();
   await page.waitForTimeout(800);
   await nav.getByRole('link', { name: 'Asbabun Nuzul', exact: true }).click();
+  await showCaption(page, '📜 Asbabun Nuzul');
   await page.waitForTimeout(2200);
   await dismissPopup(page);
   await page.waitForTimeout(1500);
@@ -388,6 +495,7 @@ async function closeMoreMenu(page) {
   // 5. Hadis - jelajah kitab + bookmark
   await nav.getByRole('link', { name: 'Hadis' }).click();
   await page.waitForLoadState('load');
+  await showCaption(page, '📚 Hadis');
   await page.waitForTimeout(800);
   await dismissPopup(page);
   await page.waitForTimeout(1000);
@@ -409,6 +517,7 @@ async function closeMoreMenu(page) {
   // 6. Kajian - fitur pencarian lintas video jadi sorotan utama, bukan
   // sekadar putar video di tab "Semua Kajian".
   await page.goto(BASE + '/kajian', { waitUntil: 'load' });
+  await showCaption(page, '🎙️ Kajian');
   await page.waitForTimeout(1200);
   await dismissPopup(page);
   await page.waitForTimeout(1000);
@@ -490,13 +599,16 @@ async function closeMoreMenu(page) {
   await smoothScroll(page, 400, 4, 260);
   await page.waitForTimeout(1200);
 
-  // 7. Closing
+  // 7. Closing - end back on the branded hero, not mid-scroll in the footer.
   await page.goto(BASE + '/', { waitUntil: 'load' });
   await page.waitForTimeout(800);
   await dismissPopup(page);
   await page.waitForTimeout(800);
   await smoothScroll(page, 3200, 16, 260);
-  await page.waitForTimeout(2500);
+  await page.waitForTimeout(1200);
+  await scrollToTop();
+  await showCaption(page, '✨ thollabulilmi.site', 2600);
+  await page.waitForTimeout(2800);
 
   await context.close();
   await browser.close();

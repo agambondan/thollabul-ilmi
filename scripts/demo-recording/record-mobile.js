@@ -22,17 +22,26 @@ if (!LOGIN_IDENTIFIER || !LOGIN_PASSWORD) {
 }
 
 async function dismissPopup(page) {
+  // The PWA install banner (aria-label "Tutup") doesn't always mount by the
+  // time this first runs on a fresh page - it can appear a beat later than
+  // the notification-permission popup and end up sitting over whatever's
+  // clicked next (it's anchored bottom-right, right where the floating
+  // settings button lives). Always taking a short beat between passes -
+  // not just after actually dismissing something - gives it a second look
+  // even when nothing was visible on the first pass.
   for (let i = 0; i < 2; i++) {
+    let acted = false;
     const btn = page.getByRole('button', { name: 'Nanti' });
     if (await btn.isVisible().catch(() => false)) {
       await btn.click().catch(() => {});
-      await page.waitForTimeout(400);
+      acted = true;
     }
     const installClose = page.getByRole('button', { name: 'Tutup' });
     if (await installClose.first().isVisible().catch(() => false)) {
       await installClose.first().click().catch(() => {});
-      await page.waitForTimeout(400);
+      acted = true;
     }
+    await page.waitForTimeout(acted ? 400 : 200);
   }
 }
 
@@ -113,6 +122,122 @@ async function closeMoreMenu(page) {
   await page.waitForTimeout(300);
 }
 
+// On mobile the font/settings panel (SettingButton.js) renders as a
+// full-screen bottom-sheet dialog whose backdrop sits above the floating
+// gear button that opened it - clicking that same button again to "close"
+// it just times out (the backdrop intercepts the click). Use the sheet's
+// own "Tutup" button instead.
+async function closeSettingsSheet(page) {
+  const dialog = page.getByRole('dialog', { name: 'Pengaturan' });
+  if (await dialog.isVisible().catch(() => false)) {
+    await dialog.getByLabel('Tutup').click().catch(() => {});
+  } else {
+    await page.getByTestId('global-setting-button').click().catch(() => {});
+  }
+}
+
+// Playwright drives real pointer input (click/hover dispatch real
+// mousemove/down/up events) but never paints a visible cursor, so every
+// click in a raw recording looks like a jump-cut instead of something being
+// clicked. This paints a small dot that rides those real events - injected
+// as an init script so it survives every page.goto() in this flow.
+const injectCursor = (context) =>
+  context.addInitScript(() => {
+    const cursor = document.createElement('div');
+    cursor.id = '__demo_cursor__';
+    Object.assign(cursor.style, {
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      width: '18px',
+      height: '18px',
+      borderRadius: '50%',
+      background: 'rgba(16, 185, 129, 0.55)',
+      border: '2px solid rgba(6, 95, 70, 0.9)',
+      boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.15)',
+      pointerEvents: 'none',
+      zIndex: '2147483647',
+      opacity: '0',
+      transform: 'translate(-50%, -50%)',
+      transition: 'transform 90ms ease-out, opacity 150ms linear, background 90ms linear',
+    });
+    const mount = () => document.documentElement.appendChild(cursor);
+    if (document.documentElement) mount();
+    else document.addEventListener('DOMContentLoaded', mount);
+    document.addEventListener(
+      'mousemove',
+      (e) => {
+        cursor.style.opacity = '1';
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      },
+      { capture: true, passive: true },
+    );
+    document.addEventListener(
+      'mousedown',
+      () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(0.65)';
+        cursor.style.background = 'rgba(16, 185, 129, 0.9)';
+      },
+      { capture: true },
+    );
+    document.addEventListener(
+      'mouseup',
+      () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursor.style.background = 'rgba(16, 185, 129, 0.55)';
+      },
+      { capture: true },
+    );
+  });
+
+// Short lower-third caption announcing the section being demoed next, so a
+// viewer who skips around the video (or misses the narration-free flow)
+// still knows what feature is on screen. Self-removes after holdMs.
+async function showCaption(page, text, holdMs = 1800) {
+  await page
+    .evaluate(
+      ({ text, holdMs }) => {
+        const prev = document.getElementById('__demo_caption__');
+        if (prev) prev.remove();
+        const el = document.createElement('div');
+        el.id = '__demo_caption__';
+        el.textContent = text;
+        Object.assign(el.style, {
+          position: 'fixed',
+          left: '50%',
+          bottom: '84px',
+          transform: 'translate(-50%, 10px)',
+          background: 'rgba(6, 78, 59, 0.94)',
+          color: '#fff',
+          padding: '9px 18px',
+          borderRadius: '999px',
+          fontSize: '13px',
+          fontWeight: '600',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          boxShadow: '0 10px 28px rgba(0, 0, 0, 0.28)',
+          zIndex: '2147483647',
+          pointerEvents: 'none',
+          opacity: '0',
+          whiteSpace: 'nowrap',
+          transition: 'opacity 260ms ease, transform 260ms ease',
+        });
+        document.documentElement.appendChild(el);
+        requestAnimationFrame(() => {
+          el.style.opacity = '1';
+          el.style.transform = 'translate(-50%, 0)';
+        });
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transform = 'translate(-50%, 10px)';
+          setTimeout(() => el.remove(), 320);
+        }, holdMs);
+      },
+      { text, holdMs },
+    )
+    .catch(() => {});
+}
+
 (async () => {
   const browser = await chromium.launch({ slowMo: 140 });
   const context = await browser.newContext({
@@ -124,11 +249,13 @@ async function closeMoreMenu(page) {
   // falls back to a "Clipboard tidak didukung. Gambar diunduh." error
   // instead of the nicer "Gambar tersalin ke clipboard!" success label.
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await injectCursor(context);
   const page = await context.newPage();
   const scrollToTop = () => page.evaluate(() => window.scrollTo(0, 0));
 
   // 1. Home
   await page.goto(BASE + '/', { waitUntil: 'load' });
+  await showCaption(page, '🏠 Beranda');
   await page.waitForTimeout(2200);
   await dismissPopup(page);
   await page.waitForTimeout(1200);
@@ -177,6 +304,7 @@ async function closeMoreMenu(page) {
     .getByRole('link', { name: 'Cari' })
     .click();
   await page.waitForLoadState('load');
+  await showCaption(page, '🔍 Cari Lintas Kategori');
   await page.waitForTimeout(800);
   await dismissPopup(page);
   const searchBox = page.getByPlaceholder('Cari ayah, hadith, atau terjemahan...');
@@ -196,6 +324,7 @@ async function closeMoreMenu(page) {
 
   // 4. Al-Quran - baca, atur tampilan lewat floating settings, tafsir, bookmark, catatan
   await page.goto(BASE + '/quran/surah/Al-Baqara', { waitUntil: 'load' });
+  await showCaption(page, '📖 Al-Quran');
   await page.waitForTimeout(1000);
   await dismissPopup(page);
   await page.waitForTimeout(1200);
@@ -209,12 +338,20 @@ async function closeMoreMenu(page) {
   // di bawah ini benar-benar mulai dari ukuran default, bukan dari sisa
   // percobaan sebelumnya.
   await dismissPopup(page);
+  // Extra beat + re-check: this is the first click on a freshly loaded
+  // page, and the PWA install banner has been seen mounting just late
+  // enough to still be sitting over this exact button afterward.
+  await page.waitForTimeout(600);
+  await dismissPopup(page);
   await page.getByTestId('global-setting-button').click();
   await page.waitForTimeout(900);
-  await dismissPopup(page);
+  // NOT dismissPopup() here: the settings panel's own close button also
+  // has aria-label "Tutup" (same as the PWA install banner's), so calling
+  // it while the panel is open closes the panel we just opened instead of
+  // whatever ambient popup it was meant to catch.
   await page.locator('text=/^\\d+px$/').first().click();
   await page.waitForTimeout(400);
-  await page.getByTestId('global-setting-button').click();
+  await closeSettingsSheet(page);
   await page.waitForTimeout(600);
 
   // Ukuran huruf Arab default (masih di posisi scroll sekarang, beberapa
@@ -227,7 +364,7 @@ async function closeMoreMenu(page) {
   await dismissPopup(page);
   await page.getByTestId('global-setting-button').click();
   await page.waitForTimeout(1500);
-  await dismissPopup(page);
+  // NOT dismissPopup() here either - same "Tutup" collision as above.
   // Jenis huruf Arab (Naskh -> kembali ke Kemenag/LPMQ) didemokan dulu
   // sebelum ukurannya diperkecil, supaya perbandingan besar-vs-kecil di
   // akhir memakai jenis huruf yang sama persis (LPMQ), bukan tertimpa
@@ -252,7 +389,7 @@ async function closeMoreMenu(page) {
     lastSize = cur;
   }
   await page.waitForTimeout(1000);
-  await page.getByTestId('global-setting-button').click();
+  await closeSettingsSheet(page);
   await page.waitForTimeout(1000);
 
   // Posisi scroll sama seperti sebelum panel dibuka - tahan di sini supaya
@@ -357,6 +494,7 @@ async function closeMoreMenu(page) {
   // 4b. Asbabun Nuzul - perkenalkan fitur dulu (baca judul + kartu info)
   // sebelum masuk ke pencarian.
   await page.goto(BASE + '/asbabun-nuzul', { waitUntil: 'load' });
+  await showCaption(page, '📜 Asbabun Nuzul');
   await page.waitForTimeout(1500);
   await dismissPopup(page);
   await page.waitForTimeout(1800);
@@ -392,6 +530,7 @@ async function closeMoreMenu(page) {
 
   // 5. Hadis - jelajah kitab, perkecil font, bookmark
   await page.goto(BASE + '/hadith', { waitUntil: 'load' });
+  await showCaption(page, '📚 Hadis');
   await page.waitForTimeout(1000);
   await dismissPopup(page);
   await page.waitForTimeout(1000);
@@ -406,7 +545,8 @@ async function closeMoreMenu(page) {
   // seperti di Al-Quran, panel setting ini shared lewat useQuranFont).
   await page.getByTestId('global-setting-button').click();
   await page.waitForTimeout(1200);
-  await dismissPopup(page);
+  // NOT dismissPopup() here - same "Tutup" collision as the Al-Quran
+  // settings panel above (it's the same shared component).
 
   // Sama seperti di Al-Quran, ukuran ini tersimpan ke akun - reset ke
   // default dulu (Arab & terjemahan) supaya kontras besar-kecil di sini
@@ -454,7 +594,7 @@ async function closeMoreMenu(page) {
     lastTranslationSize = cur;
   }
   await page.waitForTimeout(1000);
-  await page.getByTestId('global-setting-button').click();
+  await closeSettingsSheet(page);
   await page.waitForTimeout(1000);
   await page.waitForTimeout(1600);
 
@@ -470,6 +610,7 @@ async function closeMoreMenu(page) {
   // 6. Kajian - fitur pencarian lintas video jadi sorotan utama, bukan
   // sekadar putar video di tab "Semua Kajian".
   await page.goto(BASE + '/kajian', { waitUntil: 'load' });
+  await showCaption(page, '🎙️ Kajian');
   await page.waitForTimeout(1200);
   await dismissPopup(page);
   await page.waitForTimeout(1000);
@@ -549,13 +690,16 @@ async function closeMoreMenu(page) {
   await smoothScroll(page, 400, 4, 260);
   await page.waitForTimeout(1200);
 
-  // 7. Closing
+  // 7. Closing - end back on the branded hero, not mid-scroll in the footer.
   await page.goto(BASE + '/', { waitUntil: 'load' });
   await page.waitForTimeout(800);
   await dismissPopup(page);
   await page.waitForTimeout(800);
   await smoothScroll(page, 2600, 14, 260);
-  await page.waitForTimeout(2500);
+  await page.waitForTimeout(1200);
+  await scrollToTop();
+  await showCaption(page, '✨ thollabulilmi.site', 2600);
+  await page.waitForTimeout(2800);
 
   await context.close();
   await browser.close();
