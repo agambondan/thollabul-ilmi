@@ -1,13 +1,13 @@
 "use client";
 
-import { useAuth } from "@/context/Auth";
-import { Spinner3 } from "@/components/spinner/Spinner";
 import AdminMutationToast from "@/components/admin/AdminMutationToast";
-import { useLayoutMode } from "@/lib/useLayoutMode";
+import { Spinner3 } from "@/components/spinner/Spinner";
+import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
-import { useTheme } from "@/lib/useTheme";
-import { useModalA11y } from "@/lib/useModalA11y";
 import { ConvertFLagLanguage } from "@/lib/converter";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import { useModalA11y } from "@/lib/useModalA11y";
+import { useTheme } from "@/lib/useTheme";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -17,7 +17,6 @@ import {
     BsBookHalf,
     BsBookmark,
     BsCameraVideo,
-    BsWhatsapp,
     BsChevronLeft,
     BsChevronRight,
     BsClock,
@@ -25,18 +24,16 @@ import {
     BsGrid,
     BsHeart,
     BsJournalText,
-    BsLayoutSidebarReverse,
-    BsLayoutSplit,
     BsList,
     BsListCheck,
     BsMap,
-    BsMoon,
     BsMoonStarsFill,
     BsPeople,
     BsQuestionCircle,
     BsRepeat,
     BsStar,
     BsSunFill,
+    BsWhatsapp,
 } from "react-icons/bs";
 import {
     MdClose,
@@ -675,52 +672,6 @@ const AdminLayout = ({ children }) => {
                                                 : "English"}
                                         </button>
                                     ))}
-                                </div>
-
-                                {/* Layout width toggle */}
-                                <div className='hidden md:block px-4 py-2.5 border-b border-gray-100 dark:border-slate-700'>
-                                    <div className='flex items-center justify-between mb-2'>
-                                        <span className='text-sm text-gray-700 dark:text-gray-300'>
-                                            {t("settings.content_width") ||
-                                                "Lebar Konten"}
-                                        </span>
-                                    </div>
-                                    <div className='flex gap-2'>
-                                        <button
-                                            type='button'
-                                            onClick={() => setLayout(false)}
-                                            title={
-                                                t("settings.compact") ||
-                                                "Compact"
-                                            }
-                                            aria-label={
-                                                t("settings.compact") ||
-                                                "Compact"
-                                            }
-                                            className={`flex-1 flex justify-center items-center py-1.5 px-1 rounded-lg border text-xs transition-all ${
-                                                !isWide
-                                                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold"
-                                                    : "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500"
-                                            }`}
-                                        >
-                                            <BsLayoutSidebarReverse size={16} />
-                                        </button>
-                                        <button
-                                            type='button'
-                                            onClick={() => setLayout(true)}
-                                            title={t("settings.wide") || "Wide"}
-                                            aria-label={
-                                                t("settings.wide") || "Wide"
-                                            }
-                                            className={`flex-1 flex justify-center items-center py-1.5 px-1 rounded-lg border text-xs transition-all ${
-                                                isWide
-                                                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold"
-                                                    : "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500"
-                                            }`}
-                                        >
-                                            <BsLayoutSplit size={16} />
-                                        </button>
-                                    </div>
                                 </div>
 
                                 {/* Account — password changes live on the
