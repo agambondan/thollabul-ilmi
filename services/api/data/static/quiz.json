@@ -278,5 +278,445 @@
         "correct_answer": "50 kata",
         "options": "[\"10 kata\", \"25 kata\", \"50 kata\", \"100 kata\"]",
         "explanation": "Ayat Kursi (QS. Al-Baqarah: 255) adalah ayat paling agung dalam Al-Quran. Dinukil oleh Anas bin Malik ra. bahwa Nabi ﷺ bersabda: 'Barangsiapa membacanya setelah setiap shalat fardhu, tidak ada yang menghalanginya masuk surga kecuali kematian' (HR. An-Nasai)."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Apa makna tauhid uluhiyah?",
+        "correct_answer": "Mengesakan Allah dalam ibadah",
+        "options": "[\"Mengesakan Allah dalam ibadah\", \"Mengesakan Allah dalam penciptaan\", \"Meyakini nama malaikat\", \"Membaca Al-Quran saja\"]",
+        "explanation": "Tauhid uluhiyah berarti semua ibadah hanya untuk Allah. Dalil: QS. Al-Fatihah: 5."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Apa lawan dari tauhid?",
+        "correct_answer": "Syirik",
+        "options": "[\"Bidah kecil\", \"Syirik\", \"Makruh\", \"Mubah\"]",
+        "explanation": "Syirik adalah menyekutukan Allah dalam perkara yang menjadi hak khusus Allah. Dalil: QS. Luqman: 13."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Rukun iman berjumlah berapa?",
+        "correct_answer": "6",
+        "options": "[\"4\", \"5\", \"6\", \"7\"]",
+        "explanation": "Hadits Jibril menjelaskan enam rukun iman. HR. Muslim No. 8."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Nama Allah Al-Ahad paling jelas disebut dalam surat apa?",
+        "correct_answer": "Al-Ikhlas",
+        "options": "[\"Al-Fatihah\", \"Al-Ikhlas\", \"Al-Falaq\", \"An-Nas\"]",
+        "explanation": "QS. Al-Ikhlas: 1: Qul huwallahu ahad."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Makna syahadat La ilaha illallah adalah...",
+        "correct_answer": "Tidak ada sesembahan yang berhak disembah selain Allah",
+        "options": "[\"Tidak ada pencipta selain Allah saja\", \"Tidak ada sesembahan yang berhak disembah selain Allah\", \"Allah ada di mana-mana\", \"Semua agama sama\"]",
+        "explanation": "Makna syahadat adalah menafikan ibadah dari selain Allah dan menetapkannya hanya untuk Allah."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Apa prinsip Ahlus Sunnah dalam nama dan sifat Allah?",
+        "correct_answer": "Menetapkan tanpa tahrif, ta’thil, takyif, dan tamtsil",
+        "options": "[\"Menolak semua sifat\", \"Menetapkan tanpa tahrif, ta’thil, takyif, dan tamtsil\", \"Menyerupakan Allah dengan makhluk\", \"Hanya memakai akal\"]",
+        "explanation": "Aqidah salaf menetapkan apa yang Allah tetapkan bagi diri-Nya tanpa menyimpangkan atau menyerupakan."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Kitab terakhir yang Allah turunkan adalah...",
+        "correct_answer": "Al-Quran",
+        "options": "[\"Taurat\", \"Zabur\", \"Injil\", \"Al-Quran\"]",
+        "explanation": "Al-Quran diturunkan kepada Nabi Muhammad ﷺ sebagai petunjuk hingga akhir zaman."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Malaikat yang bertugas menyampaikan wahyu adalah...",
+        "correct_answer": "Jibril",
+        "options": "[\"Mikail\", \"Israfil\", \"Jibril\", \"Malik\"]",
+        "explanation": "Jibril menyampaikan wahyu kepada para rasul. QS. Al-Baqarah: 97."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Nabi terakhir adalah...",
+        "correct_answer": "Muhammad ﷺ",
+        "options": "[\"Isa عليه السلام\", \"Musa عليه السلام\", \"Muhammad ﷺ\", \"Ibrahim عليه السلام\"]",
+        "explanation": "QS. Al-Ahzab: 40 menyebut Nabi Muhammad ﷺ sebagai penutup para nabi."
+    },
+    {
+        "type": "aqidah",
+        "difficulty": "medium",
+        "question_text": "Apa makna iman kepada qadar?",
+        "correct_answer": "Meyakini semua terjadi dengan ilmu, tulisan, kehendak, dan penciptaan Allah",
+        "options": "[\"Menolak usaha manusia\", \"Meyakini semua terjadi dengan ilmu, tulisan, kehendak, dan penciptaan Allah\", \"Tidak perlu berdoa\", \"Nasib tidak bisa berubah sama sekali\"]",
+        "explanation": "Iman kepada qadar mencakup ilmu Allah, pencatatan, kehendak, dan penciptaan-Nya."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Apa pembuka wudhu yang disunnahkan?",
+        "correct_answer": "Membaca bismillah",
+        "options": "[\"Membaca shalawat khusus\", \"Membaca bismillah\", \"Adzan\", \"Takbir tujuh kali\"]",
+        "explanation": "Basmalah sebelum wudhu datang dalam hadis hasan."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Syarat sah shalat paling pokok sebelum takbir adalah...",
+        "correct_answer": "Suci dari hadats, masuk waktu, menutup aurat, menghadap kiblat",
+        "options": "[\"Makan sahur\", \"Suci dari hadats, masuk waktu, menutup aurat, menghadap kiblat\", \"Memakai parfum\", \"Membaca Yasin\"]",
+        "explanation": "Syarat sah shalat harus dipenuhi sebelum shalat."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Rukun shalat yang menjadi pembuka adalah...",
+        "correct_answer": "Takbiratul ihram",
+        "options": "[\"Ruku\", \"Takbiratul ihram\", \"Salam kedua\", \"Doa qunut\"]",
+        "explanation": "Nabi ﷺ bersabda pembuka shalat adalah takbir. HR. Abu Dawud."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Puasa Ramadan diwajibkan dalam QS apa?",
+        "correct_answer": "Al-Baqarah: 183",
+        "options": "[\"Al-Fatihah: 1\", \"Al-Baqarah: 183\", \"Al-Ikhlas: 1\", \"Yasin: 1\"]",
+        "explanation": "QS. Al-Baqarah: 183 memerintahkan puasa atas orang beriman."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Apa yang dilakukan jika lupa makan saat puasa?",
+        "correct_answer": "Melanjutkan puasa",
+        "options": "[\"Mengqadha hari itu\", \"Melanjutkan puasa\", \"Membayar fidyah\", \"Mandi wajib\"]",
+        "explanation": "Nabi ﷺ memerintahkan menyempurnakan puasa karena Allah yang memberinya makan. HR. Bukhari dan Muslim."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Zakat fitrah dikeluarkan sebelum...",
+        "correct_answer": "Shalat Idul Fitri",
+        "options": "[\"Masuk Ramadan\", \"Shalat Idul Fitri\", \"Idul Adha\", \"Wukuf Arafah\"]",
+        "explanation": "Zakat fitrah ditunaikan sebelum shalat Id agar menjadi zakat yang diterima."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Rukun haji terbesar adalah...",
+        "correct_answer": "Wukuf di Arafah",
+        "options": "[\"Thawaf Wada\", \"Wukuf di Arafah\", \"Mabit Mina\", \"Mencium Hajar Aswad\"]",
+        "explanation": "Nabi ﷺ bersabda: Haji itu Arafah. HR. Tirmidzi, Abu Dawud."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Umrah selesai setelah...",
+        "correct_answer": "Tahallul",
+        "options": "[\"Ihram saja\", \"Tahallul\", \"Mabit Mina\", \"Wukuf\"]",
+        "explanation": "Umrah: ihram, thawaf, sa’i, lalu tahallul."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Shalat Witir minimal berapa rakaat?",
+        "correct_answer": "1 rakaat",
+        "options": "[\"1 rakaat\", \"2 rakaat\", \"4 rakaat\", \"7 rakaat\"]",
+        "explanation": "Witir boleh satu rakaat; Nabi ﷺ memerintahkan menjadikan akhir shalat malam dengan witir."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Apa hukum meninggalkan shalat dengan sengaja?",
+        "correct_answer": "Dosa besar sangat berat",
+        "options": "[\"Mubah\", \"Dosa besar sangat berat\", \"Sunnah\", \"Makruh ringan\"]",
+        "explanation": "Shalat adalah tiang agama; meninggalkannya termasuk dosa besar."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Peristiwa hijrah menjadi awal kalender apa?",
+        "correct_answer": "Hijriah",
+        "options": "[\"Masehi\", \"Hijriah\", \"Romawi\", \"Persia\"]",
+        "explanation": "Umar bin Khattab menetapkan hijrah sebagai awal kalender Islam."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Perang besar pertama kaum Muslimin adalah...",
+        "correct_answer": "Badar",
+        "options": "[\"Uhud\", \"Badar\", \"Hunain\", \"Tabuk\"]",
+        "explanation": "Perang Badar terjadi 17 Ramadan 2 H."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Perang yang menyebabkan banyak pemanah turun dari bukit adalah...",
+        "correct_answer": "Uhud",
+        "options": "[\"Khandaq\", \"Uhud\", \"Mu’tah\", \"Yarmuk\"]",
+        "explanation": "Dalam Uhud sebagian pemanah meninggalkan pos sehingga keadaan berbalik."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Strategi parit dalam perang Khandaq diusulkan oleh...",
+        "correct_answer": "Salman Al-Farisi",
+        "options": "[\"Abu Hurairah\", \"Salman Al-Farisi\", \"Bilal\", \"Khalid bin Walid\"]",
+        "explanation": "Salman Al-Farisi mengusulkan strategi parit yang dikenal di Persia."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Fathu Makkah terjadi pada tahun...",
+        "correct_answer": "8 H",
+        "options": "[\"2 H\", \"5 H\", \"8 H\", \"10 H\"]",
+        "explanation": "Fathu Makkah terjadi Ramadan 8 H."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Khalifah pertama adalah...",
+        "correct_answer": "Abu Bakar Ash-Shiddiq",
+        "options": "[\"Umar\", \"Abu Bakar Ash-Shiddiq\", \"Utsman\", \"Ali\"]",
+        "explanation": "Abu Bakar menjadi khalifah setelah wafat Nabi ﷺ."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Pengumpulan mushaf standar terjadi pada masa khalifah...",
+        "correct_answer": "Utsman bin Affan",
+        "options": "[\"Abu Bakar\", \"Umar\", \"Utsman bin Affan\", \"Ali\"]",
+        "explanation": "Mushaf Utsmani distandardisasi pada masa Utsman."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Umar bin Abdul Aziz dikenal sebagai...",
+        "correct_answer": "Khalifah adil dari Bani Umayyah",
+        "options": "[\"Penyair jahiliyah\", \"Khalifah adil dari Bani Umayyah\", \"Raja Romawi\", \"Ahli nahwu pertama\"]",
+        "explanation": "Umar bin Abdul Aziz terkenal dengan keadilan dan pembaruan pada masa Umayyah."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Kitab Shahih Bukhari disusun oleh...",
+        "correct_answer": "Muhammad bin Ismail Al-Bukhari",
+        "options": "[\"Muslim bin Hajjaj\", \"Muhammad bin Ismail Al-Bukhari\", \"Imam Malik\", \"Abu Dawud\"]",
+        "explanation": "Imam Bukhari menyusun Al-Jami’ Ash-Shahih."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Imam Muslim berasal dari wilayah...",
+        "correct_answer": "Naisabur",
+        "options": "[\"Makkah\", \"Naisabur\", \"Madinah\", \"Kufah\"]",
+        "explanation": "Imam Muslim bin Al-Hajjaj An-Naisaburi berasal dari Naisabur."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Hukum tajwid nun mati/tanwin bertemu huruf ba adalah...",
+        "correct_answer": "Iqlab",
+        "options": "[\"Idzhar\", \"Iqlab\", \"Mad\", \"Qalqalah\"]",
+        "explanation": "Iqlab mengubah bunyi nun menjadi mim samar dengan ghunnah."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Huruf idzhar halqi berjumlah...",
+        "correct_answer": "6",
+        "options": "[\"4\", \"5\", \"6\", \"7\"]",
+        "explanation": "Huruf idzhar: ء ه ع ح غ خ."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Mad thabi’i dibaca sepanjang...",
+        "correct_answer": "2 harakat",
+        "options": "[\"1 harakat\", \"2 harakat\", \"4 harakat\", \"6 harakat\"]",
+        "explanation": "Mad asli atau thabi’i dibaca dua harakat."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Surah Al-Ikhlas menegaskan tema utama...",
+        "correct_answer": "Tauhid",
+        "options": "[\"Warisan\", \"Puasa\", \"Jual beli\", \"Haji\"]",
+        "explanation": "Al-Ikhlas berisi pemurnian tauhid kepada Allah."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Ayat Kursi berada pada surah dan ayat...",
+        "correct_answer": "Al-Baqarah: 255",
+        "options": "[\"Al-Baqarah: 255\", \"Ali Imran: 18\", \"Yasin: 58\", \"Al-Mulk: 1\"]",
+        "explanation": "Ayat Kursi adalah QS. Al-Baqarah ayat 255."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Surah Al-Mulk terdiri dari berapa ayat?",
+        "correct_answer": "30 ayat",
+        "options": "[\"20 ayat\", \"30 ayat\", \"40 ayat\", \"50 ayat\"]",
+        "explanation": "Surah Al-Mulk berjumlah 30 ayat."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Tiga surat perlindungan yang dibaca pagi petang adalah...",
+        "correct_answer": "Al-Ikhlas, Al-Falaq, An-Nas",
+        "options": "[\"Yasin, Al-Mulk, Al-Waqiah\", \"Al-Ikhlas, Al-Falaq, An-Nas\", \"Al-Kafirun, Al-Kautsar, Al-Ashr\", \"Al-Baqarah, Ali Imran, An-Nisa\"]",
+        "explanation": "Tiga Qul dibaca sebagai dzikir perlindungan."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Surah Al-Hujurat banyak membahas tentang...",
+        "correct_answer": "Adab sosial dan persaudaraan",
+        "options": "[\"Hukum waris\", \"Adab sosial dan persaudaraan\", \"Kisah Yusuf\", \"Manasik haji\"]",
+        "explanation": "Al-Hujurat memuat adab terhadap Nabi, tabayyun, larangan ghibah, dan persaudaraan."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Bacaan dengung dalam tajwid disebut...",
+        "correct_answer": "Ghunnah",
+        "options": "[\"Qalqalah\", \"Ghunnah\", \"Saktah\", \"Imalah\"]",
+        "explanation": "Ghunnah adalah dengung pada nun/mim tertentu."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Kata tajwid secara bahasa bermakna...",
+        "correct_answer": "Membaguskan",
+        "options": "[\"Memanjangkan\", \"Membaguskan\", \"Menghapus\", \"Meringkas\"]",
+        "explanation": "Tajwid berarti membaguskan bacaan sesuai hak huruf."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Hadits “agama adalah nasihat” diriwayatkan oleh...",
+        "correct_answer": "Muslim",
+        "options": "[\"Bukhari saja\", \"Muslim\", \"Ibnu Majah saja\", \"Daraquthni saja\"]",
+        "explanation": "Hadits ad-din an-nashihah diriwayatkan Muslim dari Tamim Ad-Dari."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Hadits Arbain Nawawi mayoritas derajatnya...",
+        "correct_answer": "Shahih atau hasan",
+        "options": "[\"Maudhu\", \"Shahih atau hasan\", \"Dhaif jiddan\", \"Munkar\"]",
+        "explanation": "Imam Nawawi memilih hadits-hadits pokok yang shahih/hasan."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Kitab Riyadhus Shalihin disusun oleh...",
+        "correct_answer": "Imam An-Nawawi",
+        "options": "[\"Imam Bukhari\", \"Imam An-Nawawi\", \"Imam Ahmad\", \"Ibnu Majah\"]",
+        "explanation": "Riyadhus Shalihin adalah karya Imam Nawawi."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Hadits “jangan marah” diriwayatkan dalam Shahih...",
+        "correct_answer": "Bukhari",
+        "options": "[\"Bukhari\", \"Tirmidzi saja\", \"Nasai saja\", \"Darimi saja\"]",
+        "explanation": "Nasihat la taghdhab diriwayatkan Bukhari."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Hadits paling awal di Shahih Bukhari tentang...",
+        "correct_answer": "Niat",
+        "options": "[\"Wudhu\", \"Niat\", \"Puasa\", \"Haji\"]",
+        "explanation": "Shahih Bukhari dibuka dengan hadits innamal a’malu binniyyat."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Rawi sahabat terbanyak meriwayatkan hadits adalah...",
+        "correct_answer": "Abu Hurairah",
+        "options": "[\"Abu Bakar\", \"Abu Hurairah\", \"Bilal\", \"Zaid bin Tsabit\"]",
+        "explanation": "Abu Hurairah dikenal sebagai sahabat paling banyak meriwayatkan hadits."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Muttafaqun alaih berarti diriwayatkan oleh...",
+        "correct_answer": "Bukhari dan Muslim",
+        "options": "[\"Abu Dawud dan Tirmidzi\", \"Bukhari dan Muslim\", \"Nasai dan Ibnu Majah\", \"Ahmad dan Malik\"]",
+        "explanation": "Muttafaqun alaih adalah hadits yang disepakati Bukhari dan Muslim."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Hadits hasan dapat dijadikan...",
+        "correct_answer": "Hujjah",
+        "options": "[\"Bukti palsu\", \"Hujjah\", \"Cerita bebas\", \"Tidak boleh diamalkan mutlak\"]",
+        "explanation": "Hadits hasan diterima sebagai dalil menurut ulama hadits."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Sanad dalam ilmu hadits adalah...",
+        "correct_answer": "Rantai perawi yang menyampaikan matan",
+        "options": "[\"Isi teks hadits\", \"Judul bab\", \"Nama kitab\", \"Rantai perawi yang menyampaikan matan\"]",
+        "explanation": "Sanad adalah jalur periwayatan sampai kepada sumber hadits."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Matan dalam ilmu hadits adalah...",
+        "correct_answer": "Teks isi hadits",
+        "options": "[\"Teks isi hadits\", \"Rantai perawi\", \"Nama imam\", \"Nomor halaman\"]",
+        "explanation": "Matan adalah teks perkataan/perbuatan/persetujuan yang diriwayatkan."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Larangan ghibah disebutkan dalam surat...",
+        "correct_answer": "Al-Hujurat: 12",
+        "options": "[\"Al-Fatihah: 2\", \"Al-Hujurat: 12\", \"Yasin: 1\", \"Al-Mulk: 30\"]",
+        "explanation": "QS. Al-Hujurat: 12 melarang ghibah dan menyerupakannya dengan memakan bangkai saudara."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Tabayyun diperintahkan dalam QS...",
+        "correct_answer": "Al-Hujurat: 6",
+        "options": "[\"Al-Hujurat: 6\", \"Al-Ikhlas: 1\", \"Al-Falaq: 5\", \"Al-Kautsar: 2\"]",
+        "explanation": "QS. Al-Hujurat: 6 memerintahkan klarifikasi berita."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Adab makan paling dasar adalah...",
+        "correct_answer": "Membaca bismillah dan makan dengan tangan kanan",
+        "options": "[\"Makan sambil berdiri terus\", \"Membaca bismillah dan makan dengan tangan kanan\", \"Mencela makanan\", \"Berlebihan\"]",
+        "explanation": "Nabi ﷺ mengajarkan: sebut nama Allah, makan dengan tangan kanan, makan yang dekat. HR. Bukhari dan Muslim."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Akhlak terbaik Nabi disebutkan sebagai...",
+        "correct_answer": "Al-Quran",
+        "options": "[\"Syair\", \"Al-Quran\", \"Perdagangan\", \"Peperangan\"]",
+        "explanation": "Aisyah menyebut akhlak Nabi ﷺ adalah Al-Quran. HR. Muslim."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Muslim yang baik adalah yang kaum Muslimin selamat dari...",
+        "correct_answer": "Lisan dan tangannya",
+        "options": "[\"Hartanya saja\", \"Lisan dan tangannya\", \"Rumahnya saja\", \"Pakainya\"]",
+        "explanation": "Hadits: Muslim adalah yang kaum Muslimin selamat dari lisan dan tangannya. HR. Bukhari dan Muslim."
     }
 ]
