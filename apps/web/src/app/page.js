@@ -47,7 +47,6 @@ import {
     MdTranslate,
 } from "react-icons/md";
 import DashboardCTA from "./home/DashboardCTA";
-import HomeClock from "./home/HomeClock";
 import PersonalLinksAuthFix from "./home/PersonalLinksAuthFix";
 import TajweedSection from "./home/TajweedSection";
 
@@ -99,10 +98,9 @@ const COLOR_MAP = {
  * Server-rendered homepage: this used to be a single "use client" component
  * (HomePageClient.js) that shipped the whole feature grid — 40+ icons, every
  * label/description string, and the color-group data — as client JS just to
- * hydrate static links. Only three things on this page actually need the
- * browser: the live clock (HomeClock), the two auth-aware CTA buttons
- * (DashboardCTA), and the Tajweed table (TajweedSection, unchanged). The rest
- * below is plain server output.
+ * hydrate static links. Only two things on this page actually need the
+ * browser: the auth-aware CTA buttons (DashboardCTA) and the Tajweed table
+ * (TajweedSection, unchanged). The rest below is plain server output.
  *
  * Auth state lives only in localStorage (see src/context/Auth.js), so the
  * server can't know if a visitor is signed in. "Personal" feature links are
@@ -522,8 +520,14 @@ export default async function Home() {
                         {t("home.hero_desc")}
                     </p>
 
-                    <div className='relative mx-auto mb-10 md:mb-4 max-w-6xl min-h-[92px]'>
-                        <HomeClock />
+                    <div className='flex flex-col sm:flex-row gap-4 justify-center items-center mb-10 md:mb-4 max-w-6xl'>
+                        <DashboardCTA className='bg-gold-500 hover:bg-gold-400 text-emerald-950 dark:text-emerald-300 px-8 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5' />
+                        <Link
+                            href='/quran'
+                            className='border border-emerald-400 text-emerald-100 hover:bg-emerald-800 px-8 py-3 rounded-full font-bold text-sm transition-all'
+                        >
+                            {t("home.cta_read")}
+                        </Link>
                     </div>
 
                     {/* Stats bar */}
