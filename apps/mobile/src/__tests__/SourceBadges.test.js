@@ -49,6 +49,30 @@ describe("parseSourceMobile", () => {
             },
         ]);
     });
+
+    it("volume/page format (Ahmad 1/53) is NOT linked as hadith", () => {
+        const refs = parseSourceMobile("HR. Ahmad 1/53");
+        expect(refs).toHaveLength(1);
+        expect(refs[0].tab).toBeNull();
+        expect(refs[0].params).toBeNull();
+        expect(refs[0].text).toBe("HR. Ahmad 1/53");
+    });
+
+    it("volume/page format with 'No.' (Ahmad No. 2/368) is NOT linked as hadith", () => {
+        const refs = parseSourceMobile("HR. Ahmad No. 2/368");
+        expect(refs).toHaveLength(1);
+        expect(refs[0].tab).toBeNull();
+        expect(refs[0].params).toBeNull();
+        expect(refs[0].text).toBe("HR. Ahmad No. 2/368");
+    });
+
+    it("mixed: volume/page and valid No. are handled separately", () => {
+        const refs = parseSourceMobile("HR. Ahmad 1/53; HR. Bukhari No. 1");
+        expect(refs).toHaveLength(2);
+        expect(refs[0].tab).toBeNull();
+        expect(refs[1].tab).toBe("hadith");
+        expect(refs[1].params.hadithNumber).toBe(1);
+    });
 });
 
 describe("SourceBadges component", () => {

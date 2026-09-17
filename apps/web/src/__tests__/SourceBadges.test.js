@@ -107,6 +107,43 @@ describe("parseSource", () => {
         expect(result[0].url).toBe("/hadith/bukhari/1");
         expect(result[0].text).toBe("HR. Bukhari No. 1");
     });
+
+    test("volume/page format (Ahmad 1/53) is NOT linked as hadith number", () => {
+        const result = parseSource("HR. Ahmad 1/53");
+        expect(result).toHaveLength(1);
+        expect(result[0].url).toBeNull();
+        expect(result[0].text).toBe("HR. Ahmad 1/53");
+    });
+
+    test("volume/page format (Ahmad 5/322) is NOT linked", () => {
+        const result = parseSource("HR. Ahmad 5/322");
+        expect(result).toHaveLength(1);
+        expect(result[0].url).toBeNull();
+        expect(result[0].text).toBe("HR. Ahmad 5/322");
+    });
+
+    test("volume/page format with 'No.' (Ahmad No. 2/368) is NOT linked", () => {
+        const result = parseSource("HR. Ahmad No. 2/368");
+        expect(result).toHaveLength(1);
+        expect(result[0].url).toBeNull();
+        expect(result[0].text).toBe("HR. Ahmad No. 2/368");
+    });
+
+    test("mixed: volume/page and valid No. are handled separately", () => {
+        const result = parseSource("HR. Ahmad 1/53; HR. Bukhari No. 1");
+        expect(result).toHaveLength(2);
+        expect(result[0].url).toBeNull();
+        expect(result[0].text).toBe("HR. Ahmad 1/53");
+        expect(result[1].url).toBe("/hadith/bukhari/1");
+        expect(result[1].text).toBe("HR. Bukhari No. 1");
+    });
+
+    test("volume/page with other separators", () => {
+        const result = parseSource("HR. Ahmad 1/53, HR. Muslim No. 10");
+        expect(result).toHaveLength(2);
+        expect(result[0].url).toBeNull();
+        expect(result[1].url).toBe("/hadith/muslim/10");
+    });
 });
 
 describe("SourceBadges", () => {

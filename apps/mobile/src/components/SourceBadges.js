@@ -32,6 +32,8 @@ const HADITH_BOOKS =
     "Bukhari|Muslim|Abu Dawud|Tirmidzi|Ibnu Majah|Nasai|Ahmad|Malik|Darimi|at-Tirmidzi|an-Nasa'i";
 
 const QS_PATTERN = /QS\.\s*([^:]+):\s*([\d-]+)/i;
+const VOLUME_PAGE_PATTERN =
+    /^(?:HR\.?|H\.R\.?)?\s*[A-Za-z\s'-]+\s+(?:No\.\s*)?\d+\/\d+(?:-\d+)?(?:\b|\s|\()/i;
 
 const tokenizeParts = (source) =>
     source
@@ -61,6 +63,12 @@ export function parseSourceMobile(source) {
     const refs = [];
 
     for (const part of tokenizeParts(source)) {
+        const vpMatch = part.match(VOLUME_PAGE_PATTERN);
+        if (vpMatch) {
+            refs.push({ text: part, tab: null, params: null });
+            continue;
+        }
+
         const hrMatch = part.match(
             new RegExp(
                 `^(?:HR\\.?|H\\.R\\.?)?\\s*(${HADITH_BOOKS})\\s+(?:No\\.\\s*)?(\\d+)`,

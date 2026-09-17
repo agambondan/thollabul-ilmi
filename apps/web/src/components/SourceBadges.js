@@ -35,6 +35,9 @@ const QS_PATTERN = /QS\.\s*([^:]+):\s*([\d-]+)/i;
 const BOOK_PATTERN =
     /(tafsir|asbabun nuzul|lubabun nuqul|shahih asbab|mustadrak|silsilah|syamilah|al-wahidi|ibnu katsir|ath-thabari|ibnu abi hatim|al-baghawi|al-hakim|al-baihaqi|dorar|shahih|hasan)/i;
 
+const VOLUME_PAGE_PATTERN =
+    /^(?:HR\.?|H\.R\.?)?\s*[A-Za-z\s'-]+\s+(?:No\.\s*)?\d+\/\d+(?:-\d+)?(?:\b|\s|\()/i;
+
 const sourceLabel = (text) => (BOOK_PATTERN.test(text) ? `Kitab: ${text}` : text);
 
 const tokenizeParts = (source) =>
@@ -58,6 +61,12 @@ export function parseSource(source) {
     const refs = [];
 
     for (const part of tokenizeParts(source)) {
+        const vpMatch = part.match(VOLUME_PAGE_PATTERN);
+        if (vpMatch) {
+            refs.push({ text: part, url: null });
+            continue;
+        }
+
         const hrMatch = part.match(
             new RegExp(
                 `^(?:HR\\.?|H\\.R\\.?)?\\s*(${HADITH_BOOKS})\\s+(?:No\\.\\s*)?(\\d+)`,
