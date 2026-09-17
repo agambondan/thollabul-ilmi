@@ -112,7 +112,7 @@ const SettingButton = () => {
         <div
             ref={panelRef}
             data-testid='global-setting-control'
-            className={`fixed right-2 z-30 transition-opacity duration-200 ${bottomClass} opacity-90 hover:opacity-100`}
+            className={`fixed right-2 z-50 transition-opacity duration-200 ${bottomClass} opacity-90 hover:opacity-100`}
         >
             <button
                 type='button'
