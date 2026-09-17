@@ -387,126 +387,130 @@ export default function GenericAdminCRUD({
                 </p>
             ) : error ? (
                 <p className='text-center text-sm text-red-500 py-6'>{error}</p>
-            ) : visible.length === 0 ? (
-                <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
-                    {search ||
-                    Object.values(filters).some((v) => v?.length > 0)
-                        ? "Tidak ada data yang cocok dengan pencarian/filter."
-                        : "Belum ada data."}
-                </p>
             ) : (
                 <>
-                    {/* Mobile: stacked cards, so every field is reachable without
-                        horizontal scrolling on narrow screens. */}
-                    <div className='space-y-3 md:hidden'>
-                        {visible.map((item) => (
-                            <div
-                                key={item[idField]}
-                                className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
-                            >
-                                <div className='flex items-center justify-end gap-1 mb-2 -mt-1 -mr-1'>
-                                    <button
-                                        type='button'
-                                        onClick={() => openEdit(item)}
-                                        className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
-                                    >
-                                        <BsPencil /> Edit
-                                    </button>
-                                    <button
-                                        type='button'
-                                        onClick={() => setDeleting(item)}
-                                        className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold'
-                                    >
-                                        <BsTrash /> Hapus
-                                    </button>
-                                </div>
-                                <dl className='space-y-1.5'>
-                                    {fields.map((f) => (
-                                        <div
-                                            key={f.key}
-                                            className='flex items-baseline justify-between gap-3 text-sm'
-                                        >
-                                            <dt className='shrink-0 text-gray-500 dark:text-gray-400'>
-                                                {f.label}
-                                            </dt>
-                                            <dd className='text-right text-gray-900 dark:text-gray-100'>
-                                                {renderFieldValue(f, item)}
-                                            </dd>
-                                        </div>
-                                    ))}
-                                </dl>
-                            </div>
-                        ))}
-                    </div>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        pageSize={pageSize}
+                        onChange={setPage}
+                        onPageSizeChange={(size) => {
+                            setPageSize(size);
+                            setPage(1);
+                        }}
+                        total={filtered.length}
+                    />
 
-                    {/* Desktop: full table. */}
-                    <div className='hidden md:block'>
-                        <PanelTable
-                            head={
-                                <>
-                                    {fields.map((f) => (
-                                        <Th
-                                            key={f.key}
-                                            sortKey={f.key}
-                                            activeSort={sort}
-                                            onSort={(key) =>
-                                                setSort((s) =>
-                                                    toggleSort(s, key),
-                                                )
-                                            }
-                                        >
-                                            {f.label}
-                                        </Th>
-                                    ))}
-                                    <Th className='text-right'>Aksi</Th>
-                                </>
-                            }
-                        >
-                            {visible.map((item) => (
-                                <Tr key={item[idField]}>
-                                    {fields.map((f) => (
-                                        <Td key={f.key}>
-                                            {renderFieldValue(f, item)}
-                                        </Td>
-                                    ))}
-                                    <Td className='text-right whitespace-nowrap align-middle'>
-                                        <div className='inline-flex items-center gap-2'>
+                    {visible.length === 0 ? (
+                        <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-6'>
+                            {search ||
+                            Object.values(filters).some((v) => v?.length > 0)
+                                ? "Tidak ada data yang cocok dengan pencarian/filter."
+                                : "Belum ada data."}
+                        </p>
+                    ) : (
+                        <>
+                            {/* Mobile: stacked cards, so every field is reachable without
+                                horizontal scrolling on narrow screens. */}
+                            <div className='space-y-3 md:hidden'>
+                                {visible.map((item) => (
+                                    <div
+                                        key={item[idField]}
+                                        className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4'
+                                    >
+                                        <div className='flex items-center justify-end gap-1 mb-2 -mt-1 -mr-1'>
                                             <button
                                                 type='button'
                                                 onClick={() => openEdit(item)}
-                                                className='inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
+                                                className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
                                             >
                                                 <BsPencil /> Edit
                                             </button>
                                             <button
                                                 type='button'
-                                                onClick={() =>
-                                                    setDeleting(item)
-                                                }
-                                                className='inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold'
+                                                onClick={() => setDeleting(item)}
+                                                className='inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold'
                                             >
                                                 <BsTrash /> Hapus
                                             </button>
                                         </div>
-                                    </Td>
-                                </Tr>
-                            ))}
-                        </PanelTable>
-                    </div>
+                                        <dl className='space-y-1.5'>
+                                            {fields.map((f) => (
+                                                <div
+                                                    key={f.key}
+                                                    className='flex items-baseline justify-between gap-3 text-sm'
+                                                >
+                                                    <dt className='shrink-0 text-gray-500 dark:text-gray-400'>
+                                                        {f.label}
+                                                    </dt>
+                                                    <dd className='text-right text-gray-900 dark:text-gray-100'>
+                                                        {renderFieldValue(f, item)}
+                                                    </dd>
+                                                </div>
+                                            ))}
+                                        </dl>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop: full table. */}
+                            <div className='hidden md:block'>
+                                <PanelTable
+                                    head={
+                                        <>
+                                            {fields.map((f) => (
+                                                <Th
+                                                    key={f.key}
+                                                    sortKey={f.key}
+                                                    activeSort={sort}
+                                                    onSort={(key) =>
+                                                        setSort((s) =>
+                                                            toggleSort(s, key),
+                                                        )
+                                                    }
+                                                >
+                                                    {f.label}
+                                                </Th>
+                                            ))}
+                                            <Th className='text-right'>Aksi</Th>
+                                        </>
+                                    }
+                                >
+                                    {visible.map((item) => (
+                                        <Tr key={item[idField]}>
+                                            {fields.map((f) => (
+                                                <Td key={f.key}>
+                                                    {renderFieldValue(f, item)}
+                                                </Td>
+                                            ))}
+                                            <Td className='text-right whitespace-nowrap align-middle'>
+                                                <div className='inline-flex items-center gap-2'>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() => openEdit(item)}
+                                                        className='inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 text-xs font-semibold'
+                                                    >
+                                                        <BsPencil /> Edit
+                                                    </button>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() =>
+                                                            setDeleting(item)
+                                                        }
+                                                        className='inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 text-xs font-semibold'
+                                                    >
+                                                        <BsTrash /> Hapus
+                                                    </button>
+                                                </div>
+                                            </Td>
+                                        </Tr>
+                                    ))}
+                                </PanelTable>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
-
-            <PanelPagination
-                page={currentPage}
-                pageCount={pageCount}
-                pageSize={pageSize}
-                onChange={setPage}
-                onPageSizeChange={(size) => {
-                    setPageSize(size);
-                    setPage(1);
-                }}
-                total={filtered.length}
-            />
 
             {creating && (
                 <ModalShell
