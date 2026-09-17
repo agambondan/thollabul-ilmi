@@ -146,6 +146,11 @@ export function getNavGroups(basePath = "") {
                               icon: <MdAccessTime />,
                           },
                           {
+                              labelKey: "link.masjid",
+                              href: "/masjid",
+                              icon: <MdMosque />,
+                          },
+                          {
                               labelKey: "link.kiblat",
                               href: "/kiblat",
                               icon: <MdExplore />,
@@ -357,7 +362,18 @@ export function getNavGroups(basePath = "") {
                               icon: <BsCalendar3 />,
                           },
                       ]
-                    : []),
+                    : [
+                          {
+                              labelKey: "link.radio_islamic",
+                              href: `${prefix}/radio-islamic`,
+                              icon: <BsGlobe />,
+                          },
+                          {
+                              labelKey: "link.browser_extension",
+                              href: `${prefix}/extension`,
+                              icon: <BsGlobe />,
+                          },
+                      ]),
             ],
         },
     ];

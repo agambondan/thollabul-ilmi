@@ -281,6 +281,7 @@ const en = {
     "link.imsakiyah": "Imsakiyah",
     "link.masjid": "Nearby Mosques",
     "link.radio_islamic": "Islamic Radio",
+    "link.browser_extension": "Browser Extension",
     "link.tasbih": "Digital Tasbih",
     "link.faraidh": "Inheritance Calculator",
     "link.asmaul_flashcard": "Asmaul Husna Flashcard",

@@ -12,11 +12,17 @@ const Footer = () => {
             links: [
                 { label: t("link.quran"), href: "/quran" },
                 { label: t("link.hadith"), href: "/hadith" },
+                { label: t("link.perawi"), href: "/perawi" },
+                { label: t("link.khatam"), href: "/khatam" },
                 { label: t("link.prayer_guide"), href: "/panduan-sholat" },
                 { label: t("link.prayer_schedule"), href: "/jadwal-sholat" },
+                { label: t("link.tasbih"), href: "/tasbih" },
+                { label: t("link.wird"), href: "/wirid" },
+                { label: t("link.wirid_custom"), href: "/wirid-custom" },
                 { label: t("link.masjid"), href: "/masjid" },
-                { label: t("link.qibla"), href: "/kiblat" },
+                { label: t("link.kiblat"), href: "/kiblat" },
                 { label: t("link.zakat"), href: "/zakat" },
+                { label: t("link.imsakiyah"), href: "/imsakiyah" },
             ],
         },
         {
@@ -26,11 +32,13 @@ const Footer = () => {
                 { label: t("link.review"), href: "/dashboard/muroja-ah" },
                 { label: t("link.recitation"), href: "/dashboard/tilawah" },
                 { label: t("link.daily_deeds"), href: "/dashboard/amalan" },
+                { label: t("link.muhasabah"), href: "/dashboard/muhasabah" },
+                { label: t("link.goals"), href: "/dashboard/goals" },
+                { label: t("link.sholat_tracker"), href: "/dashboard/sholat-tracker" },
                 { label: t("link.statistics"), href: "/dashboard/stats" },
-                {
-                    label: t("link.leaderboard"),
-                    href: "/dashboard/leaderboard",
-                },
+                { label: t("link.notes"), href: "/dashboard/notes" },
+                { label: t("link.bookmarks"), href: "/dashboard/bookmarks" },
+                { label: t("link.notifications"), href: "/dashboard/notifications" },
             ],
         },
         {
@@ -39,11 +47,23 @@ const Footer = () => {
                 { label: t("link.doa"), href: "/doa" },
                 { label: t("link.dhikr"), href: "/dzikir" },
                 { label: t("link.asmaul_husna"), href: "/asmaul-husna" },
-                { label: t("link.brief_fiqh"), href: "/fiqh" },
+                { label: t("link.asmaul_flashcard"), href: "/asmaul-husna/flashcard" },
+                { label: t("link.asmaul_wirid"), href: "/asmaul-husna/wirid" },
+                { label: t("link.tafsir"), href: "/tafsir" },
                 { label: t("link.asbabun_nuzul"), href: "/asbabun-nuzul" },
-                { label: t("link.sirah"), href: "/siroh" },
+                { label: t("link.belajar"), href: "/belajar" },
+                { label: t("link.komunitas"), href: "/komunitas" },
+                { label: t("link.forum"), href: "/forum" },
+                { label: t("link.kajian"), href: "/kajian" },
+                { label: t("link.sirah_short"), href: "/siroh" },
+                { label: t("link.brief_fiqh"), href: "/fiqh" },
+                { label: t("link.islamic_history"), href: "/sejarah" },
+                { label: t("link.tokoh"), href: "/tokoh" },
+                { label: t("link.peta"), href: "/peta" },
+                { label: t("link.manasik"), href: "/manasik" },
                 { label: t("link.library"), href: "/library" },
                 { label: t("link.blog"), href: "/blog" },
+                { label: t("link.feed"), href: "/feed" },
             ],
         },
         {
@@ -51,15 +71,15 @@ const Footer = () => {
             links: [
                 { label: t("link.arabic_dict"), href: "/kamus" },
                 { label: t("link.hijri_calendar"), href: "/hijri" },
-                { label: t("link.quiz"), href: "/quiz" },
-                { label: t("link.radio_islamic"), href: "/radio-islamic" },
-                { label: t("link.notes"), href: "/dashboard/notes" },
-                { label: t("link.bookmarks"), href: "/dashboard/bookmarks" },
+                { label: t("link.faraidh"), href: "/faraidh" },
                 { label: t("link.search"), href: "/search" },
-                { label: "Browser Extension", href: "/extension" },
+                { label: t("link.quiz"), href: "/quiz" },
+                { label: t("link.leaderboard"), href: "/leaderboard" },
+                { label: t("link.contact"), href: "/contact" },
+                { label: t("link.radio_islamic"), href: "/radio-islamic" },
                 {
-                    label: t("link.notifications"),
-                    href: "/dashboard/notifications",
+                    label: t("link.browser_extension") ?? "Browser Extension",
+                    href: "/extension",
                 },
             ],
         },
@@ -89,7 +109,7 @@ const Footer = () => {
                                 direction: "rtl",
                             }}
                         >
-                            طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ
+                            طَلَبُ الْعِلْمِ فَرِضَةٌ عَلَى كُلِّ مُسْلِمٍ
                         </p>
                         <p className='text-xs text-emerald-500 italic'>
                             &quot;{t("footer.quote")}&quot;

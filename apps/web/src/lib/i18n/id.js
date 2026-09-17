@@ -275,6 +275,7 @@ const id = {
     "link.imsakiyah": "Imsakiyah",
     "link.masjid": "Masjid Terdekat",
     "link.radio_islamic": "Radio Islam",
+    "link.browser_extension": "Ekstensi Browser",
     "link.tasbih": "Tasbih Digital",
     "link.faraidh": "Kalkulator Waris",
     "link.asmaul_flashcard": "Flashcard Asmaul Husna",
