@@ -47,6 +47,8 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedPerawiGuruFromFile(db)
 	seedTokohTarikhFromFile(db)
 	SeedLocationsFromFile(db)
+	seedHadithArbainRiyadhusFromFile(db)
+	seedTafsirRingkasFromFile(db)
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -821,11 +823,6 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 // ── Islamic Event ─────────────────────────────────────────────────────────────
 
 func seedIslamicEventsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.IslamicEvent{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Name        string `json:"name"`
 		HijriMonth  int    `json:"hijri_month"`
@@ -839,12 +836,29 @@ func seedIslamicEventsFromFile(db *gorm.DB) {
 	}
 	log.Printf("[seeder] seedIslamicEventsFromFile: %d entri", len(rows))
 	for _, r := range rows {
-		tr := model.Translation{
-			Idn:            stringPtr(r.Name),
-			DescriptionIdn: stringPtr(r.Description),
+		var existing model.IslamicEvent
+		hasExisting := db.Where("hijri_month = ? AND hijri_day = ? AND name = ?", r.HijriMonth, r.HijriDay, r.Name).
+			First(&existing).Error == nil
+
+		trUpdates := map[string]interface{}{
+			"idn":             stringPtr(r.Name),
+			"description_idn": stringPtr(r.Description),
 		}
-		if err := db.Create(&tr).Error; err != nil {
-			log.Printf("[seeder] islamic_event translation '%s': %v", r.Name, err)
+		var trID *int
+		if hasExisting && existing.TranslationID != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *existing.TranslationID).Updates(trUpdates).Error; err != nil {
+				log.Printf("[seeder] islamic_event translation update '%s': %v", r.Name, err)
+			}
+			trID = existing.TranslationID
+		} else {
+			tr := model.Translation{
+				Idn:            stringPtr(r.Name),
+				DescriptionIdn: stringPtr(r.Description),
+			}
+			if err := db.Create(&tr).Error; err != nil {
+				log.Printf("[seeder] islamic_event translation '%s': %v", r.Name, err)
+			}
+			trID = tr.ID
 		}
 		item := model.IslamicEvent{
 			Name:          r.Name,
@@ -852,23 +866,28 @@ func seedIslamicEventsFromFile(db *gorm.DB) {
 			HijriDay:      r.HijriDay,
 			Category:      model.IslamicEventCategory(r.Category),
 			Description:   r.Description,
-			TranslationID: tr.ID,
+			TranslationID: trID,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "hijri_month"}, {Name: "hijri_day"}, {Name: "name"}},
 			DoUpdates: clause.AssignmentColumns([]string{"description", "category", "translation_id"}),
 		}).Create(&item)
 	}
+
+	if len(rows) > 0 {
+		currentNames := make([]string, len(rows))
+		for i, r := range rows {
+			currentNames[i] = r.Name
+		}
+		if err := db.Where("name NOT IN ?", currentNames).Delete(&model.IslamicEvent{}).Error; err != nil {
+			log.Printf("[seeder] islamic_event cleanup baris usang: %v", err)
+		}
+	}
 }
 
 // ── History Event ─────────────────────────────────────────────────────────────
 
 func seedHistoryEventsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.HistoryEvent{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		YearHijri     int    `json:"year_hijri"`
 		YearMiladi    int    `json:"year_miladi"`
@@ -884,12 +903,28 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 	}
 	log.Printf("[seeder] seedHistoryEventsFromFile: %d entri", len(rows))
 	for _, r := range rows {
-		tr := model.Translation{
-			Idn:            stringPtr(r.Title),
-			DescriptionIdn: stringPtr(r.Description),
+		var existing model.HistoryEvent
+		hasExisting := db.Where("slug = ?", r.Slug).First(&existing).Error == nil
+
+		trUpdates := map[string]interface{}{
+			"idn":             stringPtr(r.Title),
+			"description_idn": stringPtr(r.Description),
 		}
-		if err := db.Create(&tr).Error; err != nil {
-			log.Printf("[seeder] history_event translation '%s': %v", r.Title, err)
+		var trID *int
+		if hasExisting && existing.TranslationID != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *existing.TranslationID).Updates(trUpdates).Error; err != nil {
+				log.Printf("[seeder] history_event translation update '%s': %v", r.Title, err)
+			}
+			trID = existing.TranslationID
+		} else {
+			tr := model.Translation{
+				Idn:            stringPtr(r.Title),
+				DescriptionIdn: stringPtr(r.Description),
+			}
+			if err := db.Create(&tr).Error; err != nil {
+				log.Printf("[seeder] history_event translation '%s': %v", r.Title, err)
+			}
+			trID = tr.ID
 		}
 		item := model.HistoryEvent{
 			YearHijri:     r.YearHijri,
@@ -899,7 +934,7 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 			Description:   r.Description,
 			Category:      model.HistoryCategory(r.Category),
 			IsSignificant: r.IsSignificant,
-			TranslationID: tr.ID,
+			TranslationID: trID,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
@@ -1325,11 +1360,6 @@ func seedPerawiGuruFromFile(db *gorm.DB) {
 // ── Tokoh Tarikh ──────────────────────────────────────────────────────────────
 
 func seedTokohTarikhFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.TokohTarikh{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Nama       string `json:"nama"`
 		Era        string `json:"era"`
@@ -1348,12 +1378,46 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 
 	log.Printf("[seeder] seedTokohTarikhFromFile: %d entri", len(rows))
 	for _, r := range rows {
-		tr := model.Translation{
-			Idn:            stringPtr(r.Biografi),
-			DescriptionIdn: stringPtr(r.Kontribusi),
+		r.Nama = strings.TrimSpace(r.Nama)
+		var existing model.TokohTarikh
+		hasExisting := db.Where("TRIM(nama) = ?", r.Nama).First(&existing).Error == nil
+
+		trUpdates := map[string]interface{}{
+			"idn":             stringPtr(r.Biografi),
+			"description_idn": stringPtr(r.Kontribusi),
 		}
-		if err := db.Create(&tr).Error; err != nil {
-			log.Printf("[seeder] tokoh_tarikh translation '%s': %v", r.Nama, err)
+		var trID *int
+		if hasExisting && existing.TranslationID != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *existing.TranslationID).Updates(trUpdates).Error; err != nil {
+				log.Printf("[seeder] tokoh_tarikh translation update '%s': %v", r.Nama, err)
+			}
+			trID = existing.TranslationID
+		} else {
+			tr := model.Translation{
+				Idn:            stringPtr(r.Biografi),
+				DescriptionIdn: stringPtr(r.Kontribusi),
+			}
+			if err := db.Create(&tr).Error; err != nil {
+				log.Printf("[seeder] tokoh_tarikh translation '%s': %v", r.Nama, err)
+				continue
+			}
+			trID = tr.ID
+		}
+		if hasExisting {
+			updates := map[string]interface{}{
+				"nama":           r.Nama,
+				"era":            r.Era,
+				"tahun_lahir":    r.TahunLahir,
+				"tahun_wafat":    r.TahunWafat,
+				"biografi":       r.Biografi,
+				"kontribusi":     r.Kontribusi,
+				"kategori":       r.Kategori,
+				"image_url":      r.ImageURL,
+				"translation_id": trID,
+			}
+			if err := db.Model(&existing).Updates(updates).Error; err != nil {
+				log.Printf("[seeder] tokoh_tarikh update '%s': %v", r.Nama, err)
+			}
 			continue
 		}
 		item := model.TokohTarikh{
@@ -1365,11 +1429,11 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 			Kontribusi:    r.Kontribusi,
 			Kategori:      r.Kategori,
 			ImageURL:      r.ImageURL,
-			TranslationID: tr.ID,
+			TranslationID: trID,
 		}
 		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "nama"}},
-			DoUpdates: clause.AssignmentColumns([]string{"era", "kategori", "image_url", "translation_id"}),
+			DoUpdates: clause.AssignmentColumns([]string{"era", "tahun_lahir", "tahun_wafat", "biografi", "kontribusi", "kategori", "image_url", "translation_id"}),
 		}).Create(&item).Error; err != nil {
 			log.Printf("[seeder] tokoh_tarikh insert '%s': %v", r.Nama, err)
 		}

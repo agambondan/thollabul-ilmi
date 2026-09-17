@@ -100,11 +100,11 @@
         "image_url": ""
     },
     {
-        "nama": " Ibnu Sina",
+        "nama": "Ibnu Sina",
         "era": "keemasan",
         "tahun_lahir": "980",
         "tahun_wafat": "1037",
-        "biografi": " Ibnu Sina atau Avicenna adalah ilmuwan muslim multi-disiplin yang dikenal sebagai Bapak Kedokteran Modern. Karyanya Al-Qanun fi Ath-Thibb menjadi rujukan kedokteran dunia selama berabad-abad.",
+        "biografi": "Ibnu Sina atau Avicenna adalah ilmuwan muslim multi-disiplin yang dikenal sebagai Bapak Kedokteran Modern. Karyanya Al-Qanun fi Ath-Thibb menjadi rujukan kedokteran dunia selama berabad-abad.",
         "kontribusi": "Menulis Al-Qanun fi Ath-Thibb (The Canon of Medicine), Asy-Syifa (ensiklopedia filsafat), mengembangkan teori kedokteran dan farmasi.",
         "kategori": "ilmuwan",
         "image_url": ""
@@ -140,13 +140,23 @@
         "image_url": ""
     },
     {
-        "nama": " Ibnu Khaldun",
+        "nama": "Ibnu Khaldun",
         "era": "keemasan",
         "tahun_lahir": "1332",
         "tahun_wafat": "1406",
-        "biografi": " Ibnu Khaldun adalah sejarawan, sosiolog, dan filsuf muslim yang dianggap sebagai bapak sosiologi dan historiografi modern.",
+        "biografi": "Ibnu Khaldun adalah sejarawan, sosiolog, dan filsuf muslim yang dianggap sebagai bapak sosiologi dan historiografi modern.",
         "kontribusi": "Menulis Muqaddimah sebagai pengantar ilmu sejarah dan sosiologi, mengembangkan teori siklus peradaban dan ashabiyah.",
         "kategori": "ilmuwan",
+        "image_url": ""
+    },
+    {
+        "nama": "Umar bin Abdul Aziz",
+        "era": "tabiin",
+        "tahun_lahir": "682 M / 63 H",
+        "tahun_wafat": "720 M / 101 H",
+        "biografi": "Khalifah Bani Umayyah yang terkenal dengan keadilan, kezuhudan, dan perhatian besar terhadap ilmu. Ia sering disebut mujaddid abad pertama oleh sebagian ulama.",
+        "kontribusi": "Mengembalikan harta yang zalim, memperbaiki administrasi negara, memperkuat dakwah, dan mendorong kodifikasi hadits.",
+        "kategori": "khalifah",
         "image_url": ""
     }
 ]

@@ -139,7 +139,7 @@
         "year_miladi": 632,
         "title": "Haji Wada' dan Khutbah Terakhir",
         "slug": "haji-wada",
-        "description": "Pada tahun 10 H (632 M), Nabi ﷺ melaksanakan haji terakhir bersama lebih dari 100.000 sahabat. Di Padang Arafah, beliau menyampaikan Khutbah Wada' yang berisi prinsip-prinsip fundamental Islam: kesetaraan manusia, kesucian darah dan harta, penghapusan riba, hak-hak perempuan, dan amanah Al-Quran \u0026 Sunnah. Turun QS. Al-Maidah: 3 menyatakan kesempurnaan agama Islam.\n\nSumber: HR. Bukhari No. 1741, Muslim No. 1218",
+        "description": "Pada tahun 10 H (632 M), Nabi ﷺ melaksanakan haji terakhir bersama lebih dari 100.000 sahabat. Di Padang Arafah, beliau menyampaikan Khutbah Wada' yang berisi prinsip-prinsip fundamental Islam: kesetaraan manusia, kesucian darah dan harta, penghapusan riba, hak-hak perempuan, dan amanah Al-Quran & Sunnah. Turun QS. Al-Maidah: 3 menyatakan kesempurnaan agama Islam.\n\nSumber: HR. Bukhari No. 1741, Muslim No. 1218",
         "category": "nabi",
         "is_significant": true
     },
@@ -285,6 +285,24 @@
         "slug": "ottoman-suleiman",
         "description": "Masa pemerintahan Sultan Suleiman Al-Qanuni (926-974 H / 1520-1566 M) merupakan puncak kejayaan Kesultanan Utsmaniyah. Wilayahnya mencakup tiga benua: Asia, Afrika, dan Eropa. Istanbul menjadi pusat peradaban Islam. Masjid Sulaiman (Süleymaniye Mosque) dibangun sebagai simbol kejayaan. Beliau juga dikenal sebagai legislator ulung.\n\nSumber: The Ottoman Empire and the World Around It, Suraiya Faroqhi",
         "category": "dinasti",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 99,
+        "year_miladi": 717,
+        "title": "Khalifah Umar bin Abdul Aziz (99-101 H)",
+        "slug": "umar-bin-abdul-aziz",
+        "description": "Umar bin Abdul Aziz menjadi khalifah Bani Umayyah dan dikenal karena keadilan, zuhud, pengembalian harta zalim, serta penguatan ilmu dan kodifikasi hadits. Masa pemerintahannya singkat tetapi sangat berpengaruh. Sumber: Siyar A’lam An-Nubala; Tarikh Ath-Thabari.",
+        "category": "khulafa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 261,
+        "year_miladi": 875,
+        "title": "Imam Muslim dan Shahih Muslim (204-261 H)",
+        "slug": "imam-muslim-shahih-muslim",
+        "description": "Muslim bin Al-Hajjaj An-Naisaburi menyusun Shahih Muslim, salah satu dua kitab hadits paling shahih setelah Al-Quran. Metodenya kuat dalam penyusunan sanad dan pengelompokan jalur riwayat. Sumber: Siyar A’lam An-Nubala; Muqaddimah Shahih Muslim.",
+        "category": "ulama",
         "is_significant": true
     }
 ]
