@@ -68,7 +68,7 @@ const tableTitles = () =>
 // aria-label — disambiguate by picking the one that isn't inside the table.
 const openTopicFilter = () => {
     const matches = screen.getAllByRole("button", {
-        name: /admin\.field\.category/,
+        name: /admin\.field\.topic/,
     });
     fireEvent.click(matches.find((el) => !el.closest("table")));
 };

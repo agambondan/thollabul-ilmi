@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import AdminPanduanSholatPage from "@/app/admin/panduan-sholat/page";
 import AdminAchievementsPage from "@/app/admin/achievements/page";
 import AdminAmalanPage from "@/app/admin/amalan/page";
@@ -63,9 +63,11 @@ describe("Admin CRUD pages", () => {
         render(<AdminPanduanSholatPage />);
         expect(screen.getByText("Panduan Sholat")).toBeInTheDocument();
         await waitFor(() => {
-            expect(screen.getByText("Niat Sholat")).toBeInTheDocument();
+            expect(screen.getByRole("table")).toBeInTheDocument();
         });
-        expect(screen.getByText("#1")).toBeInTheDocument();
+        const table = screen.getByRole("table");
+        expect(within(table).getByText("Niat Sholat")).toBeInTheDocument();
+        expect(screen.getAllByText("#1")[0]).toBeInTheDocument();
     });
 
     test("AdminAchievementsPage renders badges list from API", async () => {
@@ -89,10 +91,12 @@ describe("Admin CRUD pages", () => {
         render(<AdminAchievementsPage />);
         expect(screen.getByText("Achievements")).toBeInTheDocument();
         await waitFor(() => {
-            expect(screen.getByText("streak_7")).toBeInTheDocument();
+            expect(screen.getByRole("table")).toBeInTheDocument();
         });
-        expect(screen.getByText("Pejuang Subuh")).toBeInTheDocument();
-        expect(screen.getByText("7")).toBeInTheDocument();
+        const table = screen.getByRole("table");
+        expect(within(table).getByText("streak_7")).toBeInTheDocument();
+        expect(within(table).getByText("Pejuang Subuh")).toBeInTheDocument();
+        expect(within(table).getByText("7")).toBeInTheDocument();
     });
 
     test("AdminAmalanPage renders master items list from API", async () => {
@@ -115,8 +119,10 @@ describe("Admin CRUD pages", () => {
         render(<AdminAmalanPage />);
         expect(screen.getByText("Master Amalan")).toBeInTheDocument();
         await waitFor(() => {
-            expect(screen.getByText("Sholat Dhuha")).toBeInTheDocument();
+            expect(screen.getByRole("table")).toBeInTheDocument();
         });
-        expect(screen.getByText("Aktif")).toBeInTheDocument();
+        const table = screen.getByRole("table");
+        expect(within(table).getByText("Sholat Dhuha")).toBeInTheDocument();
+        expect(within(table).getByText("Aktif")).toBeInTheDocument();
     });
 });
