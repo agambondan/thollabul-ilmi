@@ -1,11 +1,11 @@
 "use client";
 
 import Section from "@/components/Section";
+import ContentWidth from "@/components/layout/ContentWidth";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { libraryApi, libraryProgressApi } from "@/lib/api";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -89,7 +89,6 @@ export const LibraryContent = ({
     basePath = "/library",
     showProgressSummary = false,
 }) => {
-    const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
     const { t } = useLocale();
     const [books, setBooks] = useState([]);
@@ -225,11 +224,7 @@ export const LibraryContent = ({
     }, [books, category, level, progressByBookId, progressStatus, search]);
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto max-w-5xl px-4"
-            }
-        >
+        <ContentWidth compact='max-w-5xl' className='px-4'>
             <div className='mb-8'>
                 <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400'>
                     Belajar
@@ -471,7 +466,7 @@ export const LibraryContent = ({
                     </button>
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

@@ -7,7 +7,7 @@ const ContentWidth = ({
     children,
     compact = "max-w-3xl",
     className = "",
-    wideClassName = "w-full",
+    wideClassName = "w-full max-w-none",
     compactClassName,
 }) => {
     const { isWide } = useLayoutMode();

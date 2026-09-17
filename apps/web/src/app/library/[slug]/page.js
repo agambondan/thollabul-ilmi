@@ -2,11 +2,11 @@
 
 import NoteButton from "@/components/NoteButton";
 import Section from "@/components/Section";
+import ContentWidth from "@/components/layout/ContentWidth";
 import { SkeletonList } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { bookmarkApi, libraryApi, libraryProgressApi } from "@/lib/api";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { use, useCallback, useEffect, useRef, useState } from "react";
 import { BsBookmark, BsBookmarkFill, BsBoxArrowUpRight } from "react-icons/bs";
@@ -37,7 +37,6 @@ const metaItems = (book, pagesSuffix) =>
     ].filter(Boolean);
 
 export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
-    const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
     const { t } = useLocale();
     const pagesSuffix = t("library.pages_suffix") || "halaman";
@@ -216,12 +215,9 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
         book.source_url;
 
     return (
-        <div
-            className={
-                isWide
-                    ? "w-full px-4"
-                    : `container mx-auto px-4 ${showPreview ? "max-w-7xl" : "max-w-4xl"}`
-            }
+        <ContentWidth
+            compact={showPreview ? "max-w-7xl" : "max-w-4xl"}
+            className='px-4'
         >
             <Link
                 className='mb-6 inline-flex items-center gap-1 text-sm text-emerald-700 dark:text-emerald-400 hover:underline'
@@ -555,7 +551,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                 )}
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

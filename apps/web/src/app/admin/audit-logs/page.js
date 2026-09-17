@@ -90,7 +90,7 @@ export default function AdminAuditLogsPage() {
     });
 
     return (
-        <div className='p-4 md:p-8 max-w-7xl mx-auto'>
+        <div className='p-4 md:p-8 w-full'>
             <div className='mb-6'>
                 <div className='flex items-center gap-2'>
                     <BsClockHistory className='text-emerald-600 text-xl' />

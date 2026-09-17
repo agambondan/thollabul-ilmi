@@ -1,11 +1,11 @@
 "use client";
 
 import Section from "@/components/Section";
+import ContentWidth from "@/components/layout/ContentWidth";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { manasikApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { MdOutlineDirectionsWalk } from "react-icons/md";
@@ -13,7 +13,6 @@ import SourceBadges from "@/components/SourceBadges";
 
 export function ManasikContent() {
     const { t, lang } = useLocale();
-    const { isWide } = useLayoutMode();
     const [activeTab, setActiveTab] = useState("umrah");
     const [openIdx, setOpenIdx] = useState(null);
     const [umrahSteps, setUmrahSteps] = useState([]);
@@ -57,11 +56,7 @@ export function ManasikContent() {
     };
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-2xl"
-            }
-        >
+        <ContentWidth compact='max-w-2xl' className='px-4 py-6'>
             {/* Header */}
             <div className='flex items-center gap-3 mb-6'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
@@ -258,7 +253,7 @@ export function ManasikContent() {
                     {t("manasik.general_note")}
                 </p>
             </div>
-        </div>
+        </ContentWidth>
     );
 }
 

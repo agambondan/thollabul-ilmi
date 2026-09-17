@@ -1,9 +1,9 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { historyApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useMemo, useState } from "react";
 
 const CATEGORIES = [
@@ -39,7 +39,6 @@ const formatHijri = (ev) => {
 
 export default function SejarahClient({ initialEvents = [] }) {
     const { t, lang } = useLocale();
-    const { isWide } = useLayoutMode();
     const [activeCategory, setActiveCategory] = useState("semua");
     const [search, setSearch] = useState("");
     const [openId, setOpenId] = useState(null);
@@ -107,11 +106,7 @@ export default function SejarahClient({ initialEvents = [] }) {
     }, [events, search, lang]);
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
-            }
-        >
+        <ContentWidth compact='max-w-3xl' className='px-4'>
             <div className='flex items-center gap-3 mb-6'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                     <svg
@@ -333,6 +328,6 @@ export default function SejarahClient({ initialEvents = [] }) {
                     )}
                 </>
             )}
-        </div>
+        </ContentWidth>
     );
 }

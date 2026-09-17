@@ -1,7 +1,6 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import SourceBadges from "@/components/SourceBadges";
 import { useEffect, useState } from "react";
@@ -16,7 +15,6 @@ const normalizeItem = (item) => ({
 
 const WiridClient = ({ initialItems = [] }) => {
     const { t, lang } = useLocale();
-    const { isWide } = useLayoutMode();
     const [activeOccasion, setActiveOccasion] = useState(
         initialItems.length > 0 ? null : "jumat",
     );
@@ -78,11 +76,7 @@ const WiridClient = ({ initialItems = [] }) => {
         ) ?? WIRID_OCCASIONS[0];
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-2xl"
-            }
-        >
+        <div className='w-full'>
             {/* Display controls */}
             <div className='flex gap-2 mb-4'>
                 <button

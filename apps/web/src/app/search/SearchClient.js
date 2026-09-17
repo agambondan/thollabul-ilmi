@@ -1,10 +1,10 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import GradeBadge from "@/components/GradeBadge";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { usePathname, useRouter } from "next/navigation";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { searchApi, semanticSearchApi } from "@/lib/api";
 import { getSurahName } from "@/lib/surahList";
 import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
@@ -298,7 +298,6 @@ export default function SearchClient({
     routeScope = "public",
 }) {
     const { t, lang } = useLocale();
-    const { isWide } = useLayoutMode();
     const routeMap = getRouteMap(routeScope);
     const TYPES = [
         { value: "all", label: t("search.type.all") },
@@ -459,11 +458,7 @@ export default function SearchClient({
     const isAll = type === "all";
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
-            }
-        >
+        <ContentWidth compact='max-w-3xl' className='px-4'>
             <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-6'>
                 {t("search.title")}
             </h1>
@@ -897,6 +892,6 @@ export default function SearchClient({
             )}
 
             {isLoadingMore && <SkeletonInline rows={2} />}
-        </div>
+        </ContentWidth>
     );
 }

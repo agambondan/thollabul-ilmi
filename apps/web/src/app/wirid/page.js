@@ -1,4 +1,5 @@
 import Section from "@/components/Section";
+import ContentWidth from "@/components/layout/ContentWidth";
 import WiridClient from "./WiridClient";
 
 const API_URL =
@@ -39,15 +40,15 @@ export default async function WiridPage() {
     return (
         <main className='min-h-screen flex flex-col'>
             <Section>
-                <div className='container mx-auto px-4 max-w-2xl'>
+                <ContentWidth compact='max-w-2xl' className='px-4 py-6'>
                     <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
-                        Wirid &amp; Dzikir
+                        Wirid & Dzikir
                     </h1>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 mb-6'>
                         Bacaan wirid harian untuk berbagai kesempatan
                     </p>
                     <WiridClient initialItems={items} />
-                </div>
+                </ContentWidth>
             </Section>
         </main>
     );

@@ -1,11 +1,11 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import PuasaSunnahPanel from "@/components/PuasaSunnahPanel";
 import RamadanCountdown from "@/components/RamadanCountdown";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useState } from "react";
 import { BsCalendar3, BsSearch } from "react-icons/bs";
 import InlineError from "@/components/InlineError";
@@ -59,7 +59,6 @@ export default function HijriClient({
     initialEvents = [],
 }) {
     const { lang, t } = useLocale();
-    const { isWide } = useLayoutMode();
     const months = monthNames(lang);
     const [todayHijri] = useState(initialToday);
 
@@ -111,11 +110,7 @@ export default function HijriClient({
     });
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-2xl"
-            }
-        >
+        <ContentWidth compact='max-w-2xl' className='px-4'>
             <div className='text-center mb-6'>
                 <BsCalendar3 className='text-4xl text-emerald-600 dark:text-emerald-400 mx-auto mb-2' />
                 <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
@@ -316,6 +311,6 @@ export default function HijriClient({
                     )}
                 </div>
             </div>
-        </div>
+        </ContentWidth>
     );
 }

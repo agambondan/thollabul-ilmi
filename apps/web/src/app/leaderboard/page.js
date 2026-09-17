@@ -1,11 +1,11 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { leaderboardApi } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { BsFire, BsSearch, BsTrophyFill, BsShieldCheck } from "react-icons/bs";
@@ -26,7 +26,6 @@ const MEDAL = ["🥇", "🥈", "🥉"];
 
 export const LeaderboardContent = () => {
     const { t } = useLocale();
-    const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
     const [tab, setTab] = useState("streak");
     const [streakData, setStreakData] = useState([]);
@@ -101,11 +100,7 @@ export const LeaderboardContent = () => {
     });
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-2xl"
-            }
-        >
+        <ContentWidth compact='max-w-2xl' className='px-4'>
             <div className='text-center mb-8'>
                 <BsTrophyFill className='text-4xl text-yellow-500 mx-auto mb-2' />
                 <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
@@ -288,7 +283,7 @@ export const LeaderboardContent = () => {
                     ))}
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 
