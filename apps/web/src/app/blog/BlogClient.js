@@ -101,7 +101,7 @@ export default function BlogClient({
                 })
                 .catch(() => setCategories([]));
         }
-    }, [initialCategories]);
+    }, [initialCategories.length]);
 
     useEffect(() => {
         if (page === 0) return;

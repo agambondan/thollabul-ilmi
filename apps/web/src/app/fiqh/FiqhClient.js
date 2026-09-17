@@ -94,7 +94,8 @@ export default function FiqhClient({
         return () => {
             cancelled = true;
         };
-    }, [categories, lang, initialGroupedItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [categories, lang, Object.keys(initialGroupedItems).length]);
 
     useEffect(() => {
         if (Object.keys(initialGroupedItems).length > 0 && lang === "ID")
@@ -119,7 +120,8 @@ export default function FiqhClient({
         return () => {
             cancelled = true;
         };
-    }, [lang, initialGroupedItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lang, Object.keys(initialGroupedItems).length]);
 
     const loadCategoryItems = async (slug) => {
         if (itemsByCategory[slug]) return;

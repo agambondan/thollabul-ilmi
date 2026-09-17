@@ -55,7 +55,8 @@ const WiridClient = ({ initialItems = [] }) => {
         return () => {
             isActive = false;
         };
-    }, [activeOccasion, initialItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeOccasion, initialItems.length]);
 
     const toggle = (idx) => {
         setOpen((prev) => {

@@ -98,7 +98,8 @@ export function PanduanSholatContent({ initialSteps = [] }) {
             })
             .catch((e) => console.error(e))
             .finally(() => setIsLoading(false));
-    }, [initialSteps]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <ContentWidth compact='max-w-2xl' className='flex-1 px-4 pt-6 pb-8'>

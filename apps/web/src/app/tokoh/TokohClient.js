@@ -45,7 +45,8 @@ export default function TokohClient({ initialItems = [], className = "" }) {
             .then((d) => setItems(d?.items ?? []))
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, [search, era, lang, initialItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [search, era, lang]);
 
     return (
         <ContentWidth compact='max-w-4xl' className={`px-4 py-6 ${className}`}>
