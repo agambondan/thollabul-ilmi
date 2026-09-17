@@ -584,7 +584,7 @@ const DashboardLayout = ({ children }) => {
                     forms, not prose, so the reading-width toggle used by the
                     public pages would only waste horizontal space here. */}
                 <div className='w-full'>{children}</div>
-                <div className='px-4 sm:px-6 pb-20 md:pb-6'>
+                <div className='px-4 sm:px-6'>
                     <BannerAd slot='banner' />
                 </div>
 
