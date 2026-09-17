@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 const CATEGORIES = [
     "thaharah",
@@ -469,26 +470,15 @@ const AdminFiqhPage = () => {
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
-                        <div>
-                            <label
-                                htmlFor='page-content'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("admin.field.content")}
-                            </label>
-                            <textarea
-                                id='page-content'
-                                value={form.content}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        content: e.target.value,
-                                    })
-                                }
-                                rows={5}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
+                        <MarkdownEditor
+                            value={form.content}
+                            onChange={(val) =>
+                                setForm({ ...form, content: val })
+                            }
+                            label={t("admin.field.content")}
+                            placeholder={t("admin.fiqh.content_placeholder")}
+                            minRows={8}
+                        />
                         <div>
                             <label
                                 htmlFor='page-dalil'

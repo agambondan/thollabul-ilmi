@@ -23,6 +23,7 @@ import {
     BsX,
 } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 // Quick-pick values for the free-text `topic` field (channel focus tags) —
 // not the same as the real `category` enum below.
@@ -296,8 +297,7 @@ const AdminStudiesPage = () => {
                 getLocalizedField(b, "title", lang) ?? "",
             ),
         topic: (a, b) => (a.topic ?? "").localeCompare(b.topic ?? ""),
-        category: (a, b) =>
-            (a.category ?? "").localeCompare(b.category ?? ""),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
     });
 
     const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
@@ -819,26 +819,17 @@ const AdminStudiesPage = () => {
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
-                        <div>
-                            <label
-                                htmlFor='page-description'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("admin.field.description")}
-                            </label>
-                            <textarea
-                                id='page-description'
-                                value={form.description}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        description: e.target.value,
-                                    })
-                                }
-                                rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
+                        <MarkdownEditor
+                            value={form.description}
+                            onChange={(val) =>
+                                setForm({ ...form, description: val })
+                            }
+                            label={t("admin.field.description")}
+                            placeholder={t(
+                                "admin.kajian.description_placeholder",
+                            )}
+                            minRows={4}
+                        />
                     </div>
                     <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                         <button

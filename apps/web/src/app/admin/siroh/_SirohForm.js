@@ -5,6 +5,7 @@ import { useLocale } from "@/context/Locale";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 const slugify = (str) =>
     str
@@ -184,28 +185,13 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 </p>
             </div>
 
-            <div>
-                <label
-                    htmlFor='sirohform-field-3'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                >
-                    {t("admin.field.content")}{" "}
-                    <span className='text-red-500'>*</span>
-                </label>
-                <textarea
-                    id='sirohform-field-3'
-                    required
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={18}
-                    className={`${inputCls} font-mono leading-relaxed`}
-                    placeholder={t("admin.sirah.content_placeholder")}
-                />
-                <p className='text-xs text-gray-400 mt-1'>
-                    {content.length.toLocaleString()}{" "}
-                    {t("admin.form.characters")}
-                </p>
-            </div>
+            <MarkdownEditor
+                value={content}
+                onChange={setContent}
+                label={t("admin.field.content")}
+                placeholder={t("admin.sirah.content_placeholder")}
+                minRows={12}
+            />
 
             <div>
                 <label

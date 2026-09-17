@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { BsPlus, BsTrash, BsPencil } from "react-icons/bs";
 import toast from "react-hot-toast";
 import ModalShell from "@/components/ModalShell";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 const API_URL =
     typeof window !== "undefined" ? process.env.NEXT_PUBLIC_API_URL || "" : "";
@@ -446,21 +447,16 @@ export default function AdminLessonsPage() {
                                             className='w-full px-3 py-1.5 mb-2 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
                                             required
                                         />
-                                        <textarea
+                                        <MarkdownEditor
+                                            value={s.body}
+                                            onChange={(val) =>
+                                                updateStep(idx, "body", val)
+                                            }
+                                            label='Isi Langkah'
                                             placeholder={t(
                                                 "admin.lessons.step_desc_placeholder",
                                             )}
-                                            value={s.body}
-                                            onChange={(e) =>
-                                                updateStep(
-                                                    idx,
-                                                    "body",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className='w-full px-3 py-1.5 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
-                                            rows={2}
-                                            required
+                                            minRows={4}
                                         />
                                     </div>
                                 ))}

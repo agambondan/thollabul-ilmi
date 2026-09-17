@@ -270,7 +270,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                             ? "lg:grid-cols-[1.1fr_0.9fr]"
                             : activeTab === "preview"
                               ? "grid-cols-1"
-                              : "grid-cols-1 max-w-3xl"
+                              : "grid-cols-1"
                     }`}
                 >
                     {/* LEFT COLUMN: EDITOR FORM */}
