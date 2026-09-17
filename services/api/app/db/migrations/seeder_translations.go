@@ -96,6 +96,132 @@ func doaEnglishByKey() map[string]LocalizedText {
 			Title:   "Prayer for Protection from Useless Knowledge",
 			Meaning: "O Allah, I seek refuge in You from knowledge that does not benefit and from a heart that is not humble.",
 		},
+		"wudhu|Doa Setelah Wudhu": {
+			Title:   "Prayer After Ablution",
+			Meaning: "I bear witness that there is no god worthy of worship except Allah, alone with no partner, and I bear witness that Muhammad is His servant and Messenger.",
+		},
+		"wudhu|Doa Memperbaiki Wudhu": {
+			Title:   "Prayer to Perfect Ablution",
+			Meaning: "O Allah, make me among those who repent often and make me among those who purify themselves.",
+		},
+		"pakaian|Doa Memakai Pakaian Baru": {
+			Title:   "Prayer When Wearing New Clothes",
+			Meaning: "All praise is for Allah who has clothed me with this and provided it for me without any effort or power on my part.",
+		},
+		"pakaian|Doa Melepas Pakaian": {
+			Title:   "Prayer When Removing Clothes",
+			Meaning: "In the name of Allah.",
+		},
+		"rumah|Doa Keluar Rumah": {
+			Title:   "Prayer When Leaving the House",
+			Meaning: "In the name of Allah, I put my trust in Allah, there is no power and no strength except by Allah.",
+		},
+		"rumah|Doa Masuk Rumah": {
+			Title:   "Prayer When Entering the House",
+			Meaning: "O Allah, I ask You for goodness in entering and goodness in leaving. In the name of Allah we enter, in the name of Allah we leave, and upon Allah our Lord we put our trust.",
+		},
+		"sakit|Doa untuk Orang Sakit": {
+			Title:   "Prayer for the Sick",
+			Meaning: "Remove the affliction, O Lord of mankind, and heal, You are the Healer. There is no healing but Your healing, a healing that leaves no sickness behind.",
+		},
+		"sakit|Doa Memohon Kesembuhan (Ruqyah)": {
+			Title:   "Prayer for Healing (Ruqyah)",
+			Meaning: "I seek refuge in the might and power of Allah from the evil of what I feel and fear.",
+		},
+		"keluarga|Doa Memohon Keturunan Saleh": {
+			Title:   "Prayer for Righteous Offspring",
+			Meaning: "My Lord, grant me from among the righteous.",
+		},
+		"keluarga|Doa untuk Keluarga": {
+			Title:   "Prayer for the Family",
+			Meaning: "Our Lord, grant us from our spouses and our offspring comfort for our eyes, and make us a leader for the righteous.",
+		},
+		"hujan|Doa Memohon Hujan (Istisqa)": {
+			Title:   "Prayer for Rain (Istisqa)",
+			Meaning: "O Allah, give us rain that is relieving, beneficial, timely, abundant, not harmful, and not delayed.",
+		},
+		"hujan|Doa Saat Mendengar Guntur": {
+			Title:   "Prayer When Hearing Thunder",
+			Meaning: "Glory be to Him whom the thunder glorifies with His praise, and the angels fear Him.",
+		},
+		"puasa|Niat Puasa Ramadan": {
+			Title:   "Intention for Ramadan Fasting",
+			Meaning: "I intend to fast tomorrow to fulfill the obligation of Ramadan this year for the sake of Allah the Almighty.",
+		},
+		"puasa|Doa Berbuka Puasa": {
+			Title:   "Prayer When Breaking the Fast",
+			Meaning: "O Allah, for You I have fasted, in You I believe, in You I trust, and with Your provision I break my fast.",
+		},
+		"puasa|Doa Menyambut Ramadan": {
+			Title:   "Prayer Welcoming Ramadan",
+			Meaning: "O Allah, bless us in Rajab and Sha'ban, and let us reach Ramadan.",
+		},
+		"jenazah|Doa Sholat Jenazah (Takbir 1)": {
+			Title:   "Funeral Prayer (First Takbir)",
+			Meaning: "O Allah, forgive him, have mercy on him, give him health, pardon him, honor his dwelling, widen his entrance, wash him with water, snow, and hail, and purify him from sins as a white garment is purified from dirt.",
+		},
+		"jenazah|Doa Sholat Jenazah (Takbir 2)": {
+			Title:   "Funeral Prayer (Second Takbir)",
+			Meaning: "O Allah, forgive our living and our dead, those present and those absent, our young and our old, our males and our females. O Allah, whoever You keep alive among us, keep him alive upon Islam, and whoever You cause to die among us, cause him to die upon faith.",
+		},
+		"dzikir_pagi|Ayat Kursi (Pagi)": {
+			Title:    "Ayat Kursi (Morning)",
+			Meaning:  "Allah, there is no god worthy of worship except Him, the Ever-Living, the Sustainer of all existence...",
+			Fadhilah: "Whoever recites it after every prescribed prayer, nothing prevents him from entering Paradise except death.",
+		},
+		"dzikir_pagi|Tasbih Pagi": {
+			Title:    "Morning Tasbih",
+			Meaning:  "Glory be to Allah, and praise is His.",
+			Fadhilah: "His sins are forgiven even if they are like the foam of the sea.",
+		},
+		"dzikir_pagi|Dzikir Pagi (Sayyidul Istighfar)": {
+			Title:    "Morning Dhikr (Sayyidul Istighfar)",
+			Meaning:  "O Allah, You are my Lord, there is no god worthy of worship except You. You created me and I am Your servant.",
+			Fadhilah: "If recited in the morning with conviction and the person dies, he enters Paradise.",
+		},
+		"dzikir_petang|Tasbih Petang": {
+			Title:   "Evening Tasbih",
+			Meaning: "Glory be to Allah, and praise is His.",
+		},
+		"dzikir_petang|Doa Perlindungan Petang": {
+			Title:    "Evening Protection Prayer",
+			Meaning:  "I seek refuge in the perfect words of Allah from the evil of what He has created.",
+			Fadhilah: "No poison, venomous creature, or thief shall harm him.",
+		},
+		"dzikir_setelah_sholat|Tasbih Tahmid Takbir": {
+			Title:   "Tasbih, Tahmid, Takbir",
+			Meaning: "Glory be to Allah — All praise is for Allah — Allah is the Greatest.",
+		},
+		"dzikir_setelah_sholat|Istighfar Setelah Sholat": {
+			Title:   "Istighfar After Prayer",
+			Meaning: "I seek forgiveness from Allah.",
+		},
+		"dzikir_tidur|Tasbih Sebelum Tidur": {
+			Title:    "Tasbih Before Sleeping",
+			Meaning:  "Glory be to Allah — All praise is for Allah — Allah is the Greatest.",
+			Fadhilah: "Better than having a servant.",
+		},
+		"dzikir_tidur|Al-Ikhlas, Al-Falaq, An-Nas sebelum tidur": {
+			Title:    "Al-Ikhlas, Al-Falaq, An-Nas Before Sleeping",
+			Meaning:  "Surahs Al-Ikhlas, Al-Falaq, and An-Nas.",
+			Fadhilah: "Sufficient against everything.",
+		},
+		"istighfar|Sayyidul Istighfar": {
+			Title:   "Master Prayer of Forgiveness (Sayyidul Istighfar)",
+			Meaning: "O Allah, You are my Lord, there is no god worthy of worship except You. You created me and I am Your servant, and I am upon Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favor upon me, and I acknowledge my sin, so forgive me, for indeed no one forgives sins except You.",
+		},
+		"istighfar|Istighfar 100x": {
+			Title:   "Istighfar 100 Times",
+			Meaning: "I seek forgiveness from Allah and repent to Him.",
+		},
+		"sholawat|Sholawat Nabi (Ibrahimiyyah)": {
+			Title:   "Salawat upon the Prophet (Ibrahimiyyah)",
+			Meaning: "O Allah, send Your blessings upon Muhammad and the family of Muhammad, as You sent blessings upon Ibrahim and the family of Ibrahim. Indeed, You are Praiseworthy, Glorious. O Allah, bless Muhammad and the family of Muhammad, as You blessed Ibrahim and the family of Ibrahim. Indeed, You are Praiseworthy, Glorious.",
+		},
+		"sholawat|Sholawat Singkat": {
+			Title:   "Short Salawat",
+			Meaning: "O Allah, send Your blessings upon Muhammad.",
+		},
 	}
 }
 

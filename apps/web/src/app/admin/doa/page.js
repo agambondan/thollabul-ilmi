@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 const CATEGORIES = [
     "pagi",
@@ -28,6 +29,20 @@ const CATEGORIES = [
     "masjid",
     "safar",
     "belajar",
+    "wudhu",
+    "pakaian",
+    "rumah",
+    "sakit",
+    "keluarga",
+    "hujan",
+    "puasa",
+    "jenazah",
+    "dzikir_pagi",
+    "dzikir_petang",
+    "dzikir_setelah_sholat",
+    "dzikir_tidur",
+    "istighfar",
+    "sholawat",
     "umum",
 ];
 
@@ -154,8 +169,7 @@ const AdminPrayersPage = () => {
             (getLocalizedField(a, "title", lang) ?? "").localeCompare(
                 getLocalizedField(b, "title", lang) ?? "",
             ),
-        category: (a, b) =>
-            (a.category ?? "").localeCompare(b.category ?? ""),
+        category: (a, b) => (a.category ?? "").localeCompare(b.category ?? ""),
     });
 
     const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
@@ -444,26 +458,15 @@ const AdminPrayersPage = () => {
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
-                        <div>
-                            <label
-                                htmlFor='page-translation'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("common.translation")}
-                            </label>
-                            <textarea
-                                id='page-translation'
-                                value={form.translation}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        translation: e.target.value,
-                                    })
-                                }
-                                rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
+                        <MarkdownEditor
+                            value={form.translation}
+                            onChange={(val) =>
+                                setForm({ ...form, translation: val })
+                            }
+                            label={t("common.translation")}
+                            placeholder={t("admin.doa.translation_placeholder")}
+                            minRows={3}
+                        />
                         <div>
                             <label
                                 htmlFor='page-category'
