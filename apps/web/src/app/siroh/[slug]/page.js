@@ -6,6 +6,11 @@ import DetailPagerNav from "@/components/DetailPagerNav";
 import SourceBadges from "@/components/SourceBadges";
 import SirohReportButton from "@/components/SirohReportButton";
 import { getLocalizedField } from "@/lib/translation";
+import {
+    renderBlogContent,
+    extractHeadings,
+    calculateReadStats,
+} from "@/lib/blogContent";
 
 const API_URL =
     process.env.API_INTERNAL_URL ||
@@ -59,16 +64,21 @@ export default async function SirohDetailPage(props) {
 
     const title = getLocalizedField(content, "title", lang);
     const subtitle = getLocalizedField(content, "subtitle", lang);
-    const body =
-        getLocalizedField(content, "content", lang) || content?.content;
+    const rawContent =
+        getLocalizedField(content, "content", lang) || (content?.content ?? "");
+
+    // Render content with Markdown support
+    const htmlContent = renderBlogContent(rawContent);
+    const stats = calculateReadStats(rawContent);
+    const headings = extractHeadings(htmlContent);
 
     return (
         <main className='min-h-screen flex flex-col'>
             <Section>
-                <ContentWidth compact='max-w-3xl' className='px-4'>
+                <ContentWidth compact='max-w-3xl' className='px-4 py-8'>
                     <Link
                         href='/siroh'
-                        className='inline-flex items-center gap-1 text-sm text-emerald-600 dark:text-emerald-400 hover:underline mb-6'
+                        className='inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 hover:dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors mb-6'
                     >
                         ← Kembali ke Siroh
                     </Link>
@@ -89,7 +99,7 @@ export default async function SirohDetailPage(props) {
 
                     {content && (
                         <article>
-                            <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-2'>
+                            <h1 className='text-2xl sm:text-3xl md:text-4xl font-extrabold text-emerald-900 dark:text-white mb-4 leading-tight tracking-tight'>
                                 {title}
                             </h1>
                             {subtitle && (
@@ -97,30 +107,70 @@ export default async function SirohDetailPage(props) {
                                     {subtitle}
                                 </p>
                             )}
-                            <div className='prose dark:prose-invert prose-emerald max-w-none text-gray-700 dark:text-gray-300 leading-relaxed'>
-                                {body
-                                    ?.split("\n")
-                                    .filter(Boolean)
-                                    .map((para, i) => (
-                                        <p key={i} className='mb-4'>
-                                            {para}
-                                        </p>
-                                    ))}
+
+                            <div className='flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100 dark:border-slate-800 text-xs text-gray-500 dark:text-gray-400'>
+                                <div className='flex flex-wrap items-center gap-3'>
+                                    {stats.minutes > 0 && (
+                                        <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium'>
+                                            {stats.minutes} min baca
+                                        </span>
+                                    )}
+                                    {stats.words > 0 && (
+                                        <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium'>
+                                            {stats.words.toLocaleString()} kata
+                                        </span>
+                                    )}
+                                </div>
                             </div>
+
+                            {/* Article Body with .blog-content CSS */}
+                            <div
+                                className='prose dark:prose-invert prose-emerald max-w-none'
+                                dangerouslySetInnerHTML={{
+                                    __html: htmlContent,
+                                }}
+                            />
+
+                            {/* Source Badges */}
                             {content.source && (
-                                <div className='mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
-                                    <p className='text-xs text-gray-400'>
-                                        Sumber:
+                                <div className='mt-8 border-t border-gray-100 dark:border-slate-700 pt-6'>
+                                    <p className='text-xs font-bold uppercase tracking-wider text-gray-400 mb-3'>
+                                        Sumber
                                     </p>
                                     <SourceBadges source={content.source} />
                                 </div>
                             )}
+
+                            {/* Table of Contents */}
+                            {headings.length > 0 && (
+                                <div className='mt-8'>
+                                    <p className='text-xs font-bold uppercase tracking-wider text-gray-400 mb-3'>
+                                        Daftar Isi
+                                    </p>
+                                    <nav className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 space-y-1.5'>
+                                        {headings.map((h) => (
+                                            <a
+                                                key={h.id}
+                                                href={`#${h.id}`}
+                                                className={`block py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors ${
+                                                    h.level === 3
+                                                        ? "pl-4 text-xs text-gray-500 dark:text-gray-500"
+                                                        : "font-medium"
+                                                }`}
+                                            >
+                                                {h.text}
+                                            </a>
+                                        ))}
+                                    </nav>
+                                </div>
+                            )}
+
                             <SirohReportButton
                                 targetId={String(
                                     content.id ?? content.slug ?? params.slug,
                                 )}
                                 targetTitle={title || "Siroh"}
-                                snippet={body}
+                                snippet={rawContent}
                                 label='Laporkan Kesalahan'
                             />
                             <DetailPagerNav

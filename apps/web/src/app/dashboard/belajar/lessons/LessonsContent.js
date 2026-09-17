@@ -5,6 +5,7 @@ import SourceBadges from "@/components/SourceBadges";
 import { useLocale } from "@/context/Locale";
 import { pushRecentBelajar } from "@/lib/recent";
 import { useLayoutMode } from "@/lib/useLayoutMode";
+import { renderBlogContent } from "@/lib/blogContent";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -335,9 +336,12 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                             )}
                         </div>
 
-                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
-                            {step.body}
-                        </p>
+                        <div
+                            className='prose dark:prose-invert prose-emerald max-w-none text-sm text-gray-700 dark:text-gray-300 leading-relaxed'
+                            dangerouslySetInnerHTML={{
+                                __html: renderBlogContent(step.body || ""),
+                            }}
+                        />
 
                         {step.arabic && (
                             <div className='rounded-2xl bg-parchment-50 dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 p-4 text-right'>
