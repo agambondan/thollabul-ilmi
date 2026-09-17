@@ -115,7 +115,7 @@ func backfillFiqhDalil(db *gorm.DB) error {
 		Dalil  string `json:"dalil"`
 	}
 	var rows []row
-	if !readStaticJSON("fiqh_item.json", &rows) {
+	if !readStaticJSON(db, "fiqh_item.json", &rows) {
 		return nil
 	}
 	for _, entry := range rows {

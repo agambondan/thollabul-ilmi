@@ -109,4 +109,5 @@ var ModelMigrations []interface{} = []interface{}{
 	model.ContentReport{},
 	model.ContentAuditLog{},
 	model.Ad{},
+	model.SeedFileState{},
 }

@@ -10,7 +10,7 @@ import (
 
 func SeedLibraryBooks(db *gorm.DB) {
 	var rows []model.LibraryBook
-	if readStaticJSON("library_book.json", &rows) && len(rows) > 0 {
+	if readStaticJSON(db, "library_book.json", &rows) && len(rows) > 0 {
 		log.Printf("[seeder] seed library books from file: %d entri", len(rows))
 		for i := range rows {
 			if rows[i].Slug == "" || rows[i].Title == "" {

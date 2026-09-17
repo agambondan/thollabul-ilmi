@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
@@ -16,8 +17,9 @@ import (
 const staticDataDir = "data/static"
 
 // SeedStaticFromFiles seeds all static Islamic content from data/static/*.json.
-// No-op per table if the static dir is absent or the table already has data.
-// Call from Seeder() after DB is migrated.
+// No-op if the static dir is absent, or per source file/dir once its
+// content is unchanged since the last run. Call from Seeder() after DB is
+// migrated.
 func SeedStaticFromFiles(db *gorm.DB) {
 	if _, err := os.Stat(staticDataDir); os.IsNotExist(err) {
 		log.Println("[seeder] data/static/ tidak ditemukan — skip SeedStaticFromFiles")
@@ -53,7 +55,25 @@ func SeedStaticFromFiles(db *gorm.DB) {
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
-func readStaticJSON(name string, dst interface{}) bool {
+func staticFileUnchanged(db *gorm.DB, name string, modTime time.Time, size int64) bool {
+	var state model.SeedFileState
+	found := db.Where("name = ?", name).First(&state).Error == nil
+	unchanged := found && state.LastModTime.Equal(modTime) && state.LastSize == size
+	if unchanged {
+		return true
+	}
+	if found {
+		db.Model(&state).Updates(map[string]interface{}{
+			"last_mod_time": modTime,
+			"last_size":     size,
+		})
+	} else {
+		db.Create(&model.SeedFileState{Name: name, LastModTime: modTime, LastSize: size})
+	}
+	return false
+}
+
+func readStaticJSON(db *gorm.DB, name string, dst interface{}) bool {
 	candidatePaths := []string{
 		"data/static/" + name,
 		"/app/data/static/" + name,
@@ -76,6 +96,12 @@ func readStaticJSON(name string, dst interface{}) bool {
 		return false
 	}
 
+	info, err := os.Stat(foundPath)
+	if err == nil && staticFileUnchanged(db, name, info.ModTime(), info.Size()) {
+		log.Printf("[seeder] %s tidak berubah sejak run terakhir — skip", name)
+		return false
+	}
+
 	f, err := os.Open(foundPath)
 	if err != nil {
 		log.Printf("[seeder] %s gagal dibuka: %v", foundPath, err)
@@ -95,7 +121,7 @@ func readStaticJSON(name string, dst interface{}) bool {
 // []T on its own; a file that fails to parse is logged and skipped rather
 // than aborting the whole seed. Files starting with "_" are skipped (e.g. a
 // human-readable "_index.json" manifest the scraper writes alongside them).
-func readStaticJSONDir[T any](dirName string) []T {
+func readStaticJSONDir[T any](db *gorm.DB, dirName string) []T {
 	candidateDirs := []string{
 		"data/static/" + dirName,
 		"/app/data/static/" + dirName,
@@ -120,6 +146,29 @@ func readStaticJSONDir[T any](dirName string) []T {
 	entries, err := os.ReadDir(foundDir)
 	if err != nil {
 		log.Printf("[seeder] baca direktori %s gagal: %v", foundDir, err)
+		return nil
+	}
+
+	var totalSize int64
+	var maxModTime time.Time
+	var fileCount int
+	for _, entry := range entries {
+		name := entry.Name()
+		if entry.IsDir() || !strings.HasSuffix(name, ".json") || strings.HasPrefix(name, "_") {
+			continue
+		}
+		info, err := entry.Info()
+		if err != nil {
+			continue
+		}
+		fileCount++
+		totalSize += info.Size()
+		if info.ModTime().After(maxModTime) {
+			maxModTime = info.ModTime()
+		}
+	}
+	if staticFileUnchanged(db, dirName, maxModTime, totalSize+int64(fileCount)) {
+		log.Printf("[seeder] direktori %s tidak berubah sejak run terakhir — skip", dirName)
 		return nil
 	}
 
@@ -159,7 +208,7 @@ func seedDoaFromFile(db *gorm.DB) {
 		Source          string `json:"source"`
 	}
 	var rows []row
-	if !readStaticJSON("doa.json", &rows) {
+	if !readStaticJSON(db, "doa.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedDoaFromFile: %d entri", len(rows))
@@ -182,11 +231,6 @@ func seedDoaFromFile(db *gorm.DB) {
 // ── Asmaul Husna ──────────────────────────────────────────────────────────────
 
 func seedAsmaUlHusnaFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.AsmaUlHusna{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Number          int    `json:"number"`
 		Arabic          string `json:"arabic"`
@@ -196,7 +240,7 @@ func seedAsmaUlHusnaFromFile(db *gorm.DB) {
 		Meaning         string `json:"meaning"`
 	}
 	var rows []row
-	if !readStaticJSON("asma_ul_husna.json", &rows) {
+	if !readStaticJSON(db, "asma_ul_husna.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedAsmaUlHusnaFromFile: %d entri", len(rows))
@@ -219,25 +263,20 @@ func seedAsmaUlHusnaFromFile(db *gorm.DB) {
 // ── Amalan Item ───────────────────────────────────────────────────────────────
 
 func seedAmalanItemFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.AmalanItem{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
 		Category    string `json:"category"`
 	}
 	var rows []row
-	if !readStaticJSON("amalan_item.json", &rows) {
+	if !readStaticJSON(db, "amalan_item.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedAmalanItemFromFile: %d entri", len(rows))
 	for _, r := range rows {
 		item := model.AmalanItem{Name: r.Name, Description: r.Description, Category: model.AmalanCategory(r.Category)}
 		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "name"}},
+			Columns:   []clause.Column{{Name: "name"}, {Name: "category"}},
 			DoUpdates: clause.AssignmentColumns([]string{"description", "category"}),
 		}).Create(&item)
 	}
@@ -258,7 +297,7 @@ func seedDzikirFromFile(db *gorm.DB) {
 		Occasion        string `json:"occasion"`
 	}
 	var rows []row
-	if !readStaticJSON("dzikir.json", &rows) {
+	if !readStaticJSON(db, "dzikir.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedDzikirFromFile: %d entri", len(rows))
@@ -284,11 +323,6 @@ func seedDzikirFromFile(db *gorm.DB) {
 // ── Sholat Guide ──────────────────────────────────────────────────────────────
 
 func seedSholatGuideFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.SholatGuide{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Step            int    `json:"step"`
 		Title           string `json:"title"`
@@ -300,7 +334,7 @@ func seedSholatGuideFromFile(db *gorm.DB) {
 		Notes           string `json:"notes"`
 	}
 	var rows []row
-	if !readStaticJSON("sholat_guide.json", &rows) {
+	if !readStaticJSON(db, "sholat_guide.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedSholatGuideFromFile: %d entri", len(rows))
@@ -325,18 +359,13 @@ func seedSholatGuideFromFile(db *gorm.DB) {
 // ── Fiqh Category ─────────────────────────────────────────────────────────────
 
 func seedFiqhCategoriesFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.FiqhCategory{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Name        string `json:"name"`
 		Slug        string `json:"slug"`
 		Description string `json:"description"`
 	}
 	var rows []row
-	if !readStaticJSON("fiqh_category.json", &rows) {
+	if !readStaticJSON(db, "fiqh_category.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedFiqhCategoriesFromFile: %d entri", len(rows))
@@ -352,11 +381,6 @@ func seedFiqhCategoriesFromFile(db *gorm.DB) {
 // ── Fiqh Item ─────────────────────────────────────────────────────────────────
 
 func seedFiqhItemsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.FiqhItem{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		CategorySlug string `json:"category_slug"`
 		Title        string `json:"title"`
@@ -367,7 +391,7 @@ func seedFiqhItemsFromFile(db *gorm.DB) {
 		SortOrder    int    `json:"sort_order"`
 	}
 	var rows []row
-	if !readStaticJSON("fiqh_item.json", &rows) {
+	if !readStaticJSON(db, "fiqh_item.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedFiqhItemsFromFile: %d entri", len(rows))
@@ -407,18 +431,13 @@ func seedFiqhItemsFromFile(db *gorm.DB) {
 // ── Siroh Category ────────────────────────────────────────────────────────────
 
 func seedSirohCategoriesFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.SirohCategory{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Title string `json:"title"`
 		Slug  string `json:"slug"`
 		Order int    `json:"order"`
 	}
 	var rows []row
-	if !readStaticJSON("siroh_category.json", &rows) {
+	if !readStaticJSON(db, "siroh_category.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedSirohCategoriesFromFile: %d entri", len(rows))
@@ -443,7 +462,7 @@ func seedSirohContentsFromFile(db *gorm.DB) {
 		Order        int    `json:"order"`
 	}
 	var rows []row
-	if !readStaticJSON("siroh_content.json", &rows) {
+	if !readStaticJSON(db, "siroh_content.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedSirohContentsFromFile: %d entri", len(rows))
@@ -478,18 +497,13 @@ func seedSirohContentsFromFile(db *gorm.DB) {
 // ── Blog Category ─────────────────────────────────────────────────────────────
 
 func seedBlogCategoriesFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.BlogCategory{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Name        string `json:"name"`
 		Slug        string `json:"slug"`
 		Description string `json:"description"`
 	}
 	var rows []row
-	if !readStaticJSON("blog_category.json", &rows) {
+	if !readStaticJSON(db, "blog_category.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedBlogCategoriesFromFile: %d entri", len(rows))
@@ -505,17 +519,12 @@ func seedBlogCategoriesFromFile(db *gorm.DB) {
 // ── Blog Tag ──────────────────────────────────────────────────────────────────
 
 func seedBlogTagsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.BlogTag{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Name string `json:"name"`
 		Slug string `json:"slug"`
 	}
 	var rows []row
-	if !readStaticJSON("blog_tag.json", &rows) {
+	if !readStaticJSON(db, "blog_tag.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedBlogTagsFromFile: %d entri", len(rows))
@@ -554,9 +563,9 @@ func seedKajianFromFile(db *gorm.DB) {
 	// to open in an editor as the scrape catalog widened. Falls back to the
 	// legacy single-file layout if the directory does not exist yet, so an
 	// unmigrated checkout still seeds.
-	rows := readStaticJSONDir[row]("kajian")
+	rows := readStaticJSONDir[row](db, "kajian")
 	if rows == nil {
-		if !readStaticJSON("kajian.json", &rows) {
+		if !readStaticJSON(db, "kajian.json", &rows) {
 			return
 		}
 	}
@@ -737,11 +746,6 @@ func seedKajianFromFile(db *gorm.DB) {
 // ── Achievement ───────────────────────────────────────────────────────────────
 
 func seedAchievementsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Achievement{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Code        string `json:"code"`
 		Name        string `json:"name"`
@@ -753,7 +757,7 @@ func seedAchievementsFromFile(db *gorm.DB) {
 		Threshold   int    `json:"threshold"`
 	}
 	var rows []row
-	if !readStaticJSON("achievement.json", &rows) {
+	if !readStaticJSON(db, "achievement.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedAchievementsFromFile: %d entri", len(rows))
@@ -787,7 +791,7 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 		Explanation   string `json:"explanation"`
 	}
 	var rows []row
-	if !readStaticJSON("quiz.json", &rows) {
+	if !readStaticJSON(db, "quiz.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedQuizQuestionsFromFile: %d entri", len(rows))
@@ -831,7 +835,7 @@ func seedIslamicEventsFromFile(db *gorm.DB) {
 		Description string `json:"description"`
 	}
 	var rows []row
-	if !readStaticJSON("islamic_event.json", &rows) {
+	if !readStaticJSON(db, "islamic_event.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedIslamicEventsFromFile: %d entri", len(rows))
@@ -898,7 +902,7 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 		IsSignificant bool   `json:"is_significant"`
 	}
 	var rows []row
-	if !readStaticJSON("history_event.json", &rows) {
+	if !readStaticJSON(db, "history_event.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedHistoryEventsFromFile: %d entri", len(rows))
@@ -959,7 +963,7 @@ func seedManasikStepsFromFile(db *gorm.DB) {
 		IsWajib         bool   `json:"is_wajib"`
 	}
 	var rows []row
-	if !readStaticJSON("manasik_step.json", &rows) {
+	if !readStaticJSON(db, "manasik_step.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedManasikStepsFromFile: %d entri", len(rows))
@@ -1060,7 +1064,7 @@ func seedIslamicTermsFromFile(db *gorm.DB) {
 		Root       string `json:"root"`
 	}
 	var rows []row
-	if !readStaticJSON("islamic_term.json", &rows) {
+	if !readStaticJSON(db, "islamic_term.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedIslamicTermsFromFile: %d entri", len(rows))
@@ -1086,11 +1090,6 @@ func seedIslamicTermsFromFile(db *gorm.DB) {
 // ── Asbabun Nuzul ─────────────────────────────────────────────────────────────
 
 func seedAsbabunNuzulFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.AsbabunNuzul{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type ayahRef struct {
 		SurahNumber int `json:"surah_number"`
 		AyahNumber  int `json:"ayah_number"`
@@ -1104,7 +1103,7 @@ func seedAsbabunNuzulFromFile(db *gorm.DB) {
 		Ayahs      []ayahRef `json:"ayahs"`
 	}
 	var rows []row
-	if !readStaticJSON("asbabun_nuzul.json", &rows) {
+	if !readStaticJSON(db, "asbabun_nuzul.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedAsbabunNuzulFromFile: %d entri", len(rows))
@@ -1123,16 +1122,33 @@ func seedAsbabunNuzulFromFile(db *gorm.DB) {
 	}
 
 	for _, r := range rows {
-		var existing model.AsbabunNuzul
-		if err := db.Where("title = ?", r.Title).First(&existing).Error; err == nil {
-			continue // already exists
-		}
 		var ayahs []model.Ayah
 		for _, ref := range r.Ayahs {
 			if id, ok := ayahMap[fmt.Sprintf("%d:%d", ref.SurahNumber, ref.AyahNumber)]; ok {
 				ayahs = append(ayahs, model.Ayah{BaseID: model.BaseID{ID: &id}})
 			}
 		}
+
+		var existing model.AsbabunNuzul
+		if err := db.Where("title = ?", r.Title).First(&existing).Error; err == nil {
+			db.Model(&existing).Updates(map[string]interface{}{
+				"narrator":    r.Narrator,
+				"content":     r.Content,
+				"source":      r.Source,
+				"display_ref": r.DisplayRef,
+			})
+			if existing.TranslationID != nil {
+				db.Model(&model.Translation{}).Where("id = ?", *existing.TranslationID).Updates(map[string]interface{}{
+					"latin_idn":       stringPtr(r.Narrator),
+					"description_idn": stringPtr(r.Content),
+				})
+			}
+			if err := db.Model(&existing).Association("Ayahs").Replace(ayahs); err != nil {
+				log.Printf("[seeder] asbabun_nuzul ayahs update '%s': %v", r.Title, err)
+			}
+			continue
+		}
+
 		tr := model.Translation{
 			Idn:            stringPtr(r.Title),
 			LatinIdn:       stringPtr(r.Narrator),
@@ -1175,7 +1191,7 @@ func seedPerawiFromFile(db *gorm.DB) {
 		Biografis   string `json:"biografis"`
 	}
 	var rows []row
-	if !readStaticJSON("perawi.json", &rows) {
+	if !readStaticJSON(db, "perawi.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedPerawiFromFile: %d entri", len(rows))
@@ -1233,11 +1249,6 @@ func seedPerawiFromFile(db *gorm.DB) {
 // ── Jarh Tadil ────────────────────────────────────────────────────────────────
 
 func seedJarhTadilFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.JarhTadil{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		PerawiNamaLatin  string  `json:"perawi_nama_latin"`
 		PenilaiNamaLatin string  `json:"penilai_nama_latin"`
@@ -1249,7 +1260,7 @@ func seedJarhTadilFromFile(db *gorm.DB) {
 		Catatan          *string `json:"catatan"`
 	}
 	var rows []row
-	if !readStaticJSON("jarh_tadil.json", &rows) {
+	if !readStaticJSON(db, "jarh_tadil.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedJarhTadilFromFile: %d entri", len(rows))
@@ -1286,12 +1297,38 @@ func seedJarhTadilFromFile(db *gorm.DB) {
 		if r.Catatan != nil {
 			catatVal = *r.Catatan
 		}
-		tr := model.Translation{
-			Idn:            stringPtr(teksVal),
-			DescriptionIdn: stringPtr(catatVal),
+
+		var existing model.JarhTadil
+		hasExisting := db.Where("perawi_id = ? AND penilai_id = ?", pID, penilaiID).First(&existing).Error == nil
+
+		trID := existing.TranslationID
+		if hasExisting && trID != nil {
+			db.Model(&model.Translation{}).Where("id = ?", *trID).Updates(map[string]interface{}{
+				"idn":             stringPtr(teksVal),
+				"description_idn": stringPtr(catatVal),
+			})
+		} else {
+			tr := model.Translation{
+				Idn:            stringPtr(teksVal),
+				DescriptionIdn: stringPtr(catatVal),
+			}
+			if err := db.Create(&tr).Error; err != nil {
+				log.Printf("[seeder] jarh_tadil translation: %v", err)
+				continue
+			}
+			trID = tr.ID
 		}
-		if err := db.Create(&tr).Error; err != nil {
-			log.Printf("[seeder] jarh_tadil translation: %v", err)
+
+		if hasExisting {
+			db.Model(&existing).Updates(map[string]interface{}{
+				"jenis_nilai":    jenisNilai,
+				"tingkat":        r.Tingkat,
+				"teks_nilai":     r.TeksNilai,
+				"sumber":         r.Sumber,
+				"halaman":        r.Halaman,
+				"catatan":        r.Catatan,
+				"translation_id": trID,
+			})
 			continue
 		}
 		item := model.JarhTadil{
@@ -1303,29 +1340,23 @@ func seedJarhTadilFromFile(db *gorm.DB) {
 			Sumber:        r.Sumber,
 			Halaman:       r.Halaman,
 			Catatan:       r.Catatan,
-			TranslationID: tr.ID,
+			TranslationID: trID,
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "perawi_id"}, {Name: "penilai_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"jenis_nilai", "tingkat", "teks_nilai", "sumber", "halaman", "catatan", "translation_id"}),
-		}).Create(&item)
+		if err := db.Create(&item).Error; err != nil {
+			log.Printf("[seeder] jarh_tadil create: %v", err)
+		}
 	}
 }
 
 // ── Perawi Guru ───────────────────────────────────────────────────────────────
 
 func seedPerawiGuruFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.PerawiGuru{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		GuruNamaLatin  string `json:"guru_nama_latin"`
 		MuridNamaLatin string `json:"murid_nama_latin"`
 	}
 	var rows []row
-	if !readStaticJSON("perawi_guru.json", &rows) {
+	if !readStaticJSON(db, "perawi_guru.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedPerawiGuruFromFile: %d relasi", len(rows))
@@ -1371,7 +1402,7 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 		ImageURL   string `json:"image_url"`
 	}
 	var rows []row
-	if !readStaticJSON("tokoh_tarikh.json", &rows) {
+	if !readStaticJSON(db, "tokoh_tarikh.json", &rows) {
 		return
 	}
 	// ── Locations ───────────────────────────────────────────────────────────────
@@ -1443,11 +1474,6 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 // ── Locations ───────────────────────────────────────────────────────────────────
 
 func SeedLocationsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Location{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Name        string  `json:"name"`
 		Description string  `json:"description"`

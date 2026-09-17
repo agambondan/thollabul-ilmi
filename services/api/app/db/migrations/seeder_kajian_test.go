@@ -19,7 +19,7 @@ func TestSeedKajianFromFileIntegration(t *testing.T) {
 		t.Fatalf("open sqlite: %v", err)
 	}
 
-	if err := db.AutoMigrate(&model.Kajian{}, &model.KajianTranscript{}); err != nil {
+	if err := db.AutoMigrate(&model.Kajian{}, &model.KajianTranscript{}, &model.SeedFileState{}); err != nil {
 		t.Fatalf("migrate: %v", err)
 	}
 
@@ -50,7 +50,8 @@ func TestSeedKajianFromFileIntegration(t *testing.T) {
 	type row struct {
 		VideoID string `json:"video_id"`
 	}
-	sourceRows := readStaticJSONDir[row]("kajian")
+	db.Where("name = ?", "kajian").Delete(&model.SeedFileState{})
+	sourceRows := readStaticJSONDir[row](db, "kajian")
 	if len(sourceRows) == 0 {
 		t.Fatal("expected the static kajian dataset to be non-empty for this assertion")
 	}

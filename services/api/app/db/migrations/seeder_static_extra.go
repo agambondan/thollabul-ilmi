@@ -35,7 +35,7 @@ type staticTafsirRow struct {
 
 func seedHadithArbainRiyadhusFromFile(db *gorm.DB) {
 	var rows []staticHadithRow
-	if !readStaticJSON("hadith_arbain_riyadhus.json", &rows) {
+	if !readStaticJSON(db, "hadith_arbain_riyadhus.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedHadithArbainRiyadhusFromFile: %d entri", len(rows))
@@ -69,7 +69,7 @@ func seedHadithArbainRiyadhusFromFile(db *gorm.DB) {
 
 func seedTafsirRingkasFromFile(db *gorm.DB) {
 	var rows []staticTafsirRow
-	if !readStaticJSON("tafsir_ringkas.json", &rows) {
+	if !readStaticJSON(db, "tafsir_ringkas.json", &rows) {
 		return
 	}
 	type ayahRow struct{ ID, Number, SurahNumber int }
