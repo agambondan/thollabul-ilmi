@@ -121,7 +121,7 @@ func readStaticJSON(db *gorm.DB, name string, dst interface{}) bool {
 // []T on its own; a file that fails to parse is logged and skipped rather
 // than aborting the whole seed. Files starting with "_" are skipped (e.g. a
 // human-readable "_index.json" manifest the scraper writes alongside them).
-func readStaticJSONDir[T any](db *gorm.DB, dirName string) []T {
+func readStaticJSONDir[T any](db *gorm.DB, dirName string) ([]T, bool) {
 	candidateDirs := []string{
 		"data/static/" + dirName,
 		"/app/data/static/" + dirName,
@@ -140,13 +140,13 @@ func readStaticJSONDir[T any](db *gorm.DB, dirName string) []T {
 	}
 	if foundDir == "" {
 		log.Printf("[seeder] direktori %s tidak ditemukan di lokasi mana pun — skip", dirName)
-		return nil
+		return nil, false
 	}
 
 	entries, err := os.ReadDir(foundDir)
 	if err != nil {
 		log.Printf("[seeder] baca direktori %s gagal: %v", foundDir, err)
-		return nil
+		return nil, true
 	}
 
 	var totalSize int64
@@ -169,7 +169,7 @@ func readStaticJSONDir[T any](db *gorm.DB, dirName string) []T {
 	}
 	if staticFileUnchanged(db, dirName, maxModTime, totalSize+int64(fileCount)) {
 		log.Printf("[seeder] direktori %s tidak berubah sejak run terakhir — skip", dirName)
-		return nil
+		return nil, true
 	}
 
 	var all []T
@@ -193,7 +193,7 @@ func readStaticJSONDir[T any](db *gorm.DB, dirName string) []T {
 		}
 		all = append(all, rows...)
 	}
-	return all
+	return all, true
 }
 
 // ── Doa ───────────────────────────────────────────────────────────────────────
@@ -563,11 +563,13 @@ func seedKajianFromFile(db *gorm.DB) {
 	// to open in an editor as the scrape catalog widened. Falls back to the
 	// legacy single-file layout if the directory does not exist yet, so an
 	// unmigrated checkout still seeds.
-	rows := readStaticJSONDir[row](db, "kajian")
-	if rows == nil {
+	rows, dirExists := readStaticJSONDir[row](db, "kajian")
+	if !dirExists {
 		if !readStaticJSON(db, "kajian.json", &rows) {
 			return
 		}
+	} else if rows == nil {
+		return
 	}
 	log.Printf("[seeder] seedKajianFromFile: %d entri", len(rows))
 	transcriptRows, transcriptErrors := 0, 0

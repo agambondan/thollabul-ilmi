@@ -51,7 +51,7 @@ func TestSeedKajianFromFileIntegration(t *testing.T) {
 		VideoID string `json:"video_id"`
 	}
 	db.Where("name = ?", "kajian").Delete(&model.SeedFileState{})
-	sourceRows := readStaticJSONDir[row](db, "kajian")
+	sourceRows, _ := readStaticJSONDir[row](db, "kajian")
 	if len(sourceRows) == 0 {
 		t.Fatal("expected the static kajian dataset to be non-empty for this assertion")
 	}
