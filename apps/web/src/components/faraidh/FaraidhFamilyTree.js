@@ -134,12 +134,6 @@ export default function FaraidhFamilyTree({ result, heirs, lang = "id" }) {
         "anak_paman_seayah",
     ];
 
-    const hasAnyUshul = ushulKeys.some((k) => heirs[k] > 0);
-    const hasAnySpouse = spouseKeys.some((k) => heirs[k] > 0);
-    const hasAnySibling = siblingKeys.some((k) => heirs[k] > 0);
-    const hasAnyFuru = furuKeys.some((k) => heirs[k] > 0);
-    const hasAnyHawasyi = hawasyiKeys.some((k) => heirs[k] > 0);
-
     return (
         <div className='mt-6 rounded-2xl border border-emerald-100 bg-white p-5 shadow-xs dark:border-slate-700 dark:bg-slate-900'>
             <div className='mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-3 dark:border-slate-800'>
@@ -148,7 +142,7 @@ export default function FaraidhFamilyTree({ result, heirs, lang = "id" }) {
                         <span>🌳</span> Diagram Pohon Silsilah Waris
                     </h3>
                     <p className='text-xs text-gray-500 dark:text-gray-400'>
-                        Visualisasi pembagian hak tirkah antar generasi (Ushul, Pasangan/Saudara, Furu', Hawasyi).
+                        Visualisasi pembagian hak tirkah antar generasi (Ushul, Pasangan/Saudara, Furu&apos;, Hawasyi).
                     </p>
                 </div>
                 <div className='flex items-center gap-2 text-[11px]'>
@@ -246,7 +240,7 @@ export default function FaraidhFamilyTree({ result, heirs, lang = "id" }) {
                 {/* Tingkat 3: Furu' / Keturunan */}
                 <div className='flex flex-col items-center gap-2'>
                     <span className='rounded-full bg-slate-100 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:bg-slate-800 dark:text-slate-300'>
-                        3. Furu' (Keturunan / Anak & Cucu)
+                        3. Furu&apos; (Keturunan / Anak &amp; Cucu)
                     </span>
                     <div className='flex flex-wrap justify-center gap-2 w-full max-w-3xl'>
                         {furuKeys.map((key) => (
