@@ -222,5 +222,18 @@ func (r *notificationInboxRepository) Create(n model.UserNotification) (model.Us
 	if n.ID == uuid.Nil {
 		n.ID = uuid.New()
 	}
+	if n.Channel == "" {
+		n.Channel = "inbox"
+	}
+	if n.Priority == "" {
+		n.Priority = "normal"
+	}
+	if n.Status == "" {
+		n.Status = "created"
+	}
+	if n.Status == "sent" && n.SentAt == nil {
+		now := time.Now()
+		n.SentAt = &now
+	}
 	return n, r.db.Create(&n).Error
 }

@@ -9,6 +9,7 @@ import (
 type NotificationInboxService interface {
 	List(userID uuid.UUID) ([]model.UserNotification, error)
 	UnreadCount(userID uuid.UUID) (int64, error)
+	Create(n model.UserNotification) (model.UserNotification, error)
 	MarkRead(id uuid.UUID, userID uuid.UUID) error
 	MarkAllRead(userID uuid.UUID) error
 	Delete(id uuid.UUID, userID uuid.UUID) error
@@ -36,6 +37,10 @@ func (s *notificationInboxService) MarkRead(id uuid.UUID, userID uuid.UUID) erro
 
 func (s *notificationInboxService) MarkAllRead(userID uuid.UUID) error {
 	return s.repo.MarkAllRead(userID)
+}
+
+func (s *notificationInboxService) Create(n model.UserNotification) (model.UserNotification, error) {
+	return s.repo.Create(n)
 }
 
 func (s *notificationInboxService) Delete(id uuid.UUID, userID uuid.UUID) error {

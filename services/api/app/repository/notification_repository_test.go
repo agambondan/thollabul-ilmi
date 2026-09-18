@@ -140,3 +140,34 @@ func TestFindDisabledUserIDsReturnsOnlyExplicitOptOuts(t *testing.T) {
 		t.Fatalf("disabled user ids = %v, want [%v]", disabled, optedOutUser)
 	}
 }
+
+func TestNotificationInboxCreateDefaultsDeliveryFields(t *testing.T) {
+	db := newNotificationTestDB(t)
+	if err := db.AutoMigrate(&model.UserNotification{}); err != nil {
+		t.Fatalf("automigrate user notification: %v", err)
+	}
+	repo := NewNotificationInboxRepository(db)
+	userID := uuid.New()
+
+	notif, err := repo.Create(model.UserNotification{
+		UserID: userID,
+		Title:  "Judul",
+		Body:   "Isi",
+		Type:   model.NotificationTypeDoa,
+		Status: "sent",
+	})
+	if err != nil {
+		t.Fatalf("create notification: %v", err)
+	}
+	if notif.Channel != "inbox" || notif.Priority != "normal" || notif.Status != "sent" || notif.SentAt == nil {
+		t.Fatalf("unexpected defaults: %#v", notif)
+	}
+
+	items, err := repo.ListByUser(userID, 10)
+	if err != nil {
+		t.Fatalf("list notifications: %v", err)
+	}
+	if len(items) != 1 || items[0].SentAt == nil {
+		t.Fatalf("expected persisted sent notification, got %#v", items)
+	}
+}

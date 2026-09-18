@@ -232,15 +232,6 @@ func (s *notificationService) SendTestPush(userID uuid.UUID) (model.PushTestResp
 	if sent == 0 {
 		return model.PushTestResponse{}, fmt.Errorf("tidak ada push token aktif — daftarkan perangkat terlebih dahulu")
 	}
-	if s.inboxRepo != nil {
-		_, _ = s.inboxRepo.Create(model.UserNotification{
-			UserID: userID,
-			Title:  content.Title,
-			Body:   content.Description,
-			Type:   model.NotificationTypeDoa,
-			RefID:  "push-test",
-		})
-	}
 	return model.PushTestResponse{Message: "test push sent", Sent: sent}, nil
 }
 
@@ -294,11 +285,14 @@ func (s *notificationService) BroadcastPush(adminID uuid.UUID, req *model.Broadc
 	if s.inboxRepo != nil {
 		for userID := range seenUsers {
 			_, _ = s.inboxRepo.Create(model.UserNotification{
-				UserID: userID,
-				Title:  title,
-				Body:   body,
-				Type:   model.NotificationTypeDoa,
-				RefID:  "admin-broadcast",
+				UserID:   userID,
+				Title:    title,
+				Body:     body,
+				Type:     model.NotificationTypeDoa,
+				RefID:    "admin-broadcast",
+				Channel:  "push",
+				Priority: "important",
+				Status:   "sent",
 			})
 		}
 	}
@@ -318,10 +312,13 @@ func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {
 
 		if s.inboxRepo != nil {
 			if _, err := s.inboxRepo.Create(model.UserNotification{
-				UserID: setting.UserID,
-				Title:  content.Title,
-				Body:   content.Description,
-				Type:   setting.Type,
+				UserID:   setting.UserID,
+				Title:    content.Title,
+				Body:     content.Description,
+				Type:     setting.Type,
+				Channel:  "inbox",
+				Priority: "normal",
+				Status:   "created",
 			}); err != nil {
 				slog.Warn("notification inbox create failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
 			} else {
@@ -330,7 +327,26 @@ func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {
 		}
 
 		if setting.User != nil && setting.User.NotifyViaEmail && setting.User.Email != nil && strings.TrimSpace(*setting.User.Email) != "" {
-			if err := lib.SendHTMLEmail(*setting.User.Email, content.Title, content.EmailHTML); err != nil {
+			err := lib.SendHTMLEmail(*setting.User.Email, content.Title, content.EmailHTML)
+			if s.inboxRepo != nil {
+				status := "sent"
+				errMsg := ""
+				if err != nil {
+					status = "failed"
+					errMsg = err.Error()
+				}
+				_, _ = s.inboxRepo.Create(model.UserNotification{
+					UserID:       setting.UserID,
+					Title:        content.Title,
+					Body:         content.Description,
+					Type:         setting.Type,
+					Channel:      "email",
+					Priority:     "normal",
+					Status:       status,
+					ErrorMessage: errMsg,
+				})
+			}
+			if err != nil {
 				slog.Warn("notification email reminder failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
 			} else {
 				delivered = true
@@ -339,7 +355,26 @@ func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {
 
 		if setting.User != nil && setting.User.NotifyViaWhatsapp && s.wa != nil &&
 			setting.User.Phone != nil && strings.TrimSpace(*setting.User.Phone) != "" && setting.User.PhoneVerifiedAt != nil {
-			if err := s.wa.SendText(*setting.User.Phone, content.WhatsAppText); err != nil {
+			err := s.wa.SendText(*setting.User.Phone, content.WhatsAppText)
+			if s.inboxRepo != nil {
+				status := "sent"
+				errMsg := ""
+				if err != nil {
+					status = "failed"
+					errMsg = err.Error()
+				}
+				_, _ = s.inboxRepo.Create(model.UserNotification{
+					UserID:       setting.UserID,
+					Title:        content.Title,
+					Body:         content.Description,
+					Type:         setting.Type,
+					Channel:      "whatsapp",
+					Priority:     "normal",
+					Status:       status,
+					ErrorMessage: errMsg,
+				})
+			}
+			if err != nil {
 				slog.Warn("notification whatsapp reminder failed", "user_id", setting.UserID, "type", setting.Type, "err", err)
 			} else {
 				delivered = true

@@ -141,6 +141,14 @@ Urutan tier: Bookmark → Search → Reading Progress → Hafalan → Streak →
   Detail lengkap: [`services/api/scripts/scrape_kajian_cron.md`](services/api/scripts/scrape_kajian_cron.md),
   riwayat migrasi: [`docs/reviews/2026-09-09-kajian-scraper-per-channel-migration.md`](docs/reviews/2026-09-09-kajian-scraper-per-channel-migration.md).
 
+## Multi-agent Shared Workspace — Commit Scoping & No Stash Rule (Wajib)
+
+Repo ini dibuka bersamaan oleh beberapa sesi agent konkuren:
+- **JANGAN PERNAH STASH**: DILARANG menjalankan `git stash`, `git stash drop`, `git stash pop`, `git stash clear`, atau `git stash apply` karena dapat menghapus work-in-progress sesi agent lain secara diam-diam.
+- **COMMIT SCOPING**: Setiap agent **HANYA BOLEH** men-stage dan me-commit file yang dikerjakan oleh sesinya sendiri (`git add <file1> <file2>`).
+- **DILARANG** menjalankan `git add .`, `git add -A`, atau `git commit -a` secara global.
+- File modifikasi/untracked milik sesi agent lain yang sedang berjalan bersamaan tidak boleh disentuh, di-stage, di-stash, ataupun di-revert.
+
 ## Deploy tooling in `ops/deploy-workspace/`
 
 That directory is a **mirrored backup**, not configuration for this repo. Deploys

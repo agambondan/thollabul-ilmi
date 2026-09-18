@@ -138,10 +138,16 @@ type BroadcastPushResponse struct {
 // UserNotification — persisted inbox message per user
 type UserNotification struct {
 	BaseUUID
-	UserID uuid.UUID        `json:"user_id" gorm:"type:uuid;not null;index"`
-	Title  string           `json:"title" gorm:"type:varchar(200)"`
-	Body   string           `json:"body" gorm:"type:text"`
-	Type   NotificationType `json:"type" gorm:"type:varchar(50)"`
-	RefID  string           `json:"ref_id,omitempty" gorm:"type:varchar(100)"`
-	IsRead bool             `json:"is_read" gorm:"default:false"`
+	UserID       uuid.UUID        `json:"user_id" gorm:"type:uuid;not null;index"`
+	Title        string           `json:"title" gorm:"type:varchar(200)"`
+	Body         string           `json:"body" gorm:"type:text"`
+	Type         NotificationType `json:"type" gorm:"type:varchar(50)"`
+	RefID        string           `json:"ref_id,omitempty" gorm:"type:varchar(100)"`
+	Channel      string           `json:"channel" gorm:"type:varchar(20)"`
+	Priority     string           `json:"priority" gorm:"type:varchar(20);default:'normal'"`
+	Status       string           `json:"status" gorm:"type:varchar(20);default:'created'"`
+	SentAt       *time.Time       `json:"sent_at,omitempty"`
+	ErrorMessage string           `json:"error_message,omitempty" gorm:"type:text"`
+	Metadata     string           `json:"metadata,omitempty" gorm:"type:jsonb"`
+	IsRead       bool             `json:"is_read" gorm:"default:false"`
 }

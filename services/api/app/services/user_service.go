@@ -91,12 +91,17 @@ type UserService interface {
 }
 
 type userService struct {
-	user repository.UserRepository
-	wa   *whatsapp.Manager
+	user  repository.UserRepository
+	inbox repository.NotificationInboxRepository
+	wa    *whatsapp.Manager
 }
 
 func NewUserService(repo repository.UserRepository, wa *whatsapp.Manager) UserService {
-	return &userService{repo, wa}
+	return NewUserServiceWithInbox(repo, nil, wa)
+}
+
+func NewUserServiceWithInbox(repo repository.UserRepository, inbox repository.NotificationInboxRepository, wa *whatsapp.Manager) UserService {
+	return &userService{user: repo, inbox: inbox, wa: wa}
 }
 
 func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) {
@@ -201,18 +206,59 @@ func (s *userService) dispatchVerification(user *model.User) error {
 				slog.Error("panic in verification dispatch goroutine", "recover", r)
 			}
 		}()
+		userID := user.ID
 		if channel == model.VerificationChannelWhatsapp {
 			if devLog {
 				slog.Info("dev: whatsapp verification code", "phone", derefStr(user.Phone), "code", raw)
 			}
-			if err := s.wa.SendOTP(derefStr(user.Phone), raw); err != nil {
+			err := s.wa.SendOTP(derefStr(user.Phone), raw)
+			if s.inbox != nil {
+				status := "sent"
+				errMsg := ""
+				if err != nil {
+					status = "failed"
+					errMsg = err.Error()
+				}
+				_, _ = s.inbox.Create(model.UserNotification{
+					UserID:       userID,
+					Title:        "Verifikasi WhatsApp",
+					Body:         "Kode verifikasi WhatsApp telah dikirim.",
+					Type:         model.NotificationTypeDoa,
+					RefID:        "verify-whatsapp",
+					Channel:      "whatsapp",
+					Priority:     "important",
+					Status:       status,
+					ErrorMessage: errMsg,
+				})
+			}
+			if err != nil {
 				slog.Warn("whatsapp verification send failed", "phone", derefStr(user.Phone), "err", err)
 			}
 		} else {
 			if devLog {
 				slog.Info("dev: email verification token", "email", derefStr(user.Email), "token", raw)
 			}
-			if err := lib.SendVerificationEmail(derefStr(user.Email), raw); err != nil {
+			err := lib.SendVerificationEmail(derefStr(user.Email), raw)
+			if s.inbox != nil {
+				status := "sent"
+				errMsg := ""
+				if err != nil {
+					status = "failed"
+					errMsg = err.Error()
+				}
+				_, _ = s.inbox.Create(model.UserNotification{
+					UserID:       userID,
+					Title:        "Verifikasi Email",
+					Body:         "Link verifikasi email telah dikirim ke email Anda.",
+					Type:         model.NotificationTypeDoa,
+					RefID:        "verify-email",
+					Channel:      "email",
+					Priority:     "important",
+					Status:       status,
+					ErrorMessage: errMsg,
+				})
+			}
+			if err != nil {
 				slog.Warn("verification email failed", "email", derefStr(user.Email), "err", err)
 			}
 		}
@@ -380,7 +426,27 @@ func (s *userService) ForgotPassword(email string) error {
 				slog.Error("panic in password reset email goroutine", "recover", r)
 			}
 		}()
-		if err := lib.SendPasswordResetEmail(*user.Email, token); err != nil {
+		err := lib.SendPasswordResetEmail(*user.Email, token)
+		if s.inbox != nil {
+			status := "sent"
+			errMsg := ""
+			if err != nil {
+				status = "failed"
+				errMsg = err.Error()
+			}
+			_, _ = s.inbox.Create(model.UserNotification{
+				UserID:       user.ID,
+				Title:        "Reset Password",
+				Body:         "Link reset password telah dikirim ke email Anda.",
+				Type:         model.NotificationTypeDoa,
+				RefID:        "password-reset",
+				Channel:      "email",
+				Priority:     "critical",
+				Status:       status,
+				ErrorMessage: errMsg,
+			})
+		}
+		if err != nil {
 			slog.Warn("password reset email failed", "email", *user.Email, "err", err)
 		}
 	}()
@@ -406,7 +472,24 @@ func (s *userService) ResetPassword(token, newPassword string) error {
 	if err := s.user.DeleteUserRefreshTokens(prt.UserID); err != nil {
 		return err
 	}
-	return s.user.MarkPasswordResetTokenUsed(tokenHash)
+	if err := s.user.MarkPasswordResetTokenUsed(tokenHash); err != nil {
+		return err
+	}
+	if s.inbox != nil {
+		if parsedID, err := uuid.Parse(prt.UserID); err == nil {
+			_, _ = s.inbox.Create(model.UserNotification{
+				UserID:   parsedID,
+				Title:    "Password Direset",
+				Body:     "Password akun Anda telah direset melalui link email. Jika ini bukan Anda, segera hubungi administrator.",
+				Type:     model.NotificationTypeDoa,
+				RefID:    "password-reset-success",
+				Channel:  "email",
+				Priority: "critical",
+				Status:   "sent",
+			})
+		}
+	}
+	return nil
 }
 
 func (s *userService) VerifyEmail(token string) error {
@@ -421,7 +504,24 @@ func (s *userService) VerifyEmail(token string) error {
 	if err := s.user.MarkEmailVerified(vt.UserID); err != nil {
 		return err
 	}
-	return s.user.MarkVerificationTokenVerified(vt.ID)
+	if err := s.user.MarkVerificationTokenVerified(vt.ID); err != nil {
+		return err
+	}
+	if s.inbox != nil {
+		if parsedID, err := uuid.Parse(vt.UserID); err == nil {
+			_, _ = s.inbox.Create(model.UserNotification{
+				UserID:   parsedID,
+				Title:    "Email Terverifikasi",
+				Body:     "Email akun Anda berhasil diverifikasi.",
+				Type:     model.NotificationTypeDoa,
+				RefID:    "verify-email-success",
+				Channel:  "email",
+				Priority: "important",
+				Status:   "sent",
+			})
+		}
+	}
+	return nil
 }
 
 func (s *userService) VerifyWhatsApp(phone, code string) error {
@@ -454,7 +554,22 @@ func (s *userService) VerifyWhatsApp(phone, code string) error {
 	if err := s.user.MarkPhoneVerified(user.ID.String()); err != nil {
 		return err
 	}
-	return s.user.MarkVerificationTokenVerified(active.ID)
+	if err := s.user.MarkVerificationTokenVerified(active.ID); err != nil {
+		return err
+	}
+	if s.inbox != nil {
+		_, _ = s.inbox.Create(model.UserNotification{
+			UserID:   user.ID,
+			Title:    "WhatsApp Terverifikasi",
+			Body:     "Nomor WhatsApp akun Anda berhasil diverifikasi.",
+			Type:     model.NotificationTypeDoa,
+			RefID:    "verify-whatsapp-success",
+			Channel:  "whatsapp",
+			Priority: "important",
+			Status:   "sent",
+		})
+	}
+	return nil
 }
 
 func (s *userService) ResendVerification(identifier string) error {
@@ -501,7 +616,23 @@ func (s *userService) UpdatePassword(id string, req *model.UpdatePasswordRequest
 	}
 	// Revoke every session (including the one making this request) so a
 	// stolen refresh token can't survive a deliberate password change.
-	return s.user.DeleteUserRefreshTokens(id)
+	if err := s.user.DeleteUserRefreshTokens(id); err != nil {
+		return err
+	}
+	if s.inbox != nil {
+		userID, _ := uuid.Parse(id)
+		_, _ = s.inbox.Create(model.UserNotification{
+			UserID:   userID,
+			Title:    "Password Diubah",
+			Body:     "Password akun Anda telah diubah. Jika ini bukan Anda, segera hubungi administrator.",
+			Type:     model.NotificationTypeDoa,
+			RefID:    "password-changed",
+			Channel:  "inbox",
+			Priority: "critical",
+			Status:   "sent",
+		})
+	}
+	return nil
 }
 
 func (s *userService) UpdateRole(id string, req *model.UpdateRoleRequest) (*model.User, error) {

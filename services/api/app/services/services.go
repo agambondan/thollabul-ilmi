@@ -123,7 +123,7 @@ func NewServices(repo *repository.Repositories) *Services {
 	prayerTimesSvc := NewPrayerTimesService()
 	notificationSvc := NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc, repo.User, waManager)
 	svc := &Services{
-		User:                 NewUserService(repo.User, waManager),
+		User:                 NewUserServiceWithInbox(repo.User, repo.NotificationInbox, waManager),
 		Ayah:                 NewAyahServiceWithCache(repo.Ayah, cache),
 		Surah:                NewSurahServiceWithCache(repo.Surah, cache),
 		Juz:                  NewJuzServiceWithCache(repo.Juz, cache),

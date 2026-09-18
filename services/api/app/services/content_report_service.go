@@ -23,10 +23,10 @@ type ContentReportService interface {
 }
 
 type contentReportService struct {
-	repo          repository.ContentReportRepository
-	inbox         repository.NotificationInboxRepository
-	repos         *repository.Repositories
-	notification  NotificationService
+	repo         repository.ContentReportRepository
+	inbox        repository.NotificationInboxRepository
+	repos        *repository.Repositories
+	notification NotificationService
 }
 
 func NewContentReportService(
@@ -454,12 +454,14 @@ func (s *contentReportService) notifyReporter(report *model.ContentReport, statu
 
 	if s.inbox != nil {
 		_, _ = s.inbox.Create(model.UserNotification{
-			UserID: report.UserID,
-			Title:  title,
-			Body:   body,
-			Type:   model.NotificationTypeReport,
-			RefID:  report.ID.String(),
-			IsRead: false,
+			UserID:   report.UserID,
+			Title:    title,
+			Body:     body,
+			Type:     model.NotificationTypeReport,
+			RefID:    report.ID.String(),
+			Channel:  "inbox",
+			Priority: "important",
+			Status:   "sent",
 		})
 	}
 	if s.notification != nil {
@@ -523,4 +525,3 @@ func translationColumnForLang(lang string) string {
 	}
 	return ""
 }
-
