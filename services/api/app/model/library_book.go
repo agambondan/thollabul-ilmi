@@ -43,6 +43,8 @@ type LibraryBook struct {
 	FileSizeBytes    int64                    `json:"file_size_bytes" gorm:"default:0"`
 	FileObjectKey    string                   `json:"-" gorm:"type:varchar(700)"`
 	CoverObjectKey   string                   `json:"-" gorm:"type:varchar(700)"`
+	FileURL          string                   `json:"file_url" gorm:"type:varchar(700)"`
+	ChecksumSHA256   string                   `json:"checksum_sha256" gorm:"type:varchar(64)"`
 	License          string                   `json:"license" gorm:"type:varchar(256)"`
 	LicenseStatus    LibraryBookLicenseStatus `json:"license_status" gorm:"type:varchar(30);default:'unverified';index"`
 	SourceNote       string                   `json:"source_note" gorm:"type:text"`
@@ -80,6 +82,19 @@ type LibraryBookExtractedText struct {
 	// a column default is declared, silently writing the default instead —
 	// which would flip every real false back to true on save.
 	Confident bool `json:"confident"`
+}
+
+// ManualExtractedPage is one corrected page submitted by a human (or an
+// OCR pass run outside the API, e.g. against a rendered page image when the
+// PDF's own text layer is corrupted) to overwrite a specific page's stored
+// text without touching the rest of the book's already-good pages.
+type ManualExtractedPage struct {
+	PageNumber int    `json:"page_number" validate:"required"`
+	Text       string `json:"text" validate:"required"`
+}
+
+type UpsertExtractedPagesRequest struct {
+	Pages []ManualExtractedPage `json:"pages" validate:"required,dive"`
 }
 
 type CreateLibraryBookRequest struct {

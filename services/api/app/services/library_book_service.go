@@ -28,6 +28,7 @@ type LibraryBookService interface {
 	ClearCover(id int) (*model.LibraryBook, error)
 	ExtractText(id int) error
 	FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error)
+	SaveManualPages(id int, pages []model.ManualExtractedPage) error
 	Delete(id int) error
 }
 
@@ -254,6 +255,46 @@ func (s *libraryBookService) ExtractText(id int) error {
 
 func (s *libraryBookService) FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error) {
 	return s.repo.FindExtractedPages(id)
+}
+
+// SaveManualPages overwrites specific pages with human/OCR-corrected text
+// (see ExtractText's doc comment on why the automatic pass won't touch
+// these pages itself) and re-derives the book's overall extraction_status
+// from the full, now-mixed set of pages.
+func (s *libraryBookService) SaveManualPages(id int, pages []model.ManualExtractedPage) error {
+	if len(pages) == 0 {
+		return nil
+	}
+	rows := make([]model.LibraryBookExtractedText, 0, len(pages))
+	for _, p := range pages {
+		rows = append(rows, model.LibraryBookExtractedText{
+			LibraryBookID:    id,
+			PageNumber:       p.PageNumber,
+			Text:             p.Text,
+			ExtractionMethod: "ocr_manual",
+			Confident:        true,
+		})
+	}
+	if err := s.repo.UpsertExtractedPages(rows); err != nil {
+		return err
+	}
+
+	all, err := s.repo.FindExtractedPages(id)
+	if err != nil {
+		return err
+	}
+	confident := 0
+	for _, p := range all {
+		if p.Confident {
+			confident++
+		}
+	}
+	status, note := model.LibraryBookExtractDone, ""
+	if confident < len(all) {
+		status = model.LibraryBookExtractLowConfidence
+		note = fmt.Sprintf("%d dari %d halaman berteks lolos cek kualitas (termasuk koreksi manual).", confident, len(all))
+	}
+	return s.repo.SetExtractionStatus(id, status, note)
 }
 
 func (s *libraryBookService) Delete(id int) error {

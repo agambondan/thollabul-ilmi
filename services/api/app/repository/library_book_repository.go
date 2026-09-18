@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/morkid/paginate"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type LibraryBookRepository interface {
@@ -22,6 +23,7 @@ type LibraryBookRepository interface {
 	ClearCover(id int) (*model.LibraryBook, error)
 	SetExtractionStatus(id int, status model.LibraryBookExtractStatus, errMsg string) error
 	SaveExtractedPages(bookID int, pages []model.LibraryBookExtractedText) error
+	UpsertExtractedPages(pages []model.LibraryBookExtractedText) error
 	FindExtractedPages(bookID int) ([]model.LibraryBookExtractedText, error)
 	Delete(id int) error
 }
@@ -248,6 +250,16 @@ func (r *libraryBookRepo) SaveExtractedPages(bookID int, pages []model.LibraryBo
 		}
 		return tx.Create(&pages).Error
 	})
+}
+
+func (r *libraryBookRepo) UpsertExtractedPages(pages []model.LibraryBookExtractedText) error {
+	if len(pages) == 0 {
+		return nil
+	}
+	return r.db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "library_book_id"}, {Name: "page_number"}},
+		DoUpdates: clause.AssignmentColumns([]string{"text", "extraction_method", "confident", "updated_at"}),
+	}).Create(&pages).Error
 }
 
 func (r *libraryBookRepo) FindExtractedPages(bookID int) ([]model.LibraryBookExtractedText, error) {

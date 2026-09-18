@@ -29,6 +29,7 @@ type LibraryBookController interface {
 	ClearCover(ctx *fiber.Ctx) error
 	ExtractText(ctx *fiber.Ctx) error
 	GetExtractedText(ctx *fiber.Ctx) error
+	UpsertExtractedText(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -362,6 +363,34 @@ func (c *libraryBookController) GetExtractedText(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, pages)
+}
+
+// @Summary Overwrite specific extracted pages with corrected text
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Param body body model.UpsertExtractedPagesRequest true "Corrected pages"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /library/books/{id}/extract [put]
+func (c *libraryBookController) UpsertExtractedText(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	if _, err := c.svc.FindByIDAny(id); err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	req := new(model.UpsertExtractedPagesRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	if err := c.svc.SaveManualPages(id, req.Pages); err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{"updated": len(req.Pages)})
 }
 
 // @Summary Delete library book
