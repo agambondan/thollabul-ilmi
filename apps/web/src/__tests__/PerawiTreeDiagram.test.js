@@ -94,11 +94,21 @@ describe("GlobalPerawiTree", () => {
     it("renders complete sanad tree from Nabi to Aimmah", () => {
         render(<GlobalPerawiTree basePath='/perawi' />);
 
-        expect(screen.getByText("Pohon Transmisi Sanad Hadis")).toBeInTheDocument();
+        expect(screen.getByText(/Pohon Transmisi Sanad Hadis/i)).toBeInTheDocument();
         expect(screen.getByText("Muhammad Rasulullah ﷺ")).toBeInTheDocument();
         expect(screen.getByText("Abu Hurairah")).toBeInTheDocument();
         expect(screen.getByText("Abdullah bin Umar")).toBeInTheDocument();
-        expect(screen.getByText("Malik bin Anas (Imam Malik)")).toBeInTheDocument();
+        expect(screen.getByText("Malik bin Anas")).toBeInTheDocument();
         expect(screen.getByText("Muhammad bin Ismail al-Bukhari")).toBeInTheDocument();
+    });
+
+    it("filters tree by selected branch", () => {
+        render(<GlobalPerawiTree basePath='/perawi' />);
+
+        const abuHurairahTab = screen.getByText("Jalur Abu Hurairah");
+        fireEvent.click(abuHurairahTab);
+
+        expect(screen.getByText("Abu Hurairah")).toBeInTheDocument();
+        expect(screen.queryByText("Abdullah bin Umar")).not.toBeInTheDocument();
     });
 });

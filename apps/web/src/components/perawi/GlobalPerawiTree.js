@@ -8,6 +8,7 @@ import {
     BsZoomIn,
     BsZoomOut,
     BsArrowRepeat,
+    BsFilter,
 } from "react-icons/bs";
 
 const LEVEL_COLORS = {
@@ -58,7 +59,7 @@ const LEVEL_COLORS = {
     },
 };
 
-const SANAD_TREE_DATA = {
+const ALL_40_PERAWI_TREE = {
     id: 1,
     nama_latin: "Muhammad Rasulullah ﷺ",
     nama_arab: "مُحَمَّدٌ رَسُولُ اللَّهِ ﷺ",
@@ -77,6 +78,7 @@ const SANAD_TREE_DATA = {
             status: "Tsiqah",
             tahun_wafat: 73,
             initial: "U",
+            branchKey: "ibnu_umar",
             children: [
                 {
                     id: 6,
@@ -90,7 +92,7 @@ const SANAD_TREE_DATA = {
                     children: [
                         {
                             id: 8,
-                            nama_latin: "Malik bin Anas (Imam Malik)",
+                            nama_latin: "Malik bin Anas",
                             nama_arab: "مَالِكُ بْنُ أَنَسٍ",
                             tabaqah: "Tabi'ut Tabi'in",
                             levelKey: "tabiut_tabiin",
@@ -99,92 +101,104 @@ const SANAD_TREE_DATA = {
                             initial: "M",
                             children: [
                                 {
-                                    id: 9,
-                                    nama_latin: "Muhammad bin Ismail al-Bukhari",
-                                    nama_arab: "مُحَمَّدُ بْنُ إِسْمَاعِيلَ البُخَارِيُّ",
-                                    tabaqah: "Mukharrij (Shahih Bukhari)",
+                                    id: 23,
+                                    nama_latin: "Muhammad bin Idris asy-Syafi'i",
+                                    nama_arab: "مُحَمَّدُ بْنُ إِدْرِيسَ الشَّافِعِيُّ",
+                                    tabaqah: "Imam Mazhab (Tabaqah 5)",
                                     levelKey: "aimmah",
-                                    status: "Amirul Mukminin",
-                                    tahun_wafat: 256,
-                                    initial: "B",
-                                },
-                                {
-                                    id: 10,
-                                    nama_latin: "Muslim bin al-Hajjaj",
-                                    nama_arab: "مُسْلِمُ بْنُ الحَجَّاجِ",
-                                    tabaqah: "Mukharrij (Shahih Muslim)",
-                                    levelKey: "aimmah",
-                                    status: "Imam Tsiqah",
-                                    tahun_wafat: 261,
-                                    initial: "M",
+                                    status: "Nashirus Sunnah",
+                                    tahun_wafat: 204,
+                                    initial: "S",
+                                    children: [
+                                        {
+                                            id: 22,
+                                            nama_latin: "Ahmad bin Hanbal",
+                                            nama_arab: "أَحْمَدُ بْنُ حَنْبَلٍ",
+                                            tabaqah: "Imam Mazhab (Tabaqah 5)",
+                                            levelKey: "aimmah",
+                                            status: "Imam Ahlus Sunnah",
+                                            tahun_wafat: 241,
+                                            initial: "Ah",
+                                            children: [
+                                                {
+                                                    id: 9,
+                                                    nama_latin: "Muhammad bin Ismail al-Bukhari",
+                                                    nama_arab: "مُحَمَّدُ بْنُ إِسْمَاعِيلَ البُخَارِيُّ",
+                                                    tabaqah: "Mukharrij (Shahih)",
+                                                    levelKey: "aimmah",
+                                                    status: "Amirul Mukminin",
+                                                    tahun_wafat: 256,
+                                                    initial: "B",
+                                                },
+                                                {
+                                                    id: 10,
+                                                    nama_latin: "Muslim bin al-Hajjaj",
+                                                    nama_arab: "مُسْلِمُ بْنُ الحَجَّاجِ",
+                                                    tabaqah: "Mukharrij (Shahih)",
+                                                    levelKey: "aimmah",
+                                                    status: "Imam Tsiqah",
+                                                    tahun_wafat: 261,
+                                                    initial: "Mu",
+                                                },
+                                                {
+                                                    id: 11,
+                                                    nama_latin: "Abu Dawud as-Sijistani",
+                                                    nama_arab: "أَبُو دَاوُدَ السِّجِسْتَانِيُّ",
+                                                    tabaqah: "Mukharrij (Sunan)",
+                                                    levelKey: "aimmah",
+                                                    status: "Imam Muhaddits",
+                                                    tahun_wafat: 275,
+                                                    initial: "D",
+                                                    children: [
+                                                        {
+                                                            id: 12,
+                                                            nama_latin: "Muhammad bin Isa at-Tirmidzi",
+                                                            nama_arab: "مُحَمَّدُ بْنُ عِيسَى التِّرْمِذِيُّ",
+                                                            tabaqah: "Mukharrij (Jami')",
+                                                            levelKey: "aimmah",
+                                                            status: "Imam Al-Hafizh",
+                                                            tahun_wafat: 279,
+                                                            initial: "T",
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    id: 22,
+                    id: 56,
                     nama_latin: "Ikrimah bin Khalid",
                     nama_arab: "عِكْرِمَةُ بْنُ خَالِدٍ",
-                    tabaqah: "Tabi'in",
+                    tabaqah: "Thabaqah 4",
                     levelKey: "tabiin",
                     status: "Tsiqah",
                     tahun_wafat: 114,
                     initial: "I",
                 },
-            ],
-        },
-        {
-            id: 4,
-            nama_latin: "Anas bin Malik",
-            nama_arab: "أَنَسُ بْنُ مَالِكٍ",
-            tabaqah: "Sahabat",
-            levelKey: "sahabat",
-            status: "Tsiqah",
-            tahun_wafat: 93,
-            initial: "A",
-            children: [
                 {
-                    id: 7,
-                    nama_latin: "Ibnu Syihab az-Zuhri",
-                    nama_arab: "مُحَمَّدُ بْنُ مُسْلِمٍ الزُّهْرِيُّ",
-                    tabaqah: "Tabi'in",
-                    levelKey: "tabiin",
-                    status: "Imam Al-Hafizh",
-                    tahun_wafat: 124,
-                    initial: "Z",
+                    id: 55,
+                    nama_latin: "Hanzhalah bin Abu Sufyan",
+                    nama_arab: "حَنْظَلَةُ بْنُ أَبِي سُفْيَانَ",
+                    tabaqah: "Thabaqah 6",
+                    levelKey: "tabiut_tabiin",
+                    status: "Tsiqah Tsabat",
+                    tahun_wafat: 151,
+                    initial: "H",
                     children: [
                         {
-                            id: 13,
-                            nama_latin: "Qutaibah bin Sa'id",
-                            nama_arab: "قُتَيْبَةُ بْنُ سَعِيدٍ",
-                            tabaqah: "Thabaqah 5",
-                            levelKey: "tabiut_tabiin",
-                            status: "Tsiqah Tsabat",
-                            tahun_wafat: 240,
-                            initial: "Q",
-                            children: [
-                                {
-                                    id: 11,
-                                    nama_latin: "Abu Dawud as-Sijistani",
-                                    nama_arab: "أَبُو دَاوُدَ السِّجِسْتَانِيُّ",
-                                    tabaqah: "Mukharrij (Sunan)",
-                                    levelKey: "aimmah",
-                                    status: "Imam Muhaddits",
-                                    tahun_wafat: 275,
-                                    initial: "D",
-                                },
-                                {
-                                    id: 12,
-                                    nama_latin: "Muhammad bin Isa at-Tirmidzi",
-                                    nama_arab: "مُحَمَّدُ بْنُ عِيسَى التِّرْمِذِيُّ",
-                                    tabaqah: "Mukharrij (Jami')",
-                                    levelKey: "aimmah",
-                                    status: "Imam Al-Hafizh",
-                                    tahun_wafat: 279,
-                                    initial: "T",
-                                },
-                            ],
+                            id: 54,
+                            nama_latin: "Ubaidullah bin Musa",
+                            nama_arab: "عُبَيْدُ اللَّهِ بْنُ مُوسَى",
+                            tabaqah: "Thabaqah 9",
+                            levelKey: "aimmah",
+                            status: "Tsiqah",
+                            tahun_wafat: 213,
+                            initial: "Ub",
                         },
                     ],
                 },
@@ -199,26 +213,173 @@ const SANAD_TREE_DATA = {
             status: "Rawi Terbanyak",
             tahun_wafat: 57,
             initial: "H",
+            branchKey: "abu_hurairah",
             children: [
                 {
-                    id: 16,
+                    id: 20,
+                    nama_latin: "Sa'id bin al-Musayyab",
+                    nama_arab: "سَعِيدُ بْنُ المُسَيَّبِ",
+                    tabaqah: "Sayyidut Tabi'in",
+                    levelKey: "tabiin",
+                    status: "Faqih Madinah",
+                    tahun_wafat: 94,
+                    initial: "M",
+                },
+                {
+                    id: 21,
+                    nama_latin: "Abu Salamah bin Abdurrahman",
+                    nama_arab: "أَبُو سَلَمَةَ بْنُ عَبْدِ الرَّحْمَنِ",
+                    tabaqah: "Tabi'in",
+                    levelKey: "tabiin",
+                    status: "Faqih Madinah",
+                    tahun_wafat: 104,
+                    initial: "Sl",
+                },
+                {
+                    id: 50,
                     nama_latin: "Atha' bin Yasar",
                     nama_arab: "عَطَاءُ بْنُ يَسَارٍ",
-                    tabaqah: "Tabi'in",
+                    tabaqah: "Thabaqah 3",
                     levelKey: "tabiin",
                     status: "Tsiqah Fadlil",
                     tahun_wafat: 103,
                     initial: "Y",
                 },
                 {
-                    id: 19,
+                    id: 53,
                     nama_latin: "Amir bin Sa'd",
                     nama_arab: "عَامِرُ بْنُ سَعْدٍ",
-                    tabaqah: "Tabi'in",
+                    tabaqah: "Thabaqah 3",
                     levelKey: "tabiin",
                     status: "Tsiqah",
                     tahun_wafat: 104,
-                    initial: "S",
+                    initial: "Am",
+                    children: [
+                        {
+                            id: 52,
+                            nama_latin: "Bukair bin Mismar",
+                            nama_arab: "بُكَيْرُ بْنُ مِسْمَارٍ",
+                            tabaqah: "Thabaqah 6",
+                            levelKey: "tabiut_tabiin",
+                            status: "Shaduq",
+                            tahun_wafat: 150,
+                            initial: "Bk",
+                        },
+                    ],
+                },
+                {
+                    id: 61,
+                    nama_latin: "Abu Zur'ah bin Amr bin Jarir",
+                    nama_arab: "أَبُو زُرْعَةَ بْنُ عَمْرٍو",
+                    tabaqah: "Tabi'in",
+                    levelKey: "tabiin",
+                    status: "Tsiqah",
+                    initial: "Z",
+                    children: [
+                        {
+                            id: 60,
+                            nama_latin: "Abu Hayyan at-Taimi",
+                            nama_arab: "أَبُو حَيَّانَ التَّيْمِيُّ",
+                            tabaqah: "Thabaqah 6",
+                            levelKey: "tabiut_tabiin",
+                            status: "Tsiqah",
+                            tahun_wafat: 145,
+                            initial: "Hy",
+                            children: [
+                                {
+                                    id: 59,
+                                    nama_latin: "Isma'il bin Ibrahim (Ibnu 'Ulayyah)",
+                                    nama_arab: "إِسْمَاعِيلُ بْنُ إِبْرَاهِيمَ",
+                                    tabaqah: "Thabaqah 8",
+                                    levelKey: "tabiut_tabiin",
+                                    status: "Hafizh Tsiqah",
+                                    tahun_wafat: 193,
+                                    initial: "Ul",
+                                    children: [
+                                        {
+                                            id: 58,
+                                            nama_latin: "Musaddad bin Musarhad",
+                                            nama_arab: "مُسَدَّدُ بْنُ مُسَرْهَدٍ",
+                                            tabaqah: "Thabaqah 10",
+                                            levelKey: "aimmah",
+                                            status: "Hafizh Bashrah",
+                                            tahun_wafat: 228,
+                                            initial: "Ms",
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 4,
+            nama_latin: "Anas bin Malik",
+            nama_arab: "أَنَسُ بْنُ مَالِكٍ",
+            tabaqah: "Sahabat",
+            levelKey: "sahabat",
+            status: "Tsiqah",
+            tahun_wafat: 93,
+            initial: "A",
+            branchKey: "anas_bin_malik",
+            children: [
+                {
+                    id: 7,
+                    nama_latin: "Ibnu Syihab az-Zuhri",
+                    nama_arab: "مُحَمَّدُ بْنُ مُسْلِمٍ الزُّهْرِيُّ",
+                    tabaqah: "Tabi'in",
+                    levelKey: "tabiin",
+                    status: "Imam Al-Hafizh",
+                    tahun_wafat: 124,
+                    initial: "Zh",
+                    children: [
+                        {
+                            id: 13,
+                            nama_latin: "Qutaibah bin Sa'id",
+                            nama_arab: "قُتَيْبَةُ بْنُ سَعِيدٍ",
+                            tabaqah: "Thabaqah 5",
+                            levelKey: "tabiut_tabiin",
+                            status: "Tsiqah Tsabat",
+                            tahun_wafat: 240,
+                            initial: "Q",
+                        },
+                    ],
+                },
+                {
+                    id: 64,
+                    nama_latin: "Qatadah bin Di'amah",
+                    nama_arab: "قَتَادَةُ بْنُ دِعَامَةَ",
+                    tabaqah: "Thabaqah 4",
+                    levelKey: "tabiin",
+                    status: "Hafizh Mufassir",
+                    tahun_wafat: 117,
+                    initial: "Qt",
+                    children: [
+                        {
+                            id: 63,
+                            nama_latin: "Syu'bah bin al-Hajjaj",
+                            nama_arab: "شُعْبَةُ بْنُ الحَجَّاجِ",
+                            tabaqah: "Thabaqah 7",
+                            levelKey: "tabiut_tabiin",
+                            status: "Amirul Mukminin",
+                            tahun_wafat: 160,
+                            initial: "Sy",
+                            children: [
+                                {
+                                    id: 62,
+                                    nama_latin: "Yahya bin Sa'id al-Qattan",
+                                    nama_arab: "يَحْيَى بْنُ سَعِيدٍ القَطَّانُ",
+                                    tabaqah: "Thabaqah 9",
+                                    levelKey: "aimmah",
+                                    status: "Imam Naqid Hadits",
+                                    tahun_wafat: 198,
+                                    initial: "Yh",
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
         },
@@ -231,28 +392,121 @@ const SANAD_TREE_DATA = {
             status: "Tsiqah",
             tahun_wafat: 58,
             initial: "Ai",
+            branchKey: "aisyah",
             children: [
                 {
-                    id: 15,
+                    id: 49,
                     nama_latin: "Abu Suhail Nafi' bin Malik",
                     nama_arab: "أَبُو سُهَيْلٍ نَافِعُ بْنُ مَالِكٍ",
                     tabaqah: "Thabaqah 4",
                     levelKey: "tabiin",
                     status: "Tsiqah",
                     tahun_wafat: 140,
-                    initial: "S",
-                },
-                {
-                    id: 21,
-                    nama_latin: "Hanzhalah bin Abu Sufyan",
-                    nama_arab: "حَنْظَلَةُ بْنُ أَبِي سُفْيَانَ",
-                    tabaqah: "Thabaqah 6",
-                    levelKey: "tabiin",
-                    status: "Tsiqah Tsabat",
-                    tahun_wafat: 151,
-                    initial: "H",
+                    initial: "Sh",
+                    children: [
+                        {
+                            id: 48,
+                            nama_latin: "Ismail bin Ja'far",
+                            nama_arab: "إِسْمَاعِيلُ بْنُ جَعْفَرٍ",
+                            tabaqah: "Thabaqah 8",
+                            levelKey: "tabiut_tabiin",
+                            status: "Qari & Tsiqah",
+                            tahun_wafat: 180,
+                            initial: "J",
+                            children: [
+                                {
+                                    id: 51,
+                                    nama_latin: "Sulaiman Abu ar-Rabi'",
+                                    nama_arab: "سُلَيْمَانُ أَبُو الرَّبِيعِ",
+                                    tabaqah: "Thabaqah 10",
+                                    levelKey: "aimmah",
+                                    status: "Tsiqah",
+                                    tahun_wafat: 234,
+                                    initial: "Sl",
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
+        },
+        {
+            id: 14,
+            nama_latin: "Umar bin Khattab",
+            nama_arab: "عُمَرُ بْنُ الخَطَّابِ",
+            tabaqah: "Khulafaur Rasyidin",
+            levelKey: "sahabat",
+            status: "Amirul Mukminin",
+            tahun_wafat: 23,
+            initial: "Um",
+            branchKey: "sahabat_lainnya",
+            children: [
+                {
+                    id: 57,
+                    nama_latin: "Malik bin Abi 'Amir",
+                    nama_arab: "مَالِكُ بْنُ أَبِي عَامِرٍ",
+                    tabaqah: "Kibarut Tabi'in",
+                    levelKey: "tabiin",
+                    status: "Kakek Imam Malik",
+                    tahun_wafat: 74,
+                    initial: "Ma",
+                },
+            ],
+        },
+        {
+            id: 15,
+            nama_latin: "Ali bin Abi Talib",
+            nama_arab: "عَلِيُّ بْنُ أَبِي طَالِبٍ",
+            tabaqah: "Khulafaur Rasyidin",
+            levelKey: "sahabat",
+            status: "Amirul Mukminin",
+            tahun_wafat: 40,
+            initial: "Al",
+            branchKey: "sahabat_lainnya",
+        },
+        {
+            id: 16,
+            nama_latin: "Abdullah bin Abbas",
+            nama_arab: "عَبْدُ اللَّهِ بْنُ عَبَّاسٍ",
+            tabaqah: "Habrul Ummah",
+            levelKey: "sahabat",
+            status: "Tarjumanul Quran",
+            tahun_wafat: 68,
+            initial: "Ab",
+            branchKey: "sahabat_lainnya",
+        },
+        {
+            id: 17,
+            nama_latin: "Jabir bin Abdullah",
+            nama_arab: "جَابِرُ بْنُ عَبْدِ اللَّهِ",
+            tabaqah: "Sahabat",
+            levelKey: "sahabat",
+            status: "Muktsirun",
+            tahun_wafat: 78,
+            initial: "Jb",
+            branchKey: "sahabat_lainnya",
+        },
+        {
+            id: 18,
+            nama_latin: "Abu Sa'id al-Khudri",
+            nama_arab: "أَبُو سَعِيدٍ الخُدْرِيُّ",
+            tabaqah: "Sahabat",
+            levelKey: "sahabat",
+            status: "Muktsirun",
+            tahun_wafat: 74,
+            initial: "Kh",
+            branchKey: "sahabat_lainnya",
+        },
+        {
+            id: 19,
+            nama_latin: "Abdullah bin Mas'ud",
+            nama_arab: "عَبْدُ اللَّهِ بْنُ مَسْعُودٍ",
+            tabaqah: "Sahabat (Faqih Kufah)",
+            levelKey: "sahabat",
+            status: "Kibarush Shahabah",
+            tahun_wafat: 32,
+            initial: "Ms",
+            branchKey: "sahabat_lainnya",
         },
     ],
 };
@@ -266,7 +520,7 @@ function OrgCard({ node, basePath, isRoot = false }) {
             className='group relative block transition-transform duration-200 hover:-translate-y-1 z-10'
         >
             <div
-                className={`relative pt-5 pb-3 px-2.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-t-4 shadow-sm hover:shadow-xl transition-all duration-200 text-center w-[150px] sm:w-[170px] ${
+                className={`relative pt-5 pb-3 px-2 rounded-2xl bg-white dark:bg-slate-800 border-2 border-t-4 shadow-sm hover:shadow-xl transition-all duration-200 text-center w-[145px] sm:w-[165px] ${
                     isRoot
                         ? "border-purple-400 dark:border-purple-600 border-t-purple-600 ring-4 ring-purple-100 dark:ring-purple-950/50"
                         : `${levelStyle.border} ${levelStyle.accent}`
@@ -282,7 +536,7 @@ function OrgCard({ node, basePath, isRoot = false }) {
                 {/* Level / Tabaqah Badge */}
                 <div className='mb-1'>
                     <span
-                        className={`inline-block text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${levelStyle.badge}`}
+                        className={`inline-block text-[8.5px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${levelStyle.badge} truncate max-w-[130px]`}
                     >
                         {node.tabaqah}
                     </span>
@@ -304,12 +558,12 @@ function OrgCard({ node, basePath, isRoot = false }) {
                 </p>
 
                 {/* Metadata & Status */}
-                <div className='flex items-center justify-center gap-1 text-[10px] text-gray-500 dark:text-gray-400'>
+                <div className='flex items-center justify-center gap-1 text-[9.5px] text-gray-500 dark:text-gray-400'>
                     {node.tahun_wafat && <span>w. {node.tahun_wafat} H</span>}
                     {node.status && (
                         <>
                             <span>•</span>
-                            <span className='font-medium text-teal-600 dark:text-teal-400 truncate max-w-[80px]'>
+                            <span className='font-medium text-teal-600 dark:text-teal-400 truncate max-w-[75px]'>
                                 {node.status}
                             </span>
                         </>
@@ -348,7 +602,7 @@ function OrgTreeNode({ node, basePath, isRoot = false }) {
                         )}
 
                         {/* Each Child branch */}
-                        <div className='flex gap-4 sm:gap-6'>
+                        <div className='flex gap-3 sm:gap-5'>
                             {node.children.map((child, idx) => (
                                 <div
                                     key={child.id || idx}
@@ -370,11 +624,25 @@ function OrgTreeNode({ node, basePath, isRoot = false }) {
 }
 
 export default function GlobalPerawiTree({ basePath = "/perawi" }) {
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(0.8);
+    const [selectedBranch, setSelectedBranch] = useState("all");
 
     const zoomIn = () => setZoom((z) => Math.min(1.4, +(z + 0.1).toFixed(2)));
-    const zoomOut = () => setZoom((z) => Math.max(0.5, +(z - 0.1).toFixed(2)));
+    const zoomOut = () => setZoom((z) => Math.max(0.4, +(z - 0.1).toFixed(2)));
     const zoomReset = () => setZoom(1);
+
+    // Filter tree by selected branch if requested
+    const filteredTree = {
+        ...ALL_40_PERAWI_TREE,
+        children:
+            selectedBranch === "all"
+                ? ALL_40_PERAWI_TREE.children
+                : ALL_40_PERAWI_TREE.children.filter((c) =>
+                      selectedBranch === "sahabat_lainnya"
+                          ? c.branchKey === "sahabat_lainnya"
+                          : c.branchKey === selectedBranch,
+                  ),
+    };
 
     return (
         <div className='bg-slate-50 dark:bg-slate-900/60 rounded-3xl border border-gray-200 dark:border-slate-800 p-4 sm:p-6 shadow-inner'>
@@ -383,10 +651,10 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                 <div>
                     <h2 className='text-base font-bold text-gray-900 dark:text-white flex items-center gap-2'>
                         <BsDiagram3Fill className='text-teal-600 dark:text-teal-400' />
-                        Pohon Transmisi Sanad Hadis
+                        Pohon Transmisi Sanad Hadis Lengkap (40 Perawi)
                     </h2>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                        Bagan silsilah periwayatan dari Rasulullah ﷺ ke Sahabat, Tabi&apos;in, hingga Aimmatul Kutub
+                        Bagan lengkap silsilah transmisi 40 perawi dari Rasulullah ﷺ ke 10 Sahabat, Tabi&apos;in, hingga Aimmatul Kutub
                     </p>
                 </div>
 
@@ -395,23 +663,23 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                     <div className='flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold'>
                         <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800'>
                             <span className='w-2 h-2 rounded-full bg-purple-600' />
-                            Nabi ﷺ
+                            Nabi ﷺ (1)
                         </span>
                         <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300 border border-pink-200 dark:border-pink-800'>
                             <span className='w-2 h-2 rounded-full bg-pink-500' />
-                            Sahabat
+                            Sahabat (10)
                         </span>
                         <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800'>
                             <span className='w-2 h-2 rounded-full bg-amber-500' />
-                            Tabi&apos;in
+                            Tabi&apos;in (11)
                         </span>
                         <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'>
                             <span className='w-2 h-2 rounded-full bg-emerald-600' />
-                            Tabi&apos;ut Tabi&apos;in
+                            Tabi&apos;ut Tabi&apos;in (8)
                         </span>
                         <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800'>
                             <span className='w-2 h-2 rounded-full bg-blue-600' />
-                            Aimmah
+                            Aimmah / Mukharrij (10)
                         </span>
                     </div>
 
@@ -440,15 +708,15 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                             type='button'
                             onClick={zoomReset}
                             className='px-2 py-1 text-[11px] font-semibold text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-lg ml-0.5'
-                            title='Reset Skala'
+                            title='Reset Skala 100%'
                         >
-                            Reset
+                            100%
                         </button>
                         <button
                             type='button'
-                            onClick={() => setZoom(0.75)}
+                            onClick={() => setZoom(0.65)}
                             className='px-2 py-1 text-[11px] font-semibold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg'
-                            title='Sesuaikan Layar (Fit View 75%)'
+                            title='Sesuaikan Layar (Fit View 65%)'
                         >
                             Fit
                         </button>
@@ -456,8 +724,36 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                 </div>
             </div>
 
+            {/* Branch Quick Filter Tabs */}
+            <div className='flex items-center gap-1.5 overflow-x-auto pb-3 mb-4 scrollbar-hide text-xs'>
+                <span className='text-gray-400 flex items-center gap-1 mr-1 text-[11px] font-medium shrink-0'>
+                    <BsFilter /> Fokus Jalur:
+                </span>
+                {[
+                    { key: "all", label: "Semua Jalur (40 Perawi)" },
+                    { key: "ibnu_umar", label: "Jalur Ibnu Umar (Silsilah Emas)" },
+                    { key: "abu_hurairah", label: "Jalur Abu Hurairah" },
+                    { key: "anas_bin_malik", label: "Jalur Anas bin Malik" },
+                    { key: "aisyah", label: "Jalur Aisyah r.a." },
+                    { key: "sahabat_lainnya", label: "Sahabat Utama Lainnya" },
+                ].map(({ key, label }) => (
+                    <button
+                        key={key}
+                        type='button'
+                        onClick={() => setSelectedBranch(key)}
+                        className={`px-3 py-1 rounded-lg font-medium whitespace-nowrap shrink-0 transition-colors ${
+                            selectedBranch === key
+                                ? "bg-teal-600 text-white shadow-sm"
+                                : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-teal-50 dark:hover:bg-teal-900/20"
+                        }`}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+
             {/* Scrollable Tree Canvas Container - Never clip left on scroll */}
-            <div className='overflow-auto max-h-[85vh] p-4 sm:p-8 bg-white/70 dark:bg-slate-950/50 rounded-2xl border border-gray-100 dark:border-slate-800/80 shadow-sm'>
+            <div className='overflow-auto max-h-[85vh] p-4 sm:p-8 bg-white/70 dark:bg-slate-950/50 rounded-2xl border border-gray-100 dark:border-slate-800/80 shadow-sm scrollbar-thin'>
                 <div className='inline-block min-w-full text-left'>
                     <div
                         className='w-max mx-auto flex flex-col items-center py-2 transition-transform duration-200'
@@ -466,7 +762,7 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                             transformOrigin: "top center",
                         }}
                     >
-                        <OrgTreeNode node={SANAD_TREE_DATA} basePath={basePath} isRoot />
+                        <OrgTreeNode node={filteredTree} basePath={basePath} isRoot />
                     </div>
                 </div>
             </div>
@@ -475,10 +771,10 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
             <div className='flex items-center justify-between mt-4 text-xs text-gray-500 dark:text-gray-400 px-2'>
                 <p className='flex items-center gap-1.5'>
                     <BsInfoCircle className='text-teal-600 shrink-0' />
-                    <span>Klik kartu perawi untuk membuka detail &amp; riwayat lengkap. Gunakan zoom atau geser ke samping untuk eksplorasi.</span>
+                    <span>Klik kartu perawi untuk membuka biografi, jarh wa ta&apos;dil, dan sanad. Pilih tab fokus jalur atau gunakan zoom untuk kenyamanan navigasi.</span>
                 </p>
                 <span className='hidden sm:inline-block text-[11px] font-medium bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-gray-400'>
-                    ↔ Geser / Zoom untuk melihat seluruh cabang
+                    Total 40 Perawi Terhubung
                 </span>
             </div>
         </div>
