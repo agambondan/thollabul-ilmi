@@ -15,7 +15,7 @@ const STATUS_COLORS = {
     dhaif: "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border-orange-300 dark:border-orange-700",
     matruk: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 border-red-300 dark:border-red-700",
     kadzdzab: "bg-red-200 text-red-800 dark:bg-red-900/60 dark:text-red-200 border-red-400 dark:border-red-800",
-    nabi: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 border-amber-300 dark:border-amber-700",
+    nabi: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 border-purple-300 dark:border-purple-700",
 };
 
 function StatusPill({ status }) {
@@ -37,36 +37,41 @@ function TreeNodeCard({ perawi, basePath, isCurrent = false, roleLabel }) {
 
     const cardContent = (
         <div
-            className={`flex flex-col items-center p-3 rounded-xl transition-all duration-200 text-center min-w-[160px] max-w-[200px] sm:min-w-[180px] ${
+            className={`relative pt-5 pb-3 px-3 rounded-2xl transition-all duration-200 text-center w-[165px] sm:w-[185px] ${
                 isCurrent
-                    ? "bg-teal-600 text-white shadow-lg shadow-teal-500/20 ring-4 ring-teal-500/30 scale-105 border-2 border-teal-400"
-                    : "bg-white dark:bg-slate-800 hover:bg-teal-50/70 dark:hover:bg-slate-700/80 border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-teal-300 dark:hover:border-teal-500"
+                    ? "bg-teal-600 text-white shadow-xl shadow-teal-500/25 ring-4 ring-teal-500/30 scale-105 border-2 border-teal-300 border-t-4 border-t-white"
+                    : "bg-white dark:bg-slate-800 hover:bg-teal-50/70 dark:hover:bg-slate-700/80 border border-gray-200 dark:border-slate-700 border-t-4 border-t-teal-500 shadow-sm hover:shadow-md hover:border-teal-400"
             }`}
         >
-            {roleLabel && (
-                <span
-                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-1.5 ${
-                        isCurrent
-                            ? "bg-teal-700/80 text-teal-100"
-                            : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                    }`}
-                >
-                    {roleLabel}
-                </span>
-            )}
+            {/* Top Floating Avatar */}
             <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm mb-1.5 shrink-0 ${
+                className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-md ring-2 ring-white dark:ring-slate-800 ${
                     isCurrent
-                        ? "bg-white text-teal-700 shadow-inner"
-                        : "bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300"
+                        ? "bg-white text-teal-700"
+                        : "bg-teal-600 text-white"
                 }`}
             >
                 {(perawi.nama_latin ?? "?")[0].toUpperCase()}
             </div>
+
+            {roleLabel && (
+                <div className='mb-1'>
+                    <span
+                        className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                            isCurrent
+                                ? "bg-teal-700/90 text-teal-100"
+                                : "bg-teal-100 text-teal-800 dark:bg-teal-950/60 dark:text-teal-300"
+                        }`}
+                    >
+                        {roleLabel}
+                    </span>
+                </div>
+            )}
+
             {perawi.nama_arab && (
                 <p
                     dir='rtl'
-                    className={`font-arabic text-sm leading-normal line-clamp-1 mb-0.5 ${
+                    className={`font-arabic text-xs leading-normal line-clamp-1 mb-0.5 ${
                         isCurrent ? "text-teal-100" : "text-gray-600 dark:text-gray-300"
                     }`}
                 >
@@ -143,7 +148,7 @@ export default function PerawiTreeDiagram({
                         Silsilah Sanad & Guru-Murid
                     </h2>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                        Visualisasi transmisi sanad ke atas (Guru) dan ke bawah (Murid)
+                        Bagan hubungan transmisi guru (atas) dan murid (bawah)
                     </p>
                 </div>
                 <div className='flex items-center bg-gray-100 dark:bg-slate-700 p-0.5 rounded-lg text-xs font-medium'>
@@ -177,35 +182,45 @@ export default function PerawiTreeDiagram({
             </div>
 
             {viewMode === "tree" ? (
-                <div className='overflow-x-auto pb-4 pt-2 -mx-2 px-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-slate-600'>
-                    <div className='min-w-[480px] flex flex-col items-center gap-2'>
+                <div className='overflow-x-auto pb-6 pt-4 -mx-2 px-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-slate-600'>
+                    <div className='min-w-[500px] flex flex-col items-center gap-0'>
                         {/* Layer 1: Guru / Masyayikh (Sanad Atas) */}
                         {hasGuru && (
                             <div className='flex flex-col items-center w-full'>
-                                <div className='flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2'>
+                                <div className='flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4'>
                                     <BsArrowUp className='text-teal-600' />
                                     Jalur Guru ({guru.length})
                                 </div>
-                                <div className='flex flex-wrap justify-center gap-3 w-full px-2'>
-                                    {guru.map((g) => (
-                                        <TreeNodeCard
-                                            key={g.id}
-                                            perawi={g}
-                                            basePath={basePath}
-                                            roleLabel='Guru'
+                                <div className='flex justify-center relative pb-6 w-full'>
+                                    {guru.length > 1 && (
+                                        <div
+                                            className='absolute bottom-0 h-0.5 bg-gray-300 dark:bg-slate-600'
+                                            style={{
+                                                left: `calc(100% / (${guru.length} * 2))`,
+                                                right: `calc(100% / (${guru.length} * 2))`,
+                                            }}
                                         />
-                                    ))}
+                                    )}
+                                    <div className='flex gap-6 sm:gap-8'>
+                                        {guru.map((g) => (
+                                            <div key={g.id} className='relative flex flex-col items-center'>
+                                                <TreeNodeCard
+                                                    perawi={g}
+                                                    basePath={basePath}
+                                                    roleLabel='Guru'
+                                                />
+                                                <div className='absolute -bottom-6 w-0.5 h-6 bg-gray-300 dark:bg-slate-600' />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                {/* Stem connector from Guru to Current */}
-                                <div className='flex flex-col items-center my-1'>
-                                    <div className='w-0.5 h-6 bg-gradient-to-b from-gray-300 to-teal-500 dark:from-slate-600 dark:to-teal-500' />
-                                    <div className='w-2 h-2 rounded-full bg-teal-500 -mt-1' />
-                                </div>
+                                {/* Center drop line into current */}
+                                <div className='w-0.5 h-6 bg-teal-500' />
                             </div>
                         )}
 
                         {/* Layer 2: Perawi Aktif (Center Focus) */}
-                        <div className='flex flex-col items-center my-1'>
+                        <div className='flex flex-col items-center my-0'>
                             <TreeNodeCard
                                 perawi={currentPerawi}
                                 basePath={basePath}
@@ -217,24 +232,34 @@ export default function PerawiTreeDiagram({
                         {/* Layer 3: Murid / Thullab (Sanad Bawah) */}
                         {hasMurid && (
                             <div className='flex flex-col items-center w-full'>
-                                {/* Stem connector from Current to Murid */}
-                                <div className='flex flex-col items-center my-1'>
-                                    <div className='w-2 h-2 rounded-full bg-teal-500 -mb-1' />
-                                    <div className='w-0.5 h-6 bg-gradient-to-b from-teal-500 to-gray-300 dark:from-teal-500 dark:to-slate-600' />
+                                {/* Center line down from current */}
+                                <div className='w-0.5 h-6 bg-teal-500' />
+                                <div className='flex justify-center relative pt-6 w-full'>
+                                    {murid.length > 1 && (
+                                        <div
+                                            className='absolute top-0 h-0.5 bg-gray-300 dark:bg-slate-600'
+                                            style={{
+                                                left: `calc(100% / (${murid.length} * 2))`,
+                                                right: `calc(100% / (${murid.length} * 2))`,
+                                            }}
+                                        />
+                                    )}
+                                    <div className='flex gap-6 sm:gap-8'>
+                                        {murid.map((m) => (
+                                            <div key={m.id} className='relative flex flex-col items-center'>
+                                                <div className='absolute -top-6 w-0.5 h-6 bg-gray-300 dark:bg-slate-600' />
+                                                <TreeNodeCard
+                                                    perawi={m}
+                                                    basePath={basePath}
+                                                    roleLabel='Murid'
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className='flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2'>
+                                <div className='flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4'>
                                     <BsArrowDown className='text-teal-600' />
                                     Jalur Murid ({murid.length})
-                                </div>
-                                <div className='flex flex-wrap justify-center gap-3 w-full px-2'>
-                                    {murid.map((m) => (
-                                        <TreeNodeCard
-                                            key={m.id}
-                                            perawi={m}
-                                            basePath={basePath}
-                                            roleLabel='Murid'
-                                        />
-                                    ))}
                                 </div>
                             </div>
                         )}

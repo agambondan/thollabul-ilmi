@@ -4,6 +4,8 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { useLocale } from "@/context/Locale";
+import { BsDiagram3Fill, BsListUl } from "react-icons/bs";
+import GlobalPerawiTree from "@/components/perawi/GlobalPerawiTree";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -67,6 +69,7 @@ export function PerawiContent({
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(initialPerawi.length === 0);
+    const [view, setView] = useState("list");
 
     const fetchPerawi = useCallback(async (pg, q, tab, reset = false) => {
         setLoading(true);
@@ -125,67 +128,101 @@ export function PerawiContent({
     };
 
     return (
-        <ContentWidth compact='max-w-4xl' className='p-6'>
-            <div className='mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
-                    {t("perawi.title")}
-                </h1>
-                {total > 0 && (
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {total} {t("perawi.unit")}
-                    </p>
-                )}
-            </div>
+        <ContentWidth compact='max-w-4xl' className='p-4 md:p-6'>
+            <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
+                <div>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                        {t("perawi.title")}
+                    </h1>
+                    {total > 0 && (
+                        <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
+                            {total} {t("perawi.unit")}
+                        </p>
+                    )}
+                </div>
 
-            {/* Search */}
-            <form onSubmit={handleSearch} className='relative mb-4 max-w-lg'>
-                <span
-                    className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none'
-                    aria-hidden='true'
-                >
-                    ⌕
-                </span>
-                <input
-                    type='text'
-                    placeholder={t("perawi.search_placeholder")}
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className='w-full pl-9 pr-20 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-300 dark:focus:ring-teal-700'
-                />
-                <button
-                    type='submit'
-                    className='absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-teal-600 text-white text-xs font-medium rounded-lg hover:bg-teal-700 transition-colors'
-                >
-                    {t("common.search")}
-                </button>
-            </form>
-
-            {/* Tabaqah filter */}
-            <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide'>
-                {[
-                    { key: "", label: t("perawi.filter_all") },
-                    ...Object.keys(TABAQAH_LABELS).map((k) => ({
-                        key: k,
-                        label: tabaqahLabel(k),
-                    })),
-                ].map(({ key, label }) => (
+                {/* View Switcher Tabs */}
+                <div className='flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-semibold self-start sm:self-auto border border-gray-200/60 dark:border-slate-700'>
                     <button
-                        key={key}
-                        onClick={() => {
-                            setTabaqah(key);
-                            setSearch("");
-                            setSearchInput("");
-                        }}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
-                            tabaqah === key
-                                ? "bg-teal-600 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900/20"
+                        type='button'
+                        onClick={() => setView("list")}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                            view === "list"
+                                ? "bg-white dark:bg-slate-700 text-teal-700 dark:text-teal-300 shadow-sm font-bold"
+                                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                         }`}
                     >
-                        {label}
+                        <BsListUl className='text-sm' />
+                        <span>Daftar Perawi</span>
                     </button>
-                ))}
+                    <button
+                        type='button'
+                        onClick={() => setView("tree")}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                            view === "tree"
+                                ? "bg-white dark:bg-slate-700 text-teal-700 dark:text-teal-300 shadow-sm font-bold"
+                                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        }`}
+                    >
+                        <BsDiagram3Fill className='text-sm text-teal-600 dark:text-teal-400' />
+                        <span>Bagan Silsilah Sanad</span>
+                    </button>
+                </div>
             </div>
+
+            {view === "tree" ? (
+                <GlobalPerawiTree basePath={basePath} />
+            ) : (
+                <>
+                    {/* Search */}
+                    <form onSubmit={handleSearch} className='relative mb-4 max-w-lg'>
+                        <span
+                            className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none'
+                            aria-hidden='true'
+                        >
+                            ⌕
+                        </span>
+                        <input
+                            type='text'
+                            placeholder={t("perawi.search_placeholder")}
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            className='w-full pl-9 pr-20 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-300 dark:focus:ring-teal-700'
+                        />
+                        <button
+                            type='submit'
+                            className='absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 bg-teal-600 text-white text-xs font-medium rounded-lg hover:bg-teal-700 transition-colors'
+                        >
+                            {t("common.search")}
+                        </button>
+                    </form>
+
+                    {/* Tabaqah filter */}
+                    <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide'>
+                        {[
+                            { key: "", label: t("perawi.filter_all") },
+                            ...Object.keys(TABAQAH_LABELS).map((k) => ({
+                                key: k,
+                                label: tabaqahLabel(k),
+                            })),
+                        ].map(({ key, label }) => (
+                            <button
+                                key={key}
+                                onClick={() => {
+                                    setTabaqah(key);
+                                    setSearch("");
+                                    setSearchInput("");
+                                }}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
+                                    tabaqah === key
+                                        ? "bg-teal-600 text-white"
+                                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900/20"
+                                }`}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
 
             {/* List */}
             {loading && perawi.length === 0 ? (
@@ -250,6 +287,8 @@ export function PerawiContent({
                         {t("common.load_more") ?? "Muat Lebih"}
                     </button>
                 </div>
+            )}
+                </>
             )}
         </ContentWidth>
     );
