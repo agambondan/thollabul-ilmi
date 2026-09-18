@@ -4,6 +4,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import Link from "next/link";
 import { useEffect, useState, use } from "react";
 import { useLocale } from "@/context/Locale";
+import PerawiTreeDiagram from "@/components/perawi/PerawiTreeDiagram";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -272,43 +273,13 @@ export function PerawiDetailContent({
                     </div>
                 </div>
             )}
-            {/* Guru & Murid */}
-            {(guru.length > 0 || murid.length > 0) && (
-                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4'>
-                    {guru.length > 0 && (
-                        <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-4'>
-                            <SectionTitle>
-                                {t("perawi.guru")} ({guru.length})
-                            </SectionTitle>
-                            <div className='space-y-1.5'>
-                                {guru.map((g) => (
-                                    <PerawiMiniCard
-                                        key={g.id}
-                                        perawi={g}
-                                        basePath={basePath}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                    {murid.length > 0 && (
-                        <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-4'>
-                            <SectionTitle>
-                                {t("perawi.murid")} ({murid.length})
-                            </SectionTitle>
-                            <div className='space-y-1.5'>
-                                {murid.map((m) => (
-                                    <PerawiMiniCard
-                                        key={m.id}
-                                        perawi={m}
-                                        basePath={basePath}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
+            <PerawiTreeDiagram
+                currentPerawi={data}
+                guru={guru}
+                murid={murid}
+                basePath={basePath}
+                t={t}
+            />
         </ContentWidth>
     );
 }
