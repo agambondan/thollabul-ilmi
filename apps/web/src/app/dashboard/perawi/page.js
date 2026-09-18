@@ -161,7 +161,7 @@ export function PerawiContent({
             </form>
 
             {/* Tabaqah filter */}
-            <div className='flex flex-wrap gap-2 mb-6'>
+            <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide'>
                 {[
                     { key: "", label: t("perawi.filter_all") },
                     ...Object.keys(TABAQAH_LABELS).map((k) => ({
@@ -176,7 +176,7 @@ export function PerawiContent({
                             setSearch("");
                             setSearchInput("");
                         }}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                             tabaqah === key
                                 ? "bg-teal-600 text-white"
                                 : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-teal-50 dark:hover:bg-teal-900/20"

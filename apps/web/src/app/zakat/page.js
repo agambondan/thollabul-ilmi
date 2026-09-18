@@ -184,7 +184,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
             </div>
 
             {/* Tabs */}
-            <div className='overflow-x-auto mb-6'>
+            <div className='overflow-x-auto pb-2 mb-6 scrollbar-hide'>
                 <div className='flex gap-2 min-w-max'>
                     {TABS.map((labelKey, i) => (
                         <button

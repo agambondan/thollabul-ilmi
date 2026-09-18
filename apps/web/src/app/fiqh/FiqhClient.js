@@ -5,6 +5,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { fiqhApi } from "@/lib/api";
 import { getLocalizedField, getLocalizedText } from "@/lib/translation";
+import { renderBlogContent } from "@/lib/blogContent";
 import { useEffect, useMemo, useState } from "react";
 import SourceBadges from "@/components/SourceBadges";
 
@@ -396,9 +397,14 @@ export default function FiqhClient({
                                                     </button>
 
                                                     <div
-                                                        className={`mt-2 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line ${isItemOpen ? "" : "hidden"}`}
+                                                        className={`mt-2 text-xs text-gray-600 dark:text-gray-300 leading-relaxed ${isItemOpen ? "" : "hidden"}`}
                                                     >
-                                                        {itemContent}
+                                                        <div
+                                                            className='blog-content'
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: renderBlogContent(itemContent),
+                                                            }}
+                                                        />
                                                         {item.source && (
                                                             <div className='mt-2'>
                                                                 <SourceBadges

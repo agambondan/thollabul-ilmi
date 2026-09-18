@@ -321,12 +321,12 @@ export function TasbihContent() {
                         className='w-24 px-3 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                 </div>
-                <div className='flex flex-wrap gap-2'>
+                <div className='flex gap-2 overflow-x-auto pb-1 scrollbar-hide'>
                     {[33, 99, 100, 313, 1000].map((preset) => (
                         <button
                             key={preset}
                             onClick={() => setTarget(preset)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
                                 target === preset
                                     ? "bg-emerald-700 text-white"
                                     : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"

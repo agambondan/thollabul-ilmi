@@ -181,11 +181,11 @@ export default function BlogClient({
             </div>
 
             {categories.length > 0 && (
-                <div className='flex flex-wrap gap-2 mb-6'>
+                <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide'>
                     <button
                         type='button'
                         onClick={() => setSelectedCategory("")}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                             selectedCategory === ""
                                 ? "bg-emerald-700 text-white"
                                 : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
@@ -203,7 +203,7 @@ export default function BlogClient({
                                 onClick={() =>
                                     setSelectedCategory(categoryValue)
                                 }
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                                     categoryValue.toLowerCase() ===
                                     selectedCategory.toLowerCase()
                                         ? "bg-emerald-700 text-white"

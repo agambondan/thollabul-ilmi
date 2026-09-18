@@ -6,9 +6,12 @@ import {
     within,
 } from "@testing-library/react";
 import AdminLessonsPage from "@/app/admin/lessons/page";
-import { authFetch } from "@/lib/api";
+import { adminLibraryApi, authFetch } from "@/lib/api";
 
 jest.mock("@/lib/api", () => ({
+    adminLibraryApi: {
+        list: jest.fn(),
+    },
     authFetch: jest.fn(),
     parseApiError: jest.fn(),
 }));
@@ -56,6 +59,10 @@ const tableTitles = () =>
 describe("Admin Lessons page — sort", () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        adminLibraryApi.list.mockResolvedValue({
+            ok: true,
+            json: async () => ({ items: [] }),
+        });
         global.fetch = jest.fn().mockResolvedValueOnce({
             ok: true,
             json: async () => ({ items: MODULES }),

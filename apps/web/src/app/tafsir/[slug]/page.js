@@ -166,23 +166,23 @@ export const TafsirSurahContent = ({
             </div>
 
             {/* Display controls */}
-            <div className='flex items-center gap-2 mb-4 flex-wrap'>
+            <div className='flex items-center gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide'>
                 <button
                     onClick={() => setShowLatin((v) => !v)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${showLatin ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${showLatin ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"}`}
                 >
                     Latin
                 </button>
                 <button
                     onClick={() => setShowTranslation((v) => !v)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${showTranslation ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${showTranslation ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"}`}
                 >
                     {t("tafsir.translation_toggle")}
                 </button>
                 <select
                     value={kitabFilter}
                     onChange={(e) => setKitabFilter(e.target.value)}
-                    className='px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                    className='px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                 >
                     <option value='all'>
                         {t("tafsir.kitab_all") ?? "Semua Tafsir"}
@@ -196,20 +196,20 @@ export const TafsirSurahContent = ({
                 </select>
                 <button
                     onClick={() => setSideBySide((v) => !v)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${sideBySide ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${sideBySide ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"}`}
                 >
                     {t("tafsir.side_by_side") ?? "Bandingkan"}
                 </button>
-                <div className='ml-auto flex gap-2'>
+                <div className='ml-auto flex gap-2 shrink-0'>
                     <button
                         onClick={expandAll}
-                        className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline'
+                        className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline whitespace-nowrap'
                     >
                         {t("tafsir.expand_all")}
                     </button>
                     <button
                         onClick={collapseAll}
-                        className='text-xs text-gray-400 hover:underline'
+                        className='text-xs text-gray-400 hover:underline whitespace-nowrap'
                     >
                         {t("tafsir.collapse_all")}
                     </button>

@@ -7,6 +7,7 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { doaApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
+import { renderBlogContent } from "@/lib/blogContent";
 import { useEffect, useRef, useState } from "react";
 import {
     BsPauseFill,
@@ -220,12 +221,12 @@ export const DoaContent = ({ initialItems = [] }) => {
                     />
                 </div>
 
-                <div className='flex gap-2 flex-wrap mb-6'>
+                <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide'>
                     {CATEGORIES.map((c) => (
                         <button
                             key={c.value}
                             onClick={() => setCategory(c.value)}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
                                 category === c.value
                                     ? "bg-emerald-700 text-white"
                                     : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
@@ -321,14 +322,19 @@ export const DoaContent = ({ initialItems = [] }) => {
                                         {doa.translation.latin_idn}
                                     </p>
                                 )}
-                                <p className='text-sm text-gray-700 dark:text-gray-300'>
-                                    {getLocalizedField(
-                                        doa,
-                                        "description",
-                                        lang,
-                                        ["meaning"],
-                                    )}
-                                </p>
+                                <div
+                                    className='blog-content text-sm text-gray-700 dark:text-gray-300'
+                                    dangerouslySetInnerHTML={{
+                                        __html: renderBlogContent(
+                                            getLocalizedField(
+                                                doa,
+                                                "description",
+                                                lang,
+                                                ["meaning"],
+                                            ),
+                                        ),
+                                    }}
+                                />
                                 {doa.audio_url && (
                                     <button
                                         onClick={(e) => {

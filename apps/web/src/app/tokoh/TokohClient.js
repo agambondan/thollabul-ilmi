@@ -80,13 +80,13 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                 </div>
 
                 {/* Era chips */}
-                <div className='flex gap-1.5 flex-wrap'>
+                <div className='flex gap-2 overflow-x-auto pb-2 scrollbar-hide'>
                     {ERA_FILTERS.map((f) => (
                         <button
                             key={f.value}
                             type='button'
                             onClick={() => setEra(f.value)}
-                            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
                                 era === f.value
                                     ? "bg-indigo-600 text-white"
                                     : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"

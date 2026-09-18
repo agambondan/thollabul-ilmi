@@ -214,7 +214,7 @@ export default function AsbabunNuzulForm({
                 <p className='text-xs text-gray-400 mb-2'>
                     {t("asbabun.quick_example") || quickExampleLabel}
                 </p>
-                <div className='flex gap-2 flex-wrap'>
+                <div className='flex gap-2 overflow-x-auto pb-2 scrollbar-hide'>
                     {QUICK_SURAH.map((num) => {
                         const s = SURAH_LIST.find((x) => x.number === num);
                         return (
@@ -222,7 +222,7 @@ export default function AsbabunNuzulForm({
                                 key={num}
                                 type='button'
                                 onClick={() => s && selectSurah(s)}
-                                className='px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors'
+                                className='px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors'
                             >
                                 {s ? `${s.number}. ${s.name}` : num}
                             </button>
