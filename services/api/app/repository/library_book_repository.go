@@ -237,7 +237,10 @@ func (r *libraryBookRepo) SetExtractionStatus(id int, status model.LibraryBookEx
 
 func (r *libraryBookRepo) SaveExtractedPages(bookID int, pages []model.LibraryBookExtractedText) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("library_book_id = ?", bookID).Delete(&model.LibraryBookExtractedText{}).Error; err != nil {
+		// Unscoped: a plain Delete only soft-deletes (sets deleted_at), which
+		// leaves the row in place and collides with idx_library_book_page on
+		// re-extraction — this table has no use for soft-delete history.
+		if err := tx.Unscoped().Where("library_book_id = ?", bookID).Delete(&model.LibraryBookExtractedText{}).Error; err != nil {
 			return err
 		}
 		if len(pages) == 0 {
