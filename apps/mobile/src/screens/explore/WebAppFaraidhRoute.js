@@ -22,6 +22,7 @@ import {
 } from "../../api/personal";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { calculateFaraidh, HEIR_LABELS } from "../../lib/faraidh";
+import { FaraidhFamilyTreeMobile } from "./FaraidhFamilyTreeMobile";
 import {
     deleteCalculatorHistory,
     mergeCalculatorHistory,
@@ -622,6 +623,11 @@ export function WebAppFaraidhRoute({ context }) {
                     distributable={distributable}
                     language={language}
                     t={t}
+                />
+
+                <FaraidhFamilyTreeMobile
+                    calculation={calculation}
+                    heirs={faraidh.heirs}
                 />
 
                 <TextInput

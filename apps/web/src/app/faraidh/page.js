@@ -8,6 +8,7 @@ import { faraidhSimpanApi } from "@/lib/api";
 import { calculateFaraidh, HEIR_LABELS } from "@/lib/faraidh";
 import { listMasjidImage } from "@/lib/const";
 import SourceBadges from "@/components/SourceBadges";
+import FaraidhFamilyTree from "@/components/faraidh/FaraidhFamilyTree";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -744,6 +745,12 @@ export function FaraidhContent() {
                                 )}
                             </div>
                         )}
+
+                        <FaraidhFamilyTree
+                            result={result}
+                            heirs={heirs}
+                            lang={lang}
+                        />
                     </>
                 )}
             </div>

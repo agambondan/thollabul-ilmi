@@ -100,6 +100,11 @@ export function createExploreClassicRenderers(context) {
     const {
         activeFeature,
         activeNoteRef,
+        bookPages = [],
+        activeBookPage = 1,
+        setActiveBookPage,
+        bookReaderFontSize = 15,
+        setBookReaderFontSize,
         answers,
         asmaulCounts,
         asmaulFlashcardRevealed,
@@ -1020,6 +1025,133 @@ export function createExploreClassicRenderers(context) {
             );
         };
 
+        const renderLibraryReaderPanel = () => {
+            if (!isLibraryDetail || !bookPages.length) return null;
+            const sortedPages = [...bookPages].sort(
+                (a, b) => a.page_number - b.page_number,
+            );
+            const currentPageData =
+                sortedPages.find((p) => p.page_number === activeBookPage) ||
+                sortedPages[0];
+            const firstPage = sortedPages[0]?.page_number || 1;
+            const lastPage =
+                sortedPages[sortedPages.length - 1]?.page_number || 1;
+
+            return (
+                <View style={styles.librarySourcePanel}>
+                    <CardTitle meta={`${sortedPages.length} Halaman Tersedia`}>
+                        Baca Teks Buku (Halaman {currentPageData.page_number})
+                    </CardTitle>
+                    <View
+                        style={{
+                            alignItems: "center",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            marginBottom: spacing.sm,
+                        }}
+                    >
+                        <View style={{ flexDirection: "row", gap: spacing.xs }}>
+                            <ActionPill
+                                disabled={activeBookPage <= firstPage}
+                                label='‹ Prev'
+                                onPress={() => {
+                                    const idx = sortedPages.findIndex(
+                                        (p) =>
+                                            p.page_number === activeBookPage,
+                                    );
+                                    if (idx > 0 && setActiveBookPage) {
+                                        setActiveBookPage(
+                                            sortedPages[idx - 1].page_number,
+                                        );
+                                    }
+                                }}
+                            />
+                            <ActionPill
+                                disabled={activeBookPage >= lastPage}
+                                label='Next ›'
+                                onPress={() => {
+                                    const idx = sortedPages.findIndex(
+                                        (p) =>
+                                            p.page_number === activeBookPage,
+                                    );
+                                    if (
+                                        idx >= 0 &&
+                                        idx < sortedPages.length - 1 &&
+                                        setActiveBookPage
+                                    ) {
+                                        setActiveBookPage(
+                                            sortedPages[idx + 1].page_number,
+                                        );
+                                    }
+                                }}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: "row", gap: spacing.xs }}>
+                            <ActionPill
+                                label='A-'
+                                onPress={() =>
+                                    setBookReaderFontSize &&
+                                    setBookReaderFontSize((s) =>
+                                        Math.max(12, s - 2),
+                                    )
+                                }
+                            />
+                            <ActionPill
+                                label='A+'
+                                onPress={() =>
+                                    setBookReaderFontSize &&
+                                    setBookReaderFontSize((s) =>
+                                        Math.min(24, s + 2),
+                                    )
+                                }
+                            />
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            backgroundColor: "#f8fafc",
+                            borderColor: "#e2e8f0",
+                            borderRadius: radius.sm,
+                            borderWidth: 1,
+                            marginVertical: spacing.xs,
+                            padding: spacing.md,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: "#1e293b",
+                                fontSize: bookReaderFontSize,
+                                lineHeight: Math.round(
+                                    bookReaderFontSize * 1.75,
+                                ),
+                            }}
+                        >
+                            {currentPageData.text}
+                        </Text>
+                    </View>
+
+                    {session?.token && (
+                        <View style={{ marginTop: spacing.sm }}>
+                            <ActionPill
+                                Icon={BookmarkCheck}
+                                label={`Tandai Halaman ${currentPageData.page_number} ke Progress`}
+                                onPress={() => {
+                                    setLibraryProgressDraft((cur) => ({
+                                        ...cur,
+                                        currentPage: String(
+                                            currentPageData.page_number,
+                                        ),
+                                    }));
+                                }}
+                            />
+                        </View>
+                    )}
+                </View>
+            );
+        };
+
         const renderLibrarySourcePanel = () => {
             if (!isLibraryDetail) return null;
             const raw = selectedItem?.raw ?? {};
@@ -1138,6 +1270,7 @@ export function createExploreClassicRenderers(context) {
                 </Card>
 
                 {renderFeedCommentsPanel()}
+                {renderLibraryReaderPanel()}
                 {renderLibrarySourcePanel()}
                 {renderLibraryProgressPanel()}
 

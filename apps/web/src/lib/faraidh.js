@@ -420,3 +420,19 @@ export const HEIR_LABELS = {
         en: "Mother + Siblings (Mushtarakah)",
     },
 };
+
+export const fmtFrac = (f) => (f ? `${f.num}/${f.den}` : "—");
+
+export const fmtNumber = (n, lang = "ID") =>
+    new Intl.NumberFormat(lang === "EN" ? "en-US" : "id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0,
+    }).format(Number.isFinite(n) ? n : 0);
+
+export const heirRowLabel = (key, lang = "ID") => {
+    const entry = HEIR_LABELS[key];
+    if (!entry) return key;
+    return entry[lang === "EN" ? "en" : "idn"];
+};
+

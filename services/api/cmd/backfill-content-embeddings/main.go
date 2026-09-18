@@ -43,7 +43,7 @@ func main() {
 
 	ctx := context.Background()
 
-	allTypes := []string{"quran", "hadith", "tafsir", "asbabun_nuzul", "doa", "fiqh", "sirah", "blog", "kajian"}
+	allTypes := []string{"quran", "hadith", "tafsir", "asbabun_nuzul", "doa", "fiqh", "sirah", "blog", "kajian", "library"}
 
 	var selectedTypes []string
 	if *typesFlag == "" {
@@ -98,6 +98,8 @@ func indexContentType(ctx context.Context, gdb *gorm.DB, svc service.ContentEmbe
 		chunks, err = fetchBlogChunks(gdb, batchSize, limit)
 	case "kajian":
 		chunks, err = fetchKajianChunks(gdb, batchSize, limit)
+	case "library":
+		chunks, err = fetchLibraryChunks(gdb, batchSize, limit)
 	default:
 		return 0, fmt.Errorf("unknown content type: %s", contentType)
 	}
@@ -481,6 +483,52 @@ func fetchKajianChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, erro
 				"start_seconds": t.StartSeconds,
 				"end_seconds":   t.EndSeconds,
 				"timestamp_url": t.TimestampURL,
+			},
+		})
+	}
+	return chunks, nil
+}
+
+func fetchLibraryChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
+	type Result struct {
+		ID         int
+		BookID     int
+		PageNumber int
+		Text       string
+		Title      string
+		Author     string
+		Category   string
+		Slug       string
+	}
+	var results []Result
+	q := gdb.Table("library_book_extracted_texts as et").
+		Select("et.id, et.library_book_id as book_id, et.page_number, et.text, b.title, b.author, b.category, b.slug").
+		Joins("JOIN library_books as b ON b.id = et.library_book_id").
+		Where("et.text != '' AND et.confident = true")
+
+	if limit > 0 {
+		q = q.Limit(limit)
+	}
+
+	if err := q.Scan(&results).Error; err != nil {
+		return nil, err
+	}
+
+	var chunks []ContentChunk
+	for _, r := range results {
+		chunkText := fmt.Sprintf("Kitab: %s\nPenulis: %s\nKategori: %s\nHalaman: %d\n\n%s",
+			r.Title, r.Author, r.Category, r.PageNumber, r.Text)
+		chunks = append(chunks, ContentChunk{
+			ContentType: "library",
+			ContentID:   uint(r.ID),
+			Text:        chunkText,
+			Metadata: map[string]interface{}{
+				"book_id":     r.BookID,
+				"book_title":  r.Title,
+				"author":      r.Author,
+				"page_number": r.PageNumber,
+				"slug":        r.Slug,
+				"category":    r.Category,
 			},
 		})
 	}

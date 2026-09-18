@@ -1,11 +1,22 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/context/Locale";
 import InlineError from "@/components/InlineError";
+import { BsGeoAltFill } from "react-icons/bs";
+
+function MapCenterController({ center, zoom }) {
+    const map = useMap();
+    useEffect(() => {
+        if (center && Number.isFinite(center[0]) && Number.isFinite(center[1])) {
+            map.flyTo(center, zoom || 12, { duration: 1.2 });
+        }
+    }, [center, zoom, map]);
+    return null;
+}
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -52,6 +63,7 @@ export default function MapComponent() {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("");
     const [era, setEra] = useState("");
+    const [selectedCenter, setSelectedCenter] = useState(null);
 
     useEffect(() => {
         const params = new URLSearchParams();
@@ -129,6 +141,7 @@ export default function MapComponent() {
                     scrollWheelZoom={true}
                     style={{ height: "100%", width: "100%" }}
                 >
+                    <MapCenterController center={selectedCenter} zoom={13} />
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -167,6 +180,46 @@ export default function MapComponent() {
                     ))}
                 </MapContainer>
             </div>
+
+            {/* Interactive Location Navigator Cards */}
+            {visibleLocations.length > 0 && (
+                <div className='mt-2'>
+                    <h3 className='text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3'>
+                        Jelajahi Titik Lokasi Sirah & Sejarah ({visibleLocations.length} Tempat)
+                    </h3>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[360px] overflow-y-auto pr-1'>
+                        {visibleLocations.map((loc) => (
+                            <button
+                                key={loc.id || loc.name}
+                                onClick={() =>
+                                    setSelectedCenter([
+                                        Number(loc.latitude),
+                                        Number(loc.longitude),
+                                    ])
+                                }
+                                className='flex flex-col items-start p-3 rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-left hover:border-emerald-500 hover:shadow-xs transition group'
+                            >
+                                <div className='flex items-center justify-between w-full mb-1'>
+                                    <span className='text-xs font-bold text-gray-800 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 flex items-center gap-1'>
+                                        <BsGeoAltFill className='text-emerald-600 text-[11px] shrink-0' />
+                                        {loc.name}
+                                    </span>
+                                    {loc.era && (
+                                        <span className='text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-1.5 py-0.5 rounded'>
+                                            {loc.era}
+                                        </span>
+                                    )}
+                                </div>
+                                {loc.description && (
+                                    <p className='text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed'>
+                                        {loc.description}
+                                    </p>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

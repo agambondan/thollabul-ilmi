@@ -421,6 +421,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/library/admin/books", admin, newLibraryBookController.FindAllAdmin)
 	master.Get("/library/books", newLibraryBookController.FindAll)
 	master.Get("/library/books/:slug", newLibraryBookController.FindBySlug)
+	master.Get("/library/books/:slug/pages", newLibraryBookController.GetPublicPages)
 	master.Put("/library/books/:id", admin, newLibraryBookController.Update)
 	master.Post("/library/books/:id/resource", admin, newLibraryBookController.UploadResource)
 	master.Delete("/library/books/:id/resource", admin, newLibraryBookController.ClearResource)

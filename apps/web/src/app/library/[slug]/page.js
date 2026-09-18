@@ -9,7 +9,18 @@ import { useLocale } from "@/context/Locale";
 import { bookmarkApi, libraryApi, libraryProgressApi } from "@/lib/api";
 import Link from "next/link";
 import { use, useCallback, useEffect, useRef, useState } from "react";
-import { BsBookmark, BsBookmarkFill, BsBoxArrowUpRight } from "react-icons/bs";
+import {
+    BsBookmark,
+    BsBookmarkFill,
+    BsBoxArrowUpRight,
+    BsChevronLeft,
+    BsChevronRight,
+    BsCheck2,
+    BsFiles,
+    BsFileEarmarkPdf,
+    BsBook,
+    BsBookmarkCheckFill,
+} from "react-icons/bs";
 
 const normalizeBook = (data) => data?.data ?? data;
 const getProgressStatuses = (t) => [
@@ -56,6 +67,11 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
     const [previewPct, setPreviewPct] = useState(50);
     const [isDesktop, setIsDesktop] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
+    const [extractedPages, setExtractedPages] = useState([]);
+    const [activePageNum, setActivePageNum] = useState(1);
+    const [readerTab, setReaderTab] = useState("auto");
+    const [fontSize, setFontSize] = useState(16);
+    const [copiedPage, setCopiedPage] = useState(false);
     const splitRef = useRef(null);
     const lastHandleMouseDownRef = useRef(0);
 
@@ -111,6 +127,19 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                 if (active) setLoading(false);
             });
 
+        libraryApi
+            .getPages(params.slug)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (!active) return;
+                const pages = data?.data?.pages || data?.pages || [];
+                if (Array.isArray(pages) && pages.length > 0) {
+                    setExtractedPages(pages);
+                    setActivePageNum(pages[0].page_number || 1);
+                }
+            })
+            .catch(() => {});
+
         return () => {
             active = false;
         };
@@ -156,6 +185,9 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                     note: item.note ?? "",
                     status: item.status ?? "reading",
                 });
+                if (item.current_page && Number(item.current_page) > 0) {
+                    setActivePageNum(Number(item.current_page));
+                }
             })
             .catch((e) => console.error(e));
     }, [book?.id, isAuthenticated]);
@@ -206,13 +238,58 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
         }
     };
 
+    const markCurrentPageToProgress = async (pageNum) => {
+        setProgressForm((cur) => ({ ...cur, current_page: String(pageNum) }));
+        if (!isAuthenticated || !book?.id) return;
+        setSavingProgress(true);
+        try {
+            const res = await libraryProgressApi.save(book.id, {
+                current_page: Number(pageNum) || 0,
+                note: progressForm.note,
+                status: progressForm.status || "reading",
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setProgress(data?.data ?? data);
+                setProgressMessage(`Halaman ${pageNum} ditandai ke progress.`);
+            }
+        } catch {
+            setProgressMessage("Progress belum bisa disimpan.");
+        } finally {
+            setSavingProgress(false);
+        }
+    };
+
+    const copyPageText = (text) => {
+        if (!text) return;
+        navigator?.clipboard?.writeText(text);
+        setCopiedPage(true);
+        setTimeout(() => setCopiedPage(false), 2000);
+    };
+
     if (loading) return <SkeletonList title={false} rows={4} />;
 
-    const showPreview =
-        book &&
-        book.source_type === "uploaded" &&
-        book.format === "pdf" &&
-        book.source_url;
+    const pdfUrl =
+        book?.file_url ||
+        (book?.format === "pdf" ? book?.source_url : "");
+    const hasTextReader = extractedPages.length > 0;
+    const hasPdfViewer = Boolean(pdfUrl);
+    const showPreview = hasTextReader || hasPdfViewer;
+
+    const currentTab =
+        readerTab === "auto"
+            ? hasTextReader
+                ? "text"
+                : "pdf"
+            : readerTab;
+
+    const sortedPages = [...extractedPages].sort(
+        (a, b) => a.page_number - b.page_number,
+    );
+    const currentPageData =
+        sortedPages.find((p) => p.page_number === activePageNum) ||
+        sortedPages[0] ||
+        null;
 
     return (
         <ContentWidth
@@ -511,12 +588,6 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         className='hidden select-none lg:flex lg:h-[calc(100vh-2rem)] lg:cursor-col-resize lg:items-stretch lg:justify-center lg:self-stretch lg:sticky lg:top-4'
                         onMouseDown={(event) => {
                             event.preventDefault();
-                            // Detected manually (rather than a native
-                            // onDoubleClick) because the full-screen drag
-                            // overlay sits on top of this handle the instant
-                            // isDragging flips true, so the first click's
-                            // mouseup lands on the overlay and the browser
-                            // never pairs the two clicks into a dblclick.
                             const now = Date.now();
                             if (now - lastHandleMouseDownRef.current < 400) {
                                 lastHandleMouseDownRef.current = 0;
@@ -535,12 +606,147 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                     </div>
                 )}
                 {showPreview && (
-                    <div className='h-[70vh] overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]'>
-                        <iframe
-                            className='h-full w-full'
-                            src={book.source_url}
-                            title={book.title}
-                        />
+                    <div className='flex flex-col h-[75vh] overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]'>
+                        <div className='flex items-center justify-between border-b border-gray-100 bg-gray-50/90 px-3 py-2 dark:border-slate-800 dark:bg-slate-950/70'>
+                            <div className='flex items-center gap-1.5'>
+                                {hasTextReader && (
+                                    <button
+                                        onClick={() => setReaderTab("text")}
+                                        className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                                            currentTab === "text"
+                                                ? "bg-emerald-700 text-white shadow-xs"
+                                                : "text-gray-600 hover:bg-gray-200/60 dark:text-gray-300 dark:hover:bg-slate-800"
+                                        }`}
+                                    >
+                                        <BsBook />
+                                        Baca Teks ({sortedPages.length} Hal)
+                                    </button>
+                                )}
+                                {hasPdfViewer && (
+                                    <button
+                                        onClick={() => setReaderTab("pdf")}
+                                        className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                                            currentTab === "pdf"
+                                                ? "bg-emerald-700 text-white shadow-xs"
+                                                : "text-gray-600 hover:bg-gray-200/60 dark:text-gray-300 dark:hover:bg-slate-800"
+                                        }`}
+                                    >
+                                        <BsFileEarmarkPdf />
+                                        PDF Asli
+                                    </button>
+                                )}
+                            </div>
+
+                            {currentTab === "text" && (
+                                <div className='flex items-center gap-1'>
+                                    <button
+                                        onClick={() => setFontSize((s) => Math.max(12, s - 2))}
+                                        title='Kecilkan teks'
+                                        className='rounded-md border border-gray-200 bg-white px-2 py-0.5 text-xs font-bold text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200'
+                                    >
+                                        A-
+                                    </button>
+                                    <button
+                                        onClick={() => setFontSize((s) => Math.min(24, s + 2))}
+                                        title='Besarkan teks'
+                                        className='rounded-md border border-gray-200 bg-white px-2 py-0.5 text-xs font-bold text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200'
+                                    >
+                                        A+
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {currentTab === "text" && currentPageData ? (
+                            <div className='flex flex-1 flex-col overflow-hidden'>
+                                <div className='flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 bg-white px-3 py-2 text-xs text-gray-600 dark:border-slate-800 dark:bg-slate-900 dark:text-gray-300'>
+                                    <div className='flex items-center gap-1'>
+                                        <button
+                                            disabled={activePageNum <= (sortedPages[0]?.page_number || 1)}
+                                            onClick={() => {
+                                                const idx = sortedPages.findIndex((p) => p.page_number === activePageNum);
+                                                if (idx > 0) setActivePageNum(sortedPages[idx - 1].page_number);
+                                            }}
+                                            className='inline-flex items-center gap-0.5 rounded-md border border-gray-200 px-2 py-1 hover:bg-gray-50 disabled:opacity-30 dark:border-slate-700 dark:hover:bg-slate-800'
+                                        >
+                                            <BsChevronLeft /> Prev
+                                        </button>
+                                        <select
+                                            value={activePageNum}
+                                            onChange={(e) => setActivePageNum(Number(e.target.value))}
+                                            className='rounded-md border border-gray-200 bg-white px-2 py-1 font-semibold text-gray-800 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200'
+                                        >
+                                            {sortedPages.map((p) => (
+                                                <option key={p.page_number} value={p.page_number}>
+                                                    Hal {p.page_number}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <button
+                                            disabled={activePageNum >= (sortedPages[sortedPages.length - 1]?.page_number || 1)}
+                                            onClick={() => {
+                                                const idx = sortedPages.findIndex((p) => p.page_number === activePageNum);
+                                                if (idx >= 0 && idx < sortedPages.length - 1) {
+                                                    setActivePageNum(sortedPages[idx + 1].page_number);
+                                                }
+                                            }}
+                                            className='inline-flex items-center gap-0.5 rounded-md border border-gray-200 px-2 py-1 hover:bg-gray-50 disabled:opacity-30 dark:border-slate-700 dark:hover:bg-slate-800'
+                                        >
+                                            Next <BsChevronRight />
+                                        </button>
+                                    </div>
+
+                                    <div className='flex items-center gap-2'>
+                                        {isAuthenticated && (
+                                            <button
+                                                onClick={() => markCurrentPageToProgress(activePageNum)}
+                                                title='Tandai halaman ini ke progress belajar'
+                                                className='inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 font-semibold text-emerald-800 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300'
+                                            >
+                                                <BsBookmarkCheckFill className='text-emerald-700 dark:text-emerald-400' />
+                                                Tandai Hal {activePageNum}
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={() => copyPageText(currentPageData.text)}
+                                            title='Salin teks halaman ini'
+                                            className='inline-flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 hover:bg-gray-50 dark:border-slate-700 dark:hover:bg-slate-800'
+                                        >
+                                            {copiedPage ? (
+                                                <>
+                                                    <BsCheck2 className='text-emerald-600' />
+                                                    Tersalin
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <BsFiles />
+                                                    Salin
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className='flex-1 overflow-y-auto p-5 md:p-6 bg-slate-50/50 dark:bg-slate-950/40'>
+                                    <div
+                                        className='whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200 select-text font-serif'
+                                        style={{ fontSize: `${fontSize}px`, lineHeight: 1.85 }}
+                                    >
+                                        {currentPageData.text}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : currentTab === "pdf" && pdfUrl ? (
+                            <iframe
+                                className='h-full w-full'
+                                src={pdfUrl}
+                                title={book.title}
+                            />
+                        ) : (
+                            <div className='flex flex-1 items-center justify-center p-6 text-center text-xs text-gray-400'>
+                                Tidak ada teks terekstrak atau file PDF untuk buku ini.
+                            </div>
+                        )}
                     </div>
                 )}
                 {isDragging && (

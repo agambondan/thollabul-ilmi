@@ -21,6 +21,7 @@ type LibraryBookController interface {
 	FindAll(ctx *fiber.Ctx) error
 	FindAllAdmin(ctx *fiber.Ctx) error
 	FindBySlug(ctx *fiber.Ctx) error
+	GetPublicPages(ctx *fiber.Ctx) error
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
 	UploadResource(ctx *fiber.Ctx) error
@@ -88,6 +89,53 @@ func (c *libraryBookController) FindBySlug(ctx *fiber.Ctx) error {
 		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, book)
+}
+
+// @Summary Get extracted pages of a book for reading
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param slug path string true "Book slug or ID"
+// @Param page query int false "Optional specific page number"
+// @Success 200 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /library/books/{slug}/pages [get]
+func (c *libraryBookController) GetPublicPages(ctx *fiber.Ctx) error {
+	slug := ctx.Params("slug")
+	book, err := c.svc.FindBySlug(slug)
+	if err != nil {
+		if id, convErr := strconv.Atoi(slug); convErr == nil {
+			book, err = c.svc.FindByIDAny(id)
+		}
+	}
+	if err != nil || book == nil || book.ID == nil {
+		return lib.ErrorNotFound(ctx)
+	}
+
+	bookID := *book.ID
+	pageQuery := ctx.Query("page")
+	if pageQuery != "" {
+		if pageNum, convErr := strconv.Atoi(pageQuery); convErr == nil && pageNum > 0 {
+			pages, err := c.svc.FindExtractedPagesBetween(bookID, pageNum, pageNum)
+			if err == nil && len(pages) > 0 {
+				return lib.OK(ctx, fiber.Map{
+					"book":        book,
+					"page":        pages[0],
+					"page_number": pageNum,
+				})
+			}
+		}
+	}
+
+	pages, err := c.svc.FindExtractedPages(bookID)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{
+		"book":        book,
+		"pages":       pages,
+		"total_pages": len(pages),
+	})
 }
 
 // @Summary Create library book

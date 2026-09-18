@@ -28,6 +28,7 @@ type LibraryBookService interface {
 	ClearCover(id int) (*model.LibraryBook, error)
 	ExtractText(id int) error
 	FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error)
+	FindExtractedPagesBetween(id int, startPage int, endPage int) ([]model.LibraryBookExtractedText, error)
 	SaveManualPages(id int, pages []model.ManualExtractedPage) error
 	GenerateDraft(id int, req *model.GenerateDraftRequest) (*model.GenerateDraftResponse, error)
 	Delete(id int) error
@@ -260,6 +261,10 @@ func (s *libraryBookService) ExtractText(id int) error {
 
 func (s *libraryBookService) FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error) {
 	return s.repo.FindExtractedPages(id)
+}
+
+func (s *libraryBookService) FindExtractedPagesBetween(id int, startPage int, endPage int) ([]model.LibraryBookExtractedText, error) {
+	return s.repo.FindExtractedPagesBetween(id, startPage, endPage)
 }
 
 // SaveManualPages overwrites specific pages with human/OCR-corrected text

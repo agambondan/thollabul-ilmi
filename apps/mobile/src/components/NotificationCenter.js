@@ -185,6 +185,7 @@ export function NotificationCenter({ variant = "classic" }) {
     const [settings, setSettings] = useState(defaultSettings);
     const [quietHours, setQuietHours] = useState(defaultQuietHours);
     const [inbox, setInbox] = useState([]);
+    const [inboxFilter, setInboxFilter] = useState("all");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [saving, setSaving] = useState(false);
@@ -669,6 +670,14 @@ export function NotificationCenter({ variant = "classic" }) {
             setActiveTab("settings");
         }
     }, [activeTab, hasSession]);
+
+    const filteredInbox = inbox.filter((item) => {
+        if (inboxFilter === "important") {
+            const p = (item?.priority || "normal").toLowerCase();
+            return p === "important" || p === "critical";
+        }
+        return true;
+    });
 
     return (
         <View
@@ -1323,17 +1332,65 @@ export function NotificationCenter({ variant = "classic" }) {
                     {loading ? (
                         <ActivityIndicator color={colors.primary} />
                     ) : null}
-                    {!loading && inbox.length === 0 ? (
+                    {inbox.length > 0 ? (
+                        <View style={styles.inboxFilterRow}>
+                            <Pressable
+                                accessibilityRole='button'
+                                onPress={() => setInboxFilter("all")}
+                                style={[
+                                    styles.inboxFilterChip,
+                                    inboxFilter === "all"
+                                        ? styles.inboxFilterChipActive
+                                        : null,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.inboxFilterText,
+                                        inboxFilter === "all"
+                                            ? styles.inboxFilterTextActive
+                                            : null,
+                                    ]}
+                                >
+                                    Semua
+                                </Text>
+                            </Pressable>
+                            <Pressable
+                                accessibilityRole='button'
+                                onPress={() => setInboxFilter("important")}
+                                style={[
+                                    styles.inboxFilterChip,
+                                    inboxFilter === "important"
+                                        ? styles.inboxFilterChipActive
+                                        : null,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.inboxFilterText,
+                                        inboxFilter === "important"
+                                            ? styles.inboxFilterTextActive
+                                            : null,
+                                    ]}
+                                >
+                                    ⭐ Penting
+                                </Text>
+                            </Pressable>
+                        </View>
+                    ) : null}
+                    {!loading && filteredInbox.length === 0 ? (
                         <Text
                             style={[
                                 styles.body,
                                 isWebApp ? styles.webAppTextMuted : null,
                             ]}
                         >
-                            Belum ada notifikasi masuk.
+                            {inboxFilter === "important"
+                                ? "Tidak ada notifikasi penting."
+                                : "Belum ada notifikasi masuk."}
                         </Text>
                     ) : null}
-                    {inbox.map((item) => {
+                    {filteredInbox.map((item) => {
                         const presentation = presentationForNotification(item);
                         const InboxIcon = presentation.Icon;
 
@@ -1366,6 +1423,67 @@ export function NotificationCenter({ variant = "classic" }) {
                                         />
                                     </View>
                                     <View style={styles.inboxCopy}>
+                                        <View style={styles.inboxBadgeRow}>
+                                            {item.channel && item.channel !== "inbox" ? (
+                                                <View
+                                                    style={[
+                                                        styles.inboxBadge,
+                                                        styles[`channelBadge_${item.channel}`] ||
+                                                            styles.channelBadge_inbox,
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={[
+                                                            styles.inboxBadgeText,
+                                                            styles[`channelBadgeText_${item.channel}`] ||
+                                                                styles.channelBadgeText_inbox,
+                                                        ]}
+                                                    >
+                                                        {item.channel.toUpperCase()}
+                                                    </Text>
+                                                </View>
+                                            ) : null}
+                                            {item.priority && item.priority !== "normal" ? (
+                                                <View
+                                                    style={[
+                                                        styles.inboxBadge,
+                                                        item.priority === "critical"
+                                                            ? styles.priorityBadge_critical
+                                                            : styles.priorityBadge_important,
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={[
+                                                            styles.inboxBadgeText,
+                                                            item.priority === "critical"
+                                                                ? styles.priorityBadgeText_critical
+                                                                : styles.priorityBadgeText_important,
+                                                        ]}
+                                                    >
+                                                        {item.priority === "critical"
+                                                            ? "KRITIS"
+                                                            : "PENTING"}
+                                                    </Text>
+                                                </View>
+                                            ) : null}
+                                            {item.status === "failed" ? (
+                                                <View
+                                                    style={[
+                                                        styles.inboxBadge,
+                                                        styles.statusBadge_failed,
+                                                    ]}
+                                                >
+                                                    <Text
+                                                        style={[
+                                                            styles.inboxBadgeText,
+                                                            styles.statusBadgeText_failed,
+                                                        ]}
+                                                    >
+                                                        GAGAL
+                                                    </Text>
+                                                </View>
+                                            ) : null}
+                                        </View>
                                         <SectionHeader
                                             meta={
                                                 item.is_read
@@ -1548,6 +1666,96 @@ const styles = StyleSheet.create({
     },
     disabled: {
         opacity: 0.55,
+    },
+    inboxBadgeRow: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 4,
+        marginBottom: 4,
+    },
+    inboxBadge: {
+        borderRadius: 4,
+        borderWidth: 1,
+        paddingHorizontal: 5,
+        paddingVertical: 1,
+    },
+    inboxBadgeText: {
+        fontSize: 9,
+        fontWeight: "800",
+    },
+    channelBadge_email: {
+        backgroundColor: "rgba(37, 99, 235, 0.08)",
+        borderColor: "rgba(37, 99, 235, 0.25)",
+    },
+    channelBadgeText_email: {
+        color: "#2563eb",
+    },
+    channelBadge_whatsapp: {
+        backgroundColor: "rgba(22, 163, 74, 0.08)",
+        borderColor: "rgba(22, 163, 74, 0.25)",
+    },
+    channelBadgeText_whatsapp: {
+        color: "#16a34a",
+    },
+    channelBadge_push: {
+        backgroundColor: "rgba(147, 51, 234, 0.08)",
+        borderColor: "rgba(147, 51, 234, 0.25)",
+    },
+    channelBadgeText_push: {
+        color: "#9333ea",
+    },
+    channelBadge_inbox: {
+        backgroundColor: "rgba(100, 116, 139, 0.08)",
+        borderColor: "rgba(100, 116, 139, 0.25)",
+    },
+    channelBadgeText_inbox: {
+        color: "#64748b",
+    },
+    priorityBadge_critical: {
+        backgroundColor: "rgba(225, 29, 72, 0.08)",
+        borderColor: "rgba(225, 29, 72, 0.25)",
+    },
+    priorityBadgeText_critical: {
+        color: "#e11d48",
+    },
+    priorityBadge_important: {
+        backgroundColor: "rgba(217, 119, 6, 0.08)",
+        borderColor: "rgba(217, 119, 6, 0.25)",
+    },
+    priorityBadgeText_important: {
+        color: "#d97706",
+    },
+    statusBadge_failed: {
+        backgroundColor: "rgba(225, 29, 72, 0.08)",
+        borderColor: "rgba(225, 29, 72, 0.25)",
+    },
+    statusBadgeText_failed: {
+        color: "#e11d48",
+    },
+    inboxFilterRow: {
+        flexDirection: "row",
+        gap: 6,
+        marginBottom: spacing.sm,
+    },
+    inboxFilterChip: {
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.faint,
+        borderRadius: radius.pill,
+        borderWidth: 1,
+        paddingHorizontal: 12,
+        paddingVertical: 5,
+    },
+    inboxFilterChipActive: {
+        backgroundColor: colors.primary,
+        borderColor: colors.primary,
+    },
+    inboxFilterText: {
+        color: colors.muted,
+        fontSize: 11,
+        fontWeight: "700",
+    },
+    inboxFilterTextActive: {
+        color: "#ffffff",
     },
     inboxHeader: {
         alignItems: "center",

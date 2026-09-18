@@ -31,6 +31,7 @@ import {
     getAsmaulNames,
     getBlogCategoryItems,
     getBookmarkItems,
+    fetchBookPages,
     getFeatureItemPage,
     getHijriOverview,
     getQuizQuestions,
@@ -338,6 +339,9 @@ export function ExploreScreen({
     });
     const [libraryProgressMessage, setLibraryProgressMessage] = useState("");
     const [libraryProgressSaving, setLibraryProgressSaving] = useState(false);
+    const [bookPages, setBookPages] = useState([]);
+    const [activeBookPage, setActiveBookPage] = useState(1);
+    const [bookReaderFontSize, setBookReaderFontSize] = useState(15);
     const [pinnedFeatureKeys, setPinnedFeatureKeys] = useState({});
     const [recentFeatureKeys, setRecentFeatureKeys] = useState({});
     const [feedComments, setFeedComments] = useState([]);
@@ -1343,6 +1347,34 @@ export function ExploreScreen({
     }, [activeFeature?.key, selectedItem, session?.token]);
 
     useEffect(() => {
+        const slugOrId =
+            selectedItem?.raw?.slug ||
+            selectedItem?.raw?.id ||
+            selectedItem?.id;
+        if (activeFeature?.key !== "library" || !selectedItem || !slugOrId) {
+            setBookPages([]);
+            return;
+        }
+        let active = true;
+        fetchBookPages(slugOrId)
+            .then((payload) => {
+                const pages = payload?.data?.pages || payload?.pages || [];
+                if (active && Array.isArray(pages)) {
+                    setBookPages(pages);
+                    if (pages.length > 0) {
+                        setActiveBookPage(pages[0].page_number || 1);
+                    }
+                }
+            })
+            .catch(() => {
+                if (active) setBookPages([]);
+            });
+        return () => {
+            active = false;
+        };
+    }, [activeFeature?.key, selectedItem]);
+
+    useEffect(() => {
         if (!isActive) return;
         if (selectedItem) {
             navigation?.setBack(() => {
@@ -1436,6 +1468,11 @@ export function ExploreScreen({
     } = createExploreClassicRenderers({
         activeFeature,
         activeNoteRef,
+        bookPages,
+        activeBookPage,
+        setActiveBookPage,
+        bookReaderFontSize,
+        setBookReaderFontSize,
         answers,
         asmaulCounts,
         asmaulFlashcardRevealed,

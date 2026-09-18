@@ -387,6 +387,13 @@ export const getAsmaulNames = async () => {
     return pickItems(payload);
 };
 
+export const fetchBookPages = async (slugOrId, page) => {
+    const query = page ? `?page=${page}` : "";
+    return requestJson(
+        `/api/v1/library/books/${encodeURIComponent(slugOrId)}/pages${query}`,
+    );
+};
+
 export const getHijriOverview = async () => {
     const [today, events] = await Promise.allSettled([
         requestJson("/api/v1/hijri/today"),

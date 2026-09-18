@@ -193,6 +193,8 @@ func (s *contentEmbeddingService) getSourceDisplayName(contentType string) strin
 		return "Artikel"
 	case "kajian":
 		return "Kajian"
+	case "library", "library_book":
+		return "Kitab/Pustaka"
 	default:
 		return contentType
 	}

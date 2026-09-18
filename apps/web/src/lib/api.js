@@ -394,6 +394,11 @@ export const libraryApi = {
     },
     detail: (slug) =>
         fetch(`${API_URL}/api/v1/library/books/${encodeURIComponent(slug)}`),
+    getPages: (slug, page) => {
+        const url = new URL(`${API_URL}/api/v1/library/books/${encodeURIComponent(slug)}/pages`);
+        if (page) url.searchParams.set("page", String(page));
+        return fetch(url.toString());
+    },
 };
 
 export const libraryProgressApi = {

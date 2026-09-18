@@ -12,7 +12,7 @@ import {
 import { useLocale } from "@/context/Locale";
 import { adminLibraryApi, authFetch, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { BsPlus, BsTrash, BsPencil } from "react-icons/bs";
+import { BsPlus, BsTrash, BsPencil, BsX } from "react-icons/bs";
 import toast from "react-hot-toast";
 import ModalShell from "@/components/ModalShell";
 import MarkdownEditor from "@/components/MarkdownEditor";
@@ -337,18 +337,39 @@ export default function AdminLessonsPage() {
             {modalOpen && (
                 <ModalShell
                     onClose={() => setModalOpen(false)}
-                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm'
-                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-xl'
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden'
                 >
-                    <h2 className='text-lg font-bold text-gray-900 dark:text-white mb-4'>
-                        {editing ? "Edit Modul" : "Tambah Modul"}
-                    </h2>
-                    <form onSubmit={handleSave} className='space-y-4'>
-                        <div className='grid grid-cols-2 gap-4'>
+                    <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-700 shrink-0'>
+                        <div>
+                            <h2 className='text-lg font-bold text-gray-900 dark:text-white'>
+                                {editing ? "Edit Modul" : "Tambah Modul"}
+                            </h2>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                                {editing
+                                    ? "Perbarui informasi modul dan langkah materi"
+                                    : "Buat modul materi belajar baru beserta langkah-langkahnya"}
+                            </p>
+                        </div>
+                        <button
+                            type='button'
+                            onClick={() => setModalOpen(false)}
+                            className='p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
+
+                    <form
+                        id='lesson-form'
+                        onSubmit={handleSave}
+                        className='flex-1 overflow-y-auto p-6 space-y-6'
+                    >
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <div>
                                 <label
                                     htmlFor='page-field-1'
-                                    className='block text-xs font-semibold mb-1'
+                                    className='block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5'
                                 >
                                     Judul
                                 </label>
@@ -363,13 +384,13 @@ export default function AdminLessonsPage() {
                                             title: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
+                                    className='w-full px-3.5 py-2.5 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 dark:border-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-field-2'
-                                    className='block text-xs font-semibold mb-1'
+                                    className='block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5'
                                 >
                                     Slug
                                 </label>
@@ -384,14 +405,15 @@ export default function AdminLessonsPage() {
                                             slug: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
+                                    className='w-full px-3.5 py-2.5 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 dark:border-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
                         </div>
+
                         <div>
                             <label
                                 htmlFor='page-field-3'
-                                className='block text-xs font-semibold mb-1'
+                                className='block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5'
                             >
                                 Deskripsi
                             </label>
@@ -404,15 +426,15 @@ export default function AdminLessonsPage() {
                                         description: e.target.value,
                                     })
                                 }
-                                className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
-                                rows={2}
+                                className='w-full px-3.5 py-2.5 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 dark:border-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                rows={3}
                             />
                         </div>
 
                         <div>
                             <label
                                 htmlFor='page-field-related-book'
-                                className='block text-xs font-semibold mb-1'
+                                className='block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5'
                             >
                                 Bacaan Lanjutan (Opsional)
                             </label>
@@ -425,7 +447,7 @@ export default function AdminLessonsPage() {
                                         related_book_id: e.target.value,
                                     })
                                 }
-                                className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
+                                className='w-full px-3.5 py-2.5 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 dark:border-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             >
                                 <option value=''>Tidak ada</option>
                                 {books.map((book) => (
@@ -437,27 +459,34 @@ export default function AdminLessonsPage() {
                         </div>
 
                         {/* Langkah-langkah */}
-                        <div>
-                            <div className='flex items-center justify-between mb-2'>
-                                <h3 className='text-xs font-bold uppercase'>
-                                    {t("admin.lessons.steps")}
-                                </h3>
+                        <div className='pt-2 border-t border-gray-100 dark:border-slate-700'>
+                            <div className='flex items-center justify-between mb-4'>
+                                <div>
+                                    <h3 className='text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white'>
+                                        {t("admin.lessons.steps")}
+                                    </h3>
+                                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                                        Total {form.steps.length} langkah tersusun
+                                    </p>
+                                </div>
                                 <button
                                     type='button'
                                     onClick={addStep}
-                                    className='text-xs text-emerald-600 font-semibold'
+                                    className='inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 rounded-lg border border-emerald-200 dark:border-emerald-800 transition-colors'
                                 >
+                                    <BsPlus className='text-base' />{" "}
                                     {t("admin.lessons.add_step")}
                                 </button>
                             </div>
-                            <div className='space-y-3'>
+
+                            <div className='space-y-5'>
                                 {form.steps.map((s, idx) => (
                                     <div
                                         key={idx}
-                                        className='p-3 border rounded-xl dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 relative'
+                                        className='p-4 sm:p-5 border border-gray-200 dark:border-slate-700 bg-gray-50/80 dark:bg-slate-900/50 rounded-2xl relative space-y-3.5 shadow-sm'
                                     >
-                                        <div className='flex items-center justify-between mb-2'>
-                                            <span className='text-xs font-bold text-gray-500 dark:text-gray-300'>
+                                        <div className='flex items-center justify-between'>
+                                            <span className='px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200'>
                                                 Langkah {idx + 1}
                                             </span>
                                             {form.steps.length > 1 && (
@@ -466,60 +495,71 @@ export default function AdminLessonsPage() {
                                                     onClick={() =>
                                                         removeStep(idx)
                                                     }
-                                                    className='text-rose-500 text-xs'
+                                                    className='inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg border border-rose-200 dark:border-rose-900/60 transition-colors'
                                                 >
+                                                    <BsTrash className='text-xs' />{" "}
                                                     Hapus
                                                 </button>
                                             )}
                                         </div>
-                                        <input
-                                            type='text'
-                                            placeholder={t(
-                                                "admin.lessons.step_title_placeholder",
-                                            )}
-                                            value={s.title}
-                                            onChange={(e) =>
-                                                updateStep(
-                                                    idx,
-                                                    "title",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className='w-full px-3 py-1.5 mb-2 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
-                                            required
-                                        />
-                                        <MarkdownEditor
-                                            value={s.body}
-                                            onChange={(val) =>
-                                                updateStep(idx, "body", val)
-                                            }
-                                            label='Isi Langkah'
-                                            placeholder={t(
-                                                "admin.lessons.step_desc_placeholder",
-                                            )}
-                                            minRows={4}
-                                        />
+
+                                        <div>
+                                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5'>
+                                                Judul Langkah
+                                            </label>
+                                            <input
+                                                type='text'
+                                                placeholder={t(
+                                                    "admin.lessons.step_title_placeholder",
+                                                )}
+                                                value={s.title}
+                                                onChange={(e) =>
+                                                    updateStep(
+                                                        idx,
+                                                        "title",
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className='w-full px-3.5 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 dark:border-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className='pt-1'>
+                                            <MarkdownEditor
+                                                value={s.body}
+                                                onChange={(val) =>
+                                                    updateStep(idx, "body", val)
+                                                }
+                                                label='Isi Langkah (Markdown)'
+                                                placeholder={t(
+                                                    "admin.lessons.step_desc_placeholder",
+                                                )}
+                                                minRows={4}
+                                            />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
-
-                        <div className='flex justify-end gap-2 mt-6'>
-                            <button
-                                type='button'
-                                onClick={() => setModalOpen(false)}
-                                className='px-4 py-2 text-sm border rounded-lg'
-                            >
-                                Batal
-                            </button>
-                            <button
-                                type='submit'
-                                className='px-5 py-2 text-sm bg-emerald-700 text-white rounded-lg'
-                            >
-                                Simpan
-                            </button>
-                        </div>
                     </form>
+
+                    <div className='flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50/80 dark:bg-slate-900/60 rounded-b-2xl shrink-0'>
+                        <button
+                            type='button'
+                            onClick={() => setModalOpen(false)}
+                            className='px-4 py-2 text-sm font-medium border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type='submit'
+                            form='lesson-form'
+                            className='px-5 py-2 text-sm font-medium bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl shadow-sm transition-colors'
+                        >
+                            Simpan
+                        </button>
+                    </div>
                 </ModalShell>
             )}
         </div>

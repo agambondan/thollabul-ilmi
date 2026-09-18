@@ -76,6 +76,8 @@ const NotificationsPage = () => {
     const [channelPrefs, setChannelPrefs] = useState(null);
     const [channelSaving, setChannelSaving] = useState(false);
     const [channelError, setChannelError] = useState("");
+    const [filterChannel, setFilterChannel] = useState("all");
+    const [filterPriority, setFilterPriority] = useState("all");
     const phoneVerified = Boolean(user?.phone_verified_at);
 
     const REMINDER_TYPES = [
@@ -499,6 +501,18 @@ const NotificationsPage = () => {
         } catch {}
     };
 
+    const filteredNotifs = notifs.filter((n) => {
+        if (filterChannel !== "all") {
+            const chan = (n.channel || (n.local ? "inbox" : "inbox")).toLowerCase();
+            if (chan !== filterChannel) return false;
+        }
+        if (filterPriority === "important") {
+            const prio = (n.priority || "normal").toLowerCase();
+            if (prio !== "important" && prio !== "critical") return false;
+        }
+        return true;
+    });
+
     const unreadCount = notifs.filter((n) => !n.is_read).length;
 
     return (
@@ -834,68 +848,141 @@ const NotificationsPage = () => {
                 </div>
             )}
 
-            {notifs.length === 0 ? (
-                <div className='text-center py-16'>
-                    <BsBell className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
-                    <p className='text-gray-500 dark:text-gray-400 text-sm mb-4'>
-                        {t("notif.empty")}
-                    </p>
-                    <Link
-                        href='/dashboard/settings'
-                        className='inline-flex items-center px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-medium transition-colors'
-                    >
-                        {t("notif.preferences_cta") ??
-                            "Atur Preferensi Notifikasi"}
-                    </Link>
-                </div>
-            ) : (
-                <ul className='space-y-2'>
-                    {notifs.map((notif) => (
-                        <li
-                            key={notif.id}
-                            className={`bg-white dark:bg-slate-800 rounded-xl border p-4 transition-all ${
-                                notif.is_read
-                                    ? "border-gray-100 dark:border-slate-700"
-                                    : "border-emerald-200 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10"
-                            }`}
-                        >
-                            <div className='flex items-start gap-3'>
-                                <div className='mt-0.5 shrink-0'>
-                                    {notif.icon ? (
-                                        <span
-                                            className={`text-xl ${notif.is_read ? "opacity-40" : ""}`}
-                                        >
-                                            {notif.icon}
-                                        </span>
-                                    ) : (
-                                        <span
-                                            className={`text-base ${
-                                                notif.is_read
-                                                    ? "text-gray-300 dark:text-slate-600"
-                                                    : "text-emerald-500"
-                                            }`}
-                                        >
-                                            {notif.is_read ? (
-                                                <BsBell />
-                                            ) : (
-                                                <BsBellFill />
-                                            )}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className='min-w-0 flex-1'>
-                                    <p
-                                        className={`text-sm font-semibold ${
-                                            notif.is_read
-                                                ? "text-gray-600 dark:text-gray-400"
-                                                : "text-gray-800 dark:text-white"
+            {notifs.length > 0 && (
+                <div className='flex flex-wrap items-center justify-between gap-2 mb-3'>
+                            <div className='flex items-center gap-1 overflow-x-auto py-1'>
+                                {["all", "inbox", "email", "whatsapp", "push"].map((chan) => (
+                                    <button
+                                        key={chan}
+                                        type='button'
+                                        onClick={() => setFilterChannel(chan)}
+                                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                                            filterChannel === chan
+                                                ? "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-emerald-950"
+                                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-800 dark:text-gray-300 dark:hover:bg-slate-700"
                                         }`}
                                     >
-                                        {notif.title}
-                                    </p>
-                                    <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
-                                        {notif.body}
-                                    </p>
+                                        {chan === "all"
+                                            ? t("notif.filter_all") || "Semua"
+                                            : chan === "inbox"
+                                              ? t("notif.channel_inbox") || "Inbox"
+                                              : chan === "email"
+                                                ? t("notif.channel_email") || "Email"
+                                                : chan === "whatsapp"
+                                                  ? t("notif.channel_whatsapp") || "WhatsApp"
+                                                  : t("notif.channel_push") || "Push"}
+                                    </button>
+                                ))}
+                            </div>
+                            <button
+                                type='button'
+                                onClick={() => setFilterPriority((p) => (p === "important" ? "all" : "important"))}
+                                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                                    filterPriority === "important"
+                                        ? "bg-amber-500 text-white border-amber-500"
+                                        : "border-gray-200 text-gray-600 hover:bg-gray-100 dark:border-slate-700 dark:text-gray-300 dark:hover:bg-slate-800"
+                                }`}
+                            >
+                                ⭐ {t("notif.filter_important") || "Penting"}
+                            </button>
+                        </div>
+                    )}
+
+                    {filteredNotifs.length === 0 ? (
+                        <div className='text-center py-16'>
+                            <BsBell className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
+                            <p className='text-gray-500 dark:text-gray-400 text-sm mb-4'>
+                                {t("notif.empty")}
+                            </p>
+                            <Link
+                                href='/dashboard/settings'
+                                className='inline-flex items-center px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-medium transition-colors'
+                            >
+                                {t("notif.preferences_cta") ??
+                                    "Atur Preferensi Notifikasi"}
+                            </Link>
+                        </div>
+                    ) : (
+                        <ul className='space-y-2'>
+                            {filteredNotifs.map((notif) => (
+                                <li
+                                    key={notif.id}
+                                    className={`bg-white dark:bg-slate-800 rounded-xl border p-4 transition-all ${
+                                        notif.is_read
+                                            ? "border-gray-100 dark:border-slate-700"
+                                            : "border-emerald-200 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10"
+                                    }`}
+                                >
+                                    <div className='flex items-start gap-3'>
+                                        <div className='mt-0.5 shrink-0'>
+                                            {notif.icon ? (
+                                                <span
+                                                    className={`text-xl ${notif.is_read ? "opacity-40" : ""}`}
+                                                >
+                                                    {notif.icon}
+                                                </span>
+                                            ) : (
+                                                <span
+                                                    className={`text-base ${
+                                                        notif.is_read
+                                                            ? "text-gray-300 dark:text-slate-600"
+                                                            : "text-emerald-500"
+                                                    }`}
+                                                >
+                                                    {notif.is_read ? (
+                                                        <BsBell />
+                                                    ) : (
+                                                        <BsBellFill />
+                                                    )}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className='min-w-0 flex-1'>
+                                            <div className='flex flex-wrap items-center gap-1.5 mb-1'>
+                                                {notif.channel && notif.channel !== "inbox" && (
+                                                    <span
+                                                        className={`rounded px-1.5 py-0.5 text-[10px] font-semibold border ${
+                                                            notif.channel === "email"
+                                                                ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800/50"
+                                                                : notif.channel === "whatsapp"
+                                                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50"
+                                                                  : "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/50"
+                                                        }`}
+                                                    >
+                                                        {notif.channel.toUpperCase()}
+                                                    </span>
+                                                )}
+                                                {notif.priority && notif.priority !== "normal" && (
+                                                    <span
+                                                        className={`rounded px-1.5 py-0.5 text-[10px] font-semibold border ${
+                                                            notif.priority === "critical"
+                                                                ? "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/50"
+                                                                : "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/50"
+                                                        }`}
+                                                    >
+                                                        {notif.priority === "critical"
+                                                            ? t("notif.priority_critical") || "Kritis"
+                                                            : t("notif.priority_important") || "Penting"}
+                                                    </span>
+                                                )}
+                                                {notif.status === "failed" && (
+                                                    <span className='rounded px-1.5 py-0.5 text-[10px] font-semibold border bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800/50'>
+                                                        {t("notif.status_failed") || "Gagal"}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p
+                                                className={`text-sm font-semibold ${
+                                                    notif.is_read
+                                                        ? "text-gray-600 dark:text-gray-400"
+                                                        : "text-gray-800 dark:text-white"
+                                                }`}
+                                            >
+                                                {notif.title}
+                                            </p>
+                                            <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
+                                                {notif.body}
+                                            </p>
                                     {notif.date && (
                                         <p className='text-xs text-gray-400 mt-1'>
                                             {new Date(

@@ -28,7 +28,7 @@ func NewSemanticSearchController(services *service.Services) SemanticSearchContr
 // @Accept json
 // @Produce json
 // @Param q query string true "Search query"
-// @Param types query string false "Comma-separated content types (quran,hadith,tafsir,asbabun_nuzul,doa,fiqh,sirah,blog,kajian)"
+// @Param types query string false "Comma-separated content types (quran,hadith,tafsir,asbabun_nuzul,doa,fiqh,sirah,blog,kajian,library)"
 // @Param limit query int false "Results limit" default(10)
 // @Success 200 {object} lib.Response
 // @Failure 400 {object} lib.Response
@@ -40,7 +40,7 @@ func (c *semanticSearchController) SemanticSearch(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, "query parameter 'q' is required")
 	}
 
-	typesParam := ctx.Query("types", "quran,hadith,tafsir,asbabun_nuzul,doa,fiqh,sirah,blog,kajian")
+	typesParam := ctx.Query("types", "quran,hadith,tafsir,asbabun_nuzul,doa,fiqh,sirah,blog,kajian,library")
 	contentTypes := strings.Split(typesParam, ",")
 	for i := range contentTypes {
 		contentTypes[i] = strings.TrimSpace(contentTypes[i])
@@ -87,7 +87,7 @@ func (c *semanticSearchController) Ask(ctx *fiber.Ctx) error {
 
 	contentTypes := req.Types
 	if len(contentTypes) == 0 {
-		contentTypes = []string{"quran", "hadith", "tafsir", "asbabun_nuzul", "doa", "fiqh", "sirah", "blog", "kajian"}
+		contentTypes = []string{"quran", "hadith", "tafsir", "asbabun_nuzul", "doa", "fiqh", "sirah", "blog", "kajian", "library"}
 	}
 
 	response, err := c.svc.AskQuestion(context.Background(), req.Question, contentTypes)

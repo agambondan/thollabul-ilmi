@@ -134,6 +134,43 @@ describe("NotificationCenter", () => {
         expect(await findByText("Body 1")).toBeTruthy();
     });
 
+    test("renders channel, priority badge and filters important items", async () => {
+        getNotificationInbox.mockResolvedValue({
+            items: [
+                {
+                    id: "1",
+                    title: "Reset Password",
+                    body: "Link reset password dikirim",
+                    type: "doa",
+                    channel: "email",
+                    priority: "critical",
+                    is_read: false,
+                },
+                {
+                    id: "2",
+                    title: "Notif Biasa",
+                    body: "Pengingat harian",
+                    type: "daily_quran",
+                    channel: "inbox",
+                    priority: "normal",
+                    is_read: true,
+                },
+            ],
+            unreadCount: 1,
+        });
+        const { findByText, queryByText } = await renderNotificationCenter();
+        fireEvent.press(await findByText(/Kotak Masuk/));
+        expect(await findByText("Reset Password")).toBeTruthy();
+        expect(await findByText("EMAIL")).toBeTruthy();
+        expect(await findByText("KRITIS")).toBeTruthy();
+        expect(await findByText("Notif Biasa")).toBeTruthy();
+
+        // Filter to important only
+        fireEvent.press(await findByText(/⭐ Penting/));
+        expect(await findByText("Reset Password")).toBeTruthy();
+        expect(queryByText("Notif Biasa")).toBeNull();
+    });
+
     test("marks inbox item read from explicit action", async () => {
         getNotificationInbox.mockResolvedValue({
             items: [
