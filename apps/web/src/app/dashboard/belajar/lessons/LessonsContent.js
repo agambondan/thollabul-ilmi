@@ -69,8 +69,15 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
             .then((data) => {
                 if (cancelled) return;
                 const items = data?.data?.items || data?.items || [];
+                const moduleSlug =
+                    typeof window === "undefined"
+                        ? null
+                        : new URLSearchParams(window.location.search).get(
+                              "module",
+                          );
+                const selected = items.find((item) => item.slug === moduleSlug);
                 setModules(Array.isArray(items) ? items : []);
-                setActiveModuleId(items?.[0]?.slug || null);
+                setActiveModuleId(selected?.slug || items?.[0]?.slug || null);
             })
             .catch(() => {
                 if (!cancelled) setError(true);

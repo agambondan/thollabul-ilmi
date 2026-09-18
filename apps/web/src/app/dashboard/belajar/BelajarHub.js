@@ -206,8 +206,9 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
 
     const handleStartModule = (mod) => {
         if (!mod) return;
+        const moduleHref = `${lessonsHref}?module=${mod.slug}`;
         pushRecentBelajar({
-            href: lessonsHref,
+            href: moduleHref,
             title: mod.title,
             meta: `Level ${mod.level || t("belajar.level.pemula")}`,
         });
@@ -397,10 +398,11 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                                       (done / total) * 100,
                                                   )
                                                 : 0;
+                                            const moduleHref = `${lessonsHref}?module=${mod.slug}`;
                                             return (
                                                 <Link
                                                     key={mod.slug}
-                                                    href={lessonsHref}
+                                                    href={moduleHref}
                                                     onClick={() =>
                                                         handleStartModule(mod)
                                                     }
