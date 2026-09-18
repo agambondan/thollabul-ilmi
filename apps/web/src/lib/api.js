@@ -961,6 +961,20 @@ export const adminLibraryApi = {
     },
     clearCover: (id) =>
         authFetch(`/api/v1/library/books/${id}/cover`, { method: "DELETE" }),
+    extractText: (id) =>
+        authFetch(`/api/v1/library/books/${id}/extract`, { method: "POST" }),
+    getExtractedText: (id) =>
+        authFetch(`/api/v1/library/books/${id}/extract`),
+    upsertExtractedText: (id, data) =>
+        authFetch(`/api/v1/library/books/${id}/extract`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    generateDraft: (id, data) =>
+        authFetch(`/api/v1/library/books/${id}/generate-draft`, {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
     delete: (id) =>
         authFetch(`/api/v1/library/books/${id}`, { method: "DELETE" }),
 };

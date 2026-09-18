@@ -15,6 +15,7 @@ import { adminLibraryApi, uploadWithProgress, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
 import {
     BsBoxArrowUpRight,
+    BsFileEarmarkText,
     BsPencil,
     BsPlusCircle,
     BsTrash,
@@ -122,6 +123,15 @@ const AdminLibraryPage = () => {
     const [uploadingCover, setUploadingCover] = useState(false);
     const [coverUploadProgress, setCoverUploadProgress] = useState(0);
     const [clearingCover, setClearingCover] = useState(false);
+    const [extractModalBook, setExtractModalBook] = useState(null);
+    const [extractedPages, setExtractedPages] = useState([]);
+    const [extractLoading, setExtractLoading] = useState(false);
+    const [extractTriggering, setExtractTriggering] = useState(false);
+    const [draftTarget, setDraftTarget] = useState("lesson");
+    const [draftStartPage, setDraftStartPage] = useState(1);
+    const [draftEndPage, setDraftEndPage] = useState(5);
+    const [draftResult, setDraftResult] = useState(null);
+    const [draftLoading, setDraftLoading] = useState(false);
 
     const load = async () => {
         setLoading(true);
@@ -154,6 +164,71 @@ const AdminLibraryPage = () => {
         setResourceFile(null);
         setCoverFile(null);
         setShowModal(true);
+    };
+
+    const openExtractModal = async (item) => {
+        setExtractModalBook(item);
+        setDraftResult(null);
+        setExtractLoading(true);
+        try {
+            const res = await adminLibraryApi.getExtractedText(item.id ?? item._id);
+            if (res.ok) {
+                const data = await res.json();
+                setExtractedPages(Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []);
+            } else {
+                setExtractedPages([]);
+            }
+        } catch {
+            setExtractedPages([]);
+        } finally {
+            setExtractLoading(false);
+        }
+    };
+
+    const handleTriggerExtract = async (bookId) => {
+        setExtractTriggering(true);
+        try {
+            const res = await adminLibraryApi.extractText(bookId);
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal memulai ekstraksi teks"));
+            fb("admin:success", "Proses ekstraksi teks dimulai di latar belakang");
+            load();
+            setTimeout(async () => {
+                try {
+                    const pageRes = await adminLibraryApi.getExtractedText(bookId);
+                    if (pageRes.ok) {
+                        const data = await pageRes.json();
+                        setExtractedPages(Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []);
+                    }
+                } catch {
+                    // silent fallback
+                }
+            }, 3000);
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        } finally {
+            setExtractTriggering(false);
+        }
+    };
+
+    const handleGenerateDraft = async () => {
+        if (!extractModalBook) return;
+        setDraftLoading(true);
+        setDraftResult(null);
+        try {
+            const res = await adminLibraryApi.generateDraft(extractModalBook.id ?? extractModalBook._id, {
+                target: draftTarget,
+                start_page: Number(draftStartPage) || 1,
+                end_page: Number(draftEndPage) || 1,
+            });
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal membuat draft"));
+            const data = await res.json();
+            setDraftResult(data?.data ?? data);
+            fb("admin:success", "Draft materi/soal berhasil dibangkitkan");
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        } finally {
+            setDraftLoading(false);
+        }
     };
 
     const fb = (type, msg) =>
@@ -603,6 +678,14 @@ const AdminLibraryPage = () => {
                                                     <BsBoxArrowUpRight />
                                                 </a>
                                             )}
+                                            <button
+                                                aria-label="Ekstrak Teks"
+                                                className='rounded p-1.5 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                                                onClick={() => openExtractModal(item)}
+                                                title="Ekstrak & Tinjau Teks Ebook"
+                                            >
+                                                <BsFileEarmarkText />
+                                            </button>
                                             <button
                                                 aria-label={t("common.edit")}
                                                 className='rounded p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
@@ -1103,6 +1186,199 @@ const AdminLibraryPage = () => {
                             onClick={save}
                         >
                             {saving ? t("common.saving") : t("common.save")}
+                        </button>
+                    </div>
+                </ModalShell>
+            )}
+
+            {extractModalBook && (
+                <ModalShell
+                    onClose={() => setExtractModalBook(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
+                >
+                    <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
+                        <div>
+                            <h2 className='font-bold text-gray-900 dark:text-white'>
+                                Ekstraksi Teks: {extractModalBook.title}
+                            </h2>
+                            <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                Format: {extractModalBook.format} · Sumber: {extractModalBook.source_type} · Status Ekstraksi: {extractModalBook.extraction_status || "none"}
+                            </p>
+                        </div>
+                        <button
+                            className='p-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
+                            onClick={() => setExtractModalBook(null)}
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
+
+                    <div className='space-y-4 p-5'>
+                        {extractModalBook.extraction_error && (
+                            <div className='rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300'>
+                                <strong>Catatan Kualitas:</strong> {extractModalBook.extraction_error}
+                            </div>
+                        )}
+
+                        <div className='flex flex-wrap items-center justify-between gap-2 rounded-xl bg-gray-50 p-4 dark:bg-slate-900'>
+                            <div>
+                                <h3 className='text-sm font-semibold text-gray-800 dark:text-gray-200'>
+                                    Teks Layer Halaman ({extractedPages.length} halaman)
+                                </h3>
+                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                    Teks ini dipakai untuk membangkitkan materi belajar & draft soal quiz.
+                                </p>
+                            </div>
+                            <button
+                                className='rounded-lg bg-purple-700 px-4 py-2 text-xs font-medium text-white hover:bg-purple-600 disabled:opacity-50'
+                                disabled={extractTriggering || extractModalBook.format !== "pdf" || extractModalBook.source_type !== "uploaded"}
+                                onClick={() => handleTriggerExtract(extractModalBook.id ?? extractModalBook._id)}
+                            >
+                                {extractTriggering ? "Memproses..." : "Ekstrak / Ekstrak Ulang"}
+                            </button>
+                        </div>
+
+                        {extractLoading ? (
+                            <div className='py-8 text-center text-sm text-gray-500 dark:text-gray-400'>
+                                Memuat halaman teks...
+                            </div>
+                        ) : extractedPages.length === 0 ? (
+                            <div className='rounded-lg border border-dashed border-gray-200 py-8 text-center text-xs text-gray-400 dark:border-slate-700'>
+                                Belum ada teks terekstrak untuk buku ini. Pastikan file PDF sudah di-upload ke sistem lalu klik tombol &quot;Ekstrak / Ekstrak Ulang&quot;.
+                            </div>
+                        ) : (
+                            <div className='max-h-96 space-y-3 overflow-y-auto pr-1'>
+                                {extractedPages.map((p) => (
+                                    <div
+                                        key={p.page_number}
+                                        className='rounded-lg border border-gray-100 bg-white p-3 text-xs shadow-sm dark:border-slate-700 dark:bg-slate-800/80'
+                                    >
+                                        <div className='mb-1 flex items-center justify-between'>
+                                            <span className='font-bold text-gray-700 dark:text-gray-200'>
+                                                Halaman {p.page_number}
+                                            </span>
+                                            <span
+                                                className={`rounded px-2 py-0.5 text-[10px] font-semibold ${
+                                                    p.confident
+                                                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                                                        : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                                                }`}
+                                            >
+                                                {p.confident ? "Lolos Cek Kualitas" : "Perlu Verifikasi"}
+                                            </span>
+                                        </div>
+                                        <p className='line-clamp-4 font-mono text-[11px] leading-relaxed text-gray-600 dark:text-gray-300'>
+                                            {p.text}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className='mt-6 rounded-xl border border-purple-200 bg-purple-50/60 p-4 dark:border-purple-900/40 dark:bg-purple-950/20'>
+                            <div className='mb-3'>
+                                <h3 className='text-sm font-bold text-purple-900 dark:text-purple-200'>
+                                    Bangkitkan Draft Materi Belajar / Soal Quiz
+                                </h3>
+                                <p className='text-xs text-purple-700/80 dark:text-purple-300/80'>
+                                    Ekstraksi materi atau soal pilihan ganda dari teks halaman dengan rujukan sitasi buku asli.
+                                </p>
+                            </div>
+                            <div className='grid gap-3 sm:grid-cols-4'>
+                                <div>
+                                    <label className='mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300'>Target Output</label>
+                                    <select
+                                        className={inputClass}
+                                        value={draftTarget}
+                                        onChange={(e) => setDraftTarget(e.target.value)}
+                                    >
+                                        <option value="lesson">Modul Belajar (Lesson Step)</option>
+                                        <option value="quiz">Soal Quiz (Pilihan Ganda)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className='mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300'>Halaman Awal</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        className={inputClass}
+                                        value={draftStartPage}
+                                        onChange={(e) => setDraftStartPage(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label className='mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300'>Halaman Akhir</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        className={inputClass}
+                                        value={draftEndPage}
+                                        onChange={(e) => setDraftEndPage(e.target.value)}
+                                    />
+                                </div>
+                                <div className='flex items-end'>
+                                    <button
+                                        className='w-full rounded-lg bg-purple-700 py-2 text-xs font-medium text-white hover:bg-purple-600 disabled:opacity-50'
+                                        disabled={draftLoading || extractedPages.length === 0}
+                                        onClick={handleGenerateDraft}
+                                    >
+                                        {draftLoading ? "Memproses..." : "Bangkitkan Draft"}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {draftResult && (
+                                <div className='mt-4 space-y-3 rounded-lg border border-purple-100 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900'>
+                                    <div className='flex items-center justify-between border-b border-gray-100 pb-2 dark:border-slate-800'>
+                                        <h4 className='text-xs font-bold text-gray-800 dark:text-gray-200'>
+                                            Hasil Draft: {draftResult.target === "lesson" ? `${draftResult.lesson_steps?.length || 0} Langkah Belajar` : `${draftResult.quiz_items?.length || 0} Soal Quiz`} (Hlm. {draftResult.start_page} - {draftResult.end_page})
+                                        </h4>
+                                        <span className='rounded bg-purple-100 px-2 py-0.5 text-[10px] font-semibold text-purple-800 dark:bg-purple-900/40 dark:text-purple-300'>
+                                            Draft / Belum Publik
+                                        </span>
+                                    </div>
+
+                                    {draftResult.lesson_steps?.map((step, idx) => (
+                                        <div key={idx} className='rounded border border-gray-100 bg-gray-50/70 p-3 text-xs dark:border-slate-800 dark:bg-slate-800/60'>
+                                            <div className='mb-1 flex items-center justify-between font-semibold text-gray-800 dark:text-gray-200'>
+                                                <span>{idx + 1}. {step.title}</span>
+                                                <span className='text-[10px] text-gray-400'>{step.source_citation}</span>
+                                            </div>
+                                            <p className='text-gray-600 dark:text-gray-300'>{step.body}</p>
+                                            {step.dalil && (
+                                                <p className='mt-1 text-[11px] italic text-emerald-700 dark:text-emerald-400'>
+                                                    Dalil: {step.dalil}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+
+                                    {draftResult.quiz_items?.map((q, idx) => (
+                                        <div key={idx} className='rounded border border-gray-100 bg-gray-50/70 p-3 text-xs dark:border-slate-800 dark:bg-slate-800/60'>
+                                            <div className='mb-1 flex items-center justify-between font-semibold text-gray-800 dark:text-gray-200'>
+                                                <span>{idx + 1}. {q.question_text}</span>
+                                                <span className='text-[10px] text-gray-400'>{q.source_citation}</span>
+                                            </div>
+                                            <p className='font-medium text-emerald-700 dark:text-emerald-400'>
+                                                Kunci Jawaban: {q.correct_answer}
+                                            </p>
+                                            <p className='text-[11px] text-gray-500 dark:text-gray-400'>
+                                                {q.explanation}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className='flex justify-end border-t border-gray-100 p-5 dark:border-slate-700'>
+                        <button
+                            className='rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
+                            onClick={() => setExtractModalBook(null)}
+                        >
+                            {t("common.close") || "Tutup"}
                         </button>
                     </div>
                 </ModalShell>

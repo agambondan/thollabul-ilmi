@@ -429,6 +429,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Post("/library/books/:id/extract", admin, newLibraryBookController.ExtractText)
 	master.Get("/library/books/:id/extract", admin, newLibraryBookController.GetExtractedText)
 	master.Put("/library/books/:id/extract", admin, newLibraryBookController.UpsertExtractedText)
+	master.Post("/library/books/:id/generate-draft", admin, newLibraryBookController.GenerateDraft)
 	master.Delete("/library/books/:id", admin, newLibraryBookController.Delete)
 	master.Get("/library/progress", jwt, newLibraryBookProgressController.FindAll)
 	master.Get("/library/progress/:bookId", jwt, newLibraryBookProgressController.FindByBook)

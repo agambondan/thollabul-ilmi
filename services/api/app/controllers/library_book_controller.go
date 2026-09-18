@@ -30,6 +30,7 @@ type LibraryBookController interface {
 	ExtractText(ctx *fiber.Ctx) error
 	GetExtractedText(ctx *fiber.Ctx) error
 	UpsertExtractedText(ctx *fiber.Ctx) error
+	GenerateDraft(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -189,6 +190,7 @@ func (c *libraryBookController) UploadResource(ctx *fiber.Ctx) error {
 		FileMimeType:  contentType,
 		FileSizeBytes: header.Size,
 		ObjectKey:     objectKey,
+		FileURL:       sourceURL,
 		Format:        format,
 	})
 	if err != nil {
@@ -391,6 +393,35 @@ func (c *libraryBookController) UpsertExtractedText(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, fiber.Map{"updated": len(req.Pages)})
+}
+
+// @Summary Generate lesson or quiz drafts from extracted book text
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Param body body model.GenerateDraftRequest true "Draft generation request"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /library/books/{id}/generate-draft [post]
+func (c *libraryBookController) GenerateDraft(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	if _, err := c.svc.FindByIDAny(id); err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	req := new(model.GenerateDraftRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	resp, err := c.svc.GenerateDraft(id, req)
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, err.Error())
+	}
+	return lib.OK(ctx, resp)
 }
 
 // @Summary Delete library book

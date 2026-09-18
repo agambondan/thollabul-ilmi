@@ -158,5 +158,45 @@
         "kontribusi": "Mengembalikan harta yang zalim, memperbaiki administrasi negara, memperkuat dakwah, dan mendorong kodifikasi hadits.",
         "kategori": "khalifah",
         "image_url": ""
+    },
+    {
+        "nama": "Salman Al-Farisi",
+        "era": "sahabat",
+        "tahun_lahir": "568 M",
+        "tahun_wafat": "656 M / 35 H",
+        "biografi": "Sahabat mulia asal Persia yang gigih mencari kebenaran tauhid hingga bertemu Rasulullah ﷺ di Madinah. Dikenal karena kecerdasannya dalam strategi pertahanan.",
+        "kontribusi": "Mengusulkan strategi penggalian parit (khandaq) yang menyelamatkan Madinah dari kepungan 10.000 pasukan Ahzab.",
+        "kategori": "sahabat",
+        "image_url": ""
+    },
+    {
+        "nama": "Mu'adz bin Jabal",
+        "era": "sahabat",
+        "tahun_lahir": "603 M / 18 SH",
+        "tahun_wafat": "639 M / 18 H",
+        "biografi": "Sahabat Anshar terkemuka yang dipuji Rasulullah ﷺ sebagai orang yang paling memahami perkara halal dan haram. Diutus sebagai hakim dan da'i ke Yaman.",
+        "kontribusi": "Menyebarkan dakwah Islam dan pemahaman syariat di Yaman serta menjadi rujukan fatwa dan qari Al-Quran di masa para sahabat.",
+        "kategori": "sahabat",
+        "image_url": ""
+    },
+    {
+        "nama": "Abu Ubaidah bin Al-Jarrah",
+        "era": "sahabat",
+        "tahun_lahir": "583 M / 40 SH",
+        "tahun_wafat": "639 M / 18 H",
+        "biografi": "Salah satu dari 10 sahabat yang dijamin masuk surga. Digelari oleh Rasulullah ﷺ sebagai 'Aminul Ummah' (Orang kepercayaan umat ini).",
+        "kontribusi": "Panglima utama penaklukan wilayah Syam, memimpin pasukan muslim dalam Perang Yarmuk dengan keteladanan tawadhu' dan keteguhan iman.",
+        "kategori": "sahabat",
+        "image_url": ""
+    },
+    {
+        "nama": "Imam Malik bin Anas",
+        "era": "tabiut_tabiin",
+        "tahun_lahir": "711 M / 93 H",
+        "tahun_wafat": "795 M / 179 H",
+        "biografi": "Imam Darul Hijrah (Madinah) dan pendiri Mazhab Maliki. Guru dari Imam Asy-Syafi'i, terkenal sangat memuliakan hadits Rasulullah ﷺ dan tidak pernah berkendara di kota Madinah.",
+        "kontribusi": "Menyusun kitab Al-Muwaththa', salah satu kitab hadits dan fiqh tertua yang paling shahih dan berpengaruh dalam sejarah Islam.",
+        "kategori": "ulama",
+        "image_url": ""
     }
 ]

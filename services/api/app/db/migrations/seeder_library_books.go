@@ -18,7 +18,7 @@ func SeedLibraryBooks(db *gorm.DB) {
 			}
 			db.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "slug"}},
-				DoUpdates: clause.AssignmentColumns([]string{"title", "author", "description", "category", "level", "language", "source_url", "source_note", "format", "source_type", "license", "license_status", "is_source_verified", "status"}),
+				DoUpdates: clause.AssignmentColumns([]string{"title", "author", "description", "category", "level", "language", "source_url", "source_note", "format", "source_type", "license", "license_status", "is_source_verified", "status", "file_url", "checksum_sha256", "file_name", "file_mime_type", "file_size_bytes"}),
 			}).Create(&rows[i])
 		}
 		return

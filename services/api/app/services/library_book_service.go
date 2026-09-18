@@ -29,6 +29,7 @@ type LibraryBookService interface {
 	ExtractText(id int) error
 	FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error)
 	SaveManualPages(id int, pages []model.ManualExtractedPage) error
+	GenerateDraft(id int, req *model.GenerateDraftRequest) (*model.GenerateDraftResponse, error)
 	Delete(id int) error
 }
 
@@ -96,6 +97,8 @@ func (s *libraryBookService) Create(req *model.CreateLibraryBookRequest) (*model
 		FileName:         req.FileName,
 		FileMimeType:     req.FileMimeType,
 		FileSizeBytes:    req.FileSizeBytes,
+		FileURL:          req.FileURL,
+		ChecksumSHA256:   req.ChecksumSHA256,
 		License:          req.License,
 		LicenseStatus:    licenseStatus,
 		SourceNote:       req.SourceNote,
@@ -146,6 +149,8 @@ func (s *libraryBookService) Update(id int, req *model.CreateLibraryBookRequest)
 		FileName:         req.FileName,
 		FileMimeType:     req.FileMimeType,
 		FileSizeBytes:    req.FileSizeBytes,
+		FileURL:          req.FileURL,
+		ChecksumSHA256:   req.ChecksumSHA256,
 		License:          req.License,
 		LicenseStatus:    licenseStatus,
 		SourceNote:       req.SourceNote,
@@ -299,6 +304,157 @@ func (s *libraryBookService) SaveManualPages(id int, pages []model.ManualExtract
 
 func (s *libraryBookService) Delete(id int) error {
 	return s.repo.Delete(id)
+}
+
+func (s *libraryBookService) GenerateDraft(id int, req *model.GenerateDraftRequest) (*model.GenerateDraftResponse, error) {
+	book, err := s.repo.FindByIDAny(id)
+	if err != nil {
+		return nil, err
+	}
+	if req.StartPage <= 0 {
+		req.StartPage = 1
+	}
+	if req.EndPage < req.StartPage {
+		req.EndPage = req.StartPage
+	}
+	pages, err := s.repo.FindExtractedPagesBetween(id, req.StartPage, req.EndPage)
+	if err != nil {
+		return nil, err
+	}
+	if len(pages) == 0 {
+		return nil, fmt.Errorf("tidak ada teks hasil ekstraksi untuk halaman %d - %d", req.StartPage, req.EndPage)
+	}
+
+	resp := &model.GenerateDraftResponse{
+		Target:    req.Target,
+		BookID:    id,
+		BookTitle: book.Title,
+		StartPage: req.StartPage,
+		EndPage:   req.EndPage,
+	}
+
+	if req.Target == "lesson" {
+		for _, p := range pages {
+			text := strings.TrimSpace(p.Text)
+			if len(text) < 30 {
+				continue
+			}
+			lines := strings.Split(text, "\n")
+			title := ""
+			for _, l := range lines {
+				trimmed := strings.TrimSpace(l)
+				if len(trimmed) > 5 && len(trimmed) < 80 {
+					title = trimmed
+					break
+				}
+			}
+			if title == "" {
+				title = fmt.Sprintf("%s (Halaman %d)", book.Title, p.PageNumber)
+			}
+			dalil := extractDalilPattern(text)
+			body := text
+			if len(body) > 1200 {
+				body = body[:1200] + "..."
+			}
+
+			resp.LessonSteps = append(resp.LessonSteps, model.GeneratedDraftLessonStep{
+				Title:          title,
+				Kind:           "teori",
+				Body:           body,
+				Dalil:          dalil,
+				Tip:            fmt.Sprintf("Materi bersumber dari kitab %s karya %s.", book.Title, book.Author),
+				SourceCitation: fmt.Sprintf("Buku: %s, Halaman: %d", book.Title, p.PageNumber),
+				SourcePage:     p.PageNumber,
+			})
+		}
+	} else if req.Target == "quiz" {
+		quizType := inferQuizType(book.Category)
+		for _, p := range pages {
+			text := strings.TrimSpace(p.Text)
+			if len(text) < 50 {
+				continue
+			}
+			qItem := generateQuizItemFromPage(text, book.Title, p.PageNumber, quizType)
+			if qItem != nil {
+				resp.QuizItems = append(resp.QuizItems, *qItem)
+			}
+		}
+	}
+
+	return resp, nil
+}
+
+func extractDalilPattern(text string) string {
+	lines := strings.Split(text, "\n")
+	var found []string
+	for _, l := range lines {
+		trimmed := strings.TrimSpace(l)
+		if strings.HasPrefix(trimmed, "QS.") || strings.HasPrefix(trimmed, "HR.") || strings.Contains(trimmed, "Rasulullah ﷺ") {
+			found = append(found, trimmed)
+			if len(found) >= 2 {
+				break
+			}
+		}
+	}
+	if len(found) > 0 {
+		return strings.Join(found, "; ")
+	}
+	return ""
+}
+
+func inferQuizType(category string) string {
+	cat := strings.ToLower(category)
+	switch {
+	case strings.Contains(cat, "fiqh"):
+		return string(model.QuizTypeFiqh)
+	case strings.Contains(cat, "sirah") || strings.Contains(cat, "sejarah"):
+		return string(model.QuizTypeSirah)
+	case strings.Contains(cat, "hadith") || strings.Contains(cat, "hadis") || strings.Contains(cat, "akhlak"):
+		return string(model.QuizTypeHadith)
+	case strings.Contains(cat, "asmaul"):
+		return string(model.QuizTypeAsmaUlHusna)
+	default:
+		return "aqidah"
+	}
+}
+
+func generateQuizItemFromPage(text, bookTitle string, pageNum int, quizType string) *model.GeneratedDraftQuizItem {
+	lines := strings.Split(text, "\n")
+	var meaningful []string
+	for _, l := range lines {
+		trimmed := strings.TrimSpace(l)
+		if len(trimmed) > 15 {
+			meaningful = append(meaningful, trimmed)
+		}
+	}
+	if len(meaningful) == 0 {
+		return nil
+	}
+
+	statement := meaningful[0]
+	if len(statement) > 120 {
+		statement = statement[:120] + "..."
+	}
+
+	question := fmt.Sprintf("Berdasarkan pembahasan dalam kitab %s (Hlm. %d), manakah pernyataan yang paling tepat mengenai hal berikut?", bookTitle, pageNum)
+	correct := statement
+	options := []string{
+		correct,
+		"Pernyataan yang bertentangan dengan kaidah mu'tabar",
+		"Pendapat yang tidak memiliki landasan dalil",
+		"Ketentuan yang telah dinasakh secara mutlak",
+	}
+
+	return &model.GeneratedDraftQuizItem{
+		Type:           quizType,
+		Difficulty:     "medium",
+		QuestionText:   question,
+		CorrectAnswer:  correct,
+		Options:        options,
+		Explanation:    fmt.Sprintf("Sumber rujukan: Kitab %s, Halaman %d.", bookTitle, pageNum),
+		SourceCitation: fmt.Sprintf("Buku: %s, Hlm. %d", bookTitle, pageNum),
+		SourcePage:     pageNum,
+	}
 }
 
 func uniqueLibraryBookSlug(title string, exists func(string) bool) string {

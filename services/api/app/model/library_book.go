@@ -112,6 +112,8 @@ type CreateLibraryBookRequest struct {
 	FileName         string                   `json:"file_name" validate:"max=256"`
 	FileMimeType     string                   `json:"file_mime_type" validate:"max=120"`
 	FileSizeBytes    int64                    `json:"file_size_bytes"`
+	FileURL          string                   `json:"file_url" validate:"max=700"`
+	ChecksumSHA256   string                   `json:"checksum_sha256" validate:"max=64"`
 	License          string                   `json:"license" validate:"max=256"`
 	LicenseStatus    LibraryBookLicenseStatus `json:"license_status"`
 	SourceNote       string                   `json:"source_note" validate:"max=5000"`
@@ -122,15 +124,58 @@ type CreateLibraryBookRequest struct {
 }
 
 type LibraryBookResource struct {
-	SourceURL     string            `json:"source_url"`
-	FileName      string            `json:"file_name"`
-	FileMimeType  string            `json:"file_mime_type"`
-	FileSizeBytes int64             `json:"file_size_bytes"`
-	ObjectKey     string            `json:"object_key"`
-	Format        LibraryBookFormat `json:"format"`
+	SourceURL      string            `json:"source_url"`
+	FileName       string            `json:"file_name"`
+	FileMimeType   string            `json:"file_mime_type"`
+	FileSizeBytes  int64             `json:"file_size_bytes"`
+	ObjectKey      string            `json:"object_key"`
+	FileURL        string            `json:"file_url"`
+	ChecksumSHA256 string            `json:"checksum_sha256"`
+	Format         LibraryBookFormat `json:"format"`
 }
 
 type LibraryBookCover struct {
 	CoverURL  string `json:"cover_url"`
 	ObjectKey string `json:"object_key"`
+}
+
+type GenerateDraftRequest struct {
+	Target     string `json:"target" validate:"required,oneof=lesson quiz"`
+	StartPage  int    `json:"start_page" validate:"required,min=1"`
+	EndPage    int    `json:"end_page" validate:"required,min=1"`
+	Topic      string `json:"topic"`
+	ModuleSlug string `json:"module_slug"`
+	AutoSave   bool   `json:"auto_save"`
+}
+
+type GeneratedDraftLessonStep struct {
+	Title           string `json:"title"`
+	Kind            string `json:"kind"`
+	Body            string `json:"body"`
+	Dalil           string `json:"dalil"`
+	Tip             string `json:"tip"`
+	SourceCitation  string `json:"source_citation"`
+	SourcePage      int    `json:"source_page"`
+}
+
+type GeneratedDraftQuizItem struct {
+	Type          string   `json:"type"`
+	Difficulty    string   `json:"difficulty"`
+	QuestionText  string   `json:"question_text"`
+	CorrectAnswer string   `json:"correct_answer"`
+	Options       []string `json:"options"`
+	Explanation   string   `json:"explanation"`
+	SourceCitation string  `json:"source_citation"`
+	SourcePage    int      `json:"source_page"`
+}
+
+type GenerateDraftResponse struct {
+	Target      string                     `json:"target"`
+	BookID      int                        `json:"book_id"`
+	BookTitle   string                     `json:"book_title"`
+	StartPage   int                        `json:"start_page"`
+	EndPage     int                        `json:"end_page"`
+	LessonSteps []GeneratedDraftLessonStep `json:"lesson_steps,omitempty"`
+	QuizItems   []GeneratedDraftQuizItem   `json:"quiz_items,omitempty"`
+	SavedCount  int                        `json:"saved_count,omitempty"`
 }

@@ -25,6 +25,7 @@ type LibraryBookRepository interface {
 	SaveExtractedPages(bookID int, pages []model.LibraryBookExtractedText) error
 	UpsertExtractedPages(pages []model.LibraryBookExtractedText) error
 	FindExtractedPages(bookID int) ([]model.LibraryBookExtractedText, error)
+	FindExtractedPagesBetween(bookID int, startPage int, endPage int) ([]model.LibraryBookExtractedText, error)
 	Delete(id int) error
 }
 
@@ -137,6 +138,8 @@ func (r *libraryBookRepo) Update(id int, book *model.LibraryBook) (*model.Librar
 		"file_name":          book.FileName,
 		"file_mime_type":     book.FileMimeType,
 		"file_size_bytes":    book.FileSizeBytes,
+		"file_url":           book.FileURL,
+		"checksum_sha256":    book.ChecksumSHA256,
 		"license":            book.License,
 		"license_status":     book.LicenseStatus,
 		"source_note":        book.SourceNote,
@@ -167,6 +170,8 @@ func (r *libraryBookRepo) UpdateResource(id int, resource *model.LibraryBookReso
 		"file_mime_type":  resource.FileMimeType,
 		"file_size_bytes": resource.FileSizeBytes,
 		"file_object_key": resource.ObjectKey,
+		"file_url":        resource.FileURL,
+		"checksum_sha256": resource.ChecksumSHA256,
 	}
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err
@@ -190,6 +195,8 @@ func (r *libraryBookRepo) ClearResource(id int) (*model.LibraryBook, error) {
 		"file_mime_type":  "",
 		"file_size_bytes": int64(0),
 		"file_object_key": "",
+		"file_url":        "",
+		"checksum_sha256": "",
 	}
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err
@@ -265,6 +272,13 @@ func (r *libraryBookRepo) UpsertExtractedPages(pages []model.LibraryBookExtracte
 func (r *libraryBookRepo) FindExtractedPages(bookID int) ([]model.LibraryBookExtractedText, error) {
 	var pages []model.LibraryBookExtractedText
 	err := r.db.Where("library_book_id = ?", bookID).Order("page_number ASC").Find(&pages).Error
+	return pages, err
+}
+
+func (r *libraryBookRepo) FindExtractedPagesBetween(bookID int, startPage int, endPage int) ([]model.LibraryBookExtractedText, error) {
+	var pages []model.LibraryBookExtractedText
+	err := r.db.Where("library_book_id = ? AND page_number >= ? AND page_number <= ?", bookID, startPage, endPage).
+		Order("page_number ASC").Find(&pages).Error
 	return pages, err
 }
 
