@@ -15,11 +15,6 @@ func SeedTier3(db *gorm.DB) {
 }
 
 func seedAchievements(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Achievement{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	achievements := []model.Achievement{
 		// Streak
 		{Code: "streak_3", Name: "Konsisten 3 Hari", NameEn: "3-Day Streak", Description: "Belajar 3 hari berturut-turut", DescEn: "Learn 3 days in a row", Icon: "🔥", Category: "streak", Threshold: 3},
