@@ -210,6 +210,7 @@ func (s *Repositories) Migrations() error {
 	migrations.DeduplicateSeedData(s.db)
 	migrations.PreMigrateAsbabunNuzul(s.db)
 	migrations.DropTahlilTables(s.db)
+	migrations.DropLegacyNonCanonicalHadithBooks(s.db)
 	migrations.PreMigrateKajianVideoID(s.db)
 	// Extensions must exist before AutoMigrate runs -- the KajianTranscript
 	// model's Embedding column is gorm:"type:vector(...)", so AutoMigrate

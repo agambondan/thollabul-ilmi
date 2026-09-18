@@ -49,7 +49,6 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedPerawiGuruFromFile(db)
 	seedTokohTarikhFromFile(db)
 	SeedLocationsFromFile(db)
-	seedHadithArbainRiyadhusFromFile(db)
 	seedTafsirRingkasFromFile(db)
 }
 
