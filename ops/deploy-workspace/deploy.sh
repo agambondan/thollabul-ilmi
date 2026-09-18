@@ -183,7 +183,7 @@ do_sync() {
     fi
     [[ -e "$source_base/$p" ]] || die "sync path not found: $p (checked in $repo/$CONTEXT/ and $repo/)"
     log "syncing $p to $DEPLOY_REMOTE_DIR"
-    tar czf - -C "$source_base" "$p" \
+    tar -I "gzip -1" -cf - -C "$source_base" "$p" \
       | remote "cd '$DEPLOY_REMOTE_DIR' && tar xzf -" >>"$LOGFILE" 2>&1 \
       || die "syncing $p failed — see $LOGFILE"
   done
