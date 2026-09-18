@@ -75,7 +75,11 @@ type LibraryBookExtractedText struct {
 	PageNumber       int    `json:"page_number" gorm:"not null;uniqueIndex:idx_library_book_page"`
 	Text             string `json:"text" gorm:"type:text"`
 	ExtractionMethod string `json:"extraction_method" gorm:"type:varchar(30)"`
-	Confident        bool   `json:"confident" gorm:"default:true"`
+	// No gorm "default" tag on purpose: the app always sets this explicitly
+	// on insert, and GORM treats a bool's zero value (false) as "unset" when
+	// a column default is declared, silently writing the default instead —
+	// which would flip every real false back to true on save.
+	Confident bool `json:"confident"`
 }
 
 type CreateLibraryBookRequest struct {
