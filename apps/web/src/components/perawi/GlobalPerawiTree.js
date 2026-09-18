@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import {
     BsDiagram3Fill,
-    BsArrowRight,
     BsInfoCircle,
-    BsCheckCircleFill,
-    BsSearch,
+    BsZoomIn,
+    BsZoomOut,
+    BsArrowRepeat,
 } from "react-icons/bs";
-import { FaQuran } from "react-icons/fa";
 
 const LEVEL_COLORS = {
     nabi: {
@@ -93,7 +92,7 @@ const SANAD_TREE_DATA = {
                             id: 8,
                             nama_latin: "Malik bin Anas (Imam Malik)",
                             nama_arab: "مَالِكُ بْنُ أَنَسٍ",
-                            tabaqah: "Tabi'ut Tabi'in (Silsilah Emas)",
+                            tabaqah: "Tabi'ut Tabi'in",
                             levelKey: "tabiut_tabiin",
                             status: "Imam Darul Hijrah",
                             tahun_wafat: 179,
@@ -105,14 +104,14 @@ const SANAD_TREE_DATA = {
                                     nama_arab: "مُحَمَّدُ بْنُ إِسْمَاعِيلَ البُخَارِيُّ",
                                     tabaqah: "Mukharrij (Shahih Bukhari)",
                                     levelKey: "aimmah",
-                                    status: "Amirul Mukminin fil Hadits",
+                                    status: "Amirul Mukminin",
                                     tahun_wafat: 256,
                                     initial: "B",
                                 },
                                 {
                                     id: 10,
                                     nama_latin: "Muslim bin al-Hajjaj",
-                                    nama_arab: "مُسْلِمُ بْنُ الحَجَّاجِ النَّيْسَابُورِيُّ",
+                                    nama_arab: "مُسْلِمُ بْنُ الحَجَّاجِ",
                                     tabaqah: "Mukharrij (Shahih Muslim)",
                                     levelKey: "aimmah",
                                     status: "Imam Tsiqah",
@@ -169,7 +168,7 @@ const SANAD_TREE_DATA = {
                                     id: 11,
                                     nama_latin: "Abu Dawud as-Sijistani",
                                     nama_arab: "أَبُو دَاوُدَ السِّجِسْتَانِيُّ",
-                                    tabaqah: "Mukharrij (Sunan Abu Dawud)",
+                                    tabaqah: "Mukharrij (Sunan)",
                                     levelKey: "aimmah",
                                     status: "Imam Muhaddits",
                                     tahun_wafat: 275,
@@ -179,7 +178,7 @@ const SANAD_TREE_DATA = {
                                     id: 12,
                                     nama_latin: "Muhammad bin Isa at-Tirmidzi",
                                     nama_arab: "مُحَمَّدُ بْنُ عِيسَى التِّرْمِذِيُّ",
-                                    tabaqah: "Mukharrij (Jami' at-Tirmidzi)",
+                                    tabaqah: "Mukharrij (Jami')",
                                     levelKey: "aimmah",
                                     status: "Imam Al-Hafizh",
                                     tahun_wafat: 279,
@@ -267,7 +266,7 @@ function OrgCard({ node, basePath, isRoot = false }) {
             className='group relative block transition-transform duration-200 hover:-translate-y-1 z-10'
         >
             <div
-                className={`relative pt-5 pb-3 px-3 rounded-2xl bg-white dark:bg-slate-800 border-2 border-t-4 shadow-sm hover:shadow-xl transition-all duration-200 text-center w-[170px] sm:w-[190px] ${
+                className={`relative pt-5 pb-3 px-2.5 rounded-2xl bg-white dark:bg-slate-800 border-2 border-t-4 shadow-sm hover:shadow-xl transition-all duration-200 text-center w-[150px] sm:w-[170px] ${
                     isRoot
                         ? "border-purple-400 dark:border-purple-600 border-t-purple-600 ring-4 ring-purple-100 dark:ring-purple-950/50"
                         : `${levelStyle.border} ${levelStyle.accent}`
@@ -275,7 +274,7 @@ function OrgCard({ node, basePath, isRoot = false }) {
             >
                 {/* Floating Top Avatar Badge */}
                 <div
-                    className={`absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md ring-2 ring-white dark:ring-slate-800 transition-transform group-hover:scale-110 ${levelStyle.avatar}`}
+                    className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-md ring-2 ring-white dark:ring-slate-800 transition-transform group-hover:scale-110 ${levelStyle.avatar}`}
                 >
                     {node.initial || (node.nama_latin ? node.nama_latin[0] : "?")}
                 </div>
@@ -300,17 +299,17 @@ function OrgCard({ node, basePath, isRoot = false }) {
                 )}
 
                 {/* Latin Name */}
-                <p className='text-xs font-bold text-gray-900 dark:text-white line-clamp-2 mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors'>
+                <p className='text-xs font-bold text-gray-900 dark:text-white line-clamp-2 mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-tight'>
                     {node.nama_latin}
                 </p>
 
                 {/* Metadata & Status */}
-                <div className='flex items-center justify-center gap-1.5 text-[10px] text-gray-500 dark:text-gray-400'>
+                <div className='flex items-center justify-center gap-1 text-[10px] text-gray-500 dark:text-gray-400'>
                     {node.tahun_wafat && <span>w. {node.tahun_wafat} H</span>}
                     {node.status && (
                         <>
                             <span>•</span>
-                            <span className='font-medium text-teal-600 dark:text-teal-400 truncate max-w-[90px]'>
+                            <span className='font-medium text-teal-600 dark:text-teal-400 truncate max-w-[80px]'>
                                 {node.status}
                             </span>
                         </>
@@ -323,7 +322,6 @@ function OrgCard({ node, basePath, isRoot = false }) {
 
 function OrgTreeNode({ node, basePath, isRoot = false }) {
     const hasChildren = node.children && node.children.length > 0;
-    const levelStyle = LEVEL_COLORS[node.levelKey] || LEVEL_COLORS.tabiin;
 
     return (
         <div className='flex flex-col items-center'>
@@ -350,7 +348,7 @@ function OrgTreeNode({ node, basePath, isRoot = false }) {
                         )}
 
                         {/* Each Child branch */}
-                        <div className='flex gap-6 sm:gap-8'>
+                        <div className='flex gap-4 sm:gap-6'>
                             {node.children.map((child, idx) => (
                                 <div
                                     key={child.id || idx}
@@ -372,12 +370,16 @@ function OrgTreeNode({ node, basePath, isRoot = false }) {
 }
 
 export default function GlobalPerawiTree({ basePath = "/perawi" }) {
-    const [filterLevel, setFilterLevel] = useState("all");
+    const [zoom, setZoom] = useState(1);
+
+    const zoomIn = () => setZoom((z) => Math.min(1.4, +(z + 0.1).toFixed(2)));
+    const zoomOut = () => setZoom((z) => Math.max(0.5, +(z - 0.1).toFixed(2)));
+    const zoomReset = () => setZoom(1);
 
     return (
         <div className='bg-slate-50 dark:bg-slate-900/60 rounded-3xl border border-gray-200 dark:border-slate-800 p-4 sm:p-6 shadow-inner'>
-            {/* Header Legend & Controls */}
-            <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200 dark:border-slate-700/80'>
+            {/* Header Legend & Zoom Controls */}
+            <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200 dark:border-slate-700/80'>
                 <div>
                     <h2 className='text-base font-bold text-gray-900 dark:text-white flex items-center gap-2'>
                         <BsDiagram3Fill className='text-teal-600 dark:text-teal-400' />
@@ -388,35 +390,84 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                     </p>
                 </div>
 
-                {/* Level Legend pills */}
-                <div className='flex flex-wrap items-center gap-2 text-[11px] font-semibold'>
-                    <span className='flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800'>
-                        <span className='w-2 h-2 rounded-full bg-purple-600' />
-                        Nabi ﷺ
-                    </span>
-                    <span className='flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300 border border-pink-200 dark:border-pink-800'>
-                        <span className='w-2 h-2 rounded-full bg-pink-500' />
-                        Sahabat
-                    </span>
-                    <span className='flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800'>
-                        <span className='w-2 h-2 rounded-full bg-amber-500' />
-                        Tabi&apos;in
-                    </span>
-                    <span className='flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'>
-                        <span className='w-2 h-2 rounded-full bg-emerald-600' />
-                        Tabi&apos;ut Tabi&apos;in
-                    </span>
-                    <span className='flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800'>
-                        <span className='w-2 h-2 rounded-full bg-blue-600' />
-                        Aimmah / Mukharrij
-                    </span>
+                <div className='flex flex-wrap items-center gap-3'>
+                    {/* Level Legend pills */}
+                    <div className='flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold'>
+                        <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800'>
+                            <span className='w-2 h-2 rounded-full bg-purple-600' />
+                            Nabi ﷺ
+                        </span>
+                        <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-pink-100 text-pink-800 dark:bg-pink-950/60 dark:text-pink-300 border border-pink-200 dark:border-pink-800'>
+                            <span className='w-2 h-2 rounded-full bg-pink-500' />
+                            Sahabat
+                        </span>
+                        <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800'>
+                            <span className='w-2 h-2 rounded-full bg-amber-500' />
+                            Tabi&apos;in
+                        </span>
+                        <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'>
+                            <span className='w-2 h-2 rounded-full bg-emerald-600' />
+                            Tabi&apos;ut Tabi&apos;in
+                        </span>
+                        <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800'>
+                            <span className='w-2 h-2 rounded-full bg-blue-600' />
+                            Aimmah
+                        </span>
+                    </div>
+
+                    {/* Zoom Controller */}
+                    <div className='flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-0.5 shadow-sm text-xs'>
+                        <button
+                            type='button'
+                            onClick={zoomOut}
+                            className='p-1.5 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700'
+                            title='Perkecil (Zoom Out)'
+                        >
+                            <BsZoomOut />
+                        </button>
+                        <span className='px-2 font-mono text-[11px] font-semibold text-gray-700 dark:text-gray-300 min-w-[40px] text-center'>
+                            {Math.round(zoom * 100)}%
+                        </span>
+                        <button
+                            type='button'
+                            onClick={zoomIn}
+                            className='p-1.5 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700'
+                            title='Perbesar (Zoom In)'
+                        >
+                            <BsZoomIn />
+                        </button>
+                        <button
+                            type='button'
+                            onClick={zoomReset}
+                            className='px-2 py-1 text-[11px] font-semibold text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-lg ml-0.5'
+                            title='Reset Skala'
+                        >
+                            Reset
+                        </button>
+                        <button
+                            type='button'
+                            onClick={() => setZoom(0.75)}
+                            className='px-2 py-1 text-[11px] font-semibold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg'
+                            title='Sesuaikan Layar (Fit View 75%)'
+                        >
+                            Fit
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Scrollable Tree Canvas Container */}
-            <div className='overflow-x-auto overflow-y-hidden pb-8 pt-4 px-4 bg-white/60 dark:bg-slate-950/40 rounded-2xl border border-gray-100 dark:border-slate-800/80 shadow-sm'>
-                <div className='min-w-[950px] flex justify-center py-4'>
-                    <OrgTreeNode node={SANAD_TREE_DATA} basePath={basePath} isRoot />
+            {/* Scrollable Tree Canvas Container - Never clip left on scroll */}
+            <div className='overflow-auto max-h-[85vh] p-4 sm:p-8 bg-white/70 dark:bg-slate-950/50 rounded-2xl border border-gray-100 dark:border-slate-800/80 shadow-sm'>
+                <div className='inline-block min-w-full text-left'>
+                    <div
+                        className='w-max mx-auto flex flex-col items-center py-2 transition-transform duration-200'
+                        style={{
+                            transform: `scale(${zoom})`,
+                            transformOrigin: "top center",
+                        }}
+                    >
+                        <OrgTreeNode node={SANAD_TREE_DATA} basePath={basePath} isRoot />
+                    </div>
                 </div>
             </div>
 
@@ -424,10 +475,10 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
             <div className='flex items-center justify-between mt-4 text-xs text-gray-500 dark:text-gray-400 px-2'>
                 <p className='flex items-center gap-1.5'>
                     <BsInfoCircle className='text-teal-600 shrink-0' />
-                    <span>Klik pada kartu nama perawi untuk membuka biografi, jarh wa ta&apos;dil, dan daftar riwayat lengkap.</span>
+                    <span>Klik kartu perawi untuk membuka detail &amp; riwayat lengkap. Gunakan zoom atau geser ke samping untuk eksplorasi.</span>
                 </p>
                 <span className='hidden sm:inline-block text-[11px] font-medium bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-gray-400'>
-                    Geser mendatar untuk melihat semua cabang ↔
+                    ↔ Geser / Zoom untuk melihat seluruh cabang
                 </span>
             </div>
         </div>

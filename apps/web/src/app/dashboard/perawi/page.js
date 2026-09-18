@@ -128,7 +128,10 @@ export function PerawiContent({
     };
 
     return (
-        <ContentWidth compact='max-w-4xl' className='p-4 md:p-6'>
+        <ContentWidth
+            compact={view === "tree" ? "max-w-7xl" : "max-w-4xl"}
+            className='p-4 md:p-6 transition-all duration-300'
+        >
             <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
                 <div>
                     <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
