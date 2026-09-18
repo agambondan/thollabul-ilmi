@@ -91,7 +91,20 @@ ulama mu'tabar (lihat memori `feedback_islamic_data_sahih_only`).
      divalidasi, jauh lebih aman daripada mempercayai OCR untuk teks
      suci. Bagian Arab yang gagal di-OCR cukup dilewati/diabaikan saat
      parsing, bukan dipaksakan.
-2. **Endpoint & job admin untuk memicu ekstraksi**
+   - **Temuan tambahan (task #2, dites di buku produksi asli)**: "punya
+     text layer" ternyata TIDAK berarti "text layer-nya bisa dipercaya".
+     Bulughul Maram (sudah live di Perpustakaan, 332 halaman) punya text
+     layer, tapi sebagian besar halamannya keluar acak/rusak — dicek
+     silang dengan `pdftotext` (poppler, bukan cuma library Go kita) dan
+     hasilnya SAMA rusaknya, jadi ini bukan keterbatasan tooling, memang
+     text layer di file PDF sumbernya sendiri sudah korup (kemungkinan
+     bekas OCR jelek yang di-embed oleh yang men-digitisasi dulu).
+     **Konsekuensi**: deteksi "kosong = perlu OCR" saja tidak cukup, perlu
+     tambahan pengecekan kualitas per halaman (mis. rasio kemunculan kata
+     umum Bahasa Indonesia seperti "yang/dan/ini/untuk/dari" sebagai kata
+     utuh) — halaman yang lolos cek "ada teks" tapi gagal cek kualitas
+     ditandai status `low_confidence`, bukan otomatis `done`, supaya tidak
+     ada draft Belajar/Quiz yang diam-diam dibangun dari teks sampah.
    - `POST /library/books/:id/extract` (admin) — proses async (bisa lama
      untuk buku besar/hasil scan), dengan status field di `LibraryBook`
      (`extraction_status`: none/processing/done/failed) supaya admin panel

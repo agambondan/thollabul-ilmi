@@ -20,6 +20,9 @@ type LibraryBookRepository interface {
 	ClearResource(id int) (*model.LibraryBook, error)
 	UpdateCover(id int, cover *model.LibraryBookCover) (*model.LibraryBook, error)
 	ClearCover(id int) (*model.LibraryBook, error)
+	SetExtractionStatus(id int, status model.LibraryBookExtractStatus, errMsg string) error
+	SaveExtractedPages(bookID int, pages []model.LibraryBookExtractedText) error
+	FindExtractedPages(bookID int) ([]model.LibraryBookExtractedText, error)
 	Delete(id int) error
 }
 
@@ -223,6 +226,31 @@ func (r *libraryBookRepo) ClearCover(id int) (*model.LibraryBook, error) {
 		return nil, err
 	}
 	return &existing, nil
+}
+
+func (r *libraryBookRepo) SetExtractionStatus(id int, status model.LibraryBookExtractStatus, errMsg string) error {
+	return r.db.Model(&model.LibraryBook{}).Where("id = ?", id).Updates(map[string]interface{}{
+		"extraction_status": status,
+		"extraction_error":  errMsg,
+	}).Error
+}
+
+func (r *libraryBookRepo) SaveExtractedPages(bookID int, pages []model.LibraryBookExtractedText) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("library_book_id = ?", bookID).Delete(&model.LibraryBookExtractedText{}).Error; err != nil {
+			return err
+		}
+		if len(pages) == 0 {
+			return nil
+		}
+		return tx.Create(&pages).Error
+	})
+}
+
+func (r *libraryBookRepo) FindExtractedPages(bookID int) ([]model.LibraryBookExtractedText, error) {
+	var pages []model.LibraryBookExtractedText
+	err := r.db.Where("library_book_id = ?", bookID).Order("page_number ASC").Find(&pages).Error
+	return pages, err
 }
 
 func (r *libraryBookRepo) Delete(id int) error {

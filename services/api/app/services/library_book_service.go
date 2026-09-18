@@ -1,8 +1,14 @@
 package service
 
 import (
+	"fmt"
+	"io"
+	"net/http"
 	"strconv"
+	"strings"
+	"time"
 
+	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/gofiber/fiber/v2"
@@ -20,6 +26,8 @@ type LibraryBookService interface {
 	ClearResource(id int) (*model.LibraryBook, error)
 	UpdateCover(id int, cover *model.LibraryBookCover) (*model.LibraryBook, error)
 	ClearCover(id int) (*model.LibraryBook, error)
+	ExtractText(id int) error
+	FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error)
 	Delete(id int) error
 }
 
@@ -161,6 +169,91 @@ func (s *libraryBookService) UpdateCover(id int, cover *model.LibraryBookCover) 
 
 func (s *libraryBookService) ClearCover(id int) (*model.LibraryBook, error) {
 	return s.repo.ClearCover(id)
+}
+
+// ExtractText pulls plain text out of a book's PDF using only its own text
+// layer (see docs/features/todo/perpustakaan-ekstraksi-konten-untuk-belajar.md
+// for why this deliberately does not OCR scanned pages). It is meant to run
+// in a background goroutine kicked off by the controller — it's a blocking
+// call by itself, and a large scanned book can take a while just to
+// download and walk page by page.
+func (s *libraryBookService) ExtractText(id int) error {
+	book, err := s.repo.FindByIDAny(id)
+	if err != nil {
+		return err
+	}
+	if book.SourceType != model.LibraryBookSourceUploaded || book.Format != model.LibraryBookFormatPDF || book.SourceURL == "" {
+		err := fmt.Errorf("only an uploaded PDF resource can be extracted")
+		_ = s.repo.SetExtractionStatus(id, model.LibraryBookExtractFailed, err.Error())
+		return err
+	}
+
+	if err := s.repo.SetExtractionStatus(id, model.LibraryBookExtractProcessing, ""); err != nil {
+		return err
+	}
+
+	fail := func(err error) error {
+		_ = s.repo.SetExtractionStatus(id, model.LibraryBookExtractFailed, err.Error())
+		return err
+	}
+
+	client := &http.Client{Timeout: 3 * time.Minute}
+	resp, err := client.Get(book.SourceURL)
+	if err != nil {
+		return fail(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fail(fmt.Errorf("download sumber gagal: HTTP %d", resp.StatusCode))
+	}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fail(err)
+	}
+
+	extracted, err := lib.ExtractPDFPages(data)
+	if err != nil {
+		return fail(err)
+	}
+
+	pages := make([]model.LibraryBookExtractedText, 0, len(extracted))
+	confidentCount, lowConfidenceCount := 0, 0
+	for _, p := range extracted {
+		if strings.TrimSpace(p.Text) == "" {
+			continue
+		}
+		if p.Confident {
+			confidentCount++
+		} else {
+			lowConfidenceCount++
+		}
+		pages = append(pages, model.LibraryBookExtractedText{
+			LibraryBookID:    id,
+			PageNumber:       p.Number,
+			Text:             p.Text,
+			ExtractionMethod: "pdf_text_layer",
+			Confident:        p.Confident,
+		})
+	}
+
+	if err := s.repo.SaveExtractedPages(id, pages); err != nil {
+		return fail(err)
+	}
+
+	status, note := model.LibraryBookExtractDone, ""
+	switch {
+	case confidentCount+lowConfidenceCount == 0:
+		status = model.LibraryBookExtractNeedsOCR
+		note = "Tidak ada layer teks yang terdeteksi — kemungkinan ini hasil scan, perlu OCR (belum didukung)."
+	case lowConfidenceCount > confidentCount:
+		status = model.LibraryBookExtractLowConfidence
+		note = fmt.Sprintf("Hanya %d dari %d halaman berteks yang lolos cek kualitas dasar — layer teks sumber kemungkinan korup, tinjau manual sebelum dipakai.", confidentCount, confidentCount+lowConfidenceCount)
+	}
+	return s.repo.SetExtractionStatus(id, status, note)
+}
+
+func (s *libraryBookService) FindExtractedPages(id int) ([]model.LibraryBookExtractedText, error) {
+	return s.repo.FindExtractedPages(id)
 }
 
 func (s *libraryBookService) Delete(id int) error {

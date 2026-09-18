@@ -50,6 +50,32 @@ type LibraryBook struct {
 	Pages            int                      `json:"pages" gorm:"default:0"`
 	Tags             string                   `json:"tags" gorm:"type:varchar(500)"`
 	Status           LibraryBookStatus        `json:"status" gorm:"type:varchar(30);default:'published';index"`
+	ExtractionStatus LibraryBookExtractStatus `json:"extraction_status" gorm:"type:varchar(30);default:'none';index"`
+	ExtractionError  string                   `json:"extraction_error" gorm:"type:text"`
+}
+
+type LibraryBookExtractStatus string
+
+const (
+	LibraryBookExtractNone          LibraryBookExtractStatus = "none"
+	LibraryBookExtractProcessing    LibraryBookExtractStatus = "processing"
+	LibraryBookExtractDone          LibraryBookExtractStatus = "done"
+	LibraryBookExtractNeedsOCR      LibraryBookExtractStatus = "needs_ocr"
+	LibraryBookExtractLowConfidence LibraryBookExtractStatus = "low_confidence"
+	LibraryBookExtractFailed        LibraryBookExtractStatus = "failed"
+)
+
+// LibraryBookExtractedText holds one page of text pulled from a
+// LibraryBook's PDF (see docs/features/todo/perpustakaan-ekstraksi-konten-untuk-belajar.md).
+// Kept per-page rather than as one blob per book so generated Lesson/Quiz
+// content can cite the exact source page for a reviewer to verify.
+type LibraryBookExtractedText struct {
+	BaseID
+	LibraryBookID    int    `json:"library_book_id" gorm:"not null;uniqueIndex:idx_library_book_page"`
+	PageNumber       int    `json:"page_number" gorm:"not null;uniqueIndex:idx_library_book_page"`
+	Text             string `json:"text" gorm:"type:text"`
+	ExtractionMethod string `json:"extraction_method" gorm:"type:varchar(30)"`
+	Confident        bool   `json:"confident" gorm:"default:true"`
 }
 
 type CreateLibraryBookRequest struct {

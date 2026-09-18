@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"mime"
 	"path/filepath"
 	"regexp"
@@ -26,6 +27,8 @@ type LibraryBookController interface {
 	ClearResource(ctx *fiber.Ctx) error
 	UploadCover(ctx *fiber.Ctx) error
 	ClearCover(ctx *fiber.Ctx) error
+	ExtractText(ctx *fiber.Ctx) error
+	GetExtractedText(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -314,6 +317,51 @@ func (c *libraryBookController) ClearCover(ctx *fiber.Ctx) error {
 		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, book)
+}
+
+// @Summary Trigger text extraction for a library book's PDF
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /library/books/{id}/extract [post]
+func (c *libraryBookController) ExtractText(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	if _, err := c.svc.FindByIDAny(id); err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	go func() {
+		if err := c.svc.ExtractText(id); err != nil {
+			log.Printf("[library] extract text failed for book %d: %v", id, err)
+		}
+	}()
+	return lib.OK(ctx, fiber.Map{"status": "processing"})
+}
+
+// @Summary Get extracted text pages for a library book
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Router /library/books/{id}/extract [get]
+func (c *libraryBookController) GetExtractedText(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	pages, err := c.svc.FindExtractedPages(id)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, pages)
 }
 
 // @Summary Delete library book
