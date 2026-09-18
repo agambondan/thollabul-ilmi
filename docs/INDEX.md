@@ -6,17 +6,18 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 
 ## Keputusan Aktif (Source of Truth)
 
-| Dokumen                                                                        | Topik                                                                                                            | Status     |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- | ---------- |
-| [MOBILE_IA_FINAL_APPROACH.md](./MOBILE_IA_FINAL_APPROACH.md)                   | **Arsitektur navigasi mobile** — 5 tab final, feature placement, urutan implementasi                             | ✅ Aktif   |
-| [MOBILE_DESIGN_PATTERNS.md](./MOBILE_DESIGN_PATTERNS.md)                       | **Pola desain mobile mengikat** — detail UI harus modal/page (bukan inline expand), modal style, back navigation | ✅ Aktif   |
-| [MOBILE_LAYOUT_MODES.md](./MOBILE_LAYOUT_MODES.md)                             | **Strategi layout mobile app** — mobile app lama tetap dipertahankan, layout baru bisa dipilih user              | 🟡 Planned |
-| [MOBILE_APP_DEVELOPMENT_GUIDELINES.md](./MOBILE_APP_DEVELOPMENT_GUIDELINES.md) | **Arahan development mobile app** — pemisahan orchestration vs renderer layout, DRY/KISS/SOLID, testing          | ✅ Aktif   |
-| [api/FEATURE_ROADMAP.md](./api/FEATURE_ROADMAP.md)                             | Roadmap fitur backend, tier, dan status pengerjaan                                                               | ✅ Aktif   |
-| [api/roadmap-status.md](./api/roadmap-status.md)                               | Status terkini tiap fitur backend                                                                                | ✅ Aktif   |
-| [web/web-status.md](./web/web-status.md)                                       | Status halaman dan komponen web (Next.js)                                                                        | ✅ Aktif   |
-| [features/README.md](./features/README.md)                                     | Status feature per slice: todo, progress, done, onhold                                                           | ✅ Aktif   |
-| [reviews/README.md](./reviews/README.md)                                       | Review lintas mobile, web, API, sync, dan UX                                                                     | ✅ Aktif   |
+| Dokumen                                                                        | Topik                                                                                                              | Status     |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ---------- |
+| [MOBILE_IA_FINAL_APPROACH.md](./MOBILE_IA_FINAL_APPROACH.md)                   | **Arsitektur navigasi mobile** — 5 tab final, feature placement, urutan implementasi                               | ✅ Aktif   |
+| [MOBILE_DESIGN_PATTERNS.md](./MOBILE_DESIGN_PATTERNS.md)                       | **Pola desain mobile mengikat** — detail UI harus modal/page (bukan inline expand), modal style, back navigation   | ✅ Aktif   |
+| [MOBILE_LAYOUT_MODES.md](./MOBILE_LAYOUT_MODES.md)                             | **Strategi layout mobile app** — mobile app lama tetap dipertahankan, layout baru bisa dipilih user                | 🟡 Planned |
+| [MOBILE_APP_DEVELOPMENT_GUIDELINES.md](./MOBILE_APP_DEVELOPMENT_GUIDELINES.md) | **Arahan development mobile app** — pemisahan orchestration vs renderer layout, DRY/KISS/SOLID, testing            | ✅ Aktif   |
+| [api/FEATURE_ROADMAP.md](./api/FEATURE_ROADMAP.md)                             | Roadmap fitur backend, tier, dan status pengerjaan                                                                 | ✅ Aktif   |
+| [api/roadmap-status.md](./api/roadmap-status.md)                               | Status terkini tiap fitur backend                                                                                  | ✅ Aktif   |
+| [web/web-status.md](./web/web-status.md)                                       | Status halaman dan komponen web (Next.js)                                                                          | ✅ Aktif   |
+| [features/README.md](./features/README.md)                                     | Status feature per slice: todo, progress, done, onhold                                                             | ✅ Aktif   |
+| [reviews/README.md](./reviews/README.md)                                       | Review lintas mobile, web, API, sync, dan UX                                                                       | ✅ Aktif   |
+| [AGENT_KNOWLEDGE.md](./AGENT_KNOWLEDGE.md)                                     | **Pengetahuan non-obvious untuk agent** — insiden data, gotcha teknis, wajib dibaca sebelum menyentuh area terkait | ✅ Aktif   |
 
 ---
 

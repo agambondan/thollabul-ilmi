@@ -1,5 +1,13 @@
 # Audit Cakupan Transkrip Kajian
 
+> **⚠️ Koreksi 2026-09-11:** kesimpulan "videonya memang tidak punya caption
+> YouTube" di bawah ini **keliru**. Kelima video yang sama ternyata punya
+> caption Indonesia asli saat dicek ulang, dan transkrip fabrikasi sempat
+> muncul lagi setelah migrasi ke folder per-channel. Fix final (isi
+> transkrip asli, 389 chunk) ada di commit `41b297cd`. Jangan percaya
+> kesimpulan "confirmed absent" di dokumen ini untuk video lain — selalu
+> cek ulang langsung ke YouTube. Detail lengkap: [`AGENT_KNOWLEDGE.md`](../AGENT_KNOWLEDGE.md#kajian-transcript-fabrication).
+
 Tanggal: `2026-09-08`
 Scope: 146 video di `services/api/data/static/kajian.json` (satu-satunya
 sumber transkrip — di-sync otomatis ke DB setiap kali seeder jalan)
