@@ -16,6 +16,7 @@ type PerawiService interface {
 	Search(*fiber.Ctx, string) *paginate.Page
 	FindGuru(*int) ([]model.Perawi, error)
 	FindMurid(*int) ([]model.Perawi, error)
+	FindHadiths(*fiber.Ctx, *int) *paginate.Page
 	UpdateByID(*int, *model.Perawi) (*model.Perawi, error)
 	DeleteByID(*int) error
 	Count() (*int64, error)
@@ -113,6 +114,21 @@ func (s *perawiService) FindMurid(id *int) ([]model.Perawi, error) {
 		return s.repo.FindMurid(id)
 	})
 	return result, err
+}
+
+func (s *perawiService) FindHadiths(ctx *fiber.Ctx, id *int) *paginate.Page {
+	if s.cache == nil {
+		return s.repo.FindHadiths(ctx, id)
+	}
+	var result *paginate.Page
+	key := lib.RequestCacheKey("perawi:hadiths", ctx, *id)
+	err := s.cache.Remember(key, &result, func() (interface{}, error) {
+		return s.repo.FindHadiths(ctx, id), nil
+	})
+	if err != nil {
+		return s.repo.FindHadiths(ctx, id)
+	}
+	return result
 }
 
 func (s *perawiService) UpdateByID(id *int, p *model.Perawi) (*model.Perawi, error) {

@@ -827,6 +827,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/perawi/:id", newPerawiController.FindByID)
 	master.Get("/perawi/:id/guru", newPerawiController.FindGuru)
 	master.Get("/perawi/:id/murid", newPerawiController.FindMurid)
+	master.Get("/perawi/:id/hadiths", newPerawiController.FindHadiths)
 	master.Get("/perawi/:id/jarh-tadil", newJarhTadilController.FindByPerawiID)
 	master.Post("/perawi", middlewares.EditorOrAdminMiddleware(), newPerawiController.Create)
 	master.Put("/perawi/:id", middlewares.EditorOrAdminMiddleware(), newPerawiController.UpdateByID)

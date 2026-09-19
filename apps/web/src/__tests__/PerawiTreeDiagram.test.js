@@ -121,4 +121,23 @@ describe("GlobalPerawiTree", () => {
 
         expect(screen.getByText("1")).toBeInTheDocument(); // Match count badge
     });
+
+    it("filters tree by quality filter and finds path between perawi", () => {
+        render(<GlobalPerawiTree basePath='/perawi' />);
+
+        // Quality filter
+        const qualitySelect = screen.getByDisplayValue("Semua Kualitas");
+        fireEvent.change(qualitySelect, { target: { value: "tsiqah" } });
+        expect(screen.getByDisplayValue("Tsiqah (Shahih)")).toBeInTheDocument();
+
+        // Path Finder Toggle
+        const pathFinderBtn = screen.getByText("Jalur Sanad");
+        fireEvent.click(pathFinderBtn);
+
+        expect(screen.getByText("Temukan Jalur")).toBeInTheDocument();
+        fireEvent.click(screen.getByText("Temukan Jalur"));
+
+        expect(screen.getByText(/Rantai Transmisi/i)).toBeInTheDocument();
+        expect(screen.getByText("Bersihkan")).toBeInTheDocument();
+    });
 });

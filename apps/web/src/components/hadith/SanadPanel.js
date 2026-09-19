@@ -20,6 +20,47 @@ const STATUS_COLORS = {
     nabi: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 border-purple-300 dark:border-purple-700",
 };
 
+function assessChainQuality(chain) {
+    if (!chain || chain.length === 0) return null;
+    let hasDhaif = false;
+    let hasShaduq = false;
+    for (const m of chain) {
+        const status = (m.perawi?.status || "").toLowerCase();
+        if (
+            status.includes("dhaif") ||
+            status.includes("layyin") ||
+            status.includes("majhul") ||
+            status.includes("matruk") ||
+            status.includes("kadzdzab")
+        ) {
+            hasDhaif = true;
+        } else if (
+            status.includes("shaduq") ||
+            status.includes("maqbul") ||
+            status.includes("la ba") ||
+            status.includes("hasan")
+        ) {
+            hasShaduq = true;
+        }
+    }
+    if (hasDhaif) {
+        return {
+            label: "Jalur Memerlukan Verifikasi (Terdapat Perawi Dhaif/Layyin)",
+            badge: "bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 border-orange-200 dark:border-orange-800",
+        };
+    }
+    if (hasShaduq) {
+        return {
+            label: "Kualitas Sanad: Hasan (Perawi Shaduq/Maqbul)",
+            badge: "bg-sky-100 text-sky-800 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200 dark:border-sky-800",
+        };
+    }
+    return {
+        label: "Kualitas Sanad: Shahih (Seluruh Perawi Tsiqah)",
+        badge: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+    };
+}
+
 export default function SanadPanel({ hadithId, t }) {
     const [sanads, setSanads] = useState(null);
     const [sanadFailed, setSanadFailed] = useState(false);
@@ -98,18 +139,26 @@ export default function SanadPanel({ hadithId, t }) {
                 const sortedChain = (sanad.mata_sanad ?? [])
                     .slice()
                     .sort((a, b) => (a.urutan ?? 0) - (b.urutan ?? 0));
+                const quality = assessChainQuality(sortedChain);
 
                 return (
                     <div
                         key={sanad.id ?? sIdx}
                         className='bg-gray-50/50 dark:bg-slate-900/40 rounded-xl p-3 border border-gray-100 dark:border-slate-800'
                     >
-                        {sanads.length > 1 && (
-                            <p className='text-xs font-bold text-teal-700 dark:text-teal-400 mb-2'>
+                        <div className='flex flex-wrap items-center justify-between gap-2 mb-2'>
+                            <p className='text-xs font-bold text-teal-700 dark:text-teal-400'>
                                 Jalur {sanad.nomor_jalur ?? sIdx + 1}
                                 {sanad.jenis ? ` — ${sanad.jenis}` : ""}
                             </p>
-                        )}
+                            {quality && (
+                                <span
+                                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${quality.badge}`}
+                                >
+                                    {quality.label}
+                                </span>
+                            )}
+                        </div>
 
                         {viewMode === "tree" ? (
                             /* Tree Diagram Flow */

@@ -505,8 +505,34 @@ const SANAD_TREE_DATA = {
     ],
 };
 
-function MobileOrgCard({ node, onOpenPerawi, isRoot = false }) {
+function getQualityTier(status) {
+    if (!status) return "tsiqah";
+    const s = status.toLowerCase();
+    if (
+        s.includes("dhaif") ||
+        s.includes("layyin") ||
+        s.includes("majhul") ||
+        s.includes("matruk") ||
+        s.includes("kadzdzab")
+    ) {
+        return "dhaif";
+    }
+    if (
+        s.includes("shaduq") ||
+        s.includes("maqbul") ||
+        s.includes("la ba") ||
+        s.includes("hasan")
+    ) {
+        return "shaduq";
+    }
+    return "tsiqah";
+}
+
+function MobileOrgCard({ node, onOpenPerawi, isRoot = false, qualityFilter = "all" }) {
     const levelStyle = LEVEL_COLORS[node.levelKey] || LEVEL_COLORS.tabiin;
+    const tier = getQualityTier(node.status);
+    const isQualityMatch = qualityFilter === "all" || tier === qualityFilter;
+    const isFaded = qualityFilter !== "all" && !isQualityMatch;
 
     return (
         <Pressable
@@ -515,9 +541,28 @@ function MobileOrgCard({ node, onOpenPerawi, isRoot = false }) {
             style={({ pressed }) => [
                 styles.card,
                 {
-                    borderColor: isRoot ? "#c084fc" : levelStyle.border,
-                    borderTopColor: isRoot ? "#9333ea" : levelStyle.border,
+                    borderColor:
+                        qualityFilter !== "all" && isQualityMatch
+                            ? tier === "tsiqah"
+                                ? "#059669"
+                                : tier === "shaduq"
+                                  ? "#2563eb"
+                                  : "#dc2626"
+                            : isRoot
+                              ? "#c084fc"
+                              : levelStyle.border,
+                    borderTopColor:
+                        qualityFilter !== "all" && isQualityMatch
+                            ? tier === "tsiqah"
+                                ? "#059669"
+                                : tier === "shaduq"
+                                  ? "#2563eb"
+                                  : "#dc2626"
+                            : isRoot
+                              ? "#9333ea"
+                              : levelStyle.border,
                     backgroundColor: "#ffffff",
+                    opacity: isFaded ? 0.3 : 1,
                     transform: [{ scale: pressed ? 0.96 : 1 }],
                 },
             ]}
@@ -576,12 +621,17 @@ function MobileOrgCard({ node, onOpenPerawi, isRoot = false }) {
     );
 }
 
-function MobileOrgTreeNode({ node, onOpenPerawi, isRoot = false }) {
+function MobileOrgTreeNode({ node, onOpenPerawi, isRoot = false, qualityFilter = "all" }) {
     const hasChildren = node.children && node.children.length > 0;
 
     return (
         <View style={styles.nodeWrapper}>
-            <MobileOrgCard node={node} onOpenPerawi={onOpenPerawi} isRoot={isRoot} />
+            <MobileOrgCard
+                node={node}
+                onOpenPerawi={onOpenPerawi}
+                isRoot={isRoot}
+                qualityFilter={qualityFilter}
+            />
 
             {hasChildren ? (
                 <View style={styles.branchWrapper}>
@@ -601,6 +651,7 @@ function MobileOrgTreeNode({ node, onOpenPerawi, isRoot = false }) {
                                     <MobileOrgTreeNode
                                         node={child}
                                         onOpenPerawi={onOpenPerawi}
+                                        qualityFilter={qualityFilter}
                                     />
                                 </View>
                             ))}
@@ -614,6 +665,7 @@ function MobileOrgTreeNode({ node, onOpenPerawi, isRoot = false }) {
 
 export function PerawiSanadTreeMobile({ onOpenPerawi }) {
     const [selectedBranch, setSelectedBranch] = useState("all");
+    const [qualityFilter, setQualityFilter] = useState("all");
 
     const filteredTree = {
         ...SANAD_TREE_DATA,
@@ -638,6 +690,34 @@ export function PerawiSanadTreeMobile({ onOpenPerawi }) {
                 <Text style={styles.subtitle}>
                     Transmisi sanad dari Rasulullah ﷺ ke Sahabat hingga Aimmah
                 </Text>
+            </View>
+
+            {/* Quality Filter Chips */}
+            <View style={styles.qualityFilterRow}>
+                {[
+                    { key: "all", label: "Semua Kualitas" },
+                    { key: "tsiqah", label: "Tsiqah (Shahih)" },
+                    { key: "shaduq", label: "Shaduq (Hasan)" },
+                    { key: "dhaif", label: "Dhaif" },
+                ].map(({ key, label }) => (
+                    <Pressable
+                        key={key}
+                        onPress={() => setQualityFilter(key)}
+                        style={[
+                            styles.qualityChip,
+                            qualityFilter === key && styles.qualityChipActive,
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.qualityChipText,
+                                qualityFilter === key && styles.qualityChipTextActive,
+                            ]}
+                        >
+                            {label}
+                        </Text>
+                    </Pressable>
+                ))}
             </View>
 
             {/* Branch Filter Chips */}
@@ -678,7 +758,7 @@ export function PerawiSanadTreeMobile({ onOpenPerawi }) {
             {/* Scrollable Diagram Canvas */}
             <ScrollView
                 horizontal
-                showsHorizontalScrollIndicator={true}
+                showsHorizontalScrollIndicator
                 contentContainerStyle={styles.canvasContainer}
             >
                 <View style={styles.canvasInner}>
@@ -686,6 +766,7 @@ export function PerawiSanadTreeMobile({ onOpenPerawi }) {
                         node={filteredTree}
                         onOpenPerawi={onOpenPerawi}
                         isRoot
+                        qualityFilter={qualityFilter}
                     />
                 </View>
             </ScrollView>
@@ -727,6 +808,32 @@ const styles = StyleSheet.create({
         fontSize: 11,
         color: "#64748b",
         marginTop: 2,
+    },
+    qualityFilterRow: {
+        flexDirection: "row",
+        gap: 6,
+        paddingBottom: spacing.xs,
+        flexWrap: "wrap",
+    },
+    qualityChip: {
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: radius.md,
+        backgroundColor: "#f1f5f9",
+        borderWidth: 1,
+        borderColor: "#e2e8f0",
+    },
+    qualityChipActive: {
+        backgroundColor: "#0d9488",
+        borderColor: "#0d9488",
+    },
+    qualityChipText: {
+        fontSize: 10,
+        fontWeight: "600",
+        color: "#64748b",
+    },
+    qualityChipTextActive: {
+        color: "#ffffff",
     },
     filterRow: {
         flexDirection: "row",

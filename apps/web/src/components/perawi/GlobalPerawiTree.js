@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import {
     BsDiagram3Fill,
     BsInfoCircle,
@@ -11,6 +11,10 @@ import {
     BsSearch,
     BsX,
     BsDownload,
+    BsSignpostSplit,
+    BsArrowRight,
+    BsShieldCheck,
+    BsArrowLeftRight,
 } from "react-icons/bs";
 
 const LEVEL_COLORS = {
@@ -513,6 +517,102 @@ const ALL_40_PERAWI_TREE = {
     ],
 };
 
+function getQualityTier(status) {
+    if (!status) return "tsiqah";
+    const s = status.toLowerCase();
+    if (
+        s.includes("dhaif") ||
+        s.includes("layyin") ||
+        s.includes("majhul") ||
+        s.includes("matruk") ||
+        s.includes("kadzdzab")
+    ) {
+        return "dhaif";
+    }
+    if (
+        s.includes("shaduq") ||
+        s.includes("maqbul") ||
+        s.includes("la ba") ||
+        s.includes("hasan")
+    ) {
+        return "shaduq";
+    }
+    return "tsiqah";
+}
+
+function flattenAllPerawis(root) {
+    const map = new Map();
+    function walk(n) {
+        if (!n) return;
+        if (!map.has(n.id)) {
+            map.set(n.id, {
+                id: n.id,
+                nama_latin: n.nama_latin,
+                nama_arab: n.nama_arab,
+                tabaqah: n.tabaqah,
+                status: n.status,
+            });
+        }
+        if (n.children) {
+            for (const c of n.children) walk(c);
+        }
+    }
+    walk(root);
+    return Array.from(map.values()).sort((a, b) => a.id - b.id);
+}
+
+function buildSanadGraph(root) {
+    const nodes = new Map();
+    const adj = new Map();
+
+    function walk(n) {
+        if (!n) return;
+        nodes.set(n.id, n);
+        if (!adj.has(n.id)) adj.set(n.id, []);
+
+        if (n.children) {
+            for (const c of n.children) {
+                walk(c);
+                adj.get(n.id).push({ to: c.id, rel: "murid" });
+                if (!adj.has(c.id)) adj.set(c.id, []);
+                adj.get(c.id).push({ to: n.id, rel: "guru" });
+            }
+        }
+    }
+    walk(root);
+    return { nodes, adj };
+}
+
+function findShortestSanadPath(root, startId, endId) {
+    if (!startId || !endId) return null;
+    const sId = Number(startId);
+    const eId = Number(endId);
+    const { nodes, adj } = buildSanadGraph(root);
+    if (!nodes.has(sId) || !nodes.has(eId)) return null;
+    if (sId === eId) return [nodes.get(sId)];
+
+    const queue = [[sId]];
+    const visited = new Set([sId]);
+
+    while (queue.length > 0) {
+        const path = queue.shift();
+        const curr = path[path.length - 1];
+
+        if (curr === eId) {
+            return path.map((id) => nodes.get(id));
+        }
+
+        const neighbors = adj.get(curr) || [];
+        for (const { to } of neighbors) {
+            if (!visited.has(to)) {
+                visited.add(to);
+                queue.push([...path, to]);
+            }
+        }
+    }
+    return null;
+}
+
 function checkNodeMatch(node, q) {
     if (!q) return false;
     const query = q.toLowerCase();
@@ -534,34 +634,74 @@ function countMatches(node, q) {
     return count;
 }
 
-function OrgCard({ node, basePath, isRoot = false, searchQuery = "" }) {
+function countQualityMatches(node, qualityFilter) {
+    if (qualityFilter === "all") return 0;
+    let count = getQualityTier(node.status) === qualityFilter ? 1 : 0;
+    if (node.children) {
+        for (const c of node.children) {
+            count += countQualityMatches(c, qualityFilter);
+        }
+    }
+    return count;
+}
+
+function OrgCard({
+    node,
+    basePath,
+    isRoot = false,
+    searchQuery = "",
+    pathStepIndex = -1,
+    isPathActive = false,
+    qualityFilter = "all",
+}) {
     const levelStyle = LEVEL_COLORS[node.levelKey] || LEVEL_COLORS.tabiin;
-    const isMatch = checkNodeMatch(node, searchQuery);
-    const isFaded = Boolean(searchQuery && !isMatch);
+    const isSearchMatch = checkNodeMatch(node, searchQuery);
+    const qualityTier = getQualityTier(node.status);
+    const isQualityMatch = qualityFilter === "all" || qualityTier === qualityFilter;
+    const isPathNode = pathStepIndex >= 0;
+
+    const isFaded =
+        (Boolean(searchQuery) && !isSearchMatch) ||
+        (qualityFilter !== "all" && !isQualityMatch) ||
+        (isPathActive && !isPathNode);
+
+    const isHighlighted = isSearchMatch || isPathNode || (qualityFilter !== "all" && isQualityMatch);
 
     return (
         <Link
             href={`${basePath}/${node.id}`}
             className={`group relative block transition-all duration-200 z-10 ${
-                isFaded ? "opacity-30 grayscale hover:opacity-100 hover:grayscale-0" : ""
-            } ${isMatch ? "scale-105" : "hover:-translate-y-1"}`}
+                isFaded ? "opacity-25 grayscale hover:opacity-100 hover:grayscale-0" : ""
+            } ${isHighlighted ? "scale-105" : "hover:-translate-y-1"}`}
         >
             <div
                 className={`relative pt-5 pb-3 px-2 rounded-2xl bg-white dark:bg-slate-800 border-2 border-t-4 shadow-sm hover:shadow-xl transition-all duration-200 text-center w-[145px] sm:w-[165px] ${
-                    isMatch
-                        ? "ring-4 ring-amber-400 ring-offset-2 dark:ring-offset-slate-900 border-amber-500 border-t-amber-500 shadow-amber-500/20"
-                        : isRoot
-                          ? "border-purple-400 dark:border-purple-600 border-t-purple-600 ring-4 ring-purple-100 dark:ring-purple-950/50"
-                          : `${levelStyle.border} ${levelStyle.accent}`
+                    isPathNode
+                        ? "ring-4 ring-amber-400 dark:ring-amber-400 border-amber-500 border-t-amber-500 shadow-amber-500/30"
+                        : isSearchMatch
+                          ? "ring-4 ring-teal-400 ring-offset-2 dark:ring-offset-slate-900 border-teal-500 border-t-teal-500 shadow-teal-500/20"
+                          : qualityFilter !== "all" && isQualityMatch
+                            ? qualityTier === "tsiqah"
+                                ? "ring-4 ring-emerald-400 border-emerald-500 border-t-emerald-500 shadow-emerald-500/20"
+                                : qualityTier === "shaduq"
+                                  ? "ring-4 ring-sky-400 border-sky-500 border-t-sky-500 shadow-sky-500/20"
+                                  : "ring-4 ring-red-400 border-red-500 border-t-red-500 shadow-red-500/20"
+                            : isRoot
+                              ? "border-purple-400 dark:border-purple-600 border-t-purple-600 ring-4 ring-purple-100 dark:ring-purple-950/50"
+                              : `${levelStyle.border} ${levelStyle.accent}`
                 }`}
             >
-                {/* Floating Top Avatar Badge */}
+                {/* Floating Top Avatar Badge or Path Step Number */}
                 <div
                     className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-md ring-2 ring-white dark:ring-slate-800 transition-transform group-hover:scale-110 ${
-                        isMatch ? "bg-amber-500 text-white" : levelStyle.avatar
+                        isPathNode
+                            ? "bg-amber-500 text-white font-mono text-[11px]"
+                            : isSearchMatch
+                              ? "bg-teal-500 text-white"
+                              : levelStyle.avatar
                     }`}
                 >
-                    {node.initial || (node.nama_latin ? node.nama_latin[0] : "?")}
+                    {isPathNode ? `#${pathStepIndex + 1}` : (node.initial || (node.nama_latin ? node.nama_latin[0] : "?"))}
                 </div>
 
                 {/* Level / Tabaqah Badge */}
@@ -586,7 +726,11 @@ function OrgCard({ node, basePath, isRoot = false, searchQuery = "" }) {
                 {/* Latin Name */}
                 <p
                     className={`text-xs font-bold leading-tight line-clamp-2 mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors ${
-                        isMatch ? "text-amber-700 dark:text-amber-400" : "text-gray-900 dark:text-white"
+                        isPathNode
+                            ? "text-amber-700 dark:text-amber-400 font-extrabold"
+                            : isSearchMatch
+                              ? "text-teal-700 dark:text-teal-400"
+                              : "text-gray-900 dark:text-white"
                     }`}
                 >
                     {node.nama_latin}
@@ -598,7 +742,15 @@ function OrgCard({ node, basePath, isRoot = false, searchQuery = "" }) {
                     {node.status && (
                         <>
                             <span>•</span>
-                            <span className='font-medium text-teal-600 dark:text-teal-400 truncate max-w-[75px]'>
+                            <span
+                                className={`font-semibold truncate max-w-[75px] ${
+                                    qualityTier === "tsiqah"
+                                        ? "text-emerald-600 dark:text-emerald-400"
+                                        : qualityTier === "shaduq"
+                                          ? "text-sky-600 dark:text-sky-400"
+                                          : "text-red-600 dark:text-red-400"
+                                }`}
+                            >
                                 {node.status}
                             </span>
                         </>
@@ -609,13 +761,30 @@ function OrgCard({ node, basePath, isRoot = false, searchQuery = "" }) {
     );
 }
 
-function OrgTreeNode({ node, basePath, isRoot = false, searchQuery = "" }) {
+function OrgTreeNode({
+    node,
+    basePath,
+    isRoot = false,
+    searchQuery = "",
+    pathNodeMap = null,
+    isPathActive = false,
+    qualityFilter = "all",
+}) {
     const hasChildren = node.children && node.children.length > 0;
+    const pathStepIndex = pathNodeMap && pathNodeMap.has(node.id) ? pathNodeMap.get(node.id) : -1;
 
     return (
         <div className='flex flex-col items-center'>
             {/* The Node Card */}
-            <OrgCard node={node} basePath={basePath} isRoot={isRoot} searchQuery={searchQuery} />
+            <OrgCard
+                node={node}
+                basePath={basePath}
+                isRoot={isRoot}
+                searchQuery={searchQuery}
+                pathStepIndex={pathStepIndex}
+                isPathActive={isPathActive}
+                qualityFilter={qualityFilter}
+            />
 
             {/* If children exist, draw vertical line down and branch out */}
             {hasChildren && (
@@ -651,6 +820,9 @@ function OrgTreeNode({ node, basePath, isRoot = false, searchQuery = "" }) {
                                         node={child}
                                         basePath={basePath}
                                         searchQuery={searchQuery}
+                                        pathNodeMap={pathNodeMap}
+                                        isPathActive={isPathActive}
+                                        qualityFilter={qualityFilter}
                                     />
                                 </div>
                             ))}
@@ -666,8 +838,18 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
     const [zoom, setZoom] = useState(0.8);
     const [selectedBranch, setSelectedBranch] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
+    const [qualityFilter, setQualityFilter] = useState("all");
     const [exporting, setExporting] = useState(false);
+
+    // Path Finder States
+    const [showPathFinder, setShowPathFinder] = useState(false);
+    const [startPerawiId, setStartPerawiId] = useState("1");
+    const [targetPerawiId, setTargetPerawiId] = useState("9");
+    const [activePath, setActivePath] = useState(null);
+
     const treeRef = useRef(null);
+
+    const allPerawis = useMemo(() => flattenAllPerawis(ALL_40_PERAWI_TREE), []);
 
     const zoomIn = () => setZoom((z) => Math.min(1.4, +(z + 0.1).toFixed(2)));
     const zoomOut = () => setZoom((z) => Math.max(0.4, +(z - 0.1).toFixed(2)));
@@ -687,6 +869,36 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
     };
 
     const matchTotal = searchQuery ? countMatches(filteredTree, searchQuery) : 0;
+    const qualityMatchTotal =
+        qualityFilter !== "all" ? countQualityMatches(filteredTree, qualityFilter) : 0;
+
+    const pathNodeMap = useMemo(() => {
+        if (!activePath) return null;
+        const map = new Map();
+        activePath.forEach((node, idx) => {
+            map.set(node.id, idx);
+        });
+        return map;
+    }, [activePath]);
+
+    const handleFindPath = () => {
+        const path = findShortestSanadPath(ALL_40_PERAWI_TREE, startPerawiId, targetPerawiId);
+        setActivePath(path);
+    };
+
+    const handleSwapPath = () => {
+        const prevStart = startPerawiId;
+        setStartPerawiId(targetPerawiId);
+        setTargetPerawiId(prevStart);
+        if (activePath) {
+            const path = findShortestSanadPath(ALL_40_PERAWI_TREE, targetPerawiId, prevStart);
+            setActivePath(path);
+        }
+    };
+
+    const handleClearPath = () => {
+        setActivePath(null);
+    };
 
     const handleExportPNG = async () => {
         if (!treeRef.current || exporting) return;
@@ -755,8 +967,23 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                         </span>
                     </div>
 
-                    {/* Zoom & Export Controller */}
+                    {/* Tools Controller */}
                     <div className='flex items-center gap-1.5'>
+                        {/* Path Finder Toggle Button */}
+                        <button
+                            type='button'
+                            onClick={() => setShowPathFinder(!showPathFinder)}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-sm transition-colors ${
+                                showPathFinder || activePath
+                                    ? "bg-amber-500 hover:bg-amber-600 text-white"
+                                    : "bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700"
+                            }`}
+                            title='Cari Jalur Transmisi Antar Perawi'
+                        >
+                            <BsSignpostSplit />
+                            <span>Jalur Sanad</span>
+                        </button>
+
                         <div className='flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-0.5 shadow-sm text-xs'>
                             <button
                                 type='button'
@@ -810,8 +1037,120 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                 </div>
             </div>
 
-            {/* Interactive Search & Branch Controls Row */}
-            <div className='flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-4'>
+            {/* Path Finder Drawer / Box */}
+            {showPathFinder && (
+                <div className='mb-4 p-3.5 bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/60 rounded-2xl'>
+                    <div className='flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3'>
+                        <div className='flex flex-wrap items-center gap-2'>
+                            <span className='text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5'>
+                                <BsSignpostSplit className='text-amber-600 dark:text-amber-400 text-sm' />
+                                Cari Jalur Sanad:
+                            </span>
+
+                            {/* Start Perawi Select */}
+                            <div className='flex items-center gap-1 text-xs'>
+                                <span className='text-gray-500 dark:text-gray-400 text-[11px]'>Dari:</span>
+                                <select
+                                    value={startPerawiId}
+                                    onChange={(e) => setStartPerawiId(e.target.value)}
+                                    className='px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-slate-700 rounded-lg text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-400'
+                                >
+                                    {allPerawis.map((p) => (
+                                        <option key={`from-${p.id}`} value={p.id}>
+                                            {p.nama_latin} ({p.tabaqah})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Swap Button */}
+                            <button
+                                type='button'
+                                onClick={handleSwapPath}
+                                className='p-1.5 text-amber-700 dark:text-amber-300 hover:bg-amber-200/60 dark:hover:bg-amber-900/40 rounded-lg transition-colors'
+                                title='Tukar Arah Jalur'
+                            >
+                                <BsArrowLeftRight />
+                            </button>
+
+                            {/* Target Perawi Select */}
+                            <div className='flex items-center gap-1 text-xs'>
+                                <span className='text-gray-500 dark:text-gray-400 text-[11px]'>Ke:</span>
+                                <select
+                                    value={targetPerawiId}
+                                    onChange={(e) => setTargetPerawiId(e.target.value)}
+                                    className='px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-amber-200 dark:border-slate-700 rounded-lg text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-400'
+                                >
+                                    {allPerawis.map((p) => (
+                                        <option key={`to-${p.id}`} value={p.id}>
+                                            {p.nama_latin} ({p.tabaqah})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='flex items-center gap-2 self-end md:self-auto'>
+                            <button
+                                type='button'
+                                onClick={handleFindPath}
+                                className='px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold shadow-xs transition-colors'
+                            >
+                                Temukan Jalur
+                            </button>
+                            {activePath && (
+                                <button
+                                    type='button'
+                                    onClick={handleClearPath}
+                                    className='px-2.5 py-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-xs font-semibold'
+                                >
+                                    Bersihkan
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Active Path Visualizer Flow */}
+                    {activePath && (
+                        <div className='mt-3 pt-3 border-t border-amber-200/80 dark:border-amber-800/50'>
+                            <div className='flex items-center justify-between gap-2 mb-2'>
+                                <span className='text-[11px] font-bold text-amber-900 dark:text-amber-200'>
+                                    Rantai Transmisi ({activePath.length} Perawi):
+                                </span>
+                                <span className='text-[10px] px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-100 font-semibold'>
+                                    {activePath.length - 1} Langkah Periwayatan
+                                </span>
+                            </div>
+                            <div className='flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin text-xs'>
+                                {activePath.map((step, idx) => (
+                                    <div key={step.id} className='flex items-center gap-1.5 shrink-0'>
+                                        <Link
+                                            href={`${basePath}/${step.id}`}
+                                            className='flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 shadow-xs hover:border-teal-500'
+                                        >
+                                            <span className='w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center'>
+                                                {idx + 1}
+                                            </span>
+                                            <span className='font-bold text-gray-800 dark:text-gray-200 text-[11px]'>
+                                                {step.nama_latin}
+                                            </span>
+                                            <span className='text-[9px] text-gray-400'>
+                                                ({step.tabaqah})
+                                            </span>
+                                        </Link>
+                                        {idx < activePath.length - 1 && (
+                                            <BsArrowRight className='text-amber-500 shrink-0 text-xs' />
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Interactive Search & Branch & Quality Controls Row */}
+            <div className='flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 mb-4'>
                 {/* Branch Quick Filter Tabs */}
                 <div className='flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-hide text-xs'>
                     <span className='text-gray-400 flex items-center gap-1 mr-1 text-[11px] font-medium shrink-0'>
@@ -840,32 +1179,55 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                     ))}
                 </div>
 
-                {/* Node Search & Highlight Box */}
-                <div className='relative min-w-[220px] sm:min-w-[260px] self-start md:self-auto'>
-                    <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs'>
-                        <BsSearch />
-                    </span>
-                    <input
-                        type='text'
-                        placeholder='Cari & sorot perawi...'
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className='w-full pl-8 pr-16 py-1.5 border border-gray-200 dark:border-slate-700 rounded-xl text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 shadow-sm'
-                    />
-                    {searchQuery ? (
-                        <div className='absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1'>
-                            <span className='text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300'>
-                                {matchTotal}
+                <div className='flex flex-wrap items-center gap-2.5 self-start xl:self-auto'>
+                    {/* Jarh wa Ta'dil Quality Filter Dropdown */}
+                    <div className='flex items-center gap-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-2.5 py-1 text-xs shadow-sm'>
+                        <BsShieldCheck className='text-teal-600 dark:text-teal-400 text-xs' />
+                        <span className='text-gray-400 text-[11px] font-medium'>Kualitas:</span>
+                        <select
+                            value={qualityFilter}
+                            onChange={(e) => setQualityFilter(e.target.value)}
+                            className='bg-transparent text-xs font-semibold text-gray-800 dark:text-gray-200 focus:outline-none cursor-pointer pr-1'
+                        >
+                            <option value='all'>Semua Kualitas</option>
+                            <option value='tsiqah'>Tsiqah (Shahih)</option>
+                            <option value='shaduq'>Shaduq (Hasan)</option>
+                            <option value='dhaif'>Dhaif / Perhatian</option>
+                        </select>
+                        {qualityFilter !== "all" && (
+                            <span className='ml-1 text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-300'>
+                                {qualityMatchTotal}
                             </span>
-                            <button
-                                type='button'
-                                onClick={() => setSearchQuery("")}
-                                className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-0.5'
-                            >
-                                <BsX className='text-sm' />
-                            </button>
-                        </div>
-                    ) : null}
+                        )}
+                    </div>
+
+                    {/* Node Search & Highlight Box */}
+                    <div className='relative min-w-[200px] sm:min-w-[240px]'>
+                        <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs'>
+                            <BsSearch />
+                        </span>
+                        <input
+                            type='text'
+                            placeholder='Cari & sorot perawi...'
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className='w-full pl-8 pr-16 py-1.5 border border-gray-200 dark:border-slate-700 rounded-xl text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 shadow-sm'
+                        />
+                        {searchQuery ? (
+                            <div className='absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1'>
+                                <span className='text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300'>
+                                    {matchTotal}
+                                </span>
+                                <button
+                                    type='button'
+                                    onClick={() => setSearchQuery("")}
+                                    className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-0.5'
+                                >
+                                    <BsX className='text-sm' />
+                                </button>
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
             </div>
 
@@ -885,6 +1247,9 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                             basePath={basePath}
                             isRoot
                             searchQuery={searchQuery}
+                            pathNodeMap={pathNodeMap}
+                            isPathActive={Boolean(activePath)}
+                            qualityFilter={qualityFilter}
                         />
                     </div>
                 </div>
@@ -894,7 +1259,7 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
             <div className='flex items-center justify-between mt-4 text-xs text-gray-500 dark:text-gray-400 px-2'>
                 <p className='flex items-center gap-1.5'>
                     <BsInfoCircle className='text-teal-600 shrink-0' />
-                    <span>Klik kartu perawi untuk membuka biografi, jarh wa ta&apos;dil, dan sanad. Pilih tab fokus jalur atau gunakan zoom untuk kenyamanan navigasi.</span>
+                    <span>Klik kartu perawi untuk membuka biografi, jarh wa ta&apos;dil, dan sanad. Pilih tab fokus jalur, filter kualitas, atau gunakan pencari jalur sanad.</span>
                 </p>
                 <span className='hidden sm:inline-block text-[11px] font-medium bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-gray-400'>
                     Total 40 Perawi Terhubung

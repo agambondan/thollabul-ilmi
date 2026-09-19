@@ -96,6 +96,8 @@ export function PerawiDetailContent({
     const [data, setData] = useState(null);
     const [guru, setGuru] = useState([]);
     const [murid, setMurid] = useState([]);
+    const [hadiths, setHadiths] = useState([]);
+    const [loadingHadiths, setLoadingHadiths] = useState(true);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -107,14 +109,21 @@ export function PerawiDetailContent({
             fetch(`${API_URL}/api/v1/perawi/${id}/murid`)
                 .then((r) => r.json())
                 .catch(() => []),
+            fetch(`${API_URL}/api/v1/perawi/${id}/hadiths?limit=15`)
+                .then((r) => r.json())
+                .catch(() => ({ items: [] })),
         ])
-            .then(([p, g, m]) => {
+            .then(([p, g, m, h]) => {
                 setData(p);
                 setGuru(Array.isArray(g?.items ?? g) ? (g?.items ?? g) : []);
                 setMurid(Array.isArray(m?.items ?? m) ? (m?.items ?? m) : []);
+                setHadiths(Array.isArray(h?.items ?? h) ? (h?.items ?? h) : []);
             })
             .catch((e) => console.error(e))
-            .finally(() => setLoading(false));
+            .finally(() => {
+                setLoading(false);
+                setLoadingHadiths(false);
+            });
     }, [id]);
 
     if (loading) {
@@ -273,6 +282,68 @@ export function PerawiDetailContent({
                     </div>
                 </div>
             )}
+
+            {/* Riwayat Hadis Terkait */}
+            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-4'>
+                <div className='flex items-center justify-between mb-3'>
+                    <SectionTitle>Riwayat Hadis Terkait</SectionTitle>
+                    {hadiths.length > 0 && (
+                        <span className='text-xs font-semibold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300'>
+                            {hadiths.length} Hadis
+                        </span>
+                    )}
+                </div>
+
+                {loadingHadiths ? (
+                    <p className='text-xs text-gray-400 py-2'>Memuat hadis terkait...</p>
+                ) : hadiths.length === 0 ? (
+                    <p className='text-xs text-gray-400 py-2'>
+                        Belum ada riwayat hadis terindeks langsung untuk perawi ini.
+                    </p>
+                ) : (
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                        {hadiths.map((h) => {
+                            const bookTitle =
+                                h.book?.translation?.title ||
+                                h.book?.name ||
+                                (h.book?.slug
+                                    ? `Hadits ${h.book.slug.toUpperCase()}`
+                                    : "Hadits");
+                            const hadithHref = h.book?.slug && h.number
+                                ? `/dashboard/hadiths/book/${h.book.slug}/number/${h.number}`
+                                : `/dashboard/hadiths/${h.id}`;
+
+                            return (
+                                <Link
+                                    key={h.id}
+                                    href={hadithHref}
+                                    className='p-3.5 rounded-xl bg-gray-50 dark:bg-slate-700/40 hover:bg-teal-50 dark:hover:bg-teal-900/20 border border-gray-100 dark:border-slate-700/70 transition-all flex flex-col justify-between group'
+                                >
+                                    <div>
+                                        <div className='flex items-center justify-between gap-2 mb-1.5'>
+                                            <span className='text-xs font-bold text-teal-700 dark:text-teal-400 group-hover:underline'>
+                                                {bookTitle} No. {h.number ?? h.id}
+                                            </span>
+                                            {h.grade && (
+                                                <span className='text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'>
+                                                    {h.grade.replace(/_/g, " ")}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className='text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed'>
+                                            {h.translation?.text || h.translation?.title || "Lihat teks hadis dan sanad lengkap..."}
+                                        </p>
+                                    </div>
+                                    <span className='text-[11px] text-teal-600 dark:text-teal-400 font-medium mt-2 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform'>
+                                        Buka Hadis →
+                                    </span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+
             <PerawiTreeDiagram
                 currentPerawi={data}
                 guru={guru}

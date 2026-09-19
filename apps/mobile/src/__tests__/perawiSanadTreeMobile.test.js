@@ -44,4 +44,15 @@ describe("PerawiSanadTreeMobile", () => {
             expect.objectContaining({ nama_latin: "Abu Hurairah" }),
         );
     });
+
+    it("handles quality filter selection", () => {
+        const onOpen = jest.fn();
+        const { getByText } = render(
+            <PerawiSanadTreeMobile onOpenPerawi={onOpen} />,
+        );
+
+        const tsiqahChip = getByText("Tsiqah (Shahih)");
+        fireEvent.press(tsiqahChip);
+        expect(getByText("Tsiqah (Shahih)")).toBeTruthy();
+    });
 });

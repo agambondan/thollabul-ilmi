@@ -15,6 +15,7 @@ type PerawiRepository interface {
 	Search(*fiber.Ctx, string) *paginate.Page
 	FindGuru(*int) ([]model.Perawi, error)
 	FindMurid(*int) ([]model.Perawi, error)
+	FindHadiths(*fiber.Ctx, *int) *paginate.Page
 	UpdateByID(*int, *model.Perawi) (*model.Perawi, error)
 	DeleteByID(*int) error
 	Count() (*int64, error)
@@ -90,6 +91,23 @@ func (r *perawiRepo) FindMurid(id *int) ([]model.Perawi, error) {
 	err := r.db.Joins("JOIN perawi_guru ON perawi_guru.murid_id = perawi.id").
 		Where("perawi_guru.guru_id = ?", id).Find(&list).Error
 	return list, err
+}
+
+func (r *perawiRepo) FindHadiths(ctx *fiber.Ctx, id *int) *paginate.Page {
+	var hadiths []model.Hadith
+	p, err := r.FindByID(id)
+	query := r.db.Model(&model.Hadith{}).
+		Joins("Book").Joins("Book.Translation").
+		Joins("Translation")
+	if err == nil && p != nil && p.NamaLatin != nil && *p.NamaLatin != "" {
+		like := "%" + *p.NamaLatin + "%"
+		query = query.Where("hadiths.id IN (SELECT DISTINCT sanads.hadith_id FROM sanads JOIN mata_sanads ON mata_sanads.sanad_id = sanads.id WHERE mata_sanads.perawi_id = ?) OR hadiths.sanad ILIKE ?", *id, like)
+	} else {
+		query = query.Where("hadiths.id IN (SELECT DISTINCT sanads.hadith_id FROM sanads JOIN mata_sanads ON mata_sanads.sanad_id = sanads.id WHERE mata_sanads.perawi_id = ?)", *id)
+	}
+	query = query.Order("hadiths.id ASC")
+	page := r.pg.With(query).Request(ctx.Request()).Response(&hadiths)
+	return &page
 }
 
 func (r *perawiRepo) UpdateByID(id *int, p *model.Perawi) (*model.Perawi, error) {

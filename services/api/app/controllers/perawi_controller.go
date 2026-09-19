@@ -17,6 +17,7 @@ type PerawiController interface {
 	Search(ctx *fiber.Ctx) error
 	FindGuru(ctx *fiber.Ctx) error
 	FindMurid(ctx *fiber.Ctx) error
+	FindHadiths(ctx *fiber.Ctx) error
 	UpdateByID(ctx *fiber.Ctx) error
 	DeleteByID(ctx *fiber.Ctx) error
 }
@@ -171,6 +172,15 @@ func (c *perawiController) FindMurid(ctx *fiber.Ctx) error {
 		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, list)
+}
+
+func (c *perawiController) FindHadiths(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	page := c.svc.FindHadiths(ctx, &id)
+	return lib.OK(ctx, page)
 }
 
 // UpdateByID perawi
