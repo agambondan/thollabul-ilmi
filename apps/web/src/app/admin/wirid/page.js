@@ -16,6 +16,8 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const CATEGORIES = ["pagi", "petang", "setelah_sholat", "tidur", "dzikir_umum"];
 
@@ -59,6 +61,8 @@ const AdminWirdPage = () => {
     useEffect(() => {
         load();
     }, []);
+
+    const isWide = useLayoutMode();
 
     const openCreate = () => {
         setEditId(null);
@@ -350,9 +354,11 @@ const AdminWirdPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
                 >
-                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                    <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? `${t("common.edit")} ${t("admin.nav.wird")}`
@@ -365,7 +371,7 @@ const AdminWirdPage = () => {
                             <BsX className='text-xl' />
                         </button>
                     </div>
-                    <div className='p-5 space-y-4'>
+                    <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                         <div>
                             <label
                                 htmlFor='page-title'
@@ -427,26 +433,15 @@ const AdminWirdPage = () => {
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
-                        <div>
-                            <label
-                                htmlFor='page-translation'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("common.translation")}
-                            </label>
-                            <textarea
-                                id='page-translation'
-                                value={form.translation}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        translation: e.target.value,
-                                    })
-                                }
-                                rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
+                        <MarkdownEditor
+                            value={form.translation}
+                            onChange={(val) =>
+                                setForm({ ...form, translation: val })
+                            }
+                            label={t("common.translation")}
+                            placeholder='Tulis terjemahan / faedah wirid dengan format Markdown...'
+                            minRows={3}
+                        />
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label
@@ -498,7 +493,7 @@ const AdminWirdPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                    <div className='flex gap-3 p-6 border-t border-gray-100 dark:border-slate-700 shrink-0'>
                         <button
                             onClick={() => setShowModal(false)}
                             className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'

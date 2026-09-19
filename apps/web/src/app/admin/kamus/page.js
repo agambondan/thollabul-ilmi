@@ -359,7 +359,7 @@ const AdminDictionaryPage = () => {
                 </>
             )}
 
-{showModal && (
+            {showModal && (
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
@@ -431,8 +431,8 @@ const AdminDictionaryPage = () => {
                             onChange={(val) =>
                                 setForm({ ...form, definition: val })
                             }
-                            label="Definisi"
-                            placeholder="Tulis definisi istilah dengan format Markdown..."
+                            label='Definisi'
+                            placeholder='Tulis definisi istilah dengan format Markdown...'
                             minRows={4}
                         />
                         <div>
@@ -481,7 +481,8 @@ const AdminDictionaryPage = () => {
                                     htmlFor='page-field-3'
                                     className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
-                                    {t("common.source")} ({t("common.optional")})
+                                    {t("common.source")} ({t("common.optional")}
+                                    )
                                 </label>
                                 <input
                                     id='page-field-3'

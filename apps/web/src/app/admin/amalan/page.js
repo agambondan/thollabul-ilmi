@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const EMPTY_FORM = {
     name: "",
@@ -76,6 +78,8 @@ export default function AdminAmalanPage() {
     useEffect(() => {
         load();
     }, []);
+
+    const isWide = useLayoutMode();
 
     const openCreate = () => {
         setEditId(null);
@@ -377,9 +381,11 @@ export default function AdminAmalanPage() {
             <ModalShell
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                    isWide ? "max-w-4xl" : "max-w-2xl"
+                }`}
             >
-                <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-700'>
+                <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                     <h2 className='font-bold text-gray-900 dark:text-white'>
                         {editId ? "Edit Master Amalan" : "Tambah Master Amalan"}
                     </h2>
@@ -390,9 +396,9 @@ export default function AdminAmalanPage() {
                         <BsX className='text-xl' />
                     </button>
                 </div>
-                <div className='space-y-4 p-4'>
+                <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                     <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                             Nama Amalan
                         </label>
                         <input
@@ -401,7 +407,7 @@ export default function AdminAmalanPage() {
                             onChange={(e) =>
                                 setForm({ ...form, name: e.target.value })
                             }
-                            className={INPUT_CLASS}
+                            className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             placeholder='Contoh: Sholat Dhuha, Sedekah Subuh'
                             required
                         />
@@ -409,7 +415,7 @@ export default function AdminAmalanPage() {
 
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                         <div>
-                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 Kategori
                             </label>
                             <select
@@ -420,7 +426,7 @@ export default function AdminAmalanPage() {
                                         category: e.target.value,
                                     })
                                 }
-                                className={INPUT_CLASS}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             >
                                 {CATEGORIES.map((c) => (
                                     <option key={c.value} value={c.value}>
@@ -447,26 +453,18 @@ export default function AdminAmalanPage() {
                         </div>
                     </div>
 
-                    <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
-                            Deskripsi / Keutamaan
-                        </label>
-                        <textarea
-                            rows='3'
-                            value={form.description}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    description: e.target.value,
-                                })
-                            }
-                            className={INPUT_CLASS}
-                            placeholder='Keutamaan atau tata cara amalan...'
-                        />
-                    </div>
+                    <MarkdownEditor
+                        value={form.description}
+                        onChange={(val) =>
+                            setForm({ ...form, description: val })
+                        }
+                        label='Deskripsi / Keutamaan'
+                        placeholder='Keutamaan atau tata cara amalan dengan format Markdown...'
+                        minRows={4}
+                    />
 
                     <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                             Sumber Dalil / Rujukan
                         </label>
                         <input
@@ -475,16 +473,24 @@ export default function AdminAmalanPage() {
                             onChange={(e) =>
                                 setForm({ ...form, source: e.target.value })
                             }
-                            className={INPUT_CLASS}
+                            className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             placeholder='Contoh: HR. Muslim No. 720; HR. Bukhari'
                         />
+                        {form.source && (
+                            <div className='mt-1'>
+                                <p className='text-[10px] text-gray-500 dark:text-gray-400 mb-0.5'>
+                                    Preview
+                                </p>
+                                <SourceBadges source={form.source} />
+                            </div>
+                        )}
                     </div>
 
-                    <div className='flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-slate-700'>
+                    <div className='flex gap-3 pt-2 border-t border-gray-200 dark:border-slate-700'>
                         <button
                             type='button'
                             onClick={() => setShowModal(false)}
-                            className='rounded-lg px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             Batal
                         </button>
@@ -492,7 +498,7 @@ export default function AdminAmalanPage() {
                             type='button'
                             onClick={save}
                             disabled={saving || !form.name}
-                            className='rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50'
+                            className='flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? "Menyimpan..." : "Simpan"}
                         </button>
