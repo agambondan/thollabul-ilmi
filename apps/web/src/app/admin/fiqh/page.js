@@ -76,7 +76,7 @@ const AdminFiqhPage = () => {
         }
     };
 
-    const isWide = useLayoutMode();
+    const { isWide } = useLayoutMode();
 
     useEffect(() => {
         load();

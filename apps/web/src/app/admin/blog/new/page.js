@@ -7,7 +7,7 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const NewBlogPage = () => {
     const { t } = useLocale();
-    const isWide = useLayoutMode();
+    const { isWide } = useLayoutMode();
 
     return (
         <div

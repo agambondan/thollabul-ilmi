@@ -171,7 +171,7 @@ export default function GenericAdminCRUD({
     const [deleting, setDeleting] = useState(null);
     const [formError, setFormError] = useState(null);
 
-    const isWide = useLayoutMode();
+    const { isWide } = useLayoutMode();
 
     const load = async () => {
         setLoading(true);

@@ -88,7 +88,7 @@ const AdminPrayersPage = () => {
         load();
     }, []);
 
-    const isWide = useLayoutMode();
+    const { isWide } = useLayoutMode();
 
     const openCreate = () => {
         setEditId(null);

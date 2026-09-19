@@ -16,7 +16,7 @@ const EditBlogPage = (props) => {
     const [post, setPost] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
-    const isWide = useLayoutMode();
+    const { isWide } = useLayoutMode();
 
     useEffect(() => {
         adminBlogApi
