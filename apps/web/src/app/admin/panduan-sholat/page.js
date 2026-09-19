@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const EMPTY_FORM = {
     step: 1,
@@ -72,6 +74,8 @@ export default function AdminPanduanSholatPage() {
     useEffect(() => {
         load();
     }, []);
+
+    const isWide = useLayoutMode();
 
     const openCreate = () => {
         setEditId(null);
@@ -376,9 +380,11 @@ export default function AdminPanduanSholatPage() {
             <ModalShell
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                    isWide ? "max-w-4xl" : "max-w-2xl"
+                }`}
             >
-                <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-700'>
+                <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                     <h2 className='font-bold text-gray-900 dark:text-white'>
                         {editId
                             ? "Edit Langkah Panduan Sholat"
@@ -391,10 +397,10 @@ export default function AdminPanduanSholatPage() {
                         <BsX className='text-xl' />
                     </button>
                 </div>
-                <div className='space-y-4 p-4'>
+                <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                     <div className='grid grid-cols-1 sm:grid-cols-4 gap-4'>
                         <div>
-                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 Urutan Langkah (Step)
                             </label>
                             <input
@@ -403,13 +409,13 @@ export default function AdminPanduanSholatPage() {
                                 onChange={(e) =>
                                     setForm({ ...form, step: e.target.value })
                                 }
-                                className={INPUT_CLASS}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 min='1'
                                 required
                             />
                         </div>
                         <div className='sm:col-span-3'>
-                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 Judul Rukun / Gerakan
                             </label>
                             <input
@@ -418,7 +424,7 @@ export default function AdminPanduanSholatPage() {
                                 onChange={(e) =>
                                     setForm({ ...form, title: e.target.value })
                                 }
-                                className={INPUT_CLASS}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 placeholder='Contoh: Takbiratul Ihram, Ruku...'
                                 required
                             />
@@ -426,7 +432,7 @@ export default function AdminPanduanSholatPage() {
                     </div>
 
                     <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                             Lafaz Arab (Opsional)
                         </label>
                         <textarea
@@ -436,13 +442,13 @@ export default function AdminPanduanSholatPage() {
                             onChange={(e) =>
                                 setForm({ ...form, arabic: e.target.value })
                             }
-                            className={`${INPUT_CLASS} font-arabic text-base`}
+                            className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-base'
                             placeholder='Teks bacaan Arab...'
                         />
                     </div>
 
                     <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                             Transliterasi Latin (Opsional)
                         </label>
                         <input
@@ -451,13 +457,13 @@ export default function AdminPanduanSholatPage() {
                             onChange={(e) =>
                                 setForm({ ...form, latin: e.target.value })
                             }
-                            className={INPUT_CLASS}
+                            className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             placeholder='Bacaan latin...'
                         />
                     </div>
 
                     <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                             Arti / Terjemahan Bacaan
                         </label>
                         <textarea
@@ -469,46 +475,33 @@ export default function AdminPanduanSholatPage() {
                                     translation: e.target.value,
                                 })
                             }
-                            className={INPUT_CLASS}
+                            className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             placeholder='Terjemahan bacaan...'
                         />
                     </div>
 
-                    <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
-                            Deskripsi Tata Cara Gerakan
-                        </label>
-                        <textarea
-                            rows='3'
-                            value={form.description}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    description: e.target.value,
-                                })
-                            }
-                            className={INPUT_CLASS}
-                            placeholder='Keterangan cara pelaksanaan rukun sholat...'
-                        />
-                    </div>
+                    <MarkdownEditor
+                        value={form.description}
+                        onChange={(val) =>
+                            setForm({ ...form, description: val })
+                        }
+                        label="Deskripsi Tata Cara Gerakan"
+                        placeholder="Keterangan cara pelaksanaan rukun sholat..."
+                        minRows={4}
+                    />
+
+                    <MarkdownEditor
+                        value={form.notes}
+                        onChange={(val) =>
+                            setForm({ ...form, notes: val })
+                        }
+                        label="Catatan Fiqh / Faedah"
+                        placeholder="Catatan khusus dari para ulama..."
+                        minRows={3}
+                    />
 
                     <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
-                            Catatan Fiqh / Faedah
-                        </label>
-                        <textarea
-                            rows='2'
-                            value={form.notes}
-                            onChange={(e) =>
-                                setForm({ ...form, notes: e.target.value })
-                            }
-                            className={INPUT_CLASS}
-                            placeholder='Catatan khusus dari para ulama...'
-                        />
-                    </div>
-
-                    <div>
-                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                             Sumber Dalil / Rujukan
                         </label>
                         <input
@@ -517,16 +510,16 @@ export default function AdminPanduanSholatPage() {
                             onChange={(e) =>
                                 setForm({ ...form, source: e.target.value })
                             }
-                            className={INPUT_CLASS}
+                            className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             placeholder='Contoh: HR. Bukhari No. 1; Al-Mughni'
                         />
                     </div>
 
-                    <div className='flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-slate-700'>
+                    <div className='flex gap-3 pt-2 border-t border-gray-200 dark:border-slate-700'>
                         <button
                             type='button'
                             onClick={() => setShowModal(false)}
-                            className='rounded-lg px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             Batal
                         </button>
@@ -534,7 +527,7 @@ export default function AdminPanduanSholatPage() {
                             type='button'
                             onClick={save}
                             disabled={saving || !form.title}
-                            className='rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50'
+                            className='flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? "Menyimpan..." : "Simpan"}
                         </button>

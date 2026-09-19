@@ -31,6 +31,7 @@ export default function AdminTokohTarikhPage() {
             api={adminTokohTarikhApi}
             searchableFields={["nama", "kategori", "era", "biografi"]}
             defaultPageSize={15}
+            formLayout="grid"
             fields={[
                 { key: "nama", label: "Nama", type: "text", required: true },
                 { key: "era", label: "Era", type: "select", options: ERA },
@@ -46,15 +47,19 @@ export default function AdminTokohTarikhPage() {
                 {
                     key: "biografi",
                     label: "Biografi",
-                    type: "textarea",
-                    rows: 4,
+                    type: "markdown",
+                    rows: 6,
                     required: true,
+                    placeholder:
+                        "Tulis biografi dengan format Markdown (## Judul, **tebal**, *miring*, daftar, > kutipan)",
                 },
                 {
                     key: "kontribusi",
                     label: "Kontribusi",
-                    type: "textarea",
-                    rows: 3,
+                    type: "markdown",
+                    rows: 4,
+                    placeholder:
+                        "Tulis kontribusi tokoh dengan format Markdown",
                 },
             ]}
         />

@@ -3,12 +3,18 @@
 import BlogForm from "../_BlogForm";
 import { useLocale } from "@/context/Locale";
 import Link from "next/link";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const NewBlogPage = () => {
     const { t } = useLocale();
+    const isWide = useLayoutMode();
 
     return (
-        <div className='p-8'>
+        <div
+            className={`p-8 mx-auto transition-all ${
+                isWide ? "max-w-7xl" : "max-w-4xl"
+            }`}
+        >
             <div className='mb-6'>
                 <Link
                     href='/admin/blog'

@@ -14,10 +14,13 @@ import {
 } from "./DataPanel";
 import ModalShell from "../ModalShell";
 import { parseApiError } from "@/lib/api";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const TYPE_TEXT = "text";
 const TYPE_NUMBER = "number";
 const TYPE_TEXTAREA = "textarea";
+const TYPE_MARKDOWN = "markdown";
 const TYPE_SELECT = "select";
 const TYPE_BOOLEAN = "boolean";
 const TYPE_JSON = "json";
@@ -167,6 +170,8 @@ export default function GenericAdminCRUD({
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(null);
     const [formError, setFormError] = useState(null);
+
+    const isWide = useLayoutMode();
 
     const load = async () => {
         setLoading(true);
@@ -515,10 +520,12 @@ export default function GenericAdminCRUD({
             {creating && (
                 <ModalShell
                     onClose={closeForm}
-                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3'
-                    panelClassName='bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl max-h-[90vh] flex flex-col'
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4'
+                    panelClassName={`bg-white dark:bg-slate-900 w-full rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
                 >
-                    <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-800'>
+                    <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-800 shrink-0'>
                         <h2 className='text-lg font-bold text-gray-900 dark:text-gray-100'>
                             {editing ? "Edit" : "Tambah"} {title}
                         </h2>
@@ -533,8 +540,8 @@ export default function GenericAdminCRUD({
                     <div
                         className={
                             formLayout === "grid"
-                                ? "grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 overflow-y-auto"
-                                : "space-y-3 p-4 overflow-y-auto"
+                                ? "grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 overflow-y-auto flex-1"
+                                : "space-y-4 p-6 overflow-y-auto flex-1"
                         }
                     >
                         {fields.map((f) => {
@@ -553,7 +560,20 @@ export default function GenericAdminCRUD({
                                             </span>
                                         ) : null}
                                     </label>
-                                    {f.type === TYPE_TEXTAREA ? (
+                                    {f.type === TYPE_MARKDOWN ? (
+                                        <MarkdownEditor
+                                            value={value}
+                                            onChange={(val) =>
+                                                setForm((prev) => ({
+                                                    ...prev,
+                                                    [f.key]: val,
+                                                }))
+                                            }
+                                            label={f.label}
+                                            placeholder={f.placeholder}
+                                            minRows={f.rows ?? 6}
+                                        />
+                                    ) : f.type === TYPE_TEXTAREA ? (
                                         <textarea
                                             value={value}
                                             onChange={(e) =>
@@ -657,20 +677,20 @@ export default function GenericAdminCRUD({
                         })}
                     </div>
                     {editing && renderExtra ? (
-                        <div className='px-4 pb-2 border-t border-gray-100 dark:border-slate-800 pt-3'>
+                        <div className='px-6 pb-2 border-t border-gray-100 dark:border-slate-800 pt-3 shrink-0'>
                             {renderExtra(editing, { reload: load })}
                         </div>
                     ) : null}
                     {formError ? (
-                        <p className='px-4 pb-1 text-xs text-red-500'>
+                        <p className='px-6 pb-1 text-xs text-red-500 shrink-0'>
                             {formError}
                         </p>
                     ) : null}
-                    <div className='flex items-center justify-end gap-2 p-4 border-t border-gray-100 dark:border-slate-800'>
+                    <div className='flex items-center justify-end gap-3 p-6 border-t border-gray-100 dark:border-slate-800 shrink-0'>
                         <button
                             type='button'
                             onClick={closeForm}
-                            className='px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-700'
+                            className='px-4 py-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-700'
                         >
                             Batal
                         </button>
@@ -678,7 +698,7 @@ export default function GenericAdminCRUD({
                             type='button'
                             onClick={save}
                             disabled={saving}
-                            className='px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-semibold'
+                            className='px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-semibold'
                         >
                             {saving ? "Menyimpan…" : "Simpan"}
                         </button>

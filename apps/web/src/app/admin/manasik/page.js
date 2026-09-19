@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const TYPES = ["haji", "umrah"];
 
@@ -69,6 +71,8 @@ const AdminManasikPage = () => {
     useEffect(() => {
         load();
     }, []);
+
+    const isWide = useLayoutMode();
 
     const openCreate = () => {
         setEditId(null);
@@ -404,9 +408,11 @@ const AdminManasikPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
                 >
-                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                    <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? t("admin.manasik.edit_step")
@@ -419,7 +425,7 @@ const AdminManasikPage = () => {
                             <BsX className='text-xl' />
                         </button>
                     </div>
-                    <div className='p-5 space-y-4'>
+                    <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                         <div className='grid grid-cols-3 gap-4'>
                             <div>
                                 <label
@@ -551,46 +557,24 @@ const AdminManasikPage = () => {
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
-                        <div>
-                            <label
-                                htmlFor='page-description'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("admin.field.description")}
-                            </label>
-                            <textarea
-                                id='page-description'
-                                value={form.description}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        description: e.target.value,
-                                    })
-                                }
-                                rows={3}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
-                        <div>
-                            <label
-                                htmlFor='page-notes'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("common.notes")}
-                            </label>
-                            <textarea
-                                id='page-notes'
-                                value={form.notes}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        notes: e.target.value,
-                                    })
-                                }
-                                rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
+                        <MarkdownEditor
+                            value={form.description}
+                            onChange={(val) =>
+                                setForm({ ...form, description: val })
+                            }
+                            label={t("admin.field.description")}
+                            placeholder={t("admin.manasik.description_placeholder")}
+                            minRows={4}
+                        />
+                        <MarkdownEditor
+                            value={form.notes}
+                            onChange={(val) =>
+                                setForm({ ...form, notes: val })
+                            }
+                            label={t("common.notes")}
+                            placeholder={t("admin.manasik.notes_placeholder")}
+                            minRows={3}
+                        />
                         <div>
                             <label
                                 htmlFor='page-source'
@@ -635,7 +619,7 @@ const AdminManasikPage = () => {
                             Wajib
                         </label>
                     </div>
-                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                    <div className='flex gap-3 p-6 border-t border-gray-100 dark:border-slate-700 shrink-0'>
                         <button
                             onClick={() => setShowModal(false)}
                             className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
