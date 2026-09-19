@@ -44,6 +44,13 @@ func NewContentEmbeddingService(repo repository.ContentEmbeddingRepository) Cont
 	}
 }
 
+func NewContentEmbeddingServiceWithProvider(repo repository.ContentEmbeddingRepository, provider embeddings.Provider) ContentEmbeddingService {
+	return &contentEmbeddingService{
+		repo:              repo,
+		embeddingProvider: provider,
+	}
+}
+
 func (s *contentEmbeddingService) SemanticSearch(ctx context.Context, query string, contentTypes []string, limit int) ([]model.ContentEmbedding, error) {
 	queryEmbedding, err := s.embeddingProvider.EmbedText(ctx, query)
 	if err != nil {
