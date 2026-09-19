@@ -2,66 +2,85 @@
     {
         "name": "Sholat Tahajud",
         "description": "Sholat sunnah malam minimal 2 rakaat",
-        "category": "sholat"
+        "category": "sholat",
+        "source": "QS. Al-Isra: 79; HR. Muslim No. 1162; HR. Muslim No. 1163"
     },
     {
         "name": "Sholat Dhuha",
         "description": "Sholat sunnah pagi minimal 2 rakaat",
-        "category": "sholat"
+        "category": "sholat",
+        "source": "HR. Muslim No. 720"
     },
     {
         "name": "Sholat Rawatib",
         "description": "Sholat sunnah sebelum/sesudah sholat fardhu",
-        "category": "sholat"
+        "category": "sholat",
+        "source": "HR. Muslim No. 728"
     },
     {
         "name": "Puasa Senin",
         "description": "Puasa sunnah hari Senin",
-        "category": "puasa"
+        "category": "puasa",
+        "source": "HR. Muslim No. 1162"
     },
     {
         "name": "Puasa Kamis",
         "description": "Puasa sunnah hari Kamis",
-        "category": "puasa"
+        "category": "puasa",
+        "source": "HR. Tirmidzi No. 747"
     },
     {
         "name": "Puasa Ayyamul Bidh",
         "description": "Puasa tanggal 13, 14, 15 bulan Hijriah",
-        "category": "puasa"
+        "category": "puasa",
+        "source": "HR. Tirmidzi No. 761; HR. An-Nasa'i No. 2424"
     },
     {
         "name": "Dzikir Pagi",
-        "description": "Baca dzikir pagi setelah subuh",
-        "category": "dzikir"
+        "description": "Dzikir pagi hari setelah sholat Subuh",
+        "category": "dzikir",
+        "source": "QS. Al-Ahzab: 41-42"
     },
     {
         "name": "Dzikir Petang",
-        "description": "Baca dzikir petang setelah ashar",
-        "category": "dzikir"
+        "description": "Dzikir petang hari setelah sholat Ashar",
+        "category": "dzikir",
+        "source": "QS. Al-Ahzab: 41-42"
     },
     {
         "name": "Istighfar 100x",
-        "description": "Membaca istighfar minimal 100 kali",
-        "category": "dzikir"
+        "description": "Membaca istighfar minimal 100 kali sehari",
+        "category": "dzikir",
+        "source": "HR. Muslim No. 2702"
     },
     {
-        "name": "Sholawat 100x",
-        "description": "Membaca sholawat minimal 100 kali",
-        "category": "dzikir"
+        "name": "Sholawat",
+        "description": "Membaca sholawat kepada Nabi Muhammad SAW",
+        "category": "dzikir",
+        "source": "HR. Muslim No. 408; HR. Tirmidzi No. 485"
+    },
+    {
+        "name": "Sedekah Subuh",
+        "description": "Sedekah di waktu subuh",
+        "category": "sedekah",
+        "source": "HR. Bukhari No. 1442; HR. Muslim No. 1010"
     },
     {
         "name": "Sedekah Harian",
-        "description": "Bersedekah setiap hari walau sedikit",
-        "category": "sedekah"
+        "description": "Sedekah setiap hari semampunya",
+        "category": "sedekah",
+        "source": "HR. Bukhari No. 2989; HR. Muslim No. 1009"
     },
     {
         "name": "Tilawah Al-Quran",
-        "description": "Membaca Al-Quran minimal 1 halaman",
-        "category": "lainnya"
+        "description": "Membaca Al-Quran minimal 1 juz atau 1 maqra",
+        "category": "lainnya",
+        "source": "HR. Tirmidzi No. 2910"
     },
     {
         "name": "Baca Hadith",
-        "description": "Membaca minimal 1 hadith beserta maknanya",
-        "category": "lainnya"
+        "description": "Membaca minimal 1 hadith shahih per hari",
+        "category": "lainnya",
+        "source": "HR. Abu Dawud No. 3660; HR. Tirmidzi No. 2656; HR. Ibnu Majah No. 230"
     }
 ]
