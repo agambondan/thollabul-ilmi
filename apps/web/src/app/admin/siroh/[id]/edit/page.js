@@ -51,7 +51,7 @@ const EditSirahPage = (props) => {
     }
 
     return (
-        <div className='p-8'>
+        <div className='p-6 md:p-8 max-w-5xl mx-auto'>
             <div className='mb-6'>
                 <Link
                     href='/admin/siroh'

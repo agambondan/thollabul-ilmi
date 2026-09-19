@@ -16,6 +16,7 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 const CATEGORIES = [
     "khulafa",
@@ -388,9 +389,9 @@ const AdminHistoryPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden'
                 >
-                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? t("admin.history.edit_event")
@@ -403,7 +404,7 @@ const AdminHistoryPage = () => {
                             <BsX className='text-xl' />
                         </button>
                     </div>
-                    <div className='p-5 space-y-4'>
+                    <div className='p-6 space-y-4 overflow-y-auto flex-1'>
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label
@@ -526,26 +527,18 @@ const AdminHistoryPage = () => {
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
-                        <div>
-                            <label
-                                htmlFor='page-description'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                            >
-                                {t("admin.field.description")}
-                            </label>
-                            <textarea
-                                id='page-description'
-                                value={form.description}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        description: e.target.value,
-                                    })
-                                }
-                                rows={4}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
+                        <MarkdownEditor
+                            value={form.description}
+                            onChange={(val) =>
+                                setForm({
+                                    ...form,
+                                    description: val,
+                                })
+                            }
+                            label={t("admin.field.description")}
+                            placeholder='Tulis deskripsi peristiwa sejarah Islam...'
+                            minRows={6}
+                        />
                         <label className='flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300'>
                             <input
                                 type='checkbox'
@@ -561,17 +554,17 @@ const AdminHistoryPage = () => {
                             Peristiwa penting
                         </label>
                     </div>
-                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700 shrink-0 bg-gray-50/50 dark:bg-slate-800/50'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             {t("common.cancel")}
                         </button>
                         <button
                             onClick={save}
                             disabled={saving || !form.title.trim()}
-                            className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
+                            className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors'
                         >
                             {saving ? t("common.saving") : t("common.save")}
                         </button>

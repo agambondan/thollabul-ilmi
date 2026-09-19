@@ -2,6 +2,7 @@
 
 import { adminSirohApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ const slugify = (str) =>
 const SirahForm = ({ initialData = null, contentId = null }) => {
     const router = useRouter();
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
     const isEdit = !!contentId;
 
     const [title, setTitle] = useState(initialData?.title ?? "");
@@ -80,21 +82,24 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
     };
 
     const inputCls =
-        "w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500";
+        "w-full px-3.5 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all";
 
     return (
-        <form onSubmit={handleSubmit} className='w-full space-y-5'>
+        <form
+            onSubmit={handleSubmit}
+            className={`w-full ${isWide ? "max-w-7xl" : "max-w-4xl"} bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 sm:p-8 shadow-sm space-y-6`}
+        >
             {error && (
-                <div className='p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400'>
+                <div className='p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400'>
                     {error}
                 </div>
             )}
 
-            <div className='grid sm:grid-cols-2 gap-4'>
+            <div className='grid sm:grid-cols-2 gap-5'>
                 <div>
                     <label
                         htmlFor='sirohform-field-1'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2'
                     >
                         {t("admin.field.category")}{" "}
                         <span className='text-red-500'>*</span>
@@ -116,7 +121,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                         ))}
                     </select>
                     {categories.length === 0 && (
-                        <p className='text-xs text-amber-500 mt-1'>
+                        <p className='text-xs text-amber-500 mt-1.5'>
                             {t("admin.sirah.create_category_first")}{" "}
                             <Link href='/admin/siroh' className='underline'>
                                 {t("admin.nav.sirah")}
@@ -129,7 +134,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 <div>
                     <label
                         htmlFor='sirohform-order'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2'
                     >
                         {t("admin.field.order")}
                     </label>
@@ -148,7 +153,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             <div>
                 <label
                     htmlFor='sirohform-field-2'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    className='block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2'
                 >
                     {t("admin.field.title")}{" "}
                     <span className='text-red-500'>*</span>
@@ -166,7 +171,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             <div>
                 <label
                     htmlFor='sirohform-slug'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    className='block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2'
                 >
                     {t("admin.field.slug")}
                 </label>
@@ -180,23 +185,25 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                     className={inputCls}
                     placeholder={t("admin.sirah.slug_placeholder")}
                 />
-                <p className='text-xs text-gray-400 mt-1'>
+                <p className='text-xs text-gray-400 mt-1.5'>
                     /siroh/{slug || "..."}
                 </p>
             </div>
 
-            <MarkdownEditor
-                value={content}
-                onChange={setContent}
-                label={t("admin.field.content")}
-                placeholder={t("admin.sirah.content_placeholder")}
-                minRows={12}
-            />
+            <div>
+                <MarkdownEditor
+                    value={content}
+                    onChange={setContent}
+                    label={t("admin.field.content")}
+                    placeholder={t("admin.sirah.content_placeholder")}
+                    minRows={14}
+                />
+            </div>
 
             <div>
                 <label
                     htmlFor='sirohform-source'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    className='block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2'
                 >
                     {t("admin.field.source")}
                 </label>
@@ -207,16 +214,16 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                     className={inputCls}
                     placeholder='Sirah Ibnu Hisyam; Ar-Raheeq Al-Makhtum (Shafiyyurrahman Al-Mubarakfuri); HR. Bukhari No. ...'
                 />
-                <p className='text-xs text-gray-400 mt-1'>
+                <p className='text-xs text-gray-400 mt-1.5'>
                     {t("admin.sirah.source_hint")}
                 </p>
             </div>
 
-            <div className='flex gap-3 pt-2'>
+            <div className='flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-slate-700'>
                 <button
                     type='submit'
                     disabled={isLoading}
-                    className='px-6 py-2.5 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition-colors'
+                    className='px-6 py-2.5 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-xl text-sm font-semibold shadow-sm transition-colors'
                 >
                     {isLoading
                         ? t("common.saving")
