@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
@@ -8,10 +8,13 @@ import {
     View,
 } from "react-native";
 import {
+    BookOpen,
     CheckCircle2,
     ChevronLeft,
     ChevronRight,
+    Clock,
     Play,
+    Sparkles,
 } from "lucide-react-native";
 import { Card } from "../../components/Card";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
@@ -19,6 +22,16 @@ import { colors, radius, spacing } from "../../theme";
 import { putJson, requestJson } from "../../api/client";
 import { getFeatureItemPage } from "../../api/explore";
 import { playAudioUrl, stopAudio } from "../../utils/audioPlayer";
+import { staticLessons } from "../../data/staticLessons";
+
+const LESSON_CATEGORIES = [
+    "Semua",
+    "Al-Quran",
+    "Fiqh Ibadah",
+    "Aqidah",
+    "Ibadah Harian",
+    "Adab",
+];
 
 export function WebAppLessonsRoute({
     feature,
@@ -27,8 +40,9 @@ export function WebAppLessonsRoute({
     styles: injectedStyles,
 }) {
     const { t } = useMobileLocale();
-    const [modules, setModules] = useState(items || []);
-    const [loading, setLoading] = useState(!items?.length);
+    const [modules, setModules] = useState(items?.length ? items : (staticLessons || []));
+    const [loading, setLoading] = useState(!items?.length && !staticLessons?.length);
+    const [selectedCategory, setSelectedCategory] = useState("Semua");
     const [activeModuleId, setActiveModuleId] = useState(null);
     const [activeStepIdx, setActiveStepIdx] = useState(0);
     const [completed, setCompleted] = useState({});
@@ -43,19 +57,43 @@ export function WebAppLessonsRoute({
         } else {
             getFeatureItemPage(feature)
                 .then((res) => {
-                    const list = res?.items || [];
+                    const list = res?.items?.length ? res.items : staticLessons;
                     setModules(list);
                     if (list.length > 0) {
-                        setActiveModuleId(list[0].slug || list[0].id);
+                        setActiveModuleId((prev) => prev || list[0].slug || list[0].id);
                     }
                 })
-                .catch(() => {})
+                .catch(() => {
+                    if (staticLessons?.length) {
+                        setModules(staticLessons);
+                        setActiveModuleId((prev) => prev || staticLessons[0].slug || staticLessons[0].id);
+                    }
+                })
                 .finally(() => setLoading(false));
         }
     }, [feature, items]);
 
+    const filteredModules = useMemo(() => {
+        if (!selectedCategory || selectedCategory === "Semua") return modules;
+        return modules.filter((m) => m.category === selectedCategory);
+    }, [modules, selectedCategory]);
+
     useEffect(() => {
-        requestJson("/api/v1/lessons/progress", { auth: true })
+        if (filteredModules.length > 0) {
+            const hasActive = filteredModules.some(
+                (m) => (m.slug || m.id) === activeModuleId,
+            );
+            if (!hasActive) {
+                setActiveModuleId(
+                    filteredModules[0].slug || filteredModules[0].id,
+                );
+                setActiveStepIdx(0);
+            }
+        }
+    }, [filteredModules, activeModuleId]);
+
+    useEffect(() => {
+        Promise.resolve(requestJson("/api/v1/lessons/progress", { auth: true }))
             .then((data) => {
                 const progressItems = data?.data?.items || data?.items || [];
                 const comp = {};
@@ -140,13 +178,60 @@ export function WebAppLessonsRoute({
             contentContainerStyle={localStyles.content}
             testID='explore-web-app-lessons-surface'
         >
+            {/* Kategori Filter */}
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={localStyles.categorySelector}
+                contentContainerStyle={localStyles.categorySelectorContent}
+            >
+                {LESSON_CATEGORIES.map((cat) => {
+                    const isCatSelected = selectedCategory === cat;
+                    return (
+                        <Pressable
+                            accessibilityRole='button'
+                            key={cat}
+                            onPress={() => setSelectedCategory(cat)}
+                            style={[
+                                localStyles.categoryTab,
+                                isCatSelected && localStyles.categoryTabActive,
+                                isDarkTheme && {
+                                    backgroundColor: isCatSelected
+                                        ? "#047857"
+                                        : "#1e293b",
+                                    borderColor: isCatSelected
+                                        ? "#10b981"
+                                        : "#334155",
+                                },
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    localStyles.categoryTabText,
+                                    isCatSelected &&
+                                        localStyles.categoryTabTextActive,
+                                    isDarkTheme && {
+                                        color: isCatSelected
+                                            ? "#ffffff"
+                                            : "#94a3b8",
+                                    },
+                                ]}
+                            >
+                                {cat}
+                            </Text>
+                        </Pressable>
+                    );
+                })}
+            </ScrollView>
+
+            {/* Modul Selector */}
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={localStyles.moduleSelector}
                 contentContainerStyle={localStyles.moduleSelectorContent}
             >
-                {modules.map((m) => {
+                {filteredModules.map((m) => {
                     const isSelected = (m.slug || m.id) === activeModuleId;
                     return (
                         <Pressable
@@ -184,6 +269,83 @@ export function WebAppLessonsRoute({
                     );
                 })}
             </ScrollView>
+
+            {activeModule && (
+                <View
+                    style={[
+                        localStyles.moduleSummaryCard,
+                        isDarkTheme && {
+                            backgroundColor: "#111827",
+                            borderColor: "#374151",
+                        },
+                    ]}
+                >
+                    <View style={localStyles.moduleSummaryHeader}>
+                        <View style={{ flex: 1 }}>
+                            <Text
+                                style={[
+                                    localStyles.moduleSummaryTitle,
+                                    isDarkTheme && { color: "#f9fafb" },
+                                ]}
+                            >
+                                {activeModule.title}
+                            </Text>
+                            {activeModule.description ? (
+                                <Text
+                                    style={[
+                                        localStyles.moduleSummaryDesc,
+                                        isDarkTheme && { color: "#9ca3af" },
+                                    ]}
+                                    numberOfLines={2}
+                                >
+                                    {activeModule.description}
+                                </Text>
+                            ) : null}
+                        </View>
+                    </View>
+                    <View style={localStyles.moduleBadgesRow}>
+                        {activeModule.category ? (
+                            <Text
+                                style={[
+                                    localStyles.moduleBadge,
+                                    isDarkTheme && {
+                                        backgroundColor: "#1e293b",
+                                        color: "#38bdf8",
+                                    },
+                                ]}
+                            >
+                                {activeModule.category}
+                            </Text>
+                        ) : null}
+                        {activeModule.level ? (
+                            <Text
+                                style={[
+                                    localStyles.moduleBadge,
+                                    isDarkTheme && {
+                                        backgroundColor: "#1e293b",
+                                        color: "#a7f3d0",
+                                    },
+                                ]}
+                            >
+                                {activeModule.level}
+                            </Text>
+                        ) : null}
+                        {activeModule.estimated_minutes ? (
+                            <Text
+                                style={[
+                                    localStyles.moduleBadge,
+                                    isDarkTheme && {
+                                        backgroundColor: "#1e293b",
+                                        color: "#fbbf24",
+                                    },
+                                ]}
+                            >
+                                ⏱ {activeModule.estimated_minutes} mnt
+                            </Text>
+                        ) : null}
+                    </View>
+                </View>
+            )}
 
             {activeModule && (
                 <Card
@@ -450,6 +612,71 @@ const localStyles = StyleSheet.create({
     emptyText: {
         fontSize: 14,
         color: colors.textSecondary,
+    },
+    categorySelector: {
+        flexGrow: 0,
+    },
+    categorySelectorContent: {
+        gap: spacing.xs,
+        paddingBottom: spacing.xs,
+    },
+    categoryTab: {
+        paddingVertical: spacing.xs,
+        paddingHorizontal: spacing.sm + 4,
+        borderRadius: radius.full,
+        backgroundColor: "#f1f5f9",
+        borderWidth: 1,
+        borderColor: "#e2e8f0",
+    },
+    categoryTabActive: {
+        backgroundColor: colors.primary,
+        borderColor: colors.primary,
+    },
+    categoryTabText: {
+        fontSize: 12,
+        fontWeight: "600",
+        color: colors.textSecondary,
+    },
+    categoryTabTextActive: {
+        color: "#ffffff",
+    },
+    moduleSummaryCard: {
+        padding: spacing.md,
+        borderRadius: radius.md,
+        backgroundColor: "#f8fafc",
+        borderWidth: 1,
+        borderColor: "#e2e8f0",
+        gap: spacing.xs,
+    },
+    moduleSummaryHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    moduleSummaryTitle: {
+        fontSize: 16,
+        fontWeight: "700",
+        color: colors.textPrimary,
+    },
+    moduleSummaryDesc: {
+        fontSize: 13,
+        color: colors.textSecondary,
+        marginTop: 2,
+        lineHeight: 18,
+    },
+    moduleBadgesRow: {
+        flexDirection: "row",
+        gap: spacing.xs,
+        marginTop: 4,
+    },
+    moduleBadge: {
+        fontSize: 11,
+        fontWeight: "600",
+        backgroundColor: "#e0f2fe",
+        color: "#0369a1",
+        paddingHorizontal: spacing.xs + 2,
+        paddingVertical: 2,
+        borderRadius: radius.sm,
     },
     moduleSelector: {
         flexGrow: 0,

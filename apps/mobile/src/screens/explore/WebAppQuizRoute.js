@@ -1,4 +1,4 @@
-import { Brain, CheckCircle2, RotateCcw, XCircle } from "lucide-react-native";
+import { Brain, CheckCircle2, Filter, RefreshCw, RotateCcw, XCircle } from "lucide-react-native";
 import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
@@ -10,8 +10,22 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../../theme";
+import { colors, radius, spacing } from "../../theme";
 import { quizOptions } from "../ExploreScreen.helpers";
+import { staticQuizQuestions } from "../../data/staticQuiz";
+
+const QUIZ_CATEGORIES = [
+    "Semua",
+    "Quran & Hafalan",
+    "Hadits",
+    "Fiqh",
+    "Sirah",
+    "Asmaul Husna",
+    "Aqidah",
+    "Tajwid",
+];
+
+const QUESTION_COUNT_OPTIONS = [10, 25, 50];
 
 const getRaw = (item) => item?.raw ?? {};
 const pickText = (...values) =>
@@ -186,8 +200,35 @@ export function WebAppQuizRoute({
     const { t } = useMobileLocale();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [done, setDone] = useState(false);
-    const total = items.length;
-    const currentItem = items[currentIndex];
+    const [selectedCategory, setSelectedCategory] = useState("Semua");
+    const [questionCount, setQuestionCount] = useState(10);
+
+    const sourceItems = useMemo(() => {
+        if (items?.length) return items;
+        if (staticQuizQuestions?.length) return staticQuizQuestions;
+        return [];
+    }, [items]);
+
+    const filteredItems = useMemo(() => {
+        let pool = sourceItems;
+        if (selectedCategory && selectedCategory !== "Semua") {
+            const catMap = {
+                "Quran & Hafalan": ["hafalan", "quran"],
+                "Hadits": ["hadith"],
+                "Fiqh": ["fiqh"],
+                "Sirah": ["sirah"],
+                "Asmaul Husna": ["asmaul_husna"],
+                "Aqidah": ["aqidah"],
+                "Tajwid": ["tajwid"],
+            };
+            const types = catMap[selectedCategory] || [];
+            pool = pool.filter((q) => types.includes(q.type));
+        }
+        return pool.slice(0, questionCount);
+    }, [sourceItems, selectedCategory, questionCount]);
+
+    const total = filteredItems.length;
+    const currentItem = filteredItems[currentIndex];
     const selected = currentItem
         ? answers[getItemId(currentItem, currentIndex)]
         : null;
@@ -195,7 +236,7 @@ export function WebAppQuizRoute({
     const score =
         typeof scoreQuiz === "function"
             ? scoreQuiz()
-            : items.reduce(
+            : filteredItems.reduce(
                   (sum, item, index) =>
                       sum +
                       (getSelectedCorrect(item, answers[getItemId(item, index)])
@@ -284,6 +325,43 @@ export function WebAppQuizRoute({
                             {t("explore.quiz.subtitle")}
                         </Text>
                     </View>
+
+                    {/* Category Filter Pills */}
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.categoryScroll}
+                        contentContainerStyle={styles.categoryScrollContent}
+                    >
+                        {QUIZ_CATEGORIES.map((cat) => {
+                            const isSelected = selectedCategory === cat;
+                            return (
+                                <Pressable
+                                    accessibilityRole='button'
+                                    key={cat}
+                                    onPress={() => {
+                                        setSelectedCategory(cat);
+                                        setCurrentIndex(0);
+                                        setAnswers({});
+                                    }}
+                                    style={[
+                                        styles.categoryPill,
+                                        isSelected && styles.categoryPillActive,
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.categoryPillText,
+                                            isSelected &&
+                                                styles.categoryPillTextActive,
+                                        ]}
+                                    >
+                                        {cat}
+                                    </Text>
+                                </Pressable>
+                            );
+                        })}
+                    </ScrollView>
 
                     <View style={styles.progressHeader}>
                         <Text style={styles.progressLabel}>
@@ -449,6 +527,34 @@ const styles = StyleSheet.create({
     },
     header: {
         marginBottom: spacing.md,
+    },
+    categoryScroll: {
+        flexGrow: 0,
+        marginBottom: spacing.md,
+    },
+    categoryScrollContent: {
+        gap: spacing.xs,
+        paddingBottom: 2,
+    },
+    categoryPill: {
+        backgroundColor: "#f1f5f9",
+        borderColor: "#e2e8f0",
+        borderRadius: 999,
+        borderWidth: 1,
+        paddingHorizontal: spacing.sm + 4,
+        paddingVertical: spacing.xs,
+    },
+    categoryPillActive: {
+        backgroundColor: "#047857",
+        borderColor: "#047857",
+    },
+    categoryPillText: {
+        color: "#64748b",
+        fontSize: 12,
+        fontWeight: "700",
+    },
+    categoryPillTextActive: {
+        color: "#ffffff",
     },
     title: {
         color: "#111827",

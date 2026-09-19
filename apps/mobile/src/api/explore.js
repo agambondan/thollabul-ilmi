@@ -377,8 +377,8 @@ export const searchDictionary = async (query) => {
     return pickItems(payload).map(normalizeExploreItem);
 };
 
-export const getQuizQuestions = async () => {
-    const payload = await requestJson("/api/v1/quiz/session?count=5");
+export const getQuizQuestions = async (count = 5) => {
+    const payload = await requestJson(`/api/v1/quiz/session?count=${count}`);
     return pickItems(payload).map(normalizeExploreItem);
 };
 

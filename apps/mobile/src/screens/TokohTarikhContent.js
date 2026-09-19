@@ -13,6 +13,7 @@ import {
 import { colors, radius, spacing } from "../theme";
 import { requestJson } from "../api/client";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { staticTokohTarikh } from "../data/staticTokohTarikh";
 
 const ERA_FILTERS = [
     { value: "", label: "Semua" },
@@ -99,9 +100,42 @@ export function TokohTarikhContent() {
             if (era) params.era = era;
             const qs = new URLSearchParams(params).toString();
             const data = await requestJson(`/api/v1/tokoh-tarikh?${qs}`);
-            setItems(data?.items ?? []);
+            if (Array.isArray(data?.items)) {
+                setItems(data.items);
+            } else {
+                setItems([]);
+            }
         } catch {
-            setItems([]);
+            let filtered = staticTokohTarikh || [];
+            if (search) {
+                const q = search.toLowerCase();
+                filtered = filtered.filter(
+                    (t) =>
+                        (t.nama || "").toLowerCase().includes(q) ||
+                        (t.biografi || "").toLowerCase().includes(q) ||
+                        (t.kontribusi || "").toLowerCase().includes(q) ||
+                        (t.kategori || "").toLowerCase().includes(q) ||
+                        (t.era || "").toLowerCase().includes(q),
+                );
+            }
+            if (era) {
+                const ef = era.toLowerCase().replace(/['\s_-]/g, "");
+                filtered = filtered.filter((t) => {
+                    const eraStr = (t.era || "")
+                        .toLowerCase()
+                        .replace(/['\s_-]/g, "");
+                    const katStr = (t.kategori || "")
+                        .toLowerCase()
+                        .replace(/['\s_-]/g, "");
+                    return (
+                        eraStr.includes(ef) ||
+                        ef.includes(eraStr) ||
+                        katStr.includes(ef) ||
+                        ef.includes(katStr)
+                    );
+                });
+            }
+            setItems(filtered);
         } finally {
             setLoading(false);
         }
