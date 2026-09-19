@@ -14,6 +14,7 @@ const (
 	QuizTypeSirah       QuizType = "sirah"
 	QuizTypeHadith      QuizType = "hadith"
 	QuizTypeAsmaUlHusna QuizType = "asmaul_husna"
+	QuizTypeSanad       QuizType = "sanad"
 )
 
 type Quiz struct {
@@ -27,6 +28,7 @@ type Quiz struct {
 	RefID         *int         `json:"ref_id,omitempty" gorm:"index"`
 	TranslationID *int         `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
+	Source        string       `json:"source" gorm:"type:text"` // sumber referensi kitab/nomor hadis/ayat
 }
 
 type UserQuizResult struct {
