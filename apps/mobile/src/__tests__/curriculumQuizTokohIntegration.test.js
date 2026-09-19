@@ -64,8 +64,8 @@ describe("Curriculum, Quiz, and Tokoh Tarikh Mobile Integration", () => {
         expect(dzikir.steps.length).toBeGreaterThanOrEqual(5);
     });
 
-    test("static dataset contains 100 quiz questions and 20 historical figures", () => {
-        expect(staticQuizQuestions).toHaveLength(100);
+    test("static dataset contains 120 quiz questions and 20 historical figures", () => {
+        expect(staticQuizQuestions).toHaveLength(120);
         expect(staticTokohTarikh).toHaveLength(20);
     });
 

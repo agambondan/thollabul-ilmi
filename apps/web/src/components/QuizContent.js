@@ -49,6 +49,12 @@ const QUIZ_TYPES = [
         fallback: "Asmaul Husna",
         icon: "💫",
     },
+    {
+        key: "sanad",
+        labelKey: "quiz.type_sanad",
+        fallback: "Sanad & Perawi",
+        icon: "🔗",
+    },
 ];
 
 const normalizeQuestion = (q) => {

@@ -23,6 +23,7 @@ const QUIZ_CATEGORIES = [
     "Asmaul Husna",
     "Aqidah",
     "Tajwid",
+    "Sanad",
 ];
 
 const QUESTION_COUNT_OPTIONS = [10, 25, 50];
@@ -220,6 +221,7 @@ export function WebAppQuizRoute({
                 "Asmaul Husna": ["asmaul_husna"],
                 "Aqidah": ["aqidah"],
                 "Tajwid": ["tajwid"],
+                "Sanad": ["sanad", "perawi"],
             };
             const types = catMap[selectedCategory] || [];
             pool = pool.filter((q) => types.includes(q.type));
