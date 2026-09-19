@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
     BsDiagram3Fill,
     BsInfoCircle,
     BsZoomIn,
     BsZoomOut,
-    BsArrowRepeat,
     BsFilter,
+    BsSearch,
+    BsX,
+    BsDownload,
 } from "react-icons/bs";
 
 const LEVEL_COLORS = {
@@ -511,24 +513,53 @@ const ALL_40_PERAWI_TREE = {
     ],
 };
 
-function OrgCard({ node, basePath, isRoot = false }) {
+function checkNodeMatch(node, q) {
+    if (!q) return false;
+    const query = q.toLowerCase();
+    return (
+        (node.nama_latin && node.nama_latin.toLowerCase().includes(query)) ||
+        (node.nama_arab && node.nama_arab.includes(query)) ||
+        (node.tabaqah && node.tabaqah.toLowerCase().includes(query))
+    );
+}
+
+function countMatches(node, q) {
+    if (!q) return 0;
+    let count = checkNodeMatch(node, q) ? 1 : 0;
+    if (node.children) {
+        for (const c of node.children) {
+            count += countMatches(c, q);
+        }
+    }
+    return count;
+}
+
+function OrgCard({ node, basePath, isRoot = false, searchQuery = "" }) {
     const levelStyle = LEVEL_COLORS[node.levelKey] || LEVEL_COLORS.tabiin;
+    const isMatch = checkNodeMatch(node, searchQuery);
+    const isFaded = Boolean(searchQuery && !isMatch);
 
     return (
         <Link
             href={`${basePath}/${node.id}`}
-            className='group relative block transition-transform duration-200 hover:-translate-y-1 z-10'
+            className={`group relative block transition-all duration-200 z-10 ${
+                isFaded ? "opacity-30 grayscale hover:opacity-100 hover:grayscale-0" : ""
+            } ${isMatch ? "scale-105" : "hover:-translate-y-1"}`}
         >
             <div
                 className={`relative pt-5 pb-3 px-2 rounded-2xl bg-white dark:bg-slate-800 border-2 border-t-4 shadow-sm hover:shadow-xl transition-all duration-200 text-center w-[145px] sm:w-[165px] ${
-                    isRoot
-                        ? "border-purple-400 dark:border-purple-600 border-t-purple-600 ring-4 ring-purple-100 dark:ring-purple-950/50"
-                        : `${levelStyle.border} ${levelStyle.accent}`
+                    isMatch
+                        ? "ring-4 ring-amber-400 ring-offset-2 dark:ring-offset-slate-900 border-amber-500 border-t-amber-500 shadow-amber-500/20"
+                        : isRoot
+                          ? "border-purple-400 dark:border-purple-600 border-t-purple-600 ring-4 ring-purple-100 dark:ring-purple-950/50"
+                          : `${levelStyle.border} ${levelStyle.accent}`
                 }`}
             >
                 {/* Floating Top Avatar Badge */}
                 <div
-                    className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-md ring-2 ring-white dark:ring-slate-800 transition-transform group-hover:scale-110 ${levelStyle.avatar}`}
+                    className={`absolute -top-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-md ring-2 ring-white dark:ring-slate-800 transition-transform group-hover:scale-110 ${
+                        isMatch ? "bg-amber-500 text-white" : levelStyle.avatar
+                    }`}
                 >
                     {node.initial || (node.nama_latin ? node.nama_latin[0] : "?")}
                 </div>
@@ -553,7 +584,11 @@ function OrgCard({ node, basePath, isRoot = false }) {
                 )}
 
                 {/* Latin Name */}
-                <p className='text-xs font-bold text-gray-900 dark:text-white line-clamp-2 mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors leading-tight'>
+                <p
+                    className={`text-xs font-bold leading-tight line-clamp-2 mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors ${
+                        isMatch ? "text-amber-700 dark:text-amber-400" : "text-gray-900 dark:text-white"
+                    }`}
+                >
                     {node.nama_latin}
                 </p>
 
@@ -574,13 +609,13 @@ function OrgCard({ node, basePath, isRoot = false }) {
     );
 }
 
-function OrgTreeNode({ node, basePath, isRoot = false }) {
+function OrgTreeNode({ node, basePath, isRoot = false, searchQuery = "" }) {
     const hasChildren = node.children && node.children.length > 0;
 
     return (
         <div className='flex flex-col items-center'>
             {/* The Node Card */}
-            <OrgCard node={node} basePath={basePath} isRoot={isRoot} />
+            <OrgCard node={node} basePath={basePath} isRoot={isRoot} searchQuery={searchQuery} />
 
             {/* If children exist, draw vertical line down and branch out */}
             {hasChildren && (
@@ -612,7 +647,11 @@ function OrgTreeNode({ node, basePath, isRoot = false }) {
                                     <div className='absolute -top-6 w-0.5 h-6 bg-gray-300 dark:bg-slate-600' />
 
                                     {/* Recursive child tree */}
-                                    <OrgTreeNode node={child} basePath={basePath} />
+                                    <OrgTreeNode
+                                        node={child}
+                                        basePath={basePath}
+                                        searchQuery={searchQuery}
+                                    />
                                 </div>
                             ))}
                         </div>
@@ -626,6 +665,9 @@ function OrgTreeNode({ node, basePath, isRoot = false }) {
 export default function GlobalPerawiTree({ basePath = "/perawi" }) {
     const [zoom, setZoom] = useState(0.8);
     const [selectedBranch, setSelectedBranch] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [exporting, setExporting] = useState(false);
+    const treeRef = useRef(null);
 
     const zoomIn = () => setZoom((z) => Math.min(1.4, +(z + 0.1).toFixed(2)));
     const zoomOut = () => setZoom((z) => Math.max(0.4, +(z - 0.1).toFixed(2)));
@@ -644,10 +686,40 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                   ),
     };
 
+    const matchTotal = searchQuery ? countMatches(filteredTree, searchQuery) : 0;
+
+    const handleExportPNG = async () => {
+        if (!treeRef.current || exporting) return;
+        setExporting(true);
+        try {
+            const html2canvas = (await import("html2canvas")).default;
+            const originalTransform = treeRef.current.style.transform;
+            treeRef.current.style.transform = "scale(1)";
+
+            const canvas = await html2canvas(treeRef.current, {
+                backgroundColor: "#0f172a",
+                scale: 2,
+                useCORS: true,
+                logging: false,
+            });
+
+            treeRef.current.style.transform = originalTransform;
+
+            const link = document.createElement("a");
+            link.download = `silsilah-sanad-hadis-${selectedBranch}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        } catch (err) {
+            console.error("Export error:", err);
+        } finally {
+            setExporting(false);
+        }
+    };
+
     return (
         <div className='bg-slate-50 dark:bg-slate-900/60 rounded-3xl border border-gray-200 dark:border-slate-800 p-4 sm:p-6 shadow-inner'>
             {/* Header Legend & Zoom Controls */}
-            <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200 dark:border-slate-700/80'>
+            <div className='flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5 pb-4 border-b border-gray-200 dark:border-slate-700/80'>
                 <div>
                     <h2 className='text-base font-bold text-gray-900 dark:text-white flex items-center gap-2'>
                         <BsDiagram3Fill className='text-teal-600 dark:text-teal-400' />
@@ -679,90 +751,141 @@ export default function GlobalPerawiTree({ basePath = "/perawi" }) {
                         </span>
                         <span className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800'>
                             <span className='w-2 h-2 rounded-full bg-blue-600' />
-                            Aimmah / Mukharrij (10)
+                            Aimmah (10)
                         </span>
                     </div>
 
-                    {/* Zoom Controller */}
-                    <div className='flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-0.5 shadow-sm text-xs'>
+                    {/* Zoom & Export Controller */}
+                    <div className='flex items-center gap-1.5'>
+                        <div className='flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-0.5 shadow-sm text-xs'>
+                            <button
+                                type='button'
+                                onClick={zoomOut}
+                                className='p-1.5 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700'
+                                title='Perkecil (Zoom Out)'
+                            >
+                                <BsZoomOut />
+                            </button>
+                            <span className='px-2 font-mono text-[11px] font-semibold text-gray-700 dark:text-gray-300 min-w-[40px] text-center'>
+                                {Math.round(zoom * 100)}%
+                            </span>
+                            <button
+                                type='button'
+                                onClick={zoomIn}
+                                className='p-1.5 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700'
+                                title='Perbesar (Zoom In)'
+                            >
+                                <BsZoomIn />
+                            </button>
+                            <button
+                                type='button'
+                                onClick={zoomReset}
+                                className='px-2 py-1 text-[11px] font-semibold text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-lg ml-0.5'
+                                title='Reset Skala 100%'
+                            >
+                                100%
+                            </button>
+                            <button
+                                type='button'
+                                onClick={() => setZoom(0.65)}
+                                className='px-2 py-1 text-[11px] font-semibold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg'
+                                title='Sesuaikan Layar (Fit View 65%)'
+                            >
+                                Fit
+                            </button>
+                        </div>
+
+                        {/* Export PNG button */}
                         <button
                             type='button'
-                            onClick={zoomOut}
-                            className='p-1.5 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700'
-                            title='Perkecil (Zoom Out)'
+                            onClick={handleExportPNG}
+                            disabled={exporting}
+                            className='flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-xl text-xs font-semibold shadow-sm transition-colors'
+                            title='Simpan Diagram sebagai Gambar PNG'
                         >
-                            <BsZoomOut />
-                        </button>
-                        <span className='px-2 font-mono text-[11px] font-semibold text-gray-700 dark:text-gray-300 min-w-[40px] text-center'>
-                            {Math.round(zoom * 100)}%
-                        </span>
-                        <button
-                            type='button'
-                            onClick={zoomIn}
-                            className='p-1.5 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700'
-                            title='Perbesar (Zoom In)'
-                        >
-                            <BsZoomIn />
-                        </button>
-                        <button
-                            type='button'
-                            onClick={zoomReset}
-                            className='px-2 py-1 text-[11px] font-semibold text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-lg ml-0.5'
-                            title='Reset Skala 100%'
-                        >
-                            100%
-                        </button>
-                        <button
-                            type='button'
-                            onClick={() => setZoom(0.65)}
-                            className='px-2 py-1 text-[11px] font-semibold text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg'
-                            title='Sesuaikan Layar (Fit View 65%)'
-                        >
-                            Fit
+                            <BsDownload />
+                            <span>{exporting ? "Menyimpan..." : "Export PNG"}</span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Branch Quick Filter Tabs */}
-            <div className='flex items-center gap-1.5 overflow-x-auto pb-3 mb-4 scrollbar-hide text-xs'>
-                <span className='text-gray-400 flex items-center gap-1 mr-1 text-[11px] font-medium shrink-0'>
-                    <BsFilter /> Fokus Jalur:
-                </span>
-                {[
-                    { key: "all", label: "Semua Jalur (40 Perawi)" },
-                    { key: "ibnu_umar", label: "Jalur Ibnu Umar (Silsilah Emas)" },
-                    { key: "abu_hurairah", label: "Jalur Abu Hurairah" },
-                    { key: "anas_bin_malik", label: "Jalur Anas bin Malik" },
-                    { key: "aisyah", label: "Jalur Aisyah r.a." },
-                    { key: "sahabat_lainnya", label: "Sahabat Utama Lainnya" },
-                ].map(({ key, label }) => (
-                    <button
-                        key={key}
-                        type='button'
-                        onClick={() => setSelectedBranch(key)}
-                        className={`px-3 py-1 rounded-lg font-medium whitespace-nowrap shrink-0 transition-colors ${
-                            selectedBranch === key
-                                ? "bg-teal-600 text-white shadow-sm"
-                                : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-teal-50 dark:hover:bg-teal-900/20"
-                        }`}
-                    >
-                        {label}
-                    </button>
-                ))}
+            {/* Interactive Search & Branch Controls Row */}
+            <div className='flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-4'>
+                {/* Branch Quick Filter Tabs */}
+                <div className='flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-hide text-xs'>
+                    <span className='text-gray-400 flex items-center gap-1 mr-1 text-[11px] font-medium shrink-0'>
+                        <BsFilter /> Fokus Jalur:
+                    </span>
+                    {[
+                        { key: "all", label: "Semua Jalur (40 Perawi)" },
+                        { key: "ibnu_umar", label: "Jalur Ibnu Umar (Silsilah Emas)" },
+                        { key: "abu_hurairah", label: "Jalur Abu Hurairah" },
+                        { key: "anas_bin_malik", label: "Jalur Anas bin Malik" },
+                        { key: "aisyah", label: "Jalur Aisyah r.a." },
+                        { key: "sahabat_lainnya", label: "Sahabat Utama Lainnya" },
+                    ].map(({ key, label }) => (
+                        <button
+                            key={key}
+                            type='button'
+                            onClick={() => setSelectedBranch(key)}
+                            className={`px-3 py-1 rounded-lg font-medium whitespace-nowrap shrink-0 transition-colors ${
+                                selectedBranch === key
+                                    ? "bg-teal-600 text-white shadow-sm"
+                                    : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-teal-50 dark:hover:bg-teal-900/20"
+                            }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Node Search & Highlight Box */}
+                <div className='relative min-w-[220px] sm:min-w-[260px] self-start md:self-auto'>
+                    <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs'>
+                        <BsSearch />
+                    </span>
+                    <input
+                        type='text'
+                        placeholder='Cari & sorot perawi...'
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className='w-full pl-8 pr-16 py-1.5 border border-gray-200 dark:border-slate-700 rounded-xl text-xs bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400 shadow-sm'
+                    />
+                    {searchQuery ? (
+                        <div className='absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1'>
+                            <span className='text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300'>
+                                {matchTotal}
+                            </span>
+                            <button
+                                type='button'
+                                onClick={() => setSearchQuery("")}
+                                className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-0.5'
+                            >
+                                <BsX className='text-sm' />
+                            </button>
+                        </div>
+                    ) : null}
+                </div>
             </div>
 
             {/* Scrollable Tree Canvas Container - Never clip left on scroll */}
             <div className='overflow-auto max-h-[85vh] p-4 sm:p-8 bg-white/70 dark:bg-slate-950/50 rounded-2xl border border-gray-100 dark:border-slate-800/80 shadow-sm scrollbar-thin'>
                 <div className='inline-block min-w-full text-left'>
                     <div
+                        ref={treeRef}
                         className='w-max mx-auto flex flex-col items-center py-2 transition-transform duration-200'
                         style={{
                             transform: `scale(${zoom})`,
                             transformOrigin: "top center",
                         }}
                     >
-                        <OrgTreeNode node={filteredTree} basePath={basePath} isRoot />
+                        <OrgTreeNode
+                            node={filteredTree}
+                            basePath={basePath}
+                            isRoot
+                            searchQuery={searchQuery}
+                        />
                     </div>
                 </div>
             </div>

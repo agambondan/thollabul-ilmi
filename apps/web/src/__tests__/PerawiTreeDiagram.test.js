@@ -100,6 +100,7 @@ describe("GlobalPerawiTree", () => {
         expect(screen.getByText("Abdullah bin Umar")).toBeInTheDocument();
         expect(screen.getByText("Malik bin Anas")).toBeInTheDocument();
         expect(screen.getByText("Muhammad bin Ismail al-Bukhari")).toBeInTheDocument();
+        expect(screen.getByText("Export PNG")).toBeInTheDocument();
     });
 
     it("filters tree by selected branch", () => {
@@ -110,5 +111,14 @@ describe("GlobalPerawiTree", () => {
 
         expect(screen.getByText("Abu Hurairah")).toBeInTheDocument();
         expect(screen.queryByText("Abdullah bin Umar")).not.toBeInTheDocument();
+    });
+
+    it("searches and highlights perawi node", () => {
+        render(<GlobalPerawiTree basePath='/perawi' />);
+
+        const searchInput = screen.getByPlaceholderText("Cari & sorot perawi...");
+        fireEvent.change(searchInput, { target: { value: "Bukhari" } });
+
+        expect(screen.getByText("1")).toBeInTheDocument(); // Match count badge
     });
 });

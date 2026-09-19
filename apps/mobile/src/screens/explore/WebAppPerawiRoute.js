@@ -1,4 +1,4 @@
-import { Users } from "lucide-react-native";
+import { ListChecks, Users } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import {
     ActivityIndicator,
@@ -13,6 +13,7 @@ import {
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
+import { PerawiSanadTreeMobile } from "./PerawiSanadTreeMobile";
 
 const TABAQAH_LABELS = {
     nabi: "explore.perawi.tabaqah.nabi",
@@ -158,6 +159,7 @@ export function WebAppPerawiRoute({
     pagination,
 }) {
     const { t } = useMobileLocale();
+    const [viewMode, setViewMode] = useState("list");
     const [search, setSearch] = useState("");
     const [tabaqah, setTabaqah] = useState("");
     const tabaqahOptions = useMemo(() => uniqueTabaqah(items), [items]);
@@ -189,116 +191,168 @@ export function WebAppPerawiRoute({
         >
             <View testID='explore-web-app-perawi-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.perawi.title")}</Text>
-                {items.length ? (
-                    <Text style={styles.count}>
-                        {t("explore.perawi.count", { count: items.length })}
-                    </Text>
-                ) : null}
-            </View>
-
-            <View style={styles.search}>
-                <TextInput
-                    onChangeText={setSearch}
-                    placeholder={t("explore.perawi.searchPlaceholder")}
-                    placeholderTextColor='#9ca3af'
-                    style={styles.input}
-                    testID='web-app-perawi-search'
-                    value={search}
-                />
-            </View>
-
-            <View style={styles.tabaqahRow}>
-                <TabaqahPill
-                    active={!tabaqah}
-                    label={t("explore.common.all")}
-                    onPress={() => setTabaqah("")}
-                    testID='web-app-perawi-tabaqah-all'
-                />
-                {tabaqahOptions.map((item) => (
-                    <TabaqahPill
-                        active={tabaqah === item}
-                        key={item}
-                        label={getTabaqahLabel(item, t)}
-                        onPress={() => setTabaqah(tabaqah === item ? "" : item)}
-                        testID={`web-app-perawi-tabaqah-${item}`}
-                    />
-                ))}
-            </View>
-
-            {error ? (
-                <Text style={styles.error}>
-                    {t("explore.common.refreshError", {
-                        subject: t("explore.perawi.fallbackTitle"),
-                    })}
-                </Text>
-            ) : null}
-            {loading ? (
-                <View style={styles.state}>
-                    <ActivityIndicator color='#0f766e' size='small' />
-                    <Text style={styles.stateText}>
-                        {t("explore.perawi.loading")}
-                    </Text>
+                <View style={styles.headerTitleWrap}>
+                    <Text style={styles.title}>{t("explore.perawi.title")}</Text>
+                    {items.length ? (
+                        <Text style={styles.count}>
+                            {t("explore.perawi.count", { count: items.length })}
+                        </Text>
+                    ) : null}
                 </View>
-            ) : null}
 
-            {!loading && !error && filteredItems.length ? (
-                <View style={styles.grid}>
-                    {filteredItems.map((item, index) => (
-                        <PerawiCard
-                            item={item}
-                            key={`${getPerawiId(item)}-${index}`}
-                            onOpen={onOpenItem}
-                            t={t}
-                        />
-                    ))}
-                </View>
-            ) : null}
-
-            {!loading && !error && !filteredItems.length ? (
-                <View style={styles.empty}>
-                    <Users color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
-                        {items.length
-                            ? t("explore.common.notFound", {
-                                  subject: t("explore.perawi.fallbackTitle"),
-                              })
-                            : t("explore.common.notAvailable", {
-                                  subject: t("explore.perawi.fallbackTitle"),
-                              })}
-                    </Text>
-                    <Text style={styles.emptyText}>
-                        {items.length
-                            ? t("explore.common.changeSearchOrFilter")
-                            : t("explore.common.retryLater")}
-                    </Text>
-                </View>
-            ) : null}
-
-            {pagination?.hasMore && !loading && !error ? (
-                <View style={styles.loadMoreWrap}>
+                {/* View Switcher */}
+                <View style={styles.viewSwitcher}>
                     <Pressable
-                        accessibilityRole='button'
-                        accessibilityState={{
-                            disabled: pagination.loadingMore,
-                        }}
-                        disabled={pagination.loadingMore}
-                        onPress={onLoadMore}
+                        onPress={() => setViewMode("list")}
                         style={[
-                            styles.loadMoreButton,
-                            pagination.loadingMore &&
-                                styles.loadMoreButtonDisabled,
+                            styles.viewSwitchButton,
+                            viewMode === "list" && styles.viewSwitchButtonActive,
                         ]}
-                        testID='web-app-perawi-load-more'
                     >
-                        <Text style={styles.loadMoreText}>
-                            {pagination.loadingMore
-                                ? t("explore.common.loadingShort")
-                                : t("explore.common.loadMore")}
+                        <ListChecks
+                            color={viewMode === "list" ? "#0f766e" : "#64748b"}
+                            size={14}
+                        />
+                        <Text
+                            style={[
+                                styles.viewSwitchText,
+                                viewMode === "list" && styles.viewSwitchTextActive,
+                            ]}
+                        >
+                            Daftar
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={() => setViewMode("tree")}
+                        style={[
+                            styles.viewSwitchButton,
+                            viewMode === "tree" && styles.viewSwitchButtonActive,
+                        ]}
+                    >
+                        <Users
+                            color={viewMode === "tree" ? "#0f766e" : "#64748b"}
+                            size={14}
+                        />
+                        <Text
+                            style={[
+                                styles.viewSwitchText,
+                                viewMode === "tree" && styles.viewSwitchTextActive,
+                            ]}
+                        >
+                            Bagan
                         </Text>
                     </Pressable>
                 </View>
-            ) : null}
+            </View>
+
+            {viewMode === "tree" ? (
+                <PerawiSanadTreeMobile onOpenPerawi={onOpenItem} />
+            ) : (
+                <>
+                    <View style={styles.search}>
+                        <TextInput
+                            onChangeText={setSearch}
+                            placeholder={t("explore.perawi.searchPlaceholder")}
+                            placeholderTextColor='#9ca3af'
+                            style={styles.input}
+                            testID='web-app-perawi-search'
+                            value={search}
+                        />
+                    </View>
+
+                    <View style={styles.tabaqahRow}>
+                        <TabaqahPill
+                            active={!tabaqah}
+                            label={t("explore.common.all")}
+                            onPress={() => setTabaqah("")}
+                            testID='web-app-perawi-tabaqah-all'
+                        />
+                        {tabaqahOptions.map((item) => (
+                            <TabaqahPill
+                                active={tabaqah === item}
+                                key={item}
+                                label={getTabaqahLabel(item, t)}
+                                onPress={() => setTabaqah(tabaqah === item ? "" : item)}
+                                testID={`web-app-perawi-tabaqah-${item}`}
+                            />
+                        ))}
+                    </View>
+
+                    {error ? (
+                        <Text style={styles.error}>
+                            {t("explore.common.refreshError", {
+                                subject: t("explore.perawi.fallbackTitle"),
+                            })}
+                        </Text>
+                    ) : null}
+                    {loading ? (
+                        <View style={styles.state}>
+                            <ActivityIndicator color='#0f766e' size='small' />
+                            <Text style={styles.stateText}>
+                                {t("explore.perawi.loading")}
+                            </Text>
+                        </View>
+                    ) : null}
+
+                    {!loading && !error && filteredItems.length ? (
+                        <View style={styles.grid}>
+                            {filteredItems.map((item, index) => (
+                                <PerawiCard
+                                    item={item}
+                                    key={`${getPerawiId(item)}-${index}`}
+                                    onOpen={onOpenItem}
+                                    t={t}
+                                />
+                            ))}
+                        </View>
+                    ) : null}
+
+                    {!loading && !error && !filteredItems.length ? (
+                        <View style={styles.empty}>
+                            <Users color='#9ca3af' size={32} strokeWidth={1.8} />
+                            <Text style={styles.emptyTitle}>
+                                {items.length
+                                    ? t("explore.common.notFound", {
+                                          subject: t("explore.perawi.fallbackTitle"),
+                                      })
+                                    : t("explore.common.notAvailable", {
+                                          subject: t("explore.perawi.fallbackTitle"),
+                                      })}
+                            </Text>
+                            <Text style={styles.emptyText}>
+                                {items.length
+                                    ? t("explore.common.changeSearchOrFilter")
+                                    : t("explore.common.retryLater")}
+                            </Text>
+                        </View>
+                    ) : null}
+
+                    {pagination?.hasMore && !loading && !error ? (
+                        <View style={styles.loadMoreWrap}>
+                            <Pressable
+                                accessibilityRole='button'
+                                accessibilityState={{
+                                    disabled: pagination.loadingMore,
+                                }}
+                                disabled={pagination.loadingMore}
+                                onPress={onLoadMore}
+                                style={[
+                                    styles.loadMoreButton,
+                                    pagination.loadingMore &&
+                                        styles.loadMoreButtonDisabled,
+                                ]}
+                                testID='web-app-perawi-load-more'
+                            >
+                                <Text style={styles.loadMoreText}>
+                                    {pagination.loadingMore
+                                        ? t("explore.common.loadingShort")
+                                        : t("explore.common.loadMore")}
+                                </Text>
+                            </Pressable>
+                        </View>
+                    ) : null}
+                </>
+            )}
         </ScrollView>
     );
 }
@@ -315,7 +369,44 @@ const styles = StyleSheet.create({
         paddingBottom: spacing.xl,
     },
     header: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
         marginBottom: spacing.md,
+    },
+    headerTitleWrap: {
+        flex: 1,
+    },
+    viewSwitcher: {
+        flexDirection: "row",
+        backgroundColor: "#e2e8f0",
+        borderRadius: radius.md,
+        padding: 2,
+    },
+    viewSwitchButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: radius.sm,
+    },
+    viewSwitchButtonActive: {
+        backgroundColor: "#ffffff",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.08,
+        shadowRadius: 1,
+        elevation: 1,
+    },
+    viewSwitchText: {
+        fontSize: 11,
+        fontWeight: "600",
+        color: "#64748b",
+    },
+    viewSwitchTextActive: {
+        color: "#0f766e",
+        fontWeight: "800",
     },
     title: {
         color: "#111827",
