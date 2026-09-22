@@ -15,6 +15,7 @@ import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const EMPTY_FORM = {
     code: "",
@@ -44,6 +45,7 @@ const asItems = (payload) =>
 
 export default function AdminAchievementsPage() {
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -393,9 +395,11 @@ export default function AdminAchievementsPage() {
             <ModalShell
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                    isWide ? "max-w-4xl" : "max-w-2xl"
+                }`}
             >
-                <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-700'>
+                <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                     <h2 className='font-bold text-gray-900 dark:text-white'>
                         {editId ? "Edit Achievement" : "Tambah Achievement"}
                     </h2>
@@ -406,7 +410,7 @@ export default function AdminAchievementsPage() {
                         <BsX className='text-xl' />
                     </button>
                 </div>
-                <div className='space-y-4 p-4'>
+                <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                     <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
                         <div className='sm:col-span-2'>
                             <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
@@ -549,23 +553,23 @@ export default function AdminAchievementsPage() {
                         />
                     </div>
 
-                    <div className='flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-slate-700'>
-                        <button
-                            type='button'
-                            onClick={() => setShowModal(false)}
-                            className='rounded-lg px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
-                        >
-                            Batal
-                        </button>
-                        <button
-                            type='button'
-                            onClick={save}
-                            disabled={saving || !form.code || !form.name}
-                            className='rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50'
-                        >
-                            {saving ? "Menyimpan..." : "Simpan"}
-                        </button>
-                    </div>
+                </div>
+                <div className='flex gap-3 p-6 border-t border-gray-100 dark:border-slate-700 shrink-0'>
+                    <button
+                        type='button'
+                        onClick={() => setShowModal(false)}
+                        className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
+                    >
+                        Batal
+                    </button>
+                    <button
+                        type='button'
+                        onClick={save}
+                        disabled={saving || !form.code || !form.name}
+                        className='flex-1 rounded-lg bg-emerald-600 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50'
+                    >
+                        {saving ? "Menyimpan..." : "Simpan"}
+                    </button>
                 </div>
             </ModalShell>
 
@@ -573,9 +577,9 @@ export default function AdminAchievementsPage() {
             <ModalShell
                 isOpen={deleteId !== null}
                 onClose={() => setDeleteId(null)}
-                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md'
+                panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
             >
-                <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-700'>
+                <div className='flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-700'>
                     <h2 className='font-bold text-gray-900 dark:text-white'>
                         Hapus Achievement
                     </h2>

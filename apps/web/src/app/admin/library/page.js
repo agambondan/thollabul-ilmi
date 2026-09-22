@@ -26,19 +26,50 @@ import ModalShell from "@/components/ModalShell";
 const FORMATS = ["link", "pdf", "epub", "html"];
 const STATUSES = ["published", "draft"];
 const SOURCE_TYPES = ["external", "uploaded"];
-const LEVELS = ["Pemula", "Menengah", "Lanjutan"];
-const LANGUAGES = ["Indonesia", "Arab", "Inggris"];
+const LEVELS = ["Pemula", "Menengah", "Lanjut", "Lanjutan"];
+const LANGUAGES = [
+    "Indonesia",
+    "Arab",
+    "Inggris",
+    "Arab/Indonesia",
+    "Arab/Inggris",
+    "Arab/Indonesia/Inggris",
+];
 const CATEGORIES = [
     "Aqidah",
     "Akhlak",
     "Bahasa Arab",
     "Fiqh",
     "Hadith",
+    "Hadits",
+    "Hadits dan Akhlak",
+    "Kisah Para Nabi",
     "Quran",
     "Sirah",
     "Tafsir",
     "Umum",
 ];
+
+function getCategoryOptions(items) {
+    const fromData = [...new Set(items.map((i) => i.category).filter(Boolean))];
+    return [...new Set([...CATEGORIES, ...fromData])].sort((a, b) =>
+        a.localeCompare(b, "id"),
+    );
+}
+
+function getLevelOptions(items) {
+    const fromData = [...new Set(items.map((i) => i.level).filter(Boolean))];
+    return [...new Set([...LEVELS, ...fromData])].sort((a, b) =>
+        a.localeCompare(b, "id"),
+    );
+}
+
+function getLanguageOptions(items) {
+    const fromData = [...new Set(items.map((i) => i.language).filter(Boolean))];
+    return [...new Set([...LANGUAGES, ...fromData])].sort((a, b) =>
+        a.localeCompare(b, "id"),
+    );
+}
 const LICENSE_STATUSES = [
     "unverified",
     "needs_review",
@@ -392,6 +423,9 @@ const AdminLibraryPage = () => {
         status: (a, b) => (a.status ?? "").localeCompare(b.status ?? ""),
     });
 
+    const categoryOptions = getCategoryOptions(items);
+    const levelOptions = getLevelOptions(items);
+    const languageOptions = getLanguageOptions(items);
     const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
     const currentPage = Math.min(page, pageCount);
     const visible = sorted.slice(
@@ -437,7 +471,7 @@ const AdminLibraryPage = () => {
                         setCategoryFilters(values);
                         setPage(1);
                     }}
-                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    options={categoryOptions.map((c) => ({ value: c, label: c }))}
                 />
                 <PanelFilterCheckboxGroup
                     label={t("admin.library.status")}
@@ -776,25 +810,25 @@ const AdminLibraryPage = () => {
                                 />
                             </Field>
                             <Field label={t("admin.field.category")}>
-                                <input
+                                <select
                                     className={inputClass}
-                                    list='library-category-options'
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
                                             category: e.target.value,
                                         })
                                     }
-                                    placeholder={t(
-                                        "admin.library.category_placeholder",
-                                    )}
                                     value={form.category}
-                                />
-                                <datalist id='library-category-options'>
-                                    {CATEGORIES.map((cat) => (
-                                        <option key={cat} value={cat} />
+                                >
+                                    <option value=''>
+                                        — {t("admin.form.select_category")} —
+                                    </option>
+                                    {categoryOptions.map((cat) => (
+                                        <option key={cat} value={cat}>
+                                            {cat}
+                                        </option>
                                     ))}
-                                </datalist>
+                                </select>
                             </Field>
                             <Field label={t("admin.library.level")}>
                                 <select
@@ -807,7 +841,7 @@ const AdminLibraryPage = () => {
                                     }
                                     value={form.level}
                                 >
-                                    {LEVELS.map((lvl) => (
+                                    {levelOptions.map((lvl) => (
                                         <option key={lvl} value={lvl}>
                                             {lvl}
                                         </option>
@@ -827,7 +861,7 @@ const AdminLibraryPage = () => {
                                     }
                                     value={form.language}
                                 >
-                                    {LANGUAGES.map((langOpt) => (
+                                    {languageOptions.map((langOpt) => (
                                         <option key={langOpt} value={langOpt}>
                                             {langOpt}
                                         </option>

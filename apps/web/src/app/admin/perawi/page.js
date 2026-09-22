@@ -23,6 +23,10 @@ const TABAQAT = [
     { value: "tabaqah_5", label: "Tabaqah 5" },
     { value: "tabaqah_6", label: "Tabaqah 6" },
     { value: "tabaqah_7", label: "Tabaqah 7" },
+    { value: "tabaqah_8", label: "Tabaqah 8" },
+    { value: "tabaqah_9", label: "Tabaqah 9" },
+    { value: "tabaqah_10", label: "Tabaqah 10" },
+    { value: "nabi", label: "Nabi" },
 ];
 
 export default function AdminPerawiPage() {

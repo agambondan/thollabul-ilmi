@@ -160,4 +160,46 @@ describe("Admin Kajian page — filter and sort", () => {
             "Adab Menuntut Ilmu",
         ]);
     });
+
+    test("editing a study with custom topic and legacy category preserves both in edit form", async () => {
+        adminKajianApi.list.mockReset();
+        adminKajianApi.list.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                items: [
+                    {
+                        id: 99,
+                        title: "Kajian Khusus",
+                        speaker: "Ustadz D",
+                        topic: "Kajian Tematik Ramadhan",
+                        category: "tazkiyatun_nufus",
+                        type: "video",
+                        url: "https://example.com",
+                    },
+                ],
+            }),
+        });
+
+        render(<AdminStudiesPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        // Click edit
+        const editButtons = screen.getAllByRole("button", {
+            name: /common\.edit/,
+        });
+        fireEvent.click(editButtons[0]);
+
+        const topicSelect = document.getElementById("page-topic");
+        expect(topicSelect).toHaveValue("Kajian Tematik Ramadhan");
+        expect(
+            within(topicSelect).getByRole("option", {
+                name: "Kajian Tematik Ramadhan",
+            }),
+        ).toBeInTheDocument();
+
+        const categorySelect = document.getElementById("page-category");
+        expect(categorySelect).toHaveValue("tazkiyatun_nufus");
+    });
 });

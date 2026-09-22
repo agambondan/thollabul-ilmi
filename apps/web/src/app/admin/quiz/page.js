@@ -19,13 +19,27 @@ import ModalShell from "@/components/ModalShell";
 
 const CATEGORIES = [
     "aqidah",
-    "fiqh",
-    "sejarah",
     "akhlak",
-    "quran",
+    "asmaul_husna",
+    "fiqh",
+    "hadith",
     "hadits",
+    "hafalan",
+    "quran",
+    "sejarah",
+    "sirah",
+    "tajwid",
     "umum",
 ];
+
+function getCategoryOptions(items) {
+    const fromData = [...new Set(
+        items.flatMap((i) => [i.category, i.type]).filter(Boolean)
+    )];
+    return [...new Set([...CATEGORIES, ...fromData])].sort((a, b) =>
+        a.localeCompare(b, "id"),
+    );
+}
 
 const EMPTY_FORM = {
     question: "",
@@ -35,6 +49,7 @@ const EMPTY_FORM = {
     option_d: "",
     answer: "0",
     explanation: "",
+    source: "",
     category: "umum",
     difficulty: "medium",
 };
@@ -97,6 +112,7 @@ const AdminQuizPage = () => {
             option_d: opts[3] ?? item.option_d ?? "",
             answer: String(item.answer ?? "0"),
             explanation: item.explanation ?? "",
+            source: item.source ?? "",
             category: item.category ?? item.type ?? "umum",
             difficulty: item.difficulty ?? "medium",
         });
@@ -121,6 +137,7 @@ const AdminQuizPage = () => {
                 ],
                 answer: Number(form.answer),
                 explanation: form.explanation,
+                source: form.source,
                 category: form.category,
                 type: form.category,
                 difficulty: form.difficulty || "medium",
@@ -209,6 +226,8 @@ const AdminQuizPage = () => {
         return `${OPTION_LABELS[idx]}: ${opts[idx] ?? ""}`;
     };
 
+    const categoryOptions = getCategoryOptions(items);
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -247,7 +266,7 @@ const AdminQuizPage = () => {
                         setCategoryFilters(values);
                         setPage(1);
                     }}
-                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    options={categoryOptions.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -515,13 +534,34 @@ const AdminQuizPage = () => {
                                     }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 >
-                                    {CATEGORIES.map((c) => (
+                                    {categoryOptions.map((c) => (
                                         <option key={c} value={c}>
                                             {c}
                                         </option>
                                     ))}
                                 </select>
                             </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-source'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.field.source") ?? "Sumber / Rujukan"}
+                            </label>
+                            <input
+                                id='page-source'
+                                type='text'
+                                value={form.source}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        source: e.target.value,
+                                    })
+                                }
+                                placeholder='mis. Tadribur Rawi; HR. Bukhari No. 119'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
                         </div>
                         <div>
                             <label

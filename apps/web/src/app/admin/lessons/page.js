@@ -10,9 +10,9 @@ import {
     Tr,
 } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
-import { adminLibraryApi, authFetch, parseApiError } from "@/lib/api";
+import { adminLibraryApi, adminLessonsApi, authFetch, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { BsPlus, BsTrash, BsPencil, BsX } from "react-icons/bs";
+import { BsPlus, BsTrash, BsPencil, BsX, BsFileMusic, BsPlayCircle, BsXCircle } from "react-icons/bs";
 import toast from "react-hot-toast";
 import ModalShell from "@/components/ModalShell";
 import MarkdownEditor from "@/components/MarkdownEditor";
@@ -156,6 +156,48 @@ export default function AdminLessonsPage() {
             steps[idx] = { ...steps[idx], [field]: val };
             return { ...prev, steps };
         });
+    };
+
+    const handleUploadAudio = async (stepIdx, file) => {
+        if (!editing?.id) {
+            toast.error("Simpan modul terlebih dahulu sebelum unggah audio");
+            return;
+        }
+        const stepOrder = form.steps[stepIdx]?.step_order || stepIdx + 1;
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : "";
+            const res = await fetch(`${API_URL}/api/v1/lessons/${editing.id}/steps/${stepOrder}/audio`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal unggah audio"));
+            const data = await res.json();
+            const audioUrl = data?.data?.audio_url || data?.audio_url;
+            updateStep(stepIdx, "audio_url", audioUrl);
+            toast.success("Audio berhasil diunggah");
+        } catch (err) {
+            toast.error(err.message || "Gagal unggah audio");
+        }
+    };
+
+    const handleDeleteAudio = async (stepIdx) => {
+        if (!editing?.id) return;
+        const stepOrder = form.steps[stepIdx]?.step_order || stepIdx + 1;
+        try {
+            const res = await authFetch(`/api/v1/lessons/${editing.id}/steps/${stepOrder}/audio`, {
+                method: "DELETE",
+            });
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal hapus audio"));
+            updateStep(stepIdx, "audio_url", "");
+            toast.success("Audio berhasil dihapus");
+        } catch (err) {
+            toast.error(err.message || "Gagal hapus audio");
+        }
     };
 
     const sorted = applySort(modules, sort, {
@@ -537,6 +579,42 @@ export default function AdminLessonsPage() {
                                                 )}
                                                 minRows={4}
                                             />
+                                        </div>
+
+                                        <div className='pt-2 border-t border-gray-200 dark:border-slate-700'>
+                                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5'>
+                                                Audio Langkah
+                                            </label>
+                                            {s.audio_url ? (
+                                                <div className='flex items-center gap-3'>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() => window.open(s.audio_url, "_blank")}
+                                                        className='inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 rounded-lg border border-emerald-200 dark:border-emerald-800 transition-colors'
+                                                    >
+                                                        <BsPlayCircle className='text-base' />{" "}
+                                                        Buka Audio
+                                                    </button>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() => handleDeleteAudio(idx)}
+                                                        className='inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg border border-rose-200 dark:border-rose-900/60 transition-colors'
+                                                    >
+                                                        <BsXCircle className='text-xs' />{" "}
+                                                        Hapus
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <input
+                                                    type='file'
+                                                    accept='audio/mpeg,audio/wav,audio/ogg,audio/m4a,audio/aac'
+                                                    onChange={(e) =>
+                                                        e.target.files[0] &&
+                                                        handleUploadAudio(idx, e.target.files[0])
+                                                    }
+                                                    className='w-full px-3.5 py-2 text-sm border border-gray-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 dark:border-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 ))}

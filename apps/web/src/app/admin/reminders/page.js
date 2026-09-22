@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const TYPES = [
     { value: "ulama", label: "Nasihat Ulama" },
@@ -42,6 +44,7 @@ const asItems = (payload) =>
 
 const AdminRemindersPage = () => {
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -408,9 +411,11 @@ const AdminRemindersPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
+                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
                 >
-                    <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
+                    <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700 shrink-0'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId ? "Edit Reminder" : "Tambah Reminder"}
                         </h2>
@@ -422,7 +427,7 @@ const AdminRemindersPage = () => {
                         </button>
                     </div>
 
-                    <div className='space-y-4 p-5'>
+                    <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                         <div className='grid gap-4 md:grid-cols-2'>
                             <Field label='Judul'>
                                 <input
@@ -460,19 +465,13 @@ const AdminRemindersPage = () => {
                             </Field>
                         </div>
 
-                        <Field label='Isi pengingat'>
-                            <textarea
-                                value={form.text}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        text: e.target.value,
-                                    })
-                                }
-                                rows={5}
-                                className={INPUT_CLASS}
-                            />
-                        </Field>
+                        <MarkdownEditor
+                            value={form.text}
+                            onChange={(text) => setForm({ ...form, text })}
+                            label='Isi pengingat'
+                            placeholder='Tulis isi pengingat...'
+                            minRows={5}
+                        />
 
                         <div className='grid gap-4 md:grid-cols-2'>
                             <Field label='Nama ulama / author'>
@@ -553,7 +552,7 @@ const AdminRemindersPage = () => {
                         </div>
                     </div>
 
-                    <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
+                    <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700 shrink-0'>
                         <button
                             onClick={() => setShowModal(false)}
                             className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'

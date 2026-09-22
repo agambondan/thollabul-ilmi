@@ -137,4 +137,39 @@ describe("GenericAdminCRUD — filter and sort", () => {
             "Perawi Amr",
         ]);
     });
+
+    test("editing a legacy select value preserves it as the selected option", async () => {
+        api.list.mockReset();
+        api.list.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                items: [
+                    {
+                        id: 4,
+                        name: "Perawi Legacy",
+                        tabaqah: "tabaqah_8",
+                        province: "Madinah",
+                    },
+                ],
+            }),
+        });
+
+        render(<GenericAdminCRUD title='Perawi' api={api} fields={fields} />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getAllByRole("button", { name: /Edit/ })[0]);
+
+        // Find the select inside the modal (the one with "— pilih —" option)
+        const selects = screen.getAllByRole("combobox");
+        const editSelect = selects.find((s) =>
+            s.querySelector('option[value=""]')?.textContent?.includes("pilih"),
+        );
+        expect(editSelect).toBeInTheDocument();
+        expect(editSelect).toHaveValue("tabaqah_8");
+        expect(
+            within(editSelect).getByRole("option", { name: "tabaqah_8" }),
+        ).toBeInTheDocument();
+    });
 });

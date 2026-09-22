@@ -24,6 +24,7 @@ import {
 } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 // Quick-pick values for the free-text `topic` field (channel focus tags) —
 // not the same as the real `category` enum below.
@@ -130,6 +131,7 @@ const EMPTY_FORM = {
 
 const AdminStudiesPage = () => {
     const { t, lang } = useLocale();
+    const { isWide } = useLayoutMode();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -619,9 +621,11 @@ const AdminStudiesPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
                 >
-                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? t("admin.kajian.edit_study")
@@ -634,7 +638,7 @@ const AdminStudiesPage = () => {
                             <BsX className='text-xl' />
                         </button>
                     </div>
-                    <div className='p-5 space-y-4'>
+                    <div className='p-6 space-y-6 overflow-y-auto flex-1'>
                         <div>
                             <label
                                 htmlFor='page-title'
@@ -744,6 +748,12 @@ const AdminStudiesPage = () => {
                                     }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 >
+                                    {form.category &&
+                                    !CATEGORIES.includes(form.category) ? (
+                                        <option value={form.category}>
+                                            {form.category}
+                                        </option>
+                                    ) : null}
                                     {CATEGORIES.map((c) => (
                                         <option key={c} value={c}>
                                             {t(`admin.kajian.category_${c}`)}
@@ -770,6 +780,12 @@ const AdminStudiesPage = () => {
                                 }
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             >
+                                {form.topic &&
+                                !TOPIC_QUICK_OPTIONS.includes(form.topic) ? (
+                                    <option value={form.topic}>
+                                        {form.topic}
+                                    </option>
+                                ) : null}
                                 {TOPIC_QUICK_OPTIONS.map((c) => (
                                     <option key={c} value={c}>
                                         {c}
@@ -831,7 +847,7 @@ const AdminStudiesPage = () => {
                             minRows={4}
                         />
                     </div>
-                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700 shrink-0'>
                         <button
                             onClick={() => setShowModal(false)}
                             className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'

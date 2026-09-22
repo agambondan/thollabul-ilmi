@@ -13,6 +13,8 @@ import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { BsPencil, BsPlus, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const slugify = (str) =>
     str
@@ -24,19 +26,19 @@ const slugify = (str) =>
 
 const AdminSirahPage = () => {
     const { t, lang } = useLocale();
+    const { isWide } = useLayoutMode();
     const [categories, setCategories] = useState([]);
     const [contents, setContents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [actionError, setActionError] = useState("");
 
-    const [newCatTitle, setNewCatTitle] = useState("");
-    const [newCatOrder, setNewCatOrder] = useState("");
+    const [catTitle, setCatTitle] = useState("");
+    const [catOrder, setCatOrder] = useState("");
     const [catLoading, setCatLoading] = useState(false);
-
     const [editingCat, setEditingCat] = useState(null);
-    const [editCatTitle, setEditCatTitle] = useState("");
-    const [editCatOrder, setEditCatOrder] = useState("");
+    const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [categoryFilters, setCategoryFilters] = useState([]);
@@ -62,17 +64,24 @@ const AdminSirahPage = () => {
         load();
     }, [load]);
 
+    const openCreateCategory = () => {
+        setEditingCat(null);
+        setCatTitle("");
+        setCatOrder("");
+        setCategoryModalOpen(true);
+    };
+
     const handleCreateCategory = async (e) => {
         e.preventDefault();
-        if (!newCatTitle.trim()) return;
+        if (!catTitle.trim()) return;
         setCatLoading(true);
         setActionError("");
         try {
-            const title = newCatTitle.trim();
+            const title = catTitle.trim();
             const res = await adminSirohApi.createCategory({
                 title,
                 slug: slugify(title),
-                order: newCatOrder ? Number(newCatOrder) : 0,
+                order: catOrder ? Number(catOrder) : 0,
             });
             if (!res.ok)
                 throw new Error(
@@ -81,13 +90,49 @@ const AdminSirahPage = () => {
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
-                setNewCatTitle("");
-                setNewCatOrder("");
+                setCatTitle("");
+                setCatOrder("");
+                setCategoryModalOpen(false);
             }
         } catch (err) {
             setActionError(err.message || t("admin.error.save"));
         } finally {
             setCatLoading(false);
+        }
+    };
+
+    const openEditCategory = (cat) => {
+        setEditingCat(cat.id);
+        setCatTitle(cat.title);
+        setCatOrder(String(cat.order ?? 0));
+        setCategoryModalOpen(true);
+    };
+
+    const handleUpdateCategory = async (e) => {
+        e.preventDefault();
+        if (!editingCat || !catTitle.trim()) return;
+        setActionError("");
+        try {
+            const title = catTitle.trim();
+            const res = await adminSirohApi.updateCategory(editingCat, {
+                title,
+                slug: slugify(title),
+                order: Number(catOrder) || 0,
+            });
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
+            const data = await res.json();
+            if (data?.id) {
+                setCategories((prev) =>
+                    prev.map((c) => (c.id === editingCat ? data : c)),
+                );
+                setEditingCat(null);
+                setCategoryModalOpen(false);
+            }
+        } catch (err) {
+            setActionError(err.message || t("admin.error.save"));
         }
     };
 
@@ -108,36 +153,6 @@ const AdminSirahPage = () => {
         }
     };
 
-    const startEditCategory = (cat) => {
-        setEditingCat(cat.id);
-        setEditCatTitle(cat.title);
-        setEditCatOrder(String(cat.order ?? 0));
-    };
-
-    const handleUpdateCategory = async (id) => {
-        setActionError("");
-        try {
-            const title = editCatTitle.trim();
-            const res = await adminSirohApi.updateCategory(id, {
-                title,
-                slug: slugify(title),
-                order: Number(editCatOrder) || 0,
-            });
-            if (!res.ok)
-                throw new Error(
-                    await parseApiError(res, t("admin.error.save")),
-                );
-            const data = await res.json();
-            if (data?.id) {
-                setCategories((prev) =>
-                    prev.map((c) => (c.id === id ? data : c)),
-                );
-            }
-            setEditingCat(null);
-        } catch (err) {
-            setActionError(err.message || t("admin.error.save"));
-        }
-    };
 
     const handleDeleteContent = async (id) => {
         if (!confirm(t("admin.sirah.confirm_delete_content"))) return;
@@ -218,35 +233,14 @@ const AdminSirahPage = () => {
                         {t("admin.field.category")}
                     </h2>
 
-                    <form
-                        onSubmit={handleCreateCategory}
-                        className='flex gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-3'
+                    <button
+                        type='button'
+                        onClick={openCreateCategory}
+                        className='flex items-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium transition-colors mb-4'
                     >
-                        <input
-                            value={newCatTitle}
-                            onChange={(e) => setNewCatTitle(e.target.value)}
-                            placeholder={t(
-                                "admin.sirah.new_category_placeholder",
-                            )}
-                            className='flex-1 px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                        />
-                        <input
-                            value={newCatOrder}
-                            onChange={(e) => setNewCatOrder(e.target.value)}
-                            placeholder={t("admin.field.order")}
-                            type='number'
-                            className='w-20 px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                        />
-                        <button
-                            type='submit'
-                            disabled={catLoading}
-                            aria-label={`${t("admin.crud.add")} ${t("admin.field.category")}`}
-                            title={`${t("admin.crud.add")} ${t("admin.field.category")}`}
-                            className='px-3 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm transition-colors'
-                        >
-                            <BsPlus className='text-lg' />
-                        </button>
-                    </form>
+                        <BsPlus className='text-lg' />
+                        {t("admin.sirah.add_category")}
+                    </button>
 
                     <div className='space-y-2'>
                         {categories.length === 0 && (
@@ -261,50 +255,7 @@ const AdminSirahPage = () => {
                                     key={cat.id}
                                     className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 px-4 py-3'
                                 >
-                                    {editingCat === cat.id ? (
-                                        <div className='flex gap-2'>
-                                            <input
-                                                value={editCatTitle}
-                                                onChange={(e) =>
-                                                    setEditCatTitle(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='flex-1 px-2 py-1 text-sm rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none'
-                                            />
-                                            <input
-                                                value={editCatOrder}
-                                                onChange={(e) =>
-                                                    setEditCatOrder(
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                type='number'
-                                                className='w-16 px-2 py-1 text-sm rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none'
-                                            />
-                                            <button
-                                                onClick={() =>
-                                                    handleUpdateCategory(cat.id)
-                                                }
-                                                aria-label={`${t("common.save")} ${title}`}
-                                                title={`${t("common.save")} ${title}`}
-                                                className='px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs'
-                                            >
-                                                {t("common.save")}
-                                            </button>
-                                            <button
-                                                onClick={() =>
-                                                    setEditingCat(null)
-                                                }
-                                                aria-label={t("common.cancel")}
-                                                title={t("common.cancel")}
-                                                className='px-2 py-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300'
-                                            >
-                                                <BsX />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className='flex items-center justify-between'>
+                                    <div className='flex items-center justify-between'>
                                             <div>
                                                 <p className='text-sm font-medium text-gray-900 dark:text-white'>
                                                     {title}
@@ -318,7 +269,7 @@ const AdminSirahPage = () => {
                                             <div className='flex gap-1'>
                                                 <button
                                                     onClick={() =>
-                                                        startEditCategory(cat)
+                                                        openEditCategory(cat)
                                                     }
                                                     aria-label={`${t("common.edit")} ${title}`}
                                                     title={`${t("common.edit")} ${title}`}
@@ -340,7 +291,6 @@ const AdminSirahPage = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                    )}
                                 </div>
                             );
                         })}
@@ -494,6 +444,86 @@ const AdminSirahPage = () => {
                     </div>
                 </div>
             </div>
+
+            {categoryModalOpen && (
+                <ModalShell
+                    isOpen={categoryModalOpen}
+                    onClose={() => setCategoryModalOpen(false)}
+                    panelClassName={`flex flex-col max-h-[90vh] overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
+                    label={editingCat ? t("common.edit") : t("admin.crud.add")}
+                >
+                    <form
+                        onSubmit={editingCat ? handleUpdateCategory : handleCreateCategory}
+                        className='flex flex-col max-h-[90vh] overflow-hidden'
+                    >
+                        <div className='p-6 border-b border-gray-100 dark:border-slate-700 shrink-0'>
+                            <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                                {editingCat
+                                    ? t("admin.crud.edit")
+                                    : t("admin.crud.add")}
+                                {" "}
+                                {t("admin.field.category")}
+                            </h2>
+                        </div>
+                        <div className='p-6 space-y-6 overflow-y-auto flex-1'>
+                            <div>
+                                <label
+                                    htmlFor='cat-title'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.field.title")} *
+                                </label>
+                                <input
+                                    id='cat-title'
+                                    value={catTitle}
+                                    onChange={(e) => setCatTitle(e.target.value)}
+                                    placeholder={t(
+                                        "admin.sirah.new_category_placeholder",
+                                    )}
+                                    className='w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    required
+                                    autoFocus
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='cat-order'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.field.order")}
+                                </label>
+                                <input
+                                    id='cat-order'
+                                    value={catOrder}
+                                    onChange={(e) => setCatOrder(e.target.value)}
+                                    type='number'
+                                    className='w-24 px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                />
+                            </div>
+                        </div>
+                        <div className='flex gap-3 p-6 border-t border-gray-100 dark:border-slate-700 shrink-0 justify-end'>
+                            <button
+                                type='button'
+                                onClick={() => setCategoryModalOpen(false)}
+                                className='px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                            >
+                                {t("common.cancel")}
+                            </button>
+                            <button
+                                type='submit'
+                                disabled={catLoading}
+                                className='px-4 py-2 text-sm font-medium text-white bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 rounded-lg transition-colors'
+                            >
+                                {catLoading
+                                    ? t("common.saving")
+                                    : t("common.save")}
+                            </button>
+                        </div>
+                    </form>
+                </ModalShell>
+            )}
         </div>
     );
 };

@@ -165,4 +165,45 @@ describe("Admin Library page — filter and sort", () => {
             "Al Wajizal-wajiz",
         ]);
     });
+
+    test("editing a book with legacy category preserves the category in the select", async () => {
+        adminLibraryApi.list.mockReset();
+        adminLibraryApi.list.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                items: [
+                    {
+                        id: 99,
+                        title: "Buku Legacy",
+                        slug: "buku-legacy",
+                        author: "Ulama Kuno",
+                        category: "Kisah Para Nabi",
+                        level: "Lanjut",
+                        language: "Arab/Indonesia",
+                        format: "pdf",
+                        status: "published",
+                        license_status: "verified",
+                    },
+                ],
+            }),
+        });
+
+        render(<AdminLibraryPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        const editButtons = screen.getAllByRole("button", {
+            name: /common\.edit/,
+        });
+        fireEvent.click(editButtons[0]);
+
+        // Find the category select and verify the selected value
+        const selects = screen.getAllByRole("combobox");
+        const categorySelect = selects.find(
+            (s) => s.value === "Kisah Para Nabi",
+        );
+        expect(categorySelect).toBeInTheDocument();
+        expect(categorySelect.value).toBe("Kisah Para Nabi");
+    });
 });

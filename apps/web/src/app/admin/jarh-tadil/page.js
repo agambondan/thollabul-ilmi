@@ -10,6 +10,8 @@ const TINGKAT_OPTIONS = [
     { value: 3, label: "3 - Cukup" },
     { value: 4, label: "4 - Lemah" },
     { value: 5, label: "5 - Sangat Lemah" },
+    { value: 6, label: "6 - Sangat Lemah / Ditinggalkan" },
+    { value: 7, label: "7 - Palsu / Kadzdzab" },
 ];
 
 export default function AdminJarhTadilPage() {

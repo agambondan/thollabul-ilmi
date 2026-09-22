@@ -12,6 +12,7 @@ const KATEGORI = [
     "filsuf",
     "penyair",
     "panglima",
+    "pahlawan",
 ];
 const ERA = [
     "Makkah",
@@ -21,6 +22,10 @@ const ERA = [
     "Abbasiyah",
     "Utsmaniyah",
     "Modern",
+    "tabiin",
+    "tabiut tabiin",
+    "keemasan",
+    "keemasan abbasiyah",
 ];
 
 export default function AdminTokohTarikhPage() {

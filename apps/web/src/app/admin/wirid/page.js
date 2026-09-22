@@ -19,7 +19,21 @@ import ModalShell from "@/components/ModalShell";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 
-const CATEGORIES = ["pagi", "petang", "setelah_sholat", "tidur", "dzikir_umum"];
+const CATEGORIES = [
+    "pagi",
+    "petang",
+    "safar",
+    "setelah_sholat",
+    "tidur",
+    "dzikir_umum",
+];
+
+function getCategoryOptions(items) {
+    const fromData = [...new Set(items.map((i) => i.category).filter(Boolean))];
+    return [...new Set([...CATEGORIES, ...fromData])].sort((a, b) =>
+        a.localeCompare(b, "id"),
+    );
+}
 
 const EMPTY_FORM = {
     title: "",
@@ -156,6 +170,8 @@ const AdminWirdPage = () => {
         currentPage * pageSize,
     );
 
+    const categoryOptions = getCategoryOptions(items);
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -194,7 +210,7 @@ const AdminWirdPage = () => {
                         setCategoryFilters(values);
                         setPage(1);
                     }}
-                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    options={categoryOptions.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -461,7 +477,7 @@ const AdminWirdPage = () => {
                                     }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 >
-                                    {CATEGORIES.map((c) => (
+                                    {categoryOptions.map((c) => (
                                         <option key={c} value={c}>
                                             {c}
                                         </option>

@@ -47,6 +47,13 @@ const CATEGORIES = [
     "umum",
 ];
 
+function getCategoryOptions(items) {
+    const fromData = [...new Set(items.map((i) => i.category).filter(Boolean))];
+    return [...new Set([...CATEGORIES, ...fromData])].sort((a, b) =>
+        a.localeCompare(b, "id"),
+    );
+}
+
 const EMPTY_FORM = {
     title: "",
     arabic: "",
@@ -182,6 +189,8 @@ const AdminPrayersPage = () => {
         currentPage * pageSize,
     );
 
+    const categoryOptions = getCategoryOptions(items);
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -220,7 +229,7 @@ const AdminPrayersPage = () => {
                         setCategoryFilters(values);
                         setPage(1);
                     }}
-                    options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    options={categoryOptions.map((c) => ({ value: c, label: c }))}
                 />
             </div>
 
@@ -490,11 +499,11 @@ const AdminPrayersPage = () => {
                                 }
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             >
-                                {CATEGORIES.map((c) => (
-                                    <option key={c} value={c}>
-                                        {c}
-                                    </option>
-                                ))}
+                                    {categoryOptions.map((c) => (
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
+                                    ))}
                             </select>
                         </div>
                         <div>
