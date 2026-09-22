@@ -790,6 +790,7 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 		CorrectAnswer string `json:"correct_answer"`
 		Options       string `json:"options"`
 		Explanation   string `json:"explanation"`
+		Source        string `json:"source"`
 	}
 	var rows []row
 	if !readStaticJSON(db, "quiz.json", &rows) {
@@ -808,6 +809,7 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 				"correct_answer": r.CorrectAnswer,
 				"options":        r.Options,
 				"explanation":    r.Explanation,
+				"source":         r.Source,
 			})
 			continue
 		}
@@ -818,6 +820,7 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 			CorrectAnswer: r.CorrectAnswer,
 			Options:       r.Options,
 			Explanation:   r.Explanation,
+			Source:        r.Source,
 		}
 		if err := db.Create(&item).Error; err != nil {
 			log.Printf("[seeder] quiz insert '%s': %v", r.QuestionText, err)

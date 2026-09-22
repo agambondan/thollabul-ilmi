@@ -336,11 +336,12 @@ type quizRow struct {
 	CorrectAnswer string `json:"correct_answer"`
 	Options       string `json:"options"`
 	Explanation   string `json:"explanation"`
+	Source        string `json:"source,omitempty"`
 }
 
 func (d *dumper) dumpQuizQuestions() {
 	var rows []quizRow
-	d.db.Raw(`SELECT type, difficulty, question_text, correct_answer, options, explanation FROM quiz WHERE deleted_at IS NULL ORDER BY type, id`).Scan(&rows)
+	d.db.Raw(`SELECT type, difficulty, question_text, correct_answer, options, explanation, source FROM quiz WHERE deleted_at IS NULL ORDER BY type, id`).Scan(&rows)
 	d.save("quiz.json", rows)
 }
 

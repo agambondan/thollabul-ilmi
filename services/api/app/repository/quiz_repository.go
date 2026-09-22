@@ -83,6 +83,7 @@ func (r *quizRepository) Update(id int, q *model.Quiz) (*model.Quiz, error) {
 		"options":        q.Options,
 		"explanation":    q.Explanation,
 		"difficulty":     q.Difficulty,
+		"source":         q.Source,
 	}
 	if err := r.db.Model(&model.Quiz{}).Where("id = ?", id).Updates(updates).Error; err != nil {
 		return nil, err

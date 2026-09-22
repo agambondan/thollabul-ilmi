@@ -33,6 +33,7 @@ type quizQuestionRequest struct {
 	QuestionText  string   `json:"question_text"`
 	CorrectAnswer string   `json:"correct_answer"`
 	Type          string   `json:"type" validate:"required"`
+	Source        string   `json:"source"`
 }
 
 type quizQuestionResponse struct {
@@ -46,6 +47,7 @@ type quizQuestionResponse struct {
 	Category      string   `json:"category"`
 	Type          string   `json:"type"`
 	Difficulty    string   `json:"difficulty"`
+	Source        string   `json:"source"`
 }
 
 func NewQuizController(services *service.Services) QuizController {
@@ -206,6 +208,7 @@ func quizFromQuestionRequest(req *quizQuestionRequest) *model.Quiz {
 		Options:       string(optionsJSON),
 		Explanation:   req.Explanation,
 		Difficulty:    difficulty,
+		Source:        req.Source,
 	}
 }
 
@@ -230,6 +233,7 @@ func quizToQuestionResponse(item *model.Quiz) quizQuestionResponse {
 		Category:      string(item.Type),
 		Type:          string(item.Type),
 		Difficulty:    item.Difficulty,
+		Source:        item.Source,
 	}
 }
 
