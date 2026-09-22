@@ -599,6 +599,21 @@ export default function GenericAdminCRUD({
                                             className={inputClass}
                                         >
                                             <option value=''>— pilih —</option>
+                                            {value !== "" &&
+                                            value !== null &&
+                                            value !== undefined &&
+                                            !(f.options ?? []).some(
+                                                (opt) =>
+                                                    String(
+                                                        typeof opt === "string"
+                                                            ? opt
+                                                            : opt.value,
+                                                    ) === String(value),
+                                            ) ? (
+                                                <option value={value}>
+                                                    {String(value)}
+                                                </option>
+                                            ) : null}
                                             {(f.options ?? []).map((opt) => (
                                                 <option
                                                     key={

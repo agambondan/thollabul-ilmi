@@ -17,6 +17,7 @@ import {
 } from "react-icons/bs";
 
 const STORAGE_KEY = "tholabul_lesson_progress_v2";
+const PENDING_KEY = "tholabul_lesson_pending_v2";
 
 const getStorage = () => {
     if (typeof window === "undefined") return {};
@@ -30,6 +31,40 @@ const getStorage = () => {
 const setStorage = (data) => {
     if (typeof window === "undefined") return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+
+const getPending = () => {
+    if (typeof window === "undefined") return {};
+    try {
+        return JSON.parse(localStorage.getItem(PENDING_KEY) || "{}");
+    } catch {
+        return {};
+    }
+};
+
+const setPending = (data) => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(PENDING_KEY, JSON.stringify(data));
+};
+
+const enqueuePending = (moduleId, step, done) => {
+    const pending = getPending();
+    pending[`${moduleId}:${step}`] = { moduleId, step, done, ts: Date.now() };
+    setPending(pending);
+};
+
+const flushPending = async () => {
+    const pending = getPending();
+    const keys = Object.keys(pending);
+    if (!keys.length) return;
+    for (const key of keys) {
+        const item = pending[key];
+        try {
+            await lessonsApi.saveProgress(item.moduleId, item.step, item.done);
+            delete pending[key];
+        } catch {}
+    }
+    setPending(pending);
 };
 
 const stepNumber = (step, index) => step?.step_order || index + 1;
@@ -93,6 +128,8 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
     useEffect(() => {
         if (modules.length === 0 || typeof window === "undefined") return;
         if (!localStorage.getItem("auth_token")) return;
+        flushPending();
+        window.addEventListener("online", flushPending);
         lessonsApi
             .myProgress()
             .then((res) => (res.ok ? res.json() : Promise.reject(res)))
@@ -110,6 +147,7 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                 });
             })
             .catch(() => {});
+        return () => window.removeEventListener("online", flushPending);
     }, [modules]);
 
     const activeModule = modules.find((m) => m.slug === activeModuleId);
@@ -151,7 +189,9 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
             return;
         await lessonsApi
             .saveProgress(activeModule.id, number, done)
-            .catch(() => {});
+            .catch(() => {
+                enqueuePending(activeModule.id, number, done);
+            });
     };
 
     const goNext = async () => {

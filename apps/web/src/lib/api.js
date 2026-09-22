@@ -1150,6 +1150,13 @@ export const adminQuizApi = {
         authFetch(`/api/v1/quiz/questions/${id}`, { method: "DELETE" }),
 };
 
+export const adminLessonsApi = {
+    list: (page = 1, size = 20) =>
+        authFetch(`/api/v1/admin/lessons?page=${page}&size=${size}`),
+    get: (id) =>
+        authFetch(`/api/v1/admin/lessons/${id}`),
+};
+
 export const adminSejarahApi = {
     list: (page = 0, size = 100) =>
         authFetch(`/api/v1/history?page=${page}&size=${size}`),
