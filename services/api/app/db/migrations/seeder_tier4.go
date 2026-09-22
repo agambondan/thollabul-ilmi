@@ -347,6 +347,10 @@ func seedExtendedBlogPosts(
 
 	for _, e := range entries {
 		cat := lookupCategory(db, e.CategorySlug)
+		var coverImg *string
+		if e.CoverImage != "" {
+			coverImg = &e.CoverImage
+		}
 		posts = append(posts, model.BlogPost{
 			BaseUUID:    model.BaseUUID{ID: uuid.New()},
 			AuthorID:    authorID,
@@ -355,6 +359,7 @@ func seedExtendedBlogPosts(
 			Slug:        e.Slug,
 			Excerpt:     e.Excerpt,
 			Content:     e.Content,
+			CoverImage:  coverImg,
 			Status:      model.BlogStatusPublished,
 			PublishedAt: &now,
 		})

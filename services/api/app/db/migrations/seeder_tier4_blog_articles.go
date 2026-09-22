@@ -7,6 +7,7 @@ type blogSeedEntry struct {
 	Excerpt      string
 	Content      string
 	Tags         []string
+	CoverImage   string
 }
 
 func getExtendedBlogSeedEntries() []blogSeedEntry {
@@ -17,6 +18,7 @@ func getExtendedBlogSeedEntries() []blogSeedEntry {
 			Slug:         "panduan-lengkap-sholat-dhuha",
 			Excerpt:      "Penjelasan komprehensif mengenai sholat Dhuha: keutamaan sedekah 360 persendian, batas waktu awal hingga akhir, rakaat terbaik, serta doa yang diajarkan Nabi ﷺ.",
 			Tags:         []string{"sholat", "fiqh"},
+			CoverImage:   "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=800&auto=format&fit=crop",
 			Content: `## Pendahuluan: Ibadah Pembuka Hari yang Penuh Berkah
 
 Sholat Dhuha merupakan salah satu sholat sunnah *muakkadah* (sangat dianjurkan) yang senantiasa dijaga oleh Rasulullah ﷺ dan diwasiatkan secara khusus kepada para sahabat tercinta, seperti Abu Hurairah dan Abu Darda' radhiyallahu 'anhuma. Ibadah ini dilaksanakan pada waktu manusia mulai sibuk dengan urusan perniagaan, pekerjaan, dan aktivitas dunia, sehingga meluangkan waktu sejenak untuk bersujud kepada Allah di waktu Dhuha menjadi bukti ketundukan seorang hamba di tengah kelalaian dunia.
@@ -107,9 +109,10 @@ Semoga Allah memudahkan kita untuk merutinkan sholat Dhuha sebagai investasi akh
 			CategorySlug: "aqidah-tauhid",
 			Title:        "Makna Dua Kalimat Syahadat, Rukun, dan 7 Syarat Diterimanya",
 			Slug:         "makna-dua-kalimat-syahadat",
-			Excerpt:      "Ulasan mendalam hakikat kalimat tauhid Laa Ilaha Illallah dan syahadat risalah Muhammad Rasulullah: penafian, penetapan, 7 syarat sah, serta pembatal keislaman.",
-			Tags:         []string{"tauhid", "akhlak"},
-			Content: `## Hakikat Dua Kalimat Syahadat
+			Excerpt:      "Memahami konsekuensi syahadatain: penafian dan penetapan, rukun Laa Ilaha Illallah, serta 7 syarat mutlak agar syahadat bermanfaat di akhirat.",
+			Tags:         []string{"aqidah", "tauhid"},
+			CoverImage:   "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=800&auto=format&fit=crop",
+			Content: `## Syahadat: Kunci Surga dan Pondasi Utama Islam
 
 Dua kalimat syahadat (*Asyhadu an laa ilaha illallah wa asyhadu anna Muhammadan Rasulullah*) adalah rukun Islam yang paling fundamental. Seluruh ibadah badaniyah seperti sholat, puasa, zakat, dan haji tidak akan bernilai di hadapan Allah manakala pondasi tauhid ini rapuh atau tercampur dengan kesyirikan.
 
@@ -185,6 +188,7 @@ Menjaga kemurnian tauhid dan ittiba' (meneladani sunnah Rasul) adalah jaminan ke
 			Slug:         "adab-menuntut-ilmu-ulama-salaf",
 			Excerpt:      "Imam Malik menasihati: 'Pelajarilah adab sebelum mempelajari ilmu.' Simak kaidah emas penuntut ilmu syar'i agar ilmu menjadi berkah dan membuahkan amal shalih.",
 			Tags:         []string{"akhlak", "hafalan"},
+			CoverImage:   "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop",
 			Content: `## Urgensi Adab dalam Menuntut Ilmu Syar'i
 
 Islam memuliakan ilmu dan mengangkat derajat orang-orang yang berilmu. Namun para ulama salafus shalih senantiasa mendidik murid-murid mereka bahwa **adab adalah mahkota dari ilmu**. Menuntut ilmu tanpa menghias diri dengan akhlak yang luhur ibarat menuangkan air susu yang murni ke dalam wadah yang najis dan kotor.
@@ -243,6 +247,7 @@ Ilmu tidak bisa diraih dengan tubuh yang santai dan malas-malasan. Yahya bin Abi
 			Slug:         "keutamaan-surat-al-kahfi-hari-jumat",
 			Excerpt:      "Ulasan komprehensif amalan sunnah membaca Surat Al-Kahfi di hari Jumat: benteng dari fitnah Dajjal, cahaya antara dua Jumat, dan tadabbur 4 kisah agung.",
 			Tags:         []string{"quran", "tilawah"},
+			CoverImage:   "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop",
 			Content: `## Anjuran Membaca Al-Kahfi di Hari Jumat
 
 Hari Jumat merupakan hari yang paling mulia dalam sepekan (*Sayyidul Ayyam*). Allah Ta'ala mensyariatkan berbagai amalan istimewa di hari ini, mulai dari sholat Jumat, mandi sunnah, memperbanyak sholawat atas Nabi ﷺ, hingga membaca Surat Al-Kahfi secara utuh (110 ayat).
@@ -299,6 +304,7 @@ Membaca Surat Al-Kahfi setiap Jumat adalah sarana *charger* ruhiyah agar kita ti
 			Slug:         "syarah-hadits-arbain-1-niat",
 			Excerpt:      "Pembahasan mendalam hadits 'Innamal a'maalu bin niyyat': kedudukan hadits sebagai sepertiga Islam, 2 fungsi niat, dan cara mengubah rutinitas menjadi bernilai ibadah.",
 			Tags:         []string{"hadith", "akhlak"},
+			CoverImage:   "https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=800&auto=format&fit=crop",
 			Content: `## Matan Hadits Lengkap
 
 Dari Amirul Mukminin Abu Hafsh Umar bin Al-Khattab radhiyallahu 'anhu, ia berkata: Aku mendengar Rasulullah ﷺ bersabda:
@@ -356,6 +362,7 @@ Mari kita senantiasa memperbarui niat di awal, di tengah, dan di akhir setiap ak
 			Slug:         "mendidik-anak-mencintai-sholat",
 			Excerpt:      "Tuntunan mendidik anak mendirikan sholat: pembagian usia 7 dan 10 tahun, metode keteladanan tanpa bentakan, serta doa mustajab orang tua.",
 			Tags:         []string{"keluarga", "sholat"},
+			CoverImage:   "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?q=80&w=800&auto=format&fit=crop",
 			Content: `## Anak: Titipan Berharga dan Ladang Amal Jariyah
 
 Anak adalah karunia terindah sekaligus amanah terberat bagi setiap orang tua muslim. Kebaikan dan keshalihan anak akan menjadi amal jariyah yang terus mengalirkan pahala ke alam kubur orang tuanya. Dan kewajiban pertama yang wajib ditanamkan dalam dada seorang anak setelah tauhid adalah mendirikan sholat lima waktu.
@@ -412,6 +419,7 @@ Semoga Allah mengaruniakan kepada kita keturunan yang menjadi penyejuk pandangan
 			Slug:         "dahsyatnya-istighfar-pembuka-rezeki",
 			Excerpt:      "Mengapa istighfar menjadi kunci kelapangan rezeki dan ketenangan hati? Mengupas janji Allah dalam Surat Nuh, lafadz istighfar terbaik, dan waktu mustajab.",
 			Tags:         []string{"dzikir", "doa"},
+			CoverImage:   "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop",
 			Content: `## Senjata Terkuat Seorang Mukmin
 
 Dalam mengarungi samudra kehidupan duniawi, setiap manusia pasti tidak luput dari kekhilafan dosa, kegundahan jiwa, himpitan ekonomi, maupun kebuntuan masalah. Di tengah kesulitan tersebut, Islam memberikan satu kunci ajaib yang sangat ringan di lisan namun berbobot dahsyat di sisi Allah: **Al-Istighfar** (memohon ampunan kepada Allah Ta'ala).
@@ -470,6 +478,7 @@ Basahilah lisan kita setiap saat dengan istighfar: saat berkendara, menunggu ant
 			Slug:         "keutamaan-tata-cara-puasa-senin-kamis",
 			Excerpt:      "Meneladani kebiasaan puasa mingguan Nabi ﷺ: alasan penyetoran amal, rahasia kesehatan sel tubuh (autofagi), kelenturan niat, dan doa berbuka yang shahih.",
 			Tags:         []string{"puasa", "fiqh"},
+			CoverImage:   "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=800&auto=format&fit=crop",
 			Content: `## Tradisi Ibadah Mingguan Rasulullah ﷺ
 
 Di antara amalan sunnah yang sangat dijaga kelangsungannya oleh Rasulullah ﷺ di luar bulan suci Ramadan adalah berpuasa pada hari Senin dan Kamis. Beliau senantiasa menanti-nanti kedua hari tersebut dengan penuh kerinduan.
@@ -531,6 +540,7 @@ Jadikanlah puasa Senin Kamis sebagai benteng pertahanan ruhiyah dan kebugaran ja
 			Slug:         "panduan-menghitung-zakat-mal",
 			Excerpt:      "Panduan praktis perhitungan zakat mal tabungan, emas, dan investasi: patokan nisab 85 gram emas, haul 1 tahun, rumus 2,5%, serta siapa saja 8 asnaf penerima.",
 			Tags:         []string{"zakat", "fiqh"},
+			CoverImage:   "https://images.unsplash.com/photo-1605728323744-882707e1e893?q=80&w=800&auto=format&fit=crop",
 			Content: `## Zakat: Rukun Islam Pembersih Jiwa dan Harta
 
 Zakat adalah rukun Islam ketiga yang mengikat setiap muslim yang memiliki kelebihan harta. Zakat bukan sekadar kedermawanan sukarela (*filantropi*), melainkan kewajiban hukum syar'i atas hak fakir miskin yang dititipkan Allah pada kekayaan orang-orang yang mampu.
@@ -598,6 +608,7 @@ Tunaikanlah zakat dengan hati yang lapang, karena zakat tidak akan pernah mengur
 			Slug:         "pelajaran-berharga-peristiwa-hijrah",
 			Excerpt:      "Membongkar rahasia di balik peristiwa hijrah Rasulullah ﷺ ke Madinah: perpaduan ikhtiar matang dan tawakkal mutlak, 3 pilar Madinah, dan makna hijrah era modern.",
 			Tags:         []string{"sirah", "hadith"},
+			CoverImage:   "https://images.unsplash.com/photo-1501854140872-2aa6a02e3b9f?q=80&w=800&auto=format&fit=crop",
 			Content: `## Titik Balik Sejarah Peradaban Manusia
 
 Peristiwa hijrahnya Rasulullah ﷺ bersama sahabat setia Abu Bakar Ash-Shiddiq radhiyallahu 'anhu dari Makkah Al-Mukarramah menuju Yatsrib (Madinah Al-Munawwarah) pada tahun 622 Masehi bukanlah sekadar peristiwa pelarian dari intimidasi kaum Quraisy. Hijrah adalah momentum strategis ilahiah yang mengubah peta peradaban dunia, hingga Khalifah Umar bin Al-Khattab menetapkannya sebagai tonggak permulaan kalender Islam (Tahun Hijriah).
@@ -662,6 +673,7 @@ Hijrah di era sekarang adalah berani meninggalkan pekerjaan yang haram menuju re
 			Slug:         "panduan-lengkap-sujud-tilawah",
 			Excerpt:      "Penjelasan lengkap fiqh sujud tilawah: hukum jumhur ulama, daftar 15 ayat sajdah berdasarkan dalil shahih/hasan, tata cara di dalam dan luar sholat, serta bacaan doa yang diajarkan Nabi ﷺ.",
 			Tags:         []string{"fiqh", "sholat", "quran"},
+			CoverImage:   "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=800&auto=format&fit=crop",
 			Content: `## Pengertian dan Hukum Sujud Tilawah
 
 Sujud Tilawah (سجود التلاوة) adalah sujud satu kali yang disyariatkan ketika seseorang membaca atau mendengar ayat sajdah dari Al-Qur'an Al-Karim. Ibadah ini merupakan wujud ketundukan mutlak seorang hamba di hadapan keagungan firman Allah Subhanahu wa Ta'ala.

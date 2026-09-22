@@ -1,6 +1,6 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
+import Image from "next/image";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { blogApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
@@ -276,11 +276,15 @@ export default function BlogClient({
                         className='block bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all overflow-hidden'
                     >
                         {post.cover_image && (
-                            <img
-                                src={post.cover_image}
-                                alt={getLocalizedField(post, "title", lang)}
-                                className='w-full h-40 object-cover'
-                            />
+                            <div className='relative w-full h-40 md:h-48'>
+                                <Image
+                                    src={post.cover_image}
+                                    alt={getLocalizedField(post, "title", lang)}
+                                    fill
+                                    className='object-cover'
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                />
+                            </div>
                         )}
                         <div className='p-4'>
                             {getCategoryLabel(post.category, lang) && (
@@ -296,19 +300,25 @@ export default function BlogClient({
                                     {getPostExcerpt(post, lang)}
                                 </p>
                             )}
-                            <div className='flex items-center justify-between text-xs text-gray-400'>
+                            <div className='flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
                                 {getAuthorName(post.author) && (
-                                    <span>{getAuthorName(post.author)}</span>
+                                    <span className='flex items-center gap-1'>
+                                        <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'/></svg>
+                                        {getAuthorName(post.author)}
+                                    </span>
                                 )}
                                 {post.published_at && (
-                                    <span>
-                                        {new Date(
-                                            post.published_at,
-                                        ).toLocaleDateString("id-ID", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                        })}
+                                    <span className='flex items-center gap-1'>
+                                        <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/></svg>
+                                        {new Date(post.published_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
+                                    </span>
+                                )}
+                                {post.tags && post.tags.length > 0 && (
+                                    <span className='flex items-center gap-1'>
+                                        <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'/></svg>
+                                        {post.tags.slice(0, 3).map((tag, i) => (
+                                            <span key={i} className='px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-medium'>{getTagLabel(tag, lang)}</span>
+                                        ))}
                                     </span>
                                 )}
                             </div>
