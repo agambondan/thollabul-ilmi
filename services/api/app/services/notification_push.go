@@ -143,6 +143,10 @@ func notificationDeepLink(notificationType model.NotificationType) string {
 		return "thullaabulilmi://hadith"
 	case model.NotificationTypeDoa, model.NotificationTypeStreakRisk, model.NotificationTypeAdzan:
 		return "thullaabulilmi://ibadah"
+	case model.NotificationTypeDzikir:
+		return "thullaabulilmi://explore/dzikir"
+	case model.NotificationTypeMurojaah:
+		return "thullaabulilmi://explore/murojaah"
 	default:
 		return "thullaabulilmi://home"
 	}

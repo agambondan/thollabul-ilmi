@@ -635,6 +635,12 @@ func reminderMessage(notificationType model.NotificationType) reminderContent {
 	case model.NotificationTypeAdzan:
 		title = "Waktunya Sholat!"
 		description = "Sudah masuk waktu sholat. Segera tunaikan sholat tepat waktu."
+	case model.NotificationTypeDzikir:
+		title = "Pengingat Dzikir"
+		description = "Waktunya mengisi hati dengan dzikir. Luangkan sejenak untuk membaca dzikir harian."
+	case model.NotificationTypeMurojaah:
+		title = "Pengingat Murojaah"
+		description = "Waktunya menunaikan murojaah harian. Tetap konsisten dengan hafalan Al-Quran Anda."
 	}
 
 	body := fmt.Sprintf(`
