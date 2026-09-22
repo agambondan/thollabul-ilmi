@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
 import { adminSirohApi } from "@/lib/api";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useEffect, useState, use } from "react";
 import SirahForm from "../../_SirohForm";
@@ -15,6 +16,7 @@ const EditSirahPage = (props) => {
     const [item, setItem] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
+    const { isWide } = useLayoutMode();
 
     useEffect(() => {
         adminSirohApi
@@ -51,7 +53,7 @@ const EditSirahPage = (props) => {
     }
 
     return (
-        <div className='p-6 md:p-8 max-w-5xl mx-auto'>
+        <div className={`p-6 md:p-8 mx-auto ${isWide ? "" : "max-w-5xl"}`}>
             <div className='mb-6'>
                 <Link
                     href='/admin/siroh'

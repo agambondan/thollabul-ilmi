@@ -383,7 +383,7 @@ export default function AdminLessonsPage() {
                     onClose={() => setModalOpen(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm'
                     panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] shadow-2xl overflow-hidden ${
-                        isWide ? "max-w-4xl" : "max-w-2xl"
+                        isWide ? "" : "max-w-2xl"
                     }`}
                 >
                     <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-700 shrink-0'>

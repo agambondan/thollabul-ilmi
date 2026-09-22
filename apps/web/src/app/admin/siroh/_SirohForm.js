@@ -87,7 +87,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
     return (
         <form
             onSubmit={handleSubmit}
-            className={`w-full ${isWide ? "max-w-7xl" : "max-w-4xl"} bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 sm:p-8 shadow-sm space-y-6`}
+            className={`w-full ${isWide ? "" : "max-w-7xl"} bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 sm:p-8 shadow-sm space-y-6`}
         >
             {error && (
                 <div className='p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400'>

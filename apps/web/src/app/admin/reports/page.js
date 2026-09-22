@@ -2,6 +2,7 @@
 
 import { contentReportApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useMemo, useState } from "react";
 import {
     BsCheckCircle,
@@ -50,6 +51,7 @@ const formatDate = (iso) => {
 
 const AdminReportsPage = () => {
     const { t, lang } = useLocale();
+    const { isWide } = useLayoutMode();
     const [status, setStatus] = useState("");
     const [targetType, setTargetType] = useState("");
     const [search, setSearch] = useState("");
@@ -412,7 +414,7 @@ const AdminReportsPage = () => {
                     setCorrectionText("");
                 }}
                 label='Review Report'
-                panelClassName='bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 shadow-xl border border-gray-100 dark:border-slate-800'
+                panelClassName={`bg-white dark:bg-slate-900 rounded-2xl w-full ${isWide ? "" : "max-w-2xl"} max-h-[90vh] overflow-y-auto p-5 shadow-xl border border-gray-100 dark:border-slate-800`}
             >
                 {active && (
                     <div className='space-y-4'>

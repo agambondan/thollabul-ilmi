@@ -12,6 +12,7 @@ import {
 } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
 import { adminLibraryApi, uploadWithProgress, parseApiError } from "@/lib/api";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
@@ -133,6 +134,7 @@ const toPayload = (form) => ({
 
 const AdminLibraryPage = () => {
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -754,7 +756,7 @@ const AdminLibraryPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
+                    panelClassName={`max-h-[90vh] w-full ${isWide ? "" : "max-w-2xl"} overflow-y-auto rounded-2xl bg-white dark:bg-slate-800`}
                 >
                     <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>
@@ -1233,7 +1235,7 @@ const AdminLibraryPage = () => {
                 <ModalShell
                     onClose={() => setExtractModalBook(null)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName='max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
+                    panelClassName={`max-h-[90vh] w-full ${isWide ? "" : "max-w-3xl"} overflow-y-auto rounded-2xl bg-white dark:bg-slate-800`}
                 >
                     <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
                         <div>

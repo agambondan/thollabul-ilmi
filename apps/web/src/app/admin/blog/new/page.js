@@ -1,9 +1,9 @@
 "use client";
 
-import BlogForm from "../_BlogForm";
 import { useLocale } from "@/context/Locale";
-import Link from "next/link";
 import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import BlogForm from "../_BlogForm";
 
 const NewBlogPage = () => {
     const { t } = useLocale();
@@ -12,7 +12,7 @@ const NewBlogPage = () => {
     return (
         <div
             className={`p-8 mx-auto transition-all ${
-                isWide ? "max-w-7xl" : "max-w-4xl"
+                isWide ? "" : "max-w-4xl"
             }`}
         >
             <div className='mb-6'>

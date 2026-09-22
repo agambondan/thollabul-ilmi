@@ -437,7 +437,7 @@ const AdminAsbabunNuzulPage = () => {
                 <ModalShell
                     onClose={() => setShowModal(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full ${isWide ? "max-w-4xl" : "max-w-2xl"} max-h-[90vh] flex flex-col shadow-2xl overflow-hidden`}
+                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full ${isWide ? "" : "max-w-2xl"} max-h-[90vh] flex flex-col shadow-2xl overflow-hidden`}
                 >
                     <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                         <h2 className='font-bold text-gray-900 dark:text-white'>

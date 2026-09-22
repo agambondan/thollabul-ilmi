@@ -1,6 +1,7 @@
 "use client";
 
 import { whatsappApi } from "@/lib/api";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -12,6 +13,7 @@ import {
 } from "react-icons/bs";
 
 export default function AdminWhatsAppPage() {
+    const { isWide } = useLayoutMode();
     const [status, setStatus] = useState("disconnected");
     const [phone, setPhone] = useState(null);
     const [qr, setQr] = useState(null);
@@ -96,7 +98,7 @@ export default function AdminWhatsAppPage() {
     };
 
     return (
-        <div className='p-6 w-full max-w-2xl'>
+        <div className={`p-6 w-full ${isWide ? "" : "max-w-2xl"}`}>
             <div className='mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2'>
                     <BsWhatsapp className='text-emerald-600 dark:text-emerald-400' />

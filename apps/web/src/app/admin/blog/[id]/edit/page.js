@@ -5,10 +5,10 @@ export const dynamic = "force-dynamic";
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
 import { adminBlogApi } from "@/lib/api";
-import Link from "next/link";
-import { useEffect, useState, use } from "react";
-import BlogForm from "../../_BlogForm";
 import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { use, useEffect, useState } from "react";
+import BlogForm from "../../_BlogForm";
 
 const EditBlogPage = (props) => {
     const params = use(props.params);
@@ -38,7 +38,7 @@ const EditBlogPage = (props) => {
 
     if (error) {
         return (
-            <div className='p-8 mx-auto max-w-4xl'>
+            <div className={`p-8 mx-auto ${isWide ? "" : "max-w-4xl"}`}>
                 <Link
                     href='/admin/blog'
                     className='text-sm font-medium text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300'
@@ -55,7 +55,7 @@ const EditBlogPage = (props) => {
     return (
         <div
             className={`p-8 mx-auto transition-all ${
-                isWide ? "max-w-7xl" : "max-w-4xl"
+                isWide ? "" : "max-w-4xl"
             }`}
         >
             <div className='mb-6'>

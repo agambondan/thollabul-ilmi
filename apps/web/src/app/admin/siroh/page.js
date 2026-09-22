@@ -451,7 +451,7 @@ const AdminSirahPage = () => {
                     onClose={() => setCategoryModalOpen(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
-                        isWide ? "max-w-4xl" : "max-w-2xl"
+                        isWide ? "" : "max-w-2xl"
                     }`}
                     label={editingCat ? t("common.edit") : t("admin.crud.add")}
                 >

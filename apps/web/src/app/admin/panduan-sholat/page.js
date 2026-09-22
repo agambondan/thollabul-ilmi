@@ -381,7 +381,7 @@ export default function AdminPanduanSholatPage() {
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
                 panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] overflow-hidden ${
-                    isWide ? "max-w-4xl" : "max-w-2xl"
+                    isWide ? "" : "max-w-2xl"
                 }`}
             >
                 <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-700 shrink-0'>

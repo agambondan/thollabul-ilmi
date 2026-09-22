@@ -521,9 +521,7 @@ export default function GenericAdminCRUD({
                 <ModalShell
                     onClose={closeForm}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4'
-                    panelClassName={`bg-white dark:bg-slate-900 w-full rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden ${
-                        isWide ? "max-w-4xl" : "max-w-2xl"
-                    }`}
+                    panelClassName={`bg-white dark:bg-slate-900 w-full rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden ${isWide ? "" : "max-w-2xl"}`}
                 >
                     <div className='flex items-center justify-between p-6 border-b border-gray-100 dark:border-slate-800 shrink-0'>
                         <h2 className='text-lg font-bold text-gray-900 dark:text-gray-100'>
