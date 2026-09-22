@@ -1411,7 +1411,8 @@ export const staticQuizQuestions = [
       "Syafi'i dari Malik dari Az-Zuhri dari Anas bin Malik",
       "Yahya bin Ma'in dari Ahmad dari Asy-Syafi'i"
     ],
-    "explanation": "Imam Al-Bukhari menyatakan bahwa sanad paling shahih mutlak adalah jalur Malik dari Nafi' (maula Ibnu Umar) dari Abdullah bin Umar radhiyallahu 'anhuma (Tadribur Rawi oleh As-Suyuthi)."
+    "explanation": "Imam Al-Bukhari menyatakan bahwa sanad paling shahih mutlak adalah jalur Malik dari Nafi' (maula Ibnu Umar) dari Abdullah bin Umar radhiyallahu 'anhuma (Tadribur Rawi oleh As-Suyuthi).",
+    "source": "Tadribur Rawi (As-Suyuthi)"
   },
   {
     "id": 102,
@@ -1425,7 +1426,8 @@ export const staticQuizQuestions = [
       "Anas bin Malik radhiyallahu 'anhu",
       "Ali bin Abi Thalib radhiyallahu 'anhu"
     ],
-    "explanation": "Abu Hurairah adalah sahabat yang paling banyak menghafal dan meriwayatkan hadits karena beliau mendedikasikan hidupnya mendampingi Nabi ﷺ di Ahlu Suffah dan didoakan berkah hafalan oleh beliau (HR. Bukhari No. 119)."
+    "explanation": "Abu Hurairah adalah sahabat yang paling banyak menghafal dan meriwayatkan hadits karena beliau mendedikasikan hidupnya mendampingi Nabi ﷺ di Ahlu Suffah dan didoakan berkah hafalan oleh beliau (HR. Bukhari No. 119).",
+    "source": "HR. Bukhari No. 119; Siyar A'lam An-Nubala (Adz-Dzahabi), biografi Abu Hurairah"
   },
   {
     "id": 103,
@@ -1439,7 +1441,8 @@ export const staticQuizQuestions = [
       "Mu'dhal",
       "Munqathi'"
     ],
-    "explanation": "Hadits Mu'allaq adalah hadits yang digugurkan satu atau seluruh perawi dari awal sanadnya oleh mukharrij atau penyusun kitab (Nukhbatul Fikar oleh Ibnu Hajar Al-Asqalani)."
+    "explanation": "Hadits Mu'allaq adalah hadits yang digugurkan satu atau seluruh perawi dari awal sanadnya oleh mukharrij atau penyusun kitab (Nukhbatul Fikar oleh Ibnu Hajar Al-Asqalani).",
+    "source": "Nukhbatul Fikar (Ibnu Hajar Al-Asqalani), pembahasan hadits mu'allaq"
   },
   {
     "id": 104,
@@ -1453,7 +1456,8 @@ export const staticQuizQuestions = [
       "Mursal",
       "Maudhu'"
     ],
-    "explanation": "Hadits Mu'dhal adalah hadits yang gugur dari sanadnya dua orang perawi atau lebih secara berturut-turut (Muqaddimah Ibnu Shalah)."
+    "explanation": "Hadits Mu'dhal adalah hadits yang gugur dari sanadnya dua orang perawi atau lebih secara berturut-turut (Muqaddimah Ibnu Shalah).",
+    "source": "Muqaddimah Ibnu Shalah, pembahasan hadits mu'dhal"
   },
   {
     "id": 105,
@@ -1467,7 +1471,8 @@ export const staticQuizQuestions = [
       "Maqthu'",
       "Qudsi"
     ],
-    "explanation": "Hadits Marfu' disandarkan kepada Nabi ﷺ, Mauquf disandarkan kepada Sahabat, dan Maqthu' disandarkan kepada Tabi'in (Taisir Musthalah al-Hadits oleh Dr. Mahmud Thahan)."
+    "explanation": "Hadits Marfu' disandarkan kepada Nabi ﷺ, Mauquf disandarkan kepada Sahabat, dan Maqthu' disandarkan kepada Tabi'in (Taisir Musthalah al-Hadits oleh Dr. Mahmud Thahan).",
+    "source": "Taisir Musthalah al-Hadits (Dr. Mahmud Thahan), pembahasan hadits mauquf"
   },
   {
     "id": 106,
@@ -1481,7 +1486,8 @@ export const staticQuizQuestions = [
       "Munqathi'",
       "Maudhu'"
     ],
-    "explanation": "Maqthu' adalah perkataan atau perbuatan yang disandarkan kepada Tabi'in atau generasi setelahnya. Berbeda dengan Munqathi' yang merupakan sifat keterputusan sanad."
+    "explanation": "Maqthu' adalah perkataan atau perbuatan yang disandarkan kepada Tabi'in atau generasi setelahnya. Berbeda dengan Munqathi' yang merupakan sifat keterputusan sanad.",
+    "source": "Muqaddimah Ibnu Shalah; Nukhbatul Fikar (Ibnu Hajar Al-Asqalani), pembahasan hadits maqthu'"
   },
   {
     "id": 107,
@@ -1495,7 +1501,8 @@ export const staticQuizQuestions = [
       "Mudallas",
       "Musnad"
     ],
-    "explanation": "Hadits Mursal menurut istilah ahli hadits adalah hadits yang gugur dari sanadnya perawi setelah Tabi'in (yaitu Sahabat) (Muqaddimah Ibnu Shalah)."
+    "explanation": "Hadits Mursal menurut istilah ahli hadits adalah hadits yang gugur dari sanadnya perawi setelah Tabi'in (yaitu Sahabat) (Muqaddimah Ibnu Shalah).",
+    "source": "Muqaddimah Ibnu Shalah, pembahasan hadits mursal"
   },
   {
     "id": 108,
@@ -1509,7 +1516,8 @@ export const staticQuizQuestions = [
       "Komentar para ulama terhadap matan hadits",
       "Kitab induk pengumpul hadits"
     ],
-    "explanation": "Sanad secara bahasa berarti sandaran, sedangkan secara istilah adalah silsilah para perawi hadits yang menghubungkan mukharrij sampai kepada matan hadits."
+    "explanation": "Sanad secara bahasa berarti sandaran, sedangkan secara istilah adalah silsilah para perawi hadits yang menghubungkan mukharrij sampai kepada matan hadits.",
+    "source": "Tadribur Rawi (As-Suyuthi); Taisir Musthalah al-Hadits (Dr. Mahmud Thahan)"
   },
   {
     "id": 109,
@@ -1523,7 +1531,8 @@ export const staticQuizQuestions = [
       "Perawi yang dhaif hafalannya",
       "Perawi yang tertolak haditsnya"
     ],
-    "explanation": "Lafaz ta'dil yang diulang atau diperkuat seperti 'Tsiqah Tsabat' atau 'Tsiqah Tsiqah' termasuk martabat ta'dil tertinggi (Taqrib At-Tahdzib oleh Ibnu Hajar)."
+    "explanation": "Lafaz ta'dil yang diulang atau diperkuat seperti 'Tsiqah Tsabat' atau 'Tsiqah Tsiqah' termasuk martabat ta'dil tertinggi (Taqrib At-Tahdzib oleh Ibnu Hajar).",
+    "source": "Taqrib At-Tahdzib (Ibnu Hajar Al-Asqalani), muqaddimah"
   },
   {
     "id": 110,
@@ -1537,7 +1546,8 @@ export const staticQuizQuestions = [
       "Fathimah binti Rasulillah radhiyallahu 'anha",
       "Hafshah binti Umar radhiyallahu 'anha"
     ],
-    "explanation": "Ummul Mukminin Aisyah radhiyallahu 'anha meriwayatkan 2.210 hadits, menjadi rujukan utama fikih keluarga dan ibadah harian Nabi ﷺ."
+    "explanation": "Ummul Mukminin Aisyah radhiyallahu 'anha meriwayatkan 2.210 hadits, menjadi rujukan utama fikih keluarga dan ibadah harian Nabi ﷺ.",
+    "source": "Siyar A'lam An-Nubala (Adz-Dzahabi), biografi Aisyah"
   },
   {
     "id": 111,
@@ -1551,7 +1561,8 @@ export const staticQuizQuestions = [
       "Dhaif Jiddan",
       "Maudhu'"
     ],
-    "explanation": "Perawi 'Shaduq' adil dan jujur namun derajat dhabth (kekuatan hafalannya) berada di bawah Tsiqah, sehingga haditsnya berstatus Hasan Lidzatihi jika tidak ada penguat (Taqrib At-Tahdzib)."
+    "explanation": "Perawi 'Shaduq' adil dan jujur namun derajat dhabth (kekuatan hafalannya) berada di bawah Tsiqah, sehingga haditsnya berstatus Hasan Lidzatihi jika tidak ada penguat (Taqrib At-Tahdzib).",
+    "source": "Taqrib At-Tahdzib (Ibnu Hajar Al-Asqalani), muqaddimah"
   },
   {
     "id": 112,
@@ -1565,7 +1576,8 @@ export const staticQuizQuestions = [
       "Masyhur",
       "Mutawatir"
     ],
-    "explanation": "Hadits Ahad dibagi menjadi Masyhur (minimal 3 perawi di setiap thabaqah), Aziz (minimal 2 perawi), dan Gharib (hanya 1 perawi di salah satu thabaqah) (Nukhbatul Fikar)."
+    "explanation": "Hadits Ahad dibagi menjadi Masyhur (minimal 3 perawi di setiap thabaqah), Aziz (minimal 2 perawi), dan Gharib (hanya 1 perawi di salah satu thabaqah) (Nukhbatul Fikar).",
+    "source": "Nukhbatul Fikar (Ibnu Hajar Al-Asqalani), pembahasan hadits gharib"
   },
   {
     "id": 113,
@@ -1579,7 +1591,8 @@ export const staticQuizQuestions = [
       "Bilal bin Rabah radhiyallahu 'anhu",
       "Usamah bin Zaid radhiyallahu 'anhu"
     ],
-    "explanation": "Anas bin Malik melayani Rasulullah ﷺ selama 10 tahun di Madinah dan didoakan panjang umur serta banyak keturunan, meriwayatkan 2.286 hadits."
+    "explanation": "Anas bin Malik melayani Rasulullah ﷺ selama 10 tahun di Madinah dan didoakan panjang umur serta banyak keturunan, meriwayatkan 2.286 hadits.",
+    "source": "HR. Bukhari No. 1982; HR. Muslim No. 2480"
   },
   {
     "id": 114,
@@ -1593,7 +1606,8 @@ export const staticQuizQuestions = [
       "Al-Hasan Al-Bashri rahimahullah",
       "Nafi' Maula Ibnu Umar rahimahullah"
     ],
-    "explanation": "Sa'id bin Al-Musayyib (15-94 H) adalah pemuka 7 Fuqaha Madinah dan salah satu tokoh tabi'in paling terkemuka dalam meriwayatkan hadits Abu Hurairah."
+    "explanation": "Sa'id bin Al-Musayyib (15-94 H) adalah pemuka 7 Fuqaha Madinah dan salah satu tokoh tabi'in paling terkemuka dalam meriwayatkan hadits Abu Hurairah.",
+    "source": "Tahdzib At-Tahdzib (Ibnu Hajar Al-Asqalani), biografi Sa'id bin Al-Musayyib; Siyar A'lam An-Nubala (Adz-Dzahabi)"
   },
   {
     "id": 115,
@@ -1607,7 +1621,8 @@ export const staticQuizQuestions = [
       "Ulama Salaf, Khalaf, dan Kontemporer",
       "Kaum Muhajirin, Anshar, dan Tabi'in"
     ],
-    "explanation": "Nabi ﷺ bersabda: 'Sebaik-baik manusia adalah generasiku (Sahabat), kemudian orang-orang setelah mereka (Tabi'in), kemudian orang-orang setelah mereka (Tabi'ut Tabi'in).' (HR. Bukhari No. 2652, Muslim No. 2533)."
+    "explanation": "Nabi ﷺ bersabda: 'Sebaik-baik manusia adalah generasiku (Sahabat), kemudian orang-orang setelah mereka (Tabi'in), kemudian orang-orang setelah mereka (Tabi'ut Tabi'in).' (HR. Bukhari No. 2652, Muslim No. 2533).",
+    "source": "HR. Bukhari No. 2652; HR. Muslim No. 2533"
   },
   {
     "id": 116,
@@ -1621,7 +1636,8 @@ export const staticQuizQuestions = [
       "Adamul 'Illah (Tidak berpenyakit tersembunyi)",
       "Dhabthur Ruwat (Kekuatan hafalan perawi)"
     ],
-    "explanation": "Ittishalus Sanad berarti setiap perawi dari awal hingga akhir menerima hadits langsung dari gurunya tanpa ada yang terputus (Muqaddimah Ibnu Shalah)."
+    "explanation": "Ittishalus Sanad berarti setiap perawi dari awal hingga akhir menerima hadits langsung dari gurunya tanpa ada yang terputus (Muqaddimah Ibnu Shalah).",
+    "source": "Muqaddimah Ibnu Shalah, pembahasan ittishal al-sanad"
   },
   {
     "id": 117,
@@ -1635,7 +1651,8 @@ export const staticQuizQuestions = [
       "Al-Jarh wat Ta'dil karya Ibnu Abi Hatim",
       "Mizan Al-I'tidal karya Adz-Dzahabi"
     ],
-    "explanation": "Al-Hafizh Ibnu Hajar meringkas dan menyempurnakan penelitian rijalul hadits perawi Kutubus Sittah dalam kitab monumentalnya Tahdzib At-Tahdzib dan ringkasannya Taqrib At-Tahdzib."
+    "explanation": "Al-Hafizh Ibnu Hajar meringkas dan menyempurnakan penelitian rijalul hadits perawi Kutubus Sittah dalam kitab monumentalnya Tahdzib At-Tahdzib dan ringkasannya Taqrib At-Tahdzib.",
+    "source": "Tahdzib At-Tahdzib; Taqrib At-Tahdzib (Ibnu Hajar Al-Asqalani)"
   },
   {
     "id": 118,
@@ -1649,7 +1666,8 @@ export const staticQuizQuestions = [
       "Nafi' dan Salim bin Abdullah",
       "Qatadah dan Sa'id bin Abi Arubah"
     ],
-    "explanation": "Alqamah bin Qais An-Nakha'i adalah murid terkemuka Abdullah bin Mas'ud di Kufah dan menjadi salah satu rujukan utama transmisi hadits di Irak."
+    "explanation": "Alqamah bin Qais An-Nakha'i adalah murid terkemuka Abdullah bin Mas'ud di Kufah dan menjadi salah satu rujukan utama transmisi hadits di Irak.",
+    "source": "Tahdzib At-Tahdzib (Ibnu Hajar Al-Asqalani), biografi Alqamah bin Qais dan Al-Aswad bin Yazid; Siyar A'lam An-Nubala (Adz-Dzahabi)"
   },
   {
     "id": 119,
@@ -1663,7 +1681,8 @@ export const staticQuizQuestions = [
       "Hadits yang maknanya bertentangan dengan Al-Quran",
       "Hadits yang sanadnya berakhir pada Tabi'ut Tabi'in"
     ],
-    "explanation": "Tadlis menurut ahli hadits adalah tindakan perawi yang menyembunyikan aib atau keterputusan dalam sanad dan menampakkannya seolah-olah bersambung tanpa cacat (Tadribur Rawi)."
+    "explanation": "Tadlis menurut ahli hadits adalah tindakan perawi yang menyembunyikan aib atau keterputusan dalam sanad dan menampakkannya seolah-olah bersambung tanpa cacat (Tadribur Rawi).",
+    "source": "Tadribur Rawi (As-Suyuthi); Nukhbatul Fikar (Ibnu Hajar Al-Asqalani)"
   },
   {
     "id": 120,
@@ -1677,7 +1696,8 @@ export const staticQuizQuestions = [
       "Sayyidut Tabi'in (Pemuka Tabi'in)",
       "Shahibus Sirr (Pemegang Rahasia)"
     ],
-    "explanation": "Ibnu Abbas radhiyallahu 'anhuma didoakan oleh Nabi ﷺ: 'Allahumma faqqih-hu fid-diin wa 'allimhut-ta'wiil' sehingga beliau dijuluki Habrul Ummah dan Turjumanul Quran, meriwayatkan 1.660 hadits."
+    "explanation": "Ibnu Abbas radhiyallahu 'anhuma didoakan oleh Nabi ﷺ: 'Allahumma faqqih-hu fid-diin wa 'allimhut-ta'wiil' sehingga beliau dijuluki Habrul Ummah dan Turjumanul Quran, meriwayatkan 1.660 hadits.",
+    "source": "HR. Bukhari No. 75, 143; HR. Muslim No. 2477"
   }
 ];
 export default staticQuizQuestions;
