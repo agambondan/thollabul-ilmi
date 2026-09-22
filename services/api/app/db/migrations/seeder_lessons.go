@@ -20,6 +20,7 @@ func SeedLessons(db *gorm.DB) {
 		{Slug: "aqidah-salaf", Title: "Aqidah Salaf & Rukun Iman", Description: "Pemahaman mendalam enam rukun iman mengikuti metodologi salafus shalih.", Category: "Aqidah", Level: "Menengah", EstimatedMinutes: 15, Icon: "aqidah", Order: 10},
 		{Slug: "sholat-sifat-nabi", Title: "Panduan Shalat Sesuai Sifat Nabi ﷺ", Description: "Rinci gerakan, bacaan, dan adab shalat sesuai hadis Sifat Shalat Nabi ﷺ.", Category: "Fiqh Ibadah", Level: "Menengah", EstimatedMinutes: 18, Icon: "sholat", Order: 11},
 		{Slug: "dzikir-doa-harian", Title: "Dzikir & Doa Harian", Description: "Dzikir pagi-petang, doa setelah shalat, doa sehari-hari, dan wirid istiqamah.", Category: "Ibadah Harian", Level: "Pemula", EstimatedMinutes: 12, Icon: "dzikir", Order: 12},
+		{Slug: "sujud-tilawah", Title: "Panduan Sujud Tilawah", Description: "Hukum, 15 ayat sajdah, tata cara di dalam & luar sholat, serta doa-doa Nabi ﷺ.", Category: "Fiqh Ibadah", Level: "Pemula", EstimatedMinutes: 10, Icon: "sholat", Order: 13},
 	}
 	for i := range modules {
 		db.Clauses(clause.OnConflict{
@@ -744,6 +745,50 @@ func SeedLessons(db *gorm.DB) {
 			Latin:     "Bismika Allaahumma amuutu wa ahyaa - Alhamdulillaahil ladzii ahyaanaa ba'da maa amaatanaa wa ilaihin nusyuur",
 			Translation: "Dengan nama-Mu ya Allah aku mati dan aku hidup - Segala puji bagi Allah yang menghidupkan kami setelah mematikan kami dan kepada-Nya kami kembali.",
 			Dalil:     "HR. Bukhari No. 6312 & 6314.",
+		},
+
+		// ===== SUJUD TILAWAH =====
+		{
+			ModuleID:  bySlug["sujud-tilawah"],
+			StepOrder: 1,
+			Kind:      "rukun",
+			Title:     "Pengertian, Hukum & Keutamaan",
+			Body:      "**Sujud Tilawah** adalah sujud satu kali saat membaca atau mendengar ayat sajdah dari Al-Qur'an.\n\n- **Hukum (Jumhur Ulama):** Sunnah Mu'akkadah (sangat dianjurkan), bukan wajib.\n- **Keutamaan:** Setan menangis tersingkir ketika anak Adam bersujud saat membaca ayat sajdah.",
+			Arabic:    "إِذَا قَرَأَ ابْنُ آدَمَ السَّجْدَةَ فَسَجَدَ اعْتَزَلَ الشَّيْطَانُ يَبْكِي يَقُولُ يَا وَيْلَهُ أُمِرَ ابْنُ آدَمَ بِالسُّجُودِ فَسَجَدَ فَلَهُ الْجَنَّةُ وَأُمِرْتُ بِالسُّجُودِ فَأَبَيْتُ فَلِيَ النَّارُ",
+			Latin:     "Idzaa qara'abnu Aadamas sajdata fasajada 'tazalasy syaithaanu yabkii yaquulu yaa wailahu, umirabnu Aadama bis sujuudi fasajada falahul jannah, wa umirtu bis sujuudi fa-abaitu faliyan naar",
+			Translation: "Jika anak Adam membaca ayat sajdah lalu bersujud, setan menyingkir sambil menangis seraya berkata: 'Celakalah aku! Anak Adam diperintahkan bersujud lalu ia sujud maka baginya surga, sedangkan aku diperintahkan bersujud namun aku membangkang maka bagiku neraka.'",
+			Dalil:     "HR. Bukhari No. 1073; HR. Muslim No. 81 & 577.",
+			Tip:       "Hadirkan kerendahan hati saat mendengar ayat-ayat keagungan Allah.",
+		},
+		{
+			ModuleID:  bySlug["sujud-tilawah"],
+			StepOrder: 2,
+			Kind:      "rukun",
+			Title:     "Mengenal 15 Ayat Sajdah Al-Qur'an",
+			Body:      "Terdapat **15 ayat sajdah** yang disepakati oleh jumhur ulama:\n\n1. Al-A'raf (7:206)\n2. Ar-Ra'd (13:15)\n3. An-Nahl (16:50)\n4. Al-Isra' (17:109)\n5. Maryam (19:58)\n6. Al-Hajj ayat pertama (22:18)\n7. Al-Hajj ayat kedua (22:77)\n8. Al-Furqan (25:60)\n9. An-Naml (27:26)\n10. As-Sajdah (32:15)\n11. Shad (38:24)\n12. Fushshilat (41:38)\n13. An-Najm (53:62)\n14. Al-Insyiqaq (84:21)\n15. Al-'Alaq (96:19)",
+			Dalil:     "Kutubus Sittah (Bukhari, Muslim, Abu Dawud, Tirmidzi, An-Nasa'i, Ibnu Majah).",
+			Tip:       "Perhatikan simbol kubah/sajdah di mushaf standar Madinah dan Kemenag RI.",
+		},
+		{
+			ModuleID:  bySlug["sujud-tilawah"],
+			StepOrder: 3,
+			Kind:      "praktik",
+			Title:     "Kaifiyah di Dalam Sholat",
+			Body:      "Tata cara sujud tilawah ketika sedang sholat:\n\n1. Selesai membaca ayat sajdah, langsung **bertakbir intiqal (Allahu Akbar)** menuju sujud tanpa ruku'.\n2. Melakukan sujud 1 kali dengan thuma'ninah.\n3. Membaca tasbih sujud atau doa sujud tilawah.\n4. **Bertakbir intiqal saat bangkit** berdiri kembali ke posisi berdiri.\n5. Melanjutkan bacaan surah atau langsung ruku'.\n\n*Kaidah Makmum:* Wajib mengikuti imam (mutaba'ah). Jika imam tidak sujud, makmum tidak boleh sujud sendiri.",
+			Dalil:     "HR. Bukhari No. 1070; HR. Muslim No. 575; Fatwa Lajnah Daimah No. 10214.",
+			Tip:       "Jika sholat berjamaah, imam dianjurkan memberi isyarat atau memilih ayat yang makruf agar makmum tidak bingung mengira ruku'.",
+		},
+		{
+			ModuleID:  bySlug["sujud-tilawah"],
+			StepOrder: 4,
+			Kind:      "praktik",
+			Title:     "Kaifiyah di Luar Sholat & Doa",
+			Body:      "Tata cara sujud tilawah di luar sholat:\n\n1. Memenuhi syarat bersuci (wudhu), menutup aurat, dan menghadap kiblat.\n2. Berniat sujud tilawah di dalam hati.\n3. **Bertakbir lalu langsung sujud satu kali** (tidak disyariatkan takbiratul ihram pembuka dan tidak ada salam).\n4. Membaca doa yang diajarkan Rasulullah ﷺ:\n\n*Sajada wajhiya lilladzii khalaqahu wa syaqqa sam'ahu wa basharahu bihawlihi wa quwwatih, fatabaarakallaahu ahsanul khaaliqiin.*\n\n5. Bangkit dari sujud tanpa takbir dan tanpa salam.",
+			Arabic:    "سَجَدَ وَجْهِي لِلَّذِي خَلَقَهُ وَشَقَّ سَمْعَهُ وَبَصَرَهُ بِحَوْلِهِ وَقُوَّتِهِ فَتَبَارَكَ اللَّهُ أَحْسَنُ الْخَالِقِينَ",
+			Latin:     "Sajada wajhiya lilladzii khalaqahu wa syaqqa sam'ahu wa basharahu bihawlihi wa quwwatih, fatabaarakallaahu ahsanul khaaliqiin",
+			Translation: "Wajahku bersujud kepada Dzat yang menciptakannya, membukakan pendengaran dan penglihatannya dengan daya dan kekuatan-Nya. Maka Maha Suci Allah sebaik-baik Pencipta.",
+			Dalil:     "HR. Abu Dawud No. 1406 & 1414; HR. Tirmidzi No. 580 (Shahih).",
+			Tip:       "Boleh juga membaca doa catatan pahala Nabi Dawud (HR. Tirmidzi No. 579).",
 		},
 	}
 

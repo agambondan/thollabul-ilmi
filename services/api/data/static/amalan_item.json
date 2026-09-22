@@ -82,5 +82,11 @@
         "description": "Membaca minimal 1 hadith shahih per hari",
         "category": "lainnya",
         "source": "HR. Abu Dawud No. 3660; HR. Tirmidzi No. 2656; HR. Ibnu Majah No. 230"
+    },
+    {
+        "name": "Sujud Tilawah",
+        "description": "Sujud satu kali ketika membaca atau mendengar salah satu dari 15 ayat sajdah",
+        "category": "sholat",
+        "source": "HR. Bukhari No. 1071; HR. Muslim No. 575; HR. Muslim No. 81"
     }
 ]

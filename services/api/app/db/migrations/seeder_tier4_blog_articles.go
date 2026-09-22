@@ -656,5 +656,94 @@ Rasulullah ﷺ bersabda:
 
 Hijrah di era sekarang adalah berani meninggalkan pekerjaan yang haram menuju rezeki yang halal, meninggalkan pergaulan toksik dan maksiat menuju majelis ilmu, serta membuang rasa malas demi istiqomah di atas ketaatan kepada Allah Ta'ala.`,
 		},
+		{
+			CategorySlug: "fiqh-hukum",
+			Title:        "Panduan Lengkap Sujud Tilawah: Dalil Shahih, 15 Ayat Sajdah, dan Kaifiyah Sholat",
+			Slug:         "panduan-lengkap-sujud-tilawah",
+			Excerpt:      "Penjelasan lengkap fiqh sujud tilawah: hukum jumhur ulama, daftar 15 ayat sajdah berdasarkan dalil shahih/hasan, tata cara di dalam dan luar sholat, serta bacaan doa yang diajarkan Nabi ﷺ.",
+			Tags:         []string{"fiqh", "sholat", "quran"},
+			Content: `## Pengertian dan Hukum Sujud Tilawah
+
+Sujud Tilawah (سجود التلاوة) adalah sujud satu kali yang disyariatkan ketika seseorang membaca atau mendengar ayat sajdah dari Al-Qur'an Al-Karim. Ibadah ini merupakan wujud ketundukan mutlak seorang hamba di hadapan keagungan firman Allah Subhanahu wa Ta'ala.
+
+Mayoritas ulama (Jumhur: Madzhab Maliki, Syafi'i, dan Hanbali) berpendapat bahwa hukum sujud tilawah adalah **Sunnah Mu'akkadah** (sangat dianjurkan), baik bagi yang membaca (*qari'*) maupun yang mendengarkan (*mustami'*).
+
+Zaid bin Tsabit radhiyallahu 'anhu meriwayatkan:
+
+> "Aku pernah membacakan kepada Nabi ﷺ surat An-Najm, dan beliau tidak bersujud pada ayat tersebut."
+> *([HR. Bukhari no. 1073](/hadith/bukhari/1073) dan [HR. Muslim no. 577](/hadith/muslim/577))*
+
+Hadits ini menjadi dalil pokok jumhur ulama bahwa sujud tilawah berhukum sunnah, karena sekiranya wajib tentu Rasulullah ﷺ tidak akan meninggalkannya.
+
+---
+
+## Keutamaan Agung Sujud Tilawah
+
+Dari Abu Hurairah radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
+
+> "Jika anak Adam membaca ayat sajdah lalu ia bersujud, setan akan menyingkir sambil menangis seraya berkata: 'Celakalah aku! Anak Adam diperintahkan untuk bersujud lalu ia bersujud, maka baginya surga. Sedangkan aku diperintahkan untuk bersujud namun aku enggan (membangkang), maka bagiku neraka.'"
+> *([HR. Muslim no. 81](/hadith/muslim/81))*
+
+---
+
+## 15 Rincian Ayat Sajdah dalam Al-Qur'an
+
+Berdasarkan penelitian dalil shahih dan hasan, terdapat 15 ayat sajdah yang disepakati oleh jumhur ulama:
+
+1. **Surah Al-A'raf (7:206)** — *([HR. Muslim no. 577](/hadith/muslim/577))*
+2. **Surah Ar-Ra'd (13:15)** — *([HR. Abu Dawud no. 1407](/hadith/abu-daud/1407), dishahihkan Al-Albani)*
+3. **Surah An-Nahl (16:50)** — *([HR. Muslim no. 772](/hadith/muslim/772))*
+4. **Surah Al-Isra' (17:109)** — *([HR. Bukhari no. 1072](/hadith/bukhari/1072))*
+5. **Surah Maryam (19:58)** — *([HR. Abu Dawud no. 1408](/hadith/abu-daud/1408), dishahihkan Al-Albani)*
+6. **Surah Al-Hajj Ayat Pertama (22:18)** — *([HR. Bukhari no. 1074](/hadith/bukhari/1074))*
+7. **Surah Al-Hajj Ayat Kedua (22:77)** — *([HR. Abu Dawud no. 1409](/hadith/abu-daud/1409))*
+8. **Surah Al-Furqan (25:60)** — *([HR. Abu Dawud no. 1410](/hadith/abu-daud/1410))*
+9. **Surah An-Naml (27:26)** — *([HR. Bukhari no. 1075](/hadith/bukhari/1075))*
+10. **Surah As-Sajdah (32:15)** — *([HR. Bukhari no. 1076](/hadith/bukhari/1076))*
+11. **Surah Shad (38:24)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077))*
+12. **Surah Fushshilat (41:38)** — *([HR. Muslim no. 581](/hadith/muslim/581))*
+13. **Surah An-Najm (53:62)** — *([HR. Bukhari no. 1070](/hadith/bukhari/1070))*
+14. **Surah Al-Insyiqaq (84:21)** — *([HR. Muslim no. 578](/hadith/muslim/578))*
+15. **Surah Al-'Alaq (96:19)** — *([HR. Abu Dawud no. 1413](/hadith/abu-daud/1413) dan [HR. At-Tirmidzi no. 583](/hadith/tirmidzi/583))*
+
+---
+
+## Perbedaan Kaifiyah: Di Dalam Sholat vs Di Luar Sholat
+
+### 1. Pelaksanaan di Dalam Sholat
+
+- **Imam atau Munfarid:** Ketika membaca ayat sajdah, langsung bertakbir intiqal (Allahu Akbar) lalu turun bersujud satu kali tanpa ruku'.
+- **Bacaan Sujud:** Membaca tasbih sujud biasa (*Subhana Rabbiyal A'la*) atau doa sujud tilawah.
+- **Bangkit dari Sujud:** Bertakbir intiqal saat bangkit berdiri kembali, lalu melanjutkan sisa bacaan ayat atau langsung ruku'.
+- **Kewajiban Makmum:** Makmum wajib mengikuti imam (*mutaba'ah*). Jika imam sujud tilawah, makmum wajib ikut sujud. Jika imam tidak sujud, makmum dilarang sujud sendirian karena akan merusak keutuhan sholat berjamaah.
+
+### 2. Pelaksanaan di Luar Sholat
+
+- **Syarat Sah (Jumhur):** Suci dari hadats (telah berwudhu), menutup aurat, dan menghadap kiblat.
+- **Niat:** Berniat di dalam hati untuk sujud tilawah karena Allah Ta'ala.
+- **Tanpa Takbiratul Ihram & Tanpa Salam:** Menurut pendapat rajih, sujud tilawah di luar sholat tidak memerlukan takbiratul ihram pembuka dan tidak diakhiri dengan salam, berdasarkan hadits Ibnu Umar radhiyallahu 'anhuma *(HR. Abu Dawud no. 1406)*. Cukup bertakbir saat hendak turun sujud dan langsung bangkit setelah selesai.
+
+---
+
+## Doa-Doa Sujud Tilawah yang Diajarkan Nabi ﷺ
+
+### 1. Doa Riwayat Aisyah radhiyallahu 'anha
+
+> **سَجَدَ وَجْهِي لِلَّذِي خَلَقَهُ وَشَقَّ سَمْعَهُ وَبَصَرَهُ بِحَوْلِهِ وَقُوَّتِهِ، فَتَبَارَكَ اللَّهُ أَحْسَنُ الْخَالِقِينَ**
+>
+> *Sajada wajhiya lilladzii khalaqahu wa syaqqa sam'ahu wa basharahu bihawlihi wa quwwatih, fatabaarakallaahu ahsanul khaaliqiin.*
+>
+> "Wajahku bersujud kepada Dzat yang menciptakannya, membukakan pendengaran dan penglihatannya dengan daya dan kekuatan-Nya. Maka Maha Suci Allah sebaik-baik Pencipta."
+> *([HR. Abu Dawud no. 1414](/hadith/abu-daud/1414), [HR. At-Tirmidzi no. 580](/hadith/tirmidzi/580), hadits shahih)*
+
+### 2. Doa Riwayat Ibnu Abbas radhiyallahu 'anhuma
+
+> **اللَّهُمَّ اكْتُبْ لِي بِهَا عِنْدَكَ أَجْرًا، وَضَعْ عَنِّي بِهَا وِزْرًا، وَاجْعَلْهَا لِي عِنْدَكَ ذُخْرًا، وَتَقَبَّلْهَا مِنِّي كَمَا تَقَبَّلْتَهَا مِنْ عَبْدِكَ دَاوُدَ**
+>
+> *Allaahummaktub lii bihaa 'indaka ajran, wa dha' 'annii bihaa wizran, waj'alhaa lii 'indaka dzukhran, wa taqabbalhaa minnii kamaa taqabbaltahaa min 'abdika Daawuud.*
+>
+> "Ya Allah, catatlah untukku dengan sujud ini pahala di sisi-Mu, gugurkanlah dengannya dosaku, jadikanlah ia sebagai simpanan untukku di sisi-Mu, dan terimalah ia dariku sebagaimana Engkau menerimanya dari hamba-Mu Dawud."
+> *([HR. At-Tirmidzi no. 579](/hadith/tirmidzi/579) dan [HR. Ibnu Majah no. 1053](/hadith/ibnu-majah/1053), hadits hasan)*`,
+		},
 	}
 }

@@ -99,6 +99,15 @@
         "dalil": "HR. Muslim No. 728; HR. Tirmidzi No. 415"
     },
     {
+        "category_slug": "sholat",
+        "title": "Panduan Sujud Tilawah",
+        "slug": "panduan-sujud-tilawah",
+        "content": "## Fiqh Sujud Tilawah (15 Ayat Sajdah)\n\nSujud satu kali saat membaca atau mendengar ayat sajdah dari Al-Qur'an.\n\n### Hukum (Jumhur Ulama):\n**Sunnah Mu'akkadah** — berdasarkan hadits Zaid bin Tsabit radhiyallahu 'anhu (*HR. Bukhari No. 1073; Muslim No. 577*).\n\n---\n\n### 1. Pelaksanaan di Dalam Sholat:\n- Membaca ayat sajdah → langsung takbir intiqal (*Allahu Akbar*) → sujud 1 kali tanpa ruku'.\n- Membaca doa sujud (*Subhana Rabbiyal A'la* atau doa tilawah) → takbir intiqal bangkit berdiri → lanjut bacaan ayat/ruku'.\n- Makmum wajib taat kepada imam: jika imam sujud maka makmum wajib ikut, jika imam tidak sujud maka makmum dilarang sujud sendiri.\n\n---\n\n### 2. Pelaksanaan di Luar Sholat:\n- Syarat: Suci dari hadats (wudhu), menutup aurat, dan menghadap kiblat.\n- Tata Cara: Berniat di dalam hati → bertakbir turun sujud (tanpa takbiratul ihram pembuka) → sujud 1 kali → bangkit berdiri/duduk tanpa salam (*HR. Abu Dawud No. 1406, Hasan*).\n\n---\n\n### 15 Ayat Sajdah dalam Al-Qur'an:\n1. Al-A'raf: 206\n2. Ar-Ra'd: 15\n3. An-Nahl: 50\n4. Al-Isra': 109\n5. Maryam: 58\n6. Al-Hajj: 18 (pertama)\n7. Al-Hajj: 77 (kedua)\n8. Al-Furqan: 60\n9. An-Naml: 26\n10. As-Sajdah: 15\n11. Shad: 24\n12. Fushshilat: 38\n13. An-Najm: 62\n14. Al-Insyiqaq: 21\n15. Al-'Alaq: 19",
+        "source": "HR. Bukhari No. 1070-1077; HR. Muslim No. 575-581; HR. Abu Dawud No. 1406-1414",
+        "sort_order": 6,
+        "dalil": "HR. Bukhari No. 1073; HR. Muslim No. 577; HR. Muslim No. 81"
+    },
+    {
         "category_slug": "puasa",
         "title": "Rukun Puasa",
         "slug": "rukun-puasa",
