@@ -904,6 +904,7 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 		Description   string `json:"description"`
 		Category      string `json:"category"`
 		IsSignificant bool   `json:"is_significant"`
+		Source        string `json:"source"`
 	}
 	var rows []row
 	if !readStaticJSON(db, "history_event.json", &rows) {
@@ -942,11 +943,12 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 			Description:   r.Description,
 			Category:      model.HistoryCategory(r.Category),
 			IsSignificant: r.IsSignificant,
+			Source:        r.Source,
 			TranslationID: trID,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "description", "year_hijri", "year_miladi", "category", "is_significant", "translation_id"}),
+			DoUpdates: clause.AssignmentColumns([]string{"title", "description", "year_hijri", "year_miladi", "category", "is_significant", "source", "translation_id"}),
 		}).Create(&item)
 	}
 }
@@ -1404,6 +1406,7 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 		Kontribusi string `json:"kontribusi"`
 		Kategori   string `json:"kategori"`
 		ImageURL   string `json:"image_url"`
+		Source     string `json:"source"`
 	}
 	var rows []row
 	if !readStaticJSON(db, "tokoh_tarikh.json", &rows) {
@@ -1448,6 +1451,7 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 				"kontribusi":     r.Kontribusi,
 				"kategori":       r.Kategori,
 				"image_url":      r.ImageURL,
+				"source":         r.Source,
 				"translation_id": trID,
 			}
 			if err := db.Model(&existing).Updates(updates).Error; err != nil {
@@ -1464,11 +1468,12 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 			Kontribusi:    r.Kontribusi,
 			Kategori:      r.Kategori,
 			ImageURL:      r.ImageURL,
+			Source:        r.Source,
 			TranslationID: trID,
 		}
 		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "nama"}},
-			DoUpdates: clause.AssignmentColumns([]string{"era", "tahun_lahir", "tahun_wafat", "biografi", "kontribusi", "kategori", "image_url", "translation_id"}),
+			DoUpdates: clause.AssignmentColumns([]string{"era", "tahun_lahir", "tahun_wafat", "biografi", "kontribusi", "kategori", "image_url", "source", "translation_id"}),
 		}).Create(&item).Error; err != nil {
 			log.Printf("[seeder] tokoh_tarikh insert '%s': %v", r.Nama, err)
 		}

@@ -18,6 +18,8 @@ func TestStaticIslamicContentSourcesAreSpecific(t *testing.T) {
 		"manasik_step.json",
 		"sholat_guide.json",
 		"siroh_content.json",
+		"tokoh_tarikh.json",
+		"history_event.json",
 	}
 
 	vague := []string{
@@ -36,6 +38,9 @@ func TestStaticIslamicContentSourcesAreSpecific(t *testing.T) {
 				title := item["title"]
 				if title == "" {
 					title = item["name"]
+				}
+				if title == "" {
+					title = item["nama"]
 				}
 				source := strings.TrimSpace(item["source"])
 				if source == "" {
@@ -68,7 +73,7 @@ func readStaticContentSourceRows(t *testing.T, name string) []map[string]string 
 	rows := make([]map[string]string, 0, len(items))
 	for _, item := range items {
 		row := map[string]string{}
-		for _, key := range []string{"title", "name", "source"} {
+		for _, key := range []string{"title", "name", "nama", "source"} {
 			if value, ok := item[key].(string); ok {
 				row[key] = value
 			}
@@ -89,6 +94,8 @@ func hasSpecificIslamicSource(source string) bool {
 		"Al-Majmu'",
 		"Fathul Qarib",
 		"Tafsir Ibnu Katsir",
+		"Al-Bidayah",
+		"Ibnu Katsir",
 		"Sirah Ibnu Hisyam",
 		"Ar-Raheeq Al-Makhtum",
 		"Sunan Kubra",
@@ -115,6 +122,10 @@ func hasSpecificIslamicSource(source string) bool {
 		"Al-Hakim",
 		"Al-Baihaqi",
 		"Ahmad",
+		"Al-Muqaddimah",
+		"Al-Kamil",
+		"Manaqib",
+		"Tarikh",
 	}
 	for _, marker := range markers {
 		if strings.Contains(source, marker) {

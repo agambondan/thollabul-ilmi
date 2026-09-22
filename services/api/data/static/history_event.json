@@ -6,7 +6,8 @@
         "slug": "kelahiran-nabi",
         "description": "## Kelahiran Sang Pembawa Risalah\n\nNabi Muhammad ﷺ lahir di Makkah pada hari **Senin, 12 Rabi'ul Awwal Tahun Gajah** (570 M).\n\n- **Kondisi Yatim:** Ayah beliau, Abdullah, wafat sebelum beliau dilahirkan.\n- **Penyusuan di Pedesaan:** Disusui oleh ibundanya, Aminah binti Wahb, selama beberapa hari lalu diserahkan kepada **Halimah As-Sa'diyah** dari Bani Sa'd agar tumbuh sehat dan fasih berbahasa Arab.\n\n> **Sumber:** *Ar-Raheeq Al-Makhtum, hlm. 56-65*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Ar-Raheeq Al-Makhtum, hlm. 56-65"
     },
     {
         "year_hijri": -43,
@@ -15,7 +16,8 @@
         "slug": "wafat-aminah",
         "description": "## Wafatnya Ibunda Tercinta\n\nKetika Nabi ﷺ berusia sekitar 6 tahun, ibundanya Aminah wafat di **Al-Abwa'** dalam perjalanan pulang dari Yatsrib (Madinah) setelah berziarah ke makam suaminya.\n\n- Rasulullah ﷺ kemudian diasuh oleh kakeknya, **Abdul Muthalib**, dengan penuh kasih sayang dan penghormatan.\n\n> **Sumber:** *Ar-Raheeq Al-Makhtum, hlm. 67*",
         "category": "nabi",
-        "is_significant": false
+        "is_significant": false,
+        "source": "Ar-Raheeq Al-Makhtum, hlm. 67"
     },
     {
         "year_hijri": -40,
@@ -24,7 +26,8 @@
         "slug": "wafat-abdul-muthalib",
         "description": "## Wafatnya Sang Kakek Pelindung\n\nKetika Nabi ﷺ berusia 8 tahun, kakeknya Abdul Muthalib wafat.\n\n- Sebelum wafat, beliau berwasiat agar pengasuhan diserahkan kepada pamannya, **Abu Thalib** (saudara kandung ayah Nabi ﷺ).\n- Abu Thalib membesarkan beliau dengan perlindungan dan cinta kasih yang mendalam.\n\n> **Sumber:** *Sirah Ibnu Hisyam*",
         "category": "nabi",
-        "is_significant": false
+        "is_significant": false,
+        "source": "Sirah Ibnu Hisyam"
     },
     {
         "year_hijri": -28,
@@ -33,7 +36,8 @@
         "slug": "pernikahan-khadijah",
         "description": "## Pernikahan Agung dengan Khadijah\n\nPada usia 25 tahun, Nabi ﷺ menikahi **Khadijah binti Khuwailid** (40 tahun) setelah keberhasilan perniagaan beliau yang amanah dan jujur.\n\n- Khadijah adalah wanita pertama yang memeluk Islam dan pendukung utama dakwah Rasulullah ﷺ.\n- Dikaruniai 6 putra-putri: **Qasim, Abdullah, Zainab, Ruqayyah, Ummu Kultsum, dan Fathimah**.\n\n> **Sumber:** *Ar-Raheeq Al-Makhtum, hlm. 83*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Ar-Raheeq Al-Makhtum, hlm. 83"
     },
     {
         "year_hijri": 1,
@@ -42,7 +46,8 @@
         "slug": "wahyu-pertama",
         "description": "## Permulaan Kenabian di Gua Hira\n\nPada malam **17 Ramadan** tahun 610 M, saat Nabi ﷺ berusia 40 tahun sedang bertahannuts di Gua Hira, Malaikat Jibril datang membawa wahyu perdana:\n\n> *\"Bacalah dengan (menyebut) nama Tuhanmu Yang menciptakan...\"* (*QS. Al-'Alaq: 1-5*)\n\nPeristiwa ini menjadi titik awal kenabian Muhammad ﷺ dan terbitnya fajar petunjuk bagi semesta alam.\n\n> **Sumber:** *HR. Bukhari No. 3, Muslim No. 160*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 3, Muslim No. 160"
     },
     {
         "year_hijri": 3,
@@ -51,7 +56,8 @@
         "slug": "dakwah-terbuka-makkah",
         "description": "## Perintah Dakwah Jahriyyah\n\nSetelah 3 tahun dakwah secara sembunyi-sembunyi (*sirriyah*), turun perintah Allah untuk mendakwahkan Islam secara terang-terangan (*QS. Al-Hijr: 94*).\n\n- Nabi ﷺ menaiki **Bukit Shafa** dan menyeru kabilah-kabilah Quraisy kepada kalimat tauhid:\n  > *\"Wahai kaumku, selamatkanlah diri kalian dari api neraka! Sesungguhnya aku adalah pemberi peringatan bagi kalian dari azab yang pedih.\"*\n\n> **Sumber:** *HR. Bukhari No. 4770, Muslim No. 208*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4770, Muslim No. 208"
     },
     {
         "year_hijri": 5,
@@ -60,7 +66,8 @@
         "slug": "hijrah-habasyah",
         "description": "## Hijrah Penyelamatan Aqidah\n\nAkibat meningkatnya siksaan kaum musyrikin Quraisy, Nabi ﷺ mengizinkan para sahabat berhijrah ke **Habasyah (Ethiopia)**.\n\n- Dipimpin oleh **Utsman bin Affan** dan istrinya **Ruqayyah**.\n- Negeri Habasyah dipimpin oleh **Raja Najasyi (Ashhamah)** yang adil dan tidak menzalimi siapa pun di negerinya.\n\n> **Sumber:** *Ar-Raheeq Al-Makhtum, hlm. 128*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Ar-Raheeq Al-Makhtum, hlm. 128"
     },
     {
         "year_hijri": 10,
@@ -69,7 +76,8 @@
         "slug": "tahun-duka-cita",
         "description": "## 'Aam Al-Huzn (Tahun Kesedihan)\n\nDalam kurun waktu berdekatan, dua sosok penyokong terbesar dakwah Rasulullah ﷺ berpulang:\n\n1. **Khadijah binti Khuwailid:** Istri setia pelipur lara dan penyokong dakwah selama 25 tahun.\n2. **Abu Thalib:** Paman yang menjadi perisai pembela beliau dari kekejaman Quraisy.\n\n> **Sumber:** *Ar-Raheeq Al-Makhtum, hlm. 163*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Ar-Raheeq Al-Makhtum, hlm. 163"
     },
     {
         "year_hijri": 10,
@@ -78,7 +86,8 @@
         "slug": "isra-miraj",
         "description": "## Perjalanan Agung dan Pensyariatan Shalat\n\nAllah ﷻ menghibur Rasul-Nya dengan mukjizat perjalanan malam:\n\n- **Al-Isra':** Dari Masjidil Haram ke Masjidil Aqsha mengendarai Buraq (*QS. Al-Isra: 1*).\n- **Al-Mi'raj:** Naik menembus tujuh lapis langit menuju Sidratul Muntaha.\n- **Kewajiban Shalat:** Menerima perintah langsung kewajiban shalat fardhu 5 waktu dalam sehari semalam.\n\n> **Sumber:** *HR. Bukhari No. 349, Muslim No. 163; QS. Al-Isra: 1*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 349, Muslim No. 163; QS. Al-Isra: 1"
     },
     {
         "year_hijri": 13,
@@ -87,7 +96,8 @@
         "slug": "hijrah-madinah",
         "description": "## Tonggak Peradaban Baru Madinah\n\nNabi Muhammad ﷺ bersama Abu Bakar Ash-Shiddiq berhijrah dari Makkah menuju Madinah (Yatsrib).\n\n- Menjadi titik awal penetapan **Kalender Hijriah** umat Islam.\n- Mempersaudarakan kaum **Muhajirin dan Anshar** (*Al-Mu'akhah*).\n- Menetapkan piagam kenegaraan pertama: **Piagam Madinah** (*Shahifah Al-Madinah*).\n\n> **Sumber:** *Ar-Raheeq Al-Makhtum, hlm. 201-215*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Ar-Raheeq Al-Makhtum, hlm. 201-215"
     },
     {
         "year_hijri": 2,
@@ -96,7 +106,8 @@
         "slug": "perang-badar",
         "description": "## Yaumul Furqan: Pembeda Haq dan Bathil\n\nPerang Badar meletus pada **17 Ramadan 2 H**:\n\n- **Kekuatan:** 313 sahabat Muslimin menghadapi 1.000 pasukan musyrikin Quraisy.\n- **Hasil:** Kemenangan telak kaum Muslimin berkat pertolongan seribu malaikat Allah (*QS. Al-Anfal: 9*).\n- Tokoh kekafiran Quraisy (termasuk Abu Jahal) tewas dan posisi politik Islam kian disegani di Jazirah Arab.\n\n> **Sumber:** *HR. Bukhari No. 3992; QS. Al-Anfal: 9*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 3992; QS. Al-Anfal: 9"
     },
     {
         "year_hijri": 3,
@@ -105,7 +116,8 @@
         "slug": "perang-uhud",
         "description": "## Pelajaran Ketaatan di Kaki Gunung Uhud\n\nTerjadi pada **7 Syawal 3 H** menghadapi 3.000 pasukan Quraisy:\n\n- **Titik Kritis:** Pasukan pemanah di bukit Rumat meninggalkan pos demi ghanimah, memicu serangan balik kavaleri musuh.\n- **Syahid:** 70 sahabat gugur sebagai syuhada, termasuk paman Nabi, **Hamzah bin Abdul Muthalib** (*Sayyidus Syuhada'*).\n\n> **Sumber:** *HR. Bukhari No. 4043; QS. Ali Imran: 121-179*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4043; QS. Ali Imran: 121-179"
     },
     {
         "year_hijri": 5,
@@ -114,7 +126,8 @@
         "slug": "perang-khandaq",
         "description": "## Strategi Parit Menghadapi Pasukan Sekutu\n\nSekitar 10.000 pasukan koalisi musyrikin (*Al-Ahzab*) mengepung Madinah:\n\n- Atas usulan sahabat **Salman Al-Farisi**, digali parit pertahanan (*khandaq*) di perbatasan utara Madinah.\n- Pengepungan berakhir setelah Allah mengirimkan angin kencang dan badai dingin yang memporak-porandakan kemah musuh.\n\n> **Sumber:** *HR. Bukhari No. 4106; QS. Al-Ahzab: 9-27*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4106; QS. Al-Ahzab: 9-27"
     },
     {
         "year_hijri": 6,
@@ -123,7 +136,8 @@
         "slug": "perjanjian-hudaibiyyah",
         "description": "## Kemenangan Nyata (*Fathan Mubiina*)\n\nPerjanjian damai 10 tahun antara kaum Muslimin dan kaum kafir Quraisy di Hudaibiyyah:\n\n- Memberikan ruang kebebasan dakwah Islam menyebar pesat ke seluruh penjuru kabilah Arab.\n- Diabadikan oleh Allah dalam **QS. Al-Fath: 1** sebagai kemenangan yang nyata (*fathan mubiina*).\n\n> **Sumber:** *HR. Bukhari No. 2731; QS. Al-Fath: 1-3*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 2731; QS. Al-Fath: 1-3"
     },
     {
         "year_hijri": 8,
@@ -132,7 +146,8 @@
         "slug": "fathu-makkah",
         "description": "## Pembebasan Kota Suci Makkah\n\nSetelah Quraisy melanggar perjanjian Hudaibiyyah, Nabi ﷺ memimpin 10.000 pasukan memasuki Makkah pada **20 Ramadan 8 H**:\n\n- Memasuki kota dengan penuh ketawadhu'an tanpa pertumpahan darah.\n- **Amnesti Akbar:** Memberikan pengampunan umum kepada seluruh penduduk Makkah.\n- Membersihkan Ka'bah dari 360 berhala kemusyrikan.\n\n> **Sumber:** *HR. Bukhari No. 4280; Ar-Raheeq Al-Makhtum, hlm. 376-386*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4280; Ar-Raheeq Al-Makhtum, hlm. 376-386"
     },
     {
         "year_hijri": 10,
@@ -141,7 +156,8 @@
         "slug": "haji-wada",
         "description": "## Khutbah Perpisahan Haji Wada'\n\nNabi ﷺ menunaikan ibadah haji terakhir bersama lebih dari 100.000 sahabat:\n\n- Menyampaikan prinsip asasi Islam: kesucian jiwa, darah, harta, penghapusan riba, dan hak-hak wanita.\n- Turun ayat penyempurna syariat: *QS. Al-Ma'idah: 3* (*\"Pada hari ini telah Aku sempurnakan untukmu agamamu...\"*).\n\n> **Sumber:** *HR. Bukhari No. 1741, Muslim No. 1218*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 1741, Muslim No. 1218"
     },
     {
         "year_hijri": 11,
@@ -150,7 +166,8 @@
         "slug": "khilafah-abu-bakar",
         "description": "## Kepemimpinan Khalifah Pertama\n\nAbu Bakar Ash-Shiddiq ra. dibaiat di Saqifah Bani Sa'idah memimpin umat Islam (632-634 M):\n\n1. **Memerangi Kaum Pembangkang:** Menumpas nabi palsu (Musailamah) dan penolak zakat (*Perang Riddah*).\n2. **Kodifikasi Al-Quran:** Menghimpun mushaf Al-Quran atas usulan Umar bin Khattab yang diketuai Zaid bin Tsabit.\n3. **Futuhat:** Mengirim ekspedisi dakwah ke perbatasan Syam dan Irak.\n\n> **Sumber:** *HR. Bukhari No. 4986; Tarikh Al-Khulafa*",
         "category": "khulafa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4986; Tarikh Al-Khulafa"
     },
     {
         "year_hijri": 11,
@@ -159,7 +176,8 @@
         "slug": "wafat-rasulullah",
         "description": "## Wafatnya Sang Kekasih Allah\n\nPada hari **Senin, 12 Rabi'ul Awwal 11 H**, Rasulullah ﷺ wafat di kamar Sayyidah Aisyah radhiyallahu 'anha pada usia 63 tahun.\n\n- Abu Bakar tampil menenangkan umat: *\"Barangsiapa menyembah Muhammad, ketahuilah Muhammad telah wafat. Barangsiapa menyembah Allah, sesungguhnya Allah Maha Hidup dan tidak akan pernah mati.\"* (*QS. Ali 'Imran: 144*).\n\n> **Sumber:** *HR. Bukhari No. 4448; Ar-Raheeq Al-Makhtum*",
         "category": "nabi",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4448; Ar-Raheeq Al-Makhtum"
     },
     {
         "year_hijri": 13,
@@ -168,7 +186,8 @@
         "slug": "khilafah-umar",
         "description": "## Era Keadilan Amirul Mukminin Umar\n\nUmar bin Khattab ra. memimpin kekhalifahan kedua (634-644 M):\n\n- **Ekspansi Peradaban:** Pembebasan wilayah Syam, Baitul Maqdis (Yerusalem), Mesir, dan kekaisaran Persia.\n- **Reformasi Tata Negara:** Mendirikan Baitul Mal, dewan administrasi negara (*Diwan*), dan mencetuskan Kalender Hijriah.\n- Dikenal dengan kezuhudan dan keadilannya yang melegenda.\n\n> **Sumber:** *Tarikh Ath-Thabari; Siyar A'lam An-Nubala*",
         "category": "khulafa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Tarikh Ath-Thabari; Siyar A'lam An-Nubala"
     },
     {
         "year_hijri": 23,
@@ -177,7 +196,8 @@
         "slug": "khilafah-utsman",
         "description": "## Kodifikasi Mushaf Utsmani\n\nUtsman bin Affan ra. terpilih melalui majelis syura memimpin umat (644-656 M):\n\n- **Mushaf Standar:** Menyatukan bacaan Al-Quran ke dalam satu dialek resmi (*Mushaf Al-Imam/Mushaf Utsmani*) yang disebarkan ke kota-kota besar Islam.\n- **Ekspansi Maritim:** Membentuk armada angkatan laut Islam pertama dan memperluas wilayah ke Afrika Utara dan Asia Tengah.\n\n> **Sumber:** *HR. Bukhari No. 4986; Tarikh Al-Khulafa*",
         "category": "khulafa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "HR. Bukhari No. 4986; Tarikh Al-Khulafa"
     },
     {
         "year_hijri": 35,
@@ -186,7 +206,8 @@
         "slug": "khilafah-ali",
         "description": "## Kekhalifahan Keempat & Gerbang Ilmu\n\nAli bin Abi Thalib ra. memimpin umat Islam di tengah gelombang fitnah politik besar (656-661 M):\n\n- Menegakkan prinsip keadilan, membenahi administrasi di Kufah, dan meletakkan kaidah dasar tata bahasa Arab (*Ilmu Nahwu*).\n- Beliau syahid dibunuh oleh pembelot Khawarij (Abdurrahman bin Muljam) saat hendak mengimami shalat Subuh.\n\n> **Sumber:** *Tarikh Al-Khulafa, As-Suyuthi*",
         "category": "khulafa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Tarikh Al-Khulafa, As-Suyuthi"
     },
     {
         "year_hijri": 41,
@@ -195,7 +216,8 @@
         "slug": "dinasti-umayyah",
         "description": "## Kekhalifahan Bani Umayyah di Damaskus\n\nDidirikan oleh Mu'awiyah bin Abi Sufyan setelah perdamaian amul jama'ah bersama Hasan bin Ali:\n\n- Pusat pemerintahan dipindahkan ke **Damaskus**.\n- Perluasan wilayah mencapai Spanyol (Andalusia) di barat hingga batas barat Tiongkok dan lembah Sungai Indus di timur.\n- Puncak kejayaan keadilan terwujud di masa khalifah **Umar bin Abdul Aziz** (99-101 H).\n\n> **Sumber:** *Al-Bidayah wan Nihayah, Ibnu Katsir*",
         "category": "dinasti",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Al-Bidayah wan Nihayah, Ibnu Katsir"
     },
     {
         "year_hijri": 132,
@@ -204,7 +226,8 @@
         "slug": "dinasti-abbasiyyah",
         "description": "## Zaman Keemasan Sains dan Peradaban Islam\n\nBani Abbasiyyah memusatkan peradaban di **Baghdad**:\n\n- **The Golden Age:** Pusat kemajuan ilmu syar'i, matematika, kedokteran, dan astronomi dunia.\n- Pendirian **Baitul Hikmah** sebagai perpustakaan dan laboratorium penerjemahan riset ilmu pengetahuan terbesar di dunia saat itu.\n\n> **Sumber:** *Tarikh Al-Islam, Adz-Dzahabi*",
         "category": "dinasti",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Tarikh Al-Islam, Adz-Dzahabi"
     },
     {
         "year_hijri": 150,
@@ -213,7 +236,8 @@
         "slug": "imam-abu-hanifah",
         "description": "## Al-Imam Al-A'zham Abu Hanifah\n\nNu'man bin Tsabit (Imam Abu Hanifah) adalah mujtahid mutlak pendiri **Mazhab Hanafi**:\n\n- Pelopor kodifikasi hukum Islam tematik dan pengembangan metode penalaran analogi (*Qiyas*).\n- Terkenal zuhud, pedagang kain sutra yang jujur, dan teguh mempertahankan prinsip hingga wafat di penjara Baghdad.\n\n> **Sumber:** *Siyar A'lam An-Nubala, Adz-Dzahabi*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Siyar A'lam An-Nubala, Adz-Dzahabi"
     },
     {
         "year_hijri": 179,
@@ -222,7 +246,8 @@
         "slug": "imam-malik",
         "description": "## Imam Daril Hijrah: Imam Malik\n\nImam Malik bin Anas adalah pendiri **Mazhab Maliki** dan rujukan ulama Madinah:\n\n- Penulis kitab monumentil **Al-Muwaththa'**, karya hadis dan fiqih shahih tertua yang masih dipelajari hingga kini.\n- Berpegang teguh pada amalan penduduk Madinah (*Amal Ahli Madinah*) dan sangat memuliakan hadis Rasulullah ﷺ.\n\n> **Sumber:** *Siyar A'lam An-Nubala, Adz-Dzahabi*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Siyar A'lam An-Nubala, Adz-Dzahabi"
     },
     {
         "year_hijri": 204,
@@ -231,7 +256,8 @@
         "slug": "imam-syafii",
         "description": "## Peletak Fondasi Ushul Fiqh: Imam Asy-Syafi'i\n\nMuhammad bin Idris Asy-Syafi'i adalah pendiri **Mazhab Syafi'i**:\n\n- Menulis kitab **Ar-Risalah** (kitab pertama yang merumuskan kaidah Ushul Fiqh) dan kitab **Al-Umm**.\n- Memadukan metodologi hadis Ahlul Hijaz dan nalar ijtihad Ahlul Iraq secara harmonis.\n\n> **Sumber:** *Manaqib Asy-Syafi'i, Al-Baihaqi*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Manaqib Asy-Syafi'i, Al-Baihaqi"
     },
     {
         "year_hijri": 241,
@@ -240,7 +266,8 @@
         "slug": "imam-ahmad-hanbal",
         "description": "## Imam Ahli Sunnah: Ahmad bin Hanbal\n\nImam Ahmad bin Hanbal adalah pendiri **Mazhab Hanbali**:\n\n- Menyusun ensiklopedia hadis raksasa **Musnad Ahmad** (memuat sekitar 27.000 hadis shahih).\n- Teladan keteguhan aqidah (*Mihnah fitnah Khalqil Quran*), tetap teguh mempertahankan kebenaran meski dipenjara dan didera cambuk.\n\n> **Sumber:** *Manaqib Al-Imam Ahmad, Ibnu Al-Jauzi*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Manaqib Al-Imam Ahmad, Ibnu Al-Jauzi"
     },
     {
         "year_hijri": 256,
@@ -249,7 +276,8 @@
         "slug": "shahih-bukhari",
         "description": "## Masterpiece Shahih Al-Bukhari\n\nMuhammad bin Ismail Al-Bukhari menyelesaikan penyusunan kitab **Al-Jami' Ash-Shahih**:\n\n- Kitab paling shahih di muka bumi setelah Al-Quran.\n- Diseleksi secara amat ketat selama 16 tahun dari hafalan 600.000 hadis, di mana beliau selalu mandi dan shalat istikharah dua rakaat sebelum menuliskan setiap hadis.\n\n> **Sumber:** *Hadyus Sari Muqaddimah Fathul Bari, Ibnu Hajar*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Hadyus Sari Muqaddimah Fathul Bari, Ibnu Hajar"
     },
     {
         "year_hijri": 583,
@@ -258,7 +286,8 @@
         "slug": "pembebasan-yerusalem",
         "description": "## Pembebasan Baitul Maqdis oleh Shalahuddin\n\nShalahuddin Al-Ayyubi membebaskan kota suci Yerusalem (Al-Quds) dari penguasaan Pasukan Salib setelah kemenangan besar di **Pertempuran Hittin**:\n\n- Menunjukkan akhlak Islam yang agung dengan memberi jaminan keamanan jiwa, harta, dan gereja bagi penduduk Nasrani.\n\n> **Sumber:** *Al-Kamil fit Tarikh, Ibnu Al-Atsir*",
         "category": "peristiwa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Al-Kamil fit Tarikh, Ibnu Al-Atsir"
     },
     {
         "year_hijri": 656,
@@ -267,7 +296,8 @@
         "slug": "jatuhnya-baghdad",
         "description": "## Tragedi Penyerbuan Baghdad\n\nPasukan Mongol di bawah komando Hulagu Khan menghancurkan kota Baghdad:\n\n- Berakhirnya kekuasaan Dinasti Abbasiyyah di Irak.\n- Jutaan buku dan khazanah keilmuan peradaban Islam dijarah dan dimusnahkan ke Sungai Tigris.\n\n> **Sumber:** *Al-Bidayah wan Nihayah, Ibnu Katsir*",
         "category": "peristiwa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Al-Bidayah wan Nihayah, Ibnu Katsir"
     },
     {
         "year_hijri": 728,
@@ -276,7 +306,8 @@
         "slug": "ibnu-taimiyah",
         "description": "## Syaikhul Islam Ibnu Taimiyyah\n\nTaqiyuddin Ahmad bin Abdul Halim Ibnu Taimiyyah:\n\n- Mujaddid besar pemurnian aqidah Islam yang mengobarkan semangat kembali kepada pemahaman Salafus Shalih.\n- Aktif berjihad memimpin perlawanan terhadap serbuan bangsa Tatar, serta menulis ratusan jilid karya ilmiah bermutu tinggi seperti *Majmu' Fatawa*.\n\n> **Sumber:** *Siyar A'lam An-Nubala, Adz-Dzahabi*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Siyar A'lam An-Nubala, Adz-Dzahabi"
     },
     {
         "year_hijri": 926,
@@ -285,7 +316,8 @@
         "slug": "ottoman-suleiman",
         "description": "## Kegemilangan Kesultanan Khilafah Utsmaniyah\n\nDi bawah kepemimpinan **Sultan Suleiman Al-Qanuni** (1520-1566 M):\n\n- Kekuasaan terbentang luas melintasi tiga benua (Asia, Afrika Utara, dan Eropa Tenggara).\n- Menata hukum perundang-undangan (*Qanun*) yang selaras dengan syariat Islam serta membangun arsitektur peradaban monumental.\n\n> **Sumber:** *Tarikh Ad-Daulah Al-'Aliyyah Al-'Utsmaniyyah*",
         "category": "dinasti",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Tarikh Ad-Daulah Al-'Aliyyah Al-'Utsmaniyyah"
     },
     {
         "year_hijri": 99,
@@ -294,7 +326,8 @@
         "slug": "umar-bin-abdul-aziz",
         "description": "## Khalifah Kelima Khulafaur Rasyidin\n\nUmar bin Abdul Aziz memimpin kekhalifahan Bani Umayyah dengan keadilan yang menyerupai kakek buyutnya Umar bin Khattab:\n\n- Menghapus kezhaliman, mengembalikan tanah sitaan negara kepada rakyat miskin, serta menginstruksikan **kodifikasi resmi hadis Nabi ﷺ** yang dipimpin oleh Ibnu Syihab Az-Zuhri.\n\n> **Sumber:** *Tarikh Ath-Thabari; Siyar A'lam An-Nubala*",
         "category": "khulafa",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Tarikh Ath-Thabari; Siyar A'lam An-Nubala"
     },
     {
         "year_hijri": 261,
@@ -303,6 +336,7 @@
         "slug": "imam-muslim-shahih-muslim",
         "description": "## Al-Imam Muslim bin Al-Hajjaj\n\nImam Muslim bin Al-Hajjaj An-Naisaburi menyusun kitab **Shahih Muslim**:\n\n- Kitab hadis rujukan paling shahih mendampingi Shahih Al-Bukhari.\n- Memiliki keunggulan dalam susunan sanad yang rapi, ketelitian jalur transmisi, dan keseragaman redaksi teks hadis.\n\n> **Sumber:** *Muqaddimah Shahih Muslim; Siyar A'lam An-Nubala*",
         "category": "ulama",
-        "is_significant": true
+        "is_significant": true,
+        "source": "Muqaddimah Shahih Muslim; Siyar A'lam An-Nubala"
     }
 ]

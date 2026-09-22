@@ -10,6 +10,7 @@ type TokohTarikh struct {
 	Kontribusi    string       `json:"-" gorm:"type:text"`
 	Kategori      string       `json:"kategori" gorm:"type:varchar(100);index"` // ulama, ilmuwan, sahabat, khalifah, dll
 	ImageURL      string       `json:"image_url,omitempty" gorm:"type:varchar(500)"`
+	Source        string       `json:"source,omitempty" gorm:"type:text"` // kitab rujukan: Ar-Raheeq Al-Makhtum, Sirah Ibnu Hisyam, dll
 	TranslationID *int         `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
 }

@@ -19,6 +19,7 @@ type HistoryEvent struct {
 	Description   string          `json:"-" gorm:"type:text"`
 	Category      HistoryCategory `json:"category" gorm:"type:varchar(50);index"`
 	IsSignificant bool            `json:"is_significant" gorm:"default:false"`
+	Source        string          `json:"source,omitempty" gorm:"type:text"`
 	TranslationID *int            `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation    `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
 }

@@ -93,3 +93,26 @@ func TestBackfillSurahIndonesian(t *testing.T) {
 		t.Fatalf("expected Idn 'Sapi Betina', got %v", updated2.Idn)
 	}
 }
+
+func TestSurahIndoDataCompleteness(t *testing.T) {
+	if len(surahIndoData) != 114 {
+		t.Fatalf("expected 114 surahs in surahIndoData, got %d", len(surahIndoData))
+	}
+	seen := make(map[int]bool)
+	for i, entry := range surahIndoData {
+		expectedNum := i + 1
+		if entry.Number != expectedNum {
+			t.Fatalf("entry %d: expected number %d, got %d", i, expectedNum, entry.Number)
+		}
+		if seen[entry.Number] {
+			t.Fatalf("duplicate surah number %d", entry.Number)
+		}
+		seen[entry.Number] = true
+		if entry.LatinID == "" {
+			t.Fatalf("surah %d: missing LatinID", entry.Number)
+		}
+		if entry.MeanID == "" {
+			t.Fatalf("surah %d: missing MeanID", entry.Number)
+		}
+	}
+}
