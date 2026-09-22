@@ -196,10 +196,27 @@ const clipRows = (rows, availableHeight) => {
  * Font Arab dideteksi dari isi baris (bukan dari urutan baris), ukuran font
  * mengecil otomatis sampai seluruh teks masuk ke dalam frame.
  */
+const MIN_CANVAS_WIDTH = 1920;
+const MIN_CANVAS_HEIGHT = 1080;
+
 export const renderShareImage = ({ image, text, hasKitab = false }) => {
     const canvas = document.createElement("canvas");
-    canvas.width = image.naturalWidth || image.width;
-    canvas.height = image.naturalHeight || image.height;
+    let imgWidth = image.naturalWidth || image.width;
+    let imgHeight = image.naturalHeight || image.height;
+
+    if (!imgWidth || !imgHeight) {
+        imgWidth = MIN_CANVAS_WIDTH;
+        imgHeight = MIN_CANVAS_HEIGHT;
+    } else {
+        const scaleX = MIN_CANVAS_WIDTH / imgWidth;
+        const scaleY = MIN_CANVAS_HEIGHT / imgHeight;
+        const scale = Math.max(scaleX, scaleY, 1);
+        imgWidth = Math.round(imgWidth * scale);
+        imgHeight = Math.round(imgHeight * scale);
+    }
+
+    canvas.width = imgWidth;
+    canvas.height = imgHeight;
 
     const context = canvas.getContext("2d");
     context.drawImage(image, 0, 0, canvas.width, canvas.height);

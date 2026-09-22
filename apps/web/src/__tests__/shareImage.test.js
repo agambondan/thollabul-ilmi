@@ -1,6 +1,7 @@
 import {
     classifyShareLines,
     isArabicText,
+    renderShareImage,
     wrapShareLine,
 } from "@/lib/shareImage";
 
@@ -97,5 +98,96 @@ describe("wrapShareLine", () => {
 
     it("mengembalikan array kosong untuk baris kosong", () => {
         expect(wrapShareLine(fakeContext(), "   ", 100)).toEqual([]);
+    });
+});
+
+describe("renderShareImage", () => {
+    it("membuat canvas dengan dimensi minimal 1920x1080", () => {
+        const mockImage = {
+            src: "/assets/images/masjid/QuranCosmic.svg",
+            width: 0,
+            height: 0,
+            naturalWidth: 0,
+            naturalHeight: 0,
+        };
+
+        // Mock canvas getContext untuk menghindari error jsdom drawImage
+        const originalCreateElement = document.createElement;
+        document.createElement = (tag) => {
+            if (tag === "canvas") {
+                return {
+                    width: 0,
+                    height: 0,
+                    getContext: () => ({
+                        drawImage: () => {},
+                        fillRect: () => {},
+                        fillText: () => {},
+                        measureText: (value) => ({ width: value.length * 10 }),
+                        font: "",
+                        textAlign: "",
+                        textBaseline: "",
+                        direction: "",
+                        fillStyle: "",
+                        globalAlpha: 1,
+                    }),
+                };
+            }
+            return originalCreateElement.call(document, tag);
+        };
+
+        const canvas = renderShareImage({
+            image: mockImage,
+            text: "Test",
+            hasKitab: false,
+        });
+
+        document.createElement = originalCreateElement;
+
+        expect(canvas.width).toBeGreaterThanOrEqual(1920);
+        expect(canvas.height).toBeGreaterThanOrEqual(1080);
+    });
+
+    it("menskalakan canvas jika gambar lebih kecil dari HD", () => {
+        const mockImage = {
+            src: "/assets/images/masjid/small.jpg",
+            width: 800,
+            height: 600,
+            naturalWidth: 800,
+            naturalHeight: 600,
+        };
+
+        const originalCreateElement = document.createElement;
+        document.createElement = (tag) => {
+            if (tag === "canvas") {
+                return {
+                    width: 0,
+                    height: 0,
+                    getContext: () => ({
+                        drawImage: () => {},
+                        fillRect: () => {},
+                        fillText: () => {},
+                        measureText: (value) => ({ width: value.length * 10 }),
+                        font: "",
+                        textAlign: "",
+                        textBaseline: "",
+                        direction: "",
+                        fillStyle: "",
+                        globalAlpha: 1,
+                    }),
+                };
+            }
+            return originalCreateElement.call(document, tag);
+        };
+
+        const canvas = renderShareImage({
+            image: mockImage,
+            text: "Test",
+            hasKitab: false,
+        });
+
+        document.createElement = originalCreateElement;
+
+        expect(canvas.width).toBeGreaterThanOrEqual(1920);
+        expect(canvas.height).toBeGreaterThanOrEqual(1080);
     });
 });
