@@ -560,7 +560,7 @@ export default function GenericAdminCRUD({
                                             </span>
                                         ) : null}
                                     </label>
-                                    {f.type === TYPE_MARKDOWN ? (
+                                    {f.type === TYPE_MARKDOWN || (f.type === TYPE_TEXTAREA && (f.markdown === true || (f.markdown !== false && (f.rows ?? 4) >= 4))) ? (
                                         <MarkdownEditor
                                             value={value}
                                             onChange={(val) =>
