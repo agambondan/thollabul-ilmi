@@ -373,9 +373,15 @@ const id = {
     "notifications.daily_hadith": "Pengingat Baca Hadith",
     "notifications.daily_hadith_desc":
         "Ingatkan saya untuk membaca Hadith setiap hari",
-    "notifications.doa_dzikir": "Pengingat Doa & Dzikir",
+    "notifications.doa_dzikir": "Pengingat Doa",
     "notifications.doa_dzikir_desc":
-        "Ingatkan saya untuk membaca doa dan dzikir harian",
+        "Ingatkan saya untuk membaca doa harian",
+    "notifications.dzikir": "Pengingat Dzikir",
+    "notifications.dzikir_desc":
+        "Ingatkan saya untuk membaca dzikir harian (pagi & petang)",
+    "notifications.murojaah": "Pengingat Muroja'ah",
+    "notifications.murojaah_desc":
+        "Ingatkan saya untuk mengulang hafalan Al-Qur'an harian",
     "notifications.adzan": "Pengingat Adzan",
     "notifications.adzan_desc": "Terima notifikasi ketika waktu sholat tiba",
     "notifications.enable_all": "Aktifkan semua",

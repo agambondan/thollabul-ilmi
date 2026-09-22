@@ -99,6 +99,18 @@ const NotificationsPage = () => {
             descKey: "notifications.doa_dzikir_desc",
             defaultTime: "08:00",
         },
+        {
+            key: "dzikir",
+            labelKey: "notifications.dzikir",
+            descKey: "notifications.dzikir_desc",
+            defaultTime: "09:00",
+        },
+        {
+            key: "murojaah",
+            labelKey: "notifications.murojaah",
+            descKey: "notifications.murojaah_desc",
+            defaultTime: "10:00",
+        },
     ];
 
     // --- Load reminder settings ---

@@ -379,6 +379,10 @@ const en = {
     "notifications.daily_hadith_desc": "Remind me to read Hadith every day",
     "notifications.doa_dzikir": "Dua and Dhikr Reminder",
     "notifications.doa_dzikir_desc": "Remind me to read daily dua and dhikr",
+    "notifications.dzikir": "Dhikr Reminder",
+    "notifications.dzikir_desc": "Remind me to read daily morning and evening dhikr",
+    "notifications.murojaah": "Muroja'ah Reminder",
+    "notifications.murojaah_desc": "Remind me to review daily Quran memorization",
     "notifications.adzan": "Adhan Reminder",
     "notifications.adzan_desc":
         "Receive notifications when prayer time arrives",
