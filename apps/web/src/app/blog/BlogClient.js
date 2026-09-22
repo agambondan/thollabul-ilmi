@@ -33,6 +33,13 @@ const getAuthorName = (author) => {
     return author.name ?? author.email ?? "";
 };
 
+const getTagLabel = (tag, lang) => {
+    if (!tag) return "";
+    if (typeof tag === "string") return tag;
+    if (typeof tag.name === "string") return tag.name;
+    return getLocalizedField(tag, "name", lang) || tag.slug || "";
+};
+
 const getPostExcerpt = (post, lang) => {
     const translation = post?.translation ?? {};
     const text =
