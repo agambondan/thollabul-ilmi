@@ -540,7 +540,7 @@ Jadikanlah puasa Senin Kamis sebagai benteng pertahanan ruhiyah dan kebugaran ja
 			Slug:         "panduan-menghitung-zakat-mal",
 			Excerpt:      "Panduan praktis perhitungan zakat mal tabungan, emas, dan investasi: patokan nisab 85 gram emas, haul 1 tahun, rumus 2,5%, serta siapa saja 8 asnaf penerima.",
 			Tags:         []string{"zakat", "fiqh"},
-			CoverImage:   "https://images.unsplash.com/photo-1605728323744-882707e1e893?q=80&w=800&auto=format&fit=crop",
+			CoverImage:   "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop",
 			Content: `## Zakat: Rukun Islam Pembersih Jiwa dan Harta
 
 Zakat adalah rukun Islam ketiga yang mengikat setiap muslim yang memiliki kelebihan harta. Zakat bukan sekadar kedermawanan sukarela (*filantropi*), melainkan kewajiban hukum syar'i atas hak fakir miskin yang dititipkan Allah pada kekayaan orang-orang yang mampu.
@@ -608,7 +608,7 @@ Tunaikanlah zakat dengan hati yang lapang, karena zakat tidak akan pernah mengur
 			Slug:         "pelajaran-berharga-peristiwa-hijrah",
 			Excerpt:      "Membongkar rahasia di balik peristiwa hijrah Rasulullah ﷺ ke Madinah: perpaduan ikhtiar matang dan tawakkal mutlak, 3 pilar Madinah, dan makna hijrah era modern.",
 			Tags:         []string{"sirah", "hadith"},
-			CoverImage:   "https://images.unsplash.com/photo-1501854140872-2aa6a02e3b9f?q=80&w=800&auto=format&fit=crop",
+			CoverImage:   "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=800&auto=format&fit=crop",
 			Content: `## Titik Balik Sejarah Peradaban Manusia
 
 Peristiwa hijrahnya Rasulullah ﷺ bersama sahabat setia Abu Bakar Ash-Shiddiq radhiyallahu 'anhu dari Makkah Al-Mukarramah menuju Yatsrib (Madinah Al-Munawwarah) pada tahun 622 Masehi bukanlah sekadar peristiwa pelarian dari intimidasi kaum Quraisy. Hijrah adalah momentum strategis ilahiah yang mengubah peta peradaban dunia, hingga Khalifah Umar bin Al-Khattab menetapkannya sebagai tonggak permulaan kalender Islam (Tahun Hijriah).
