@@ -298,7 +298,7 @@ Mulailah dengan membaca satu hadits beserta syarah ringkasnya setiap pekan. Tera
 	for _, p := range posts {
 		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"category_id", "title", "excerpt", "content", "status", "published_at"}),
+			DoUpdates: clause.AssignmentColumns([]string{"category_id", "title", "excerpt", "content", "cover_image", "status", "published_at"}),
 		}).Create(&p).Error; err != nil {
 			fmt.Printf("Warning: upsert blog post %s: %v\n", p.Slug, err)
 			continue
