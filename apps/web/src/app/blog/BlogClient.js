@@ -7,8 +7,8 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { BsSearch } from "react-icons/bs";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { BsSearch, BsTag, BsPerson, BsCalendar, BsClock } from "react-icons/bs";
 
 const PAGE_SIZE = 10;
 
@@ -58,6 +58,33 @@ const getPostExcerpt = (post, lang) => {
         .trim();
 };
 
+const getReadTime = (post) => {
+    if (!post) return 0;
+    const text =
+        post.content_idn ||
+        post.contentIdn ||
+        post.content_en ||
+        post.contentEn ||
+        post.description_idn ||
+        post.descriptionIdn ||
+        "";
+    const wordCount = text.replace(/<[^>]*>/g, " ").split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(wordCount / 200));
+};
+
+const uniqueTags = (posts) => {
+    return Array.from(new Set(posts.flatMap((post) => post.tags || []))).sort(
+        (a, b) => a.localeCompare(b),
+    );
+};
+
+const SORT_OPTIONS = [
+    { value: "newest", labelKey: "blog.sort_newest" },
+    { value: "oldest", labelKey: "blog.sort_oldest" },
+    { value: "title-asc", labelKey: "blog.sort_title_asc" },
+    { value: "title-desc", labelKey: "blog.sort_title_desc" },
+];
+
 export default function BlogClient({
     initialPosts = [],
     initialCategories = [],
@@ -73,7 +100,9 @@ export default function BlogClient({
     const [page, setPage] = useState(0);
     const [error, setError] = useState(false);
     const [search, setSearch] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [sort, setSort] = useState("newest");
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
     const sentinelRef = useRef(null);
 
     const fetchPage = (pageNum, append) => {
@@ -135,226 +164,485 @@ export default function BlogClient({
         return () => obs.disconnect();
     }, [hasMore, isLoading, isLoadingMore]);
 
-    const filteredPosts = posts.filter((post) => {
-        const query = search.trim().toLowerCase();
-        const title = getLocalizedField(post, "title", lang);
-        const excerpt = getPostExcerpt(post, lang);
-        const authorName = getAuthorName(post.author);
-        const categoryLabel =
-            getCategoryLabel(post.category, lang) ||
-            getLocalizedField(post, "category", lang);
-        const categoryValue = getCategoryValue(
-            post.category ?? categoryLabel,
-            lang,
-        );
-        const matchesQuery =
-            !query ||
-            title?.toLowerCase().includes(query) ||
-            excerpt?.toLowerCase().includes(query) ||
-            authorName?.toLowerCase().includes(query) ||
-            categoryLabel?.toLowerCase().includes(query);
-        const matchesCategory =
-            !selectedCategory ||
-            categoryValue.toLowerCase() === selectedCategory.toLowerCase();
+    useEffect(() => {
+        setVisibleCount(PAGE_SIZE);
+    }, [search, selectedTags, sort]);
 
-        if (!query && !selectedCategory) return true;
-        return matchesQuery && matchesCategory;
-    });
+    const allTags = useMemo(() => uniqueTags(posts), [posts]);
+
+    const filteredPosts = useMemo(() => {
+        const query = search.trim().toLowerCase();
+        return posts.filter((post) => {
+            const title = getLocalizedField(post, "title", lang);
+            const excerpt = getPostExcerpt(post, lang);
+            const authorName = getAuthorName(post.author);
+            const categoryLabel =
+                getCategoryLabel(post.category, lang) ||
+                getLocalizedField(post, "category", lang);
+            const matchesQuery =
+                !query ||
+                title?.toLowerCase().includes(query) ||
+                excerpt?.toLowerCase().includes(query) ||
+                authorName?.toLowerCase().includes(query) ||
+                categoryLabel?.toLowerCase().includes(query);
+            const matchesTags =
+                selectedTags.length === 0 ||
+                selectedTags.every((tag) =>
+                    (post.tags || []).includes(tag),
+                );
+            return matchesQuery && matchesTags;
+        });
+    }, [posts, search, selectedTags, lang]);
+
+    const sortedPosts = useMemo(() => {
+        const cloned = [...filteredPosts];
+        switch (sort) {
+            case "oldest":
+                return cloned.sort(
+                    (a, b) =>
+                        new Date(a.published_at).getTime() -
+                        new Date(b.published_at).getTime(),
+                );
+            case "title-asc":
+                return cloned.sort((a, b) => {
+                    const ta = getLocalizedField(a, "title", lang);
+                    const tb = getLocalizedField(b, "title", lang);
+                    return ta.localeCompare(tb);
+                });
+            case "title-desc":
+                return cloned.sort((a, b) => {
+                    const ta = getLocalizedField(a, "title", lang);
+                    const tb = getLocalizedField(b, "title", lang);
+                    return tb.localeCompare(ta);
+                });
+            case "newest":
+            default:
+                return cloned.sort(
+                    (a, b) =>
+                        new Date(b.published_at).getTime() -
+                        new Date(a.published_at).getTime(),
+                );
+        }
+    }, [filteredPosts, sort, lang]);
+
+    const visiblePosts = sortedPosts.slice(0, visibleCount);
+    const canLoadMore = visiblePosts.length < sortedPosts.length;
+
+    const toggleTag = (tag) => {
+        setSelectedTags((current) => {
+            const exists = current.includes(tag);
+            const updated = exists
+                ? current.filter((value) => value !== tag)
+                : [...current, tag];
+            return updated.sort((a, b) => a.localeCompare(b));
+        });
+    };
+
+    const clearFilters = () => {
+        setSearch("");
+        setSelectedTags([]);
+        setSort("newest");
+    };
+
+    const removeSelectedTag = (tag) => {
+        setSelectedTags((current) => current.filter((value) => value !== tag));
+    };
+
+    const summaryText =
+        sortedPosts.length === 0
+            ? ""
+            : `${visiblePosts.length} / ${sortedPosts.length} ${t("blog.showing")}`;
+
+    const featuredPost = sortedPosts[0];
+    const regularPosts = sortedPosts.slice(1);
 
     return (
         <div
             className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
+                isWide
+                    ? "w-full px-4 max-w-7xl mx-auto"
+                    : "container mx-auto px-4 max-w-3xl"
             }
         >
-            <div className='mb-8'>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+            <div className="mb-8">
+                <h1 className="text-2xl font-bold text-emerald-900 dark:text-white mb-1">
                     {t("blog.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     {t("blog.subtitle")}
                 </p>
             </div>
 
-            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
-                <BsSearch className='text-gray-400 shrink-0' />
-                <input
-                    type='text'
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder={t("blog.search_placeholder")}
-                    className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
-                />
-            </div>
-
-            {categories.length > 0 && (
-                <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide'>
-                    <button
-                        type='button'
-                        onClick={() => setSelectedCategory("")}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
-                            selectedCategory === ""
-                                ? "bg-emerald-700 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
-                        }`}
-                    >
-                        {t("blog.filter_all")}
-                    </button>
-                    {categories.map((category) => {
-                        const categoryValue = getCategoryValue(category, lang);
-                        const categoryLabel = getCategoryLabel(category, lang);
-                        return (
-                            <button
-                                key={categoryValue}
-                                type='button'
-                                onClick={() =>
-                                    setSelectedCategory(categoryValue)
-                                }
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors ${
-                                    categoryValue.toLowerCase() ===
-                                    selectedCategory.toLowerCase()
-                                        ? "bg-emerald-700 text-white"
-                                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
-                                }`}
-                            >
-                                {categoryLabel}
-                            </button>
-                        );
-                    })}
+            <div className="mb-6 space-y-4">
+                <div className="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2">
+                    <BsSearch className="text-gray-400 shrink-0" />
+                    <input
+                        type="search"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder={t("blog.search_placeholder")}
+                        className="flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none"
+                    />
                 </div>
-            )}
+
+                {allTags.length > 0 && (
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <p className="type-caption blog-body font-medium">
+                                {t("blog.filter_by_tags")}
+                                {selectedTags.length > 0 && (
+                                    <span className="ml-2 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 rounded text-xs">
+                                        {selectedTags.length}
+                                    </span>
+                                )}
+                            </p>
+                            {selectedTags.length > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={clearFilters}
+                                    className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline"
+                                >
+                                    {t("blog.clear_filters")}
+                                </button>
+                            )}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {allTags.map((tag) => {
+                                const active = selectedTags.includes(tag);
+                                return (
+                                    <button
+                                        key={tag}
+                                        type="button"
+                                        onClick={() => toggleTag(tag)}
+                                        aria-pressed={active}
+                                        className={`
+                                            px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-colors flex items-center gap-1 ${
+                                                active
+                                                    ? "bg-emerald-700 text-white"
+                                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
+                                            }
+                                        `}
+                                    >
+                                        <BsTag className="w-3 h-3" />
+                                        {getTagLabel(tag, lang)}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {selectedTags.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                <span className="type-caption blog-body font-medium">
+                                    {t("blog.selected_tags")}
+                                </span>
+                                {selectedTags.map((tag) => (
+                                    <button
+                                        key={`selected-${tag}`}
+                                        type="button"
+                                        onClick={() => removeSelectedTag(tag)}
+                                        className="blog-tag-filter blog-tag-filter-active px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 flex items-center gap-1"
+                                    >
+                                        {getTagLabel(tag, lang)}
+                                        <span className="ml-1">×</span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                <div className="flex items-center gap-3">
+                    <label
+                        htmlFor="blog-sort-select"
+                        className="type-caption blog-body font-medium whitespace-nowrap"
+                    >
+                        {t("blog.sort_label")}
+                    </label>
+                    <select
+                        id="blog-sort-select"
+                        value={sort}
+                        onChange={(e) => setSort(e.target.value)}
+                        className="blog-sort-select w-auto rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none"
+                    >
+                        {SORT_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                                {t(opt.labelKey)}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
 
             {isLoading && <SkeletonInline rows={4} />}
 
             {error && posts.length === 0 && !isLoading && (
-                <div className='text-center py-12'>
-                    <p className='text-red-500 dark:text-red-400 text-sm'>
+                <div className="text-center py-12">
+                    <p className="text-red-500 dark:text-red-400 text-sm">
                         {t("blog.load_error")}
                     </p>
                 </div>
             )}
 
-            {!error && !isLoading && posts.length === 0 && (
-                <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
+            {!error && !isLoading && sortedPosts.length === 0 && (
+                <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700">
                     <p
-                        className='text-4xl text-emerald-300 dark:text-emerald-700 mb-3'
+                        className="text-4xl text-emerald-300 dark:text-emerald-700 mb-3"
                         style={{ fontFamily: "Amiri, serif" }}
                     >
                         كِتَابَةً
                     </p>
-                    <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
+                    <p className="text-gray-500 dark:text-gray-400 font-medium mb-1">
                         {t("blog.empty_title")}
                     </p>
-                    <p className='text-sm text-gray-400'>
+                    <p className="text-sm text-gray-400">
                         {t("blog.empty_hint")}
                     </p>
                 </div>
             )}
 
-            {!error &&
-                !isLoading &&
-                posts.length > 0 &&
-                filteredPosts.length === 0 && (
-                    <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                        <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
-                            {t("blog.no_match_title")}
-                        </p>
-                        <p className='text-sm text-gray-400'>
-                            {t("blog.no_match_hint")}
-                        </p>
-                        <button
-                            type='button'
-                            onClick={() => {
-                                setSearch("");
-                                setSelectedCategory("");
-                            }}
-                            className='mt-4 px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-medium transition-colors'
-                        >
-                            {t("blog.reset_filter")}
-                        </button>
-                    </div>
-                )}
-
-            <div className='space-y-4'>
-                {filteredPosts.map((post) => (
-                    <Link
-                        key={post.id ?? post.slug}
-                        href={`${basePath}/${post.slug}`}
-                        className='block bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all overflow-hidden'
+            {!error && !isLoading && posts.length > 0 && sortedPosts.length === 0 && (
+                <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700">
+                    <p className="text-gray-500 dark:text-gray-400 font-medium mb-1">
+                        {t("blog.no_match_title")}
+                    </p>
+                    <p className="text-sm text-gray-400 mb-4">
+                        {t("blog.no_match_hint")}
+                    </p>
+                    <button
+                        type="button"
+                        onClick={clearFilters}
+                        className="px-4 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-medium transition-colors"
                     >
-                        {post.cover_image && (
-                            <div className='relative w-full h-40 md:h-48'>
-                                <Image
-                                    src={post.cover_image}
-                                    alt={getLocalizedField(post, "title", lang)}
-                                    fill
-                                    className='object-cover'
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                />
-                            </div>
-                        )}
-                        <div className='p-4'>
-                            {getCategoryLabel(post.category, lang) && (
-                                <span className='text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-2 block'>
-                                    {getCategoryLabel(post.category, lang)}
-                                </span>
-                            )}
-                            <h2 className='font-bold text-emerald-900 dark:text-white mb-1 line-clamp-2'>
-                                {getLocalizedField(post, "title", lang)}
-                            </h2>
-                            {getPostExcerpt(post, lang) && (
-                                <p className='text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3'>
-                                    {getPostExcerpt(post, lang)}
-                                </p>
-                            )}
-                            <div className='flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
-                                {getAuthorName(post.author) && (
-                                    <span className='flex items-center gap-1'>
-                                        <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'/></svg>
-                                        {getAuthorName(post.author)}
-                                    </span>
-                                )}
-                                {post.published_at && (
-                                    <span className='flex items-center gap-1'>
-                                        <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/></svg>
-                                        {new Date(post.published_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
-                                    </span>
-                                )}
-                                {post.tags && post.tags.length > 0 && (
-                                    <span className='flex items-center gap-1'>
-                                        <svg className='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z'/></svg>
-                                        {post.tags.slice(0, 3).map((tag, i) => (
-                                            <span key={i} className='px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-medium'>{getTagLabel(tag, lang)}</span>
-                                        ))}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-
-            {isLoadingMore && (
-                <div className='flex justify-center py-6'>
-                    <div className='w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin' />
+                        {t("blog.reset_filter")}
+                    </button>
                 </div>
             )}
 
-            <div ref={sentinelRef} className='h-1' />
+            {!error && !isLoading && sortedPosts.length > 0 && (
+                <>
+                    {featuredPost && (
+                        <article
+                            className="relative group overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 mb-6 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg transition-all"
+                        >
+                            <Link
+                                href={`${basePath}/${featuredPost.slug}`}
+                                className="block"
+                            >
+                                {featuredPost.cover_image && (
+                                    <div className="relative w-full h-64 md:h-80 lg:h-96">
+                                        <Image
+                                            src={featuredPost.cover_image}
+                                            alt={getLocalizedField(featuredPost, "title", lang)}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
+                                            priority
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                                            {getCategoryLabel(featuredPost.category, lang) && (
+                                                <span className="inline-block px-3 py-1 bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wide rounded mb-3">
+                                                    {getCategoryLabel(featuredPost.category, lang)}
+                                                </span>
+                                            )}
+                                            <h2 className="font-bold text-white text-xl md:text-2xl lg:text-3xl line-clamp-2 mb-2">
+                                                {getLocalizedField(featuredPost, "title", lang)}
+                                            </h2>
+                                            <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
+                                                {getAuthorName(featuredPost.author) && (
+                                                    <span className="flex items-center gap-1">
+                                                        <BsPerson className="w-3.5 h-3.5" />
+                                                        {getAuthorName(featuredPost.author)}
+                                                    </span>
+                                                )}
+                                                {featuredPost.published_at && (
+                                                    <span className="flex items-center gap-1">
+                                                        <BsCalendar className="w-3.5 h-3.5" />
+                                                        {new Date(featuredPost.published_at).toLocaleDateString("id-ID", {
+                                                            day: "numeric",
+                                                            month: "long",
+                                                            year: "numeric",
+                                                        })}
+                                                    </span>
+                                                )}
+                                                <span className="flex items-center gap-1">
+                                                    <BsClock className="w-3.5 h-3.5" />
+                                                    {getReadTime(featuredPost)} {t("blog.reading_time")}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                {!featuredPost.cover_image && (
+                                    <div className="p-6 md:p-8">
+                                        {getCategoryLabel(featuredPost.category, lang) && (
+                                            <span className="inline-block px-3 py-1 bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wide rounded mb-3">
+                                                {getCategoryLabel(featuredPost.category, lang)}
+                                            </span>
+                                        )}
+                                        <h2 className="font-bold text-emerald-900 dark:text-white text-xl md:text-2xl lg:text-3xl line-clamp-2 mb-3">
+                                            {getLocalizedField(featuredPost, "title", lang)}
+                                        </h2>
+                                        {getPostExcerpt(featuredPost, lang) && (
+                                            <p className="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4">
+                                                {getPostExcerpt(featuredPost, lang)}
+                                            </p>
+                                        )}
+                                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                                            {getAuthorName(featuredPost.author) && (
+                                                <span className="flex items-center gap-1">
+                                                    <BsPerson className="w-3.5 h-3.5" />
+                                                    {getAuthorName(featuredPost.author)}
+                                                </span>
+                                            )}
+                                            {featuredPost.published_at && (
+                                                <span className="flex items-center gap-1">
+                                                    <BsCalendar className="w-3.5 h-3.5" />
+                                                    {new Date(featuredPost.published_at).toLocaleDateString("id-ID", {
+                                                        day: "numeric",
+                                                        month: "long",
+                                                        year: "numeric",
+                                                    })}
+                                                </span>
+                                            )}
+                                            <span className="flex items-center gap-1">
+                                                <BsClock className="w-3.5 h-3.5" />
+                                                {getReadTime(featuredPost)} {t("blog.reading_time")}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </Link>
+                            {featuredPost.tags && featuredPost.tags.length > 0 && (
+                                <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2 z-10">
+                                    {featuredPost.tags.slice(0, 5).map((tag, i) => (
+                                        <span
+                                            key={i}
+                                            className="px-2 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-emerald-700 dark:text-emerald-400 rounded text-xs font-medium"
+                                        >
+                                            {getTagLabel(tag, lang)}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                        </article>
+                    )}
 
-            {!hasMore && posts.length > 0 && !isLoading && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
-                    {t("blog.all_shown")}
-                </p>
+                    {regularPosts.length > 0 && (
+                        <section className="space-y-4" aria-label={t("blog.articles")}>
+                            {regularPosts.map((post, idx) => {
+                                const visibleIdx = idx + 1;
+                                if (visibleIdx > visibleCount) return null;
+                                return (
+                                    <article
+                                        key={post.id ?? post.slug}
+                                        className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all"
+                                    >
+                                        <Link
+                                            href={`${basePath}/${post.slug}`}
+                                            className="block"
+                                        >
+                                            <div className="flex flex-col md:flex-row">
+                                                {post.cover_image && (
+                                                    <div className="relative w-full md:w-64 md:flex-shrink-0 h-40 md:h-auto min-h-[160px]">
+                                                        <Image
+                                                            src={post.cover_image}
+                                                            alt={getLocalizedField(post, "title", lang)}
+                                                            fill
+                                                            className="object-cover"
+                                                            sizes="(max-width: 768px) 100vw, 256px"
+                                                        />
+                                                    </div>
+                                                )}
+                                                <div className="p-4 md:p-5 flex flex-col justify-between flex-1 min-w-0">
+                                                    <div>
+                                                        {getCategoryLabel(post.category, lang) && (
+                                                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-2 block">
+                                                                {getCategoryLabel(post.category, lang)}
+                                                            </span>
+                                                        )}
+                                                        <h3 className="font-bold text-emerald-900 dark:text-white mb-1 line-clamp-2">
+                                                            {getLocalizedField(post, "title", lang)}
+                                                        </h3>
+                                                        {getPostExcerpt(post, lang) && (
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+                                                                {getPostExcerpt(post, lang)}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-3 pt-3 border-t border-gray-100 dark:border-slate-700">
+                                                        {getAuthorName(post.author) && (
+                                                            <span className="flex items-center gap-1">
+                                                                <BsPerson className="w-3 h-3" />
+                                                                {getAuthorName(post.author)}
+                                                            </span>
+                                                        )}
+                                                        {post.published_at && (
+                                                            <span className="flex items-center gap-1">
+                                                                <BsCalendar className="w-3 h-3" />
+                                                                {new Date(post.published_at).toLocaleDateString("id-ID", {
+                                                                    day: "numeric",
+                                                                    month: "short",
+                                                                    year: "numeric",
+                                                                })}
+                                                            </span>
+                                                        )}
+                                                        <span className="flex items-center gap-1">
+                                                            <BsClock className="w-3 h-3" />
+                                                            {getReadTime(post)} {t("blog.reading_time")}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {post.tags && post.tags.length > 0 && (
+                                                <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
+                                                    {post.tags.slice(0, 3).map((tag, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-medium"
+                                                        >
+                                                            {getTagLabel(tag, lang)}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </Link>
+                                    </article>
+                                );
+                            })}
+                        </section>
+                    )}
+
+                    {canLoadMore && (
+                        <div className="flex justify-center py-6">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setVisibleCount((count) => count + PAGE_SIZE)
+                                }
+                                className="px-6 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-medium transition-colors flex items-center gap-2"
+                            >
+                                {t("blog.load_more")}
+                            </button>
+                        </div>
+                    )}
+
+                    {!canLoadMore && sortedPosts.length > 0 && !isLoading && (
+                        <p className="text-center text-xs text-gray-400 dark:text-gray-600 py-4">
+                            {t("blog.all_shown")}
+                        </p>
+                    )}
+                </>
             )}
 
-            {!isLoading && filteredPosts.length === 0 && posts.length > 0 && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
-                    {t("blog.no_search")}
-                </p>
+            {isLoadingMore && (
+                <div className="flex justify-center py-6">
+                    <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                </div>
             )}
+
+            <div ref={sentinelRef} className="h-1" />
         </div>
     );
 }
 
-export { BlogClient as BlogContent };
+export const BlogContent = BlogClient;
