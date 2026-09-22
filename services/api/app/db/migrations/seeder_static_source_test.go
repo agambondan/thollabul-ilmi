@@ -11,6 +11,7 @@ import (
 func TestStaticIslamicContentSourcesAreSpecific(t *testing.T) {
 	files := []string{
 		"amalan_item.json",
+		"asbabun_nuzul.json",
 		"doa.json",
 		"dzikir.json",
 		"fiqh_item.json",
@@ -92,6 +93,28 @@ func hasSpecificIslamicSource(source string) bool {
 		"Ar-Raheeq Al-Makhtum",
 		"Sunan Kubra",
 		"Shahihul Jami'",
+		"Lubabun Nuqul",
+		"As-Suyuthi",
+		"Ibnu Abi Hatim",
+		"Thabrani",
+		"Al-Mu'jam",
+		"Muqaddimah Ibnu Shalah",
+		"Nukhbatul Fikar",
+		"Tadribur Rawi",
+		"Taqrib At-Tahdzib",
+		"Tahdzib At-Tahdzib",
+		"Siyar A'lam",
+		"Taisir Musthalah",
+		"Ibnu Hajar",
+		"Adz-Dzahabi",
+		"Al-Wahidi",
+		"At-Tirmidzi",
+		"An-Nasai",
+		"Abu Dawud",
+		"Ibnu Majah",
+		"Al-Hakim",
+		"Al-Baihaqi",
+		"Ahmad",
 	}
 	for _, marker := range markers {
 		if strings.Contains(source, marker) {
