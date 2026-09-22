@@ -76,6 +76,14 @@ const defaultSettings = [
         type: "doa",
     },
     {
+        body: "Lengkapi dzikir pagi dan petangmu.",
+        is_active: true,
+        label: "Dzikir Harian",
+        serverSync: true,
+        time: "17:00",
+        type: "dzikir",
+    },
+    {
         body: "Lanjutkan sesi belajar kajian.",
         is_active: false,
         label: "Kajian",
@@ -87,7 +95,7 @@ const defaultSettings = [
         body: "Waktu murojaah singkat hari ini.",
         is_active: false,
         label: "Murojaah",
-        serverSync: false,
+        serverSync: true,
         time: "20:15",
         type: "murojaah",
     },
