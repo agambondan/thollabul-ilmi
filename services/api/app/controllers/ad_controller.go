@@ -35,7 +35,7 @@ func (c *adController) GetActiveAd(ctx *fiber.Ctx) error {
 	slot := ctx.Query("slot", "banner")
 	ad, err := c.svc.GetActiveBySlot(slot)
 	if err != nil {
-		return lib.ErrorNotFound(ctx, "no active ad")
+		return lib.OK(ctx, nil)
 	}
 	return lib.OK(ctx, ad)
 }
