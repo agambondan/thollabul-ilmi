@@ -172,11 +172,28 @@ self.addEventListener("fetch", (event) => {
 
     if (!isSameOrigin && !isTargetApi) return;
 
-    // Never cache auth or admin traffic.
-    if (
+    // Never cache auth, user personal state, or admin traffic.
+    const isPrivateApiPath =
         url.pathname.startsWith("/api/v1/auth") ||
-        url.pathname.startsWith("/admin")
-    ) {
+        url.pathname.startsWith("/api/v1/user") ||
+        url.pathname.startsWith("/api/v1/profile") ||
+        url.pathname.startsWith("/api/v1/notifications") ||
+        url.pathname.startsWith("/api/v1/notes") ||
+        url.pathname.startsWith("/api/v1/bookmarks") ||
+        url.pathname.startsWith("/api/v1/goals") ||
+        url.pathname.startsWith("/api/v1/muhasabah") ||
+        url.pathname.startsWith("/api/v1/tilawah") ||
+        url.pathname.startsWith("/api/v1/hafalan") ||
+        url.pathname.startsWith("/api/v1/sholat") ||
+        url.pathname.startsWith("/api/v1/amalan") ||
+        url.pathname.startsWith("/api/v1/streak") ||
+        url.pathname.startsWith("/api/v1/activity") ||
+        url.pathname.startsWith("/api/v1/lessons/progress") ||
+        url.pathname.startsWith("/api/v1/achievements/mine") ||
+        url.pathname.startsWith("/api/v1/admin") ||
+        url.pathname.startsWith("/admin");
+
+    if (isPrivateApiPath || request.headers.has("authorization")) {
         return;
     }
 
