@@ -66,6 +66,16 @@ const nextConfig = {
                 permanent: true,
             },
             {
+                source: "/murojaah",
+                destination: "/dashboard/muroja-ah",
+                permanent: true,
+            },
+            {
+                source: "/dashboard/murojaah",
+                destination: "/dashboard/muroja-ah",
+                permanent: true,
+            },
+            {
                 source: "/muhasabah",
                 destination: "/dashboard/muhasabah",
                 permanent: true,

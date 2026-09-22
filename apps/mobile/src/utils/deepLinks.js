@@ -137,7 +137,7 @@ export const parseDeepLink = (url) => {
         if (second === "dzikir") {
             return { params: { featureKey: "dzikir" }, tab };
         }
-        if (second === "murojaah") {
+        if (second === "murojaah" || second === "muroja-ah") {
             return { params: { featureKey: "murojaah" }, tab };
         }
         if (second === "doa") {
