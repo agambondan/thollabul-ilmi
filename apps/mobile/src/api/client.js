@@ -767,7 +767,14 @@ export const normalizePerawi = (item) => ({
 
 export const normalizeDoa = (item) => ({
     id: item.id ?? item.slug ?? item.title,
-    title: pickText(item.title, item.nama, item.label, "Doa"),
+    title: pickText(
+        item.title,
+        item.nama,
+        item.translation?.idn,
+        item.translation?.en,
+        item.label,
+        "Doa",
+    ),
     arabic: pickText(
         item.arabic,
         item.arab,
@@ -775,6 +782,8 @@ export const normalizeDoa = (item) => ({
         item.translation?.ar,
     ),
     body: pickText(
+        item.translation?.description_idn,
+        item.translation?.description_en,
         item.translation?.idn,
         item.translation?.text_idn,
         item.translation?.text,
