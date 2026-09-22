@@ -16,12 +16,14 @@ import { BsPlus, BsTrash, BsPencil, BsX, BsFileMusic, BsPlayCircle, BsXCircle } 
 import toast from "react-hot-toast";
 import ModalShell from "@/components/ModalShell";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const API_URL =
     typeof window !== "undefined" ? process.env.NEXT_PUBLIC_API_URL || "" : "";
 
 export default function AdminLessonsPage() {
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
     const [modules, setModules] = useState([]);
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -380,7 +382,9 @@ export default function AdminLessonsPage() {
                 <ModalShell
                     onClose={() => setModalOpen(false)}
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm'
-                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden'
+                    panelClassName={`bg-white dark:bg-slate-800 rounded-2xl w-full flex flex-col max-h-[90vh] shadow-2xl overflow-hidden ${
+                        isWide ? "max-w-4xl" : "max-w-2xl"
+                    }`}
                 >
                     <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-700 shrink-0'>
                         <div>
