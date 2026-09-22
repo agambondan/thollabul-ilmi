@@ -2,6 +2,7 @@
 
 import { whatsappApi } from "@/lib/api";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import {
     BsWhatsapp,
     BsCheckCircle,
@@ -154,10 +155,13 @@ export default function AdminWhatsAppPage() {
                     <div>
                         {qr ? (
                             <div className='flex flex-col items-center gap-3'>
-                                <img
+                                <Image
                                     src={qr}
                                     alt='QR pairing WhatsApp'
+                                    width={224}
+                                    height={224}
                                     className='w-56 h-56 border border-gray-200 dark:border-slate-600 rounded-lg'
+                                    unoptimized
                                 />
                                 <p className='text-xs text-gray-500 dark:text-gray-400 text-center'>
                                     Buka WhatsApp di HP → Perangkat Tertaut →

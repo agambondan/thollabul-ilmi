@@ -14,6 +14,7 @@ import { adminKajianApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import {
     BsBoxArrowUpRight,
     BsCameraVideo,
@@ -105,11 +106,13 @@ const KajianThumbnail = ({ src, alt, className, duration, onClick }) => {
             onClick={onClick}
             className={`relative block overflow-hidden ${className}`}
         >
-            <img
+            <Image
                 src={src}
                 alt={alt}
                 onError={() => setFailed(true)}
+                fill
                 className='w-full h-full object-cover'
+                unoptimized
             />
             <DurationBadge duration={duration} />
         </button>
@@ -912,10 +915,13 @@ const AdminStudiesPage = () => {
                     >
                         <BsX className='text-xl' />
                     </button>
-                    <img
+                    <Image
                         src={previewImage.src}
-                        alt={previewImage.title}
+                        alt={previewImage.title || "Preview"}
+                        width={1280}
+                        height={720}
                         className='w-full max-h-[85vh] object-contain rounded-xl bg-black'
+                        unoptimized
                     />
                     {previewImage.title && (
                         <p className='mt-2 text-center text-sm text-white'>

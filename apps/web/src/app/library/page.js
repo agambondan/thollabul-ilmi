@@ -7,6 +7,7 @@ import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { libraryApi, libraryProgressApi } from "@/lib/api";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import {
     BsBook,
@@ -394,10 +395,13 @@ export const LibraryContent = ({
                         >
                             <div className='mb-4 flex items-start justify-between gap-3'>
                                 {book.cover_url ? (
-                                    <img
-                                        alt=''
+                                    <Image
+                                        alt=""
+                                        width={40}
+                                        height={40}
                                         className='h-10 w-10 shrink-0 rounded-lg object-cover'
                                         src={book.cover_url}
+                                        unoptimized
                                     />
                                 ) : (
                                     <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/40'>
