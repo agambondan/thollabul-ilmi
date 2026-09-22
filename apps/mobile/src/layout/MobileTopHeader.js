@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react-native";
+import { ChevronDown, Menu, Search } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../theme";
@@ -20,6 +20,8 @@ export function MobileTopHeader({
     accountMenuOpen = false,
     isDarkTheme = false,
     onOpenAccountMenu,
+    onOpenMenu,
+    onOpenSearch,
 }) {
     const { t } = useMobileLocale();
     const normalizedAccountLabel = accountLabel?.trim() || "T";
@@ -45,6 +47,44 @@ export function MobileTopHeader({
             </View>
 
             <View style={styles.actions}>
+                {onOpenSearch ? (
+                    <Pressable
+                        accessibilityLabel={t("nav.search")}
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(17, 24, 39, 0.08)",
+                            borderless: true,
+                        }}
+                        onPress={onOpenSearch}
+                        style={styles.actionIconBtn}
+                        testID='mobile-top-header-search'
+                    >
+                        <Search
+                            color={isDarkTheme ? header.darkMuted : header.muted}
+                            size={19}
+                            strokeWidth={2}
+                        />
+                    </Pressable>
+                ) : null}
+                {onOpenMenu ? (
+                    <Pressable
+                        accessibilityLabel={t("nav.menu")}
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(17, 24, 39, 0.08)",
+                            borderless: true,
+                        }}
+                        onPress={onOpenMenu}
+                        style={styles.actionIconBtn}
+                        testID='mobile-top-header-menu'
+                    >
+                        <Menu
+                            color={isDarkTheme ? header.darkMuted : header.muted}
+                            size={19}
+                            strokeWidth={2}
+                        />
+                    </Pressable>
+                ) : null}
                 <Pressable
                     accessibilityLabel={t("account.menuLabel")}
                     accessibilityRole='button'
@@ -125,6 +165,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         paddingLeft: spacing.sm,
+    },
+    actionIconBtn: {
+        alignItems: "center",
+        height: 32,
+        justifyContent: "center",
+        width: 32,
     },
     accountButton: {
         alignItems: "center",

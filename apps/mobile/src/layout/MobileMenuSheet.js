@@ -141,7 +141,8 @@ export const webAppMenuGroups = [
                 key: "goals",
                 label: "Target Belajar",
                 labelKey: "menu.goals",
-                tab: "profile",
+                params: { featureKey: "goals" },
+                tab: "belajar",
             },
         ],
     },
@@ -274,6 +275,7 @@ export const webAppMenuGroups = [
                 key: "jadwal-sholat",
                 label: "Jadwal Sholat",
                 labelKey: "menu.prayerSchedule",
+                params: { view: "prayer" },
                 tab: "ibadah",
             },
             {

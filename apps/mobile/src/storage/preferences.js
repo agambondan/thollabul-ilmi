@@ -25,6 +25,7 @@ export const preferenceKeys = {
     smartNotifPendingSync: "smart-notif-pending-sync",
     smartNotifQuietHours: "smart-notif-quiet-hours",
     smartNotifSettings: "smart-notif-settings",
+    lessonProgressPendingSync: "lesson-progress-pending-sync",
     quranArabicFont: "quran-arabic-font",
     quranAudioQari: "quran-audio-qari",
     quranAudioRange: "quran-audio-range",

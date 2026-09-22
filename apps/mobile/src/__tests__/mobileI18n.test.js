@@ -18,6 +18,8 @@ describe("mobile i18n translations", () => {
     test("translates shell labels and falls back to Indonesian before key", () => {
         expect(translateMobile("en", "nav.search")).toBe("Search");
         expect(translateMobile("idn", "nav.search")).toBe("Cari");
+        expect(translateMobile("idn", "nav.ibadah")).toBe("Ibadah");
+        expect(translateMobile("idn", "nav.belajar")).toBe("Belajar");
         expect(translateMobile("en", "missing.key")).toBe("missing.key");
     });
 

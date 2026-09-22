@@ -117,6 +117,8 @@ export function WebAppShell({
                     accountLabel={accountLabel}
                     isDarkTheme={isDarkTheme}
                     onOpenAccountMenu={openAccountMenu}
+                    onOpenMenu={openMenu}
+                    onOpenSearch={openSearch}
                 />
             )}
             <KeyboardAvoidingView
@@ -131,8 +133,6 @@ export function WebAppShell({
                     active={activeTab}
                     isDarkTheme={isDarkTheme}
                     onChange={onTabChange}
-                    onOpenMenu={openMenu}
-                    onOpenSearch={openSearch}
                 />
             )}
             <MobileMenuSheet

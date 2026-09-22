@@ -88,7 +88,7 @@ describe("MobileAppShell", () => {
 
         await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());
         expect(getByText("Shell content")).toBeTruthy();
-        expect(getByText("Dashboard")).toBeTruthy();
+        expect(getByText("Beranda")).toBeTruthy();
         expect(queryByTestId("classic-app-shell")).toBeNull();
     });
 
@@ -126,11 +126,11 @@ describe("MobileAppShell", () => {
         expect(queryByTestId("classic-app-shell")).toBeNull();
         expect(getByText("Thullaabul 'Ilmi")).toBeTruthy();
         expect(getByText("T")).toBeTruthy();
-        expect(getByText("Dashboard")).toBeTruthy();
+        expect(getByText("Beranda")).toBeTruthy();
         expect(getByText("Al-Quran")).toBeTruthy();
-        expect(getByText("Hadith")).toBeTruthy();
-        expect(getByText("Cari")).toBeTruthy();
-        expect(getByText("Menu")).toBeTruthy();
+        expect(getByText("Hadis")).toBeTruthy();
+        expect(getByText("Ibadah")).toBeTruthy();
+        expect(getByText("Belajar")).toBeTruthy();
         expect(setBarStyleSpy).toHaveBeenCalledWith("dark-content");
         expect(getByTestId("mobile-top-header").props.style).toEqual(
             expect.arrayContaining([
@@ -355,6 +355,18 @@ describe("MobileAppShell", () => {
 
         expect(onTabChange).toHaveBeenCalledWith("ibadah", null);
         expect(queryByTestId("mobile-menu-sheet")).toBeNull();
+
+        fireEvent.press(getByLabelText("Menu"));
+        fireEvent.press(getByTestId("mobile-menu-item-jadwal-sholat"));
+        expect(onTabChange).toHaveBeenCalledWith("ibadah", {
+            view: "prayer",
+        });
+
+        fireEvent.press(getByLabelText("Menu"));
+        fireEvent.press(getByTestId("mobile-menu-item-goals"));
+        expect(onTabChange).toHaveBeenCalledWith("belajar", {
+            featureKey: "goals",
+        });
     });
 
     test("routes web app menu profile shortcut through existing profile handler", async () => {
@@ -380,7 +392,7 @@ describe("MobileAppShell", () => {
         expect(onTabChange).toHaveBeenCalledWith("quran");
     });
 
-    test("opens global search and menu from web app bottom nav actions", async () => {
+    test("opens global search and menu from web app header actions", async () => {
         AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
         const onTabChange = jest.fn();
         const { getByLabelText, getByTestId } = renderShell({ onTabChange });
@@ -405,7 +417,7 @@ describe("MobileAppShell", () => {
         expect(getByLabelText("Al-Quran").props.accessibilityState).toEqual({
             selected: true,
         });
-        expect(getByLabelText("Dashboard").props.accessibilityState).toEqual({
+        expect(getByLabelText("Beranda").props.accessibilityState).toEqual({
             selected: false,
         });
 
@@ -419,17 +431,17 @@ describe("MobileAppShell", () => {
         ).toEqual({ selected: false });
     });
 
-    test("marks search action active when web app shell active tab is search", async () => {
+    test("marks the active web app tab in the five-tab contract", async () => {
         AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
         const { getByLabelText, getByTestId } = renderShell({
-            activeTab: "search",
+            activeTab: "ibadah",
         });
 
         await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());
-        expect(getByLabelText("Cari").props.accessibilityState).toEqual({
+        expect(getByLabelText("Ibadah").props.accessibilityState).toEqual({
             selected: true,
         });
-        expect(getByLabelText("Dashboard").props.accessibilityState).toEqual({
+        expect(getByLabelText("Beranda").props.accessibilityState).toEqual({
             selected: false,
         });
     });

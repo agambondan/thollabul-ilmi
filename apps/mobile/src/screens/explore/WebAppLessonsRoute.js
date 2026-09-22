@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
+    AppState,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -23,6 +24,11 @@ import { putJson, requestJson } from "../../api/client";
 import { getFeatureItemPage } from "../../api/explore";
 import { playAudioUrl, stopAudio } from "../../utils/audioPlayer";
 import { staticLessons } from "../../data/staticLessons";
+import {
+    preferenceKeys,
+    readPreference,
+    writePreference,
+} from "../../storage/preferences";
 
 const LESSON_CATEGORIES = [
     "Semua",
@@ -92,6 +98,45 @@ export function WebAppLessonsRoute({
         }
     }, [filteredModules, activeModuleId]);
 
+    const enqueuePending = async (moduleId, step, done) => {
+        try {
+            const pending = await readPreference(preferenceKeys.lessonProgressPendingSync, {});
+            pending[`${moduleId}:${step}`] = { moduleId, step, done, ts: Date.now() };
+            await writePreference(preferenceKeys.lessonProgressPendingSync, pending);
+        } catch {}
+    };
+
+    const flushPending = async () => {
+        try {
+            const pending = await readPreference(preferenceKeys.lessonProgressPendingSync, {});
+            const keys = Object.keys(pending);
+            if (!keys.length) return;
+            for (const key of keys) {
+                const item = pending[key];
+                try {
+                    await putJson(
+                        "/api/v1/lessons/progress",
+                        { module_id: item.moduleId, step: item.step, done: item.done },
+                        { auth: true },
+                    );
+                    delete pending[key];
+                } catch {}
+            }
+            await writePreference(preferenceKeys.lessonProgressPendingSync, pending);
+        } catch {}
+    };
+
+    useEffect(() => {
+        flushPending();
+        const handleAppState = (state) => {
+            if (state === "active") flushPending();
+        };
+        const sub = AppState.addEventListener("change", handleAppState);
+        return () => {
+            sub?.remove?.();
+        };
+    }, [modules]);
+
     useEffect(() => {
         Promise.resolve(requestJson("/api/v1/lessons/progress", { auth: true }))
             .then((data) => {
@@ -124,7 +169,9 @@ export function WebAppLessonsRoute({
                 },
                 { auth: true },
             );
-        } catch {}
+        } catch {
+            await enqueuePending(activeModule.id, stepNum, done);
+        }
     };
 
     const handleNext = () => {

@@ -3,9 +3,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
     BarChart3,
     BookOpen,
+    GraduationCap,
+    HandHeart,
     LibraryBig,
-    Menu,
-    Search,
 } from "lucide-react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../theme";
@@ -28,26 +28,24 @@ export const webDashboardBottomItems = [
     {
         Icon: BarChart3,
         key: "home",
-        label: "Dashboard",
+        label: "Beranda",
         labelKey: "nav.dashboard",
     },
     { Icon: BookOpen, key: "quran", label: "Al-Quran", labelKey: "nav.quran" },
     {
         Icon: LibraryBig,
         key: "hadith",
-        label: "Hadith",
+        label: "Hadis",
         labelKey: "nav.hadith",
     },
-    { Icon: Search, key: "search", label: "Cari", labelKey: "nav.search" },
-    { Icon: Menu, key: "menu", label: "Menu", labelKey: "nav.menu" },
+    { Icon: HandHeart, key: "ibadah", label: "Ibadah", labelKey: "nav.ibadah" },
+    { Icon: GraduationCap, key: "belajar", label: "Belajar", labelKey: "nav.belajar" },
 ];
 
 export function MobileBottomNav({
     active,
     isDarkTheme = false,
     onChange,
-    onOpenMenu,
-    onOpenSearch,
 }) {
     const insets = useSafeAreaInsets();
     const { t } = useMobileLocale();
@@ -66,16 +64,13 @@ export function MobileBottomNav({
             {webDashboardBottomItems.map((tab) => {
                 const selected = active === tab.key;
                 const Icon = tab.Icon;
-                const isAction = tab.key === "menu" || tab.key === "search";
                 const label = t(tab.labelKey);
 
                 return (
                     <Pressable
                         accessibilityLabel={label}
-                        accessibilityRole={isAction ? "button" : "tab"}
-                        accessibilityState={
-                            tab.key === "menu" ? undefined : { selected }
-                        }
+                        accessibilityRole='tab'
+                        accessibilityState={{ selected }}
                         android_ripple={{
                             color: isDarkTheme
                                 ? nav.darkActiveBg
@@ -84,15 +79,7 @@ export function MobileBottomNav({
                         }}
                         key={tab.key}
                         onPress={() => {
-                            if (!selected || isAction) hapticSelection();
-                            if (tab.key === "menu") {
-                                onOpenMenu?.();
-                                return;
-                            }
-                            if (tab.key === "search") {
-                                onOpenSearch?.();
-                                return;
-                            }
+                            if (!selected) hapticSelection();
                             onChange?.(tab.key);
                         }}
                         style={[

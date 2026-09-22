@@ -134,6 +134,15 @@ export const parseDeepLink = (url) => {
     }
 
     if (tab === "belajar") {
+        if (second === "dzikir") {
+            return { params: { featureKey: "dzikir" }, tab };
+        }
+        if (second === "murojaah") {
+            return { params: { featureKey: "murojaah" }, tab };
+        }
+        if (second === "doa") {
+            return { params: { featureKey: "doa" }, tab };
+        }
         return {
             params: second ? { featureKey: second } : {},
             tab,
