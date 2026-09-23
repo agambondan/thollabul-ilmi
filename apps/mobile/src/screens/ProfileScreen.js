@@ -200,34 +200,52 @@ const getAchievementProgress = (achievement, stats, t) => {
 };
 
 function SubScreen({ title, onBack, children }) {
-    const { isWebAppLayout } = useLayoutModePreference();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
+    const theme = isDarkTheme ? colors.dark : colors.light;
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : undefined}
-            style={styles.flex}
+            style={[styles.flex, { backgroundColor: theme.bg }]}
         >
-            <View style={styles.subHeader}>
+            <View
+                style={[
+                    styles.subHeader,
+                    {
+                        backgroundColor: theme.surface,
+                        borderBottomColor: theme.border,
+                    },
+                ]}
+            >
                 <Pressable
                     accessibilityRole='button'
                     accessibilityLabel={t("common.back")}
-                    android_ripple={{ color: colors.faint, borderless: true }}
+                    android_ripple={{ color: theme.faint, borderless: true }}
                     hitSlop={12}
                     onPress={onBack}
-                    style={styles.backButton}
+                    style={[
+                        styles.backButton,
+                        {
+                            backgroundColor: theme.bg,
+                            borderColor: theme.border,
+                        },
+                    ]}
                 >
                     <ArrowLeft
-                        color={colors.primary}
+                        color={theme.primary}
                         size={20}
                         strokeWidth={2.5}
                     />
                 </Pressable>
-                <Text style={styles.subTitle}>{title}</Text>
+                <Text style={[styles.subTitle, { color: theme.ink }]}>
+                    {title}
+                </Text>
             </View>
             <ScrollView
                 contentContainerStyle={[
                     styles.subContent,
+                    { backgroundColor: theme.bg },
                     isWebAppLayout && styles.webAppSurface,
                 ]}
                 keyboardShouldPersistTaps='handled'
@@ -246,32 +264,54 @@ function SubScreen({ title, onBack, children }) {
 }
 
 function MenuRow({ Icon, label, meta, danger, onPress }) {
+    const { isDarkTheme } = useLayoutModePreference();
+    const theme = isDarkTheme ? colors.dark : colors.light;
+
     return (
         <Pressable
             accessibilityRole='button'
             android_ripple={{
-                color: "rgba(91, 110, 91, 0.12)",
+                color: isDarkTheme ? "rgba(52, 211, 153, 0.12)" : "rgba(91, 110, 91, 0.12)",
                 borderless: false,
             }}
             onPress={onPress}
-            style={styles.menuRow}
+            style={[styles.menuRow, { borderBottomColor: theme.border }]}
         >
-            <View style={[styles.menuIcon, danger && styles.menuIconDanger]}>
+            <View
+                style={[
+                    styles.menuIcon,
+                    {
+                        backgroundColor: danger
+                            ? (isDarkTheme ? "#450a0a" : "#fef2f2")
+                            : theme.surfaceMuted,
+                        borderColor: danger
+                            ? (isDarkTheme ? "#7f1d1d" : "#fecaca")
+                            : theme.border,
+                    },
+                ]}
+            >
                 <Icon
-                    color={danger ? colors.danger : colors.primary}
+                    color={danger ? theme.danger : theme.primary}
                     size={18}
                     strokeWidth={2.2}
                 />
             </View>
             <View style={styles.menuText}>
                 <Text
-                    style={[styles.menuLabel, danger && styles.menuLabelDanger]}
+                    style={[
+                        styles.menuLabel,
+                        { color: danger ? theme.danger : theme.ink },
+                    ]}
                 >
                     {label}
                 </Text>
-                {meta ? <Text style={styles.menuMeta}>{meta}</Text> : null}
+                {meta ? (
+                    <Text style={[styles.menuMeta, { color: theme.muted }]}>
+                        {meta}
+                    </Text>
+                ) : null}
             </View>
-            <ChevronRight color={colors.muted} size={18} strokeWidth={2.4} />
+            <ChevronRight color={theme.muted} size={18} strokeWidth={2.4} />
         </Pressable>
     );
 }
