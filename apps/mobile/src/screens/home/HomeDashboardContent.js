@@ -1255,7 +1255,7 @@ const styles = StyleSheet.create({
     avatar: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: 16,
         borderWidth: 1,
         height: 34,
@@ -1264,15 +1264,13 @@ const styles = StyleSheet.create({
     },
     avatarText: {
         color: colors.primary,
-        fontFamily: "serif",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     name: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     location: {
         color: colors.muted,
@@ -1294,7 +1292,7 @@ const styles = StyleSheet.create({
     prayerStatusPill: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderWidth: 1,
         borderRadius: radius.sm,
         flexDirection: "row",
@@ -1337,7 +1335,7 @@ const styles = StyleSheet.create({
     },
     prayerCard: {
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderWidth: 1,
         borderRadius: radius.lg,
         marginBottom: spacing.md,
@@ -1393,9 +1391,8 @@ const styles = StyleSheet.create({
     },
     prayerTime: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 42,
-        fontWeight: "900",
+        fontWeight: "800",
         marginTop: spacing.xs,
     },
     prayerSummary: {
@@ -1409,7 +1406,7 @@ const styles = StyleSheet.create({
     countdown: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderWidth: 1,
         borderRadius: radius.sm,
         flexDirection: "row",
@@ -1424,7 +1421,7 @@ const styles = StyleSheet.create({
         fontWeight: "800",
     },
     prayerTimeline: {
-        backgroundColor: colors.faint,
+        backgroundColor: colors.border,
         height: 1,
         marginBottom: spacing.sm,
         width: "100%",
@@ -1575,7 +1572,7 @@ const styles = StyleSheet.create({
     },
     recentCard: {
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
@@ -1590,9 +1587,8 @@ const styles = StyleSheet.create({
     },
     recentTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     recentMeta: {
         color: colors.muted,
@@ -1602,7 +1598,7 @@ const styles = StyleSheet.create({
     recentRow: {
         alignItems: "center",
         backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -1614,7 +1610,7 @@ const styles = StyleSheet.create({
     recentIcon: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
         height: 34,
@@ -1624,7 +1620,7 @@ const styles = StyleSheet.create({
     recentRowTitle: {
         color: colors.ink,
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     recentRowSubtitle: {
         color: colors.muted,
@@ -1634,7 +1630,7 @@ const styles = StyleSheet.create({
     journalCard: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         flexDirection: "row",
@@ -1645,7 +1641,7 @@ const styles = StyleSheet.create({
     journalIcon: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: 42,
@@ -1654,9 +1650,8 @@ const styles = StyleSheet.create({
     },
     journalTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     journalDesc: {
         color: colors.muted,
@@ -1665,7 +1660,7 @@ const styles = StyleSheet.create({
     },
     dailyCard: {
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         gap: spacing.sm,
@@ -1770,18 +1765,17 @@ const styles = StyleSheet.create({
     },
     dailyTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     dailyMeta: {
         color: colors.muted,
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     dailyItem: {
         backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",

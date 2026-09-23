@@ -2,12 +2,12 @@ import { colors, spacing, radius, shadows } from "../theme";
 
 describe("colors", () => {
     test("has primary, onPrimary, surface, ink, muted", () => {
-        expect(colors.primary).toBe("#5b6e5b");
-        expect(colors.onPrimary).toBe("#fffaf0");
-        expect(colors.surface).toBe("#f5f2eb");
-        expect(colors.ink).toBe("#3c3a35");
-        expect(colors.muted).toBe("#8c8577");
-        expect(colors.bg).toBe("#fefdf9");
+        expect(colors.primary).toBe("#047857");
+        expect(colors.onPrimary).toBe("#ffffff");
+        expect(colors.surface).toBe("#ffffff");
+        expect(colors.ink).toBe("#0f172a");
+        expect(colors.muted).toBe("#94a3b8");
+        expect(colors.bg).toBe("#f8fafc");
     });
 });
 

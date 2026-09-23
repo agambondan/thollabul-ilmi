@@ -36,7 +36,7 @@ export function SegmentedTabs({ options, value, onChange, style }) {
                         accessibilityRole='tab'
                         accessibilityState={{ selected: active }}
                         android_ripple={{
-                            color: "rgba(91, 110, 91, 0.12)",
+                            color: colors.primaryBg,
                             borderless: false,
                         }}
                         key={option.key}
@@ -108,7 +108,7 @@ export function IconActionButton({
             accessibilityRole='button'
             accessibilityState={{ disabled, selected: active }}
             android_ripple={{
-                color: "rgba(91, 110, 91, 0.12)",
+                color: colors.primaryBg,
                 borderless: true,
             }}
             disabled={disabled}
@@ -144,7 +144,7 @@ export function ActionPill({
             accessibilityRole='button'
             accessibilityState={{ disabled, selected: active }}
             android_ripple={{
-                color: "rgba(91, 110, 91, 0.12)",
+                color: colors.primaryBg,
                 borderless: false,
             }}
             disabled={disabled}
@@ -330,9 +330,8 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 18,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     sectionMeta: {
         color: colors.muted,
@@ -346,7 +345,7 @@ const styles = StyleSheet.create({
     },
     segmentedTabs: {
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -369,7 +368,7 @@ const styles = StyleSheet.create({
     segmentLabel: {
         color: colors.primary,
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     segmentLabelActive: {
         color: colors.onPrimary,
@@ -377,7 +376,7 @@ const styles = StyleSheet.create({
     searchWrap: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -396,7 +395,7 @@ const styles = StyleSheet.create({
     iconButton: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: 38,
@@ -413,7 +412,7 @@ const styles = StyleSheet.create({
     actionPill: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
         flexDirection: "row",
@@ -430,7 +429,7 @@ const styles = StyleSheet.create({
     actionPillLabel: {
         color: colors.primary,
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     actionPillLabelActive: {
         color: colors.onPrimary,
@@ -438,7 +437,7 @@ const styles = StyleSheet.create({
     compactRow: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -470,7 +469,7 @@ const styles = StyleSheet.create({
     rowIcon: {
         alignItems: "center",
         backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: 36,
@@ -484,7 +483,7 @@ const styles = StyleSheet.create({
     rowTitle: {
         color: colors.ink,
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     rowSubtitle: {
         color: colors.muted,
@@ -500,7 +499,7 @@ const styles = StyleSheet.create({
     },
     rowBadge: {
         backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
         paddingHorizontal: 6,
@@ -517,7 +516,7 @@ const styles = StyleSheet.create({
     rowBadgeText: {
         color: colors.muted,
         fontSize: 9,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 11,
     },
     rowBadgeTextActive: {
@@ -530,12 +529,12 @@ const styles = StyleSheet.create({
         color: colors.primary,
         flexShrink: 1,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     stateBox: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
@@ -545,7 +544,7 @@ const styles = StyleSheet.create({
     stateIcon: {
         alignItems: "center",
         backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         height: 42,
@@ -555,9 +554,8 @@ const styles = StyleSheet.create({
     },
     stateTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 17,
-        fontWeight: "900",
+        fontWeight: "800",
         textAlign: "center",
     },
     stateDescription: {

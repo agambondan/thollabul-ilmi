@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react-native";
 import {
     ActivityIndicator,
-    Linking,
     Platform,
     Pressable,
     StyleSheet,
@@ -24,7 +23,7 @@ import {
     verifyWhatsapp,
 } from "../api/auth";
 import { API_URL } from "../api/client";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, shadows, spacing } from "../theme";
 import { Card, CardTitle } from "./Card";
 
 const ACCOUNT_NOT_VERIFIED_MESSAGE = "account not verified";
@@ -124,6 +123,10 @@ export function SessionCard() {
             const result = await WebBrowser.openAuthSessionAsync(
                 authUrl,
                 redirectUrl,
+                {
+                    toolbarColor: theme.surface,
+                    controlsColor: theme.primary,
+                },
             );
 
             if (result.type === "success" && result.url) {
@@ -147,7 +150,7 @@ export function SessionCard() {
                 }
             }
         } catch (err) {
-            showError(err?.message || "Login dengan Google gagal.");
+            showError(err?.message || t("session.googleLoginError"));
         } finally {
             setBusy(false);
         }
@@ -336,7 +339,7 @@ export function SessionCard() {
         <Card style={{ backgroundColor: theme.surface, borderColor: theme.border }}>
             <CardTitle meta={t("session.card.meta")}>
                 {isSignIn
-                    ? t("session.signIn.title")
+                    ? t("session.card.title")
                     : isRegister
                       ? t("session.register.title")
                       : isVerify
@@ -350,11 +353,206 @@ export function SessionCard() {
                       ? t("session.verify.emailDesc")
                       : t("session.card.description")}
             </Text>
+
+            {!isVerify ? (
+                <View
+                    style={[
+                        styles.tabContainer,
+                        {
+                            backgroundColor: theme.surfaceMuted,
+                            borderColor: theme.border,
+                        },
+                    ]}
+                >
+                    <Pressable
+                        accessibilityLabel={t("session.mode.signIn")}
+                        accessibilityRole='button'
+                        accessibilityState={{ selected: isSignIn }}
+                        android_ripple={{
+                            color: isDarkTheme
+                                ? "rgba(52, 211, 153, 0.15)"
+                                : "rgba(4, 120, 87, 0.12)",
+                            borderless: false,
+                        }}
+                        onPress={() => {
+                            setMode("signin");
+                            setMessage("");
+                        }}
+                        style={[
+                            styles.tabButton,
+                            isSignIn && [
+                                styles.tabButtonActive,
+                                {
+                                    backgroundColor: theme.surface,
+                                    borderColor: theme.border,
+                                    ...shadows.paper,
+                                },
+                            ],
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.tabText,
+                                { color: theme.muted },
+                                isSignIn && [
+                                    styles.tabTextActive,
+                                    { color: theme.primary },
+                                ],
+                            ]}
+                        >
+                            {t("session.signIn.label")}
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        accessibilityLabel={t("session.mode.register")}
+                        accessibilityRole='button'
+                        accessibilityState={{ selected: isRegister }}
+                        android_ripple={{
+                            color: isDarkTheme
+                                ? "rgba(52, 211, 153, 0.15)"
+                                : "rgba(4, 120, 87, 0.12)",
+                            borderless: false,
+                        }}
+                        onPress={() => {
+                            setMode("register");
+                            setMessage("");
+                        }}
+                        style={[
+                            styles.tabButton,
+                            isRegister && [
+                                styles.tabButtonActive,
+                                {
+                                    backgroundColor: theme.surface,
+                                    borderColor: theme.border,
+                                    ...shadows.paper,
+                                },
+                            ],
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.tabText,
+                                { color: theme.muted },
+                                isRegister && [
+                                    styles.tabTextActive,
+                                    { color: theme.primary },
+                                ],
+                            ]}
+                        >
+                            {t("session.register.tab")}
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        accessibilityLabel={t("session.mode.forgot")}
+                        accessibilityRole='button'
+                        accessibilityState={{ selected: isForgot }}
+                        android_ripple={{
+                            color: isDarkTheme
+                                ? "rgba(52, 211, 153, 0.15)"
+                                : "rgba(4, 120, 87, 0.12)",
+                            borderless: false,
+                        }}
+                        onPress={() => {
+                            setMode("forgot");
+                            setMessage("");
+                        }}
+                        style={[
+                            styles.tabButton,
+                            isForgot && [
+                                styles.tabButtonActive,
+                                {
+                                    backgroundColor: theme.surface,
+                                    borderColor: theme.border,
+                                    ...shadows.paper,
+                                },
+                            ],
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.tabText,
+                                { color: theme.muted },
+                                isForgot && [
+                                    styles.tabTextActive,
+                                    { color: theme.primary },
+                                ],
+                            ]}
+                        >
+                            {t("session.forgot.title")}
+                        </Text>
+                    </Pressable>
+                </View>
+            ) : null}
+
             <View style={styles.form}>
+                {!isVerify && !isForgot ? (
+                    <>
+                        <Pressable
+                            accessibilityLabel='Login dengan Google'
+                            accessibilityRole='button'
+                            android_ripple={{
+                                color: isDarkTheme
+                                    ? "rgba(255, 255, 255, 0.08)"
+                                    : "rgba(0, 0, 0, 0.08)",
+                                borderless: false,
+                            }}
+                            disabled={loading || busy}
+                            onPress={handleGoogleLogin}
+                            style={[
+                                styles.googleButton,
+                                {
+                                    backgroundColor: theme.surface,
+                                    borderColor: theme.border,
+                                },
+                            ]}
+                        >
+                            {busy ? (
+                                <ActivityIndicator size='small' color={theme.primary} />
+                            ) : (
+                                <>
+                                    <GoogleIcon size={18} />
+                                    <Text
+                                        style={[
+                                            styles.googleButtonText,
+                                            { color: theme.ink },
+                                        ]}
+                                    >
+                                        {t("session.googleLogin")}
+                                    </Text>
+                                </>
+                            )}
+                        </Pressable>
+
+                        <View style={styles.dividerRow}>
+                            <View
+                                style={[
+                                    styles.dividerLine,
+                                    { backgroundColor: theme.border },
+                                ]}
+                            />
+                            <Text
+                                style={[
+                                    styles.dividerText,
+                                    { color: theme.muted },
+                                ]}
+                            >
+                                {t("session.or")}
+                            </Text>
+                            <View
+                                style={[
+                                    styles.dividerLine,
+                                    { backgroundColor: theme.border },
+                                ]}
+                            />
+                        </View>
+                    </>
+                ) : null}
+
                 {isRegister ? (
                     <TextInput
                         accessibilityLabel={t("session.name.label")}
                         autoCapitalize='words'
+                        autoComplete='name'
                         autoCorrect={false}
                         onChangeText={setName}
                         placeholder={t("session.name.placeholder")}
@@ -370,8 +568,9 @@ export function SessionCard() {
                         value={name}
                     />
                 ) : null}
+
                 {isRegister ? (
-                    <View style={styles.modeRow}>
+                    <View style={styles.channelRow}>
                         <Pressable
                             accessibilityLabel={t("session.channel.email")}
                             accessibilityRole='button'
@@ -384,11 +583,11 @@ export function SessionCard() {
                             }}
                             onPress={() => setVerificationChannel("email")}
                             style={[
-                                styles.modeLink,
+                                styles.channelLink,
                                 { borderColor: theme.border },
                                 verificationChannel === "email"
                                     ? [
-                                          styles.modeLinkActive,
+                                          styles.channelLinkActive,
                                           {
                                               backgroundColor:
                                                   theme.primaryBg,
@@ -400,11 +599,11 @@ export function SessionCard() {
                         >
                             <Text
                                 style={[
-                                    styles.modeLinkText,
+                                    styles.channelLinkText,
                                     { color: theme.muted },
                                     verificationChannel === "email"
                                         ? [
-                                              styles.modeLinkTextActive,
+                                              styles.channelLinkTextActive,
                                               { color: theme.primary },
                                           ]
                                         : null,
@@ -430,11 +629,11 @@ export function SessionCard() {
                                 setVerificationChannel("whatsapp")
                             }
                             style={[
-                                styles.modeLink,
+                                styles.channelLink,
                                 { borderColor: theme.border },
                                 verificationChannel === "whatsapp"
                                     ? [
-                                          styles.modeLinkActive,
+                                          styles.channelLinkActive,
                                           {
                                               backgroundColor:
                                                   theme.primaryBg,
@@ -447,11 +646,11 @@ export function SessionCard() {
                         >
                             <Text
                                 style={[
-                                    styles.modeLinkText,
+                                    styles.channelLinkText,
                                     { color: theme.muted },
                                     verificationChannel === "whatsapp"
                                         ? [
-                                              styles.modeLinkTextActive,
+                                              styles.channelLinkTextActive,
                                               { color: theme.primary },
                                           ]
                                         : null,
@@ -462,10 +661,12 @@ export function SessionCard() {
                         </Pressable>
                     </View>
                 ) : null}
+
                 {!isVerify ? (
                     <TextInput
                         accessibilityLabel={t("session.email.label")}
                         autoCapitalize='none'
+                        autoComplete='email'
                         autoCorrect={false}
                         keyboardType='email-address'
                         onChangeText={setEmail}
@@ -486,10 +687,12 @@ export function SessionCard() {
                         value={email}
                     />
                 ) : null}
+
                 {isRegister && verificationChannel === "whatsapp" ? (
                     <TextInput
                         accessibilityLabel={t("session.phone.label")}
                         autoCapitalize='none'
+                        autoComplete='tel'
                         autoCorrect={false}
                         keyboardType='phone-pad'
                         onChangeText={setPhone}
@@ -506,6 +709,7 @@ export function SessionCard() {
                         value={phone}
                     />
                 ) : null}
+
                 {isVerifyWhatsapp ? (
                     <TextInput
                         accessibilityLabel={t("session.code.label")}
@@ -525,6 +729,7 @@ export function SessionCard() {
                         value={code}
                     />
                 ) : null}
+
                 {!isForgot && !isVerify ? (
                     <View
                         style={[
@@ -537,6 +742,7 @@ export function SessionCard() {
                     >
                         <TextInput
                             accessibilityLabel={t("session.password.label")}
+                            autoComplete={isRegister ? "new-password" : "current-password"}
                             onChangeText={setPassword}
                             placeholder={
                                 isRegister
@@ -584,9 +790,11 @@ export function SessionCard() {
                         </Pressable>
                     </View>
                 ) : null}
+
                 {isRegister ? (
                     <TextInput
                         accessibilityLabel={t("session.password.confirmLabel")}
+                        autoComplete='new-password'
                         onChangeText={setConfirmPassword}
                         placeholder={t("session.password.confirmPlaceholder")}
                         placeholderTextColor={theme.muted}
@@ -656,63 +864,6 @@ export function SessionCard() {
                     )}
                 </Pressable>
 
-                {/* Google Sign In option */}
-                {!isVerify && !isForgot ? (
-                    <>
-                        <View style={styles.dividerRow}>
-                            <View
-                                style={[
-                                    styles.dividerLine,
-                                    { backgroundColor: theme.border },
-                                ]}
-                            />
-                            <Text
-                                style={[
-                                    styles.dividerText,
-                                    { color: theme.muted },
-                                ]}
-                            >
-                                {t("session.or") || "ATAU"}
-                            </Text>
-                            <View
-                                style={[
-                                    styles.dividerLine,
-                                    { backgroundColor: theme.border },
-                                ]}
-                            />
-                        </View>
-
-                        <Pressable
-                            accessibilityLabel='Login dengan Google'
-                            accessibilityRole='button'
-                            android_ripple={{
-                                color: "rgba(0, 0, 0, 0.08)",
-                                borderless: false,
-                            }}
-                            disabled={loading || busy}
-                            onPress={handleGoogleLogin}
-                            style={[
-                                styles.googleButton,
-                                {
-                                    backgroundColor: theme.surface,
-                                    borderColor: theme.border,
-                                },
-                            ]}
-                        >
-                            <GoogleIcon size={18} />
-                            <Text
-                                style={[
-                                    styles.googleButtonText,
-                                    { color: theme.ink },
-                                ]}
-                            >
-                                {t("session.googleLogin") ||
-                                    "Masuk dengan Google"}
-                            </Text>
-                        </Pressable>
-                    </>
-                ) : null}
-
                 {isVerifyWhatsapp ? (
                     <Pressable
                         accessibilityLabel={t("session.resend.accessibility")}
@@ -729,6 +880,7 @@ export function SessionCard() {
                         </Text>
                     </Pressable>
                 ) : null}
+
                 {isVerify ? (
                     <Pressable
                         accessibilityLabel={t("session.mode.signIn")}
@@ -745,124 +897,7 @@ export function SessionCard() {
                     </Pressable>
                 ) : null}
             </View>
-            {!isVerify ? (
-                <View style={styles.modeRow}>
-                    <Pressable
-                        accessibilityLabel={t("session.mode.signIn")}
-                        accessibilityRole='button'
-                        accessibilityState={{ selected: isSignIn }}
-                        android_ripple={{
-                            color: "rgba(4, 120, 87, 0.12)",
-                            borderless: false,
-                        }}
-                        onPress={() => setMode("signin")}
-                        style={[
-                            styles.modeLink,
-                            { borderColor: theme.border },
-                            isSignIn
-                                ? [
-                                      styles.modeLinkActive,
-                                      {
-                                          backgroundColor: theme.primaryBg,
-                                          borderColor: theme.primary,
-                                      },
-                                  ]
-                                : null,
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.modeLinkText,
-                                { color: theme.muted },
-                                isSignIn
-                                    ? [
-                                          styles.modeLinkTextActive,
-                                          { color: theme.primary },
-                                      ]
-                                    : null,
-                            ]}
-                        >
-                            {t("session.signIn.label")}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        accessibilityLabel={t("session.mode.register")}
-                        accessibilityRole='button'
-                        accessibilityState={{ selected: isRegister }}
-                        android_ripple={{
-                            color: "rgba(4, 120, 87, 0.12)",
-                            borderless: false,
-                        }}
-                        onPress={() => setMode("register")}
-                        style={[
-                            styles.modeLink,
-                            { borderColor: theme.border },
-                            isRegister
-                                ? [
-                                      styles.modeLinkActive,
-                                      {
-                                          backgroundColor: theme.primaryBg,
-                                          borderColor: theme.primary,
-                                      },
-                                  ]
-                                : null,
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.modeLinkText,
-                                { color: theme.muted },
-                                isRegister
-                                    ? [
-                                          styles.modeLinkTextActive,
-                                          { color: theme.primary },
-                                      ]
-                                    : null,
-                            ]}
-                        >
-                            {t("session.register.tab")}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        accessibilityLabel={t("session.mode.forgot")}
-                        accessibilityRole='button'
-                        accessibilityState={{ selected: isForgot }}
-                        android_ripple={{
-                            color: "rgba(4, 120, 87, 0.12)",
-                            borderless: false,
-                        }}
-                        onPress={() => setMode("forgot")}
-                        style={[
-                            styles.modeLink,
-                            { borderColor: theme.border },
-                            isForgot
-                                ? [
-                                      styles.modeLinkActive,
-                                      {
-                                          backgroundColor: theme.primaryBg,
-                                          borderColor: theme.primary,
-                                      },
-                                  ]
-                                : null,
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.modeLinkText,
-                                { color: theme.muted },
-                                isForgot
-                                    ? [
-                                          styles.modeLinkTextActive,
-                                          { color: theme.primary },
-                                      ]
-                                    : null,
-                            ]}
-                        >
-                            {t("session.forgot.title")}
-                        </Text>
-                    </Pressable>
-                </View>
-            ) : null}
+
             {error ? <Text style={styles.error}>{error}</Text> : null}
             {message ? (
                 <Text style={[styles.success, { color: theme.primary }]}>
@@ -874,6 +909,32 @@ export function SessionCard() {
 }
 
 const styles = StyleSheet.create({
+    tabContainer: {
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: "row",
+        gap: spacing.xs,
+        marginTop: spacing.md,
+        padding: 4,
+    },
+    tabButton: {
+        alignItems: "center",
+        borderRadius: radius.sm,
+        flex: 1,
+        justifyContent: "center",
+        minHeight: 36,
+        paddingHorizontal: spacing.xs,
+    },
+    tabButtonActive: {
+        borderWidth: 1,
+    },
+    tabText: {
+        fontSize: 13,
+        fontWeight: "600",
+    },
+    tabTextActive: {
+        fontWeight: "800",
+    },
     form: {
         gap: spacing.sm,
         marginTop: spacing.md,
@@ -945,28 +1006,25 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginTop: spacing.sm,
     },
-    modeRow: {
+    channelRow: {
         flexDirection: "row",
-        flexWrap: "wrap",
         gap: spacing.sm,
-        marginTop: spacing.sm,
     },
-    modeLink: {
+    channelLink: {
         alignItems: "center",
         borderRadius: radius.sm,
         borderWidth: 1,
-        flexGrow: 1,
+        flex: 1,
         justifyContent: "center",
-        minHeight: 34,
-        minWidth: 88,
+        minHeight: 36,
         paddingHorizontal: spacing.sm,
     },
-    modeLinkActive: {},
-    modeLinkText: {
+    channelLinkActive: {},
+    channelLinkText: {
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "700",
     },
-    modeLinkTextActive: {},
+    channelLinkTextActive: {},
     link: {
         fontSize: 13,
         fontWeight: "700",
@@ -995,7 +1053,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.sm,
         justifyContent: "center",
-        minHeight: 44,
+        minHeight: 46,
         paddingHorizontal: spacing.md,
     },
     googleButtonText: {

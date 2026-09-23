@@ -197,7 +197,7 @@ function ModalSheetInner({
                         accessibilityLabel={closeLabel}
                         accessibilityRole='button'
                         android_ripple={{
-                            color: "rgba(91, 110, 91, 0.12)",
+                            color: colors.primaryBg,
                             borderless: true,
                         }}
                         hitSlop={8}
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     },
     handle: {
         alignSelf: "center",
-        backgroundColor: colors.faint,
+        backgroundColor: colors.borderStrong,
         borderRadius: 3,
         height: 4,
         width: 40,
@@ -283,9 +283,8 @@ const styles = StyleSheet.create({
     },
     title: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 17,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     subtitle: {
         color: colors.muted,
@@ -295,7 +294,7 @@ const styles = StyleSheet.create({
     },
     close: {
         alignItems: "center",
-        backgroundColor: colors.surface,
+        backgroundColor: colors.surfaceMuted,
         borderRadius: 8,
         height: 30,
         justifyContent: "center",
@@ -312,7 +311,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         backgroundColor: colors.bg,
-        borderTopColor: colors.faint,
+        borderTopColor: colors.border,
         borderTopWidth: 1,
         paddingBottom: spacing.lg,
         paddingTop: spacing.md,

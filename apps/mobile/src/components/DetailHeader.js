@@ -24,7 +24,7 @@ export function DetailHeader({
                             accessibilityLabel={backLabel}
                             accessibilityRole='button'
                             android_ripple={{
-                                color: "rgba(91, 110, 91, 0.12)",
+                                color: colors.primaryBg,
                                 borderless: true,
                             }}
                             hitSlop={8}
@@ -70,7 +70,7 @@ export function DetailHeader({
 const styles = StyleSheet.create({
     header: {
         alignItems: "center",
-        borderBottomColor: colors.faint,
+        borderBottomColor: colors.border,
         borderBottomWidth: 1,
         flexDirection: "row",
         gap: spacing.md,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     backButton: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
         height: 34,
@@ -100,9 +100,8 @@ const styles = StyleSheet.create({
     title: {
         color: colors.ink,
         flex: 1,
-        fontFamily: "serif",
-        fontSize: 20,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "800",
         minWidth: 0,
     },
     subtitle: {
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
     meta: {
         color: colors.primary,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
         marginLeft: spacing.xs,
         maxWidth: "34%",
         textAlign: "right",

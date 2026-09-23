@@ -482,7 +482,7 @@ export const styles = StyleSheet.create({
     backButton: {
         alignItems: "center",
         backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: 38,
@@ -491,9 +491,8 @@ export const styles = StyleSheet.create({
     },
     subTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     subContent: {
         backgroundColor: colors.bg,
@@ -518,18 +517,16 @@ export const styles = StyleSheet.create({
     },
     avatarText: {
         color: colors.onPrimary,
-        fontFamily: "serif",
         fontSize: 18,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     profileBody: {
         flex: 1,
     },
     name: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     email: {
         color: colors.muted,
@@ -554,9 +551,8 @@ export const styles = StyleSheet.create({
     },
     statValue: {
         color: colors.primaryDark,
-        fontFamily: "serif",
         fontSize: 24,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     statLabel: {
         color: colors.muted,
@@ -584,9 +580,8 @@ export const styles = StyleSheet.create({
     },
     progressValue: {
         color: colors.primaryDark,
-        fontFamily: "serif",
         fontSize: 20,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     progressLabel: {
         color: colors.muted,
@@ -727,9 +722,8 @@ export const styles = StyleSheet.create({
     },
     achievementHeroValue: {
         color: colors.primaryDark,
-        fontFamily: "serif",
         fontSize: 28,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     achievementHeroLabel: {
         color: colors.muted,
@@ -808,9 +802,8 @@ export const styles = StyleSheet.create({
     achievementDetailTitle: {
         color: colors.ink,
         flex: 1,
-        fontFamily: "serif",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "800",
         lineHeight: 20,
     },
     achievementDetailDescription: {
@@ -915,9 +908,8 @@ export const styles = StyleSheet.create({
     },
     menuLabel: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     menuLabelDanger: {
         color: colors.danger,
@@ -1142,9 +1134,8 @@ export const styles = StyleSheet.create({
     },
     appearanceLabel: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "800",
         marginBottom: spacing.xs,
     },
     appearanceLabelGap: {

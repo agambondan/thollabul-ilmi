@@ -17,7 +17,7 @@ export function CardTitle({ children, meta, metaStyle, style, titleStyle }) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
@@ -40,16 +40,15 @@ const styles = StyleSheet.create({
     title: {
         color: colors.ink,
         flex: 1,
-        fontFamily: "serif",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "600",
         minWidth: 0,
     },
     meta: {
         color: colors.primary,
         flexShrink: 1,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "600",
         marginLeft: spacing.md,
         maxWidth: "48%",
         textAlign: "right",

@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
         }),
     },
     header: {
-        borderBottomColor: colors.faint,
+        borderBottomColor: colors.border,
         borderBottomWidth: 1,
         marginBottom: spacing.xl,
         paddingBottom: spacing.md,
@@ -177,10 +177,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 20,
-        fontWeight: "900",
-        letterSpacing: 0,
+        fontWeight: "800",
+        letterSpacing: -0.3,
     },
     subtitle: {
         color: colors.muted,

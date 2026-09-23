@@ -1698,7 +1698,7 @@ const styles = StyleSheet.create({
     hintCard: {
         alignItems: "center",
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
@@ -1708,7 +1708,7 @@ const styles = StyleSheet.create({
     hintIcon: {
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: 44,
@@ -1725,13 +1725,12 @@ const styles = StyleSheet.create({
     },
     hintTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 17,
-        fontWeight: "900",
+        fontWeight: "800",
     },
     loadingCard: {
         backgroundColor: colors.surface,
-        borderColor: colors.faint,
+        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
@@ -1746,7 +1745,7 @@ const styles = StyleSheet.create({
     },
     loadingSkeleton: {
         alignItems: "center",
-        borderTopColor: colors.faint,
+        borderTopColor: colors.border,
         borderTopWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
@@ -1905,8 +1904,7 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         color: colors.ink,
-        fontFamily: "serif",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "800",
     },
 });
