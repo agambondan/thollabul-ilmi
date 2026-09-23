@@ -206,3 +206,85 @@ func (c *googleAuthController) renderErrorPage(ctx *fiber.Ctx, msg string) error
 	u.RawQuery = q.Encode()
 	return ctx.Redirect(u.String(), fiber.StatusTemporaryRedirect)
 }
+
+// VerifyToken handles native Google Sign-in ID token or Access token verification
+// POST /auth/google/token
+func (c *googleAuthController) VerifyToken(ctx *fiber.Ctx) error {
+	var req struct {
+		IDToken     string `json:"id_token"`
+		AccessToken string `json:"access_token"`
+	}
+	if err := ctx.BodyParser(&req); err != nil || (req.IDToken == "" && req.AccessToken == "") {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "id_token or access_token is required",
+		})
+	}
+
+	var profile struct {
+		Sub           string `json:"sub"`
+		Email         string `json:"email"`
+		EmailVerified any    `json:"email_verified"`
+		Name          string `json:"name"`
+		Picture       string `json:"picture"`
+	}
+
+	var verifyURL string
+	if req.IDToken != "" {
+		verifyURL = "https://oauth2.googleapis.com/tokeninfo?id_token=" + url.QueryEscape(req.IDToken)
+	} else {
+		verifyURL = "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + url.QueryEscape(req.AccessToken)
+	}
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Get(verifyURL)
+	if err != nil {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": fmt.Sprintf("google token verification request failed: %v", err),
+		})
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode != http.StatusOK {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "invalid google token",
+		})
+	}
+
+	if err := json.Unmarshal(body, &profile); err != nil || profile.Email == "" {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "failed to extract google profile",
+		})
+	}
+
+	isVerified := false
+	switch v := profile.EmailVerified.(type) {
+	case bool:
+		isVerified = v
+	case string:
+		isVerified = v == "true"
+	default:
+		isVerified = true
+	}
+
+	if !isVerified {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "google account email is not verified",
+		})
+	}
+
+	loginResp, err := c.user.FindOrCreateOAuthUser(profile.Email, profile.Name, profile.Picture, "google", profile.Sub)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": fmt.Sprintf("user provisioning failed: %v", err),
+		})
+	}
+
+	setAuthCookies(ctx, loginResp.Token, loginResp.RefreshToken)
+
+	return ctx.JSON(fiber.Map{
+		"token":         loginResp.Token,
+		"refresh_token": loginResp.RefreshToken,
+		"user":          loginResp.User,
+	})
+}

@@ -255,6 +255,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Google OAuth
 	master.Get("/auth/google", authLimiter, newGoogleAuthController.Login)
 	master.Get("/auth/google/callback", authLimiter, newGoogleAuthController.Callback)
+	master.Post("/auth/google/token", authLimiter, newGoogleAuthController.VerifyToken)
 
 	// WhatsApp (public availability check — used by the register form)
 	master.Get("/whatsapp/availability", newWhatsappController.Availability)
