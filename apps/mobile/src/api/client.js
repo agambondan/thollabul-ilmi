@@ -4,15 +4,7 @@ import { NativeModules, Platform } from "react-native";
 
 const resolveApiUrl = () => {
     if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
-    if (Platform.OS === "web") return "http://localhost:29900";
-
-    const scriptUrl = NativeModules.SourceCode?.scriptURL ?? "";
-    const host = /^[a-z][a-z0-9+.-]*:\/\/([^/:]+)/i.exec(scriptUrl)?.[1];
-    if (host && host !== "localhost" && host !== "127.0.0.1") {
-        return `http://${host}:29900`;
-    }
-
-    return "http://localhost:29900";
+    return "https://api.thollabulilmi.site";
 };
 
 export const API_URL = resolveApiUrl();
