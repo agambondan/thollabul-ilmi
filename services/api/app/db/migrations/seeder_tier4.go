@@ -171,6 +171,7 @@ func seedBlogPosts(db *gorm.DB) {
 			CategoryID: categoryID(lookupCategory(db, "quran-tafsir")),
 			Title:      "Keutamaan Membaca Al-Quran Setiap Hari Menurut Sunnah",
 			Slug:       "keutamaan-membaca-al-quran",
+			CoverImage: stringPtr("https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=800&auto=format&fit=crop"),
 			Excerpt:    "Mengulas keutamaan membaca dan mentadabburi Al-Quran setiap hari, ganjaran pahala per huruf, syafaat di yaumil qiyamah, serta adab-adab tilawah.",
 			Content: `## Al-Quran: Mukjizat Abadi dan Petunjuk Hidup
 
@@ -243,6 +244,7 @@ Mulailah berkomitmen meluangkan waktu khusus (misal setelah sholat Subuh atau se
 			CategoryID: categoryID(lookupCategory(db, "hadith-sunnah")),
 			Title:      "Mengenal Kitab Arbain Nawawi: Poros Dasar Ajaran Islam",
 			Slug:       "mengenal-arbain-nawawi",
+			CoverImage: stringPtr("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop"),
 			Excerpt:      "Ulasan mendalam kitab Al-Arba'in An-Nawawiyah karya Imam An-Nawawi, latar belakang penulisan, metode penyusunan hadits, dan faedah mempelajarinya.",
 			Content: `## Mahakarya Imam An-Nawawi
 

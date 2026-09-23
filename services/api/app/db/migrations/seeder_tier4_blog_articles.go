@@ -446,7 +446,7 @@ Imam Al-Qurthubi mengisahkan bahwa suatu ketika ada seseorang mengadu kepada Ima
 Rasulullah ﷺ bersabda:
 
 > "Barangsiapa memperbanyak istighfar, niscaya Allah menjadikan untuk setiap kesedihannya kelapangan, untuk setiap kesempitannya jalan keluar, dan memberinya rezeki dari arah yang tidak disangka-sangka."
-> *([HR. Abu Dawud no. 1518](/hadith/abu-daud/1518) dan [HR. Ibnu Majah no. 3819](https://sunnah.com/ibnmajah:3819))*
+> *([HR. Abu Dawud no. 1518](/hadith/abu-daud/1518) dan [HR. Ibnu Majah no. 3819](/hadith/ibnu-majah/3819))*
 
 ### 3. Menghapus Karat dan Noda Hitam di Dalam Hati
 Setiap perbuatan dosa akan menitikkan noda hitam pada hati seorang hamba. Jika ia beristighfar dan bertaubat, noda hitam tersebut akan terhapus dan hatinya kembali berkilau bersih *([HR. Tirmidzi no. 3334](/hadith/tirmidzi/3334))*.
