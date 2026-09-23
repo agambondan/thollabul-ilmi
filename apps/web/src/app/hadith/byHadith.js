@@ -40,6 +40,8 @@ const ByHadith = ({ basePath = "/hadith" }) => {
             .then((data) => {
                 const items = normalizeItems(data);
                 setBookList(items);
+                const defaultBook = items.find((b) => b.slug === "bukhari") || items[0];
+                if (defaultBook) setSelectedBookIds([defaultBook.id]);
             })
             .catch(() => setIsError(true))
             .finally(() => setIsLoading(false));
