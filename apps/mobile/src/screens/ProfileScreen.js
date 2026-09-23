@@ -1228,11 +1228,12 @@ function AchievementsDetail({
     );
 }
 
-export function ProfileScreen({ isActive, navigation, onOpenTab }) {
+export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab }) {
     const {
         deleteAccount,
         loading: sessionLoading,
         session,
+        signInWithSession,
         signOut,
         updateCurrentUser,
         user,
@@ -1247,6 +1248,18 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     const [achievements, setAchievements] = useState(DEFAULT_BADGES);
     const [achievementsLoading, setAchievementsLoading] = useState(false);
     const [achievementsMessage, setAchievementsMessage] = useState("");
+
+    useEffect(() => {
+        if (!deepLinkTarget?.params?.authCallback) return;
+        const { token, refreshToken, name, email } = deepLinkTarget.params;
+        if (token) {
+            signInWithSession({
+                token,
+                refreshToken: refreshToken || token,
+                user: name && email ? { name, email } : undefined,
+            }).catch(() => {});
+        }
+    }, [deepLinkTarget?.params?.authCallback, signInWithSession]);
 
     const push = (screen) => setStack((s) => [...s, screen]);
     const pop = () => setStack((s) => s.slice(0, -1));

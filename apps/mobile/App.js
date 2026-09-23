@@ -404,9 +404,14 @@ export default function App() {
                                                         onOpenTab={openTab}
                                                     />
                                                 );
-                                            if (tab === "profile")
+                                             if (tab === "profile")
                                                 screen = (
                                                     <ProfileScreen
+                                                        deepLinkTarget={
+                                                            isActive
+                                                                ? deepLinkTarget
+                                                                : null
+                                                        }
                                                         isActive={isActive}
                                                         navigation={navigation}
                                                         onOpenTab={openTab}

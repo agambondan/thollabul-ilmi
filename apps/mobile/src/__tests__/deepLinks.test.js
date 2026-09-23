@@ -223,6 +223,23 @@ describe("parseDeepLink", () => {
             });
         });
 
+        test("parses google auth callback deep link", () => {
+            const result = parseDeepLink(
+                "thullaabulilmi://auth/google/callback?token=jwt123&refresh_token=rt456&name=Ahmad&email=ahmad%40test.com",
+            );
+            expect(result).toEqual({
+                tab: "profile",
+                params: {
+                    authCallback: true,
+                    token: "jwt123",
+                    refreshToken: "rt456",
+                    name: "Ahmad",
+                    email: "ahmad@test.com",
+                    view: "settings-account",
+                },
+            });
+        });
+
         test("handles empty profile link", () => {
             const result = parseDeepLink("thollabul-ilmi://profile");
             expect(result).toEqual({ tab: "profile", params: {} });

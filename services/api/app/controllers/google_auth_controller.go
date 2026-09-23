@@ -68,6 +68,18 @@ func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 		Secure:   viper.GetString("ENVIRONMENT") == "production",
 		SameSite: "Lax",
 	})
+	source := ctx.Query("source")
+	if source == "mobile" {
+		ctx.Cookie(&fiber.Cookie{
+			Name:     "google_oauth_source",
+			Value:    "mobile",
+			Path:     "/",
+			Expires:  time.Now().Add(10 * time.Minute),
+			HTTPOnly: true,
+			Secure:   viper.GetString("ENVIRONMENT") == "production",
+			SameSite: "Lax",
+		})
+	}
 	authURL := cfg.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 	return ctx.Redirect(authURL, fiber.StatusTemporaryRedirect)
 }
@@ -146,11 +158,35 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 		return c.renderErrorPage(ctx, fmt.Sprintf("user provisioning failed: %v", err))
 	}
 
-	// Tokens travel via httpOnly cookies (same as the regular email/password
-	// login), never via the redirect URL — a URL query string ends up in
-	// browser history, server/proxy access logs, and any Referer header sent
-	// from the landing page.
 	setAuthCookies(ctx, loginResp.Token, loginResp.RefreshToken)
+
+	source := ctx.Cookies("google_oauth_source")
+	if source == "mobile" {
+		ctx.Cookie(&fiber.Cookie{
+			Name:     "google_oauth_source",
+			Value:    "",
+			Path:     "/",
+			Expires:  time.Now().Add(-1 * time.Hour),
+			HTTPOnly: true,
+			Secure:   viper.GetString("ENVIRONMENT") == "production",
+			SameSite: "Lax",
+		})
+		mobileRedirect := "thullaabulilmi://auth/google/callback"
+		u, _ := url.Parse(mobileRedirect)
+		q := u.Query()
+		q.Set("token", loginResp.Token)
+		q.Set("refresh_token", loginResp.RefreshToken)
+		if loginResp.User != nil {
+			if loginResp.User.Name != nil {
+				q.Set("name", *loginResp.User.Name)
+			}
+			if loginResp.User.Email != nil {
+				q.Set("email", *loginResp.User.Email)
+			}
+		}
+		u.RawQuery = q.Encode()
+		return ctx.Redirect(u.String(), fiber.StatusTemporaryRedirect)
+	}
 
 	frontend := os.Getenv("FRONTEND_URL")
 	if frontend == "" {

@@ -178,4 +178,23 @@ describe("SessionCard", () => {
         fireEvent.press(getByText("Keluar"));
         expect(signOut).toHaveBeenCalledTimes(1);
     });
+
+    test("renders google login button and triggers oauth session", async () => {
+        const signInWithSession = jest.fn().mockResolvedValue({});
+        useSession.mockReturnValue({
+            ...defaultSession,
+            signInWithSession,
+        });
+        const { getByLabelText } = render(<SessionCard />);
+        const googleButton = getByLabelText("Login dengan Google");
+        expect(googleButton).toBeTruthy();
+        fireEvent.press(googleButton);
+        await waitFor(() => {
+            expect(signInWithSession).toHaveBeenCalledWith({
+                token: "test-token",
+                refreshToken: "test-refresh",
+                user: { name: "Test User", email: "test@test.com" },
+            });
+        });
+    });
 });

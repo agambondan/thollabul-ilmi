@@ -62,6 +62,25 @@ const numberOrNull = (value) => {
     return Number.isFinite(parsed) ? parsed : null;
 };
 
+const parseQueryParams = (url) => {
+    try {
+        const parsed = new URL(url);
+        return Object.fromEntries(parsed.searchParams.entries());
+    } catch {
+        const qIdx = url.indexOf("?");
+        if (qIdx >= 0) {
+            const qs = url.slice(qIdx + 1);
+            const params = {};
+            qs.split("&").forEach((pair) => {
+                const [k, v] = pair.split("=");
+                if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || "");
+            });
+            return params;
+        }
+        return {};
+    }
+};
+
 export const parseDeepLink = (url) => {
     const segments = normalizeSegments(url).map((item) =>
         decodeURIComponent(item).toLowerCase(),
@@ -69,7 +88,24 @@ export const parseDeepLink = (url) => {
     const [rawTab, second, third, fourth] = segments;
     const tab = tabAliases[rawTab] ?? rawTab;
 
-    if (!knownTabs.includes(tab)) return null;
+    const queryParams = parseQueryParams(url);
+
+    if (!knownTabs.includes(tab)) {
+        if (rawTab === "auth" && second === "google" && third === "callback") {
+            return {
+                tab: "profile",
+                params: {
+                    authCallback: true,
+                    token: queryParams.token,
+                    refreshToken: queryParams.refresh_token,
+                    name: queryParams.name,
+                    email: queryParams.email,
+                    view: "settings-account",
+                },
+            };
+        }
+        return null;
+    }
 
     if (tab === "home") {
         if (rawTab === "search" || rawTab === "global-search") {

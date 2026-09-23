@@ -136,6 +136,27 @@ export function SessionProvider({ children }) {
         [persist],
     );
 
+    const signInWithSession = useCallback(
+        async (sessionData) => {
+            setLoading(true);
+            setError("");
+            try {
+                const user = sessionData?.user?.name
+                    ? sessionData.user
+                    : await getMe().catch(() => sessionData?.user ?? null);
+                const next = { ...sessionData, user };
+                await persist(next);
+                return next;
+            } catch (err) {
+                setError(err?.message ?? "Gagal memproses sesi login.");
+                throw err;
+            } finally {
+                setLoading(false);
+            }
+        },
+        [persist],
+    );
+
     const signOut = useCallback(async () => {
         setLoading(true);
         setError("");
@@ -239,6 +260,7 @@ export function SessionProvider({ children }) {
             session,
             deleteAccount,
             signIn,
+            signInWithSession,
             signOut,
             updateCurrentUser,
             user: session?.user ?? null,
@@ -250,6 +272,7 @@ export function SessionProvider({ children }) {
             restore,
             session,
             signIn,
+            signInWithSession,
             signOut,
             updateCurrentUser,
         ],

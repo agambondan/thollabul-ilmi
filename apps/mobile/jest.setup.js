@@ -38,3 +38,9 @@ jest.mock("react-native-webview", () => {
         }),
     };
 });
+
+jest.mock("expo-web-browser", () => ({
+    openAuthSessionAsync: jest.fn(() =>
+        Promise.resolve({ type: "success", url: "thullaabulilmi://auth/google/callback?token=test-token&refresh_token=test-refresh&name=Test+User&email=test%40test.com" }),
+    ),
+}));
