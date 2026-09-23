@@ -191,9 +191,11 @@ function ResultRow({ answer, index, item, t }) {
 export function WebAppQuizRoute({
     activeFeature,
     answers = {},
+    clearFeature,
     error,
     items = [],
     loading,
+    navigation,
     onRestart,
     scoreQuiz,
     setAnswers = () => {},
@@ -254,6 +256,29 @@ export function WebAppQuizRoute({
         setCurrentIndex(0);
         setDone(false);
     }, [total]);
+
+    useEffect(() => {
+        if (!navigation?.setBack) return;
+        if (currentIndex > 0) {
+            navigation.setBack(() => {
+                setCurrentIndex((prev) => prev - 1);
+                return true;
+            });
+        } else if (clearFeature) {
+            navigation.setBack(() => {
+                clearFeature();
+                return true;
+            });
+        }
+        return () => {
+            if (clearFeature) {
+                navigation?.setBack?.(() => {
+                    clearFeature();
+                    return true;
+                });
+            }
+        };
+    }, [currentIndex, navigation, clearFeature]);
 
     const answerCurrent = (option) => {
         if (!currentItem || selected) return;

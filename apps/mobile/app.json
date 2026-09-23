@@ -23,7 +23,9 @@
             "permissions": [
                 "ACCESS_COARSE_LOCATION",
                 "ACCESS_FINE_LOCATION",
-                "POST_NOTIFICATIONS"
+                "POST_NOTIFICATIONS",
+                "android.permission.RECORD_AUDIO",
+                "android.permission.MODIFY_AUDIO_SETTINGS"
             ],
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
@@ -52,6 +54,12 @@
                     ]
                 }
             ]
-        ]
+        ],
+        "extra": {
+            "eas": {
+                "projectId": "8fc96483-72fe-4dd8-9d57-f1a60e74d398"
+            }
+        },
+        "owner": "agambondan"
     }
 }

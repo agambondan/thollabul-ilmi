@@ -14,7 +14,7 @@ Follow-up to `2026-09-13-mobile-app-deep-review.md` item #6:
 | **HadithScreen.js** | ✅ FIXED | Offline indicator badge added; `normalizeHadith` matches backend; `hadithSource` state tracked |
 | **ProfileScreen.js** | ✅ FIXED | **Field mapping bugs corrected**:<br>- `hafalanCount`: now reads `memorized` from `HafalanSummary` (not `memorized_count`)<br>- `sholatWeekly`: computes `berjamaah_pct + munfarid_pct` from `SholatStats` (not `weekly_completion_pct`)<br>- `tilawahPages`: reads `total_pages` from `TilawahSummary` |
 | **KhatamScreen.js** | ✅ OK | `normalizeProgress` handles `surah_number`/`ayah_number` snake_case from `ReadingProgress` correctly |
-| **ExploreScreen.js** | ⚠️ PARTIAL | Feature routes use `getFeatureItemPage` + web app routes; `WebAppLessonsRoute`/`WebAppQuizRoute` need `navigation` prop for `setBack`/`clearBack` (tracked separately as #5) |
+| **ExploreScreen.js** | ✅ FIXED | Feature routes use `getFeatureItemPage` + web app routes; `WebAppLessonsRoute`/`WebAppQuizRoute` now receive `navigation` and handle `setBack`/`clearBack` |
 
 ---
 
@@ -62,21 +62,21 @@ Follow-up to `2026-09-13-mobile-app-deep-review.md` item #6:
 
 ## Fixed Issues (This Session)
 
-1. **ProfileScreen**: Fixed field name mismatches for hafalan, prayer stats, tilawah
+1. **ProfileScreen**: Fixed field name mismatches for hafalan (`memorized`), prayer stats (`berjamaah_pct + munfarid_pct`), tilawah (`total_pages`)
 2. **QuranScreen**: Offline Quran pack integration (offline-first loading with API fallback)
 3. **HadithScreen**: Visual indicator "(Offline)" when showing cached data
 4. **Storage**: Added `PRAGMA user_version` for SQLite schema migrations
 5. **Offline Pack**: `checkUpdates` now triggers Quran refresh via `force=true`
+6. **Sub-Route Navigation**: `WebAppLessonsRoute` and `WebAppQuizRoute` receive `navigation` and handle Android hardware back level-by-level
+7. **EAS Config**: `projectId` (`8fc96483-72fe-4dd8-9d57-f1a60e74d398`), `owner`, and `eas.json` configured
 
 ---
 
-## Remaining Items (Not Fixed Here)
+## Remaining Items
 
-| Item | Reference | Priority |
-|------|-----------|----------|
-| `WebAppLessonsRoute`/`WebAppQuizRoute` need `navigation` prop for Android back handling | `2026-09-13` item #5 | P2 |
-| EAS `projectId` in `app.json` for push tokens | `2026-09-13` item #2 | P0 (infra) |
-| Live-device verification before release | `2026-09-13` item #7 | P0 |
+| Item | Reference | Priority | Status |
+|------|-----------|----------|--------|
+| Live-device verification before release | `2026-09-13` item #7 | P0 | Siap dites di device fisik/emulator |
 
 ---
 

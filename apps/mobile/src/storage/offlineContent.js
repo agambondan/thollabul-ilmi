@@ -34,6 +34,14 @@ export const clearPrayerOfflinePack = async () => getPrayerOfflineOverview();
 
 export const getOfflinePrayerForDate = async () => null;
 
+export const getOfflineSurahs = async () => [];
+
+export const getOfflineAyahsForSurah = async () => [];
+
+export const getOfflineAyahsForPage = async () => [];
+
+export const getOfflineAyahsForHizb = async () => [];
+
 export const getOfflineItems = async () => [];
 
 export const getOfflineHadithCountByBook = async () => 0;

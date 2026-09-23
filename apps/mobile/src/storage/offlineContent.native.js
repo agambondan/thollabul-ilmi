@@ -64,6 +64,15 @@ const openDb = async () => {
         CREATE INDEX IF NOT EXISTS idx_offline_audio_surah ON offline_audio(surah_number);
         CREATE INDEX IF NOT EXISTS idx_offline_audio_qari ON offline_audio(qari_slug);
       `);
+            
+            // SQLite schema migration via PRAGMA user_version
+            const SCHEMA_VERSION = 1;
+            const row = await db.getFirstAsync("PRAGMA user_version");
+            const currentVersion = row?.user_version ?? 0;
+            if (currentVersion < SCHEMA_VERSION) {
+                // Future migrations go here
+                await db.execAsync(`PRAGMA user_version = ${SCHEMA_VERSION}`);
+            }
             return db;
         })();
     }
@@ -564,7 +573,7 @@ export const buildOfflinePack = async ({
     const quranComplete =
         existingQuranSurahs >= QURAN_TOTAL_SURAHS &&
         existingQuranAyahs >= QURAN_TOTAL_AYAHS;
-    const shouldSaveQuran = includeQuran && (force || !quranComplete);
+    const shouldSaveQuran = includeQuran && (force || checkUpdates || !quranComplete);
 
     const booksToFetch =
         force || checkUpdates
@@ -859,6 +868,76 @@ export const enforceOfflineAudioStorageLimit = async ({
     } catch {
         return { removedCount: 0, freedBytes: 0 };
     }
+};
+
+export const getOfflineSurahs = async () => {
+    const db = await openDb();
+    const rows = await db.getAllAsync(
+        "SELECT payload FROM offline_items WHERE type = ? ORDER BY key ASC",
+        ["quran_surah"],
+    );
+    return rows
+        .map((row) => {
+            try {
+                return JSON.parse(row.payload);
+            } catch {
+                return null;
+            }
+        })
+        .filter(Boolean)
+        .sort((a, b) => Number(a.number) - Number(b.number));
+};
+
+export const getOfflineAyahsForSurah = async (surahNumber) => {
+    const db = await openDb();
+    const rows = await db.getAllAsync(
+        "SELECT payload FROM offline_items WHERE type = ? AND key LIKE ? ORDER BY key ASC",
+        ["quran_ayah", `ayah:${surahNumber}:%`],
+    );
+    return rows
+        .map((row) => {
+            try {
+                return JSON.parse(row.payload);
+            } catch {
+                return null;
+            }
+        })
+        .filter((item) => item && Number(item.surahNumber) === Number(surahNumber))
+        .sort((a, b) => Number(a.number) - Number(b.number));
+};
+
+export const getOfflineAyahsForPage = async (pageNumber) => {
+    const db = await openDb();
+    const rows = await db.getAllAsync(
+        "SELECT payload FROM offline_items WHERE type = 'quran_ayah' ORDER BY key ASC",
+    );
+    return rows
+        .map((row) => {
+            try {
+                return JSON.parse(row.payload);
+            } catch {
+                return null;
+            }
+        })
+        .filter((item) => item && Number(item.pageNumber) === Number(pageNumber))
+        .sort((a, b) => Number(a.number) - Number(b.number));
+};
+
+export const getOfflineAyahsForHizb = async (hizbQuarter) => {
+    const db = await openDb();
+    const rows = await db.getAllAsync(
+        "SELECT payload FROM offline_items WHERE type = 'quran_ayah' ORDER BY key ASC",
+    );
+    return rows
+        .map((row) => {
+            try {
+                return JSON.parse(row.payload);
+            } catch {
+                return null;
+            }
+        })
+        .filter((item) => item && Number(item.hizbQuarter) === Number(hizbQuarter))
+        .sort((a, b) => Number(a.number) - Number(b.number));
 };
 
 export const getOfflineItems = async (type) => {

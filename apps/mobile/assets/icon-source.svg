@@ -13,7 +13,7 @@
     Book mark — scaled down significantly (~0.68x) to prevent oversized appearance
     on Android / iOS launchers and within circular/squircle mask frames.
   -->
-  <g transform="translate(96 102) scale(0.68)">
+  <g transform="translate(96 100) scale(0.82)">
     <!-- Soft shadow -->
     <ellipse cx="0" cy="36" rx="42" ry="5" fill="#000" opacity="0.22"/>
 

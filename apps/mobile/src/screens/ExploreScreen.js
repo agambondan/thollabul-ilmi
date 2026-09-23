@@ -1381,12 +1381,32 @@ export function ExploreScreen({
                 setSelectedItem(null);
                 return true;
             });
+        } else if (showFaraidhHistory) {
+            navigation?.setBack(() => {
+                setShowFaraidhHistory(false);
+                return true;
+            });
+        } else if (editingUserWirdId) {
+            navigation?.setBack(() => {
+                setEditingUserWirdId("");
+                setUserWirdForm(emptyUserWirdForm);
+                return true;
+            });
         } else if (activeFeature?.type === "forum" && forumView !== "list") {
             navigation?.setBack(() => {
                 setForumView("list");
                 setForumDetail(null);
                 setForumAnswers([]);
                 setForumError("");
+                return true;
+            });
+        } else if (
+            (activeFeature?.key === "tafsir" ||
+                activeFeature?.key === "asbabun-nuzul") &&
+            selectedSurahNumber
+        ) {
+            navigation?.setBack(() => {
+                setSelectedSurahNumber(null);
                 return true;
             });
         } else if (activeFeature) {
@@ -1400,6 +1420,9 @@ export function ExploreScreen({
     }, [
         isActive,
         selectedItem,
+        showFaraidhHistory,
+        editingUserWirdId,
+        selectedSurahNumber,
         activeFeature,
         forumView,
         navigation,
@@ -1722,6 +1745,7 @@ export function ExploreScreen({
             handleTogglePinnedFeature,
             items,
             kajianCategory,
+            navigation,
             kajianSearch,
             leaderboardTab,
             libraryProgressFilter,

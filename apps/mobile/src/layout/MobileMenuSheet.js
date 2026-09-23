@@ -36,7 +36,7 @@ import {
     View,
 } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../theme";
+import { colors, radius, spacing } from "../theme";
 import { hapticSelection } from "../utils/haptics";
 
 export const webAppMenuGroups = [
@@ -396,17 +396,23 @@ export const webAppMenuGroups = [
 ];
 
 const sheet = {
-    active: "#34d399",
+    active: colors.dark.primary,
+    activeLight: colors.light.primary,
     backdrop: "rgba(2, 6, 23, 0.62)",
-    border: "#243044",
-    ink: "#f8fafc",
-    muted: "#94a3b8",
-    surface: "#111827",
+    border: colors.dark.borderStrong,
+    borderLight: colors.light.borderStrong,
+    ink: colors.dark.ink,
+    inkLight: colors.light.ink,
+    muted: colors.dark.muted,
+    mutedLight: colors.light.muted,
+    surface: colors.dark.surface,
+    surfaceLight: colors.light.surface,
 };
 
 export function MobileMenuSheet({
     active,
     accountLabel = "Tamu",
+    isDarkTheme = false,
     onClose,
     onSelect,
     visible,
@@ -428,17 +434,43 @@ export function MobileMenuSheet({
                     style={styles.backdrop}
                     testID='mobile-menu-sheet-backdrop'
                 />
-                <View style={styles.sheet}>
-                    <View style={styles.header}>
+                <View
+                    style={[
+                        styles.sheet,
+                        isDarkTheme && styles.sheetDark,
+                    ]}
+                >
+                    <View
+                        style={[
+                            styles.header,
+                            isDarkTheme && styles.headerDark,
+                        ]}
+                    >
                         <View>
-                            <Text style={styles.title}>{t("menu.title")}</Text>
-                            <Text style={styles.subtitle}>{accountLabel}</Text>
+                            <Text
+                                style={[
+                                    styles.title,
+                                    isDarkTheme && styles.titleDark,
+                                ]}
+                            >
+                                {t("menu.title")}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.subtitle,
+                                    isDarkTheme && styles.subtitleDark,
+                                ]}
+                            >
+                                {accountLabel}
+                            </Text>
                         </View>
                         <Pressable
                             accessibilityLabel={t("common.closeMenu")}
                             accessibilityRole='button'
                             android_ripple={{
-                                color: "#1f2937",
+                                color: isDarkTheme
+                                    ? sheet.border
+                                    : sheet.borderLight,
                                 borderless: true,
                             }}
                             onPress={onClose}
@@ -446,7 +478,9 @@ export function MobileMenuSheet({
                             testID='mobile-menu-sheet-close'
                         >
                             <X
-                                color={sheet.muted}
+                                color={
+                                    isDarkTheme ? sheet.muted : sheet.mutedLight
+                                }
                                 size={20}
                                 strokeWidth={2.2}
                             />
@@ -459,7 +493,12 @@ export function MobileMenuSheet({
                     >
                         {webAppMenuGroups.map((group) => (
                             <View key={group.key} style={styles.group}>
-                                <Text style={styles.groupTitle}>
+                                <Text
+                                    style={[
+                                        styles.groupTitle,
+                                        isDarkTheme && styles.groupTitleDark,
+                                    ]}
+                                >
                                     {t(group.titleKey)}
                                 </Text>
                                 <View style={styles.grid}>
@@ -477,7 +516,9 @@ export function MobileMenuSheet({
                                                     selected,
                                                 }}
                                                 android_ripple={{
-                                                    color: "#1f2937",
+                                                    color: isDarkTheme
+                                                        ? sheet.border
+                                                        : sheet.borderLight,
                                                     borderless: false,
                                                 }}
                                                 key={item.key}
@@ -488,16 +529,24 @@ export function MobileMenuSheet({
                                                 }}
                                                 style={[
                                                     styles.item,
+                                                    isDarkTheme &&
+                                                        styles.itemDark,
                                                     selected &&
-                                                        styles.itemActive,
+                                                        (isDarkTheme
+                                                            ? styles.itemActiveDark
+                                                            : styles.itemActive),
                                                 ]}
                                                 testID={`mobile-menu-item-${item.key}`}
                                             >
                                                 <Icon
                                                     color={
                                                         selected
-                                                            ? sheet.active
-                                                            : "#cbd5e1"
+                                                            ? isDarkTheme
+                                                                ? sheet.active
+                                                                : sheet.activeLight
+                                                            : isDarkTheme
+                                                            ? sheet.muted
+                                                            : sheet.mutedLight
                                                     }
                                                     size={15}
                                                     strokeWidth={2}
@@ -506,8 +555,12 @@ export function MobileMenuSheet({
                                                     numberOfLines={1}
                                                     style={[
                                                         styles.itemLabel,
+                                                        isDarkTheme &&
+                                                            styles.itemLabelDark,
                                                         selected &&
-                                                            styles.itemLabelActive,
+                                                            (isDarkTheme
+                                                                ? styles.itemLabelActiveDark
+                                                                : styles.itemLabelActive),
                                                     ]}
                                                 >
                                                     {label}
@@ -535,33 +588,45 @@ const styles = StyleSheet.create({
         backgroundColor: sheet.backdrop,
     },
     sheet: {
-        backgroundColor: sheet.surface,
+        backgroundColor: sheet.surfaceLight,
         borderTopLeftRadius: radius.lg,
         borderTopRightRadius: radius.lg,
         maxHeight: "78%",
         overflow: "hidden",
     },
+    sheetDark: {
+        backgroundColor: sheet.surface,
+    },
     header: {
         alignItems: "center",
-        borderBottomColor: sheet.border,
+        borderBottomColor: sheet.borderLight,
         borderBottomWidth: 1,
         flexDirection: "row",
         justifyContent: "space-between",
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.md,
     },
+    headerDark: {
+        borderBottomColor: sheet.border,
+    },
     title: {
-        color: sheet.ink,
+        color: sheet.inkLight,
         fontSize: 14,
         fontWeight: "800",
         letterSpacing: 0,
     },
+    titleDark: {
+        color: sheet.ink,
+    },
     subtitle: {
-        color: sheet.muted,
+        color: sheet.mutedLight,
         fontSize: 11,
         fontWeight: "500",
         letterSpacing: 0,
         marginTop: 1,
+    },
+    subtitleDark: {
+        color: sheet.muted,
     },
     closeButton: {
         alignItems: "center",
@@ -580,10 +645,13 @@ const styles = StyleSheet.create({
         gap: spacing.xs,
     },
     groupTitle: {
-        color: sheet.muted,
+        color: sheet.mutedLight,
         fontSize: 10,
         fontWeight: "800",
         letterSpacing: 0.4,
+    },
+    groupTitleDark: {
+        color: sheet.muted,
     },
     grid: {
         flexDirection: "row",
@@ -592,7 +660,7 @@ const styles = StyleSheet.create({
     },
     item: {
         alignItems: "center",
-        borderColor: sheet.border,
+        borderColor: sheet.borderLight,
         borderRadius: radius.md,
         borderWidth: 1,
         flexBasis: "48%",
@@ -603,18 +671,32 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.sm,
         paddingVertical: spacing.xs,
     },
+    itemDark: {
+        borderColor: sheet.border,
+    },
     itemActive: {
         backgroundColor: "rgba(16, 185, 129, 0.12)",
-        borderColor: "#065f46",
+        borderColor: colors.light.primaryHover,
+    },
+    itemActiveDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.12)",
+        borderColor: colors.dark.primaryHover,
     },
     itemLabel: {
-        color: "#e5e7eb",
+        color: sheet.inkLight,
         flex: 1,
         fontSize: 12,
         fontWeight: "600",
         letterSpacing: 0,
     },
+    itemLabelDark: {
+        color: sheet.ink,
+    },
     itemLabelActive: {
+        color: sheet.activeLight,
+        fontWeight: "800",
+    },
+    itemLabelActiveDark: {
         color: sheet.active,
         fontWeight: "800",
     },

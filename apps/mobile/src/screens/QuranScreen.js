@@ -44,6 +44,12 @@ import {
     getTafsirForAyah,
 } from "../api/client";
 import {
+    getOfflineSurahs,
+    getOfflineAyahsForSurah,
+    getOfflineAyahsForPage,
+    getOfflineAyahsForHizb,
+} from "../storage/offlineContent";
+import {
     addBookmark,
     deleteBookmark,
     getBookmarks,
@@ -466,6 +472,17 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const load = useCallback(async () => {
         setLoading(true);
+        try {
+            const offlineSurahs = await getOfflineSurahs();
+            if (offlineSurahs && offlineSurahs.length > 0) {
+                setSurahs(offlineSurahs);
+                setMessage("Memuat daftar surah dari offline");
+                setLoading(false);
+                return;
+            }
+        } catch {
+            // fall through to API
+        }
         const items = await getSurahs();
         setSurahs(items);
         setLoading(false);
@@ -691,6 +708,34 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     };
 
     const loadSurahPage = async (surahNumber, page = 0) => {
+        try {
+            const offlineAyahs = await getOfflineAyahsForSurah(surahNumber);
+            if (offlineAyahs && offlineAyahs.length > 0) {
+                const pageSize = SURAH_PAGE_SIZE;
+                const start = page * pageSize;
+                const end = start + pageSize;
+                const pageItems = offlineAyahs.slice(start, end);
+                const hasMore = end < offlineAyahs.length;
+                const current = surahPaginationRef.current;
+                surahPaginationRef.current = {
+                    hasMore,
+                    keys: current.keys ?? new Set(),
+                    loadedCount: current.loadedCount ?? 0,
+                    loading: false,
+                    page,
+                    surahNumber,
+                };
+                return {
+                    hasMore,
+                    items: pageItems,
+                    page,
+                    total: offlineAyahs.length,
+                    totalPages: Math.ceil(offlineAyahs.length / pageSize),
+                };
+            }
+        } catch {
+            // fall through to API
+        }
         const result = await getAyahsForSurahPage(surahNumber, {
             page,
             size: SURAH_PAGE_SIZE,
@@ -721,7 +766,11 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         setMushafPageLoading(true);
         try {
             const [items, mufrodatItems] = await Promise.all([
-                getAyahsForPage(nextPage),
+                getAyahsForPage(nextPage).catch(async (fetchErr) => {
+                    const offlineItems = await getOfflineAyahsForPage(nextPage);
+                    if (offlineItems && offlineItems.length > 0) return offlineItems;
+                    throw fetchErr;
+                }),
                 getMufrodatByPage(nextPage).catch(() => []),
             ]);
             if (mushafPageRequestRef.current !== requestId) return items;
@@ -788,14 +837,36 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 ? getSurahPageForAyah(normalizedTargetAyah.number)
                 : 0;
             const pagesToLoad = getInitialSurahPages(targetPage, surah.ayahs);
-            const pages = await Promise.all(
-                pagesToLoad.map((page) =>
-                    getAyahsForSurahPage(surah.number, {
-                        page,
-                        size: SURAH_PAGE_SIZE,
-                    }),
-                ),
-            );
+            let pages;
+            try {
+                const offlineAyahs = await getOfflineAyahsForSurah(surah.number);
+                if (offlineAyahs && offlineAyahs.length > 0) {
+                    pages = pagesToLoad.map((page) => {
+                        const pageSize = SURAH_PAGE_SIZE;
+                        const start = page * pageSize;
+                        const end = start + pageSize;
+                        const pageItems = offlineAyahs.slice(start, end);
+                        return {
+                            items: pageItems,
+                            hasMore: end < offlineAyahs.length,
+                            page,
+                            total: offlineAyahs.length,
+                            totalPages: Math.ceil(offlineAyahs.length / pageSize),
+                        };
+                    });
+                } else {
+                    throw new Error("No offline data");
+                }
+            } catch {
+                pages = await Promise.all(
+                    pagesToLoad.map((page) =>
+                        getAyahsForSurahPage(surah.number, {
+                            page,
+                            size: SURAH_PAGE_SIZE,
+                        }),
+                    ),
+                );
+            }
             const result = pages[pages.length - 1] ?? {
                 hasMore: false,
                 page: 0,
@@ -915,7 +986,17 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         });
         setReaderLoading(true);
         try {
-            const items = await getAyahsForPage(page);
+            let items;
+            try {
+                const offlineAyahs = await getOfflineAyahsForPage(page);
+                if (offlineAyahs && offlineAyahs.length > 0) {
+                    items = offlineAyahs;
+                } else {
+                    throw new Error("No offline data");
+                }
+            } catch {
+                items = await getAyahsForPage(page);
+            }
             setAyahs(items);
             setMushafPageNumber(page);
             setMushafPageAyahs(items);
@@ -943,7 +1024,17 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         });
         setReaderLoading(true);
         try {
-            const items = await getAyahsForHizb(hizb);
+            let items;
+            try {
+                const offlineAyahs = await getOfflineAyahsForHizb(hizb);
+                if (offlineAyahs && offlineAyahs.length > 0) {
+                    items = offlineAyahs;
+                } else {
+                    throw new Error("No offline data");
+                }
+            } catch {
+                items = await getAyahsForHizb(hizb);
+            }
             setAyahs(items);
             const initialPage = getFirstPageNumber(items);
             setMushafPageNumber(initialPage);

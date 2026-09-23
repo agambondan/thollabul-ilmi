@@ -40,9 +40,11 @@ const LESSON_CATEGORIES = [
 ];
 
 export function WebAppLessonsRoute({
+    clearFeature,
     feature,
     items,
     isDarkTheme,
+    navigation,
     styles: injectedStyles,
 }) {
     const { t } = useMobileLocale();
@@ -150,6 +152,29 @@ export function WebAppLessonsRoute({
             })
             .catch(() => {});
     }, [modules]);
+
+    useEffect(() => {
+        if (!navigation?.setBack) return;
+        if (activeStepIdx > 0) {
+            navigation.setBack(() => {
+                setActiveStepIdx((prev) => prev - 1);
+                return true;
+            });
+        } else if (clearFeature) {
+            navigation.setBack(() => {
+                clearFeature();
+                return true;
+            });
+        }
+        return () => {
+            if (clearFeature) {
+                navigation?.setBack?.(() => {
+                    clearFeature();
+                    return true;
+                });
+            }
+        };
+    }, [activeStepIdx, navigation, clearFeature]);
 
     const activeModule = modules.find(
         (m) => (m.slug || m.id) === activeModuleId,

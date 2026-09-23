@@ -103,6 +103,14 @@ jest.mock("../storage/preferences", () => ({
     writePreference: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock("../storage/offlineContent", () => ({
+    getOfflineSurahs: jest.fn().mockResolvedValue([]),
+    getOfflineAyahsForSurah: jest.fn().mockResolvedValue([]),
+    getOfflineAyahsForPage: jest.fn().mockResolvedValue([]),
+    getOfflineAyahsForHizb: jest.fn().mockResolvedValue([]),
+    getOfflineOverview: jest.fn().mockResolvedValue({ supported: true }),
+}));
+
 jest.mock("lucide-react-native", () => {
     const icons = {};
     const names = [

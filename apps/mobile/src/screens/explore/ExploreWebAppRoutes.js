@@ -174,6 +174,7 @@ export function renderExploreWebAppRoute(context) {
         loadMoreFeature,
         loadZakatHistory,
         loading,
+        navigation,
         notesSearch,
         onToggleAmalan,
         onOpenKajianUrl,
@@ -2176,9 +2177,11 @@ export function renderExploreWebAppRoute(context) {
             <WebAppQuizRoute
                 activeFeature={activeFeature}
                 answers={answers}
+                clearFeature={clearFeature}
                 error={error}
                 items={visibleItems}
                 loading={loading}
+                navigation={navigation}
                 onRestart={loadFeature}
                 scoreQuiz={scoreQuiz}
                 setAnswers={setAnswers}
@@ -2606,9 +2609,11 @@ export function renderExploreWebAppRoute(context) {
     if (activeFeature?.key === "lessons" || activeFeature?.type === "lessons") {
         return (
             <WebAppLessonsRoute
+                clearFeature={clearFeature}
                 feature={activeFeature}
                 isDarkTheme={isDarkTheme}
                 items={visibleItems}
+                navigation={navigation}
                 styles={styles}
             />
         );

@@ -5,10 +5,10 @@ import { radius, spacing } from "../theme";
 
 const header = {
     bg: "#ffffff",
-    border: "#f3f4f6",
-    brand: "#007f63",
-    ink: "#111827",
-    muted: "#9ca3af",
+    border: "#e2e8f0",
+    brand: "#047857",
+    ink: "#0f172a",
+    muted: "#64748b",
     darkBg: "#020617",
     darkBorder: "#1e293b",
     darkInk: "#f8fafc",

@@ -1306,17 +1306,23 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             : 0,
                     hafalanCount:
                         hafalanRes.status === "fulfilled"
-                            ? (hafalanRes.value?.memorized_count ??
-                              hafalanRes.value?.total ??
-                              hafalanRes.value?.data?.memorized_count ??
+                            ? (hafalanRes.value?.memorized ??
+                              hafalanRes.value?.memorized_count ??
+                              hafalanRes.value?.data?.memorized ??
                               0)
                             : null,
                     sholatWeekly:
                         prayerRes.status === "fulfilled"
-                            ? (prayerRes.value?.weekly_completion_pct ??
-                              prayerRes.value?.completion_pct ??
-                              prayerRes.value?.data?.weekly_completion_pct ??
-                              null)
+                            ? (prayerRes.value?.berjamaah_pct != null &&
+                              prayerRes.value?.munfarid_pct != null
+                                  ? Math.round(
+                                        Number(prayerRes.value.berjamaah_pct) +
+                                            Number(prayerRes.value.munfarid_pct),
+                                    )
+                                  : (prayerRes.value?.weekly_completion_pct ??
+                                    prayerRes.value?.completion_pct ??
+                                    prayerRes.value?.data?.weekly_completion_pct ??
+                                    null))
                             : null,
                     tilawahPages:
                         tilawahRes.status === "fulfilled"

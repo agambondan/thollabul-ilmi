@@ -665,7 +665,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         ? "Memuat hadis..."
         : `${formatHadithCount(displayedHadithCount)} hadis ditampilkan dari ${formatHadithCount(totalHadithCount)} ${
               query ? "hasil" : "hadis"
-          }`;
+          }${hadithSource === "offline" ? " (Offline)" : ""}`;
     const hasBufferedHadiths = visibleCount < filteredHadiths.length;
     const hasMoreHadiths =
         hasBufferedHadiths || (hadithSource === "backend" && hasMoreRemote);

@@ -11,23 +11,23 @@ import {
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../theme";
+import { colors, radius, spacing } from "../theme";
 import { hapticSelection } from "../utils/haptics";
 
 const menu = {
-    active: "#34d399",
+    active: colors.dark.primary,
     backdrop: "rgba(2, 6, 23, 0.22)",
-    border: "#334155",
-    danger: "#f87171",
-    ink: "#f8fafc",
-    muted: "#94a3b8",
-    surface: "#1e293b",
-    lightActive: "#047857",
+    border: colors.dark.border,
+    danger: colors.dark.danger,
+    ink: colors.dark.ink,
+    muted: colors.dark.muted,
+    surface: colors.dark.surfaceMuted,
+    lightActive: colors.light.primary,
     lightBackdrop: "rgba(15, 23, 42, 0.18)",
-    lightBorder: "#e5e7eb",
-    lightInk: "#111827",
-    lightMuted: "#64748b",
-    lightSurface: "#ffffff",
+    lightBorder: colors.light.border,
+    lightInk: colors.light.ink,
+    lightMuted: colors.light.muted,
+    lightSurface: colors.light.surface,
 };
 
 const accountItems = [
@@ -293,7 +293,10 @@ export function MobileAccountMenu({
                                 style={[
                                     styles.langPill,
                                     !isDarkTheme && styles.langPillLight,
-                                    language === "idn" && styles.langPillActive,
+                                    language === "idn" &&
+                                        (isDarkTheme
+                                            ? styles.langPillActiveDark
+                                            : styles.langPillActiveLight),
                                 ]}
                                 testID='mobile-account-menu-language-idn'
                             >
@@ -302,7 +305,9 @@ export function MobileAccountMenu({
                                     style={[
                                         styles.langText,
                                         language === "idn"
-                                            ? styles.langTextActive
+                                            ? isDarkTheme
+                                                ? styles.langTextActiveDark
+                                                : styles.langTextActiveLight
                                             : !isDarkTheme &&
                                               styles.langTextLight,
                                     ]}
@@ -322,7 +327,10 @@ export function MobileAccountMenu({
                                 style={[
                                     styles.langPill,
                                     !isDarkTheme && styles.langPillLight,
-                                    language === "en" && styles.langPillActive,
+                                    language === "en" &&
+                                        (isDarkTheme
+                                            ? styles.langPillActiveDark
+                                            : styles.langPillActiveLight),
                                 ]}
                                 testID='mobile-account-menu-language-en'
                             >
@@ -331,7 +339,9 @@ export function MobileAccountMenu({
                                     style={[
                                         styles.langText,
                                         language === "en"
-                                            ? styles.langTextActive
+                                            ? isDarkTheme
+                                                ? styles.langTextActiveDark
+                                                : styles.langTextActiveLight
                                             : !isDarkTheme &&
                                               styles.langTextLight,
                                     ]}
@@ -556,8 +566,13 @@ const styles = StyleSheet.create({
     langPillLight: {
         borderColor: menu.lightBorder,
     },
-    langPillActive: {
-        borderColor: "#10b981",
+    langPillActiveDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+        borderColor: menu.active,
+    },
+    langPillActiveLight: {
+        backgroundColor: "#ecfdf5",
+        borderColor: menu.lightActive,
     },
     flag: {
         fontSize: 14,
@@ -571,8 +586,11 @@ const styles = StyleSheet.create({
     langTextLight: {
         color: menu.lightMuted,
     },
-    langTextActive: {
+    langTextActiveDark: {
         color: menu.active,
+    },
+    langTextActiveLight: {
+        color: menu.lightActive,
     },
     signOutRow: {
         alignItems: "center",

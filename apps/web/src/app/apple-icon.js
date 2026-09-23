@@ -17,8 +17,8 @@ export default function AppleIcon() {
             }}
         >
             <svg
-                width='130'
-                height='130'
+                width='105'
+                height='105'
                 viewBox='0 0 100 100'
                 fill='none'
                 xmlns='http://www.w3.org/2000/svg'

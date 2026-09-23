@@ -10,7 +10,7 @@ import { updateProfile } from "../api/auth";
 import { useSession } from "../context/SessionContext";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
-import { colors } from "../theme";
+import { colors, getThemeColors } from "../theme";
 import { useLayoutMode } from "./LayoutModeProvider";
 import { MobileAccountMenu } from "./MobileAccountMenu";
 import { MobileBottomNav } from "./MobileBottomNav";
@@ -138,6 +138,7 @@ export function WebAppShell({
             <MobileMenuSheet
                 accountLabel={accountLabel}
                 active={activeTab}
+                isDarkTheme={isDarkTheme}
                 onClose={closeMenu}
                 onSelect={handleMenuSelect}
                 visible={menuVisible}
@@ -165,17 +166,17 @@ export function WebAppShell({
 
 const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: "#ffffff",
+        backgroundColor: colors.light.surface,
         flex: 1,
     },
     safeAreaDark: {
-        backgroundColor: "#020617",
+        backgroundColor: colors.dark.bg,
     },
     container: {
-        backgroundColor: colors.bg,
+        backgroundColor: colors.light.bg,
         flex: 1,
     },
     containerDark: {
-        backgroundColor: "#020617",
+        backgroundColor: colors.dark.bg,
     },
 });
