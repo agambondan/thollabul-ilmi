@@ -57,8 +57,10 @@ export async function getHadithsByThemeSlug(rawSlug) {
             if (!data?.items?.length) break;
         }
 
-        return { hadiths, isError: false };
+        const theme = hadiths[0]?.theme || null;
+
+        return { hadiths, theme, isError: false };
     } catch {
-        return { hadiths: [], isError: true };
+        return { hadiths: [], theme: null, isError: true };
     }
 }
