@@ -201,7 +201,7 @@ Ketika manusia berada di padang mahsyar dalam keadaan ketakutan dan membutuhkan 
 Dari Abu Umamah Al-Bahili radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
 
 > "Bacalah Al-Quran, karena sesungguhnya ia akan datang pada hari kiamat sebagai pemberi syafaat bagi para pembacanya."
-> *([HR. Muslim no. 804](/hadith/muslim/804))*
+> *([HR. Muslim no. 1874](/hadith/muslim/1874))*
 
 ### 3. Bersama Para Malaikat yang Mulia
 Keutamaan ini berlaku bagi siapa saja, baik yang telah mahir membaca maupun yang masih terbata-bata dalam mengeja tajwid.
@@ -209,7 +209,7 @@ Keutamaan ini berlaku bagi siapa saja, baik yang telah mahir membaca maupun yang
 Aisyah radhiyallahu 'anha meriwayatkan sabda Rasulullah ﷺ:
 
 > "Orang yang mahir membaca Al-Quran akan bersama para malaikat yang mulia lagi taat. Sedangkan orang yang membaca Al-Quran dengan terbata-bata dan merasa kesulitan, maka baginya dua pahala (pahala membaca dan pahala atas kesungguhannya berusaha)."
-> *([HR. Bukhari no. 4937](/hadith/bukhari/4937) dan [HR. Muslim no. 798](/hadith/muslim/798))*
+> *([HR. Bukhari no. 4937](/hadith/bukhari/4937) dan [HR. Muslim no. 1862](/hadith/muslim/1862))*
 
 Maka jangan pernah merasa minder atau putus asa jika lidah masih kaku dalam melafalkan makharijul huruf; setiap tetes perjuangan kita dihargai ganda oleh Allah Yang Maha Pemurah.
 

@@ -260,7 +260,7 @@ Dari Abu Sa'id Al-Khudri radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
 Dalam riwayat lain yang shahih, sepuluh ayat pertama dari surat ini juga menjadi tameng kokoh dari fitnah terbesar yang akan melanda umat manusia di akhir zaman:
 
 > "Barangsiapa menghafal sepuluh ayat pertama dari surat Al-Kahfi, maka ia akan terlindungi dari fitnah Dajjal."
-> *([HR. Muslim no. 809](/hadith/muslim/809))*
+> *([HR. Muslim no. 1883](/hadith/muslim/1883))*
 
 ---
 
@@ -498,7 +498,7 @@ Terdapat alasan khusus yang disampaikan langsung oleh lisan mulia Rasulullah ﷺ
 Ketika Rasulullah ﷺ ditanya mengenai alasan berpuasa pada hari Senin, beliau bersabda:
 
 > "Itu adalah hari di mana aku dilahirkan, dan hari di mana aku diutus (menjadi Rasul) atau diturunkannya wahyu kepadaku."
-> *([HR. Muslim no. 1162](/hadith/muslim/1162))*
+> *([HR. Muslim no. 2750](/hadith/muslim/2750))*
 
 ### 2. Hari Penyetoran Amal Hamba kepada Allah (Hari Kamis)
 Setiap pekan, lembaran amal ibadah manusia diperiksa dan diangkat ke hadapan Allah Subhanahu wa Ta'ala.
@@ -523,7 +523,7 @@ Ditinjau dari perspektif kesehatan modern, puasa berkala dua hari dalam sepekan 
 ## Ketentuan Fiqih Puasa Sunnah
 
 ### 1. Kelonggaran Niat
-Berbeda dengan puasa wajib Ramadan yang mengharuskan seseorang berniat sebelum terbit fajar (*Tabyitun Niyyah*), puasa sunnah memiliki kelonggaran di mana niat boleh dipasang di pagi hari (misal pukul 07.00 atau 08.00 pagi) dengan syarat belum makan, minum, atau melakukan pembatal puasa sejak fajar Subuh *([HR. Muslim no. 1154](/hadith/muslim/1154))*.
+Berbeda dengan puasa wajib Ramadan yang mengharuskan seseorang berniat sebelum terbit fajar (*Tabyitun Niyyah*), puasa sunnah memiliki kelonggaran di mana niat boleh dipasang di pagi hari (misal pukul 07.00 atau 08.00 pagi) dengan syarat belum makan, minum, atau melakukan pembatal puasa sejak fajar Subuh *([HR. Muslim no. 2714](/hadith/muslim/2714))*.
 
 ### 2. Adab Berbuka Puasa
 - **Menyegerakan Berbuka:** Segera berbuka saat adzan Maghrib berkumandang *([HR. Bukhari no. 1957](/hadith/bukhari/1957))*.
@@ -642,7 +642,7 @@ Rasulullah ﷺ mendatangi kediaman Abu Bakar pada waktu siang hari yang tidak la
 Ketika para pengejar Quraisy telah berdiri tepat di bibir Gua Tsur hingga Abu Bakar berkata gemetar: *"Wahai Rasulullah, sekiranya salah seorang dari mereka melihat ke bawah kakinya, niscaya mereka akan melihat kita!"* Rasulullah ﷺ menjawab dengan tenang dan penuh keyakinan:
 
 > "Wahai Abu Bakar, apa prasangkamu terhadap dua orang di mana Allah adalah pihak ketiganya?"
-> *([HR. Bukhari no. 3653](/hadith/bukhari/3653) dan [HR. Muslim no. 2381](/hadith/muslim/2381))*
+> *([HR. Bukhari no. 3653](/hadith/bukhari/3653) dan [HR. Muslim no. 6169](/hadith/muslim/6169))*
 
 ---
 
@@ -683,7 +683,7 @@ Mayoritas ulama (Jumhur: Madzhab Maliki, Syafi'i, dan Hanbali) berpendapat bahwa
 Zaid bin Tsabit radhiyallahu 'anhu meriwayatkan:
 
 > "Aku pernah membacakan kepada Nabi ﷺ surat An-Najm, dan beliau tidak bersujud pada ayat tersebut."
-> *([HR. Bukhari no. 1073](/hadith/bukhari/1073) dan [HR. Muslim no. 577](/hadith/muslim/577))*
+> *([HR. Bukhari no. 1073](/hadith/bukhari/1073) dan [HR. Muslim no. 1298](/hadith/muslim/1298))*
 
 Hadits ini menjadi dalil pokok jumhur ulama bahwa sujud tilawah berhukum sunnah, karena sekiranya wajib tentu Rasulullah ﷺ tidak akan meninggalkannya.
 
@@ -694,7 +694,7 @@ Hadits ini menjadi dalil pokok jumhur ulama bahwa sujud tilawah berhukum sunnah,
 Dari Abu Hurairah radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
 
 > "Jika anak Adam membaca ayat sajdah lalu ia bersujud, setan akan menyingkir sambil menangis seraya berkata: 'Celakalah aku! Anak Adam diperintahkan untuk bersujud lalu ia bersujud, maka baginya surga. Sedangkan aku diperintahkan untuk bersujud namun aku enggan (membangkang), maka bagiku neraka.'"
-> *([HR. Muslim no. 81](/hadith/muslim/81))*
+> *([HR. Muslim no. 244](/hadith/muslim/244))*
 
 ---
 
@@ -702,9 +702,9 @@ Dari Abu Hurairah radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
 
 Berdasarkan penelitian dalil shahih dan hasan, terdapat 15 ayat sajdah yang disepakati oleh jumhur ulama:
 
-1. **Surah Al-A'raf (7:206)** — *([HR. Muslim no. 577](/hadith/muslim/577))*
+1. **Surah Al-A'raf (7:206)** — *([HR. Bukhari no. 1075](/hadith/bukhari/1075) dan [HR. Muslim no. 575](/hadith/muslim/575))*
 2. **Surah Ar-Ra'd (13:15)** — *([HR. Abu Dawud no. 1407](/hadith/abu-daud/1407), dishahihkan Al-Albani)*
-3. **Surah An-Nahl (16:50)** — *([HR. Muslim no. 772](/hadith/muslim/772))*
+3. **Surah An-Nahl (16:50)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077))*
 4. **Surah Al-Isra' (17:109)** — *([HR. Bukhari no. 1072](/hadith/bukhari/1072))*
 5. **Surah Maryam (19:58)** — *([HR. Abu Dawud no. 1408](/hadith/abu-daud/1408), dishahihkan Al-Albani)*
 6. **Surah Al-Hajj Ayat Pertama (22:18)** — *([HR. Bukhari no. 1074](/hadith/bukhari/1074))*
@@ -712,11 +712,11 @@ Berdasarkan penelitian dalil shahih dan hasan, terdapat 15 ayat sajdah yang dise
 8. **Surah Al-Furqan (25:60)** — *([HR. Abu Dawud no. 1410](/hadith/abu-daud/1410))*
 9. **Surah An-Naml (27:26)** — *([HR. Bukhari no. 1075](/hadith/bukhari/1075))*
 10. **Surah As-Sajdah (32:15)** — *([HR. Bukhari no. 1076](/hadith/bukhari/1076))*
-11. **Surah Shad (38:24)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077))*
+11. **Surah Shad (38:24)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077), [HR. Abu Dawud no. 1409](/hadith/abu-daud/1409) dan [HR. Abu Dawud no. 1410](/hadith/abu-daud/1410))*
 12. **Surah Fushshilat (41:38)** — *([HR. Muslim no. 581](/hadith/muslim/581))*
 13. **Surah An-Najm (53:62)** — *([HR. Bukhari no. 1070](/hadith/bukhari/1070))*
-14. **Surah Al-Insyiqaq (84:21)** — *([HR. Muslim no. 578](/hadith/muslim/578))*
-15. **Surah Al-'Alaq (96:19)** — *([HR. Abu Dawud no. 1413](/hadith/abu-daud/1413) dan [HR. At-Tirmidzi no. 583](/hadith/tirmidzi/583))*
+14. **Surah Al-Insyiqaq (84:21)** — *([HR. Bukhari no. 1074](/hadith/bukhari/1074), [HR. Abu Dawud no. 1407](/hadith/abu-daud/1407) dan [HR. Abu Dawud no. 1408](/hadith/abu-daud/1408))*
+15. **Surah Al-'Alaq (96:19)** — *([HR. Abu Dawud no. 1407](/hadith/abu-daud/1407) dan [HR. Abu Dawud no. 1413](/hadith/abu-daud/1413))*
 
 ---
 
