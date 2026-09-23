@@ -73,9 +73,16 @@ const getReadTime = (post) => {
 };
 
 const uniqueTags = (posts) => {
-    return Array.from(new Set(posts.flatMap((post) => post.tags || []))).sort(
-        (a, b) => a.localeCompare(b),
-    );
+    const seen = new Set();
+    return posts
+        .flatMap((post) => post.tags || [])
+        .filter((tag) => {
+            const key = tag.slug ?? tag.id ?? JSON.stringify(tag);
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        })
+        .sort((a, b) => getTagLabel(a, "ID").localeCompare(getTagLabel(b, "ID")));
 };
 
 const SORT_OPTIONS = [
@@ -187,8 +194,13 @@ export default function BlogClient({
                 categoryLabel?.toLowerCase().includes(query);
             const matchesTags =
                 selectedTags.length === 0 ||
-                selectedTags.every((tag) =>
-                    (post.tags || []).includes(tag),
+                selectedTags.every((selectedTag) =>
+                    (post.tags || []).some(
+                        (postTag) =>
+                            postTag.slug === selectedTag.slug ||
+                            postTag.id === selectedTag.id ||
+                            JSON.stringify(postTag) === JSON.stringify(selectedTag)
+                    )
                 );
             return matchesQuery && matchesTags;
         });
@@ -228,13 +240,22 @@ export default function BlogClient({
     const visiblePosts = sortedPosts.slice(0, visibleCount);
     const canLoadMore = visiblePosts.length < sortedPosts.length;
 
+    const isTagEqual = (a, b) => {
+        if (a === b) return true;
+        const keyA = a?.slug ?? a?.id ?? a;
+        const keyB = b?.slug ?? b?.id ?? b;
+        return keyA === keyB;
+    };
+
     const toggleTag = (tag) => {
         setSelectedTags((current) => {
-            const exists = current.includes(tag);
+            const exists = current.some((t) => isTagEqual(t, tag));
             const updated = exists
-                ? current.filter((value) => value !== tag)
+                ? current.filter((value) => !isTagEqual(value, tag))
                 : [...current, tag];
-            return updated.sort((a, b) => a.localeCompare(b));
+            return updated.sort((a, b) =>
+                getTagLabel(a, lang).localeCompare(getTagLabel(b, lang)),
+            );
         });
     };
 
@@ -245,7 +266,9 @@ export default function BlogClient({
     };
 
     const removeSelectedTag = (tag) => {
-        setSelectedTags((current) => current.filter((value) => value !== tag));
+        setSelectedTags((current) =>
+            current.filter((value) => !isTagEqual(value, tag)),
+        );
     };
 
     const summaryText =
@@ -308,10 +331,11 @@ export default function BlogClient({
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {allTags.map((tag) => {
-                                const active = selectedTags.includes(tag);
+                                const active = selectedTags.some((t) => isTagEqual(t, tag));
+                                const tagKey = tag.slug ?? tag.id ?? JSON.stringify(tag);
                                 return (
                                     <button
-                                        key={tag}
+                                        key={tagKey}
                                         type="button"
                                         onClick={() => toggleTag(tag)}
                                         aria-pressed={active}
@@ -336,7 +360,7 @@ export default function BlogClient({
                                 </span>
                                 {selectedTags.map((tag) => (
                                     <button
-                                        key={`selected-${tag}`}
+                                        key={`selected-${tag.slug ?? tag.id ?? JSON.stringify(tag)}`}
                                         type="button"
                                         onClick={() => removeSelectedTag(tag)}
                                         className="blog-tag-filter blog-tag-filter-active px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 flex items-center gap-1"
