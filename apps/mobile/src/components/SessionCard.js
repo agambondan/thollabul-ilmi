@@ -23,7 +23,7 @@ import {
     verifyWhatsapp,
 } from "../api/auth";
 import { API_URL } from "../api/client";
-import { colors, radius, shadows, spacing } from "../theme";
+import { colors, getThemeColors, radius, shadows, spacing } from "../theme";
 import { Card, CardTitle } from "./Card";
 
 const ACCOUNT_NOT_VERIFIED_MESSAGE = "account not verified";
@@ -55,8 +55,11 @@ export function SessionCard() {
     const { error, loading, signIn, signInWithSession, signOut, user } =
         useSession();
     const { showError, showInfo, showSuccess } = useFeedback();
-    const { isDarkTheme } = useLayoutModePreference();
-    const theme = isDarkTheme ? colors.dark : colors.light;
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isClassic: !isWebAppLayout,
+    });
     const { t } = useMobileLocale();
 
     const [name, setName] = useState("");
@@ -126,6 +129,7 @@ export function SessionCard() {
                 {
                     toolbarColor: theme.surface,
                     controlsColor: theme.primary,
+                    showInRecents: true,
                 },
             );
 

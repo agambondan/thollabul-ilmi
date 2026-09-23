@@ -50,7 +50,7 @@ import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { defaultLayoutMode, useLayoutMode } from "../layout/LayoutModeProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
-import { colors } from "../theme";
+import { colors, getThemeColors } from "../theme";
 import { styles, WEB_APP_PROFILE_THEMES } from "./ProfileScreen.styles";
 
 const DEFAULT_BADGES = [
@@ -202,7 +202,10 @@ const getAchievementProgress = (achievement, stats, t) => {
 function SubScreen({ title, onBack, children }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
-    const theme = isDarkTheme ? colors.dark : colors.light;
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isClassic: !isWebAppLayout,
+    });
 
     return (
         <KeyboardAvoidingView
@@ -264,8 +267,11 @@ function SubScreen({ title, onBack, children }) {
 }
 
 function MenuRow({ Icon, label, meta, danger, onPress }) {
-    const { isDarkTheme } = useLayoutModePreference();
-    const theme = isDarkTheme ? colors.dark : colors.light;
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isClassic: !isWebAppLayout,
+    });
 
     return (
         <Pressable

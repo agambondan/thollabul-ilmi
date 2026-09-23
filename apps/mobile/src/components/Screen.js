@@ -10,7 +10,8 @@ import {
     View,
 } from "react-native";
 import { useTabActivity } from "../context/TabActivityContext";
-import { colors, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { getThemeColors, spacing } from "../theme";
 
 export function Screen({
     title,
@@ -28,6 +29,11 @@ export function Screen({
     listKeyExtractor,
     listFooter,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isClassic: !isWebAppLayout,
+    });
     const { notifyTabActivity } = useTabActivity();
     const handleScrollActivity = useCallback(
         (event) => {
@@ -48,12 +54,12 @@ export function Screen({
 
     const renderHeader = () => (
         <>
-            <View style={styles.header}>
+            <View style={{ ...styles.header, borderBottomColor: theme.border }}>
                 <View style={styles.headerTop}>
                     <View style={styles.headerCopy}>
-                        <Text style={styles.title}>{title}</Text>
+                        <Text style={{ ...styles.title, color: theme.ink }}>{title}</Text>
                         {subtitle ? (
-                            <Text style={styles.subtitle}>{subtitle}</Text>
+                            <Text style={{ ...styles.subtitle, color: theme.muted }}>{subtitle}</Text>
                         ) : null}
                     </View>
                     {actions ? (
@@ -79,7 +85,10 @@ export function Screen({
                 style={styles.flex}
             >
                 <FlatList
-                    contentContainerStyle={styles.content}
+                    contentContainerStyle={[
+                        styles.content,
+                        { backgroundColor: theme.bg },
+                    ]}
                     data={listData}
                     keyboardShouldPersistTaps='handled'
                     keyExtractor={listKeyExtractor}
@@ -93,7 +102,7 @@ export function Screen({
                             <RefreshControl
                                 refreshing={!!refreshing}
                                 onRefresh={onRefresh}
-                                tintColor={colors.primary}
+                                tintColor={theme.primary}
                             />
                         ) : undefined
                     }
@@ -111,7 +120,10 @@ export function Screen({
             style={styles.flex}
         >
             <ScrollView
-                contentContainerStyle={styles.content}
+                contentContainerStyle={[
+                    styles.content,
+                    { backgroundColor: theme.bg },
+                ]}
                 keyboardShouldPersistTaps='handled'
                 onMomentumScrollBegin={handleScrollActivity}
                 onScroll={handleScrollActivity}
@@ -121,7 +133,7 @@ export function Screen({
                         <RefreshControl
                             refreshing={!!refreshing}
                             onRefresh={onRefresh}
-                            tintColor={colors.primary}
+                            tintColor={theme.primary}
                         />
                     ) : undefined
                 }
@@ -138,7 +150,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     content: {
-        backgroundColor: colors.bg,
         padding: spacing.lg,
         paddingBottom: spacing.xl,
         ...Platform.select({
@@ -160,7 +171,6 @@ const styles = StyleSheet.create({
         }),
     },
     header: {
-        borderBottomColor: colors.border,
         borderBottomWidth: 1,
         marginBottom: spacing.xl,
         paddingBottom: spacing.md,
@@ -176,13 +186,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     title: {
-        color: colors.ink,
         fontSize: 20,
         fontWeight: "800",
         letterSpacing: -0.3,
     },
     subtitle: {
-        color: colors.muted,
         fontSize: 14,
         lineHeight: 20,
         marginTop: spacing.sm,

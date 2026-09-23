@@ -35,7 +35,7 @@ import {
     translateMobile,
 } from "../../i18n/translations";
 import { arabicTypography } from "../../styles/arabicTypography";
-import { colors, radius, shadows, spacing } from "../../theme";
+import { colors, getClassicThemeColors, getThemeColors, radius, shadows, spacing } from "../../theme";
 
 export const homeDashboardLayouts = {
     paper: "paper",
@@ -1208,7 +1208,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     webAppScroll: {
-        backgroundColor: webDashboardDarkColors.bg,
+        flex: 1,
     },
     screen: {
         backgroundColor: colors.bg,
@@ -1218,7 +1218,7 @@ const styles = StyleSheet.create({
         paddingTop: spacing.xl,
     },
     webAppScreen: {
-        backgroundColor: webDashboardDarkColors.bg,
+        flexGrow: 1,
         paddingBottom: spacing.lg,
         paddingTop: spacing.lg,
     },
@@ -1226,13 +1226,11 @@ const styles = StyleSheet.create({
         marginBottom: spacing.lg,
     },
     webAppGreetingTitle: {
-        color: webDashboardDarkColors.title,
         fontSize: 22,
         fontWeight: "900",
         letterSpacing: 0,
     },
     webAppGreetingDate: {
-        color: webDashboardDarkColors.muted,
         fontSize: 13,
         fontWeight: "600",
         letterSpacing: 0,
@@ -1346,37 +1344,25 @@ const styles = StyleSheet.create({
         ...shadows.paper,
     },
     webAppPrayerCard: {
-        backgroundColor: webDashboardDarkColors.card,
-        borderColor: webDashboardDarkColors.borderSoft,
         borderRadius: 24,
     },
     webAppCard: {
-        backgroundColor: webDashboardDarkColors.card,
-        borderColor: webDashboardDarkColors.border,
         borderRadius: radius.md,
     },
     webAppPill: {
-        backgroundColor: webDashboardDarkColors.primarySoft,
-        borderColor: "#065f46",
     },
     webAppDivider: {
-        backgroundColor: webDashboardDarkColors.border,
     },
     webAppTitleText: {
-        color: webDashboardDarkColors.title,
         fontFamily: webDashboardFontFamily,
     },
     webAppText: {
-        color: webDashboardDarkColors.text,
     },
     webAppMutedText: {
-        color: webDashboardDarkColors.muted,
     },
     webAppPrimaryText: {
-        color: webDashboardDarkColors.primary,
     },
     webAppAccentText: {
-        color: webDashboardDarkColors.accent,
     },
     prayerKicker: {
         color: colors.primary,
@@ -1466,8 +1452,6 @@ const styles = StyleSheet.create({
         ...shadows.paper,
     },
     webAppMenuGrid: {
-        backgroundColor: webDashboardDarkColors.card,
-        borderColor: webDashboardDarkColors.border,
         borderRadius: radius.md,
         marginTop: 0,
     },
@@ -1475,22 +1459,15 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
     },
     webAppSectionTitle: {
-        color: webDashboardDarkColors.text,
         fontSize: 14,
         fontWeight: "900",
         marginBottom: spacing.sm,
     },
     webAppIconTile: {
-        backgroundColor: webDashboardDarkColors.iconBg,
-        borderColor: webDashboardDarkColors.border,
     },
     webAppActionTile: {
-        backgroundColor: webDashboardDarkColors.cardDeep,
-        borderColor: webDashboardDarkColors.border,
     },
     webAppRow: {
-        backgroundColor: webDashboardDarkColors.cardDeep,
-        borderColor: webDashboardDarkColors.border,
     },
     menuItem: {
         alignItems: "center",
@@ -1704,8 +1681,6 @@ const styles = StyleSheet.create({
     },
     webAppReminderButton: {
         alignItems: "center",
-        backgroundColor: webDashboardDarkColors.card,
-        borderColor: webDashboardDarkColors.border,
         borderRadius: 999,
         borderWidth: 1,
         height: 32,
@@ -1714,7 +1689,6 @@ const styles = StyleSheet.create({
     },
     webAppReminderArabic: {
         ...arabicTypography.small,
-        color: webDashboardDarkColors.title,
         fontFamily: webDashboardFontFamily,
         fontSize: 24,
         lineHeight: 40,
@@ -1723,7 +1697,6 @@ const styles = StyleSheet.create({
         writingDirection: "rtl",
     },
     webAppReminderText: {
-        color: webDashboardDarkColors.text,
         fontSize: 14,
         lineHeight: 20,
         marginBottom: spacing.sm,
@@ -1740,7 +1713,6 @@ const styles = StyleSheet.create({
         fontWeight: "800",
     },
     webAppReminderLink: {
-        color: webDashboardDarkColors.primary,
         fontSize: 12,
         fontWeight: "800",
     },

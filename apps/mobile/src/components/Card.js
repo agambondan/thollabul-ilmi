@@ -1,15 +1,45 @@
 import { Platform, StyleSheet, Text, View } from "react-native";
-import { colors, radius, shadows, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { colors, getThemeColors, radius, shadows, spacing } from "../theme";
 
 export function Card({ children, style }) {
-    return <View style={[styles.card, style]}>{children}</View>;
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isClassic: !isWebAppLayout,
+    });
+    return (
+        <View
+            style={[
+                styles.card,
+                {
+                    backgroundColor: theme.surface,
+                    borderColor: theme.border,
+                },
+                style,
+            ]}
+        >
+            {children}
+        </View>
+    );
 }
 
 export function CardTitle({ children, meta, metaStyle, style, titleStyle }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isClassic: !isWebAppLayout,
+    });
     return (
         <View style={[styles.titleRow, style]}>
-            <Text style={[styles.title, titleStyle]}>{children}</Text>
-            {meta ? <Text style={[styles.meta, metaStyle]}>{meta}</Text> : null}
+            <Text style={[styles.title, { color: theme.ink }, titleStyle]}>
+                {children}
+            </Text>
+            {meta ? (
+                <Text style={[styles.meta, { color: theme.primary }, metaStyle]}>
+                    {meta}
+                </Text>
+            ) : null}
         </View>
     );
 }
