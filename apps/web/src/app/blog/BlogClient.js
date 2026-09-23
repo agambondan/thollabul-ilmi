@@ -461,17 +461,31 @@ export default function BlogClient({
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
                                             priority
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                                        <div className="absolute bottom-0 left-0 right-0 p-6">
-                                            {getCategoryLabel(featuredPost.category, lang) && (
-                                                <span className="inline-block px-3 py-1 bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wide rounded mb-3">
-                                                    {getCategoryLabel(featuredPost.category, lang)}
-                                                </span>
-                                            )}
-                                            <h2 className="font-bold text-white text-xl md:text-2xl lg:text-3xl line-clamp-2 mb-2">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+                                        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                                            <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
+                                                {getCategoryLabel(featuredPost.category, lang) && (
+                                                    <span className="inline-block px-2.5 py-0.5 sm:px-3 sm:py-1 bg-emerald-600 text-white text-[11px] sm:text-xs font-semibold uppercase tracking-wide rounded">
+                                                        {getCategoryLabel(featuredPost.category, lang)}
+                                                    </span>
+                                                )}
+                                                {featuredPost.tags && featuredPost.tags.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {featuredPost.tags.slice(0, 3).map((tag, i) => (
+                                                            <span
+                                                                key={i}
+                                                                className="px-2 py-0.5 bg-black/40 text-emerald-300 rounded text-[11px] font-medium border border-white/10"
+                                                            >
+                                                                {getTagLabel(tag, lang)}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <h2 className="font-bold text-white text-lg sm:text-xl md:text-2xl lg:text-3xl line-clamp-2 mb-2">
                                                 {getLocalizedField(featuredPost, "title", lang)}
                                             </h2>
-                                            <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
+                                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-white/80">
                                                 {getAuthorName(featuredPost.author) && (
                                                     <span className="flex items-center gap-1">
                                                         <BsPerson className="w-3.5 h-3.5" />
@@ -498,11 +512,25 @@ export default function BlogClient({
                                 )}
                                 {!featuredPost.cover_image && (
                                     <div className="p-6 md:p-8">
-                                        {getCategoryLabel(featuredPost.category, lang) && (
-                                            <span className="inline-block px-3 py-1 bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wide rounded mb-3">
-                                                {getCategoryLabel(featuredPost.category, lang)}
-                                            </span>
-                                        )}
+                                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                                            {getCategoryLabel(featuredPost.category, lang) && (
+                                                <span className="inline-block px-3 py-1 bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wide rounded">
+                                                    {getCategoryLabel(featuredPost.category, lang)}
+                                                </span>
+                                            )}
+                                            {featuredPost.tags && featuredPost.tags.length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {featuredPost.tags.slice(0, 3).map((tag, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-xs font-medium"
+                                                        >
+                                                            {getTagLabel(tag, lang)}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                         <h2 className="font-bold text-emerald-900 dark:text-white text-xl md:text-2xl lg:text-3xl line-clamp-2 mb-3">
                                             {getLocalizedField(featuredPost, "title", lang)}
                                         </h2>
@@ -536,18 +564,6 @@ export default function BlogClient({
                                     </div>
                                 )}
                             </Link>
-                            {featuredPost.tags && featuredPost.tags.length > 0 && (
-                                <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2 z-10">
-                                    {featuredPost.tags.slice(0, 5).map((tag, i) => (
-                                        <span
-                                            key={i}
-                                            className="px-2 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-emerald-700 dark:text-emerald-400 rounded text-xs font-medium"
-                                        >
-                                            {getTagLabel(tag, lang)}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
                         </article>
                     )}
 
@@ -567,7 +583,7 @@ export default function BlogClient({
                                         >
                                             <div className="flex flex-col md:flex-row">
                                                 {post.cover_image && (
-                                                    <div className="relative w-full md:w-64 md:flex-shrink-0 h-40 md:h-auto min-h-[160px]">
+                                                    <div className="relative w-full md:w-64 md:flex-shrink-0 h-44 md:h-auto min-h-[160px]">
                                                         <Image
                                                             src={post.cover_image}
                                                             alt={getLocalizedField(post, "title", lang)}
@@ -579,11 +595,25 @@ export default function BlogClient({
                                                 )}
                                                 <div className="p-4 md:p-5 flex flex-col justify-between flex-1 min-w-0">
                                                     <div>
-                                                        {getCategoryLabel(post.category, lang) && (
-                                                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-2 block">
-                                                                {getCategoryLabel(post.category, lang)}
-                                                            </span>
-                                                        )}
+                                                        <div className="flex items-center justify-between gap-2 mb-2">
+                                                            {getCategoryLabel(post.category, lang) && (
+                                                                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                                                                    {getCategoryLabel(post.category, lang)}
+                                                                </span>
+                                                            )}
+                                                            {post.tags && post.tags.length > 0 && (
+                                                                <div className="flex flex-wrap gap-1">
+                                                                    {post.tags.slice(0, 2).map((tag, i) => (
+                                                                        <span
+                                                                            key={i}
+                                                                            className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-medium"
+                                                                        >
+                                                                            {getTagLabel(tag, lang)}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                         <h3 className="font-bold text-emerald-900 dark:text-white mb-1 line-clamp-2">
                                                             {getLocalizedField(post, "title", lang)}
                                                         </h3>
@@ -617,18 +647,6 @@ export default function BlogClient({
                                                     </div>
                                                 </div>
                                             </div>
-                                            {post.tags && post.tags.length > 0 && (
-                                                <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
-                                                    {post.tags.slice(0, 3).map((tag, i) => (
-                                                        <span
-                                                            key={i}
-                                                            className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-medium"
-                                                        >
-                                                            {getTagLabel(tag, lang)}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
                                         </Link>
                                     </article>
                                 );
