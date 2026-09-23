@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BookOpen, ChevronDown, Search } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import {
@@ -92,15 +93,36 @@ function SirohCard({ index, item, onOpen, t }) {
 }
 
 export function WebAppSirohRoute({
+    clearFeature,
     error,
     items,
     loading,
+    navigation,
     onLoadMore,
     onOpenItem,
     pagination,
 }) {
     const { t } = useMobileLocale();
     const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        if (!navigation?.setBack) return;
+        if (clearFeature) {
+            navigation.setBack(() => {
+                clearFeature();
+                return true;
+            });
+        }
+        return () => {
+            if (clearFeature) {
+                navigation?.setBack?.(() => {
+                    clearFeature();
+                    return true;
+                });
+            }
+        };
+    }, [clearFeature, navigation]);
+
     const filteredItems = useMemo(() => {
         const query = normalizeSearchText(search);
         if (!query) return items;

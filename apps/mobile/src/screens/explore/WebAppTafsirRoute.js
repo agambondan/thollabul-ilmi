@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BookOpen, FileText, Search } from "lucide-react-native";
 import {
     ActivityIndicator,
@@ -162,9 +163,11 @@ function AsbabunResultCard({ item, onOpen, t, testID }) {
 
 export function WebAppTafsirRoute({
     arabicTitle,
+    clearFeature,
     error,
     items,
     loading,
+    navigation,
     onOpenItem,
     onSelectSurah,
     onSearchSurah,
@@ -186,6 +189,29 @@ export function WebAppTafsirRoute({
         typedSurahNumber >= 1 &&
         typedSurahNumber <= 114;
     const Icon = isAsbabun ? FileText : BookOpen;
+
+    useEffect(() => {
+        if (!navigation?.setBack) return;
+        if (selectedSurahNumber) {
+            navigation.setBack(() => {
+                onSelectSurah(null);
+                return true;
+            });
+        } else if (clearFeature) {
+            navigation.setBack(() => {
+                clearFeature();
+                return true;
+            });
+        }
+        return () => {
+            if (clearFeature) {
+                navigation?.setBack?.(() => {
+                    clearFeature();
+                    return true;
+                });
+            }
+        };
+    }, [clearFeature, navigation, onSelectSurah, selectedSurahNumber]);
     const surfaceTestID = isAsbabun
         ? "explore-web-app-asbabun-surface"
         : "explore-web-app-tafsir-surface";

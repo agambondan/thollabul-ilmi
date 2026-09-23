@@ -318,6 +318,7 @@ function KajianStat({ accent = "#047857", formatValue, label, value }) {
 export function WebAppKajianRoute({
     apiUrl = "https://api.thollabulilmi.site",
     categories,
+    clearFeature,
     error,
     filteredItems,
     formatStat,
@@ -332,6 +333,7 @@ export function WebAppKajianRoute({
     kajianCategory,
     kajianSearch,
     loading,
+    navigation,
     onOpenItem,
     onOpenUrl,
     onSearch,
@@ -361,6 +363,34 @@ export function WebAppKajianRoute({
     // Bookmarks state
     const [savedBookmarks, setSavedBookmarks] = useState([]);
     const [savedQuery, setSavedQuery] = useState("");
+
+    useEffect(() => {
+        if (!navigation?.setBack) return;
+        if (playerItem) {
+            navigation.setBack(() => {
+                setPlayerItem(null);
+                return true;
+            });
+        } else if (tab !== "list") {
+            navigation.setBack(() => {
+                setTab("list");
+                return true;
+            });
+        } else if (clearFeature) {
+            navigation.setBack(() => {
+                clearFeature();
+                return true;
+            });
+        }
+        return () => {
+            if (clearFeature) {
+                navigation?.setBack?.(() => {
+                    clearFeature();
+                    return true;
+                });
+            }
+        };
+    }, [clearFeature, navigation, playerItem, tab]);
 
     const loadSavedBookmarks = useCallback(() => {
         AsyncStorage.getItem("kajian_saved_chunks")

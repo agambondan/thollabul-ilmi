@@ -2379,6 +2379,7 @@ export function renderExploreWebAppRoute(context) {
         return (
             <WebAppKajianRoute
                 categories={KAJIAN_CATEGORIES}
+                clearFeature={clearFeature}
                 error={error}
                 filteredItems={filteredKajian}
                 formatStat={formatCompactStat}
@@ -2393,6 +2394,7 @@ export function renderExploreWebAppRoute(context) {
                 kajianCategory={kajianCategory}
                 kajianSearch={kajianSearch}
                 loading={loading}
+                navigation={navigation}
                 onOpenItem={openItemDetail}
                 onOpenUrl={onOpenKajianUrl}
                 onSearch={setKajianSearch}
@@ -2481,9 +2483,11 @@ export function renderExploreWebAppRoute(context) {
     if (activeFeature?.key === "siroh") {
         return (
             <WebAppSirohRoute
+                clearFeature={clearFeature}
                 error={error}
                 items={items}
                 loading={loading}
+                navigation={navigation}
                 onLoadMore={loadMoreFeature}
                 onOpenItem={openItemDetail}
                 pagination={pagination}
@@ -2509,9 +2513,11 @@ export function renderExploreWebAppRoute(context) {
     if (activeFeature?.key === "tafsir") {
         return (
             <WebAppTafsirRoute
+                clearFeature={clearFeature}
                 error={error}
                 items={items}
                 loading={loading}
+                navigation={navigation}
                 onOpenItem={openItemDetail}
                 onSearchSurah={setSurahSearch}
                 onSelectSurah={loadSurahContent}
@@ -2526,9 +2532,11 @@ export function renderExploreWebAppRoute(context) {
         return (
             <WebAppTafsirRoute
                 arabicTitle='أَسْبَابُ النُّزُول'
+                clearFeature={clearFeature}
                 error={error}
                 items={items}
                 loading={loading}
+                navigation={navigation}
                 onOpenItem={openItemDetail}
                 onSearchSurah={setSurahSearch}
                 onSelectSurah={loadSurahContent}
