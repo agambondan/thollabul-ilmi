@@ -178,10 +178,14 @@ export function createQuranScreenRenderers(context) {
             MIN_ARABIC_FONT_SIZE,
             Math.min(MAX_ARABIC_FONT_SIZE + extraSize, fontSize + extraSize),
         );
+        const effectiveRatio = Math.max(
+            lineHeightRatio,
+            arabicFont === "indopak" ? 2.1 : arabicFont === "naskh" ? 2.0 : 1.85,
+        );
         return {
             fontSize: size,
             fontWeight: "400",
-            lineHeight: Math.round(size * lineHeightRatio),
+            lineHeight: Math.round(size * effectiveRatio),
             ...(font?.fontFamily ? { fontFamily: font.fontFamily } : {}),
         };
     };

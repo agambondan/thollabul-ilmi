@@ -171,7 +171,9 @@ function ModalSheetInner({
                     {...panResponder.panHandlers}
                     importantForAccessibility='no-hide-descendants'
                 >
-                    <View style={styles.handle} />
+                    <View style={styles.handleWrapper}>
+                        <View style={styles.handle} />
+                    </View>
                 </View>
                 <View style={[styles.header, headerStyle]}>
                     <View style={styles.headerCopy}>
@@ -254,12 +256,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 8,
     },
+    handleWrapper: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom: spacing.sm,
+        paddingTop: spacing.xs,
+        width: "100%",
+    },
     handle: {
         alignSelf: "center",
         backgroundColor: colors.faint,
         borderRadius: 3,
         height: 4,
-        marginBottom: spacing.md,
         width: 40,
     },
     header: {
