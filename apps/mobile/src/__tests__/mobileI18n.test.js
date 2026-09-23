@@ -20,6 +20,12 @@ describe("mobile i18n translations", () => {
         expect(translateMobile("idn", "nav.search")).toBe("Cari");
         expect(translateMobile("idn", "nav.ibadah")).toBe("Ibadah");
         expect(translateMobile("idn", "nav.belajar")).toBe("Belajar");
+        expect(translateMobile("idn", "session.or")).toBe("ATAU");
+        expect(translateMobile("en", "session.or")).toBe("OR");
+        expect(translateMobile("idn", "session.googleLogin")).toBe("Masuk dengan Google");
+        expect(translateMobile("en", "session.googleLogin")).toBe("Sign in with Google");
+        expect(translateMobile("idn", "prayer.reminder.audio_choice")).toBe("Pilihan Muadzin / Suara Adzan");
+        expect(translateMobile("idn", "komunitas.chat")).toBe("Obrolan Komunitas");
         expect(translateMobile("en", "missing.key")).toBe("missing.key");
     });
 

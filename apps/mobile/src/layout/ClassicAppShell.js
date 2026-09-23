@@ -7,7 +7,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TabBar } from "../components/TabBar";
-import { colors } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { getClassicThemeColors } from "../theme";
 
 export function ClassicAppShell({
     activeTab,
@@ -16,25 +17,28 @@ export function ClassicAppShell({
     onTabChange,
     testID = "classic-app-shell",
 }) {
+    const { isDarkTheme } = useLayoutModePreference();
+    const classicTheme = getClassicThemeColors(isDarkTheme);
+
     useEffect(() => {
-        StatusBar.setBarStyle("dark-content");
-    }, []);
+        StatusBar.setBarStyle(isDarkTheme ? "light-content" : "dark-content");
+    }, [isDarkTheme]);
 
     return (
         <SafeAreaView
             edges={["top", "left", "right"]}
-            style={styles.safeArea}
+            style={[styles.safeArea, { backgroundColor: classicTheme.bg }]}
             testID={testID}
         >
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : undefined}
                 keyboardVerticalOffset={0}
-                style={styles.container}
+                style={[styles.container, { backgroundColor: classicTheme.bg }]}
             >
                 {children}
             </KeyboardAvoidingView>
             {activeTab === "quran" || keyboardVisible ? null : (
-                <TabBar active={activeTab} onChange={onTabChange} />
+                <TabBar active={activeTab} isDarkTheme={isDarkTheme} onChange={onTabChange} />
             )}
         </SafeAreaView>
     );
@@ -43,10 +47,8 @@ export function ClassicAppShell({
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: colors.bg,
     },
     container: {
         flex: 1,
-        backgroundColor: colors.bg,
     },
 });

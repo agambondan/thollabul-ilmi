@@ -22,7 +22,7 @@ export const tabs = [
 
 const AUTO_HIDE_DELAY = 2800;
 
-const nav = {
+const navLight = {
     active: "#3c3a35",
     activeBg: "#ebe4d4",
     inactive: "#9b9487",
@@ -30,7 +30,18 @@ const nav = {
     bg: "#fffdf8",
 };
 
-export function TabBar({ active, onChange }) {
+const navDark = {
+    active: "#f5f2eb",
+    activeBg: "#2c312a",
+    inactive: "#9ca996",
+    border: "#3a3f38",
+    bg: "#1a1c18",
+};
+
+const nav = navLight;
+
+export function TabBar({ active, isDarkTheme = false, onChange }) {
+    const navColors = isDarkTheme ? navDark : navLight;
     const insets = useSafeAreaInsets();
     const { activityTick } = useTabActivity();
     const hideTimer = useRef(null);
@@ -68,63 +79,63 @@ export function TabBar({ active, onChange }) {
 
     if (!visible) {
         return (
-            <View
-                pointerEvents='none'
-                style={[
-                    styles.hiddenWrap,
-                    { paddingBottom: Math.max(insets.bottom, spacing.xs) },
-                ]}
-            />
-        );
-    }
-
-    return (
-        <View
+<View
+            pointerEvents='none'
             style={[
-                styles.wrap,
-                { paddingBottom: Math.max(insets.bottom, spacing.sm) },
+                styles.hiddenWrap,
+                { paddingBottom: Math.max(insets.bottom, spacing.xs) },
             ]}
-        >
-            {tabs.map((tab) => {
-                const selected = active === tab.key;
-                const Icon = tab.Icon;
-                return (
-                    <Pressable
-                        accessibilityLabel={tab.label}
-                        accessibilityRole='tab'
-                        accessibilityState={{ selected }}
-                        android_ripple={{
-                            color: nav.activeBg,
-                            borderless: false,
-                        }}
-                        key={tab.key}
-                        onPress={() => {
-                            if (!selected) hapticSelection();
-                            onChange(tab.key);
-                            reveal();
-                        }}
-                        style={styles.item}
-                    >
-                        <View
-                            style={[
-                                styles.iconWrap,
-                                selected && styles.iconWrapActive,
-                            ]}
-                        >
-                            <Icon
-                                color={selected ? nav.active : nav.inactive}
-                                size={20}
-                                strokeWidth={selected ? 2.5 : 1.9}
-                            />
-                        </View>
-                        {selected ? (
-                            <Text style={styles.label}>{tab.label}</Text>
-                        ) : null}
-                    </Pressable>
-                );
-            })}
-        </View>
+        />
     );
+}
+
+return (
+    <View
+        style={[
+            styles.wrap,
+            { paddingBottom: Math.max(insets.bottom, spacing.sm) },
+        ]}
+    >
+        {tabs.map((tab) => {
+            const selected = active === tab.key;
+            const Icon = tab.Icon;
+            return (
+                <Pressable
+                    accessibilityLabel={tab.label}
+                    accessibilityRole='tab'
+                    accessibilityState={{ selected }}
+                    android_ripple={{
+                        color: navColors.activeBg,
+                        borderless: false,
+                    }}
+                    key={tab.key}
+                    onPress={() => {
+                        if (!selected) hapticSelection();
+                        onChange(tab.key);
+                        reveal();
+                    }}
+                    style={styles.item}
+                >
+                    <View
+                        style={[
+                            styles.iconWrap,
+                            selected && styles.iconWrapActive,
+                        ]}
+                    >
+                        <Icon
+                            color={selected ? navColors.active : navColors.inactive}
+                            size={20}
+                            strokeWidth={selected ? 2.5 : 1.9}
+                        />
+                    </View>
+                    {selected ? (
+                        <Text style={styles.label}>{tab.label}</Text>
+                    ) : null}
+                </Pressable>
+            );
+        })}
+    </View>
+);
 }
 
 const styles = StyleSheet.create({

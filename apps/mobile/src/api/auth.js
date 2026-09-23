@@ -11,6 +11,14 @@ export const login = async ({ email, password }) => {
     return normalizeSession(payload);
 };
 
+export const loginWithGoogleToken = async ({ idToken, accessToken }) => {
+    const payload = await postJson("/api/v1/auth/google/token", {
+        id_token: idToken,
+        access_token: accessToken,
+    });
+    return normalizeSession(payload);
+};
+
 export const register = async ({
     name,
     email,
