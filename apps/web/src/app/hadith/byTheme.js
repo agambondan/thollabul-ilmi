@@ -91,7 +91,7 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
         );
 
     return (
-        <div className='space-y-4 px-4'>
+        <ContentWidth compact='max-w-6xl' className='space-y-4 px-4'>
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 shadow-sm'>
                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3'>
                     {t("hadith.filter_perawi") || (lang === "ID" ? "Filter Perawi" : "Filter Narrator")}
@@ -148,10 +148,7 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
                 )}
             </div>
 
-            <ContentWidth
-                compact='max-w-6xl'
-                className='grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 px-4'
-            >
+            <div className='grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4'>
                 {filteredThemes.map((theme) => {
                     const themeLabel = getThemeLabel(theme);
                     const themeSlug = themeLabel
@@ -208,8 +205,8 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
                         </p>
                     </div>
                 )}
-            </ContentWidth>
-        </div>
+            </div>
+        </ContentWidth>
     );
 };
 

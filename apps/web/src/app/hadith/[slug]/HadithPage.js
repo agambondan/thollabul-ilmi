@@ -460,13 +460,7 @@ const HadithPage = ({
             )}
             <ul
                 id={`${params.slug}-${hadith.number}`}
-                className={classNames({
-                    "flex flex-col md:flex-row md:justify-between px-3 py-3 md:p-4 border-b border-emerald-100 dark:border-slate-700": true,
-                    "bg-parchment-50 dark:bg-slate-800":
-                        hadith.number % 2 === 1,
-                    "bg-white dark:bg-slate-900": hadith.number % 2 === 0,
-                    "text-emerald-900 dark:text-white": true,
-                })}
+                className='flex flex-col md:flex-row md:justify-between px-3 py-3 md:p-4 text-emerald-900 dark:text-white'
                 ref={cardRef}
             >
                 {!actionsHidden && (
@@ -798,14 +792,11 @@ const HadithPage = ({
                 hadith.dhaif_by ||
                 hadith.grade_notes ||
                 hadith.sanad) && (
-                <div className='px-4 pt-3 pb-1'>
+                <div className='px-4 pt-2 pb-1'>
                     <HadithAuthenticity hadith={hadith} />
                 </div>
             )}
-            <p className='px-4 pt-2 text-[11px] text-gray-400 text-center'>
-                {t("hadith.audio_tafsir_note")}
-            </p>
-            <div className='px-4 pt-2 pb-1 flex gap-2 flex-wrap'>
+            <div className='px-4 pt-2 pb-4 flex gap-2 flex-wrap'>
                 <button
                     type='button'
                     onClick={() => setShowSanad((v) => !v)}
