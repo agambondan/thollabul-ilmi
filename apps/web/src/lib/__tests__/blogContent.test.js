@@ -26,7 +26,9 @@ describe("blogContent utility", () => {
 ## Subheading
 This is **bold** and *italic* and \`code\`.
 
-> Quote text
+> Quote line 1
+> Quote line 2
+Quote line 3
 
 - Item 1
 - Item 2
@@ -41,7 +43,9 @@ console.log("hello");
         expect(html).toContain("<strong>bold</strong>");
         expect(html).toContain("<em>italic</em>");
         expect(html).toContain("<code>code</code>");
-        expect(html).toContain("<blockquote>Quote text</blockquote>");
+        expect(html).toContain(
+            "<blockquote>Quote line 1<br>Quote line 2<br>Quote line 3</blockquote>",
+        );
         expect(html).toContain("<ul>");
         expect(html).toContain("<li>Item 1</li>");
         expect(html).toContain('<pre><code class="language-js">');

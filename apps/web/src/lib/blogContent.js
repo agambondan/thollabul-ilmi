@@ -214,16 +214,32 @@ export const renderBlogContent = (raw) => {
             continue;
         }
 
-        // Blockquotes
+        // Blockquotes (multiline support & line-breaks)
         if (trimmedLine.startsWith(">")) {
             if (inList) {
                 output.push(`</${listType}>`);
                 inList = false;
             }
-            const quoteContent = trimmedLine.replace(/^>\s*/, "");
-            output.push(
-                `<blockquote>${formatInline(quoteContent)}</blockquote>`,
-            );
+            const quoteLines = [trimmedLine.replace(/^>\s*/, "")];
+            let j = i + 1;
+            while (
+                j < lines.length &&
+                lines[j].trim() !== "" &&
+                !lines[j].trim().startsWith("#") &&
+                !lines[j].trim().startsWith("```") &&
+                !/^(\*{3,}|-{3,}|_{3,})$/.test(lines[j].trim()) &&
+                !/^[-*+]\s+/.test(lines[j].trim()) &&
+                !/^\d+\.\s+/.test(lines[j].trim())
+            ) {
+                quoteLines.push(lines[j].trim().replace(/^>\s*/, ""));
+                j++;
+            }
+            i = j - 1;
+            const formattedContent = quoteLines
+                .filter(Boolean)
+                .map((l) => formatInline(l))
+                .join("<br />");
+            output.push(`<blockquote>${formattedContent}</blockquote>`);
             continue;
         }
 
