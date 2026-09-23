@@ -593,6 +593,14 @@ export default function BlogClient({
                                                         />
                                                     </div>
                                                 )}
+                                                {!post.cover_image && (
+                                                    <div className="relative w-full md:w-64 md:flex-shrink-0 h-44 md:h-auto min-h-[160px] bg-gradient-to-br from-emerald-100 via-emerald-50 to-teal-50 dark:from-emerald-900/30 dark:via-emerald-800/20 dark:to-teal-900/30 flex items-center justify-center">
+                                                        <div className="text-emerald-300 dark:text-emerald-700 text-center px-4">
+                                                            <BsCalendar className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                                                            <p className="text-sm font-medium">{t("blog.no_image")}</p>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 <div className="p-4 md:p-5 flex flex-col justify-between flex-1 min-w-0">
                                                     <div>
                                                         <div className="flex items-center justify-between gap-2 mb-2">
