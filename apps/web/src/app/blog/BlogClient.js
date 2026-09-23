@@ -283,7 +283,7 @@ export default function BlogClient({
         <div
             className={
                 isWide
-                    ? "w-full px-4 max-w-7xl mx-auto"
+                    ? "w-full px-4"
                     : "container mx-auto px-4 max-w-3xl"
             }
         >
