@@ -1,5 +1,5 @@
 import { BookOpen, Search } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
@@ -142,9 +142,11 @@ function DoaCard({ item, onOpen, t }) {
 }
 
 export function WebAppDoaRoute({
+    clearFeature,
     error,
     items,
     loading,
+    navigation,
     onLoadMore,
     onOpenItem,
     pagination,
@@ -152,6 +154,29 @@ export function WebAppDoaRoute({
     const { t } = useMobileLocale();
     const [query, setQuery] = useState("");
     const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        if (!navigation?.setBack) return;
+        if (category) {
+            navigation.setBack(() => {
+                setCategory("");
+                return true;
+            });
+        } else if (clearFeature) {
+            navigation.setBack(() => {
+                clearFeature();
+                return true;
+            });
+        }
+        return () => {
+            if (clearFeature) {
+                navigation?.setBack?.(() => {
+                    clearFeature();
+                    return true;
+                });
+            }
+        };
+    }, [category, clearFeature, navigation]);
     const categories = useMemo(
         () =>
             DOA_CATEGORIES.map((item) => ({

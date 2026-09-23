@@ -2127,9 +2127,11 @@ export function renderExploreWebAppRoute(context) {
     if (activeFeature?.key === "doa") {
         return (
             <WebAppDoaRoute
+                clearFeature={clearFeature}
                 error={error}
                 items={items}
                 loading={loading}
+                navigation={navigation}
                 onLoadMore={loadMoreFeature}
                 onOpenItem={openItemDetail}
                 pagination={pagination}

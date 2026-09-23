@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deleteJson, postJson, putJson, requestJson } from "./client";
 
 const pickItems = (payload) => {
@@ -69,11 +70,27 @@ export const saveLibraryProgress = async ({
         { auth: true },
     );
 
-export const getTodayPrayerLog = async () =>
-    requestJson("/api/v1/sholat/today", { auth: true });
+export const getTodayPrayerLog = async () => {
+    const cacheKey = "tholabul:cache:sholat-today";
+    try {
+        const payload = await requestJson("/api/v1/sholat/today", { auth: true });
+        AsyncStorage.setItem(cacheKey, JSON.stringify(payload)).catch(() => {});
+        return payload;
+    } catch (error) {
+        const cached = await AsyncStorage.getItem(cacheKey).catch(() => null);
+        if (cached) {
+            try {
+                return JSON.parse(cached);
+            } catch {
+                /* fallback */
+            }
+        }
+        throw error;
+    }
+};
 
-export const savePrayerLog = async ({ date, prayer, status }) =>
-    putJson(
+export const savePrayerLog = async ({ date, prayer, status }) => {
+    const res = await putJson(
         "/api/v1/sholat/today",
         {
             date,
@@ -82,6 +99,20 @@ export const savePrayerLog = async ({ date, prayer, status }) =>
         },
         { auth: true },
     );
+    const cacheKey = "tholabul:cache:sholat-today";
+    AsyncStorage.getItem(cacheKey)
+        .then((raw) => {
+            const current = raw ? JSON.parse(raw) : {};
+            const updated = {
+                ...current,
+                [prayer]: status,
+                ...(current.log ? { log: { ...current.log, [prayer]: status } } : {}),
+            };
+            return AsyncStorage.setItem(cacheKey, JSON.stringify(updated));
+        })
+        .catch(() => {});
+    return res;
+};
 
 export const getPrayerStats = async () =>
     requestJson("/api/v1/sholat/stats", { auth: true });

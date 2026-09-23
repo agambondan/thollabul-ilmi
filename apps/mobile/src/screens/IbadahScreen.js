@@ -19,7 +19,7 @@ import { CompactRow, SectionHeader } from "../components/Paper";
 import { Screen } from "../components/Screen";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
 import { KhatamScreen } from "./KhatamScreen";
 import { PrayerScreen } from "./PrayerScreen";
 import { QiblaScreen } from "./QiblaScreen";
@@ -172,13 +172,13 @@ const buildSections = (t) =>
         title: t(section.titleKey),
     }));
 
-const WEB_APP_IBADAH_BG = "#020617";
-const WEB_APP_IBADAH_SURFACE = "#111827";
-const WEB_APP_IBADAH_TILE = "#1e293b";
-const WEB_APP_IBADAH_TILE_ACTIVE = "#064e3b";
-const WEB_APP_IBADAH_BORDER = "#243044";
-const WEB_APP_IBADAH_ACCENT = "#34d399";
-const WEB_APP_IBADAH_MUTED = "#94a3b8";
+const WEB_APP_IBADAH_BG = "#ffffff";
+const WEB_APP_IBADAH_SURFACE = "#ffffff";
+const WEB_APP_IBADAH_TILE = "#f8fafc";
+const WEB_APP_IBADAH_TILE_ACTIVE = "#ecfdf5";
+const WEB_APP_IBADAH_BORDER = "#e5e7eb";
+const WEB_APP_IBADAH_ACCENT = "#047857";
+const WEB_APP_IBADAH_MUTED = "#64748b";
 const WEB_APP_IBADAH_LIGHT = {
     accent: "#047857",
     bg: "#ffffff",
@@ -192,17 +192,18 @@ const WEB_APP_IBADAH_LIGHT = {
     tile: "#f8fafc",
     title: "#111827",
 };
+
 const WEB_APP_IBADAH_DARK = {
-    accent: WEB_APP_IBADAH_ACCENT,
-    bg: WEB_APP_IBADAH_BG,
-    border: WEB_APP_IBADAH_BORDER,
+    accent: colors.dark.primary,
+    bg: colors.dark.bg,
+    border: "#243044",
     iconSoft: "rgba(52, 211, 153, 0.10)",
-    muted: WEB_APP_IBADAH_MUTED,
-    primaryTile: WEB_APP_IBADAH_TILE_ACTIVE,
+    muted: colors.dark.muted,
+    primaryTile: "#064e3b",
     primaryTileBorder: "rgba(52, 211, 153, 0.45)",
-    surface: WEB_APP_IBADAH_SURFACE,
+    surface: "#111827",
     text: "#cbd5e1",
-    tile: WEB_APP_IBADAH_TILE,
+    tile: "#1e293b",
     title: "#f8fafc",
 };
 

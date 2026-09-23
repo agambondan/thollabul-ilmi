@@ -1,5 +1,6 @@
 import { requestJson } from "./client";
 import { getBookmarks } from "./personal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const pickItems = (payload) => {
     if (Array.isArray(payload)) return payload;
@@ -320,17 +321,51 @@ export const getZakatGoldPrice = async () => {
 };
 
 export const getFeatureItemPage = async (feature, pagination) => {
+    const isFirstPage = !pagination || Number(pagination.page ?? 0) === 0;
     const endpoint = pagination
         ? withPagination(feature.endpoint, pagination)
         : feature.endpoint;
-    const payload = await requestJson(endpoint, {
-        auth: feature.type === "protected-list",
-    });
-    const items = pickItems(payload).map(normalizeExploreItem);
-    return {
-        items,
-        meta: pickPaginationMeta(payload, pagination, items.length),
-    };
+    const cacheKey = `tholabul:cache:feature:${feature.key || feature.endpoint}`;
+
+    try {
+        const payload = await requestJson(endpoint, {
+            auth: feature.type === "protected-list",
+        });
+        if (isFirstPage) {
+            AsyncStorage.setItem(cacheKey, JSON.stringify(payload)).catch(
+                () => {},
+            );
+        }
+        const items = pickItems(payload).map(normalizeExploreItem);
+        return {
+            items,
+            meta: pickPaginationMeta(payload, pagination, items.length),
+        };
+    } catch (error) {
+        if (isFirstPage) {
+            const cached = await AsyncStorage.getItem(cacheKey).catch(
+                () => null,
+            );
+            if (cached) {
+                try {
+                    const payload = JSON.parse(cached);
+                    const items = pickItems(payload).map(normalizeExploreItem);
+                    return {
+                        items,
+                        meta: pickPaginationMeta(
+                            payload,
+                            pagination,
+                            items.length,
+                        ),
+                        fromCache: true,
+                    };
+                } catch {
+                    /* fallback to throwing error */
+                }
+            }
+        }
+        throw error;
+    }
 };
 
 export const getAllNotes = async () => {
@@ -383,8 +418,22 @@ export const getQuizQuestions = async (count = 5) => {
 };
 
 export const getAsmaulNames = async () => {
-    const payload = await requestJson("/api/v1/asmaul-husna");
-    return pickItems(payload);
+    const cacheKey = "tholabul:cache:asmaul-husna";
+    try {
+        const payload = await requestJson("/api/v1/asmaul-husna");
+        AsyncStorage.setItem(cacheKey, JSON.stringify(payload)).catch(() => {});
+        return pickItems(payload);
+    } catch (error) {
+        const cached = await AsyncStorage.getItem(cacheKey).catch(() => null);
+        if (cached) {
+            try {
+                return pickItems(JSON.parse(cached));
+            } catch {
+                /* fallback */
+            }
+        }
+        throw error;
+    }
 };
 
 export const fetchBookPages = async (slugOrId, page) => {

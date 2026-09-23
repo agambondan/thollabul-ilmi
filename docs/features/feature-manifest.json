@@ -65,6 +65,30 @@
             "status": "active"
         },
         {
+            "key": "verify-email",
+            "title": "Verify Email",
+            "route": "/auth/verify-email",
+            "surface": "auth",
+            "purpose": "Email verification flow for registered accounts.",
+            "status": "active"
+        },
+        {
+            "key": "verify-whatsapp",
+            "title": "Verify WhatsApp",
+            "route": "/auth/verify-whatsapp",
+            "surface": "auth",
+            "purpose": "WhatsApp OTP verification flow for registered accounts.",
+            "status": "active"
+        },
+        {
+            "key": "auth-google-callback",
+            "title": "Google Auth Callback",
+            "route": "/auth/google/callback",
+            "surface": "auth",
+            "purpose": "OAuth callback handling for Google Sign-In.",
+            "status": "active"
+        },
+        {
             "key": "dev",
             "title": "Developer Tools",
             "route": "/dev",
