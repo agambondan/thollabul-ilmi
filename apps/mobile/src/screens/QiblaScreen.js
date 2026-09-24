@@ -125,7 +125,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
     );
 }
 
-export function QiblaScreen({ onBack, onOpenTab }) {
+export function QiblaScreen({ navigation, onOpenTab }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
     const webAppTheme = isDarkTheme
@@ -304,15 +304,11 @@ export function QiblaScreen({ onBack, onOpenTab }) {
         />
     ) : (
         <>
-            {onBack || onOpenTab ? (
+            {onOpenTab ? (
                 <IconActionButton
                     Icon={ArrowLeft}
-                    label={
-                        onBack
-                            ? t("qibla.action.backIbadah")
-                            : t("qibla.action.backHome")
-                    }
-                    onPress={onBack ?? (() => onOpenTab("home"))}
+                    label={t("qibla.action.backIbadah")}
+                    onPress={() => onOpenTab("ibadah")}
                 />
             ) : null}
             <IconActionButton
@@ -323,6 +319,17 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             />
         </>
     );
+
+    // Update header in web app layout
+    useEffect(() => {
+        if (isWebAppLayout && navigation?.setHeader) {
+            navigation.setHeader({
+                showBack: true,
+                title: t("qibla.heading"),
+                onBack: () => onOpenTab?.("ibadah"),
+            });
+        }
+    }, [isWebAppLayout, navigation, onOpenTab, t]);
 
     useEffect(() => {
         load();

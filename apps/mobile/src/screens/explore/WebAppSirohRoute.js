@@ -106,22 +106,17 @@ export function WebAppSirohRoute({
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        if (!navigation?.setBack) return;
-        if (clearFeature) {
-            navigation.setBack(() => {
-                clearFeature();
-                return true;
+        if (navigation?.setHeader) {
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.siroh.title"),
+                onBack: () => {
+                    if (clearFeature) clearFeature();
+                    return true;
+                },
             });
         }
-        return () => {
-            if (clearFeature) {
-                navigation?.setBack?.(() => {
-                    clearFeature();
-                    return true;
-                });
-            }
-        };
-    }, [clearFeature, navigation]);
+    }, [navigation, clearFeature, t]);
 
     const filteredItems = useMemo(() => {
         const query = normalizeSearchText(search);

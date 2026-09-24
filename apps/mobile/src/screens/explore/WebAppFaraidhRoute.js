@@ -381,6 +381,19 @@ export function WebAppFaraidhRoute({ context }) {
     };
 
     if (showFaraidhHistory) {
+        useEffect(() => {
+            if (navigation?.setHeader) {
+                navigation.setHeader({
+                    showBack: true,
+                    title: t("explore.faraidh.historyTitle"),
+                    onBack: () => {
+                        setShowFaraidhHistory(false);
+                        return true;
+                    },
+                });
+            }
+        }, [navigation, t]);
+
         return (
             <ScrollView
                 contentContainerStyle={styles.content}
@@ -389,17 +402,6 @@ export function WebAppFaraidhRoute({ context }) {
             >
                 <View testID='explore-web-app-faraidh-surface' />
                 <View testID='explore-web-app-faraidh-history-surface' />
-                <Pressable
-                    accessibilityRole='button'
-                    onPress={() => setShowFaraidhHistory(false)}
-                    style={styles.backButton}
-                    testID='web-app-faraidh-history-back'
-                >
-                    <ArrowLeft color='#047857' size={15} strokeWidth={2.4} />
-                    <Text style={styles.backText}>
-                        {t("explore.faraidh.backToCalculator")}
-                    </Text>
-                </Pressable>
                 <View style={styles.hero}>
                     <View style={styles.heroIcon}>
                         <History color='#047857' size={26} strokeWidth={2.2} />
@@ -438,6 +440,19 @@ export function WebAppFaraidhRoute({ context }) {
             </ScrollView>
         );
     }
+
+    useEffect(() => {
+        if (navigation?.setHeader) {
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.faraidh.title"),
+                onBack: () => {
+                    if (clearFeature) clearFeature();
+                    return true;
+                },
+            });
+        }
+    }, [navigation, clearFeature, t]);
 
     return (
         <ScrollView

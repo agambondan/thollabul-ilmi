@@ -191,27 +191,29 @@ export function WebAppTafsirRoute({
     const Icon = isAsbabun ? FileText : BookOpen;
 
     useEffect(() => {
-        if (!navigation?.setBack) return;
+        if (!navigation?.setHeader) return;
         if (selectedSurahNumber) {
-            navigation.setBack(() => {
-                onSelectSurah(null);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.tafsir.surahNumber", { number: selectedSurahNumber }),
+                onBack: () => {
+                    onSelectSurah(null);
+                    return true;
+                },
             });
         } else if (clearFeature) {
-            navigation.setBack(() => {
-                clearFeature();
-                return true;
-            });
-        }
-        return () => {
-            if (clearFeature) {
-                navigation?.setBack?.(() => {
+            navigation.setHeader({
+                showBack: true,
+                title: title,
+                onBack: () => {
                     clearFeature();
                     return true;
-                });
-            }
-        };
-    }, [clearFeature, navigation, onSelectSurah, selectedSurahNumber]);
+                },
+            });
+        } else {
+            navigation.setHeader(null);
+        }
+    }, [navigation, clearFeature, onSelectSurah, selectedSurahNumber, t, title]);
     const surfaceTestID = isAsbabun
         ? "explore-web-app-asbabun-surface"
         : "explore-web-app-tafsir-surface";

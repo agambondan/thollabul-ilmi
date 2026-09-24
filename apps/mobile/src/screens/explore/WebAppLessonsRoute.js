@@ -154,27 +154,29 @@ export function WebAppLessonsRoute({
     }, [modules]);
 
     useEffect(() => {
-        if (!navigation?.setBack) return;
+        if (!navigation?.setHeader) return;
         if (activeStepIdx > 0) {
-            navigation.setBack(() => {
-                setActiveStepIdx((prev) => prev - 1);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: step?.title || activeModule?.title || "Pelajaran",
+                onBack: () => {
+                    setActiveStepIdx((prev) => prev - 1);
+                    return true;
+                },
             });
         } else if (clearFeature) {
-            navigation.setBack(() => {
-                clearFeature();
-                return true;
-            });
-        }
-        return () => {
-            if (clearFeature) {
-                navigation?.setBack?.(() => {
+            navigation.setHeader({
+                showBack: true,
+                title: activeModule?.title || "Pelajaran",
+                onBack: () => {
                     clearFeature();
                     return true;
-                });
-            }
-        };
-    }, [activeStepIdx, navigation, clearFeature]);
+                },
+            });
+        } else {
+            navigation.setHeader(null);
+        }
+    }, [activeStepIdx, navigation, clearFeature, step, activeModule]);
 
     const activeModule = modules.find(
         (m) => (m.slug || m.id) === activeModuleId,

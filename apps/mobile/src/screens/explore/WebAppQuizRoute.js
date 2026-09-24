@@ -258,27 +258,29 @@ export function WebAppQuizRoute({
     }, [total]);
 
     useEffect(() => {
-        if (!navigation?.setBack) return;
+        if (!navigation?.setHeader) return;
         if (currentIndex > 0) {
-            navigation.setBack(() => {
-                setCurrentIndex((prev) => prev - 1);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.quiz.questionProgress", { current: currentIndex + 1, total }),
+                onBack: () => {
+                    setCurrentIndex((prev) => prev - 1);
+                    return true;
+                },
             });
         } else if (clearFeature) {
-            navigation.setBack(() => {
-                clearFeature();
-                return true;
-            });
-        }
-        return () => {
-            if (clearFeature) {
-                navigation?.setBack?.(() => {
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.quiz.title"),
+                onBack: () => {
                     clearFeature();
                     return true;
-                });
-            }
-        };
-    }, [currentIndex, navigation, clearFeature]);
+                },
+            });
+        } else {
+            navigation.setHeader(null);
+        }
+    }, [currentIndex, navigation, clearFeature, t, total]);
 
     const answerCurrent = (option) => {
         if (!currentItem || selected) return;

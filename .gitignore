@@ -87,6 +87,10 @@ output/
 test-results/
 playwright-report/
 
+# Mobile build artifacts
+*.apk
+*.aab
+
 # audit/debug artifacts (local only)
 screenshots/
 logs/

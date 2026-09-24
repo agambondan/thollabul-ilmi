@@ -1374,60 +1374,94 @@ export function ExploreScreen({
         };
     }, [activeFeature?.key, selectedItem]);
 
-    useEffect(() => {
-        if (!isActive) return;
+    const updateHeader = useCallback(() => {
+        if (!isActive || !navigation?.setHeader) return;
+
         if (selectedItem) {
-            navigation?.setBack(() => {
-                setSelectedItem(null);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: selectedItem?.title || "Detail",
+                onBack: () => {
+                    setSelectedItem(null);
+                    return true;
+                },
             });
         } else if (showFaraidhHistory) {
-            navigation?.setBack(() => {
-                setShowFaraidhHistory(false);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.faraidh.historyTitle"),
+                onBack: () => {
+                    setShowFaraidhHistory(false);
+                    return true;
+                },
             });
         } else if (editingUserWirdId) {
-            navigation?.setBack(() => {
-                setEditingUserWirdId("");
-                setUserWirdForm(emptyUserWirdForm);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.wird.editTitle"),
+                onBack: () => {
+                    setEditingUserWirdId("");
+                    setUserWirdForm(emptyUserWirdForm);
+                    return true;
+                },
             });
         } else if (activeFeature?.type === "forum" && forumView !== "list") {
-            navigation?.setBack(() => {
-                setForumView("list");
-                setForumDetail(null);
-                setForumAnswers([]);
-                setForumError("");
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: forumDetail?.title || t("explore.forum.detailTitle"),
+                onBack: () => {
+                    setForumView("list");
+                    setForumDetail(null);
+                    setForumAnswers([]);
+                    setForumError("");
+                    return true;
+                },
             });
         } else if (
             (activeFeature?.key === "tafsir" ||
                 activeFeature?.key === "asbabun-nuzul") &&
             selectedSurahNumber
         ) {
-            navigation?.setBack(() => {
-                setSelectedSurahNumber(null);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: selectedSurah
+                    ? selectedSurah.name
+                    : t("explore.tafsir.surahNumber", { number: selectedSurahNumber }),
+                onBack: () => {
+                    setSelectedSurahNumber(null);
+                    return true;
+                },
             });
         } else if (activeFeature) {
-            navigation?.setBack(() => {
-                clearFeature();
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: activeFeature.title,
+                onBack: () => {
+                    clearFeature();
+                    return true;
+                },
             });
         } else {
-            navigation?.clearBack?.();
+            navigation.setHeader(null);
         }
     }, [
         isActive,
+        navigation,
         selectedItem,
         showFaraidhHistory,
         editingUserWirdId,
-        selectedSurahNumber,
         activeFeature,
         forumView,
-        navigation,
-        featureReturnRoute,
+        forumDetail,
+        selectedSurahNumber,
+        selectedSurah,
+        clearFeature,
+        t,
     ]);
+
+    useEffect(() => {
+        updateHeader();
+    }, [updateHeader]);
 
     const scoreQuiz = () => {
         if (!items.length) return 0;
