@@ -101,7 +101,8 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 		baseState = strings.TrimSuffix(state, "|mobile")
 		isMobile = true
 	}
-	if cookieState == "" || baseState != cookieState {
+	cookieBaseState := strings.TrimSuffix(cookieState, "|mobile")
+	if cookieState == "" || baseState != cookieBaseState {
 		return c.renderErrorPage(ctx, "invalid oauth state")
 	}
 	ctx.Cookie(&fiber.Cookie{

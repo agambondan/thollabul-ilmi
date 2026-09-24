@@ -140,6 +140,7 @@ const baseContext = (activeFeature, overrides = {}) => ({
     loadFeature: jest.fn(),
     loadZakatHistory: jest.fn(),
     loading: false,
+    navigation: { setHeader: jest.fn() },
     notesSearch: "",
     onOpenKajianUrl: jest.fn(),
     onOpenTab: jest.fn(),
@@ -1033,6 +1034,7 @@ describe("Explore web app reference list routes", () => {
     });
 
     test("renders Faraidh history route through dedicated dashboard history surface", () => {
+        const navigation = { setHeader: jest.fn() };
         const setShowFaraidhHistory = jest.fn();
         const route = renderExploreWebAppRoute(
             baseContext(
@@ -1047,6 +1049,7 @@ describe("Explore web app reference list routes", () => {
                             wealth: 120000000,
                         },
                     ],
+                    navigation,
                     setShowFaraidhHistory,
                     showFaraidhHistory: true,
                 },
@@ -1061,7 +1064,7 @@ describe("Explore web app reference list routes", () => {
         expect(getByText("Riwayat Faraidh")).toBeTruthy();
         expect(getByText("Rp 120.000.000")).toBeTruthy();
 
-        fireEvent.press(getByTestId("web-app-faraidh-history-back"));
+        navigation.setHeader.mock.calls.at(-1)[0].onBack();
         expect(setShowFaraidhHistory).toHaveBeenCalledWith(false);
     });
 

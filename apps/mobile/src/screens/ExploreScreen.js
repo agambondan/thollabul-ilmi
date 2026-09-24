@@ -1422,10 +1422,11 @@ export function ExploreScreen({
                 activeFeature?.key === "asbabun-nuzul") &&
             selectedSurahNumber
         ) {
+            const surah = surahs.find((s) => s.number === selectedSurahNumber);
             navigation.setHeader({
                 showBack: true,
-                title: selectedSurah
-                    ? selectedSurah.name
+                title: surah
+                    ? surah.name
                     : t("explore.tafsir.surahNumber", { number: selectedSurahNumber }),
                 onBack: () => {
                     setSelectedSurahNumber(null);
@@ -1454,7 +1455,7 @@ export function ExploreScreen({
         forumView,
         forumDetail,
         selectedSurahNumber,
-        selectedSurah,
+        surahs,
         clearFeature,
         t,
     ]);
