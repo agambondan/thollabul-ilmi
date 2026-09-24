@@ -461,6 +461,13 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         setRelatedHadiths([]);
         setHadithAyahs([]);
         setDetailTab("text");
+        if (isWebAppLayout && navigation?.setHeader) {
+            navigation.setHeader({
+                title: hadith?.arabic ? "Detail Hadith" : "Detail Hadith",
+                showBack: true,
+                onBack: () => setSelectedHadith(null),
+            });
+        }
 
         try {
             const [detail, sanadItems, takhrijItems] = await Promise.all([
@@ -1099,10 +1106,23 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                 setSelectedHadith(null);
                 return true;
             });
+            if (isWebAppLayout && navigation?.setHeader) {
+                const title = selectedHadith?.arabic
+                    ? "Detail Hadith"
+                    : "Detail Hadith";
+                navigation.setHeader({
+                    title,
+                    showBack: true,
+                    onBack: () => setSelectedHadith(null),
+                });
+            }
         } else {
             navigation?.clearBack?.();
+            if (isWebAppLayout && navigation?.setHeader) {
+                navigation.setHeader(null);
+            }
         }
-    }, [isActive, selectedHadith, selectedPerawi, navigation]);
+    }, [isActive, selectedHadith, selectedPerawi, navigation, isWebAppLayout]);
 
     const renderHadithActionSheet = () => {
         const { visible, hadith } = hadithActionSheet;
@@ -1210,25 +1230,6 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         ]}
                         testID='hadith-web-app-detail-hero'
                     >
-                        <Pressable
-                            accessibilityRole='button'
-                            onPress={() => setSelectedHadith(null)}
-                            style={styles.webAppDetailBackLink}
-                        >
-                            <ArrowLeft
-                                color={webAppTheme.accent}
-                                size={15}
-                                strokeWidth={2.2}
-                            />
-                            <Text
-                                style={[
-                                    styles.webAppDetailBackText,
-                                    { color: webAppTheme.accent },
-                                ]}
-                            >
-                                Kembali ke daftar hadith
-                            </Text>
-                        </Pressable>
                         <Text
                             style={[
                                 styles.webAppDetailEyebrow,

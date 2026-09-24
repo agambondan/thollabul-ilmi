@@ -45,6 +45,7 @@ export default function App() {
     const [internalRoutes, setInternalRoutes] = useState({});
     const [returnRoutes, setReturnRoutes] = useState({});
     const [keyboardVisible, setKeyboardVisible] = useState(false);
+    const [headerConfig, setHeaderConfigState] = useState(null);
 
     // Refs so the single BackHandler registration never goes stale
     const activeTabRef = useRef("home");
@@ -55,6 +56,7 @@ export default function App() {
 
     useEffect(() => {
         activeTabRef.current = activeTab;
+        setHeaderConfigState(null);
     }, [activeTab]);
     useEffect(() => {
         deepLinkTargetRef.current = deepLinkTarget;
@@ -282,6 +284,10 @@ export default function App() {
         screenBackRef.current = null;
     }, []);
 
+    const setHeaderConfig = useCallback((config) => {
+        setHeaderConfigState(config);
+    }, []);
+
     const navigation = useMemo(
         () => ({
             clearBack,
@@ -292,6 +298,7 @@ export default function App() {
             reset: resetInternalViews,
             routes: internalRoutes,
             setBack,
+            setHeader: setHeaderConfig,
         }),
         [
             activeTab,
@@ -302,6 +309,7 @@ export default function App() {
             openInternalView,
             resetInternalViews,
             setBack,
+            setHeaderConfig,
         ],
     );
 
@@ -335,6 +343,9 @@ export default function App() {
                                     />
                                     <MobileAppShell
                                         activeTab={shellActiveTab}
+                                        internalRoutes={internalRoutes}
+                                        returnRoutes={returnRoutes}
+                                        headerConfig={headerConfig}
                                         keyboardVisible={keyboardVisible}
                                         onOpenProfile={() => openTab("profile")}
                                         onTabChange={openTab}

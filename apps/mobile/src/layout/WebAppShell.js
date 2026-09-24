@@ -25,9 +25,12 @@ export function getWebAppAccountLabel(user, guestLabel = "Tamu") {
 export function WebAppShell({
     activeTab,
     children,
+    headerConfig,
+    internalRoutes,
     keyboardVisible,
     onOpenProfile,
     onTabChange,
+    returnRoutes,
 }) {
     const { loading, session, signOut, updateCurrentUser, user } = useSession();
     const { t } = useMobileLocale();
@@ -105,6 +108,33 @@ export function WebAppShell({
 
     const hideChrome = activeTab === "quran" && quranFullscreen;
 
+    const returnRoute = returnRoutes?.[activeTab];
+    let topHeaderProps = {
+        accountLabel,
+        accountMenuOpen: accountMenuVisible,
+        isDarkTheme,
+        onOpenAccountMenu: openAccountMenu,
+        onOpenMenu: openMenu,
+        onOpenSearch: openSearch,
+    };
+
+    if (headerConfig?.title || headerConfig?.showBack) {
+        topHeaderProps = {
+            ...topHeaderProps,
+            showBack: true,
+            title: headerConfig.title,
+            subtitle: headerConfig.subtitle,
+            onBack: headerConfig.onBack,
+        };
+    } else if (activeTab === "profile" && returnRoute) {
+        topHeaderProps = {
+            ...topHeaderProps,
+            showBack: true,
+            title: t("profile.title") || "Profil",
+            onBack: () => onTabChange?.(returnRoute.tab, returnRoute.params),
+        };
+    }
+
     return (
         <SafeAreaView
             edges={["top", "left", "right"]}
@@ -113,12 +143,7 @@ export function WebAppShell({
         >
             {hideChrome ? null : (
                 <MobileTopHeader
-                    accountMenuOpen={accountMenuVisible}
-                    accountLabel={accountLabel}
-                    isDarkTheme={isDarkTheme}
-                    onOpenAccountMenu={openAccountMenu}
-                    onOpenMenu={openMenu}
-                    onOpenSearch={openSearch}
+                    {...topHeaderProps}
                 />
             )}
             <KeyboardAvoidingView

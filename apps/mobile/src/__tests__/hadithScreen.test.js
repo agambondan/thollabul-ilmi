@@ -445,6 +445,10 @@ describe("HadithScreen", () => {
             isDarkTheme: false,
             isWebAppLayout: true,
         });
+        const setHeader = jest.fn();
+        const setBack = jest.fn();
+        const clearBack = jest.fn();
+        const navigation = { setHeader, setBack, clearBack };
         clientApi.getHadithDetail.mockResolvedValue({
             id: 1,
             book: "Shahih Bukhari",
@@ -455,7 +459,7 @@ describe("HadithScreen", () => {
         });
 
         const { findAllByTestId, findByText, getAllByText, getByTestId } =
-            render(<HadithScreen isActive />);
+            render(<HadithScreen isActive navigation={navigation} />);
         fireEvent.press(
             await waitFor(() => getByTestId("hadith-web-app-book-bukhari")),
         );
@@ -468,8 +472,14 @@ describe("HadithScreen", () => {
                 1,
             );
         });
-        expect(await findByText("Kembali ke daftar hadith")).toBeTruthy();
         expect(getByTestId("hadith-web-app-detail")).toBeTruthy();
+        expect(setHeader).toHaveBeenCalledWith(
+            expect.objectContaining({
+                title: "Detail Hadith",
+                showBack: true,
+                onBack: expect.any(Function),
+            }),
+        );
     });
 
     test("detail view shows tab buttons", async () => {

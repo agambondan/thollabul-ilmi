@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	service "github.com/agambondan/islamic-explorer/app/services"
@@ -59,6 +60,10 @@ func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 		})
 	}
 	state := c.googleStateToken()
+	source := ctx.Query("source")
+	if source == "mobile" {
+		state = state + "|mobile"
+	}
 	ctx.Cookie(&fiber.Cookie{
 		Name:     "google_oauth_state",
 		Value:    state,
@@ -68,18 +73,6 @@ func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 		Secure:   viper.GetString("ENVIRONMENT") == "production",
 		SameSite: "Lax",
 	})
-	source := ctx.Query("source")
-	if source == "mobile" {
-		ctx.Cookie(&fiber.Cookie{
-			Name:     "google_oauth_source",
-			Value:    "mobile",
-			Path:     "/",
-			Expires:  time.Now().Add(10 * time.Minute),
-			HTTPOnly: true,
-			Secure:   viper.GetString("ENVIRONMENT") == "production",
-			SameSite: "Lax",
-		})
-	}
 	authURL := cfg.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
 	return ctx.Redirect(authURL, fiber.StatusTemporaryRedirect)
 }
@@ -102,7 +95,13 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 		return c.renderErrorPage(ctx, "missing state parameter")
 	}
 	cookieState := ctx.Cookies("google_oauth_state")
-	if cookieState == "" || state != cookieState {
+	baseState := state
+	isMobile := false
+	if strings.HasSuffix(state, "|mobile") {
+		baseState = strings.TrimSuffix(state, "|mobile")
+		isMobile = true
+	}
+	if cookieState == "" || baseState != cookieState {
 		return c.renderErrorPage(ctx, "invalid oauth state")
 	}
 	ctx.Cookie(&fiber.Cookie{
@@ -160,17 +159,7 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 
 	setAuthCookies(ctx, loginResp.Token, loginResp.RefreshToken)
 
-	source := ctx.Cookies("google_oauth_source")
-	if source == "mobile" {
-		ctx.Cookie(&fiber.Cookie{
-			Name:     "google_oauth_source",
-			Value:    "",
-			Path:     "/",
-			Expires:  time.Now().Add(-1 * time.Hour),
-			HTTPOnly: true,
-			Secure:   viper.GetString("ENVIRONMENT") == "production",
-			SameSite: "Lax",
-		})
+	if isMobile {
 		mobileRedirect := "thullaabulilmi://auth/google/callback"
 		u, _ := url.Parse(mobileRedirect)
 		q := u.Query()

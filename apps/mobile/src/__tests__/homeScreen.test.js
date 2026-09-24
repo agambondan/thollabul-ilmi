@@ -227,6 +227,7 @@ const defaultNavigation = {
     closeAndOpen: jest.fn(),
     setBack: jest.fn(),
     clearBack: jest.fn(),
+    setHeader: jest.fn(),
 };
 
 const renderHomeScreen = async (props = {}) => {

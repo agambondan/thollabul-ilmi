@@ -2,6 +2,7 @@ import { ChevronDown, Menu, Search } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../theme";
+import { ArrowLeft } from "lucide-react-native";
 
 const header = {
     bg: "#ffffff",
@@ -22,29 +23,96 @@ export function MobileTopHeader({
     onOpenAccountMenu,
     onOpenMenu,
     onOpenSearch,
+    onBack,
+    title,
+    subtitle,
+    showBack = false,
 }) {
     const { t } = useMobileLocale();
     const normalizedAccountLabel = accountLabel?.trim() || "T";
+    const isMorphed = Boolean(showBack || title);
 
     return (
         <View
             style={[styles.wrap, isDarkTheme && styles.wrapDark]}
             testID='mobile-top-header'
         >
-            <View style={styles.brandGroup}>
-                <View style={styles.logo}>
-                    <Text style={styles.logoText}>ط</Text>
+            {isMorphed ? (
+                <View style={styles.brandGroup}>
+                    {showBack ? (
+                        <Pressable
+                            accessibilityLabel={t("common.back")}
+                            accessibilityRole='button'
+                            android_ripple={{
+                                color: isDarkTheme
+                                    ? "rgba(52, 211, 153, 0.12)"
+                                    : "rgba(91, 110, 91, 0.12)",
+                                borderless: true,
+                            }}
+                            hitSlop={12}
+                            onPress={onBack}
+                            style={[
+                                styles.backButton,
+                                {
+                                    backgroundColor: isDarkTheme
+                                        ? header.darkBg
+                                        : header.bg,
+                                    borderColor: isDarkTheme
+                                        ? header.darkBorder
+                                        : header.border,
+                                },
+                            ]}
+                        >
+                            <ArrowLeft
+                                color={isDarkTheme ? header.brand : header.brand}
+                                size={20}
+                                strokeWidth={2.5}
+                            />
+                        </Pressable>
+                    ) : null}
+                    <View style={styles.morphedTitleWrap}>
+                        <Text
+                            style={[
+                                styles.brandName,
+                                isDarkTheme && styles.brandNameDark,
+                            ]}
+                            numberOfLines={1}
+                        >
+                            {title}
+                        </Text>
+                        {subtitle ? (
+                            <Text
+                                style={[
+                                    styles.morphedSubtitle,
+                                    {
+                                        color: isDarkTheme
+                                            ? header.darkMuted
+                                            : header.muted,
+                                    },
+                                ]}
+                                numberOfLines={1}
+                            >
+                                {subtitle}
+                            </Text>
+                        ) : null}
+                    </View>
                 </View>
-                <Text
-                    style={[
-                        styles.brandName,
-                        isDarkTheme && styles.brandNameDark,
-                    ]}
-                    numberOfLines={1}
-                >
-                    Thullaabul 'Ilmi
-                </Text>
-            </View>
+            ) : (
+                <View style={styles.brandGroup}>
+                    <View style={styles.logo}>
+                        <Text style={styles.logoText}>ط</Text>
+                    </View>
+                    <Text
+                        style={[
+                            styles.brandName,
+                            isDarkTheme && styles.brandNameDark,
+                        ]}
+                        numberOfLines={1}
+                    >
+                        Thullaabul 'Ilmi
+                    </Text>
+                </View>
+            )}
 
             <View style={styles.actions}>
                 {onOpenSearch ? (
@@ -129,6 +197,21 @@ const styles = StyleSheet.create({
         backgroundColor: header.darkBg,
         borderBottomColor: header.darkBorder,
     },
+    morphedWrap: {
+        alignItems: "center",
+        backgroundColor: header.bg,
+        borderBottomColor: header.border,
+        borderBottomWidth: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        minHeight: 56,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+    },
+    morphedWrapDark: {
+        backgroundColor: header.darkBg,
+        borderBottomColor: header.darkBorder,
+    },
     brandGroup: {
         alignItems: "center",
         flex: 1,
@@ -166,6 +249,9 @@ const styles = StyleSheet.create({
         gap: spacing.xs,
         paddingLeft: spacing.sm,
     },
+    morphedActions: {
+        width: 32,
+    },
     actionIconBtn: {
         alignItems: "center",
         height: 32,
@@ -193,5 +279,28 @@ const styles = StyleSheet.create({
     },
     chevronOpen: {
         transform: [{ rotate: "180deg" }],
+    },
+    backButton: {
+        alignItems: "center",
+        backgroundColor: header.bg,
+        borderColor: header.border,
+        borderRadius: radius.sm,
+        borderWidth: 1,
+        height: 36,
+        justifyContent: "center",
+        width: 36,
+    },
+    morphedTitleWrap: {
+        flex: 1,
+        minWidth: 0,
+    },
+    morphedTitle: {
+        fontSize: 16,
+        fontWeight: "700",
+        letterSpacing: -0.2,
+    },
+    morphedSubtitle: {
+        fontSize: 12,
+        marginTop: 2,
     },
 });

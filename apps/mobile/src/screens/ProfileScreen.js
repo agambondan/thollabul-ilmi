@@ -212,39 +212,41 @@ function SubScreen({ title, onBack, children }) {
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             style={[styles.flex, { backgroundColor: theme.bg }]}
         >
-            <View
-                style={[
-                    styles.subHeader,
-                    {
-                        backgroundColor: theme.surface,
-                        borderBottomColor: theme.border,
-                    },
-                ]}
-            >
-                <Pressable
-                    accessibilityRole='button'
-                    accessibilityLabel={t("common.back")}
-                    android_ripple={{ color: theme.faint, borderless: true }}
-                    hitSlop={12}
-                    onPress={onBack}
+            {!isWebAppLayout ? (
+                <View
                     style={[
-                        styles.backButton,
+                        styles.subHeader,
                         {
-                            backgroundColor: theme.bg,
-                            borderColor: theme.border,
+                            backgroundColor: theme.surface,
+                            borderBottomColor: theme.border,
                         },
                     ]}
                 >
-                    <ArrowLeft
-                        color={theme.primary}
-                        size={20}
-                        strokeWidth={2.5}
-                    />
-                </Pressable>
-                <Text style={[styles.subTitle, { color: theme.ink }]}>
-                    {title}
-                </Text>
-            </View>
+                    <Pressable
+                        accessibilityRole='button'
+                        accessibilityLabel={t("common.back")}
+                        android_ripple={{ color: theme.faint, borderless: true }}
+                        hitSlop={12}
+                        onPress={onBack}
+                        style={[
+                            styles.backButton,
+                            {
+                                backgroundColor: theme.bg,
+                                borderColor: theme.border,
+                            },
+                        ]}
+                    >
+                        <ArrowLeft
+                            color={theme.primary}
+                            size={20}
+                            strokeWidth={2.5}
+                        />
+                    </Pressable>
+                    <Text style={[styles.subTitle, { color: theme.ink }]}>
+                        {title}
+                    </Text>
+                </View>
+            ) : null}
             <ScrollView
                 contentContainerStyle={[
                     styles.subContent,
@@ -1294,10 +1296,39 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 pop();
                 return true;
             });
+            if (isWebAppLayout && navigation?.setHeader) {
+                const currentScreen = stack[stack.length - 1];
+                const titles = {
+                    settings: "Pengaturan",
+                    achievements: "Pencapaian",
+                    "settings-account": "Akun",
+                    "settings-notifications": "Notifikasi",
+                    "settings-storage": "Penyimpanan",
+                    "settings-appearance": "Tampilan",
+                    "settings-security": "Keamanan",
+                };
+                navigation.setHeader({
+                    title: titles[currentScreen] || currentScreen,
+                    showBack: true,
+                    onBack: pop,
+                });
+            }
         } else {
             navigation?.clearBack?.();
+            if (isWebAppLayout && navigation?.setHeader) {
+                const returnRoute = navigation.routes?.profile?.returnRoute;
+                if (returnRoute) {
+                    navigation.setHeader({
+                        title: "Profil",
+                        showBack: true,
+                        onBack: () => navigation?.close?.("profile"),
+                    });
+                } else {
+                    navigation.setHeader(null);
+                }
+            }
         }
-    }, [isActive, stack.length, navigation]);
+    }, [isActive, stack.length, navigation, isWebAppLayout]);
 
     const initials = `${user?.name || user?.email || "TI"}`
         .split(/\s+/)
