@@ -59,83 +59,6 @@ export const prayerScheduleItems = [
     { Icon: Moon, key: "isha", label: "Isya" },
 ];
 
-const menuItems = [
-    {
-        Icon: Compass,
-        key: "ibadah",
-        labelKey: "home.menu.qibla",
-        params: { view: "qibla" },
-    },
-    { Icon: BookOpenCheck, key: "quran", labelKey: "home.menu.memory" },
-    {
-        Icon: Smile,
-        featureKey: "muhasabah",
-        key: "belajar",
-        labelKey: "home.menu.journal",
-    },
-    {
-        Icon: HelpCircle,
-        featureKey: "quiz",
-        key: "belajar",
-        labelKey: "home.menu.quiz",
-    },
-    {
-        Icon: Video,
-        featureKey: "kajian",
-        key: "belajar",
-        labelKey: "home.menu.kajian",
-    },
-    {
-        Icon: FileText,
-        featureKey: "tafsir",
-        key: "belajar",
-        labelKey: "home.menu.tafsir",
-    },
-    { Icon: Book, key: "hadith", labelKey: "home.menu.hadith" },
-    {
-        Icon: Grid,
-        internalView: "feature-directory",
-        key: "belajar",
-        labelKey: "home.menu.more",
-    },
-];
-
-const webDashboardDarkColors = {
-    accent: "#fbbf24",
-    bg: "#020617",
-    border: "#1e293b",
-    borderSoft: "#064e3b",
-    card: "#0f172a",
-    cardDeep: "#111827",
-    iconBg: "#0f3f3a",
-    muted: "#94a3b8",
-    primary: "#6ee7b7",
-    primaryStrong: "#10b981",
-    primarySoft: "#022c22",
-    text: "#cbd5e1",
-    title: "#f8fafc",
-};
-
-const webDashboardLightColors = {
-    accent: "#0f766e",
-    bg: "#ffffff",
-    border: "#e5e7eb",
-    borderSoft: "#a7f3d0",
-    card: "#ffffff",
-    cardDeep: "#f8fafc",
-    iconBg: "#ecfdf5",
-    muted: "#64748b",
-    primary: "#047857",
-    primaryStrong: "#059669",
-    primarySoft: "#ecfdf5",
-    reminderCard: "#ecfdf5",
-    text: "#475569",
-    title: "#111827",
-};
-
-const getWebDashboardColors = (isDarkTheme) =>
-    isDarkTheme ? webDashboardDarkColors : webDashboardLightColors;
-
 const webDashboardFontFamily = Platform.select({
     android: "sans-serif",
     ios: "System",
@@ -181,6 +104,46 @@ const createWebDashboardStyles = (dashboardColors) => ({
     titleText: { color: dashboardColors.title },
 });
 
+const menuItems = [
+    {
+        Icon: Compass,
+        key: "ibadah",
+        labelKey: "home.menu.qibla",
+        params: { view: "qibla" },
+    },
+    { Icon: BookOpenCheck, key: "quran", labelKey: "home.menu.memory" },
+    {
+        Icon: Smile,
+        featureKey: "muhasabah",
+        key: "belajar",
+        labelKey: "home.menu.journal",
+    },
+    {
+        Icon: HelpCircle,
+        featureKey: "quiz",
+        key: "belajar",
+        labelKey: "home.menu.quiz",
+    },
+    {
+        Icon: Video,
+        featureKey: "kajian",
+        key: "belajar",
+        labelKey: "home.menu.kajian",
+    },
+    {
+        Icon: FileText,
+        featureKey: "tafsir",
+        key: "belajar",
+        labelKey: "home.menu.tafsir",
+    },
+    { Icon: Book, key: "hadith", labelKey: "home.menu.hadith" },
+    {
+        Icon: Grid,
+        internalView: "feature-directory",
+        key: "belajar",
+        labelKey: "home.menu.more",
+    },
+];
 const formatHadisSource = (value = "") => {
     if (!value) return "";
     return value.replace(/\bHadith\b/g, "Hadis");
@@ -190,7 +153,7 @@ const defaultT = (key, values) =>
     translateMobile(defaultMobileLanguage, key, values);
 
 const buildWebAppDailySlides = ({
-    colors: dashboardColors = webDashboardDarkColors,
+    colors: dashboardColors,
     dailyAyah,
     dailyHadith,
     dailyMessage,
@@ -269,7 +232,7 @@ export function PaperHomeDashboard(props) {
 }
 
 export function WebAppHomeDashboard(props) {
-    const dashboardColors = getWebDashboardColors(props.isDarkTheme);
+    const dashboardColors = getThemeColors({ isDark: props.isDarkTheme, isClassic: false });
     return (
         <DashboardContent
             {...props}
@@ -293,13 +256,14 @@ function PaperHomeHeader({
     onOpenTab,
 }) {
     const { t } = useMobileLocale();
+    const theme = getThemeColors({ isDark: false, isClassic: true });
 
     return (
         <View style={styles.header} testID='home-classic-header'>
             <Pressable
                 accessibilityRole='button'
                 android_ripple={{
-                    color: "rgba(91, 110, 91, 0.12)",
+                    color: theme.faint,
                     borderless: false,
                 }}
                 onPress={() => onOpenTab("profile")}
@@ -318,7 +282,7 @@ function PaperHomeHeader({
                     accessibilityLabel={t("a11y.openSearch")}
                     accessibilityRole='button'
                     android_ripple={{
-                        color: "rgba(91, 110, 91, 0.16)",
+                        color: theme.faint,
                         borderless: true,
                     }}
                     onPress={() => {
@@ -332,20 +296,20 @@ function PaperHomeHeader({
                         }
                     }}
                 >
-                    <Search color={colors.muted} size={18} strokeWidth={2.2} />
+                    <Search color={theme.muted} size={18} strokeWidth={2.2} />
                 </Pressable>
                 <Pressable
                     accessibilityLabel={t("a11y.openNotifications")}
                     accessibilityRole='button'
                     android_ripple={{
-                        color: "rgba(91, 110, 91, 0.16)",
+                        color: theme.faint,
                         borderless: true,
                     }}
                     onPress={() =>
                         onOpenTab("belajar", { featureKey: "notifications" })
                     }
                 >
-                    <Bell color={colors.muted} size={18} strokeWidth={2.2} />
+                    <Bell color={theme.muted} size={18} strokeWidth={2.2} />
                 </Pressable>
             </View>
         </View>
@@ -353,7 +317,7 @@ function PaperHomeHeader({
 }
 
 function WebAppHomeGreeting({
-    colors: dashboardColors = webDashboardDarkColors,
+    colors: dashboardColors,
     displayName,
     gregorianDate,
 }) {
@@ -406,7 +370,7 @@ function DashboardContent({
 }) {
     const isWebApp = layout === homeDashboardLayouts.webApp;
     const dashboardColors = isWebApp
-        ? getWebDashboardColors(isDarkTheme)
+        ? getThemeColors({ isDark: isDarkTheme, isClassic: false })
         : null;
     const webStyles = isWebApp ? createWebDashboardStyles(dashboardColors) : {};
     const primary = isWebApp ? dashboardColors.primary : colors.primary;
@@ -835,7 +799,7 @@ function DashboardContent({
 }
 
 function WebAppDailyReminderCard({
-    dashboardColors = webDashboardDarkColors,
+    dashboardColors,
     dailyAyah,
     dailyHadith,
     dailyMessage,
@@ -1493,7 +1457,7 @@ const styles = StyleSheet.create({
         textTransform: "uppercase",
     },
     webAppMenuLabel: {
-        color: webDashboardDarkColors.text,
+        color: colors.dark.text,
     },
     contextCard: {
         backgroundColor: colors.surface,
@@ -1648,7 +1612,7 @@ const styles = StyleSheet.create({
     },
     webAppReminderCard: {
         backgroundColor: "#052e2b",
-        borderColor: webDashboardDarkColors.borderSoft,
+        borderColor: colors.dark.primaryBg,
         borderRadius: 16,
         borderWidth: 1,
         marginBottom: spacing.lg,

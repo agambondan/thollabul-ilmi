@@ -7,7 +7,7 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { colors, radius, shadows, spacing } from "../theme";
+import { colors, radius, shadows, spacing, touchTarget } from "../theme";
 import { hapticSelection, hapticTap } from "../utils/haptics";
 
 export function SectionHeader({ title, meta, action }) {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
         color: colors.muted,
         fontSize: 12,
         lineHeight: 17,
-        marginTop: 2,
+        marginTop: spacing.xs,
     },
     sectionAction: {
         alignItems: "center",
@@ -349,8 +349,8 @@ const styles = StyleSheet.create({
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
-        gap: spacing.xs,
-        padding: 4,
+        gap: spacing.sm,
+        padding: spacing.xs,
     },
     segmentButton: {
         alignItems: "center",
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 32,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.xs,
     },
     segmentButtonActive: {
@@ -398,9 +398,9 @@ const styles = StyleSheet.create({
         borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
-        height: 38,
+        height: touchTarget,
         justifyContent: "center",
-        width: 38,
+        width: touchTarget,
     },
     iconButtonActive: {
         backgroundColor: colors.primary,
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 36,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
         paddingVertical: spacing.xs,
     },
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
         color: colors.muted,
         fontSize: 12,
         lineHeight: 17,
-        marginTop: 2,
+        marginTop: spacing.xs,
     },
     rowBadges: {
         flexDirection: "row",

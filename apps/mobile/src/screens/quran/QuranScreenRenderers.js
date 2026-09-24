@@ -868,6 +868,7 @@ export function createQuranScreenRenderers(context) {
             selectedSurah.type === "surah" &&
             Number(selectedSurah.number) !== 1 &&
             Number(selectedSurah.number) !== 9;
+        const isReaderInWebApp = isWebAppLayout;
 
         return (
             <>
@@ -941,11 +942,13 @@ export function createQuranScreenRenderers(context) {
                             ) : null}
                         </View>
                         <View style={styles.readerHeaderActions}>
-                            <IconActionButton
-                                Icon={ArrowLeft}
-                                label='Kembali ke daftar surah'
-                                onPress={closeReader}
-                            />
+                            {!isReaderInWebApp && (
+                                <IconActionButton
+                                    Icon={ArrowLeft}
+                                    label='Kembali ke daftar surah'
+                                    onPress={closeReader}
+                                />
+                            )}
                             <IconActionButton
                                 Icon={MoreVertical}
                                 label='Menu baca'

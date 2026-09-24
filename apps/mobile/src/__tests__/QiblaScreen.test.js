@@ -195,7 +195,7 @@ describe("QiblaScreen", () => {
         ).toEqual(
             expect.objectContaining({
                 backgroundColor: "#ffffff",
-                borderColor: "#e5e7eb",
+                borderColor: "#e2e8f0",
             }),
         );
     });
@@ -222,7 +222,7 @@ describe("QiblaScreen", () => {
             ),
         ).toEqual(
             expect.objectContaining({
-                backgroundColor: "#111827",
+                backgroundColor: "#0f172a",
                 borderColor: "#334155",
             }),
         );

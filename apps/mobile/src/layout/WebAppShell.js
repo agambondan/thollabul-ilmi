@@ -10,7 +10,7 @@ import { updateProfile } from "../api/auth";
 import { useSession } from "../context/SessionContext";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
-import { colors, getThemeColors } from "../theme";
+import { getThemeColors } from "../theme";
 import { useLayoutMode } from "./LayoutModeProvider";
 import { MobileAccountMenu } from "./MobileAccountMenu";
 import { MobileBottomNav } from "./MobileBottomNav";
@@ -34,8 +34,9 @@ export function WebAppShell({
 }) {
     const { loading, session, signOut, updateCurrentUser, user } = useSession();
     const { t } = useMobileLocale();
-    const { isDarkTheme, setThemePreference, themePreference } =
+    const { isDarkTheme, isWebAppLayout, setThemePreference, themePreference } =
         useLayoutMode();
+    const theme = getThemeColors({ isDark: isDarkTheme, isClassic: !isWebAppLayout });
     const [accountMenuVisible, setAccountMenuVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
     const [quranFullscreen, setQuranFullscreen] = useState(false);
@@ -138,18 +139,19 @@ export function WebAppShell({
     return (
         <SafeAreaView
             edges={["top", "left", "right"]}
-            style={[styles.safeArea, isDarkTheme && styles.safeAreaDark]}
+            style={[styles.shell, { backgroundColor: theme.surface }]}
             testID='web-app-shell'
         >
             {hideChrome ? null : (
                 <MobileTopHeader
                     {...topHeaderProps}
+                    isWebAppLayout={isWebAppLayout}
                 />
             )}
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : undefined}
                 keyboardVerticalOffset={0}
-                style={[styles.container, isDarkTheme && styles.containerDark]}
+                style={[styles.contentWrap, { backgroundColor: theme.bg }]}
             >
                 {children}
             </KeyboardAvoidingView>
@@ -190,18 +192,10 @@ export function WebAppShell({
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        backgroundColor: colors.light.surface,
+    shell: {
         flex: 1,
     },
-    safeAreaDark: {
-        backgroundColor: colors.dark.bg,
-    },
-    container: {
-        backgroundColor: colors.light.bg,
+    contentWrap: {
         flex: 1,
-    },
-    containerDark: {
-        backgroundColor: colors.dark.bg,
     },
 });

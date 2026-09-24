@@ -1063,12 +1063,12 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         return openSurah(selectedSurah);
     };
 
-    const closeReader = () => {
+    const closeReader = useCallback(() => {
         stopAudio();
         setReaderMenuVisible(false);
         setSelectedDetailAyah(null);
         setSelectedSurah(null);
-    };
+    }, [stopAudio]);
 
     const navigateAdjacentSurah = useCallback(
         (delta) => {
@@ -1909,6 +1909,24 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             setQuranTab("surah");
         }
     }, [isWebAppLayout, quranTab]);
+
+    useEffect(() => {
+        if (!isActive || !navigation?.setHeader) return;
+        if (isWebAppLayout && selectedSurah) {
+            const surahName = selectedSurah.name ?? `Surah ${selectedSurah.number}`;
+            navigation.setHeader({
+                showBack: true,
+                title: surahName,
+                subtitle: selectedSurah.type === "surah" ? `${selectedSurah.ayahs} ayah` : selectedSurah.meaning,
+                onBack: () => {
+                    closeReader();
+                    return true;
+                },
+            });
+        } else if (isWebAppLayout) {
+            navigation.setHeader(null);
+        }
+    }, [isActive, isWebAppLayout, navigation, selectedSurah, closeReader]);
 
     const {
         closeAyahDetail,

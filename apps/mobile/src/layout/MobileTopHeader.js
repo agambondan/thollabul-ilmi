@@ -1,25 +1,14 @@
 import { ChevronDown, Menu, Search } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../theme";
+import { radius, spacing, touchTarget, getThemeColors } from "../theme";
 import { ArrowLeft } from "lucide-react-native";
-
-const header = {
-    bg: "#ffffff",
-    border: "#e2e8f0",
-    brand: "#047857",
-    ink: "#0f172a",
-    muted: "#64748b",
-    darkBg: "#020617",
-    darkBorder: "#1e293b",
-    darkInk: "#f8fafc",
-    darkMuted: "#94a3b8",
-};
 
 export function MobileTopHeader({
     accountLabel = "T",
     accountMenuOpen = false,
     isDarkTheme = false,
+    isWebAppLayout = true,
     onOpenAccountMenu,
     onOpenMenu,
     onOpenSearch,
@@ -31,10 +20,11 @@ export function MobileTopHeader({
     const { t } = useMobileLocale();
     const normalizedAccountLabel = accountLabel?.trim() || "T";
     const isMorphed = Boolean(showBack || title);
+    const theme = getThemeColors({ isDark: isDarkTheme, isClassic: !isWebAppLayout });
 
     return (
         <View
-            style={[styles.wrap, isDarkTheme && styles.wrapDark]}
+            style={[styles.wrap, { backgroundColor: theme.bg, borderBottomColor: theme.border }]}
             testID='mobile-top-header'
         >
             {isMorphed ? (
@@ -44,9 +34,7 @@ export function MobileTopHeader({
                             accessibilityLabel={t("common.back")}
                             accessibilityRole='button'
                             android_ripple={{
-                                color: isDarkTheme
-                                    ? "rgba(52, 211, 153, 0.12)"
-                                    : "rgba(91, 110, 91, 0.12)",
+                                color: theme.faint,
                                 borderless: true,
                             }}
                             hitSlop={12}
@@ -54,17 +42,13 @@ export function MobileTopHeader({
                             style={[
                                 styles.backButton,
                                 {
-                                    backgroundColor: isDarkTheme
-                                        ? header.darkBg
-                                        : header.bg,
-                                    borderColor: isDarkTheme
-                                        ? header.darkBorder
-                                        : header.border,
+                                    backgroundColor: theme.surface,
+                                    borderColor: theme.border,
                                 },
                             ]}
                         >
                             <ArrowLeft
-                                color={isDarkTheme ? header.brand : header.brand}
+                                color={theme.primary}
                                 size={20}
                                 strokeWidth={2.5}
                             />
@@ -74,7 +58,7 @@ export function MobileTopHeader({
                         <Text
                             style={[
                                 styles.brandName,
-                                isDarkTheme && styles.brandNameDark,
+                                { color: theme.ink },
                             ]}
                             numberOfLines={1}
                         >
@@ -84,11 +68,7 @@ export function MobileTopHeader({
                             <Text
                                 style={[
                                     styles.morphedSubtitle,
-                                    {
-                                        color: isDarkTheme
-                                            ? header.darkMuted
-                                            : header.muted,
-                                    },
+                                    { color: theme.muted },
                                 ]}
                                 numberOfLines={1}
                             >
@@ -97,15 +77,15 @@ export function MobileTopHeader({
                         ) : null}
                     </View>
                 </View>
-            ) : (
-                <View style={styles.brandGroup}>
-                    <View style={styles.logo}>
+) : (
+            <View style={styles.brandGroup}>
+                    <View style={[styles.logo, { backgroundColor: theme.primary }]}>
                         <Text style={styles.logoText}>ط</Text>
                     </View>
                     <Text
                         style={[
                             styles.brandName,
-                            isDarkTheme && styles.brandNameDark,
+                            { color: theme.ink },
                         ]}
                         numberOfLines={1}
                     >
@@ -120,18 +100,18 @@ export function MobileTopHeader({
                         accessibilityLabel={t("nav.search")}
                         accessibilityRole='button'
                         android_ripple={{
-                            color: "rgba(17, 24, 39, 0.08)",
+                            color: theme.faint,
                             borderless: true,
                         }}
                         onPress={onOpenSearch}
                         style={styles.actionIconBtn}
                         testID='mobile-top-header-search'
                     >
-                        <Search
-                            color={isDarkTheme ? header.darkMuted : header.muted}
-                            size={19}
-                            strokeWidth={2}
-                        />
+                            <Search
+                                color={theme.muted}
+                                size={19}
+                                strokeWidth={2}
+                            />
                     </Pressable>
                 ) : null}
                 {onOpenMenu ? (
@@ -139,38 +119,38 @@ export function MobileTopHeader({
                         accessibilityLabel={t("nav.menu")}
                         accessibilityRole='button'
                         android_ripple={{
-                            color: "rgba(17, 24, 39, 0.08)",
+                            color: theme.faint,
                             borderless: true,
                         }}
                         onPress={onOpenMenu}
                         style={styles.actionIconBtn}
                         testID='mobile-top-header-menu'
                     >
-                        <Menu
-                            color={isDarkTheme ? header.darkMuted : header.muted}
-                            size={19}
-                            strokeWidth={2}
-                        />
+                            <Menu
+                                color={theme.muted}
+                                size={19}
+                                strokeWidth={2}
+                            />
                     </Pressable>
                 ) : null}
                 <Pressable
                     accessibilityLabel={t("account.menuLabel")}
                     accessibilityRole='button'
                     android_ripple={{
-                        color: "rgba(17, 24, 39, 0.08)",
+                        color: theme.faint,
                         borderless: true,
                     }}
                     onPress={onOpenAccountMenu}
                     style={styles.accountButton}
                     testID='mobile-top-header-profile'
                 >
-                    <View style={styles.avatar}>
+                    <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
                         <Text style={styles.avatarText} numberOfLines={1}>
                             {normalizedAccountLabel.slice(0, 1).toUpperCase()}
                         </Text>
                     </View>
                     <ChevronDown
-                        color={isDarkTheme ? header.darkMuted : header.muted}
+                        color={theme.muted}
                         size={17}
                         strokeWidth={2}
                         style={accountMenuOpen ? styles.chevronOpen : undefined}
@@ -184,8 +164,6 @@ export function MobileTopHeader({
 const styles = StyleSheet.create({
     wrap: {
         alignItems: "center",
-        backgroundColor: header.bg,
-        borderBottomColor: header.border,
         borderBottomWidth: 1,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -193,24 +171,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
     },
-    wrapDark: {
-        backgroundColor: header.darkBg,
-        borderBottomColor: header.darkBorder,
-    },
     morphedWrap: {
         alignItems: "center",
-        backgroundColor: header.bg,
-        borderBottomColor: header.border,
         borderBottomWidth: 1,
         flexDirection: "row",
         justifyContent: "space-between",
         minHeight: 56,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
-    },
-    morphedWrapDark: {
-        backgroundColor: header.darkBg,
-        borderBottomColor: header.darkBorder,
     },
     brandGroup: {
         alignItems: "center",
@@ -221,7 +189,6 @@ const styles = StyleSheet.create({
     },
     logo: {
         alignItems: "center",
-        backgroundColor: header.brand,
         borderRadius: radius.sm,
         height: 34,
         justifyContent: "center",
@@ -234,19 +201,15 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
     },
     brandName: {
-        color: header.ink,
         flex: 1,
         fontSize: 15,
         fontWeight: "800",
         letterSpacing: 0,
     },
-    brandNameDark: {
-        color: header.darkInk,
-    },
     actions: {
         alignItems: "center",
         flexDirection: "row",
-        gap: spacing.xs,
+        gap: spacing.sm,
         paddingLeft: spacing.sm,
     },
     morphedActions: {
@@ -254,22 +217,22 @@ const styles = StyleSheet.create({
     },
     actionIconBtn: {
         alignItems: "center",
-        height: 32,
+        height: touchTarget,
         justifyContent: "center",
-        width: 32,
+        width: touchTarget,
     },
     accountButton: {
         alignItems: "center",
         flexDirection: "row",
         gap: spacing.xs,
+        minHeight: touchTarget,
     },
     avatar: {
         alignItems: "center",
-        backgroundColor: header.brand,
         borderRadius: 999,
-        height: 32,
+        height: touchTarget,
         justifyContent: "center",
-        width: 32,
+        width: touchTarget,
     },
     avatarText: {
         color: "#ffffff",
@@ -282,13 +245,11 @@ const styles = StyleSheet.create({
     },
     backButton: {
         alignItems: "center",
-        backgroundColor: header.bg,
-        borderColor: header.border,
         borderRadius: radius.sm,
         borderWidth: 1,
-        height: 36,
+        height: touchTarget,
         justifyContent: "center",
-        width: 36,
+        width: touchTarget,
     },
     morphedTitleWrap: {
         flex: 1,

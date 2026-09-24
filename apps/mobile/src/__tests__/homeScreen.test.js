@@ -313,7 +313,7 @@ describe("HomeScreen", () => {
         });
         expect(getByTestId("home-scroll").props.style).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ backgroundColor: "#ffffff" }),
+                expect.objectContaining({ backgroundColor: "#f8fafc" }),
             ]),
         );
         expect(getByTestId("home-prayer-card").props.style).toEqual(
@@ -328,7 +328,7 @@ describe("HomeScreen", () => {
             expect.arrayContaining([
                 expect.objectContaining({
                     backgroundColor: "#ffffff",
-                    borderColor: "#e5e7eb",
+                    borderColor: "#e2e8f0",
                 }),
             ]),
         );
@@ -370,14 +370,14 @@ describe("HomeScreen", () => {
             expect.arrayContaining([
                 expect.objectContaining({
                     backgroundColor: "#0f172a",
-                    borderColor: "#1e293b",
+                    borderColor: "#334155",
                 }),
             ]),
         );
         expect(getByTestId("home-daily-card").props.style).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({
-                    backgroundColor: "#022c22",
+                    backgroundColor: "#052e2b",
                     borderColor: "#064e3b",
                 }),
             ]),

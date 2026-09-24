@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
         color: colors.muted,
         fontSize: 12,
         lineHeight: 18,
-        marginTop: 2,
+        marginTop: spacing.xs,
     },
     actions: {
         alignItems: "center",
         flexDirection: "row",
-        gap: spacing.xs,
+        gap: spacing.sm,
     },
 });

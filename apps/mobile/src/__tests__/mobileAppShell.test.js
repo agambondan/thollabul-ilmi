@@ -134,12 +134,12 @@ describe("MobileAppShell", () => {
         expect(setBarStyleSpy).toHaveBeenCalledWith("dark-content");
         expect(getByTestId("mobile-top-header").props.style).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ backgroundColor: "#ffffff" }),
+                expect.objectContaining({ backgroundColor: "#f8fafc" }),
             ]),
         );
         expect(getByTestId("mobile-bottom-nav").props.style).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ backgroundColor: "#ffffff" }),
+                expect.objectContaining({ backgroundColor: "#f8fafc" }),
             ]),
         );
     });

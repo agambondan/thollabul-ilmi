@@ -365,31 +365,37 @@ export function WebAppKajianRoute({
     const [savedQuery, setSavedQuery] = useState("");
 
     useEffect(() => {
-        if (!navigation?.setBack) return;
+        if (!navigation?.setHeader) return;
         if (playerItem) {
-            navigation.setBack(() => {
-                setPlayerItem(null);
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: playerItem.title || "Pemutar",
+                onBack: () => {
+                    setPlayerItem(null);
+                    return true;
+                },
             });
         } else if (tab !== "list") {
-            navigation.setBack(() => {
-                setTab("list");
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: tab === "bookmarks" ? "Bookmark" : "Kajian",
+                onBack: () => {
+                    setTab("list");
+                    return true;
+                },
             });
         } else if (clearFeature) {
-            navigation.setBack(() => {
-                clearFeature();
-                return true;
-            });
-        }
-        return () => {
-            if (clearFeature) {
-                navigation?.setBack?.(() => {
+            navigation.setHeader({
+                showBack: true,
+                title: "Kajian",
+                onBack: () => {
                     clearFeature();
                     return true;
-                });
-            }
-        };
+                },
+            });
+        } else {
+            navigation.setHeader(null);
+        }
     }, [clearFeature, navigation, playerItem, tab]);
 
     const loadSavedBookmarks = useCallback(() => {

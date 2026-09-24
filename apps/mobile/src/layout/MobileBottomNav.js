@@ -8,21 +8,8 @@ import {
     LibraryBig,
 } from "lucide-react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../theme";
+import { radius, spacing, touchTarget, getThemeColors } from "../theme";
 import { hapticSelection } from "../utils/haptics";
-
-const nav = {
-    active: "#047857",
-    activeBg: "#ecfdf5",
-    bg: "#ffffff",
-    border: "#e2e8f0",
-    inactive: "#64748b",
-    darkActive: "#34d399",
-    darkActiveBg: "#064e3b",
-    darkBg: "#020617",
-    darkBorder: "#1e293b",
-    darkInactive: "#94a3b8",
-};
 
 export const webDashboardBottomItems = [
     {
@@ -45,18 +32,22 @@ export const webDashboardBottomItems = [
 export function MobileBottomNav({
     active,
     isDarkTheme = false,
+    isWebAppLayout = true,
     onChange,
 }) {
     const insets = useSafeAreaInsets();
     const { t } = useMobileLocale();
-    const activeColor = isDarkTheme ? nav.darkActive : nav.active;
-    const inactiveColor = isDarkTheme ? nav.darkInactive : nav.inactive;
+    const theme = getThemeColors({ isDark: isDarkTheme, isClassic: !isWebAppLayout });
+    const activeColor = theme.primary;
+    const activeBg = theme.primaryBg;
+    const inactiveColor = theme.muted;
+    const borderColor = theme.border;
 
     return (
         <View
             style={[
                 styles.wrap,
-                isDarkTheme && styles.wrapDark,
+                { backgroundColor: theme.bg, borderTopColor: borderColor },
                 { paddingBottom: Math.max(insets.bottom, spacing.xs) },
             ]}
             testID='mobile-bottom-nav'
@@ -72,9 +63,7 @@ export function MobileBottomNav({
                         accessibilityRole='tab'
                         accessibilityState={{ selected }}
                         android_ripple={{
-                            color: isDarkTheme
-                                ? nav.darkActiveBg
-                                : nav.activeBg,
+                            color: activeBg,
                             borderless: false,
                         }}
                         key={tab.key}
@@ -96,11 +85,8 @@ export function MobileBottomNav({
                         <Text
                             style={[
                                 styles.label,
-                                isDarkTheme && styles.labelDark,
+                                { color: selected ? activeColor : inactiveColor },
                                 selected && styles.labelActive,
-                                selected &&
-                                    isDarkTheme &&
-                                    styles.labelActiveDark,
                             ]}
                             numberOfLines={1}
                         >
@@ -116,47 +102,33 @@ export function MobileBottomNav({
 const styles = StyleSheet.create({
     wrap: {
         alignItems: "center",
-        backgroundColor: nav.bg,
-        borderTopColor: nav.border,
         borderTopWidth: 1,
         flexDirection: "row",
         paddingHorizontal: spacing.sm,
         paddingTop: spacing.xs,
     },
-    wrapDark: {
-        backgroundColor: nav.darkBg,
-        borderTopColor: nav.darkBorder,
-    },
     item: {
         alignItems: "center",
         borderRadius: radius.md,
         flex: 1,
-        gap: 2,
+        gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 52,
-        paddingHorizontal: 2,
-        paddingVertical: spacing.xs,
+        minHeight: touchTarget,
+        paddingHorizontal: spacing.xs,
+        paddingVertical: spacing.sm,
     },
     itemActive: {
-        backgroundColor: nav.activeBg,
+        backgroundColor: "#ecfdf5",
     },
     itemActiveDark: {
-        backgroundColor: nav.darkActiveBg,
+        backgroundColor: "#064e3b",
     },
     label: {
-        color: nav.inactive,
         fontSize: 10,
         fontWeight: "600",
         letterSpacing: 0,
     },
-    labelDark: {
-        color: nav.darkInactive,
-    },
     labelActive: {
-        color: nav.active,
         fontWeight: "800",
-    },
-    labelActiveDark: {
-        color: nav.darkActive,
     },
 });

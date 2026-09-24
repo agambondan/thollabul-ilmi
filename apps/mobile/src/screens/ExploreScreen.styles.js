@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { arabicTypography } from "../styles/arabicTypography";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 
 const WEB_APP_EXPLORE_BG = "#020617";
 const WEB_APP_EXPLORE_SURFACE = "#111827";
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         marginBottom: spacing.md,
-        minHeight: 42,
+        minHeight: touchTarget,
     },
     backToExploreText: {
         color: colors.primary,
@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
     webAppCatalogInput: {
         color: "#e2e8f0",
         fontSize: 14,
-        minHeight: 42,
+        minHeight: touchTarget,
         padding: 0,
     },
     webAppBookmarksRoot: {
@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
         borderRadius: 999,
         borderWidth: 1,
         marginBottom: spacing.md,
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.xs,
     },
@@ -280,7 +280,7 @@ export const styles = StyleSheet.create({
         borderColor: WEB_APP_EXPLORE_BORDER,
         borderRadius: 999,
         borderWidth: 1,
-        minHeight: 30,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
         paddingVertical: 6,
     },
@@ -334,9 +334,9 @@ export const styles = StyleSheet.create({
         borderColor: WEB_APP_EXPLORE_BORDER,
         borderRadius: 14,
         borderWidth: 1,
-        height: 42,
+        height: touchTarget,
         justifyContent: "center",
-        width: 42,
+        width: touchTarget,
     },
     webAppNoteBody: {
         flex: 1,
@@ -374,7 +374,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.xs,
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.xs,
     },
@@ -406,9 +406,9 @@ export const styles = StyleSheet.create({
         borderColor: WEB_APP_EXPLORE_BORDER,
         borderRadius: 14,
         borderWidth: 1,
-        height: 42,
+        height: touchTarget,
         justifyContent: "center",
-        width: 42,
+        width: touchTarget,
     },
     webAppGoalTitleBlock: {
         flex: 1,
@@ -801,7 +801,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.xs,
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
         paddingVertical: 7,
     },
@@ -926,9 +926,9 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#ecfdf5",
         borderRadius: 999,
-        height: 34,
+        height: touchTarget,
         justifyContent: "center",
-        width: 34,
+        width: touchTarget,
     },
     webAppZakatHistoryIconText: {
         color: "#047857",
@@ -952,9 +952,9 @@ export const styles = StyleSheet.create({
     },
     webAppZakatHistoryDelete: {
         alignItems: "center",
-        minHeight: 32,
+        minHeight: touchTarget,
         justifyContent: "center",
-        width: 32,
+        width: touchTarget,
     },
     webAppZakatHistoryMeta: {
         gap: 3,
@@ -1087,11 +1087,11 @@ export const styles = StyleSheet.create({
     },
     formPrimaryButton: {
         flex: 1,
-        minHeight: 42,
+        minHeight: touchTarget,
     },
     loginButton: {
         marginTop: spacing.md,
-        minHeight: 42,
+        minHeight: touchTarget,
     },
     secondaryButton: {
         alignItems: "center",
@@ -1101,7 +1101,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         marginBottom: spacing.sm,
-        minHeight: 42,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     secondaryButtonText: {
@@ -1368,7 +1368,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.primary,
         borderRadius: radius.md,
         justifyContent: "center",
-        minHeight: 38,
+        minHeight: touchTarget,
     },
     commentSubmitDisabled: {
         opacity: 0.55,
@@ -1451,7 +1451,7 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: radius.md,
         borderWidth: 1,
-        minHeight: 40,
+        minHeight: touchTarget,
         minWidth: 48,
         justifyContent: "center",
         paddingHorizontal: spacing.md,
@@ -1714,8 +1714,8 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.primary,
         borderRadius: radius.sm,
         justifyContent: "center",
-        minHeight: 28,
-        minWidth: 28,
+        minHeight: touchTarget,
+        minWidth: touchTarget,
     },
     heirButtonDisabled: {
         opacity: 0.3,

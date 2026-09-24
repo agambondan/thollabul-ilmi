@@ -10,7 +10,7 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { staticTokohTarikh } from "../data/staticTokohTarikh";
@@ -762,8 +762,12 @@ const styles = StyleSheet.create({
         padding: spacing.lg,
     },
     modalClose: {
+        alignItems: "center",
         alignSelf: "flex-end",
-        padding: spacing.sm,
+        height: touchTarget,
+        justifyContent: "center",
+        minWidth: touchTarget,
+        padding: spacing.xs,
     },
     modalCloseText: {
         color: colors.primary,

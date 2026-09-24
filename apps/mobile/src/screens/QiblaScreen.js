@@ -23,7 +23,7 @@ import { ActionPill, EmptyState, IconActionButton } from "../components/Paper";
 import { Screen } from "../components/Screen";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import {
     compassSupported,
     qiblaOffset,
@@ -40,42 +40,6 @@ const compassTicks = Array.from({ length: 72 }, (_, index) => index * 5);
 const compassLabels = Array.from({ length: 12 }, (_, index) => index * 30);
 const rotationLimit = 1440;
 const ALIGNMENT_THRESHOLD = 8;
-const WEB_APP_QIBLA_THEMES = {
-    light: {
-        accent: "#047857",
-        bg: "#f8fafc",
-        border: "#e5e7eb",
-        compassBorder: "#a7f3d0",
-        iconBg: "#d1fae5",
-        inputBg: "#f8fafc",
-        inputBorder: "#d1d5db",
-        messageBg: "#fff7ed",
-        messageBorder: "#fed7aa",
-        messageText: "#c2410c",
-        muted: "#64748b",
-        note: "#94a3b8",
-        surface: "#ffffff",
-        text: "#334155",
-        title: "#064e3b",
-    },
-    dark: {
-        accent: "#34d399",
-        bg: "#020617",
-        border: "#334155",
-        compassBorder: "#047857",
-        iconBg: "#064e3b",
-        inputBg: "#0f172a",
-        inputBorder: "#334155",
-        messageBg: "#431407",
-        messageBorder: "#9a3412",
-        messageText: "#fdba74",
-        muted: "#94a3b8",
-        note: "#64748b",
-        surface: "#111827",
-        text: "#cbd5e1",
-        title: "#f8fafc",
-    },
-};
 
 // Normalize to [0, 360)
 const norm = (v) => ((v % 360) + 360) % 360;
@@ -128,9 +92,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
 export function QiblaScreen({ navigation, onOpenTab }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
-    const webAppTheme = isDarkTheme
-        ? WEB_APP_QIBLA_THEMES.dark
-        : WEB_APP_QIBLA_THEMES.light;
+    const webAppTheme = getThemeColors({ isDark: isDarkTheme, isClassic: false });
     const { width } = useWindowDimensions();
     const [coords, setCoords] = useState(null);
     const [direction, setDirection] = useState(null);
@@ -1388,7 +1350,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.xs,
-        minHeight: 30,
+        minHeight: touchTarget,
         maxWidth: 178,
         paddingHorizontal: spacing.sm,
     },

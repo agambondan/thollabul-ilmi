@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { QURAN_FONT_FAMILIES } from "../constants/quranFonts";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 import {
     WEB_APP_QURAN_ACCENT,
     WEB_APP_QURAN_ACCENT_BG,
@@ -117,7 +117,7 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
     },
     surahPagerButtonText: {
@@ -182,7 +182,7 @@ export const styles = StyleSheet.create({
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
         borderRadius: 12,
-        minHeight: 42,
+        minHeight: touchTarget,
     },
     webAppSurahPagerButtonText: {
         color: WEB_APP_QURAN_ACCENT,
@@ -242,14 +242,14 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     quranSearchInput: {
         color: colors.ink,
         flex: 1,
         fontSize: 13,
-        minHeight: 32,
+        minHeight: touchTarget,
         padding: 0,
     },
     webAppQuranSearch: {
@@ -260,14 +260,14 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
-        minHeight: 38,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppQuranSearchInput: {
         color: "#e2e8f0",
         flex: 1,
         fontSize: 14,
-        minHeight: 36,
+        minHeight: touchTarget,
         padding: 0,
     },
     webAppMushafCta: {
@@ -285,9 +285,9 @@ export const styles = StyleSheet.create({
     },
     webAppMushafCtaIcon: {
         alignItems: "center",
-        height: 30,
+        height: touchTarget,
         justifyContent: "center",
-        width: 30,
+        width: touchTarget,
     },
     webAppMushafCtaCopy: {
         flex: 1,
@@ -310,7 +310,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
-        gap: 4,
+        gap: spacing.xs,
         marginBottom: spacing.md,
         marginTop: spacing.sm,
         padding: 4,
@@ -320,7 +320,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         flex: 1,
         justifyContent: "center",
-        minHeight: 32,
+        minHeight: touchTarget,
     },
     quranTabButtonActive: {
         backgroundColor: colors.primary,
@@ -373,10 +373,10 @@ export const styles = StyleSheet.create({
         minWidth: 0,
     },
     surahNumberWrap: {
-        height: 38,
+        height: touchTarget,
         justifyContent: "center",
         marginRight: spacing.md,
-        width: 38,
+        width: touchTarget,
     },
     surahNumberDiamond: {
         alignItems: "center",
@@ -384,10 +384,10 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: 6,
         borderWidth: 1,
-        height: 34,
+        height: 38,
         justifyContent: "center",
         transform: [{ rotate: "45deg" }],
-        width: 34,
+        width: 38,
     },
     surahNumberText: {
         color: colors.primary,
@@ -399,10 +399,10 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: WEB_APP_QURAN_ACCENT_BG,
         borderRadius: 4,
-        height: 38,
+        height: touchTarget,
         justifyContent: "center",
         marginRight: spacing.md,
-        width: 38,
+        width: touchTarget,
     },
     webAppSurahNumberText: {
         color: WEB_APP_QURAN_ACCENT,
@@ -483,7 +483,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.primary,
         borderRadius: radius.md,
         justifyContent: "center",
-        minHeight: 42,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     modePanelActionText: {
@@ -537,7 +537,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         marginTop: spacing.md,
-        minHeight: 38,
+        minHeight: touchTarget,
     },
     targetPreviewButtonText: {
         color: colors.primary,
@@ -556,7 +556,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flex: 1,
         justifyContent: "center",
-        minHeight: 32,
+        minHeight: touchTarget,
     },
     navigatorTabActive: {
         backgroundColor: colors.surfaceMuted,
@@ -583,7 +583,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
         fontWeight: "800",
-        minHeight: 42,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     loader: {
@@ -610,9 +610,9 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: 999,
         borderWidth: 1,
-        height: 28,
+        height: touchTarget,
         justifyContent: "center",
-        width: 28,
+        width: touchTarget,
     },
     focusAyahNumberText: {
         color: colors.primary,
@@ -622,9 +622,9 @@ export const styles = StyleSheet.create({
     focusAyahMenuButton: {
         alignItems: "center",
         borderRadius: radius.sm,
-        height: 32,
+        height: touchTarget,
         justifyContent: "center",
-        width: 32,
+        width: touchTarget,
     },
     targetAyahCard: {
         borderColor: colors.primary,
@@ -658,10 +658,10 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: radius.sm,
         borderWidth: 1,
-        height: 34,
+        height: touchTarget,
         justifyContent: "center",
         marginLeft: spacing.sm,
-        width: 34,
+        width: touchTarget,
     },
     lineAyahRow: {
         borderBottomColor: colors.faint,
@@ -681,9 +681,9 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: 999,
         borderWidth: 1,
-        height: 28,
+        height: touchTarget,
         justifyContent: "center",
-        width: 28,
+        width: touchTarget,
     },
     lineAyahNumberText: {
         color: colors.primary,
@@ -700,9 +700,9 @@ export const styles = StyleSheet.create({
     lineAyahMenuButton: {
         alignItems: "center",
         borderRadius: radius.sm,
-        height: 32,
+        height: touchTarget,
         justifyContent: "center",
-        width: 32,
+        width: touchTarget,
     },
     inlineArabicRow: {
         alignItems: "flex-start",
@@ -719,10 +719,10 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: radius.sm,
         borderWidth: 1,
-        height: 34,
+        height: touchTarget,
         justifyContent: "center",
-        marginTop: 4,
-        width: 34,
+        marginTop: spacing.xs,
+        width: touchTarget,
     },
     ayahArabic: {
         color: colors.ink,
@@ -802,7 +802,7 @@ export const styles = StyleSheet.create({
         borderColor: "#c8a955",
         borderRadius: 999,
         borderWidth: 1,
-        height: 30,
+        height: touchTarget,
         justifyContent: "center",
         minWidth: 50,
         paddingHorizontal: spacing.sm,
@@ -842,10 +842,11 @@ export const styles = StyleSheet.create({
         borderColor: "#c8a955",
         borderRadius: 999,
         borderWidth: 1,
+        minHeight: touchTarget,
         justifyContent: "center",
         minWidth: 32,
         paddingHorizontal: spacing.sm,
-        paddingVertical: 3,
+        paddingVertical: spacing.xs,
     },
     mushafFootPageText: {
         color: "#1f8f7a",
@@ -1019,7 +1020,7 @@ export const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "900",
         marginBottom: spacing.md,
-        minWidth: 28,
+        minWidth: touchTarget,
         overflow: "hidden",
         paddingHorizontal: spacing.sm,
         paddingVertical: 4,
@@ -1113,7 +1114,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         marginTop: spacing.sm,
-        minHeight: 38,
+        minHeight: touchTarget,
     },
     revealButtonText: {
         color: colors.primary,
@@ -1209,7 +1210,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.md,
         borderWidth: 1,
         justifyContent: "center",
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     qariButtonActive: {
@@ -1283,7 +1284,7 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 36,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     audioPrimaryButtonText: {
@@ -1314,7 +1315,7 @@ export const styles = StyleSheet.create({
         color: colors.ink,
         fontSize: 13,
         fontWeight: "900",
-        minHeight: 38,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
         paddingVertical: 0,
         textAlign: "center",
@@ -1361,7 +1362,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         borderWidth: 1,
         justifyContent: "center",
-        minHeight: 32,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
     },
     audioChipActive: {
@@ -1393,7 +1394,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         borderWidth: 1,
         justifyContent: "center",
-        minHeight: 32,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     audioRepeatButtonActive: {
@@ -1583,7 +1584,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.primary,
         borderRadius: radius.md,
         justifyContent: "center",
-        minHeight: 42,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     primaryButtonText: {
@@ -1701,7 +1702,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         borderWidth: 1,
         justifyContent: "center",
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     settingChipActive: {
@@ -1752,7 +1753,7 @@ export const styles = StyleSheet.create({
         gap: spacing.sm,
         justifyContent: "center",
         marginTop: spacing.lg,
-        minHeight: 42,
+        minHeight: touchTarget,
     },
     tajweedButtonText: {
         color: colors.primary,

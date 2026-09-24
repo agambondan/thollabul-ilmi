@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     tags: {
         flexDirection: "row",
         flexWrap: "wrap",
-        gap: 4,
+        gap: spacing.xs,
         marginTop: spacing.xs,
     },
     tag: {
@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontWeight: "700",
         overflow: "hidden",
-        paddingHorizontal: 6,
-        paddingVertical: 2,
+        paddingHorizontal: spacing.xs,
+        paddingVertical: spacing.xs,
     },
     tagEra: {
         backgroundColor: "#dbeafe",

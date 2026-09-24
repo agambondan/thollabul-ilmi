@@ -1,6 +1,6 @@
 import { MoreVertical } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 import { hapticTap } from "../utils/haptics";
 
 export function MetaRail({ items = [], style, textStyle }) {
@@ -211,9 +211,9 @@ const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: radius.sm,
         borderWidth: 1,
-        height: 36,
+        height: touchTarget,
         justifyContent: "center",
-        width: 36,
+        width: touchTarget,
     },
     metaRail: {
         alignItems: "stretch",
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
         width: 92,
     },
     railItem: {
-        marginTop: spacing.xs,
+        marginTop: spacing.sm,
     },
     railText: {
         color: colors.muted,
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         marginTop: spacing.sm,
         overflow: "hidden",
         paddingHorizontal: spacing.xs,
-        paddingVertical: 4,
+        paddingVertical: spacing.xs,
     },
     railBadgeActive: {
         backgroundColor: colors.primary,
@@ -306,11 +306,11 @@ const styles = StyleSheet.create({
     },
     menuButton: {
         alignItems: "center",
-        borderRadius: 20,
-        height: 40,
+        borderRadius: radius.md,
+        height: touchTarget,
         justifyContent: "center",
         marginLeft: spacing.xs,
-        width: 40,
+        width: touchTarget,
     },
     footer: {
         marginTop: spacing.xs,

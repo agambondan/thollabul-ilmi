@@ -156,27 +156,29 @@ export function WebAppDoaRoute({
     const [category, setCategory] = useState("");
 
     useEffect(() => {
-        if (!navigation?.setBack) return;
+        if (!navigation?.setHeader) return;
         if (category) {
-            navigation.setBack(() => {
-                setCategory("");
-                return true;
+            navigation.setHeader({
+                showBack: true,
+                title: category,
+                onBack: () => {
+                    setCategory("");
+                    return true;
+                },
             });
         } else if (clearFeature) {
-            navigation.setBack(() => {
-                clearFeature();
-                return true;
-            });
-        }
-        return () => {
-            if (clearFeature) {
-                navigation?.setBack?.(() => {
+            navigation.setHeader({
+                showBack: true,
+                title: t("explore.doa.title"),
+                onBack: () => {
                     clearFeature();
                     return true;
-                });
-            }
-        };
-    }, [category, clearFeature, navigation]);
+                },
+            });
+        } else {
+            navigation.setHeader(null);
+        }
+    }, [category, clearFeature, navigation, t]);
     const categories = useMemo(
         () =>
             DOA_CATEGORIES.map((item) => ({

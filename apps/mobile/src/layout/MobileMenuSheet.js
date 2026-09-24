@@ -36,7 +36,7 @@ import {
     View,
 } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 import { hapticSelection } from "../utils/haptics";
 
 export const webAppMenuGroups = [
@@ -631,9 +631,9 @@ const styles = StyleSheet.create({
     closeButton: {
         alignItems: "center",
         borderRadius: 999,
-        height: 36,
+        height: touchTarget,
         justifyContent: "center",
-        width: 36,
+        width: touchTarget,
     },
     scrollContent: {
         gap: spacing.lg,
@@ -642,7 +642,7 @@ const styles = StyleSheet.create({
         paddingTop: spacing.md,
     },
     group: {
-        gap: spacing.xs,
+        gap: spacing.sm,
     },
     groupTitle: {
         color: sheet.mutedLight,
@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
     grid: {
         flexDirection: "row",
         flexWrap: "wrap",
-        gap: spacing.xs,
+        gap: spacing.sm,
     },
     item: {
         alignItems: "center",
@@ -667,9 +667,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexGrow: 1,
         gap: spacing.xs,
-        minHeight: 38,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
-        paddingVertical: spacing.xs,
+        paddingVertical: spacing.sm,
     },
     itemDark: {
         borderColor: sheet.border,

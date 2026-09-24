@@ -50,15 +50,15 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
             });
     }, []);
 
-    const themeHasSelectedBook = (theme) => {
+    const themeHasSelectedBook = useCallback((theme) => {
         if (!selectedBookIds.length) return true;
         const themeBooks = Array.isArray(theme?.books) ? theme.books : [];
         return themeBooks.some((book) => selectedBookIds.includes(book.id));
-    };
+    }, [selectedBookIds]);
 
     const filteredThemes = useMemo(() => {
         return (themes?.items ?? []).filter(themeHasSelectedBook);
-    }, [themes, selectedBookIds]);
+    }, [themes, themeHasSelectedBook]);
 
     const toggleBook = (bookId) => {
         setSelectedBookIds((prev) =>

@@ -30,6 +30,14 @@ export const colors = {
         onPrimary: "#ffffff",
         border: "#e2e8f0",
         borderStrong: "#cbd5e1",
+        card: "#ffffff",
+        cardDeep: "#f8fafc",
+        iconBg: "#ecfdf5",
+        borderSoft: "#a7f3d0",
+        primarySoft: "#ecfdf5",
+        primaryStrong: "#059669",
+        reminderCard: "#ecfdf5",
+        title: "#111827",
     },
     dark: {
         bg: "#020617",
@@ -47,6 +55,14 @@ export const colors = {
         onPrimary: "#020617",
         border: "#334155",
         borderStrong: "#475569",
+        card: "#0f172a",
+        cardDeep: "#111827",
+        iconBg: "#064e3b",
+        borderSoft: "#064e3b",
+        primarySoft: "#022c22",
+        primaryStrong: "#10b981",
+        reminderCard: "#052e2b",
+        title: "#f8fafc",
     },
     classic: {
         light: {
@@ -104,6 +120,9 @@ export const spacing = {
     xl: 24,
     xxl: 32,
 };
+
+export const touchTarget = 44;
+export const touchTargetSmall = 40;
 
 export const radius = {
     sm: 8,

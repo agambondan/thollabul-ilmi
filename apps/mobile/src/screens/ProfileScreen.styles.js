@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 
 export const WEB_APP_PROFILE_BG = "#020617";
 export const WEB_APP_PROFILE_SURFACE = "#111827";
@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
         gap: spacing.xs,
         justifyContent: "center",
         marginTop: spacing.md,
-        minHeight: 42,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppSettingsText: {
@@ -172,7 +172,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: 2,
-        minHeight: 30,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
     },
     webAppSectionLinkText: {
@@ -485,9 +485,9 @@ export const styles = StyleSheet.create({
         borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
-        height: 38,
+        height: touchTarget,
         justifyContent: "center",
-        width: 38,
+        width: touchTarget,
     },
     subTitle: {
         color: colors.ink,
@@ -536,9 +536,9 @@ export const styles = StyleSheet.create({
     },
     gearButton: {
         alignItems: "center",
-        height: 40,
+        height: touchTarget,
         justifyContent: "center",
-        width: 40,
+        width: touchTarget,
     },
     statsRow: {
         flexDirection: "row",
@@ -612,7 +612,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: 2,
-        minHeight: 30,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
     },
     sectionLinkText: {
@@ -895,9 +895,9 @@ export const styles = StyleSheet.create({
         borderColor: colors.faint,
         borderRadius: radius.md,
         borderWidth: 1,
-        height: 38,
+        height: touchTarget,
         justifyContent: "center",
-        width: 38,
+        width: touchTarget,
     },
     menuIconDanger: {
         backgroundColor: "#fef2f2",

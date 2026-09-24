@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, Mosque } from "lucide-react-native";
+import { CheckCircle2, Circle, Landmark } from "lucide-react-native";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
@@ -122,7 +122,7 @@ export function WebAppSholatTrackerRoute({
 
             <View style={styles.header}>
                 <View style={styles.headerIcon}>
-                    <Mosque color='#047857' size={24} strokeWidth={2.2} />
+                    <Landmark color='#047857' size={24} strokeWidth={2.2} />
                 </View>
                 <View style={styles.headerText}>
                     <Text style={styles.title}>
