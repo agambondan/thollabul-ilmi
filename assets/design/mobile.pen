@@ -228103,11 +228103,28 @@
           ],
           "children": [
             {
-              "id": "FKhIe",
-              "type": "ref",
-              "ref": "Nzfmr",
+              "type": "frame",
+              "id": "hpkoG",
               "name": "Progress Card",
               "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "$shadow-color",
+                "offset": {
+                  "x": 0,
+                  "y": "$shadow-offset-y"
+                },
+                "blur": "$shadow-blur"
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": "$pad-card",
               "children": [
                 {
                   "type": "frame",
@@ -228173,11 +228190,28 @@
               ]
             },
             {
-              "id": "PSUeb",
-              "type": "ref",
-              "ref": "Nzfmr",
+              "type": "frame",
+              "id": "Tjhaw",
               "name": "Checklist Card",
               "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "$shadow-color",
+                "offset": {
+                  "x": 0,
+                  "y": "$shadow-offset-y"
+                },
+                "blur": "$shadow-blur"
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": "$pad-card",
               "children": [
                 {
                   "type": "frame",
