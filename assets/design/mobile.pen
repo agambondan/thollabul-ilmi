@@ -139630,7 +139630,7 @@
                           "id": "Q3PjE",
                           "name": "Active Count",
                           "fill": "$primary",
-                          "content": "5 aktif",
+                          "content": "0 aktif",
                           "fontFamily": "$font-body",
                           "fontSize": 13,
                           "fontWeight": "700"
@@ -139679,7 +139679,7 @@
                               "id": "WRRE4",
                               "name": "Subtitle",
                               "fill": "$text-secondary",
-                              "content": "Aktif",
+                              "content": "Nonaktif",
                               "fontFamily": "$font-body",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -139690,7 +139690,7 @@
                           "type": "frame",
                           "id": "L8simR",
                           "name": "Pill",
-                          "fill": "$primary",
+                          "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
                           "padding": [
                             8,
@@ -139703,8 +139703,8 @@
                               "type": "text",
                               "id": "HxHJw",
                               "name": "Label",
-                              "fill": "$primary-foreground",
-                              "content": "Aktif",
+                              "fill": "$ink",
+                              "content": "Mati",
                               "fontFamily": "$font-body",
                               "fontSize": 13,
                               "fontWeight": "700"
@@ -139725,6 +139725,7 @@
                       "type": "frame",
                       "id": "DZ2jF",
                       "name": "Toggle Row Audio Adzan",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "padding": [
                         4,
@@ -139793,6 +139794,7 @@
                       "type": "text",
                       "id": "i4mGo",
                       "name": "Jeda Label",
+                      "opacity": 0.55,
                       "fill": "$text-secondary",
                       "content": "JEDA PENGINGAT",
                       "fontFamily": "$font-body",
@@ -139804,6 +139806,7 @@
                       "type": "frame",
                       "id": "c8Tfh",
                       "name": "Pill Row 0",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "gap": 10,
                       "children": [
@@ -139865,6 +139868,7 @@
                       "type": "frame",
                       "id": "hs24C",
                       "name": "Pill Row 1",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "gap": 10,
                       "children": [
@@ -139926,6 +139930,7 @@
                       "type": "frame",
                       "id": "jP7xY",
                       "name": "Pill Row 2",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "gap": 10,
                       "children": [
@@ -139961,6 +139966,7 @@
                       "type": "text",
                       "id": "UAkkF",
                       "name": "Waktu Label",
+                      "opacity": 0.55,
                       "fill": "$text-secondary",
                       "content": "WAKTU SHOLAT",
                       "fontFamily": "$font-body",
@@ -139972,6 +139978,7 @@
                       "type": "frame",
                       "id": "H2Mc81",
                       "name": "Pill Row 0",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "gap": 10,
                       "children": [
@@ -140033,6 +140040,7 @@
                       "type": "frame",
                       "id": "kb6Un",
                       "name": "Pill Row 1",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "gap": 10,
                       "children": [
@@ -140094,6 +140102,7 @@
                       "type": "frame",
                       "id": "ykuEg",
                       "name": "Pill Row 2",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "gap": 10,
                       "children": [
@@ -140129,6 +140138,7 @@
                       "type": "frame",
                       "id": "eDk3h",
                       "name": "Reset Reminder Button",
+                      "opacity": 0.55,
                       "width": "fill_container",
                       "fill": "$surface",
                       "cornerRadius": "$radius-pill",
@@ -140450,14 +140460,487 @@
                       "fontFamily": "$font-body",
                       "fontSize": 13,
                       "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "soA7U",
+                      "name": "Tab Switcher",
+                      "width": "fill_container",
+                      "fill": "$border",
+                      "cornerRadius": "$radius-tile",
+                      "gap": 4,
+                      "padding": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "wI1Sj",
+                          "name": "Tab Masuk",
+                          "width": "fill_container",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "or4NS",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Masuk",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ReC9i",
+                          "name": "Tab Daftar",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "cornerRadius": "$radius-tile",
+                          "effect": {
+                            "type": "shadow",
+                            "shadowType": "outer",
+                            "color": "$shadow-color",
+                            "offset": {
+                              "x": 0,
+                              "y": 2
+                            },
+                            "blur": 6
+                          },
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "dVtRa",
+                              "name": "Label",
+                              "fill": "$primary",
+                              "content": "Daftar",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "g5sMeF",
+                          "name": "Tab Lupa Sandi",
+                          "width": "fill_container",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "qxkRp",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Lupa Sandi",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "TnWtk",
+                      "name": "Google Button",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": "$radius-tile",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "gap": 8,
+                      "padding": [
+                        13,
+                        16
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "MyphG",
+                          "name": "Google Icon",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "chrome",
+                          "library": "lucide",
+                          "fill": "#4285F4"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Nfc81",
+                          "name": "Label",
+                          "fill": "$ink",
+                          "content": "Masuk dengan Google",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CiIQa",
+                      "name": "Divider Row",
+                      "width": "fill_container",
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "j4ZtE",
+                          "name": "Line Left",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "r9neb",
+                          "name": "Atau",
+                          "fill": "$text-secondary",
+                          "content": "ATAU",
+                          "fontFamily": "$font-body",
+                          "fontSize": 10,
+                          "fontWeight": "700",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "QK4Vn",
+                          "name": "Line Right",
+                          "fill": "$border",
+                          "width": "fill_container",
+                          "height": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CRjEh",
+                      "name": "Nama Field",
+                      "width": "fill_container",
+                      "fill": "$bg",
+                      "cornerRadius": "$radius-tile",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "W29LB",
+                          "name": "Placeholder",
+                          "fill": "$text-secondary",
+                          "content": "Nama",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Rm565",
+                      "name": "Channel Toggle",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Ht5pY",
+                          "name": "Email Option",
+                          "width": "fill_container",
+                          "fill": "$surface",
+                          "cornerRadius": "$radius-tile",
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "padding": [
+                            12,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nlSOn",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Email",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "DNodb",
+                          "name": "WhatsApp Option",
+                          "width": "fill_container",
+                          "fill": "$chip-fill",
+                          "cornerRadius": "$radius-tile",
+                          "stroke": "$primary",
+                          "strokeWidth": 1,
+                          "padding": [
+                            12,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "iKJSo",
+                              "name": "Label",
+                              "fill": "$primary",
+                              "content": "WhatsApp",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "f7Gcgv",
+                      "name": "Email Optional Field",
+                      "width": "fill_container",
+                      "fill": "$bg",
+                      "cornerRadius": "$radius-tile",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CQR5G",
+                          "name": "Placeholder",
+                          "fill": "$text-secondary",
+                          "content": "Email (opsional)",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Xne2u",
+                      "name": "Phone Field",
+                      "width": "fill_container",
+                      "fill": "$bg",
+                      "cornerRadius": "$radius-tile",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "F8IMqh",
+                          "name": "Placeholder",
+                          "fill": "$text-secondary",
+                          "content": "08xxxxxxxxxx",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MLh5y",
+                      "name": "Password Field",
+                      "width": "fill_container",
+                      "fill": "$bg",
+                      "cornerRadius": "$radius-tile",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "gap": 8,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "u7cbAA",
+                          "name": "Placeholder",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Kata sandi (min. 8 karakter)",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "GxqhX",
+                          "name": "Eye Icon",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "eye",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZMZfr",
+                      "name": "Confirm Password Field",
+                      "width": "fill_container",
+                      "fill": "$bg",
+                      "cornerRadius": "$radius-tile",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mtHnm",
+                          "name": "Placeholder",
+                          "fill": "$text-secondary",
+                          "content": "Ulangi kata sandi",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Vwyi4",
+                      "name": "Submit Button",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-tile",
+                      "padding": [
+                        14,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "HwRgj",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Daftar",
+                          "fontFamily": "$font-body",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
                     }
                   ]
                 }
               }
             }
           ]
+        },
+        {
+          "type": "frame",
+          "id": "L4AzvF",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "qHaqL",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
+            }
+          ]
         }
       ]
+    },
+    {
+      "type": "ellipse",
+      "id": "buJfn",
+      "x": 6088,
+      "y": 97726,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "nBTUk",
+      "x": 6100,
+      "y": 97729,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "uBJTq",
+      "x": 6140,
+      "y": 97723,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "r6hUe8",
+      "x": 6088,
+      "y": 97709,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tile 'Masuk/Daftar' → tab Daftar",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
     }
   ],
   "themes": {
