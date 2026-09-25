@@ -171838,6 +171838,68 @@
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "BVivj",
+      "x": 6088,
+      "y": 105176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "p29R5",
+      "x": 6100,
+      "y": 105179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Syco0",
+      "x": 6140,
+      "y": 105173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "WfCtI",
+      "x": 6088,
+      "y": 105159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tile 'Statistik'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "id": "xR5pc",
+      "type": "ref",
+      "ref": "r7P5jg",
+      "x": 4910,
+      "y": 138850,
+      "descendants": {
+        "h7m7Yb": {
+          "content": "Buka Menu Lainnya"
+        },
+        "e2jF9": {
+          "content": "User membuka Beranda, memilih tile Lainnya di Akses Cepat, lalu melihat daftar fitur tambahan yang tidak muat di grid utama."
+        },
+        "VOnZ7": {
+          "content": "Mobile Team"
+        }
+      }
     }
   ],
   "themes": {
