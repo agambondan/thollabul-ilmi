@@ -58,7 +58,7 @@ export function SessionCard() {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const theme = getThemeColors({
         isDark: isDarkTheme,
-        isClassic: !isWebAppLayout,
+        isPaperLayout: !isWebAppLayout,
     });
     const { t } = useMobileLocale();
 

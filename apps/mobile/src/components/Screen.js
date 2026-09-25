@@ -32,7 +32,7 @@ export function Screen({
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const theme = getThemeColors({
         isDark: isDarkTheme,
-        isClassic: !isWebAppLayout,
+        isPaperLayout: !isWebAppLayout,
     });
     const { notifyTabActivity } = useTabActivity();
     const handleScrollActivity = useCallback(

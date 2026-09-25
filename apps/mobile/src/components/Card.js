@@ -6,7 +6,7 @@ export function Card({ children, style }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const theme = getThemeColors({
         isDark: isDarkTheme,
-        isClassic: !isWebAppLayout,
+        isPaperLayout: !isWebAppLayout,
     });
     return (
         <View
@@ -28,7 +28,7 @@ export function CardTitle({ children, meta, metaStyle, style, titleStyle }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const theme = getThemeColors({
         isDark: isDarkTheme,
-        isClassic: !isWebAppLayout,
+        isPaperLayout: !isWebAppLayout,
     });
     return (
         <View style={[styles.titleRow, style]}>

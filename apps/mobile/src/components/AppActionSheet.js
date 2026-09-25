@@ -78,6 +78,13 @@ export function ActionSheetRow({
     );
 }
 
+export function ActionSheetSection({ title, style }) {
+    if (!title) return null;
+    return (
+        <Text style={[styles.sectionTitle, style]}>{title}</Text>
+    );
+}
+
 export function AppActionSheet({
     visible,
     onClose,
@@ -155,5 +162,14 @@ const styles = StyleSheet.create({
     rowSubtitleActive: {
         color: colors.onPrimary,
         opacity: 0.82,
+    },
+    sectionTitle: {
+        color: colors.muted,
+        fontSize: 11,
+        fontWeight: "800",
+        letterSpacing: 0.5,
+        marginBottom: spacing.xs,
+        marginTop: spacing.sm,
+        textTransform: "uppercase",
     },
 });

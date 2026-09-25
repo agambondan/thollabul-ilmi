@@ -36,7 +36,7 @@ export function WebAppShell({
     const { t } = useMobileLocale();
     const { isDarkTheme, isWebAppLayout, setThemePreference, themePreference } =
         useLayoutMode();
-    const theme = getThemeColors({ isDark: isDarkTheme, isClassic: !isWebAppLayout });
+    const theme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: !isWebAppLayout });
     const [accountMenuVisible, setAccountMenuVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
     const [quranFullscreen, setQuranFullscreen] = useState(false);

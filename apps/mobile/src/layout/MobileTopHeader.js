@@ -20,7 +20,7 @@ export function MobileTopHeader({
     const { t } = useMobileLocale();
     const normalizedAccountLabel = accountLabel?.trim() || "T";
     const isMorphed = Boolean(showBack || title);
-    const theme = getThemeColors({ isDark: isDarkTheme, isClassic: !isWebAppLayout });
+    const theme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: !isWebAppLayout });
 
     return (
         <View
@@ -80,7 +80,7 @@ export function MobileTopHeader({
 ) : (
             <View style={styles.brandGroup}>
                     <View style={[styles.logo, { backgroundColor: theme.primary }]}>
-                        <Text style={styles.logoText}>ط</Text>
+                        <Text style={[styles.logoText, { color: theme.onPrimary }]}>ط</Text>
                     </View>
                     <Text
                         style={[
@@ -145,7 +145,7 @@ export function MobileTopHeader({
                     testID='mobile-top-header-profile'
                 >
                     <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
-                        <Text style={styles.avatarText} numberOfLines={1}>
+                        <Text style={[styles.avatarText, { color: theme.onPrimary }]} numberOfLines={1}>
                             {normalizedAccountLabel.slice(0, 1).toUpperCase()}
                         </Text>
                     </View>
@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
         width: 34,
     },
     logoText: {
-        color: "#ffffff",
         fontSize: 18,
         fontWeight: "900",
         letterSpacing: 0,

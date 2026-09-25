@@ -37,7 +37,7 @@ export function MobileBottomNav({
 }) {
     const insets = useSafeAreaInsets();
     const { t } = useMobileLocale();
-    const theme = getThemeColors({ isDark: isDarkTheme, isClassic: !isWebAppLayout });
+    const theme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: !isWebAppLayout });
     const activeColor = theme.primary;
     const activeBg = theme.primaryBg;
     const inactiveColor = theme.muted;
@@ -48,7 +48,7 @@ export function MobileBottomNav({
             style={[
                 styles.wrap,
                 { backgroundColor: theme.bg, borderTopColor: borderColor },
-                { paddingBottom: Math.max(insets.bottom, spacing.xs) },
+                { paddingBottom: Math.max(insets.bottom, spacing.sm) },
             ]}
             testID='mobile-bottom-nav'
         >
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         flexDirection: "row",
         paddingHorizontal: spacing.sm,
-        paddingTop: spacing.xs,
+        paddingTop: spacing.sm,
     },
     item: {
         alignItems: "center",

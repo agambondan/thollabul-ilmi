@@ -120,10 +120,9 @@ export const colors = {
 
 export const getThemeColors = ({
     isDark = false,
-    isClassic = false,
     isPaperLayout = false,
 } = {}) => {
-    if (isClassic || isPaperLayout) {
+    if (isPaperLayout) {
         return isDark ? colors.classic.dark : colors.classic.light;
     }
     return isDark ? colors.dark : colors.light;
@@ -172,6 +171,7 @@ export const radius = {
     md: 12,
     lg: 16,
     xl: 24,
+    full: 999,
 };
 
 export const shadows = {

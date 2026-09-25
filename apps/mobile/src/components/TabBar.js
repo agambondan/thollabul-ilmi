@@ -8,7 +8,7 @@ import {
 } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getClassicThemeColors, radius, spacing, touchTarget } from "../theme";
+import { radius, spacing, touchTarget, getThemeColors } from "../theme";
 import { useTabActivity } from "../context/TabActivityContext";
 import { hapticSelection } from "../utils/haptics";
 
@@ -23,7 +23,7 @@ export const tabs = [
 const AUTO_HIDE_DELAY = 2800;
 
 export function TabBar({ active, isDarkTheme = false, onChange }) {
-    const theme = getClassicThemeColors(isDarkTheme);
+    const theme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: true });
     const navColors = {
         active: theme.ink,
         activeBg: theme.primaryBg ?? theme.surfaceMuted,
@@ -169,9 +169,9 @@ const styles = StyleSheet.create({
     iconWrap: {
         alignItems: "center",
         borderRadius: radius.md,
-        height: 38,
+        height: 44,
         justifyContent: "center",
-        width: 46,
+        width: 44,
     },
     label: {
         fontSize: 10,
