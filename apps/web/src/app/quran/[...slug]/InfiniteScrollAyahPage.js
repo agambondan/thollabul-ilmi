@@ -44,6 +44,7 @@ const InfiniteScrollAyahPage = ({
     searchParams,
     basePath = "/quran/surah",
     initialSurah = null,
+    initialTafsirMap = null,
 }) => {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
@@ -67,6 +68,7 @@ const InfiniteScrollAyahPage = ({
         (initialSurah.slug === slug ||
             String(initialSurah.number) === slug ||
             initialSurah.identifier === slug);
+    const trustedTafsirMap = initialMatchesSlug ? initialTafsirMap : null;
 
     const [surah, setSurah] = useState(
         initialMatchesSlug ? initialSurah : null,
@@ -447,6 +449,7 @@ const InfiniteScrollAyahPage = ({
                                             isOpen ? actionMenuKey : null,
                                         )
                                     }
+                                    tafsirMap={trustedTafsirMap}
                                 />
                             );
                         })}

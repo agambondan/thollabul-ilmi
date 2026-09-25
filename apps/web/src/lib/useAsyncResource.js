@@ -10,8 +10,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * that is misinformation, not just a rough edge — so a failed load keeps
  * `data` null and raises `error` instead, and the caller can retry.
  */
-export const useAsyncResource = (loader) => {
-    const [data, setData] = useState(null);
+export const useAsyncResource = (loader, initialData = null) => {
+    const [data, setData] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(false);
     const loaderRef = useRef(loader);

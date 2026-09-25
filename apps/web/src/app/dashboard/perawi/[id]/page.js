@@ -2,7 +2,7 @@
 
 import ContentWidth from "@/components/layout/ContentWidth";
 import Link from "next/link";
-import { useEffect, useState, use } from "react";
+import { useEffect, useState, use, useRef } from "react";
 import { useLocale } from "@/context/Locale";
 import PerawiTreeDiagram from "@/components/perawi/PerawiTreeDiagram";
 
@@ -90,17 +90,33 @@ export default function DashboardPerawiDetailPage(props) {
 export function PerawiDetailContent({
     params,
     basePath = "/dashboard/perawi",
+    initialPerawi = null,
 }) {
     const { id } = params;
     const { t } = useLocale();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(initialPerawi);
     const [guru, setGuru] = useState([]);
     const [murid, setMurid] = useState([]);
     const [hadiths, setHadiths] = useState([]);
     const [loadingHadiths, setLoadingHadiths] = useState(true);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!initialPerawi);
+
+    const hydratedIdRef = useRef(
+        initialPerawi && String(initialPerawi.id ?? id) === String(id)
+            ? id
+            : null,
+    );
 
     useEffect(() => {
+        const skipResetForSsrHydration = hydratedIdRef.current === id;
+        hydratedIdRef.current = null;
+
+        if (!skipResetForSsrHydration) {
+            setLoading(true);
+            setData(null);
+        }
+        setLoadingHadiths(true);
+
         Promise.all([
             fetch(`${API_URL}/api/v1/perawi/${id}`).then((r) => r.json()),
             fetch(`${API_URL}/api/v1/perawi/${id}/guru`)
@@ -295,10 +311,13 @@ export function PerawiDetailContent({
                 </div>
 
                 {loadingHadiths ? (
-                    <p className='text-xs text-gray-400 py-2'>Memuat hadis terkait...</p>
+                    <p className='text-xs text-gray-400 py-2'>
+                        Memuat hadis terkait...
+                    </p>
                 ) : hadiths.length === 0 ? (
                     <p className='text-xs text-gray-400 py-2'>
-                        Belum ada riwayat hadis terindeks langsung untuk perawi ini.
+                        Belum ada riwayat hadis terindeks langsung untuk perawi
+                        ini.
                     </p>
                 ) : (
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
@@ -309,9 +328,10 @@ export function PerawiDetailContent({
                                 (h.book?.slug
                                     ? `Hadits ${h.book.slug.toUpperCase()}`
                                     : "Hadits");
-                            const hadithHref = h.book?.slug && h.number
-                                ? `/dashboard/hadiths/book/${h.book.slug}/number/${h.number}`
-                                : `/dashboard/hadiths/${h.id}`;
+                            const hadithHref =
+                                h.book?.slug && h.number
+                                    ? `/dashboard/hadiths/book/${h.book.slug}/number/${h.number}`
+                                    : `/dashboard/hadiths/${h.id}`;
 
                             return (
                                 <Link
@@ -322,7 +342,8 @@ export function PerawiDetailContent({
                                     <div>
                                         <div className='flex items-center justify-between gap-2 mb-1.5'>
                                             <span className='text-xs font-bold text-teal-700 dark:text-teal-400 group-hover:underline'>
-                                                {bookTitle} No. {h.number ?? h.id}
+                                                {bookTitle} No.{" "}
+                                                {h.number ?? h.id}
                                             </span>
                                             {h.grade && (
                                                 <span className='text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'>
@@ -331,7 +352,9 @@ export function PerawiDetailContent({
                                             )}
                                         </div>
                                         <p className='text-xs text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed'>
-                                            {h.translation?.text || h.translation?.title || "Lihat teks hadis dan sanad lengkap..."}
+                                            {h.translation?.text ||
+                                                h.translation?.title ||
+                                                "Lihat teks hadis dan sanad lengkap..."}
                                         </p>
                                     </div>
                                     <span className='text-[11px] text-teal-600 dark:text-teal-400 font-medium mt-2 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform'>

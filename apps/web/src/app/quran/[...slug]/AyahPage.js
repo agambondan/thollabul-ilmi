@@ -43,6 +43,7 @@ const AyahPage = ({
     showTranslation = true,
     isActionMenuOpen,
     onActionMenuToggle,
+    tafsirMap = null,
 }) => {
     const { t, lang } = useLocale();
     const { arabicFontSize, fontCls, translationFontSize } = useQuranFont();
@@ -58,6 +59,26 @@ const AyahPage = ({
     const menuButtonRef = useRef(null);
     const menuContainerRef = useRef(null);
 
+    const buildTafsirItems = useCallback(
+        (data) =>
+            [
+                {
+                    source: t("tafsir.kitab_kemenag_label"),
+                    text: data?.kemenag?.description_idn,
+                },
+                {
+                    source: t("tafsir.kitab_ibnu_katsir_label"),
+                    text: data?.ibnu_katsir?.description_idn,
+                },
+            ].filter((entry) => entry.text),
+        [t],
+    );
+
+    const initialTafsirEntry = tafsirMap?.[ayah.id];
+    const initialTafsirItems = initialTafsirEntry
+        ? buildTafsirItems(initialTafsirEntry)
+        : null;
+
     const [tafsirOpen, setTafsirOpen] = useState(false);
     const tafsirRes = useAsyncResource(async () => {
         const res = await tafsirApi.byAyah(ayah.id);
@@ -66,18 +87,8 @@ const AyahPage = ({
         // The API returns one object with a named field per tafsir source
         // (`kemenag`, `ibnu_katsir`), not a list — flatten it into the
         // {source, text} entries this panel renders.
-        const items = [
-            {
-                source: t("tafsir.kitab_kemenag_label"),
-                text: data?.kemenag?.description_idn,
-            },
-            {
-                source: t("tafsir.kitab_ibnu_katsir_label"),
-                text: data?.ibnu_katsir?.description_idn,
-            },
-        ].filter((entry) => entry.text);
-        return { items };
-    });
+        return { items: buildTafsirItems(data) };
+    }, initialTafsirItems);
 
     const [mufrodatOpen, setMufrodatOpen] = useState(false);
     const mufrodatRes = useAsyncResource(() => mufrodatApi.byAyah(ayah.id));
@@ -739,39 +750,39 @@ const AyahPage = ({
                 </ul>
             </ul>
 
-            {tafsirOpen && (
-                <div className='bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/30 px-4 py-4'>
-                    <div className='flex items-start justify-between gap-3 mb-3'>
-                        <p className='text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide'>
-                            {t("ayah.tafsir_label")} {surah.number}:
-                            {ayah.number}
-                        </p>
-                        <PanelCloseButton
-                            onClose={() => setTafsirOpen(false)}
-                        />
-                    </div>
-                    <PanelStatus
-                        isLoading={tafsirRes.isLoading}
-                        error={tafsirRes.error}
-                        isEmpty={tafsirRes.data?.length === 0}
-                        loadingText={t("ayah.loading_tafsir")}
-                        emptyText={t("ayah.tafsir_empty")}
-                        onRetry={tafsirRes.retry}
-                    />
-                    {!tafsirRes.isLoading &&
-                        Array.isArray(tafsirRes.data) &&
-                        tafsirRes.data.map((entry, i) => (
-                            <div key={i} className='mb-4 last:mb-0'>
-                                {entry.source && (
-                                    <SourceBadges source={entry.source} />
-                                )}
-                                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
-                                    {entry.text ?? entry.content}
-                                </p>
-                            </div>
-                        ))}
+            <div
+                className={classNames(
+                    "bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/30 px-4 py-4",
+                    !tafsirOpen && "hidden",
+                )}
+            >
+                <div className='flex items-start justify-between gap-3 mb-3'>
+                    <p className='text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide'>
+                        {t("ayah.tafsir_label")} {surah.number}:{ayah.number}
+                    </p>
+                    <PanelCloseButton onClose={() => setTafsirOpen(false)} />
                 </div>
-            )}
+                <PanelStatus
+                    isLoading={tafsirRes.isLoading}
+                    error={tafsirRes.error}
+                    isEmpty={tafsirRes.data?.length === 0}
+                    loadingText={t("ayah.loading_tafsir")}
+                    emptyText={t("ayah.tafsir_empty")}
+                    onRetry={tafsirRes.retry}
+                />
+                {!tafsirRes.isLoading &&
+                    Array.isArray(tafsirRes.data) &&
+                    tafsirRes.data.map((entry, i) => (
+                        <div key={i} className='mb-4 last:mb-0'>
+                            {entry.source && (
+                                <SourceBadges source={entry.source} />
+                            )}
+                            <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                {entry.text ?? entry.content}
+                            </p>
+                        </div>
+                    ))}
+            </div>
 
             {mufrodatOpen && (
                 <div className='bg-sky-50 dark:bg-sky-900/10 border-b border-sky-100 dark:border-sky-900/30 px-4 py-4'>

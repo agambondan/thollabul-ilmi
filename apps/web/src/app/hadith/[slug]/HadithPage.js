@@ -59,17 +59,18 @@ const PERAWI_STATUS_COLORS = {
         "bg-red-200 text-red-900 dark:bg-red-900/60 dark:text-red-200 border-red-400",
 };
 
-function SanadPanel({ hadithId, basePath = "/hadith" }) {
+function SanadPanel({ hadithId, basePath = "/hadith", initialData = null }) {
     const { t } = useLocale();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(initialData);
     const [failed, setFailed] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!initialData);
 
     const perawiBase = basePath.startsWith("/dashboard")
         ? "/dashboard/perawi"
         : "/perawi";
 
     useEffect(() => {
+        if (initialData) return;
         fetch(`${API_URL}/api/v1/hadiths/${hadithId}/sanad`)
             .then((r) => r.json())
             .then((d) =>
@@ -77,7 +78,7 @@ function SanadPanel({ hadithId, basePath = "/hadith" }) {
             )
             .catch(() => setFailed(true))
             .finally(() => setLoading(false));
-    }, [hadithId]);
+    }, [hadithId, initialData]);
 
     if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
     if (failed)
@@ -175,13 +176,14 @@ function SanadPanel({ hadithId, basePath = "/hadith" }) {
     );
 }
 
-function TakhrijPanel({ hadithId }) {
+function TakhrijPanel({ hadithId, initialData = null }) {
     const { t, lang } = useLocale();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(initialData);
     const [failed, setFailed] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!initialData);
 
     useEffect(() => {
+        if (initialData) return;
         fetch(`${API_URL}/api/v1/hadiths/${hadithId}/takhrij`)
             .then((r) => r.json())
             .then((d) =>
@@ -189,7 +191,7 @@ function TakhrijPanel({ hadithId }) {
             )
             .catch(() => setFailed(true))
             .finally(() => setLoading(false));
-    }, [hadithId]);
+    }, [hadithId, initialData]);
 
     if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
     if (!data?.length)
@@ -231,13 +233,14 @@ function TakhrijPanel({ hadithId }) {
     );
 }
 
-function HadithAyahPanel({ hadithId }) {
+function HadithAyahPanel({ hadithId, initialData = null }) {
     const { t, lang } = useLocale();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(initialData);
     const [failed, setFailed] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!initialData);
 
     useEffect(() => {
+        if (initialData) return;
         fetch(`${API_URL}/api/v1/hadiths/${hadithId}/ayahs`)
             .then((r) => r.json())
             .then((d) =>
@@ -245,7 +248,7 @@ function HadithAyahPanel({ hadithId }) {
             )
             .catch(() => setFailed(true))
             .finally(() => setLoading(false));
-    }, [hadithId]);
+    }, [hadithId, initialData]);
 
     if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
     if (failed)
@@ -304,6 +307,9 @@ const HadithPage = ({
     newLimit,
     isLast,
     basePath = "/hadith",
+    initialSanad = null,
+    initialTakhrij = null,
+    initialRelatedAyat = null,
 }) => {
     const { t, lang } = useLocale();
     const { isHidden: actionsHidden, isMenu: actionsMenu } =
@@ -834,41 +840,43 @@ const HadithPage = ({
                     {t("hadith.related_ayah")}
                 </button>
             </div>
-            {showSanad && (
-                <div className='px-4 pb-3'>
-                    <div className='flex items-start justify-between gap-3 mb-2'>
-                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
-                            {t("hadith.sanad")}
-                        </p>
-                        <PanelCloseButton onClose={() => setShowSanad(false)} />
-                    </div>
-                    <SanadPanel hadithId={hadith.id} basePath={basePath} />
+            <div className={classNames("px-4 pb-3", !showSanad && "hidden")}>
+                <div className='flex items-start justify-between gap-3 mb-2'>
+                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
+                        {t("hadith.sanad")}
+                    </p>
+                    <PanelCloseButton onClose={() => setShowSanad(false)} />
                 </div>
-            )}
-            {showTakhrij && (
-                <div className='px-4 pb-3'>
-                    <div className='flex items-start justify-between gap-3 mb-2'>
-                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
-                            {t("hadith.takhrij")}
-                        </p>
-                        <PanelCloseButton
-                            onClose={() => setShowTakhrij(false)}
-                        />
-                    </div>
-                    <TakhrijPanel hadithId={hadith.id} />
+                <SanadPanel
+                    hadithId={hadith.id}
+                    basePath={basePath}
+                    initialData={initialSanad}
+                />
+            </div>
+            <div className={classNames("px-4 pb-3", !showTakhrij && "hidden")}>
+                <div className='flex items-start justify-between gap-3 mb-2'>
+                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
+                        {t("hadith.takhrij")}
+                    </p>
+                    <PanelCloseButton onClose={() => setShowTakhrij(false)} />
                 </div>
-            )}
-            {showAyat && (
-                <div className='px-4 pb-3'>
-                    <div className='flex items-start justify-between gap-3 mb-2'>
-                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
-                            {t("hadith.related_ayah")}
-                        </p>
-                        <PanelCloseButton onClose={() => setShowAyat(false)} />
-                    </div>
-                    <HadithAyahPanel hadithId={hadith.id} />
+                <TakhrijPanel
+                    hadithId={hadith.id}
+                    initialData={initialTakhrij}
+                />
+            </div>
+            <div className={classNames("px-4 pb-3", !showAyat && "hidden")}>
+                <div className='flex items-start justify-between gap-3 mb-2'>
+                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
+                        {t("hadith.related_ayah")}
+                    </p>
+                    <PanelCloseButton onClose={() => setShowAyat(false)} />
                 </div>
-            )}
+                <HadithAyahPanel
+                    hadithId={hadith.id}
+                    initialData={initialRelatedAyat}
+                />
+            </div>
             {isCopied ? <PopUpIsCopied /> : <></>}
             {reportOpen && (
                 <ContentReportModal

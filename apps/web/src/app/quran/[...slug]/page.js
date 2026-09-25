@@ -1,5 +1,6 @@
 import InfiniteScrollAyahPage from "@/app/quran/[...slug]/InfiniteScrollAyahPage";
 import Section from "@/components/Section";
+import { normalizeTafsirEntry } from "@/lib/tafsirContent";
 
 export const revalidate = 86400;
 
@@ -28,6 +29,33 @@ async function getSurahData(slug) {
     }
 }
 
+async function getTafsirMap(surahNumber) {
+    if (!surahNumber) return {};
+    try {
+        const res = await fetch(
+            `${API_URL}/api/v1/tafsir/surah/${surahNumber}`,
+            { next: { revalidate: 86400 } },
+        );
+        if (!res.ok) return {};
+        const data = await res.json();
+        const map = {};
+        const list = Array.isArray(data)
+            ? data
+            : (data?.tafsirs ?? data?.items ?? []);
+        list.forEach((entry, index) => {
+            const normalized = normalizeTafsirEntry(entry, index);
+            [entry.ayah_id, entry.ayah?.id, normalized.ayahNumber]
+                .filter(Boolean)
+                .forEach((key) => {
+                    map[key] = normalized;
+                });
+        });
+        return map;
+    } catch {
+        return {};
+    }
+}
+
 const SuratPage = async (props) => {
     const searchParams = await props.searchParams;
     const params = await props.params;
@@ -44,6 +72,7 @@ const SuratPage = async (props) => {
             : "/quran";
 
     const initialSurah = await getSurahData(slug);
+    const initialTafsirMap = await getTafsirMap(initialSurah?.number);
 
     return (
         <main className='min-h-screen flex flex-col'>
@@ -54,6 +83,7 @@ const SuratPage = async (props) => {
                         searchParams={searchParams}
                         basePath={basePath}
                         initialSurah={initialSurah}
+                        initialTafsirMap={initialTafsirMap}
                     />
                 </div>
             </Section>

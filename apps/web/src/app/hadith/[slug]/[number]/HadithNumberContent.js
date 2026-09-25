@@ -32,6 +32,23 @@ export const fetchHadithByBookNumber = async (slug, number, options = {}) => {
     return res.json();
 };
 
+const toArr = (data) =>
+    Array.isArray(data?.items ?? data) ? (data?.items ?? data) : [];
+
+const fetchHadithPanel = async (hadithId, path) => {
+    if (!hadithId) return null;
+    try {
+        const res = await fetch(
+            `${API_URL}/api/v1/hadiths/${hadithId}/${path}`,
+            { next: { revalidate: 3600 } },
+        );
+        if (!res.ok) return null;
+        return toArr(await res.json());
+    } catch {
+        return null;
+    }
+};
+
 const SUNNAH_SLUG_MAP = {
     bukhari: "bukhari",
     muslim: "muslim",
@@ -73,6 +90,13 @@ export default async function HadithNumberContent({
         notFound();
     }
 
+    const [initialSanad, initialTakhrij, initialRelatedAyat] =
+        await Promise.all([
+            fetchHadithPanel(hadith.id, "sanad"),
+            fetchHadithPanel(hadith.id, "takhrij"),
+            fetchHadithPanel(hadith.id, "ayahs"),
+        ]);
+
     const book = hadith.book ?? { slug: params.slug };
     const sunnahUrl = getSunnahComUrl(book.slug ?? params.slug, number);
     const total = books.find((b) => b.slug === params.slug)?.count ?? null;
@@ -90,6 +114,9 @@ export default async function HadithNumberContent({
                 book={book}
                 hadith={hadith}
                 basePath={basePath}
+                initialSanad={initialSanad}
+                initialTakhrij={initialTakhrij}
+                initialRelatedAyat={initialRelatedAyat}
             />
             <HadithNumberPager
                 basePath={basePath}

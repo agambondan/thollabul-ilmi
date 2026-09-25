@@ -1,6 +1,6 @@
 "use client";
 
-import { LibraryDetailContent } from "@/app/library/[slug]/page";
+import { LibraryDetailContent } from "@/app/library/[slug]/LibraryDetailPageClient";
 import { use } from "react";
 
 export default function DashboardLibraryDetailPage({ params }) {

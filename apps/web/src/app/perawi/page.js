@@ -1,7 +1,16 @@
 import { PerawiContent } from "@/app/dashboard/perawi/page";
 import Section from "@/components/Section";
+import { openGraphFor } from "@/lib/site";
 
 export const revalidate = 86400;
+
+export const metadata = {
+    alternates: { canonical: "/perawi" },
+    openGraph: openGraphFor("/perawi"),
+    title: "Daftar Perawi Hadits",
+    description:
+        "Jelajahi daftar perawi hadits lengkap dengan status kredibilitas (jarh wa ta'dil), tabaqah, dan silsilah sanad antar perawi.",
+};
 
 const API_URL =
     process.env.API_INTERNAL_URL ||
