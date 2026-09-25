@@ -73,8 +73,7 @@ export function MobileBottomNav({
                         }}
                         style={[
                             styles.item,
-                            selected && styles.itemActive,
-                            selected && isDarkTheme && styles.itemActiveDark,
+                            selected && { backgroundColor: activeBg },
                         ]}
                     >
                         <Icon
@@ -111,17 +110,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: radius.md,
         flex: 1,
-        gap: spacing.xs,
+        gap: spacing.sm,
         justifyContent: "center",
         minHeight: touchTarget,
-        paddingHorizontal: spacing.xs,
+        paddingHorizontal: spacing.sm,
         paddingVertical: spacing.sm,
-    },
-    itemActive: {
-        backgroundColor: "#ecfdf5",
-    },
-    itemActiveDark: {
-        backgroundColor: "#064e3b",
     },
     label: {
         fontSize: 10,

@@ -81,6 +81,14 @@ export const colors = {
             onPrimary: "#fffaf0",
             border: "#e6e2d6",
             borderStrong: "#d4d0c4",
+            card: "#f5f2eb",
+            cardDeep: "#f0ece1",
+            iconBg: "#edf0eb",
+            borderSoft: "#d4d0c4",
+            primarySoft: "#edf0eb",
+            primaryStrong: "#4a5a4a",
+            reminderCard: "#edf0eb",
+            title: "#3c3a35",
         },
         dark: {
             bg: "#1a1c18",
@@ -98,12 +106,24 @@ export const colors = {
             onPrimary: "#1a1c18",
             border: "#3a3f38",
             borderStrong: "#4a4f48",
+            card: "#232721",
+            cardDeep: "#2c312a",
+            iconBg: "#2c332c",
+            borderSoft: "#3a3f38",
+            primarySoft: "#2c332c",
+            primaryStrong: "#a4c4a4",
+            reminderCard: "#2c332c",
+            title: "#f5f2eb",
         },
     },
 };
 
-export const getThemeColors = ({ isDark = false, isClassic = false } = {}) => {
-    if (isClassic) {
+export const getThemeColors = ({
+    isDark = false,
+    isClassic = false,
+    isPaperLayout = false,
+} = {}) => {
+    if (isClassic || isPaperLayout) {
         return isDark ? colors.classic.dark : colors.classic.light;
     }
     return isDark ? colors.dark : colors.light;
@@ -123,6 +143,29 @@ export const spacing = {
 
 export const touchTarget = 44;
 export const touchTargetSmall = 40;
+
+export const iconStroke = {
+    thin: 1.9,
+    regular: 2.2,
+    bold: 2.5,
+};
+
+export const elevation = {
+    none: 0,
+    low: 1,
+    medium: 4,
+    high: 8,
+    modal: 16,
+};
+
+export const zIndex = {
+    base: 0,
+    card: 1,
+    header: 10,
+    overlay: 20,
+    modal: 30,
+    toast: 40,
+};
 
 export const radius = {
     sm: 8,

@@ -8,7 +8,7 @@ import {
 } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { radius, spacing } from "../theme";
+import { getClassicThemeColors, radius, spacing, touchTarget } from "../theme";
 import { useTabActivity } from "../context/TabActivityContext";
 import { hapticSelection } from "../utils/haptics";
 
@@ -22,26 +22,15 @@ export const tabs = [
 
 const AUTO_HIDE_DELAY = 2800;
 
-const navLight = {
-    active: "#3c3a35",
-    activeBg: "#ebe4d4",
-    inactive: "#9b9487",
-    border: "#e6e2d6",
-    bg: "#fffdf8",
-};
-
-const navDark = {
-    active: "#f5f2eb",
-    activeBg: "#2c312a",
-    inactive: "#9ca996",
-    border: "#3a3f38",
-    bg: "#1a1c18",
-};
-
-const nav = navLight;
-
 export function TabBar({ active, isDarkTheme = false, onChange }) {
-    const navColors = isDarkTheme ? navDark : navLight;
+    const theme = getClassicThemeColors(isDarkTheme);
+    const navColors = {
+        active: theme.ink,
+        activeBg: theme.primaryBg ?? theme.surfaceMuted,
+        inactive: theme.muted,
+        border: theme.border,
+        bg: theme.bg,
+    };
     const insets = useSafeAreaInsets();
     const { activityTick } = useTabActivity();
     const hideTimer = useRef(null);
@@ -79,99 +68,112 @@ export function TabBar({ active, isDarkTheme = false, onChange }) {
 
     if (!visible) {
         return (
-<View
-            pointerEvents='none'
-            style={[
-                styles.hiddenWrap,
-                { paddingBottom: Math.max(insets.bottom, spacing.xs) },
-            ]}
-        />
-    );
-}
+            <View
+                pointerEvents='none'
+                style={[
+                    styles.hiddenWrap,
+                    {
+                        backgroundColor: navColors.bg,
+                        paddingBottom: Math.max(insets.bottom, spacing.xs),
+                    },
+                ]}
+            />
+        );
+    }
 
-return (
-    <View
-        style={[
-            styles.wrap,
-            { paddingBottom: Math.max(insets.bottom, spacing.sm) },
-        ]}
-    >
-        {tabs.map((tab) => {
-            const selected = active === tab.key;
-            const Icon = tab.Icon;
-            return (
-                <Pressable
-                    accessibilityLabel={tab.label}
-                    accessibilityRole='tab'
-                    accessibilityState={{ selected }}
-                    android_ripple={{
-                        color: navColors.activeBg,
-                        borderless: false,
-                    }}
-                    key={tab.key}
-                    onPress={() => {
-                        if (!selected) hapticSelection();
-                        onChange(tab.key);
-                        reveal();
-                    }}
-                    style={styles.item}
-                >
-                    <View
-                        style={[
-                            styles.iconWrap,
-                            selected && styles.iconWrapActive,
-                        ]}
+    return (
+        <View
+            style={[
+                styles.wrap,
+                {
+                    backgroundColor: navColors.bg,
+                    borderTopColor: navColors.border,
+                    paddingBottom: Math.max(insets.bottom, spacing.sm),
+                },
+            ]}
+        >
+            {tabs.map((tab) => {
+                const selected = active === tab.key;
+                const Icon = tab.Icon;
+                return (
+                    <Pressable
+                        accessibilityLabel={tab.label}
+                        accessibilityRole='tab'
+                        accessibilityState={{ selected }}
+                        android_ripple={{
+                            color: navColors.activeBg,
+                            borderless: false,
+                        }}
+                        key={tab.key}
+                        onPress={() => {
+                            if (!selected) hapticSelection();
+                            onChange(tab.key);
+                            reveal();
+                        }}
+                        style={styles.item}
                     >
-                        <Icon
-                            color={selected ? navColors.active : navColors.inactive}
-                            size={20}
-                            strokeWidth={selected ? 2.5 : 1.9}
-                        />
-                    </View>
-                    {selected ? (
-                        <Text style={styles.label}>{tab.label}</Text>
-                    ) : null}
-                </Pressable>
-            );
-        })}
-    </View>
-);
+                        <View
+                            style={[
+                                styles.iconWrap,
+                                selected && {
+                                    backgroundColor: navColors.activeBg,
+                                },
+                            ]}
+                        >
+                            <Icon
+                                color={
+                                    selected
+                                        ? navColors.active
+                                        : navColors.inactive
+                                }
+                                size={20}
+                                strokeWidth={selected ? 2.5 : 1.9}
+                            />
+                        </View>
+                        {selected ? (
+                            <Text
+                                style={[
+                                    styles.label,
+                                    { color: navColors.active },
+                                ]}
+                            >
+                                {tab.label}
+                            </Text>
+                        ) : null}
+                    </Pressable>
+                );
+            })}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
     wrap: {
         alignItems: "center",
-        backgroundColor: nav.bg,
-        borderTopColor: nav.border,
         borderTopWidth: 1,
         flexDirection: "row",
         paddingHorizontal: spacing.sm,
         paddingTop: spacing.sm,
     },
     hiddenWrap: {
-        backgroundColor: nav.bg,
         minHeight: 6,
     },
     item: {
         alignItems: "center",
         flex: 1,
-        gap: 3,
+        gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 52,
+        minHeight: touchTarget,
         paddingVertical: spacing.xs,
     },
     iconWrap: {
         alignItems: "center",
         borderRadius: radius.md,
-        height: 34,
+        height: 38,
         justifyContent: "center",
         width: 46,
     },
-    iconWrapActive: {
-        backgroundColor: nav.activeBg,
-    },
     label: {
-        color: nav.active,
         fontSize: 10,
         fontWeight: "800",
         letterSpacing: 0,
