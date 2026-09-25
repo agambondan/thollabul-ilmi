@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { formatCurrency } from "../ExploreScreen.helpers";
 
@@ -23,7 +24,7 @@ const HEIR_METAS = {
     pamanSeayah: { label: "Paman Seayah", arabic: "الْعَمُّ لِأَب" },
 };
 
-function HeirCardMobile({ heirKey, count, resultRow }) {
+function HeirCardMobile({ activeDark, heirKey, count, resultRow }) {
     const meta = HEIR_METAS[heirKey] || { label: heirKey, arabic: "" };
     const isPresent = Boolean(count && count > 0);
     const isEligible = Boolean(resultRow && resultRow.share > 0);
@@ -37,15 +38,17 @@ function HeirCardMobile({ heirKey, count, resultRow }) {
                 styles.node,
                 isEligible
                     ? resultRow.isAshabah
-                        ? styles.nodeAshabah
-                        : styles.nodeFurudh
-                    : styles.nodeMahjub,
+                        ? [styles.nodeAshabah, activeDark && { backgroundColor: "#451a03", borderColor: "#78350f" }]
+                        : [styles.nodeFurudh, activeDark && { backgroundColor: "#064e3b", borderColor: "#059669" }]
+                    : [styles.nodeMahjub, activeDark && { backgroundColor: "#450a0a", borderColor: "#7f1d1d" }],
             ]}
         >
             {meta.arabic ? (
-                <Text style={styles.arabicText}>{meta.arabic}</Text>
+                <Text style={[styles.arabicText, activeDark && { color: "#cbd5e1" }]}>
+                    {meta.arabic}
+                </Text>
             ) : null}
-            <Text style={styles.nodeTitle}>
+            <Text style={[styles.nodeTitle, activeDark && { color: "#f9fafb" }]}>
                 {meta.label}
                 {count > 1 ? ` (${count})` : ""}
             </Text>
@@ -58,6 +61,8 @@ function HeirCardMobile({ heirKey, count, resultRow }) {
                             resultRow.isAshabah
                                 ? styles.badgeAshabah
                                 : styles.badgeFurudh,
+                            activeDark && resultRow.isAshabah && { backgroundColor: "#78350f", color: "#fde68a" },
+                            activeDark && !resultRow.isAshabah && { backgroundColor: "#065f46", color: "#6ee7b7" },
                         ]}
                     >
                         {resultRow.isAshabah
@@ -66,18 +71,21 @@ function HeirCardMobile({ heirKey, count, resultRow }) {
                               ? `${resultRow.fraction.numerator}/${resultRow.fraction.denominator}`
                               : `${(resultRow.share * 100).toFixed(0)}%`}
                     </Text>
-                    <Text style={styles.amount}>
+                    <Text style={[styles.amount, activeDark && { color: "#34d399" }]}>
                         {formatCurrency(resultRow.amount)}
                     </Text>
                 </View>
             ) : (
-                <Text style={styles.mahjubBadge}>Mahjub (Terhalang)</Text>
+                <Text style={[styles.mahjubBadge, activeDark && { color: "#f87171" }]}>Mahjub (Terhalang)</Text>
             )}
         </View>
     );
 }
 
 export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkThemePref ?? false;
+
     if (!calculation?.rows?.length) return null;
 
     const rowMap = (calculation.rows || []).reduce((acc, row) => {
@@ -99,10 +107,10 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
     const hawasyiKeys = ["pamanKandung", "pamanSeayah"];
 
     return (
-        <View style={styles.treeContainer}>
-            <View style={styles.treeHeader}>
-                <Text style={styles.treeTitle}>🌳 Diagram Silsilah Waris</Text>
-                <Text style={styles.treeSubtitle}>
+        <View style={[styles.treeContainer, activeDark && { backgroundColor: "#111827", borderColor: "#374151" }]}>
+            <View style={[styles.treeHeader, activeDark && { borderBottomColor: "#1e293b" }]}>
+                <Text style={[styles.treeTitle, activeDark && { color: "#34d399" }]}>🌳 Diagram Silsilah Waris</Text>
+                <Text style={[styles.treeSubtitle, activeDark && { color: "#9ca3af" }]}>
                     Peta hak waris antar tingkat generasi pewaris
                 </Text>
             </View>
@@ -110,10 +118,11 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
             {/* Generasi 1: Ushul */}
             {ushulKeys.some((k) => heirs[k] > 0 || rowMap[k]) && (
                 <View style={styles.tierSection}>
-                    <Text style={styles.tierLabel}>1. Ushul (Leluhur)</Text>
+                    <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>1. Ushul (Leluhur)</Text>
                     <View style={styles.tierGrid}>
                         {ushulKeys.map((k) => (
                             <HeirCardMobile
+                                activeDark={activeDark}
                                 count={heirs[k]}
                                 heirKey={k}
                                 key={k}
@@ -126,16 +135,17 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
 
             {/* Generasi 2: Mayyit, Pasangan & Saudara */}
             <View style={styles.tierSection}>
-                <Text style={styles.tierLabel}>
+                <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>
                     2. Pewaris, Pasangan & Saudara
                 </Text>
                 <View style={styles.tierGrid}>
-                    <View style={styles.mayyitCard}>
+                    <View style={[styles.mayyitCard, activeDark && { backgroundColor: "#059669" }]}>
                         <Text style={styles.mayyitArabic}>الْمَيِّت</Text>
                         <Text style={styles.mayyitText}>AL-MAYYIT</Text>
                     </View>
                     {spouseKeys.map((k) => (
                         <HeirCardMobile
+                            activeDark={activeDark}
                             count={heirs[k]}
                             heirKey={k}
                             key={k}
@@ -144,6 +154,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
                     ))}
                     {siblingKeys.map((k) => (
                         <HeirCardMobile
+                            activeDark={activeDark}
                             count={heirs[k]}
                             heirKey={k}
                             key={k}
@@ -156,10 +167,11 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
             {/* Generasi 3: Furu' */}
             {furuKeys.some((k) => heirs[k] > 0 || rowMap[k]) && (
                 <View style={styles.tierSection}>
-                    <Text style={styles.tierLabel}>3. Furu' (Keturunan)</Text>
+                    <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>3. Furu' (Keturunan)</Text>
                     <View style={styles.tierGrid}>
                         {furuKeys.map((k) => (
                             <HeirCardMobile
+                                activeDark={activeDark}
                                 count={heirs[k]}
                                 heirKey={k}
                                 key={k}
@@ -173,10 +185,11 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
             {/* Generasi 4: Hawasyi */}
             {hawasyiKeys.some((k) => heirs[k] > 0 || rowMap[k]) && (
                 <View style={styles.tierSection}>
-                    <Text style={styles.tierLabel}>4. Hawasyi (Paman)</Text>
+                    <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>4. Hawasyi (Paman)</Text>
                     <View style={styles.tierGrid}>
                         {hawasyiKeys.map((k) => (
                             <HeirCardMobile
+                                activeDark={activeDark}
                                 count={heirs[k]}
                                 heirKey={k}
                                 key={k}

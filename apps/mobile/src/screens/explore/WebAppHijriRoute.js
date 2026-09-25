@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 
 const HIJRI_MONTHS = [
@@ -176,22 +177,22 @@ const getUpcomingFasts = (raw) => {
         .slice(0, 3);
 };
 
-function EventCard({ index, item, t }) {
+function EventCard({ index, isDarkTheme, item, t }) {
     const meta = getEventMeta(item);
     return (
-        <View style={styles.eventCard} testID='web-app-hijri-event-card'>
-            <View style={styles.eventDateBadge}>
-                <Text style={styles.eventDateText}>
+        <View style={[styles.eventCard, isDarkTheme && styles.eventCardDark]} testID='web-app-hijri-event-card'>
+            <View style={[styles.eventDateBadge, isDarkTheme && styles.eventDateBadgeDark]}>
+                <Text style={[styles.eventDateText, isDarkTheme && styles.eventDateTextDark]}>
                     {getRaw(item).hijri_day ?? index + 1}
                 </Text>
             </View>
             <View style={styles.eventMain}>
-                {meta ? <Text style={styles.eventMeta}>{meta}</Text> : null}
-                <Text style={styles.eventTitle}>
+                {meta ? <Text style={[styles.eventMeta, isDarkTheme && styles.eventMetaDark]}>{meta}</Text> : null}
+                <Text style={[styles.eventTitle, isDarkTheme && styles.eventTitleDark]}>
                     {getTitle(item, index, t)}
                 </Text>
                 {getBody(item) ? (
-                    <Text numberOfLines={3} style={styles.eventBody}>
+                    <Text numberOfLines={3} style={[styles.eventBody, isDarkTheme && styles.eventBodyDark]}>
                         {getBody(item)}
                     </Text>
                 ) : null}
@@ -200,8 +201,10 @@ function EventCard({ index, item, t }) {
     );
 }
 
-export function WebAppHijriRoute({ error, items = [], loading }) {
+export function WebAppHijriRoute({ error, isDarkTheme: isDarkThemeProp = false, items = [], loading }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const today = getToday(items);
     const todayRaw = getRaw(today);
     const events = getEvents(items, today);
@@ -212,17 +215,17 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-hijri-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.hijri.title")}</Text>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.hijri.title")}</Text>
             </View>
 
             {today ? (
-                <View style={styles.todayCard}>
+                <View style={[styles.todayCard, isDarkTheme && styles.todayCardDark]}>
                     <Text style={styles.todayLabel}>
                         {t("explore.hijri.today")}
                     </Text>
@@ -237,7 +240,7 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
 
             {today ? (
                 <>
-                    <View style={styles.countdownCard}>
+                    <View style={[styles.countdownCard, isDarkTheme && styles.countdownCardDark]}>
                         <View style={styles.countdownIcon}>
                             <CalendarDays
                                 color='#fde68a'
@@ -265,58 +268,58 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
                         </View>
                     </View>
 
-                    <View style={styles.fastingCard}>
+                    <View style={[styles.fastingCard, isDarkTheme && styles.fastingCardDark]}>
                         <View style={styles.fastingHeader}>
                             <CalendarDays
-                                color='#059669'
+                                color={isDarkTheme ? '#34d399' : '#059669'}
                                 size={18}
                                 strokeWidth={2.2}
                             />
-                            <Text style={styles.fastingTitle}>
+                            <Text style={[styles.fastingTitle, isDarkTheme && styles.fastingTitleDark]}>
                                 {t("explore.hijri.fastingTitle")}
                             </Text>
                         </View>
-                        <View style={styles.fastingToday}>
-                            <Text style={styles.fastingTodayLabel}>
+                        <View style={[styles.fastingToday, isDarkTheme && styles.fastingTodayDark]}>
+                            <Text style={[styles.fastingTodayLabel, isDarkTheme && styles.fastingTodayLabelDark]}>
                                 {t("explore.hijri.today")}
                             </Text>
                             {todayFasts.length ? (
                                 todayFasts.map((item) => (
                                     <Text
                                         key={item.id}
-                                        style={styles.fastingTodayText}
+                                        style={[styles.fastingTodayText, isDarkTheme && styles.fastingTodayTextDark]}
                                     >
                                         {t(item.labelKey)}
                                     </Text>
                                 ))
                             ) : (
-                                <Text style={styles.fastingEmptyText}>
+                                <Text style={[styles.fastingEmptyText, isDarkTheme && styles.fastingEmptyTextDark]}>
                                     {t("explore.hijri.noSpecialFastToday")}
                                 </Text>
                             )}
                         </View>
                         {upcomingFasts.length ? (
                             <View style={styles.upcomingList}>
-                                <Text style={styles.upcomingTitle}>
+                                <Text style={[styles.upcomingTitle, isDarkTheme && styles.upcomingTitleDark]}>
                                     {t("explore.hijri.upcoming")}
                                 </Text>
                                 {upcomingFasts.map((item) => (
                                     <View
                                         key={item.id}
-                                        style={styles.upcomingRow}
+                                        style={[styles.upcomingRow, isDarkTheme && styles.upcomingRowDark]}
                                     >
-                                        <View style={styles.upcomingDayBadge}>
+                                        <View style={[styles.upcomingDayBadge, isDarkTheme && styles.upcomingDayBadgeDark]}>
                                             <Text
-                                                style={styles.upcomingDayText}
+                                                style={[styles.upcomingDayText, isDarkTheme && styles.upcomingDayTextDark]}
                                             >
                                                 {item.days}
                                             </Text>
                                         </View>
                                         <View style={styles.upcomingTextWrap}>
-                                            <Text style={styles.upcomingLabel}>
+                                            <Text style={[styles.upcomingLabel, isDarkTheme && styles.upcomingLabelDark]}>
                                                 {t(item.labelKey)}
                                             </Text>
-                                            <Text style={styles.upcomingDate}>
+                                            <Text style={[styles.upcomingDate, isDarkTheme && styles.upcomingDateDark]}>
                                                 {item.date} H
                                             </Text>
                                         </View>
@@ -324,8 +327,8 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
                                 ))}
                             </View>
                         ) : null}
-                        <View style={styles.fastingNote}>
-                            <Text style={styles.fastingNoteText}>
+                        <View style={[styles.fastingNote, isDarkTheme && styles.fastingNoteDark]}>
+                            <Text style={[styles.fastingNoteText, isDarkTheme && styles.fastingNoteTextDark]}>
                                 {t("explore.hijri.fastingNote")}
                             </Text>
                         </View>
@@ -333,24 +336,24 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
                 </>
             ) : null}
 
-            <View style={styles.converterCard}>
-                <Text style={styles.converterTitle}>
+            <View style={[styles.converterCard, isDarkTheme && styles.converterCardDark]}>
+                <Text style={[styles.converterTitle, isDarkTheme && styles.converterTitleDark]}>
                     {t("explore.hijri.converterTitle")}
                 </Text>
                 <View style={styles.converterRow}>
-                    <Text style={styles.converterInput}>
+                    <Text style={[styles.converterInput, isDarkTheme && styles.converterInputDark]}>
                         {formatGregorian(todayRaw)}
                     </Text>
-                    <Text style={styles.converterButton}>
+                    <Text style={[styles.converterButton, isDarkTheme && styles.converterButtonDark]}>
                         {t("explore.hijri.convert")}
                     </Text>
                 </View>
                 {today ? (
-                    <View style={styles.converterResult}>
-                        <Text style={styles.converterResultArabic}>
+                    <View style={[styles.converterResult, isDarkTheme && styles.converterResultDark]}>
+                        <Text style={[styles.converterResultArabic, isDarkTheme && styles.converterResultArabicDark]}>
                             {formatTodayArabic(today, t)}
                         </Text>
-                        <Text style={styles.converterResultText}>
+                        <Text style={[styles.converterResultText, isDarkTheme && styles.converterResultTextDark]}>
                             {formatTodayHijri(today, t)}
                         </Text>
                     </View>
@@ -372,12 +375,13 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
 
             {!loading && !error && events.length ? (
                 <View style={styles.events}>
-                    <Text style={styles.sectionTitle}>
+                    <Text style={[styles.sectionTitle, isDarkTheme && styles.sectionTitleDark]}>
                         {t("explore.hijri.eventsTitle")}
                     </Text>
                     {events.slice(0, 8).map((item, index) => (
                         <EventCard
                             index={index}
+                            isDarkTheme={isDarkTheme}
                             item={item}
                             key={`${item?.id ?? getTitle(item, index, t)}-${index}`}
                             t={t}
@@ -387,12 +391,12 @@ export function WebAppHijriRoute({ error, items = [], loading }) {
             ) : null}
 
             {!loading && !error && !items.length ? (
-                <View style={styles.empty}>
-                    <CalendarDays color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                    <CalendarDays color={isDarkTheme ? '#64748b' : '#9ca3af'} size={32} strokeWidth={1.8} />
+                    <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                         {t("explore.hijri.emptyTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                         {t("explore.hijri.emptyText")}
                     </Text>
                 </View>
@@ -752,5 +756,117 @@ const styles = StyleSheet.create({
         lineHeight: 18,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    todayCardDark: {
+        backgroundColor: "#064e3b",
+    },
+    countdownCardDark: {
+        backgroundColor: "#064e3b",
+    },
+    fastingCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    fastingTitleDark: {
+        color: "#f8fafc",
+    },
+    fastingTodayDark: {
+        backgroundColor: "#064e3b",
+        borderColor: "#047857",
+    },
+    fastingTodayLabelDark: {
+        color: "#34d399",
+    },
+    fastingTodayTextDark: {
+        color: "#f8fafc",
+    },
+    fastingEmptyTextDark: {
+        color: "#94a3b8",
+    },
+    upcomingTitleDark: {
+        color: "#94a3b8",
+    },
+    upcomingRowDark: {
+        borderBottomColor: "#1e293b",
+    },
+    upcomingDayBadgeDark: {
+        backgroundColor: "#064e3b",
+    },
+    upcomingDayTextDark: {
+        color: "#34d399",
+    },
+    upcomingLabelDark: {
+        color: "#f8fafc",
+    },
+    upcomingDateDark: {
+        color: "#94a3b8",
+    },
+    fastingNoteDark: {
+        backgroundColor: "#451a03",
+    },
+    fastingNoteTextDark: {
+        color: "#fcd34d",
+    },
+    converterCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    converterTitleDark: {
+        color: "#f8fafc",
+    },
+    converterInputDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+        color: "#f8fafc",
+    },
+    converterButtonDark: {
+        backgroundColor: "#059669",
+    },
+    converterResultDark: {
+        backgroundColor: "#1e293b",
+    },
+    converterResultArabicDark: {
+        color: "#34d399",
+    },
+    converterResultTextDark: {
+        color: "#cbd5e1",
+    },
+    sectionTitleDark: {
+        color: "#f8fafc",
+    },
+    eventCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    eventDateBadgeDark: {
+        backgroundColor: "#064e3b",
+    },
+    eventDateTextDark: {
+        color: "#34d399",
+    },
+    eventMetaDark: {
+        color: "#34d399",
+    },
+    eventTitleDark: {
+        color: "#f8fafc",
+    },
+    eventBodyDark: {
+        color: "#94a3b8",
+    },
+    emptyDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
     },
 });

@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
@@ -75,17 +76,22 @@ const getStatusLabel = (value) => {
 const uniqueTabaqah = (items) =>
     Array.from(new Set(items.map(getTabaqah).filter(Boolean)));
 
-function TabaqahPill({ active, label, onPress, testID }) {
+function TabaqahPill({ active, isDarkTheme, label, onPress, testID }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={onPress}
-            style={[styles.tabaqahPill, active && styles.tabaqahPillActive]}
+            style={[
+                styles.tabaqahPill,
+                isDarkTheme && styles.tabaqahPillDark,
+                active && styles.tabaqahPillActive,
+            ]}
             testID={testID}
         >
             <Text
                 style={[
                     styles.tabaqahPillText,
+                    isDarkTheme && styles.tabaqahPillTextDark,
                     active && styles.tabaqahPillTextActive,
                 ]}
             >
@@ -108,7 +114,7 @@ function StatusBadge({ status }) {
     );
 }
 
-function PerawiCard({ item, onOpen, t }) {
+function PerawiCard({ isDarkTheme, item, onOpen, t }) {
     const arabic = getPerawiArabic(item);
     const latin = getPerawiLatin(item, t("explore.perawi.fallbackTitle"));
     const tabaqah = getTabaqah(item);
@@ -119,29 +125,29 @@ function PerawiCard({ item, onOpen, t }) {
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-perawi-card'
         >
-            <View style={styles.icon}>
-                <Users color='#0f766e' size={18} strokeWidth={2.1} />
+            <View style={[styles.icon, isDarkTheme && styles.iconDark]}>
+                <Users color={isDarkTheme ? "#34d399" : "#0f766e"} size={18} strokeWidth={2.1} />
             </View>
             <View style={styles.cardBody}>
                 {arabic ? (
-                    <Text numberOfLines={1} style={styles.arabic}>
+                    <Text numberOfLines={1} style={[styles.arabic, isDarkTheme && styles.arabicDark]}>
                         {arabic}
                     </Text>
                 ) : null}
-                <Text numberOfLines={1} style={styles.latin}>
+                <Text numberOfLines={1} style={[styles.latin, isDarkTheme && styles.latinDark]}>
                     {latin}
                 </Text>
                 <View style={styles.metaRow}>
                     {tabaqah ? (
-                        <Text style={styles.meta}>
+                        <Text style={[styles.meta, isDarkTheme && styles.metaDark]}>
                             {getTabaqahLabel(tabaqah, t)}
                         </Text>
                     ) : null}
                     {deathYear ? (
-                        <Text style={styles.meta}>· {deathYear} H</Text>
+                        <Text style={[styles.meta, isDarkTheme && styles.metaDark]}>· {deathYear} H</Text>
                     ) : null}
                 </View>
                 <StatusBadge status={status} />
@@ -159,6 +165,7 @@ export function WebAppPerawiRoute({
     pagination,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme } = useLayoutModePreference();
     const [viewMode, setViewMode] = useState("list");
     const [search, setSearch] = useState("");
     const [tabaqah, setTabaqah] = useState("");
@@ -184,38 +191,40 @@ export function WebAppPerawiRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-perawi-surface' />
             <View style={styles.header}>
                 <View style={styles.headerTitleWrap}>
-                    <Text style={styles.title}>{t("explore.perawi.title")}</Text>
+                    <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.perawi.title")}</Text>
                     {items.length ? (
-                        <Text style={styles.count}>
+                        <Text style={[styles.count, isDarkTheme && styles.countDark]}>
                             {t("explore.perawi.count", { count: items.length })}
                         </Text>
                     ) : null}
                 </View>
 
                 {/* View Switcher */}
-                <View style={styles.viewSwitcher}>
+                <View style={[styles.viewSwitcher, isDarkTheme && styles.viewSwitcherDark]}>
                     <Pressable
                         onPress={() => setViewMode("list")}
                         style={[
                             styles.viewSwitchButton,
+                            isDarkTheme && styles.viewSwitchButtonDark,
                             viewMode === "list" && styles.viewSwitchButtonActive,
                         ]}
                     >
                         <ListChecks
-                            color={viewMode === "list" ? "#0f766e" : "#64748b"}
+                            color={viewMode === "list" ? (isDarkTheme ? "#34d399" : "#0f766e") : (isDarkTheme ? "#6ee7b7" : "#64748b")}
                             size={14}
                         />
                         <Text
                             style={[
                                 styles.viewSwitchText,
+                                isDarkTheme && styles.viewSwitchTextDark,
                                 viewMode === "list" && styles.viewSwitchTextActive,
                             ]}
                         >
@@ -226,16 +235,18 @@ export function WebAppPerawiRoute({
                         onPress={() => setViewMode("tree")}
                         style={[
                             styles.viewSwitchButton,
+                            isDarkTheme && styles.viewSwitchButtonDark,
                             viewMode === "tree" && styles.viewSwitchButtonActive,
                         ]}
                     >
                         <Users
-                            color={viewMode === "tree" ? "#0f766e" : "#64748b"}
+                            color={viewMode === "tree" ? (isDarkTheme ? "#34d399" : "#0f766e") : (isDarkTheme ? "#6ee7b7" : "#64748b")}
                             size={14}
                         />
                         <Text
                             style={[
                                 styles.viewSwitchText,
+                                isDarkTheme && styles.viewSwitchTextDark,
                                 viewMode === "tree" && styles.viewSwitchTextActive,
                             ]}
                         >
@@ -249,12 +260,12 @@ export function WebAppPerawiRoute({
                 <PerawiSanadTreeMobile onOpenPerawi={onOpenItem} />
             ) : (
                 <>
-                    <View style={styles.search}>
+                    <View style={[styles.search, isDarkTheme && styles.searchDark]}>
                         <TextInput
                             onChangeText={setSearch}
                             placeholder={t("explore.perawi.searchPlaceholder")}
                             placeholderTextColor='#9ca3af'
-                            style={styles.input}
+                            style={[styles.input, isDarkTheme && styles.inputDark]}
                             testID='web-app-perawi-search'
                             value={search}
                         />
@@ -263,6 +274,7 @@ export function WebAppPerawiRoute({
                     <View style={styles.tabaqahRow}>
                         <TabaqahPill
                             active={!tabaqah}
+                            isDarkTheme={isDarkTheme}
                             label={t("explore.common.all")}
                             onPress={() => setTabaqah("")}
                             testID='web-app-perawi-tabaqah-all'
@@ -270,6 +282,7 @@ export function WebAppPerawiRoute({
                         {tabaqahOptions.map((item) => (
                             <TabaqahPill
                                 active={tabaqah === item}
+                                isDarkTheme={isDarkTheme}
                                 key={item}
                                 label={getTabaqahLabel(item, t)}
                                 onPress={() => setTabaqah(tabaqah === item ? "" : item)}
@@ -279,16 +292,16 @@ export function WebAppPerawiRoute({
                     </View>
 
                     {error ? (
-                        <Text style={styles.error}>
+                        <Text style={[styles.error, isDarkTheme && styles.errorDark]}>
                             {t("explore.common.refreshError", {
                                 subject: t("explore.perawi.fallbackTitle"),
                             })}
                         </Text>
                     ) : null}
                     {loading ? (
-                        <View style={styles.state}>
-                            <ActivityIndicator color='#0f766e' size='small' />
-                            <Text style={styles.stateText}>
+                        <View style={[styles.state, isDarkTheme && styles.stateDark]}>
+                            <ActivityIndicator color={isDarkTheme ? "#34d399" : "#0f766e"} size='small' />
+                            <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                                 {t("explore.perawi.loading")}
                             </Text>
                         </View>
@@ -298,6 +311,7 @@ export function WebAppPerawiRoute({
                         <View style={styles.grid}>
                             {filteredItems.map((item, index) => (
                                 <PerawiCard
+                                    isDarkTheme={isDarkTheme}
                                     item={item}
                                     key={`${getPerawiId(item)}-${index}`}
                                     onOpen={onOpenItem}
@@ -308,9 +322,9 @@ export function WebAppPerawiRoute({
                     ) : null}
 
                     {!loading && !error && !filteredItems.length ? (
-                        <View style={styles.empty}>
-                            <Users color='#9ca3af' size={32} strokeWidth={1.8} />
-                            <Text style={styles.emptyTitle}>
+                        <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                            <Users color={isDarkTheme ? "#64748b" : "#9ca3af"} size={32} strokeWidth={1.8} />
+                            <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {items.length
                                     ? t("explore.common.notFound", {
                                           subject: t("explore.perawi.fallbackTitle"),
@@ -319,7 +333,7 @@ export function WebAppPerawiRoute({
                                           subject: t("explore.perawi.fallbackTitle"),
                                       })}
                             </Text>
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                                 {items.length
                                     ? t("explore.common.changeSearchOrFilter")
                                     : t("explore.common.retryLater")}
@@ -362,11 +376,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         flex: 1,
     },
+    rootDark: {
+        backgroundColor: "#0f172a",
+    },
     content: {
         backgroundColor: "#f8fafc",
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
+    },
+    contentDark: {
+        backgroundColor: "#0f172a",
     },
     header: {
         flexDirection: "row",
@@ -383,6 +403,9 @@ const styles = StyleSheet.create({
         borderRadius: radius.md,
         padding: 2,
     },
+    viewSwitcherDark: {
+        backgroundColor: "#1e293b",
+    },
     viewSwitchButton: {
         flexDirection: "row",
         alignItems: "center",
@@ -390,6 +413,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: radius.sm,
+    },
+    viewSwitchButtonDark: {
+        backgroundColor: "transparent",
     },
     viewSwitchButtonActive: {
         backgroundColor: "#ffffff",
@@ -404,6 +430,9 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         color: "#64748b",
     },
+    viewSwitchTextDark: {
+        color: "#94a3b8",
+    },
     viewSwitchTextActive: {
         color: "#0f766e",
         fontWeight: "800",
@@ -414,11 +443,17 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 28,
     },
+    titleDark: {
+        color: "#f8fafc",
+    },
     count: {
         color: "#6b7280",
         fontSize: 13,
         fontWeight: "700",
         marginTop: 2,
+    },
+    countDark: {
+        color: "#94a3b8",
     },
     search: {
         backgroundColor: "#ffffff",
@@ -430,11 +465,18 @@ const styles = StyleSheet.create({
         minHeight: 46,
         paddingHorizontal: spacing.md,
     },
+    searchDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     input: {
         color: "#111827",
         fontSize: 14,
         minHeight: 42,
         padding: 0,
+    },
+    inputDark: {
+        color: "#e2e8f0",
     },
     tabaqahRow: {
         flexDirection: "row",
@@ -451,6 +493,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.md,
         paddingVertical: 7,
     },
+    tabaqahPillDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     tabaqahPillActive: {
         backgroundColor: "#0f766e",
         borderColor: "#0f766e",
@@ -459,6 +505,9 @@ const styles = StyleSheet.create({
         color: "#4b5563",
         fontSize: 12,
         fontWeight: "800",
+    },
+    tabaqahPillTextDark: {
+        color: "#94a3b8",
     },
     tabaqahPillTextActive: {
         color: "#ffffff",
@@ -475,6 +524,10 @@ const styles = StyleSheet.create({
         gap: spacing.md,
         padding: spacing.md,
     },
+    cardDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     icon: {
         alignItems: "center",
         backgroundColor: "#ccfbf1",
@@ -482,6 +535,9 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: "center",
         width: 40,
+    },
+    iconDark: {
+        backgroundColor: "#064e3b",
     },
     cardBody: {
         flex: 1,
@@ -491,8 +547,11 @@ const styles = StyleSheet.create({
         color: "#1f2937",
         fontFamily: "serif",
         fontSize: 17,
-        lineHeight: 24,
+        lineHeight: 32,
         textAlign: "right",
+    },
+    arabicDark: {
+        color: "#e2e8f0",
     },
     latin: {
         color: "#374151",
@@ -500,6 +559,9 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 18,
         marginTop: 2,
+    },
+    latinDark: {
+        color: "#f8fafc",
     },
     metaRow: {
         alignItems: "center",
@@ -512,6 +574,9 @@ const styles = StyleSheet.create({
         color: "#6b7280",
         fontSize: 12,
         fontWeight: "700",
+    },
+    metaDark: {
+        color: "#94a3b8",
     },
     statusBadge: {
         alignSelf: "flex-start",
@@ -530,10 +595,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         minHeight: 150,
     },
+    stateDark: {
+        backgroundColor: "transparent",
+    },
     stateText: {
         color: "#6b7280",
         fontSize: 13,
         fontWeight: "800",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
     },
     error: {
         backgroundColor: "#fef2f2",
@@ -546,6 +617,11 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
         padding: spacing.md,
     },
+    errorDark: {
+        backgroundColor: "#450a0a",
+        borderColor: "#7f1d1d",
+        color: "#fca5a5",
+    },
     empty: {
         alignItems: "center",
         backgroundColor: "#ffffff",
@@ -556,6 +632,10 @@ const styles = StyleSheet.create({
         minHeight: 190,
         padding: spacing.lg,
     },
+    emptyDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     emptyTitle: {
         color: "#374151",
         fontSize: 15,
@@ -563,12 +643,18 @@ const styles = StyleSheet.create({
         marginTop: spacing.sm,
         textAlign: "center",
     },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
     emptyText: {
         color: "#6b7280",
         fontSize: 13,
         lineHeight: 20,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
     loadMoreWrap: {
         alignItems: "center",

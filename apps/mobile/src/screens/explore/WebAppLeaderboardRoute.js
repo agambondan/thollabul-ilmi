@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 
 function LeaderboardRow({
@@ -19,6 +20,7 @@ function LeaderboardRow({
     getRank,
     getScore,
     index,
+    isDarkTheme,
     item,
     tab,
     t,
@@ -29,29 +31,45 @@ function LeaderboardRow({
     return (
         <View
             key={`${getItemKey(item)}-${tab}-${index}`}
-            style={[styles.row, rank === 1 && styles.rowTop]}
+            style={[
+                styles.row,
+                isDarkTheme && styles.rowDark,
+                rank === 1 && styles.rowTop,
+            ]}
             testID='web-app-leaderboard-row'
         >
-            <View style={[styles.rank, rank <= 3 && styles.rankTop]}>
+            <View style={[
+                styles.rank,
+                isDarkTheme && styles.rankDark,
+                rank <= 3 && styles.rankTop,
+            ]}>
                 <Text
-                    style={[styles.rankText, rank <= 3 && styles.rankTextTop]}
+                    style={[
+                        styles.rankText,
+                        isDarkTheme && styles.rankTextDark,
+                        rank <= 3 && styles.rankTextTop,
+                    ]}
                 >
                     {rank}
                 </Text>
             </View>
             <View style={styles.titleBlock}>
-                <Text numberOfLines={1} style={styles.name}>
+                <Text numberOfLines={1} style={[styles.name, isDarkTheme && styles.nameDark]}>
                     {getName(item, index)}
                 </Text>
-                <Text style={styles.meta}>
+                <Text style={[styles.meta, isDarkTheme && styles.metaDark]}>
                     {rank <= 3
                         ? t("explore.leaderboard.topPerformer")
                         : t("explore.leaderboard.participant")}
                 </Text>
             </View>
-            <Text style={[styles.score, rank === 1 && styles.scoreTop]}>
+            <Text style={[
+                styles.score,
+                isDarkTheme && styles.scoreDark,
+                rank === 1 && styles.scoreTop,
+            ]}>
                 {formatScore(score)}{" "}
-                <Text style={styles.unit}>{activeMeta.unit}</Text>
+                <Text style={[styles.unit, isDarkTheme && styles.unitDark]}>{activeMeta.unit}</Text>
             </Text>
         </View>
     );
@@ -67,19 +85,22 @@ export function WebAppLeaderboardRoute({
     getRank,
     getScore,
     hasItems,
+    isDarkTheme: isDarkThemeProp = false,
     loading,
     onSelectTab,
     tabs,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const activeMeta = tabs.find((tab) => tab.key === activeTab) ?? tabs[0];
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-leaderboard-surface' />
             <View style={styles.header}>
@@ -89,12 +110,12 @@ export function WebAppLeaderboardRoute({
                     size={20}
                     strokeWidth={2.2}
                 />
-                <Text style={styles.title}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>
                     {t("explore.leaderboard.title")}
                 </Text>
             </View>
 
-            <View style={styles.tabs}>
+            <View style={[styles.tabs, isDarkTheme && styles.tabsDark]}>
                 {tabs.map((tab) => (
                     <Pressable
                         accessibilityRole='tab'
@@ -103,14 +124,15 @@ export function WebAppLeaderboardRoute({
                         onPress={() => onSelectTab(tab.key)}
                         style={[
                             styles.tab,
-                            activeTab === tab.key && styles.tabActive,
+                            activeTab === tab.key && (isDarkTheme ? styles.tabActiveDark : styles.tabActive),
                         ]}
                         testID={`web-app-leaderboard-tab-${tab.key}`}
                     >
                         <Text
                             style={[
                                 styles.tabText,
-                                activeTab === tab.key && styles.tabTextActive,
+                                isDarkTheme && styles.tabTextDark,
+                                activeTab === tab.key && (isDarkTheme ? styles.tabTextActiveDark : styles.tabTextActive),
                             ]}
                         >
                             {tab.label}
@@ -119,11 +141,11 @@ export function WebAppLeaderboardRoute({
                 ))}
             </View>
 
-            {error ? <Text style={styles.notice}>{error}</Text> : null}
+            {error ? <Text style={[styles.notice, isDarkTheme && styles.noticeDark]}>{error}</Text> : null}
             {loading ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#047857' size='small' />
-                    <Text style={styles.stateText}>
+                    <ActivityIndicator color={isDarkTheme ? '#34d399' : '#047857'} size='small' />
+                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                         {t("explore.leaderboard.loading")}
                     </Text>
                 </View>
@@ -141,6 +163,7 @@ export function WebAppLeaderboardRoute({
                                     getRank={getRank}
                                     getScore={getScore}
                                     index={index}
+                                    isDarkTheme={isDarkTheme}
                                     item={item}
                                     key={`${getItemKey(item)}-${activeTab}-${index}`}
                                     tab={activeTab}
@@ -149,27 +172,27 @@ export function WebAppLeaderboardRoute({
                             ))}
                         </View>
                     ) : (
-                        <LeaderboardEmpty t={t} />
+                        <LeaderboardEmpty isDarkTheme={isDarkTheme} t={t} />
                     )}
                 </>
             ) : null}
             {!loading && !error && !hasItems ? (
-                <LeaderboardEmpty t={t} />
+                <LeaderboardEmpty isDarkTheme={isDarkTheme} t={t} />
             ) : null}
         </ScrollView>
     );
 }
 
-function LeaderboardEmpty({ t }) {
+function LeaderboardEmpty({ isDarkTheme, t }) {
     return (
         <View style={styles.empty}>
             <Trophy
-                color='#e5e7eb'
-                fill='#e5e7eb'
+                color={isDarkTheme ? '#334155' : '#e5e7eb'}
+                fill={isDarkTheme ? '#334155' : '#e5e7eb'}
                 size={38}
                 strokeWidth={1.6}
             />
-            <Text style={styles.emptyText}>
+            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                 {t("explore.leaderboard.empty")}
             </Text>
         </View>
@@ -332,5 +355,60 @@ const styles = StyleSheet.create({
         color: "#9ca3af",
         fontSize: 14,
         textAlign: "center",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    tabsDark: {
+        backgroundColor: "#0f172a",
+    },
+    tabActiveDark: {
+        backgroundColor: "#1e293b",
+        shadowColor: "#000000",
+    },
+    tabTextDark: {
+        color: "#94a3b8",
+    },
+    tabTextActiveDark: {
+        color: "#34d399",
+    },
+    rowDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    rankDark: {
+        backgroundColor: "#064e3b",
+    },
+    rankTextDark: {
+        color: "#34d399",
+    },
+    nameDark: {
+        color: "#f8fafc",
+    },
+    metaDark: {
+        color: "#94a3b8",
+    },
+    scoreDark: {
+        color: "#cbd5e1",
+    },
+    unitDark: {
+        color: "#64748b",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    noticeDark: {
+        backgroundColor: "#451a03",
+        borderColor: "#b45309",
+        color: "#fcd34d",
+    },
+    emptyTextDark: {
+        color: "#64748b",
     },
 });

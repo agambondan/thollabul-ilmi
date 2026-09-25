@@ -1116,9 +1116,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#f3f4f6",
         borderRadius: radius.md,
-        height: 46,
+        height: 48,
         justifyContent: "center",
-        width: 46,
+        width: 48,
     },
     counterButtonDark: {
         backgroundColor: "#1e293b",

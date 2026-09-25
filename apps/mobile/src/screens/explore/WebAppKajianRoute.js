@@ -964,6 +964,7 @@ export function WebAppKajianRoute({
                                     />
                                     <Pressable
                                         accessibilityRole='button'
+                                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                                         onPress={() =>
                                             removeSavedBookmark(item.id)
                                         }
@@ -1498,13 +1499,15 @@ const styles = StyleSheet.create({
     removeBookmarkBtn: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: 4,
         alignSelf: "flex-end",
         marginTop: 4,
         marginRight: 6,
-        minHeight: 40,
-        paddingVertical: 6,
-        paddingHorizontal: 10,
+        minHeight: 44,
+        minWidth: 44,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
     },
     removeBookmarkText: {
         fontSize: 11,

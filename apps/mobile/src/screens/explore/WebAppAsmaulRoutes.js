@@ -17,6 +17,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { setAsmaulWiridCount } from "../../storage/asmaulWirid";
 import { radius, spacing } from "../../theme";
 import { hapticMedium, hapticTap } from "../../utils/haptics";
@@ -41,17 +42,40 @@ const sumCounts = (counts = {}) =>
 const clampIndex = (index, length) =>
     Math.max(0, Math.min(Math.max(0, length - 1), index));
 
-function Header({ arabic, subtitle, title }) {
+function Header({ activeDark, arabic, subtitle, title }) {
     return (
         <View style={styles.header}>
-            {arabic ? <Text style={styles.headerArabic}>{arabic}</Text> : null}
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.subtitle}>{subtitle}</Text>
+            {arabic ? (
+                <Text
+                    style={[
+                        styles.headerArabic,
+                        activeDark && { color: "#34d399" },
+                    ]}
+                >
+                    {arabic}
+                </Text>
+            ) : null}
+            <Text
+                style={[
+                    styles.title,
+                    activeDark && { color: "#f9fafb" },
+                ]}
+            >
+                {title}
+            </Text>
+            <Text
+                style={[
+                    styles.subtitle,
+                    activeDark && { color: "#9ca3af" },
+                ]}
+            >
+                {subtitle}
+            </Text>
         </View>
     );
 }
 
-function IconButton({ disabled, Icon, label, onPress, variant = "neutral" }) {
+function IconButton({ activeDark, disabled, Icon, label, onPress, variant = "neutral" }) {
     return (
         <Pressable
             accessibilityLabel={label}
@@ -61,12 +85,21 @@ function IconButton({ disabled, Icon, label, onPress, variant = "neutral" }) {
             onPress={onPress}
             style={[
                 styles.iconButton,
+                activeDark && {
+                    backgroundColor: "#1e293b",
+                },
                 variant === "primary" && styles.iconButtonPrimary,
                 disabled && styles.disabledButton,
             ]}
         >
             <Icon
-                color={variant === "primary" ? "#ffffff" : "#475569"}
+                color={
+                    variant === "primary"
+                        ? "#ffffff"
+                        : activeDark
+                          ? "#cbd5e1"
+                          : "#475569"
+                }
                 size={17}
                 strokeWidth={2.3}
             />
@@ -74,20 +107,48 @@ function IconButton({ disabled, Icon, label, onPress, variant = "neutral" }) {
     );
 }
 
-function StatTile({ color, label, value }) {
+function StatTile({ activeDark, color, label, value }) {
     return (
-        <View style={styles.statTile}>
+        <View
+            style={[
+                styles.statTile,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}
+        >
             <Text style={[styles.statValue, { color }]}>{value}</Text>
-            <Text style={styles.statLabel}>{label}</Text>
+            <Text
+                style={[
+                    styles.statLabel,
+                    activeDark && { color: "#9ca3af" },
+                ]}
+            >
+                {label}
+            </Text>
         </View>
     );
 }
 
-function EmptyState({ loading, t }) {
+function EmptyState({ activeDark, loading, t }) {
     return (
-        <View style={styles.emptyCard}>
+        <View
+            style={[
+                styles.emptyCard,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}
+        >
             {loading ? <ActivityIndicator color='#047857' /> : null}
-            <Text style={styles.emptyText}>
+            <Text
+                style={[
+                    styles.emptyText,
+                    activeDark && { color: "#9ca3af" },
+                ]}
+            >
                 {loading
                     ? t("explore.asmaul.loading")
                     : t("explore.asmaul.empty")}
@@ -105,6 +166,8 @@ export function WebAppAsmaulFlashcardRoute({
     setAsmaulIndex = () => {},
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkThemePref ?? false;
     const [shuffled, setShuffled] = useState(false);
     const [order, setOrder] = useState([]);
     const names = asmaulNames;
@@ -146,22 +209,32 @@ export function WebAppAsmaulFlashcardRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[
+                styles.root,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
         >
             <View testID='explore-web-app-asmaul-flashcard-surface' />
             <Header
+                activeDark={activeDark}
                 title={t("explore.asmaul.flashcard.title")}
                 subtitle={t("explore.asmaul.flashcard.subtitle")}
             />
 
             {asmaulLoading || !currentName ? (
-                <EmptyState loading={asmaulLoading} t={t} />
+                <EmptyState activeDark={activeDark} loading={asmaulLoading} t={t} />
             ) : (
                 <>
                     <View style={styles.toolbar}>
-                        <Text style={styles.toolbarText}>
+                        <Text style={[
+                            styles.toolbarText,
+                            activeDark && { color: "#9ca3af" },
+                        ]}>
                             {safeIndex + 1} / {sequence.length}
                         </Text>
                         <View style={styles.toolbarActions}>
@@ -170,17 +243,21 @@ export function WebAppAsmaulFlashcardRoute({
                                 onPress={shuffle}
                                 style={[
                                     styles.smallAction,
+                                    activeDark && {
+                                        backgroundColor: "#1e293b",
+                                    },
                                     shuffled && styles.smallActionActive,
                                 ]}
                             >
                                 <Shuffle
-                                    color={shuffled ? "#b45309" : "#475569"}
+                                    color={shuffled ? "#b45309" : activeDark ? "#cbd5e1" : "#475569"}
                                     size={14}
                                     strokeWidth={2.3}
                                 />
                                 <Text
                                     style={[
                                         styles.smallActionText,
+                                        activeDark && { color: "#cbd5e1" },
                                         shuffled &&
                                             styles.smallActionTextActive,
                                     ]}
@@ -192,14 +269,22 @@ export function WebAppAsmaulFlashcardRoute({
                                 <Pressable
                                     accessibilityRole='button'
                                     onPress={resetOrder}
-                                    style={styles.smallAction}
+                                    style={[
+                                        styles.smallAction,
+                                        activeDark && {
+                                            backgroundColor: "#1e293b",
+                                        },
+                                    ]}
                                 >
                                     <RotateCcw
-                                        color='#475569'
+                                        color={activeDark ? "#cbd5e1" : "#475569"}
                                         size={14}
                                         strokeWidth={2.3}
                                     />
-                                    <Text style={styles.smallActionText}>
+                                    <Text style={[
+                                        styles.smallActionText,
+                                        activeDark && { color: "#cbd5e1" },
+                                    ]}>
                                         {t("explore.asmaul.originalOrder")}
                                     </Text>
                                 </Pressable>
@@ -213,31 +298,58 @@ export function WebAppAsmaulFlashcardRoute({
                         )}
                         accessibilityRole='button'
                         onPress={toggleReveal}
-                        style={styles.flashcard}
+                        style={[
+                            styles.flashcard,
+                            activeDark && {
+                                backgroundColor: "#111827",
+                                borderColor: "#374151",
+                            },
+                        ]}
                         testID='web-app-asmaul-flashcard-card'
                     >
-                        <Text style={styles.badgeText}>
+                        <Text style={[
+                            styles.badgeText,
+                            activeDark && {
+                                backgroundColor: "#064e3b",
+                                color: "#6ee7b7",
+                            },
+                        ]}>
                             #{getNumber(currentName, currentIndex)}
                         </Text>
-                        <Text style={styles.cardHint}>
+                        <Text style={[
+                            styles.cardHint,
+                            activeDark && { color: "#9ca3af" },
+                        ]}>
                             {asmaulFlashcardRevealed
                                 ? t("explore.asmaul.hideHint")
                                 : t("explore.asmaul.showHint")}
                         </Text>
-                        <Text style={styles.flashArabic}>
+                        <Text style={[
+                            styles.flashArabic,
+                            activeDark && { color: "#a7f3d0" },
+                        ]}>
                             {getArabic(currentName)}
                         </Text>
                         {asmaulFlashcardRevealed ? (
                             <>
-                                <Text style={styles.flashLatin}>
+                                <Text style={[
+                                    styles.flashLatin,
+                                    activeDark && { color: "#f9fafb" },
+                                ]}>
                                     {getLatin(currentName)}
                                 </Text>
-                                <Text style={styles.flashMeaning}>
+                                <Text style={[
+                                    styles.flashMeaning,
+                                    activeDark && { color: "#34d399" },
+                                ]}>
                                     {getMeaning(currentName)}
                                 </Text>
                             </>
                         ) : (
-                            <Text style={styles.guessHint}>
+                            <Text style={[
+                                styles.guessHint,
+                                activeDark && { color: "#9ca3af" },
+                            ]}>
                                 {t("explore.asmaul.guessHint")}
                             </Text>
                         )}
@@ -245,6 +357,7 @@ export function WebAppAsmaulFlashcardRoute({
 
                     <View style={styles.navRow}>
                         <IconButton
+                            activeDark={activeDark}
                             disabled={safeIndex === 0}
                             Icon={ChevronLeft}
                             label={t("explore.asmaul.previous")}
@@ -253,7 +366,10 @@ export function WebAppAsmaulFlashcardRoute({
                         <Pressable
                             accessibilityRole='button'
                             onPress={toggleReveal}
-                            style={styles.primaryAction}
+                            style={[
+                                styles.primaryAction,
+                                activeDark && { backgroundColor: "#059669" },
+                            ]}
                         >
                             <Text style={styles.primaryActionText}>
                                 {asmaulFlashcardRevealed
@@ -262,6 +378,7 @@ export function WebAppAsmaulFlashcardRoute({
                             </Text>
                         </Pressable>
                         <IconButton
+                            activeDark={activeDark}
                             disabled={safeIndex >= sequence.length - 1}
                             Icon={ChevronRight}
                             label={t("explore.asmaul.next")}
@@ -284,6 +401,8 @@ export function WebAppAsmaulWiridRoute({
     setAsmaulIndex = () => {},
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkThemePref ?? false;
     const [vibrate, setVibrate] = useState(true);
     const names = asmaulNames;
     const safeIndex = clampIndex(asmaulIndex, names.length);
@@ -318,35 +437,56 @@ export function WebAppAsmaulWiridRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[
+                styles.root,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
         >
             <View testID='explore-web-app-asmaul-wirid-surface' />
             <Header
+                activeDark={activeDark}
                 arabic='وِرْدُ الْأَسْمَاءِ'
                 title={t("explore.asmaul.wirid.title")}
                 subtitle={t("explore.asmaul.wirid.subtitle")}
             />
 
             {asmaulLoading || !currentName ? (
-                <EmptyState loading={asmaulLoading} t={t} />
+                <EmptyState activeDark={activeDark} loading={asmaulLoading} t={t} />
             ) : (
                 <>
-                    <View style={styles.counterCard}>
+                    <View style={[
+                        styles.counterCard,
+                        activeDark && {
+                            backgroundColor: "#111827",
+                            borderColor: "#374151",
+                        },
+                    ]}>
                         <View style={styles.cardTopRow}>
-                            <Text style={styles.indexBadge}>
+                            <Text style={[
+                                styles.indexBadge,
+                                activeDark && {
+                                    backgroundColor: "#064e3b",
+                                    color: "#6ee7b7",
+                                },
+                            ]}>
                                 #{getNumber(currentName, safeIndex)} /{" "}
                                 {names.length}
                             </Text>
                             <View style={styles.indexActions}>
                                 <IconButton
+                                    activeDark={activeDark}
                                     disabled={safeIndex === 0}
                                     Icon={ChevronLeft}
                                     label={t("explore.asmaul.previousName")}
                                     onPress={() => move(-1)}
                                 />
                                 <IconButton
+                                    activeDark={activeDark}
                                     disabled={safeIndex >= names.length - 1}
                                     Icon={ChevronRight}
                                     label={t("explore.asmaul.nextName")}
@@ -355,13 +495,22 @@ export function WebAppAsmaulWiridRoute({
                             </View>
                         </View>
 
-                        <Text style={styles.wiridArabic}>
+                        <Text style={[
+                            styles.wiridArabic,
+                            activeDark && { color: "#a7f3d0" },
+                        ]}>
                             {getArabic(currentName)}
                         </Text>
-                        <Text style={styles.wiridLatin}>
+                        <Text style={[
+                            styles.wiridLatin,
+                            activeDark && { color: "#9ca3af" },
+                        ]}>
                             {getLatin(currentName)}
                         </Text>
-                        <Text style={styles.wiridMeaning}>
+                        <Text style={[
+                            styles.wiridMeaning,
+                            activeDark && { color: "#34d399" },
+                        ]}>
                             {getMeaning(currentName)}
                         </Text>
 
@@ -392,7 +541,10 @@ export function WebAppAsmaulWiridRoute({
                         </View>
 
                         <View style={styles.progressBlock}>
-                            <View style={styles.progressTrack}>
+                            <View style={[
+                                styles.progressTrack,
+                                activeDark && { backgroundColor: "#374151" },
+                            ]}>
                                 <View
                                     style={[
                                         styles.progressFill,
@@ -400,7 +552,10 @@ export function WebAppAsmaulWiridRoute({
                                     ]}
                                 />
                             </View>
-                            <Text style={styles.progressText}>
+                            <Text style={[
+                                styles.progressText,
+                                activeDark && { color: "#9ca3af" },
+                            ]}>
                                 {progressPct}% · {count}/{WIRID_TARGET}
                             </Text>
                         </View>
@@ -409,14 +564,20 @@ export function WebAppAsmaulWiridRoute({
                             <Pressable
                                 accessibilityRole='button'
                                 onPress={() => updateCount(0)}
-                                style={styles.neutralButton}
+                                style={[
+                                    styles.neutralButton,
+                                    activeDark && { backgroundColor: "#1e293b" },
+                                ]}
                             >
                                 <RotateCcw
-                                    color='#374151'
+                                    color={activeDark ? "#cbd5e1" : "#374151"}
                                     size={15}
                                     strokeWidth={2.2}
                                 />
-                                <Text style={styles.neutralButtonText}>
+                                <Text style={[
+                                    styles.neutralButtonText,
+                                    activeDark && { color: "#cbd5e1" },
+                                ]}>
                                     {t("explore.asmaul.reset")}
                                 </Text>
                             </Pressable>
@@ -428,14 +589,20 @@ export function WebAppAsmaulWiridRoute({
                                         (e) => console.error(e),
                                     );
                                 }}
-                                style={styles.dangerButton}
+                                style={[
+                                    styles.dangerButton,
+                                    activeDark && { backgroundColor: "rgba(220, 38, 38, 0.2)" },
+                                ]}
                             >
                                 <RefreshCcw
                                     color='#dc2626'
                                     size={15}
                                     strokeWidth={2.2}
                                 />
-                                <Text style={styles.dangerButtonText}>
+                                <Text style={[
+                                    styles.dangerButtonText,
+                                    activeDark && { color: "#f87171" },
+                                ]}>
                                     {t("explore.asmaul.resetAll")}
                                 </Text>
                             </Pressable>
@@ -446,19 +613,23 @@ export function WebAppAsmaulWiridRoute({
                                 }
                                 style={[
                                     styles.vibrateButton,
+                                    activeDark && { backgroundColor: "#1e293b" },
                                     vibrate && styles.vibrateButtonActive,
+                                    activeDark && vibrate && { backgroundColor: "#064e3b" },
                                 ]}
                             >
                                 <Hand
-                                    color={vibrate ? "#047857" : "#64748b"}
+                                    color={vibrate ? (activeDark ? "#34d399" : "#047857") : activeDark ? "#9ca3af" : "#64748b"}
                                     size={15}
                                     strokeWidth={2.2}
                                 />
                                 <Text
                                     style={[
                                         styles.vibrateButtonText,
+                                        activeDark && { color: "#9ca3af" },
                                         vibrate &&
                                             styles.vibrateButtonTextActive,
+                                        activeDark && vibrate && { color: "#34d399" },
                                     ]}
                                 >
                                     {t("explore.asmaul.vibrateStatus", {
@@ -473,16 +644,19 @@ export function WebAppAsmaulWiridRoute({
 
                     <View style={styles.statsGrid}>
                         <StatTile
+                            activeDark={activeDark}
                             color='#047857'
                             label={t("explore.asmaul.countLabel")}
                             value={count}
                         />
                         <StatTile
+                            activeDark={activeDark}
                             color='#d97706'
                             label={t("explore.asmaul.targetLabel")}
                             value={WIRID_TARGET}
                         />
                         <StatTile
+                            activeDark={activeDark}
                             color='#2563eb'
                             label={t("explore.asmaul.todayTotalLabel")}
                             value={totalToday}
@@ -512,9 +686,10 @@ const styles = StyleSheet.create({
     headerArabic: {
         color: "#047857",
         fontSize: 30,
-        lineHeight: 42,
+        lineHeight: 50,
         marginBottom: 2,
         textAlign: "center",
+        paddingVertical: 4,
     },
     title: {
         color: "#064e3b",
@@ -557,6 +732,7 @@ const styles = StyleSheet.create({
         gap: 5,
         paddingHorizontal: spacing.sm,
         paddingVertical: 7,
+        minHeight: 44,
     },
     smallActionActive: {
         backgroundColor: "#fef3c7",
@@ -603,10 +779,11 @@ const styles = StyleSheet.create({
     },
     flashArabic: {
         color: "#064e3b",
-        fontSize: 45,
-        lineHeight: 70,
+        fontSize: 48,
+        lineHeight: 78,
         marginBottom: spacing.md,
         textAlign: "center",
+        paddingVertical: 4,
     },
     flashLatin: {
         color: "#1f2937",
@@ -640,9 +817,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#f1f5f9",
         borderRadius: radius.md,
-        height: 42,
+        height: 48,
         justifyContent: "center",
-        width: 46,
+        width: 48,
     },
     iconButtonPrimary: {
         backgroundColor: "#047857",
@@ -656,7 +833,7 @@ const styles = StyleSheet.create({
         borderRadius: radius.md,
         flex: 1,
         justifyContent: "center",
-        minHeight: 42,
+        minHeight: 48,
         paddingHorizontal: spacing.md,
     },
     primaryActionText: {
@@ -693,9 +870,10 @@ const styles = StyleSheet.create({
     },
     wiridArabic: {
         color: "#064e3b",
-        fontSize: 31,
-        lineHeight: 45,
+        fontSize: 34,
+        lineHeight: 52,
         textAlign: "center",
+        paddingVertical: 4,
     },
     wiridLatin: {
         color: "#64748b",

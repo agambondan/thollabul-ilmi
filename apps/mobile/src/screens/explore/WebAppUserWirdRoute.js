@@ -741,9 +741,9 @@ const styles = StyleSheet.create({
     },
     modalClose: {
         alignItems: "center",
-        height: 34,
+        height: 44,
         justifyContent: "center",
-        width: 34,
+        width: 44,
     },
     field: {
         marginBottom: spacing.sm,

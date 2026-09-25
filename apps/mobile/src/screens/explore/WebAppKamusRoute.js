@@ -10,6 +10,8 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
+import { arabicTypography } from "../../styles/arabicTypography";
 import { radius, spacing } from "../../theme";
 
 const toStr = (value) => {
@@ -68,20 +70,20 @@ const SUGGESTED_TERMS = [
     { arabic: "جنة", label: "Jannah" },
 ];
 
-function KamusResultCard({ item }) {
+function KamusResultCard({ isDarkTheme, item }) {
     return (
-        <View style={styles.resultCard} testID='web-app-kamus-result-card'>
-            <Text numberOfLines={1} style={styles.arabicText}>
+        <View style={[styles.resultCard, isDarkTheme && styles.resultCardDark]} testID='web-app-kamus-result-card'>
+            <Text numberOfLines={1} style={[styles.arabicText, isDarkTheme && styles.arabicTextDark]}>
                 {getArabic(item) || "-"}
             </Text>
             <View style={styles.resultBody}>
-                <Text numberOfLines={1} style={styles.latinText}>
+                <Text numberOfLines={1} style={[styles.latinText, isDarkTheme && styles.latinTextDark]}>
                     {getLatin(item) || "-"}
                 </Text>
-                <Text numberOfLines={3} style={styles.meaningText}>
+                <Text numberOfLines={3} style={[styles.meaningText, isDarkTheme && styles.meaningTextDark]}>
                     {getMeaning(item) || "-"}
                 </Text>
-                <Text numberOfLines={1} style={styles.rootText}>
+                <Text numberOfLines={1} style={[styles.rootText, isDarkTheme && styles.rootTextDark]}>
                     {getRoot(item) || "-"}
                 </Text>
             </View>
@@ -95,11 +97,14 @@ export function WebAppKamusRoute({
     error,
     focusDictionaryInput,
     items,
+    isDarkTheme: isDarkThemeProp = false,
     loading,
     onSearch,
     onUpdateQuery,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const query = dictionaryQuery.trim();
 
     const handleSelectSuggestion = (term) => {
@@ -108,22 +113,22 @@ export function WebAppKamusRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-kamus-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.kamus.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.kamus.title")}</Text>
+                <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
                     {t("explore.kamus.subtitle")}
                 </Text>
             </View>
 
             <View style={styles.searchWrap}>
-                <View style={styles.searchBox}>
-                    <Search color='#9ca3af' size={17} strokeWidth={2} />
+                <View style={[styles.searchBox, isDarkTheme && styles.searchBoxDark]}>
+                    <Search color={isDarkTheme ? '#64748b' : '#9ca3af'} size={17} strokeWidth={2} />
                     <TextInput
                         ref={dictionaryInputRef}
                         autoCapitalize='none'
@@ -131,9 +136,9 @@ export function WebAppKamusRoute({
                         onChangeText={onUpdateQuery}
                         onSubmitEditing={onSearch}
                         placeholder={t("explore.kamus.searchPlaceholder")}
-                        placeholderTextColor='#9ca3af'
+                        placeholderTextColor={isDarkTheme ? '#64748b' : '#9ca3af'}
                         returnKeyType='search'
-                        style={styles.input}
+                        style={[styles.input, isDarkTheme && styles.inputDark]}
                         testID='web-app-kamus-search'
                         value={dictionaryQuery}
                     />
@@ -141,7 +146,7 @@ export function WebAppKamusRoute({
                 <Pressable
                     accessibilityRole='button'
                     onPress={onSearch}
-                    style={styles.searchButton}
+                    style={[styles.searchButton, isDarkTheme && styles.searchButtonDark]}
                     testID='web-app-kamus-submit'
                 >
                     <Text style={styles.searchButtonText}>
@@ -150,11 +155,11 @@ export function WebAppKamusRoute({
                 </Pressable>
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={[styles.error, isDarkTheme && styles.errorDark]}>{error}</Text> : null}
             {loading ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#059669' size='small' />
-                    <Text style={styles.stateText}>
+                    <ActivityIndicator color={isDarkTheme ? '#34d399' : '#059669'} size='small' />
+                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                         {t("explore.kamus.loading")}
                     </Text>
                 </View>
@@ -162,16 +167,16 @@ export function WebAppKamusRoute({
 
             {!loading && query.length < 2 ? (
                 <View style={styles.empty}>
-                    <Search color='#cbd5e1' size={40} strokeWidth={1.7} />
-                    <Text style={styles.emptyTitle}>
+                    <Search color={isDarkTheme ? '#475569' : '#cbd5e1'} size={40} strokeWidth={1.7} />
+                    <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                         {t("explore.kamus.minCharsTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                         {t("explore.kamus.minCharsText")}
                     </Text>
 
                     <View style={styles.suggestionsContainer}>
-                        <Text style={styles.suggestionsHeader}>
+                        <Text style={[styles.suggestionsHeader, isDarkTheme && styles.suggestionsHeaderDark]}>
                             Kosakata Populer:
                         </Text>
                         <View style={styles.suggestionChips}>
@@ -179,12 +184,12 @@ export function WebAppKamusRoute({
                                 <Pressable
                                     key={term.label}
                                     onPress={() => handleSelectSuggestion(term)}
-                                    style={styles.suggestionChip}
+                                    style={[styles.suggestionChip, isDarkTheme && styles.suggestionChipDark]}
                                 >
-                                    <Text style={styles.suggestionChipLatin}>
+                                    <Text style={[styles.suggestionChipLatin, isDarkTheme && styles.suggestionChipLatinDark]}>
                                         {term.label}
                                     </Text>
-                                    <Text style={styles.suggestionChipArabic}>
+                                    <Text style={[styles.suggestionChipArabic, isDarkTheme && styles.suggestionChipArabicDark]}>
                                         {term.arabic}
                                     </Text>
                                 </Pressable>
@@ -196,14 +201,14 @@ export function WebAppKamusRoute({
 
             {!loading && query.length >= 2 && !items.length ? (
                 <View style={styles.empty}>
-                    <Text style={styles.emptyTitle}>
+                    <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                         {t("explore.kamus.noResultTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                         {t("explore.kamus.noResultText", { query })}
                     </Text>
                     <View style={styles.suggestionsContainer}>
-                        <Text style={styles.suggestionsHeader}>
+                        <Text style={[styles.suggestionsHeader, isDarkTheme && styles.suggestionsHeaderDark]}>
                             Coba kata kunci lain:
                         </Text>
                         <View style={styles.suggestionChips}>
@@ -211,12 +216,12 @@ export function WebAppKamusRoute({
                                 <Pressable
                                     key={term.label}
                                     onPress={() => handleSelectSuggestion(term)}
-                                    style={styles.suggestionChip}
+                                    style={[styles.suggestionChip, isDarkTheme && styles.suggestionChipDark]}
                                 >
-                                    <Text style={styles.suggestionChipLatin}>
+                                    <Text style={[styles.suggestionChipLatin, isDarkTheme && styles.suggestionChipLatinDark]}>
                                         {term.label}
                                     </Text>
-                                    <Text style={styles.suggestionChipArabic}>
+                                    <Text style={[styles.suggestionChipArabic, isDarkTheme && styles.suggestionChipArabicDark]}>
                                         {term.arabic}
                                     </Text>
                                 </Pressable>
@@ -227,20 +232,21 @@ export function WebAppKamusRoute({
             ) : null}
 
             {!loading && items.length ? (
-                <View style={styles.results}>
-                    <View style={styles.tableHeader}>
-                        <Text style={[styles.headerCell, styles.arabicHeader]}>
+                <View style={[styles.results, isDarkTheme && styles.resultsDark]}>
+                    <View style={[styles.tableHeader, isDarkTheme && styles.tableHeaderDark]}>
+                        <Text style={[styles.headerCell, styles.arabicHeader, isDarkTheme && styles.headerCellDark]}>
                             {t("explore.kamus.columnArabic")}
                         </Text>
-                        <Text style={styles.headerCell}>
+                        <Text style={[styles.headerCell, isDarkTheme && styles.headerCellDark]}>
                             {t("explore.kamus.columnLatin")}
                         </Text>
-                        <Text style={styles.headerCell}>
+                        <Text style={[styles.headerCell, isDarkTheme && styles.headerCellDark]}>
                             {t("explore.kamus.columnMeaning")}
                         </Text>
                     </View>
                     {items.map((item, index) => (
                         <KamusResultCard
+                            isDarkTheme={isDarkTheme}
                             item={item}
                             key={`${item?.id ?? getLatin(item) ?? "kamus"}-${index}`}
                         />
@@ -424,13 +430,9 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.md,
     },
     arabicText: {
+        ...arabicTypography.body,
         color: "#1f2937",
         flex: 0.9,
-        fontFamily: "Kitab-Regular",
-        fontSize: 24,
-        lineHeight: 34,
-        textAlign: "right",
-        writingDirection: "rtl",
     },
     resultBody: {
         flex: 2,
@@ -452,5 +454,78 @@ const styles = StyleSheet.create({
         color: "#94a3b8",
         fontSize: 12,
         fontWeight: "700",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    searchBoxDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    inputDark: {
+        color: "#f8fafc",
+    },
+    searchButtonDark: {
+        backgroundColor: "#059669",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
+    },
+    suggestionsHeaderDark: {
+        color: "#94a3b8",
+    },
+    suggestionChipDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    suggestionChipLatinDark: {
+        color: "#f8fafc",
+    },
+    suggestionChipArabicDark: {
+        color: "#34d399",
+    },
+    resultsDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    tableHeaderDark: {
+        backgroundColor: "#1e293b",
+    },
+    headerCellDark: {
+        color: "#94a3b8",
+    },
+    resultCardDark: {
+        borderColor: "#1e293b",
+    },
+    arabicTextDark: {
+        color: "#34d399",
+    },
+    latinTextDark: {
+        color: "#93c5fd",
+    },
+    meaningTextDark: {
+        color: "#e2e8f0",
+    },
+    rootTextDark: {
+        color: "#64748b",
+    },
+    errorDark: {
+        backgroundColor: "#450a0a",
+        color: "#f87171",
     },
 });

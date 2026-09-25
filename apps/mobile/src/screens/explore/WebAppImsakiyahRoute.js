@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 
 const PRAYERS = [
@@ -59,20 +60,28 @@ const todayKey = () => {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
-function ImsakiyahRow({ index, item, t }) {
+function ImsakiyahRow({ index, isDarkTheme, item, t }) {
     const row = getRaw(item);
     const isToday = getDateValue(row) === todayKey();
 
     return (
         <View
-            style={[styles.row, isToday && styles.rowToday]}
+            style={[
+                styles.row,
+                isDarkTheme && styles.rowDark,
+                isToday && (isDarkTheme ? styles.rowTodayDark : styles.rowToday),
+            ]}
             testID='web-app-imsakiyah-row'
         >
             <View style={styles.dayCell}>
-                <Text style={[styles.dayText, isToday && styles.dayTextToday]}>
+                <Text style={[
+                    styles.dayText,
+                    isDarkTheme && styles.dayTextDark,
+                    isToday && (isDarkTheme ? styles.dayTextTodayDark : styles.dayTextToday),
+                ]}>
                     {getDayLabel(row, index)}
                 </Text>
-                {isToday ? <View style={styles.todayDot} /> : null}
+                {isToday ? <View style={[styles.todayDot, isDarkTheme && styles.todayDotDark]} /> : null}
             </View>
             <ScrollView
                 horizontal
@@ -85,7 +94,8 @@ function ImsakiyahRow({ index, item, t }) {
                             <Text
                                 style={[
                                     styles.timeLabel,
-                                    prayer.key === "imsak" && styles.imsakLabel,
+                                    isDarkTheme && styles.timeLabelDark,
+                                    prayer.key === "imsak" && (isDarkTheme ? styles.imsakLabelDark : styles.imsakLabel),
                                 ]}
                             >
                                 {t(`prayer.name.${prayer.key}`)}
@@ -93,7 +103,8 @@ function ImsakiyahRow({ index, item, t }) {
                             <Text
                                 style={[
                                     styles.timeValue,
-                                    prayer.key === "imsak" && styles.imsakValue,
+                                    isDarkTheme && styles.timeValueDark,
+                                    prayer.key === "imsak" && (isDarkTheme ? styles.imsakValueDark : styles.imsakValue),
                                 ]}
                             >
                                 {getPrayerValue(row, prayer)}
@@ -106,41 +117,43 @@ function ImsakiyahRow({ index, item, t }) {
     );
 }
 
-export function WebAppImsakiyahRoute({ error, items = [], loading }) {
+export function WebAppImsakiyahRoute({ error, isDarkTheme: isDarkThemeProp = false, items = [], loading }) {
     const { language, t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const location =
         getLocationLabel(items) || t("explore.imsakiyah.defaultLocation");
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-imsakiyah-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.imsakiyah.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.imsakiyah.title")}</Text>
+                <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
                     {t("explore.imsakiyah.subtitle", { location })}
                 </Text>
             </View>
 
             <View style={styles.monthBar}>
-                <View style={styles.monthButton}>
-                    <Text style={styles.monthButtonText}>←</Text>
+                <View style={[styles.monthButton, isDarkTheme && styles.monthButtonDark]}>
+                    <Text style={[styles.monthButtonText, isDarkTheme && styles.monthButtonTextDark]}>←</Text>
                 </View>
-                <Text style={styles.monthText}>
+                <Text style={[styles.monthText, isDarkTheme && styles.monthTextDark]}>
                     {inferMonthLabel(items, language)}
                 </Text>
-                <View style={styles.monthButton}>
-                    <Text style={styles.monthButtonText}>→</Text>
+                <View style={[styles.monthButton, isDarkTheme && styles.monthButtonDark]}>
+                    <Text style={[styles.monthButtonText, isDarkTheme && styles.monthButtonTextDark]}>→</Text>
                 </View>
             </View>
 
             {loading ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#059669' size='small' />
-                    <Text style={styles.stateText}>
+                    <ActivityIndicator color={isDarkTheme ? '#34d399' : '#059669'} size='small' />
+                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                         {t("explore.imsakiyah.loading")}
                     </Text>
                 </View>
@@ -151,8 +164,8 @@ export function WebAppImsakiyahRoute({ error, items = [], loading }) {
             ) : null}
 
             {!loading && !error && items.length ? (
-                <View style={styles.table}>
-                    <View style={styles.tableHeader}>
+                <View style={[styles.table, isDarkTheme && styles.tableDark]}>
+                    <View style={[styles.tableHeader, isDarkTheme && styles.tableHeaderDark]}>
                         <Text style={styles.tableHeaderDay}>
                             {t("explore.imsakiyah.dayColumn")}
                         </Text>
@@ -163,6 +176,7 @@ export function WebAppImsakiyahRoute({ error, items = [], loading }) {
                     {items.map((item, index) => (
                         <ImsakiyahRow
                             index={index}
+                            isDarkTheme={isDarkTheme}
                             item={item}
                             key={`${getDateValue(getRaw(item)) || index}-${index}`}
                             t={t}
@@ -172,12 +186,12 @@ export function WebAppImsakiyahRoute({ error, items = [], loading }) {
             ) : null}
 
             {!loading && !error && !items.length ? (
-                <View style={styles.empty}>
-                    <CalendarDays color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                    <CalendarDays color={isDarkTheme ? '#64748b' : '#9ca3af'} size={32} strokeWidth={1.8} />
+                    <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                         {t("explore.imsakiyah.emptyTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                         {t("explore.imsakiyah.emptyText")}
                     </Text>
                 </View>
@@ -370,5 +384,73 @@ const styles = StyleSheet.create({
         lineHeight: 18,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    monthButtonDark: {
+        backgroundColor: "#1e293b",
+    },
+    monthButtonTextDark: {
+        color: "#cbd5e1",
+    },
+    monthTextDark: {
+        color: "#f8fafc",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    tableDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    tableHeaderDark: {
+        backgroundColor: "#059669",
+    },
+    rowDark: {
+        borderBottomColor: "#1e293b",
+    },
+    rowTodayDark: {
+        backgroundColor: "#064e3b",
+    },
+    dayTextDark: {
+        color: "#e2e8f0",
+    },
+    dayTextTodayDark: {
+        color: "#34d399",
+    },
+    todayDotDark: {
+        backgroundColor: "#34d399",
+    },
+    timeLabelDark: {
+        color: "#64748b",
+    },
+    imsakLabelDark: {
+        color: "#fbbf24",
+    },
+    timeValueDark: {
+        color: "#e2e8f0",
+    },
+    imsakValueDark: {
+        color: "#fbbf24",
+    },
+    emptyDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
 });

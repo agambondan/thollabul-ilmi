@@ -19,6 +19,7 @@ import {
 } from "lucide-react-native";
 import { Card } from "../../components/Card";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { colors, radius, spacing } from "../../theme";
 import { putJson, requestJson } from "../../api/client";
 import { getFeatureItemPage } from "../../api/explore";
@@ -48,6 +49,8 @@ export function WebAppLessonsRoute({
     styles: injectedStyles,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkTheme ?? isDarkThemePref ?? false;
     const [modules, setModules] = useState(items?.length ? items : (staticLessons || []));
     const [loading, setLoading] = useState(!items?.length && !staticLessons?.length);
     const [selectedCategory, setSelectedCategory] = useState("Semua");
@@ -222,7 +225,7 @@ export function WebAppLessonsRoute({
                 testID='explore-web-app-lessons-surface'
             >
                 <ActivityIndicator
-                    color={isDarkTheme ? "#34d399" : colors.primary}
+                    color={activeDark ? "#34d399" : colors.primary}
                 />
             </View>
         );
@@ -237,7 +240,7 @@ export function WebAppLessonsRoute({
                 <Text
                     style={[
                         localStyles.emptyText,
-                        isDarkTheme && { color: "#9ca3af" },
+                        activeDark && { color: "#9ca3af" },
                     ]}
                 >
                     {t("explore.empty.lessons") || "Belum ada modul pelajaran."}
@@ -248,7 +251,10 @@ export function WebAppLessonsRoute({
 
     return (
         <ScrollView
-            style={localStyles.container}
+            style={[
+                localStyles.container,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
             contentContainerStyle={localStyles.content}
             testID='explore-web-app-lessons-surface'
         >
@@ -269,7 +275,7 @@ export function WebAppLessonsRoute({
                             style={[
                                 localStyles.categoryTab,
                                 isCatSelected && localStyles.categoryTabActive,
-                                isDarkTheme && {
+                                activeDark && {
                                     backgroundColor: isCatSelected
                                         ? "#047857"
                                         : "#1e293b",
@@ -284,7 +290,7 @@ export function WebAppLessonsRoute({
                                     localStyles.categoryTabText,
                                     isCatSelected &&
                                         localStyles.categoryTabTextActive,
-                                    isDarkTheme && {
+                                    activeDark && {
                                         color: isCatSelected
                                             ? "#ffffff"
                                             : "#94a3b8",
@@ -318,7 +324,7 @@ export function WebAppLessonsRoute({
                             style={[
                                 localStyles.moduleTab,
                                 isSelected && localStyles.moduleTabActive,
-                                isDarkTheme && {
+                                activeDark && {
                                     backgroundColor: isSelected
                                         ? "#065f46"
                                         : "#1f2937",
@@ -330,7 +336,7 @@ export function WebAppLessonsRoute({
                                     localStyles.moduleTabText,
                                     isSelected &&
                                         localStyles.moduleTabTextActive,
-                                    isDarkTheme && {
+                                    activeDark && {
                                         color: isSelected
                                             ? "#a7f3d0"
                                             : "#d1d5db",
@@ -348,7 +354,7 @@ export function WebAppLessonsRoute({
                 <View
                     style={[
                         localStyles.moduleSummaryCard,
-                        isDarkTheme && {
+                        activeDark && {
                             backgroundColor: "#111827",
                             borderColor: "#374151",
                         },
@@ -359,7 +365,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.moduleSummaryTitle,
-                                    isDarkTheme && { color: "#f9fafb" },
+                                    activeDark && { color: "#f9fafb" },
                                 ]}
                             >
                                 {activeModule.title}
@@ -368,7 +374,7 @@ export function WebAppLessonsRoute({
                                 <Text
                                     style={[
                                         localStyles.moduleSummaryDesc,
-                                        isDarkTheme && { color: "#9ca3af" },
+                                        activeDark && { color: "#9ca3af" },
                                     ]}
                                     numberOfLines={2}
                                 >
@@ -382,7 +388,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.moduleBadge,
-                                    isDarkTheme && {
+                                    activeDark && {
                                         backgroundColor: "#1e293b",
                                         color: "#38bdf8",
                                     },
@@ -395,7 +401,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.moduleBadge,
-                                    isDarkTheme && {
+                                    activeDark && {
                                         backgroundColor: "#1e293b",
                                         color: "#a7f3d0",
                                     },
@@ -408,7 +414,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.moduleBadge,
-                                    isDarkTheme && {
+                                    activeDark && {
                                         backgroundColor: "#1e293b",
                                         color: "#fbbf24",
                                     },
@@ -425,7 +431,7 @@ export function WebAppLessonsRoute({
                 <Card
                     style={[
                         localStyles.stepCard,
-                        isDarkTheme && {
+                        activeDark && {
                             backgroundColor: "#111827",
                             borderColor: "#374151",
                         },
@@ -442,7 +448,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.stepBadge,
-                                    isDarkTheme && {
+                                    activeDark && {
                                         backgroundColor: "#064e3b",
                                         color: "#6ee7b7",
                                     },
@@ -463,12 +469,12 @@ export function WebAppLessonsRoute({
                                               ? {
                                                     backgroundColor: "#fef3c7",
                                                     color: "#b45309",
-                                                }
+                                                  }
                                               : {
                                                     backgroundColor: "#e0f2fe",
                                                     color: "#0369a1",
                                                 },
-                                        isDarkTheme && {
+                                        activeDark && {
                                             backgroundColor: "#1e293b",
                                             color: "#93c5fd",
                                         },
@@ -486,7 +492,7 @@ export function WebAppLessonsRoute({
                     <Text
                         style={[
                             localStyles.stepTitle,
-                            isDarkTheme && { color: "#f9fafb" },
+                            activeDark && { color: "#f9fafb" },
                         ]}
                     >
                         {step?.title || activeModule.title}
@@ -496,7 +502,7 @@ export function WebAppLessonsRoute({
                         <Text
                             style={[
                                 localStyles.stepBody,
-                                isDarkTheme && { color: "#d1d5db" },
+                                activeDark && { color: "#d1d5db" },
                             ]}
                         >
                             {step?.body || step?.content}
@@ -507,7 +513,7 @@ export function WebAppLessonsRoute({
                         <Text
                             style={[
                                 localStyles.stepArabic,
-                                isDarkTheme && { color: "#a7f3d0" },
+                                activeDark && { color: "#a7f3d0" },
                             ]}
                         >
                             {step.arabic}
@@ -518,7 +524,7 @@ export function WebAppLessonsRoute({
                         <Text
                             style={[
                                 localStyles.stepLatin,
-                                isDarkTheme && { color: "#6ee7b7" },
+                                activeDark && { color: "#6ee7b7" },
                             ]}
                         >
                             {step.latin}
@@ -529,7 +535,7 @@ export function WebAppLessonsRoute({
                         <Text
                             style={[
                                 localStyles.stepTranslation,
-                                isDarkTheme && { color: "#9ca3af" },
+                                activeDark && { color: "#9ca3af" },
                             ]}
                         >
                             {step.translation}
@@ -540,7 +546,7 @@ export function WebAppLessonsRoute({
                         <View
                             style={[
                                 localStyles.stepDalilBox,
-                                isDarkTheme && {
+                                activeDark && {
                                     backgroundColor: "rgba(6, 95, 70, 0.2)",
                                     borderLeftColor: "#10b981",
                                 },
@@ -549,7 +555,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.stepDalilText,
-                                    isDarkTheme && { color: "#d1d5db" },
+                                    activeDark && { color: "#d1d5db" },
                                 ]}
                             >
                                 {step.dalil}
@@ -561,7 +567,7 @@ export function WebAppLessonsRoute({
                         <View
                             style={[
                                 localStyles.stepTipBox,
-                                isDarkTheme && {
+                                activeDark && {
                                     backgroundColor: "rgba(180, 83, 9, 0.2)",
                                     borderLeftColor: "#f59e0b",
                                 },
@@ -570,7 +576,7 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.stepTipText,
-                                    isDarkTheme && { color: "#fde68a" },
+                                    activeDark && { color: "#fde68a" },
                                 ]}
                             >
                                 {step.tip}
@@ -589,7 +595,7 @@ export function WebAppLessonsRoute({
                             }}
                             style={[
                                 localStyles.audioButton,
-                                isDarkTheme && {
+                                activeDark && {
                                     backgroundColor: "#064e3b",
                                     borderColor: "#059669",
                                 },
@@ -597,12 +603,12 @@ export function WebAppLessonsRoute({
                         >
                             <Play
                                 size={16}
-                                color={isDarkTheme ? "#6ee7b7" : colors.primary}
+                                color={activeDark ? "#6ee7b7" : colors.primary}
                             />
                             <Text
                                 style={[
                                     localStyles.audioButtonText,
-                                    isDarkTheme && { color: "#6ee7b7" },
+                                    activeDark && { color: "#6ee7b7" },
                                 ]}
                             >
                                 Putar Audio Pelafalan
@@ -622,7 +628,7 @@ export function WebAppLessonsRoute({
                                 localStyles.navButton,
                                 activeStepIdx === 0 &&
                                     localStyles.navButtonDisabled,
-                                isDarkTheme && { backgroundColor: "#1f2937" },
+                                activeDark && { backgroundColor: "#1f2937" },
                             ]}
                         >
                             <ChevronLeft
@@ -630,7 +636,7 @@ export function WebAppLessonsRoute({
                                 color={
                                     activeStepIdx === 0
                                         ? "#9ca3af"
-                                        : isDarkTheme
+                                        : activeDark
                                           ? "#f3f4f6"
                                           : colors.textPrimary
                                 }
@@ -640,7 +646,7 @@ export function WebAppLessonsRoute({
                                     localStyles.navButtonText,
                                     activeStepIdx === 0 &&
                                         localStyles.navButtonTextDisabled,
-                                    isDarkTheme && { color: "#f3f4f6" },
+                                    activeDark && { color: "#f3f4f6" },
                                 ]}
                             >
                                 Sebelumnya
@@ -653,7 +659,7 @@ export function WebAppLessonsRoute({
                             style={[
                                 localStyles.navButton,
                                 localStyles.navButtonPrimary,
-                                isDarkTheme && { backgroundColor: "#059669" },
+                                activeDark && { backgroundColor: "#059669" },
                             ]}
                         >
                             <Text style={localStyles.navButtonPrimaryText}>
@@ -701,6 +707,8 @@ const localStyles = StyleSheet.create({
         backgroundColor: "#f1f5f9",
         borderWidth: 1,
         borderColor: "#e2e8f0",
+        minHeight: 44,
+        justifyContent: "center",
     },
     categoryTabActive: {
         backgroundColor: colors.primary,
@@ -764,6 +772,8 @@ const localStyles = StyleSheet.create({
         paddingHorizontal: spacing.md,
         borderRadius: radius.full,
         backgroundColor: "#f3f4f6",
+        minHeight: 44,
+        justifyContent: "center",
     },
     moduleTabActive: {
         backgroundColor: colors.primaryLight || "#ecfdf5",
@@ -809,11 +819,13 @@ const localStyles = StyleSheet.create({
         color: colors.textSecondary,
     },
     stepArabic: {
-        fontSize: 20,
-        lineHeight: 32,
+        fontSize: 22,
+        lineHeight: 40,
         textAlign: "right",
         color: colors.primary,
         fontFamily: "System",
+        writingDirection: "rtl",
+        paddingVertical: 4,
     },
     stepTranslation: {
         fontSize: 13,
@@ -862,6 +874,7 @@ const localStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#a7f3d0",
         marginTop: spacing.xs,
+        minHeight: 44,
     },
     audioButtonText: {
         fontSize: 13,
@@ -877,11 +890,13 @@ const localStyles = StyleSheet.create({
     navButton: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: 4,
         paddingVertical: spacing.sm,
         paddingHorizontal: spacing.md,
         borderRadius: radius.md,
         backgroundColor: "#f3f4f6",
+        minHeight: 44,
     },
     navButtonDisabled: {
         opacity: 0.5,

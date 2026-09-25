@@ -7,8 +7,9 @@ import {
     Text,
     View,
 } from "react-native";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../../theme";
+import { colors, getThemeColors, radius, spacing } from "../../theme";
 
 const getFeedReference = (item = {}, t) => {
     const raw = item?.raw ?? {};
@@ -25,6 +26,7 @@ const getFeedReference = (item = {}, t) => {
 
 function FeedCard({
     formatDate,
+    isDarkTheme,
     isLoggedIn,
     item,
     likingFeedId,
@@ -47,28 +49,28 @@ function FeedCard({
     const isLiking = likingFeedId === item.id;
 
     return (
-        <View style={styles.card} testID='web-app-feed-card'>
+        <View style={[styles.card, isDarkTheme && styles.cardDark]} testID='web-app-feed-card'>
             <View style={styles.cardHeader}>
-                <View style={styles.avatar}>
-                    <Text style={styles.avatarText}>
+                <View style={[styles.avatar, isDarkTheme && styles.avatarDark]}>
+                    <Text style={[styles.avatarText, isDarkTheme && styles.avatarTextDark]}>
                         {author[0]?.toUpperCase() ?? "U"}
                     </Text>
                 </View>
                 <View style={styles.authorBlock}>
-                    <Text numberOfLines={1} style={styles.author}>
+                    <Text numberOfLines={1} style={[styles.author, isDarkTheme && styles.authorDark]}>
                         {author}
                     </Text>
                     {createdAt ? (
-                        <Text style={styles.date}>{createdAt}</Text>
+                        <Text style={[styles.date, isDarkTheme && styles.dateDark]}>{createdAt}</Text>
                     ) : null}
                 </View>
             </View>
-            {item.body ? <Text style={styles.body}>{item.body}</Text> : null}
+            {item.body ? <Text style={[styles.body, isDarkTheme && styles.bodyDark]}>{item.body}</Text> : null}
             {feedRef ? (
-                <View style={styles.ref}>
-                    <Text style={styles.refText}>{feedRef.label}</Text>
+                <View style={[styles.ref, isDarkTheme && styles.refDark]}>
+                    <Text style={[styles.refText, isDarkTheme && styles.refTextDark]}>{feedRef.label}</Text>
                     {feedRef.id ? (
-                        <Text style={styles.refId}>#{feedRef.id}</Text>
+                        <Text style={[styles.refId, isDarkTheme && styles.refIdDark]}>#{feedRef.id}</Text>
                     ) : null}
                 </View>
             ) : null}
@@ -76,24 +78,24 @@ function FeedCard({
                 <Pressable
                     accessibilityRole='button'
                     accessibilityLabel={t("explore.feed.likeAccessibility")}
-                    android_ripple={{ color: "#fee2e2", borderless: false }}
+                    android_ripple={{ color: isDarkTheme ? "#450a0a" : "#fee2e2", borderless: false }}
                     accessibilityState={{ disabled: isLiking }}
                     disabled={isLiking}
                     onPress={() => onLike(item)}
-                    style={styles.action}
+                    style={[styles.action, isDarkTheme && styles.actionDark]}
                 >
-                    <Text style={styles.actionText}>
+                    <Text style={[styles.actionText, isDarkTheme && styles.actionTextDark]}>
                         {isLiking ? t("explore.feed.liking") : `♡ ${likes}`}
                     </Text>
                 </Pressable>
                 <Pressable
                     accessibilityRole='button'
                     accessibilityLabel={t("explore.feed.commentAccessibility")}
-                    android_ripple={{ color: "#dbeafe", borderless: false }}
+                    android_ripple={{ color: isDarkTheme ? "#1e3a5f" : "#dbeafe", borderless: false }}
                     onPress={() => onOpenComments(item)}
-                    style={styles.action}
+                    style={[styles.action, isDarkTheme && styles.actionDark]}
                 >
-                    <Text style={styles.actionText}>
+                    <Text style={[styles.actionText, isDarkTheme && styles.actionTextDark]}>
                         {t("explore.feed.comments")}
                     </Text>
                 </Pressable>
@@ -153,10 +155,11 @@ export function WebAppFeedRoute({
     pagination,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme } = useLayoutModePreference();
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             onScroll={({ nativeEvent }) => {
                 const { contentOffset, contentSize, layoutMeasurement } =
                     nativeEvent;
@@ -167,26 +170,26 @@ export function WebAppFeedRoute({
             }}
             scrollEventThrottle={120}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-feed-route' />
             <View testID='explore-web-app-community-feed-surface' />
             <View style={styles.header}>
-                <View style={styles.headerIcon}>
+                <View style={[styles.headerIcon, isDarkTheme && styles.headerIconDark]}>
                     <MessageCircle
-                        color='#059669'
+                        color={isDarkTheme ? "#34d399" : "#059669"}
                         size={30}
                         strokeWidth={2.3}
                     />
                 </View>
-                <Text style={styles.title}>{t("explore.feed.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.feed.title")}</Text>
+                <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
                     {t("explore.feed.subtitle")}
                 </Text>
             </View>
 
-            <View style={styles.createBox}>
-                <Text style={styles.createText}>
+            <View style={[styles.createBox, isDarkTheme && styles.createBoxDark]}>
+                <Text style={[styles.createText, isDarkTheme && styles.createTextDark]}>
                     {isLoggedIn
                         ? t("explore.feed.createPost")
                         : t("explore.feed.loginToCreate")}
@@ -197,21 +200,21 @@ export function WebAppFeedRoute({
 
             {loading ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#059669' />
-                    <Text style={styles.stateText}>
+                    <ActivityIndicator color={isDarkTheme ? "#34d399" : "#059669"} />
+                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                         {t("explore.feed.loading")}
                     </Text>
                 </View>
             ) : null}
 
             {!loading && !items.length ? (
-                <View style={styles.empty}>
+                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
                     <MessageCircle
-                        color='#d1d5db'
+                        color={isDarkTheme ? "#64748b" : "#d1d5db"}
                         size={34}
                         strokeWidth={2.2}
                     />
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                         {t("explore.feed.empty")}
                     </Text>
                 </View>
@@ -222,6 +225,7 @@ export function WebAppFeedRoute({
                     {items.map((item) => (
                         <FeedCard
                             formatDate={formatDate}
+                            isDarkTheme={isDarkTheme}
                             isLoggedIn={isLoggedIn}
                             item={item}
                             key={item.id}
@@ -238,7 +242,7 @@ export function WebAppFeedRoute({
 
             {pagination.loadingMore ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#059669' size='small' />
+                    <ActivityIndicator color={isDarkTheme ? "#34d399" : "#059669"} size='small' />
                 </View>
             ) : null}
         </ScrollView>
@@ -250,15 +254,21 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         flex: 1,
     },
+    rootDark: {
+        backgroundColor: "#0f172a",
+    },
     content: {
         backgroundColor: "#f8fafc",
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
     },
+    contentDark: {
+        backgroundColor: "#0f172a",
+    },
     header: {
         alignItems: "center",
-        marginBottom: spacing.lg,
+        marginBottom: spacing.md,
     },
     headerIcon: {
         alignItems: "center",
@@ -269,6 +279,9 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
         width: 64,
     },
+    headerIconDark: {
+        backgroundColor: "#064e3b",
+    },
     title: {
         color: "#111827",
         fontSize: 24,
@@ -277,12 +290,18 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         textAlign: "center",
     },
+    titleDark: {
+        color: "#f8fafc",
+    },
     subtitle: {
         color: "#6b7280",
         fontSize: 14,
         lineHeight: 20,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
     },
     createBox: {
         alignItems: "center",
@@ -296,11 +315,18 @@ const styles = StyleSheet.create({
         minHeight: 48,
         paddingHorizontal: spacing.md,
     },
+    createBoxDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     createText: {
         color: "#6b7280",
         fontSize: 13,
         fontWeight: "800",
         textAlign: "center",
+    },
+    createTextDark: {
+        color: "#94a3b8",
     },
     notice: {
         color: "#b91c1c",
@@ -320,6 +346,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "700",
     },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
     list: {
         gap: spacing.md,
     },
@@ -329,6 +358,10 @@ const styles = StyleSheet.create({
         borderRadius: radius.md,
         borderWidth: 1,
         padding: spacing.md,
+    },
+    cardDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
     },
     cardHeader: {
         alignItems: "center",
@@ -344,10 +377,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: 40,
     },
+    avatarDark: {
+        backgroundColor: "#064e3b",
+    },
     avatarText: {
         color: "#059669",
         fontSize: 14,
         fontWeight: "900",
+    },
+    avatarTextDark: {
+        color: "#34d399",
     },
     authorBlock: {
         flex: 1,
@@ -358,16 +397,25 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "900",
     },
+    authorDark: {
+        color: "#f8fafc",
+    },
     date: {
         color: "#9ca3af",
         fontSize: 11,
         marginTop: 2,
+    },
+    dateDark: {
+        color: "#64748b",
     },
     body: {
         color: "#374151",
         fontSize: 14,
         lineHeight: 20,
         marginBottom: spacing.sm,
+    },
+    bodyDark: {
+        color: "#cbd5e1",
     },
     ref: {
         alignSelf: "flex-start",
@@ -381,15 +429,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.sm,
         paddingVertical: 6,
     },
+    refDark: {
+        backgroundColor: "#451a03",
+        borderColor: "#78350f",
+    },
     refText: {
         color: "#b45309",
         fontSize: 11,
         fontWeight: "900",
     },
+    refTextDark: {
+        color: "#fde68a",
+    },
     refId: {
         color: "#d97706",
         fontSize: 11,
         fontWeight: "800",
+    },
+    refIdDark: {
+        color: "#f59e0b",
     },
     actions: {
         alignItems: "center",
@@ -406,10 +464,16 @@ const styles = StyleSheet.create({
         minHeight: 32,
         paddingHorizontal: spacing.sm,
     },
+    actionDark: {
+        backgroundColor: "transparent",
+    },
     actionText: {
         color: "#6b7280",
         fontSize: 12,
         fontWeight: "800",
+    },
+    actionTextDark: {
+        color: "#94a3b8",
     },
     iconAction: {
         alignItems: "center",
@@ -426,11 +490,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: spacing.xl,
     },
+    emptyDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     emptyText: {
         color: "#6b7280",
-        fontSize: 14,
-        lineHeight: 20,
+        fontSize: 13,
+        fontWeight: "700",
         marginTop: spacing.sm,
         textAlign: "center",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
 });

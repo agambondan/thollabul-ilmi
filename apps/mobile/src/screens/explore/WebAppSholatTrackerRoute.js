@@ -2,6 +2,7 @@ import { CheckCircle2, Circle, Landmark } from "lucide-react-native";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { PRAYER_ITEMS } from "../ExploreScreen.helpers";
 
@@ -56,42 +57,72 @@ const getHeatTextStyle = (entry) => {
     return entry.count > 0 ? styles.monthDayTextDone : styles.monthDayTextEmpty;
 };
 
-function PrayerRow({ done, item, onPress }) {
+function PrayerRow({ activeDark, done, item, onPress }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={() => onPress(item.key)}
-            style={[styles.prayerRow, done && styles.prayerRowDone]}
+            style={[
+                styles.prayerRow,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+                done && styles.prayerRowDone,
+                activeDark && done && {
+                    backgroundColor: "#064e3b",
+                    borderColor: "#059669",
+                },
+            ]}
             testID='web-app-sholat-prayer-row'
         >
             {done ? (
                 <CheckCircle2 color='#10b981' size={26} strokeWidth={2.4} />
             ) : (
-                <Circle color='#cbd5e1' size={26} strokeWidth={2.2} />
+                <Circle color={activeDark ? "#4b5563" : "#cbd5e1"} size={26} strokeWidth={2.2} />
             )}
-            <Text style={[styles.prayerLabel, done && styles.prayerLabelDone]}>
+            <Text
+                style={[
+                    styles.prayerLabel,
+                    activeDark && { color: "#f9fafb" },
+                    done && styles.prayerLabelDone,
+                    activeDark && done && { color: "#6ee7b7" },
+                ]}
+            >
                 {item.label}
             </Text>
         </Pressable>
     );
 }
 
-function LastSevenRow({ language, row, today }) {
+function LastSevenRow({ activeDark, language, row, today }) {
     return (
         <View
-            style={[styles.weekRow, row.date === today && styles.weekRowToday]}
+            style={[
+                styles.weekRow,
+                activeDark && { borderBottomColor: "#1e293b" },
+                row.date === today && styles.weekRowToday,
+                activeDark && row.date === today && { backgroundColor: "#064e3b" },
+            ]}
         >
-            <Text style={styles.weekDate}>
+            <Text
+                style={[
+                    styles.weekDate,
+                    activeDark && { color: "#cbd5e1" },
+                ]}
+            >
                 {formatShortDate(row.date, language)}
             </Text>
             <Text
                 style={[
                     styles.weekCount,
+                    activeDark && { color: "#9ca3af" },
                     row.count === 5
                         ? styles.weekCountFull
                         : row.count >= 3
                           ? styles.weekCountMedium
                           : null,
+                    activeDark && row.count === 5 && { color: "#34d399" },
                 ]}
             >
                 {row.count}/5
@@ -105,6 +136,8 @@ export function WebAppSholatTrackerRoute({
     togglePrayer = () => {},
 }) {
     const { language, t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkThemePref ?? false;
     const doneCount = PRAYER_ITEMS.filter((item) => sholatLog[item.key]).length;
     const pct = Math.round((doneCount / PRAYER_ITEMS.length) * 100);
     const today = todayIso();
@@ -114,37 +147,70 @@ export function WebAppSholatTrackerRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[
+                styles.root,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
         >
             <View testID='explore-web-app-sholat-tracker-surface' />
 
             <View style={styles.header}>
-                <View style={styles.headerIcon}>
-                    <Landmark color='#047857' size={24} strokeWidth={2.2} />
+                <View style={[
+                    styles.headerIcon,
+                    activeDark && { backgroundColor: "#064e3b" },
+                ]}>
+                    <Landmark color={activeDark ? "#6ee7b7" : "#047857"} size={24} strokeWidth={2.2} />
                 </View>
                 <View style={styles.headerText}>
-                    <Text style={styles.title}>
+                    <Text style={[
+                        styles.title,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {t("explore.sholatTracker.title")}
                     </Text>
-                    <Text style={styles.subtitle}>
+                    <Text style={[
+                        styles.subtitle,
+                        activeDark && { color: "#9ca3af" },
+                    ]}>
                         {t("explore.sholatTracker.subtitle")}
                     </Text>
                 </View>
             </View>
 
-            <View style={styles.progressCard}>
+            <View style={[
+                styles.progressCard,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}>
                 <View style={styles.progressTop}>
-                    <Text style={styles.progressTitle}>
+                    <Text style={[
+                        styles.progressTitle,
+                        activeDark && { color: "#cbd5e1" },
+                    ]}>
                         {t("explore.sholatTracker.today")}
                     </Text>
-                    <Text style={styles.progressCount}>{doneCount}/5</Text>
+                    <Text style={[
+                        styles.progressCount,
+                        activeDark && { color: "#34d399" },
+                    ]}>{doneCount}/5</Text>
                 </View>
-                <View style={styles.progressTrack}>
+                <View style={[
+                    styles.progressTrack,
+                    activeDark && { backgroundColor: "#374151" },
+                ]}>
                     <View style={[styles.progressFill, { width: `${pct}%` }]} />
                 </View>
-                <Text style={styles.progressText}>
+                <Text style={[
+                    styles.progressText,
+                    activeDark && { color: "#9ca3af" },
+                ]}>
                     {t("explore.sholatTracker.recordedPercent", {
                         percent: pct,
                     })}
@@ -154,6 +220,7 @@ export function WebAppSholatTrackerRoute({
             <View style={styles.prayerList}>
                 {PRAYER_ITEMS.map((item) => (
                     <PrayerRow
+                        activeDark={activeDark}
                         done={Boolean(sholatLog[item.key])}
                         item={item}
                         key={item.key}
@@ -162,15 +229,28 @@ export function WebAppSholatTrackerRoute({
                 ))}
             </View>
 
-            <View style={styles.weekCard}>
-                <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>
+            <View style={[
+                styles.weekCard,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}>
+                <View style={[
+                    styles.cardHeader,
+                    activeDark && { borderBottomColor: "#1e293b" },
+                ]}>
+                    <Text style={[
+                        styles.cardTitle,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {t("explore.sholatTracker.lastSevenDays")}
                     </Text>
                 </View>
                 <View style={styles.weekTable}>
                     {lastSeven.map((row) => (
                         <LastSevenRow
+                            activeDark={activeDark}
                             key={row.date}
                             language={language}
                             row={row}
@@ -180,12 +260,24 @@ export function WebAppSholatTrackerRoute({
                 </View>
             </View>
 
-            <View style={styles.monthCard}>
+            <View style={[
+                styles.monthCard,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}>
                 <View style={styles.monthHeader}>
-                    <Text style={styles.cardTitle}>
+                    <Text style={[
+                        styles.cardTitle,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {t("explore.sholatTracker.thisMonth")}
                     </Text>
-                    <Text style={styles.perfectText}>
+                    <Text style={[
+                        styles.perfectText,
+                        activeDark && { color: "#9ca3af" },
+                    ]}>
                         {t("explore.sholatTracker.perfectDays", {
                             count: perfectDays,
                         })}
@@ -198,7 +290,10 @@ export function WebAppSholatTrackerRoute({
                             style={[
                                 styles.monthDay,
                                 getHeatStyle(entry),
+                                activeDark && entry.count === 0 && !entry.future && { backgroundColor: "#1e293b" },
+                                activeDark && entry.future && { backgroundColor: "#0f172a" },
                                 entry.today && styles.monthDayToday,
+                                activeDark && entry.today && { borderColor: "#34d399" },
                             ]}
                             testID='web-app-sholat-month-day'
                         >
@@ -206,6 +301,8 @@ export function WebAppSholatTrackerRoute({
                                 style={[
                                     styles.monthDayText,
                                     getHeatTextStyle(entry),
+                                    activeDark && entry.count === 0 && !entry.future && { color: "#64748b" },
+                                    activeDark && entry.future && { color: "#334155" },
                                 ]}
                             >
                                 {entry.day}

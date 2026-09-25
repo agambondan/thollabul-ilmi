@@ -2,6 +2,7 @@ import { BookOpen } from "lucide-react-native";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { getExploreItemKey } from "../ExploreScreen.helpers";
 
@@ -14,6 +15,7 @@ export const WEB_APP_TOOL_ROUTE_KEYS = new Set(
 export function WebAppToolRoute({
     activeFeature,
     error,
+    isDarkTheme: isDarkThemeProp = false,
     items,
     loading,
     renderFeatureContent,
@@ -22,6 +24,8 @@ export function WebAppToolRoute({
     visibleItems,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const config = {
         subtitle: activeFeature?.subtitle ?? "",
         title: activeFeature?.title ?? t("explore.tool.titleFallback"),
@@ -31,24 +35,24 @@ export function WebAppToolRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-surface' />
             <View testID={`explore-web-app-${routeKey}-surface`} />
             <View style={styles.header}>
-                <View style={styles.iconWrap}>
-                    <BookOpen color='#047857' size={22} strokeWidth={2.1} />
+                <View style={[styles.iconWrap, isDarkTheme && styles.iconWrapDark]}>
+                    <BookOpen color={isDarkTheme ? '#34d399' : '#047857'} size={22} strokeWidth={2.1} />
                 </View>
                 <View style={styles.headerText}>
                     {config.eyebrow ? (
-                        <Text style={styles.eyebrow}>{config.eyebrow}</Text>
+                        <Text style={[styles.eyebrow, isDarkTheme && styles.eyebrowDark]}>{config.eyebrow}</Text>
                     ) : null}
-                    <Text style={styles.title}>{config.title}</Text>
+                    <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{config.title}</Text>
                     {config.subtitle ? (
-                        <Text style={styles.subtitle}>{config.subtitle}</Text>
+                        <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>{config.subtitle}</Text>
                     ) : null}
                 </View>
             </View>
@@ -56,11 +60,11 @@ export function WebAppToolRoute({
             <View style={styles.panel}>
                 {renderFeatureContent?.()}
                 {loading ? (
-                    <Text style={styles.stateText}>
+                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                         {t("explore.tool.loading")}
                     </Text>
                 ) : null}
-                {error ? <Text style={styles.error}>{error}</Text> : null}
+                {error ? <Text style={[styles.error, isDarkTheme && styles.errorDark]}>{error}</Text> : null}
                 {renderItem && listItems?.length ? (
                     <View style={styles.list}>
                         {listItems.map((item, index) => (
@@ -151,5 +155,32 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         lineHeight: 17,
         padding: spacing.md,
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    iconWrapDark: {
+        backgroundColor: "#064e3b",
+    },
+    eyebrowDark: {
+        color: "#34d399",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    stateTextDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+        color: "#94a3b8",
+    },
+    errorDark: {
+        backgroundColor: "#451a03",
+        color: "#fcd34d",
     },
 });

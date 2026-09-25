@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
 
@@ -52,7 +53,7 @@ const getSirohExcerpt = (item) =>
 const getSirohCategory = (item) =>
     toStr(getRaw(item).category ?? getRaw(item).type ?? item?.meta);
 
-function SirohCard({ index, item, onOpen, t }) {
+function SirohCard({ index, isDarkTheme, item, onOpen, t }) {
     const category = getSirohCategory(item);
     const excerpt = getSirohExcerpt(item);
 
@@ -60,18 +61,18 @@ function SirohCard({ index, item, onOpen, t }) {
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-siroh-card'
         >
             <View style={styles.cardTop}>
-                <View style={styles.numberBadge}>
-                    <Text style={styles.numberText}>{index + 1}</Text>
+                <View style={[styles.numberBadge, isDarkTheme && styles.numberBadgeDark]}>
+                    <Text style={[styles.numberText, isDarkTheme && styles.numberTextDark]}>{index + 1}</Text>
                 </View>
                 <View style={styles.cardBody}>
                     {category ? (
-                        <Text style={styles.categoryBadge}>{category}</Text>
+                        <Text style={[styles.categoryBadge, isDarkTheme && styles.categoryBadgeDark]}>{category}</Text>
                     ) : null}
-                    <Text numberOfLines={1} style={styles.cardTitle}>
+                    <Text numberOfLines={1} style={[styles.cardTitle, isDarkTheme && styles.cardTitleDark]}>
                         {getSirohTitle(
                             item,
                             index,
@@ -81,12 +82,12 @@ function SirohCard({ index, item, onOpen, t }) {
                         )}
                     </Text>
                     {excerpt ? (
-                        <Text numberOfLines={2} style={styles.cardExcerpt}>
+                        <Text numberOfLines={2} style={[styles.cardExcerpt, isDarkTheme && styles.cardExcerptDark]}>
                             {excerpt}
                         </Text>
                     ) : null}
                 </View>
-                <ChevronDown color='#9ca3af' size={22} strokeWidth={2.1} />
+                <ChevronDown color={isDarkTheme ? '#64748b' : '#9ca3af'} size={22} strokeWidth={2.1} />
             </View>
         </Pressable>
     );
@@ -95,6 +96,7 @@ function SirohCard({ index, item, onOpen, t }) {
 export function WebAppSirohRoute({
     clearFeature,
     error,
+    isDarkTheme: isDarkThemeProp = false,
     items,
     loading,
     navigation,
@@ -103,6 +105,8 @@ export function WebAppSirohRoute({
     pagination,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const [search, setSearch] = useState("");
 
     useEffect(() => {
@@ -140,33 +144,33 @@ export function WebAppSirohRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-siroh-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.siroh.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.siroh.title")}</Text>
+                <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
                     {t("explore.siroh.subtitle")}
                 </Text>
             </View>
 
-            <View style={styles.search}>
-                <Search color='#9ca3af' size={16} strokeWidth={2} />
+            <View style={[styles.search, isDarkTheme && styles.searchDark]}>
+                <Search color={isDarkTheme ? '#64748b' : '#9ca3af'} size={16} strokeWidth={2} />
                 <TextInput
                     onChangeText={setSearch}
                     placeholder={t("explore.siroh.searchPlaceholder")}
-                    placeholderTextColor='#9ca3af'
-                    style={styles.input}
+                    placeholderTextColor={isDarkTheme ? '#64748b' : '#9ca3af'}
+                    style={[styles.input, isDarkTheme && styles.inputDark]}
                     testID='web-app-siroh-search'
                     value={search}
                 />
             </View>
 
             {error ? (
-                <Text style={styles.error}>
+                <Text style={[styles.error, isDarkTheme && styles.errorDark]}>
                     {t("explore.common.refreshError", {
                         subject: t("explore.siroh.title"),
                     })}
@@ -174,8 +178,8 @@ export function WebAppSirohRoute({
             ) : null}
             {loading ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#2563eb' size='small' />
-                    <Text style={styles.stateText}>
+                    <ActivityIndicator color={isDarkTheme ? '#60a5fa' : '#2563eb'} size='small' />
+                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                         {t("explore.siroh.loading")}
                     </Text>
                 </View>
@@ -186,6 +190,7 @@ export function WebAppSirohRoute({
                     {filteredItems.map((item, index) => (
                         <SirohCard
                             index={index}
+                            isDarkTheme={isDarkTheme}
                             item={item}
                             key={`${getSirohId(item, index)}-${index}`}
                             onOpen={onOpenItem}
@@ -196,9 +201,9 @@ export function WebAppSirohRoute({
             ) : null}
 
             {!loading && !error && !filteredItems.length ? (
-                <View style={styles.empty}>
-                    <BookOpen color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                    <BookOpen color={isDarkTheme ? '#64748b' : '#9ca3af'} size={32} strokeWidth={1.8} />
+                    <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                         {items.length
                             ? t("explore.common.notFound", {
                                   subject: t("explore.siroh.title"),
@@ -207,7 +212,7 @@ export function WebAppSirohRoute({
                                   subject: t("explore.siroh.title"),
                               })}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                         {items.length
                             ? t("explore.common.changeSearchOrFilter")
                             : t("explore.common.retryLater")}
@@ -404,5 +409,61 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 13,
         fontWeight: "900",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    searchDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    inputDark: {
+        color: "#f8fafc",
+    },
+    cardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    cardTitleDark: {
+        color: "#f8fafc",
+    },
+    cardExcerptDark: {
+        color: "#94a3b8",
+    },
+    numberBadgeDark: {
+        backgroundColor: "#1e3a8a",
+    },
+    numberTextDark: {
+        color: "#93c5fd",
+    },
+    categoryBadgeDark: {
+        backgroundColor: "#1e3a8a",
+        color: "#93c5fd",
+    },
+    emptyDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    errorDark: {
+        backgroundColor: "#450a0a",
+        color: "#f87171",
     },
 });

@@ -22,6 +22,7 @@ import {
     saveFaraidh,
 } from "../../api/personal";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { calculateFaraidh, HEIR_LABELS } from "../../lib/faraidh";
 import { FaraidhFamilyTreeMobile } from "./FaraidhFamilyTreeMobile";
 import {
@@ -97,36 +98,90 @@ const getHeirLabel = (row, language = "idn") =>
 const getHeirCount = (heirs = {}) =>
     Object.values(heirs).reduce((sum, value) => sum + Number(value || 0), 0);
 
-function CurrencyField({ hint, label, onChangeText, value }) {
+function CurrencyField({ activeDark, hint, label, onChangeText, value }) {
     return (
         <View style={styles.field}>
-            <Text style={styles.fieldLabel}>{label}</Text>
-            <View style={styles.inputShell}>
-                <Text style={styles.inputPrefix}>Rp</Text>
+            <Text
+                style={[
+                    styles.fieldLabel,
+                    activeDark && { color: "#cbd5e1" },
+                ]}
+            >
+                {label}
+            </Text>
+            <View
+                style={[
+                    styles.inputShell,
+                    activeDark && {
+                        backgroundColor: "#1e293b",
+                        borderColor: "#374151",
+                    },
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.inputPrefix,
+                        activeDark && { color: "#34d399" },
+                    ]}
+                >
+                    Rp
+                </Text>
                 <TextInput
                     keyboardType='numeric'
                     onChangeText={(nextValue) =>
                         onChangeText(digitsOnly(nextValue))
                     }
                     placeholder='0'
-                    placeholderTextColor='#94a3b8'
+                    placeholderTextColor={activeDark ? "#64748b" : "#94a3b8"}
                     returnKeyType='done'
-                    style={styles.input}
+                    style={[
+                        styles.input,
+                        activeDark && { color: "#f9fafb" },
+                    ]}
                     value={formatNumericInput(value)}
                 />
             </View>
-            {hint ? <Text style={styles.hint}>{hint}</Text> : null}
+            {hint ? (
+                <Text
+                    style={[
+                        styles.hint,
+                        activeDark && { color: "#9ca3af" },
+                    ]}
+                >
+                    {hint}
+                </Text>
+            ) : null}
         </View>
     );
 }
 
-function HeirStepper({ count, field, onChange, t }) {
+function HeirStepper({ activeDark, count, field, onChange, t }) {
     return (
-        <View style={styles.heirCard}>
-            <Text style={styles.heirLabel}>
+        <View
+            style={[
+                styles.heirCard,
+                activeDark && {
+                    backgroundColor: "#1e293b",
+                    borderColor: "#374151",
+                },
+            ]}
+        >
+            <Text
+                style={[
+                    styles.heirLabel,
+                    activeDark && { color: "#cbd5e1" },
+                ]}
+            >
                 {t(`explore.faraidh.heir.${field.key}`)}
             </Text>
-            <Text style={styles.heirCount}>{count}</Text>
+            <Text
+                style={[
+                    styles.heirCount,
+                    activeDark && { color: "#f9fafb" },
+                ]}
+            >
+                {count}
+            </Text>
             <View style={styles.heirActions}>
                 <Pressable
                     accessibilityRole='button'
@@ -135,11 +190,19 @@ function HeirStepper({ count, field, onChange, t }) {
                     onPress={() => onChange(field.key, -1)}
                     style={[
                         styles.stepperButton,
+                        activeDark && { backgroundColor: "#334155" },
                         count === 0 && styles.disabledButton,
                     ]}
                     testID={`web-app-faraidh-heir-${field.key}-minus`}
                 >
-                    <Text style={styles.stepperText}>-</Text>
+                    <Text
+                        style={[
+                            styles.stepperText,
+                            activeDark && { color: "#f9fafb" },
+                        ]}
+                    >
+                        -
+                    </Text>
                 </Pressable>
                 <Pressable
                     accessibilityLabel={t("a11y.addHeir")}
@@ -149,22 +212,36 @@ function HeirStepper({ count, field, onChange, t }) {
                     onPress={() => onChange(field.key, 1)}
                     style={[
                         styles.stepperButton,
+                        activeDark && { backgroundColor: "#065f46" },
                         count >= field.max && styles.disabledButton,
                     ]}
                     testID={`web-app-faraidh-heir-${field.key}-plus`}
                 >
-                    <Plus color='#047857' size={14} strokeWidth={2.5} />
+                    <Plus color={activeDark ? "#6ee7b7" : "#047857"} size={14} strokeWidth={2.5} />
                 </Pressable>
             </View>
         </View>
     );
 }
 
-function ResultRows({ calculation, distributable, language, t }) {
+function ResultRows({ activeDark, calculation, distributable, language, t }) {
     if (!calculation?.rows?.length) {
         return (
-            <View style={styles.emptyResult}>
-                <Text style={styles.emptyTitle}>
+            <View
+                style={[
+                    styles.emptyResult,
+                    activeDark && {
+                        backgroundColor: "#111827",
+                        borderColor: "#374151",
+                    },
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.emptyTitle,
+                        activeDark && { color: "#9ca3af" },
+                    ]}
+                >
                     {t("explore.faraidh.emptyResult")}
                 </Text>
             </View>
@@ -174,38 +251,87 @@ function ResultRows({ calculation, distributable, language, t }) {
     return (
         <View style={styles.resultList}>
             {calculation.rows.map((row) => (
-                <View key={`${row.key}-${row.count}`} style={styles.resultRow}>
+                <View
+                    key={`${row.key}-${row.count}`}
+                    style={[
+                        styles.resultRow,
+                        activeDark && {
+                            backgroundColor: "#1e293b",
+                            borderColor: "#374151",
+                        },
+                    ]}
+                >
                     <View style={styles.resultMain}>
-                        <Text style={styles.resultName}>
+                        <Text
+                            style={[
+                                styles.resultName,
+                                activeDark && { color: "#f9fafb" },
+                            ]}
+                        >
                             {getHeirLabel(row, language)}
                             {row.count > 1
                                 ? ` (${t("explore.faraidh.peopleCount", { count: row.count })})`
                                 : ""}
                         </Text>
                         {row.isAshabah ? (
-                            <Text style={styles.ashabahBadge}>
+                            <Text
+                                style={[
+                                    styles.ashabahBadge,
+                                    activeDark && {
+                                        backgroundColor: "#78350f",
+                                        color: "#fde68a",
+                                    },
+                                ]}
+                            >
                                 {t("explore.faraidh.ashabah")}
                             </Text>
                         ) : null}
                     </View>
                     <View style={styles.resultMeta}>
-                        <Text style={styles.resultShare}>
+                        <Text
+                            style={[
+                                styles.resultShare,
+                                activeDark && { color: "#9ca3af" },
+                            ]}
+                        >
                             {row.fraction
                                 ? `${row.fraction.num}/${row.fraction.den}`
                                 : t("explore.faraidh.remainder")}{" "}
                             · {(row.share * 100).toFixed(2)}%
                         </Text>
-                        <Text style={styles.resultAmount}>
+                        <Text
+                            style={[
+                                styles.resultAmount,
+                                activeDark && { color: "#34d399" },
+                            ]}
+                        >
                             {formatCurrency(row.amount)}
                         </Text>
                     </View>
                 </View>
             ))}
-            <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>
+            <View
+                style={[
+                    styles.totalRow,
+                    activeDark && {
+                        borderTopColor: "#374151",
+                    },
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.totalLabel,
+                        activeDark && { color: "#cbd5e1" },
+                    ]}
+                >
                     {t("explore.faraidh.totalDistributed")}
                 </Text>
-                <Text style={styles.totalValue}>
+                <Text
+                    style={[
+                        styles.totalValue,
+                        activeDark && { color: "#34d399" },
+                    ]}
+                >
                     {formatCurrency(distributable * calculation.totalShare)}
                 </Text>
             </View>
@@ -213,12 +339,16 @@ function ResultRows({ calculation, distributable, language, t }) {
     );
 }
 
-function Notice({ children, tone = "amber" }) {
+function Notice({ activeDark, children, tone = "amber" }) {
     return (
         <View
             style={[
                 styles.notice,
                 tone === "blue" ? styles.noticeBlue : styles.noticeAmber,
+                activeDark &&
+                    (tone === "blue"
+                        ? { backgroundColor: "rgba(30, 58, 138, 0.25)", borderColor: "#1e40af" }
+                        : { backgroundColor: "rgba(120, 53, 15, 0.25)", borderColor: "#92400e" }),
             ]}
         >
             <Text
@@ -227,6 +357,10 @@ function Notice({ children, tone = "amber" }) {
                     tone === "blue"
                         ? styles.noticeTextBlue
                         : styles.noticeTextAmber,
+                    activeDark &&
+                        (tone === "blue"
+                            ? { color: "#93c5fd" }
+                            : { color: "#fde68a" }),
                 ]}
             >
                 {children}
@@ -235,16 +369,35 @@ function Notice({ children, tone = "amber" }) {
     );
 }
 
-function HistoryCard({ item, language, onDelete, t }) {
+function HistoryCard({ activeDark, item, language, onDelete, t }) {
     const wealth = Number(item.wealth ?? 0);
     return (
-        <View style={styles.historyCard} testID='web-app-faraidh-history-card'>
+        <View
+            style={[
+                styles.historyCard,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}
+            testID='web-app-faraidh-history-card'
+        >
             <View style={styles.historyHeader}>
                 <View>
-                    <Text style={styles.historyAmount}>
+                    <Text
+                        style={[
+                            styles.historyAmount,
+                            activeDark && { color: "#34d399" },
+                        ]}
+                    >
                         {formatCurrency(wealth)}
                     </Text>
-                    <Text style={styles.historyDate}>
+                    <Text
+                        style={[
+                            styles.historyDate,
+                            activeDark && { color: "#9ca3af" },
+                        ]}
+                    >
                         {formatDate(item, language, t)}
                     </Text>
                 </View>
@@ -261,9 +414,21 @@ function HistoryCard({ item, language, onDelete, t }) {
                 </Pressable>
             </View>
             {item.result_summary ? (
-                <Text style={styles.historySummary}>{item.result_summary}</Text>
+                <Text
+                    style={[
+                        styles.historySummary,
+                        activeDark && { color: "#cbd5e1" },
+                    ]}
+                >
+                    {item.result_summary}
+                </Text>
             ) : null}
-            <Text style={styles.historySource}>
+            <Text
+                style={[
+                    styles.historySource,
+                    activeDark && { color: "#64748b" },
+                ]}
+            >
                 {item.is_local
                     ? t("explore.faraidh.localSource")
                     : t("explore.faraidh.accountSource")}
@@ -274,6 +439,8 @@ function HistoryCard({ item, language, onDelete, t }) {
 
 export function WebAppFaraidhRoute({ context }) {
     const { language, t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkThemePref ?? false;
     const {
         faraidh = { bequest: "", debts: "", estate: "", heirs: {} },
         faraidhCatatan = "",
@@ -409,9 +576,15 @@ export function WebAppFaraidhRoute({ context }) {
     if (showFaraidhHistory) {
         return (
             <ScrollView
-                contentContainerStyle={styles.content}
+                contentContainerStyle={[
+                    styles.content,
+                    activeDark && { backgroundColor: "#0f172a" },
+                ]}
                 showsVerticalScrollIndicator={false}
-                style={styles.root}
+                style={[
+                    styles.root,
+                    activeDark && { backgroundColor: "#0f172a" },
+                ]}
             >
                 <View testID='explore-web-app-faraidh-surface' />
                 <View testID='explore-web-app-faraidh-history-surface' />
@@ -421,30 +594,51 @@ export function WebAppFaraidhRoute({ context }) {
                     style={styles.backButton}
                     testID='web-app-faraidh-history-back'
                 >
-                    <ArrowLeft color='#047857' size={15} strokeWidth={2.4} />
-                    <Text style={styles.backText}>
+                    <ArrowLeft color={activeDark ? "#34d399" : "#047857"} size={15} strokeWidth={2.4} />
+                    <Text style={[
+                        styles.backText,
+                        activeDark && { color: "#34d399" },
+                    ]}>
                         {t("explore.faraidh.backToCalculator")}
                     </Text>
                 </Pressable>
                 <View style={styles.hero}>
-                    <View style={styles.heroIcon}>
-                        <History color='#047857' size={26} strokeWidth={2.2} />
+                    <View style={[
+                        styles.heroIcon,
+                        activeDark && { backgroundColor: "#064e3b" },
+                    ]}>
+                        <History color={activeDark ? "#6ee7b7" : "#047857"} size={26} strokeWidth={2.2} />
                     </View>
-                    <Text style={styles.title}>
+                    <Text style={[
+                        styles.title,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {t("explore.faraidh.historyTitle")}
                     </Text>
-                    <Text style={styles.subtitle}>
+                    <Text style={[
+                        styles.subtitle,
+                        activeDark && { color: "#9ca3af" },
+                    ]}>
                         {t("explore.faraidh.historySubtitle")}
                     </Text>
                 </View>
                 {!session?.token ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.historyLoginNotice")}
                     </Notice>
                 ) : null}
                 {faraidhHistory.length === 0 ? (
-                    <View style={styles.emptyResult}>
-                        <Text style={styles.emptyTitle}>
+                    <View style={[
+                        styles.emptyResult,
+                        activeDark && {
+                            backgroundColor: "#111827",
+                            borderColor: "#374151",
+                        },
+                    ]}>
+                        <Text style={[
+                            styles.emptyTitle,
+                            activeDark && { color: "#9ca3af" },
+                        ]}>
                             {t("explore.faraidh.historyEmpty")}
                         </Text>
                     </View>
@@ -452,6 +646,7 @@ export function WebAppFaraidhRoute({ context }) {
                     <View style={styles.historyList}>
                         {faraidhHistory.map((item) => (
                             <HistoryCard
+                                activeDark={activeDark}
                                 item={item}
                                 key={item.id}
                                 language={language}
@@ -467,30 +662,58 @@ export function WebAppFaraidhRoute({ context }) {
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[
+                styles.root,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
         >
             <View testID='explore-web-app-faraidh-surface' />
             <View style={styles.hero}>
-                <Text style={styles.arabicTitle}>الْفَرَائِض</Text>
-                <View style={styles.heroIcon}>
-                    <Scale color='#047857' size={28} strokeWidth={2.2} />
+                <Text style={[
+                    styles.arabicTitle,
+                    activeDark && { color: "#34d399" },
+                ]}>الْفَرَائِض</Text>
+                <View style={[
+                    styles.heroIcon,
+                    activeDark && { backgroundColor: "#064e3b" },
+                ]}>
+                    <Scale color={activeDark ? "#6ee7b7" : "#047857"} size={28} strokeWidth={2.2} />
                 </View>
-                <Text style={styles.title}>{t("explore.faraidh.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[
+                    styles.title,
+                    activeDark && { color: "#f9fafb" },
+                ]}>{t("explore.faraidh.title")}</Text>
+                <Text style={[
+                    styles.subtitle,
+                    activeDark && { color: "#9ca3af" },
+                ]}>
                     {t("explore.faraidh.subtitle")}
                 </Text>
             </View>
 
-            <Notice>{t("explore.faraidh.scopeNotice")}</Notice>
+            <Notice activeDark={activeDark}>{t("explore.faraidh.scopeNotice")}</Notice>
 
-            <View style={styles.card}>
-                <Text style={styles.sectionTitle}>
+            <View style={[
+                styles.card,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}>
+                <Text style={[
+                    styles.sectionTitle,
+                    activeDark && { color: "#f9fafb" },
+                ]}>
                     {t("explore.faraidh.assetsSection")}
                 </Text>
                 <CurrencyField
+                    activeDark={activeDark}
                     label={t("explore.faraidh.estateLabel")}
                     onChangeText={(value) =>
                         setFaraidh((current) => ({ ...current, estate: value }))
@@ -498,6 +721,7 @@ export function WebAppFaraidhRoute({ context }) {
                     value={faraidh.estate}
                 />
                 <CurrencyField
+                    activeDark={activeDark}
                     label={t("explore.faraidh.debtsLabel")}
                     onChangeText={(value) =>
                         setFaraidh((current) => ({ ...current, debts: value }))
@@ -505,6 +729,7 @@ export function WebAppFaraidhRoute({ context }) {
                     value={faraidh.debts}
                 />
                 <CurrencyField
+                    activeDark={activeDark}
                     hint={t("explore.faraidh.maxBequest", {
                         amount: formatCurrency(maxBequest),
                     })}
@@ -519,12 +744,24 @@ export function WebAppFaraidhRoute({ context }) {
                 />
             </View>
 
-            <View style={styles.card}>
+            <View style={[
+                styles.card,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}>
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>
+                    <Text style={[
+                        styles.sectionTitle,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {t("explore.faraidh.heirsSection")}
                     </Text>
-                    <Text style={styles.sectionMeta}>
+                    <Text style={[
+                        styles.sectionMeta,
+                        activeDark && { color: "#34d399" },
+                    ]}>
                         {t("explore.faraidh.heirCount", { count: heirCount })}
                     </Text>
                 </View>
@@ -578,13 +815,23 @@ export function WebAppFaraidhRoute({ context }) {
                     );
                     if (fields.length === 0) return null;
                     return (
-                        <View key={group.key} style={styles.heirGroup}>
-                            <Text style={styles.heirGroupLabel}>
+                        <View
+                            key={group.key}
+                            style={[
+                                styles.heirGroup,
+                                activeDark && { borderBottomColor: "#1e293b" },
+                            ]}
+                        >
+                            <Text style={[
+                                styles.heirGroupLabel,
+                                activeDark && { color: "#9ca3af" },
+                            ]}>
                                 {group.label}
                             </Text>
                             <View style={styles.heirGrid}>
                                 {fields.map((field) => (
                                     <HeirStepper
+                                        activeDark={activeDark}
                                         count={faraidh.heirs[field.key] ?? 0}
                                         field={field}
                                         key={field.key}
@@ -598,53 +845,66 @@ export function WebAppFaraidhRoute({ context }) {
                 })}
             </View>
 
-            <View style={styles.card}>
+            <View style={[
+                styles.card,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}>
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>
+                    <Text style={[
+                        styles.sectionTitle,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {t("explore.faraidh.resultSection")}
                     </Text>
-                    <Text style={styles.sectionMeta}>
+                    <Text style={[
+                        styles.sectionMeta,
+                        activeDark && { color: "#34d399" },
+                    ]}>
                         {formatCurrency(distributable)}
                     </Text>
                 </View>
                 {bequestCapped ? (
-                    <Notice>
+                    <Notice activeDark={activeDark}>
                         {t("explore.faraidh.bequestCapped", {
                             amount: formatCurrency(maxBequest),
                         })}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.musytarakah ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.musytarakahNotice")}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.umariyyah ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.umariyyahNotice")}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.kakek_saudara ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.kakekSaudaraNotice")}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.akdariyah ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.akdariyahNotice")}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.aul ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.aulNotice")}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.radd ? (
-                    <Notice tone='blue'>
+                    <Notice activeDark={activeDark} tone='blue'>
                         {t("explore.faraidh.raddNotice")}
                     </Notice>
                 ) : null}
                 <ResultRows
+                    activeDark={activeDark}
                     calculation={calculation}
                     distributable={distributable}
                     language={language}
@@ -660,8 +920,15 @@ export function WebAppFaraidhRoute({ context }) {
                     multiline
                     onChangeText={setFaraidhCatatan}
                     placeholder={t("explore.faraidh.notePlaceholder")}
-                    placeholderTextColor='#94a3b8'
-                    style={styles.noteInput}
+                    placeholderTextColor={activeDark ? "#64748b" : "#94a3b8"}
+                    style={[
+                        styles.noteInput,
+                        activeDark && {
+                            backgroundColor: "#1e293b",
+                            borderColor: "#374151",
+                            color: "#f9fafb",
+                        },
+                    ]}
                     value={faraidhCatatan}
                 />
 
@@ -675,6 +942,7 @@ export function WebAppFaraidhRoute({ context }) {
                         onPress={handleSave}
                         style={[
                             styles.primaryButton,
+                            activeDark && { backgroundColor: "#059669" },
                             (savingFaraidh || distributable <= 0) &&
                                 styles.disabledButton,
                         ]}
@@ -690,11 +958,20 @@ export function WebAppFaraidhRoute({ context }) {
                     <Pressable
                         accessibilityRole='button'
                         onPress={handleLoadHistory}
-                        style={styles.secondaryButton}
+                        style={[
+                            styles.secondaryButton,
+                            activeDark && {
+                                backgroundColor: "#1e293b",
+                                borderColor: "#374151",
+                            },
+                        ]}
                         testID='web-app-faraidh-history-link'
                     >
-                        <History color='#047857' size={15} strokeWidth={2.4} />
-                        <Text style={styles.secondaryButtonText}>
+                        <History color={activeDark ? "#34d399" : "#047857"} size={15} strokeWidth={2.4} />
+                        <Text style={[
+                            styles.secondaryButtonText,
+                            activeDark && { color: "#34d399" },
+                        ]}>
                             {t("explore.faraidh.history")}
                         </Text>
                     </Pressable>
@@ -722,8 +999,9 @@ const styles = StyleSheet.create({
     arabicTitle: {
         color: "#047857",
         fontSize: 30,
-        lineHeight: 43,
+        lineHeight: 50,
         marginBottom: spacing.xs,
+        paddingVertical: 4,
     },
     heroIcon: {
         alignItems: "center",
@@ -885,7 +1163,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#ecfdf5",
         borderRadius: radius.sm,
         flex: 1,
-        height: 30,
+        height: 38,
+        minWidth: 38,
         justifyContent: "center",
     },
     stepperText: {
@@ -999,7 +1278,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 42,
+        minHeight: 44,
     },
     primaryButtonText: {
         color: "#ffffff",
@@ -1014,7 +1293,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         justifyContent: "center",
-        minHeight: 42,
+        minHeight: 44,
         paddingHorizontal: spacing.md,
     },
     secondaryButtonText: {
@@ -1029,6 +1308,7 @@ const styles = StyleSheet.create({
         gap: spacing.xs,
         marginBottom: spacing.md,
         padding: spacing.xs,
+        minHeight: 44,
     },
     backText: {
         color: "#047857",
@@ -1063,9 +1343,9 @@ const styles = StyleSheet.create({
     },
     historyDelete: {
         alignItems: "center",
-        height: 34,
+        height: 44,
         justifyContent: "center",
-        width: 34,
+        width: 44,
     },
     historySummary: {
         color: "#334155",

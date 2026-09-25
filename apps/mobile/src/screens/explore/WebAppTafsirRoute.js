@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
@@ -54,20 +55,29 @@ const getAsbabunContent = (item) =>
     item?.raw?.text ??
     "";
 
-function SurahCard({ active, onPress, surah, t, testID }) {
+function SurahCard({ active, isDark, onPress, surah, t, testID }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={onPress}
-            style={[styles.surahCard, active && styles.surahCardActive]}
+            style={[
+                styles.surahCard,
+                isDark && styles.surahCardDark,
+                active && styles.surahCardActive,
+            ]}
             testID={testID}
         >
             <View
-                style={[styles.surahNumber, active && styles.surahNumberActive]}
+                style={[
+                    styles.surahNumber,
+                    isDark && styles.surahNumberDark,
+                    active && styles.surahNumberActive,
+                ]}
             >
                 <Text
                     style={[
                         styles.surahNumberText,
+                        isDark && styles.surahNumberTextDark,
                         active && styles.surahNumberTextActive,
                     ]}
                 >
@@ -75,10 +85,19 @@ function SurahCard({ active, onPress, surah, t, testID }) {
                 </Text>
             </View>
             <View style={styles.surahBody}>
-                <Text numberOfLines={1} style={styles.surahName}>
+                <Text
+                    numberOfLines={1}
+                    style={[styles.surahName, isDark && styles.surahNameDark]}
+                >
                     {surah.name}
                 </Text>
-                <Text numberOfLines={1} style={styles.surahMeaning}>
+                <Text
+                    numberOfLines={1}
+                    style={[
+                        styles.surahMeaning,
+                        isDark && styles.surahMeaningDark,
+                    ]}
+                >
                     {surah.meaning ||
                         t("explore.tafsir.ayahCount", { count: surah.ayahs })}
                 </Text>
@@ -87,40 +106,76 @@ function SurahCard({ active, onPress, surah, t, testID }) {
     );
 }
 
-function TafsirResultCard({ item, onOpen, t, testID }) {
+function TafsirResultCard({ isDark, item, onOpen, t, testID }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.resultCard}
+            style={[styles.resultCard, isDark && styles.resultCardDark]}
             testID={testID}
         >
             <View style={styles.resultHeader}>
-                <Text style={styles.resultTitle}>
+                <Text
+                    style={[
+                        styles.resultTitle,
+                        isDark && styles.resultTitleDark,
+                    ]}
+                >
                     {item.title || t("explore.tafsir.ayahFallback")}
                 </Text>
                 {item.meta ? (
-                    <Text numberOfLines={1} style={styles.resultMeta}>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.resultMeta,
+                            isDark && styles.resultMetaDark,
+                        ]}
+                    >
                         {item.meta}
                     </Text>
                 ) : null}
             </View>
             {item.arabic ? (
-                <Text numberOfLines={2} style={styles.arabicText}>
+                <Text
+                    numberOfLines={2}
+                    style={[styles.arabicText, isDark && styles.arabicTextDark]}
+                >
                     {item.arabic}
                 </Text>
             ) : null}
             {item.body ? (
-                <Text numberOfLines={2} style={styles.translationText}>
+                <Text
+                    numberOfLines={2}
+                    style={[
+                        styles.translationText,
+                        isDark && styles.translationTextDark,
+                    ]}
+                >
                     {item.body}
                 </Text>
             ) : null}
             {item.tafsir ? (
-                <View style={styles.tafsirPanel}>
-                    <Text style={styles.tafsirSource}>
+                <View
+                    style={[
+                        styles.tafsirPanel,
+                        isDark && styles.tafsirPanelDark,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.tafsirSource,
+                            isDark && styles.tafsirSourceDark,
+                        ]}
+                    >
                         {t("explore.tafsir.kemenagSource")}
                     </Text>
-                    <Text numberOfLines={3} style={styles.tafsirText}>
+                    <Text
+                        numberOfLines={3}
+                        style={[
+                            styles.tafsirText,
+                            isDark && styles.tafsirTextDark,
+                        ]}
+                    >
                         {item.tafsir}
                     </Text>
                 </View>
@@ -129,7 +184,7 @@ function TafsirResultCard({ item, onOpen, t, testID }) {
     );
 }
 
-function AsbabunResultCard({ item, onOpen, t, testID }) {
+function AsbabunResultCard({ isDark, item, onOpen, t, testID }) {
     const content = getAsbabunContent(item);
     const source = getAsbabunSource(item);
 
@@ -137,23 +192,44 @@ function AsbabunResultCard({ item, onOpen, t, testID }) {
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.resultCard}
+            style={[styles.resultCard, isDark && styles.resultCardDark]}
             testID={testID}
         >
             <View style={styles.asbabunMetaRow}>
-                <Text numberOfLines={1} style={styles.asbabunAyahPill}>
+                <Text
+                    numberOfLines={1}
+                    style={[
+                        styles.asbabunAyahPill,
+                        isDark && styles.asbabunAyahPillDark,
+                    ]}
+                >
                     {getAsbabunAyahLabel(item, t)}
                 </Text>
                 {source ? (
-                    <Text numberOfLines={1} style={styles.asbabunSource}>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.asbabunSource,
+                            isDark && styles.asbabunSourceDark,
+                        ]}
+                    >
                         {source}
                     </Text>
                 ) : null}
             </View>
             {content ? (
-                <Text style={styles.asbabunContent}>{content}</Text>
+                <Text
+                    style={[
+                        styles.asbabunContent,
+                        isDark && styles.asbabunContentDark,
+                    ]}
+                >
+                    {content}
+                </Text>
             ) : (
-                <Text style={styles.emptyText}>
+                <Text
+                    style={[styles.emptyText, isDark && styles.emptyTextDark]}
+                >
                     {t("explore.tafsir.asbabunSummaryEmpty")}
                 </Text>
             )}
@@ -175,8 +251,11 @@ export function WebAppTafsirRoute({
     surahSearch,
     surahs,
     variant = "tafsir",
+    isDarkTheme = false,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDark = isDarkTheme ?? isDarkThemePref;
     const isAsbabun = variant === "asbabun";
     const filteredSurahs = filterSurahs(surahs, surahSearch);
     const selectedNumber = Number(selectedSurahNumber);
@@ -250,18 +329,31 @@ export function WebAppTafsirRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                isDark && styles.contentDark,
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[
+                styles.root,
+                isDark && styles.rootDark,
+            ]}
         >
             <View testID={surfaceTestID} />
-            <View style={[styles.header, isAsbabun && styles.headerCentered]}>
+            <View style={[
+                styles.header,
+                isAsbabun && styles.headerCentered,
+                isDark && styles.headerDark,
+            ]}>
                 {isAsbabun && arabicTitle ? (
-                    <Text style={styles.arabicHeading}>{arabicTitle}</Text>
+                    <Text style={[styles.arabicHeading, isDark && styles.arabicHeadingDark]}>{arabicTitle}</Text>
                 ) : null}
-                <View style={styles.iconWrap}>
-                    <Icon color='#047857' size={22} strokeWidth={2.1} />
+                <View style={[
+                    styles.iconWrap,
+                    isDark && styles.iconWrapDark,
+                ]}>
+                    <Icon color={isDark ? '#34d399' : '#047857'} size={22} strokeWidth={2.1} />
                 </View>
                 <View
                     style={[
@@ -273,6 +365,7 @@ export function WebAppTafsirRoute({
                         style={[
                             styles.title,
                             isAsbabun && styles.titleCentered,
+                            isDark && styles.titleDark,
                         ]}
                     >
                         {title}
@@ -281,6 +374,7 @@ export function WebAppTafsirRoute({
                         style={[
                             styles.subtitle,
                             isAsbabun && styles.subtitleCentered,
+                            isDark && styles.subtitleDark,
                         ]}
                     >
                         {subtitle}
@@ -289,8 +383,14 @@ export function WebAppTafsirRoute({
             </View>
 
             {!isAsbabun ? (
-                <View style={styles.notice}>
-                    <Text style={styles.noticeText}>
+                <View style={[
+                    styles.notice,
+                    isDark && styles.noticeDark,
+                ]}>
+                    <Text style={[
+                        styles.noticeText,
+                        isDark && styles.noticeTextDark,
+                    ]}>
                         <Text style={styles.noticeStrong}>
                             {t("explore.tafsir.noticePrefix")}{" "}
                         </Text>
@@ -304,16 +404,20 @@ export function WebAppTafsirRoute({
                     style={[
                         styles.searchBox,
                         isAsbabun && styles.asbabunSearchBox,
+                        isDark && styles.searchBoxDark,
                     ]}
                 >
-                    <Search color='#9ca3af' size={16} strokeWidth={2} />
+                    <Search color={isDark ? '#64748b' : '#9ca3af'} size={16} strokeWidth={2} />
                     <TextInput
                         autoCapitalize='none'
                         keyboardType={isAsbabun ? "number-pad" : "default"}
                         onChangeText={onSearchSurah}
                         placeholder={placeholder}
-                        placeholderTextColor='#9ca3af'
-                        style={styles.input}
+                        placeholderTextColor={isDark ? '#64748b' : '#9ca3af'}
+                        style={[
+                            styles.input,
+                            isDark && styles.inputDark,
+                        ]}
                         testID={searchTestID}
                         value={surahSearch}
                     />
@@ -356,16 +460,24 @@ export function WebAppTafsirRoute({
                                 }}
                                 style={[
                                     styles.quickPill,
+                                    isDark && styles.quickPillDark,
                                     selectedNumber === number &&
                                         styles.quickPillActive,
+                                    selectedNumber === number &&
+                                        isDark &&
+                                        styles.quickPillActiveDark,
                                 ]}
                                 testID='web-app-asbabun-quick-surah'
                             >
                                 <Text
                                     style={[
                                         styles.quickPillText,
+                                        isDark && styles.quickPillTextDark,
                                         selectedNumber === number &&
                                             styles.quickPillTextActive,
+                                        selectedNumber === number &&
+                                            isDark &&
+                                            styles.quickPillTextActiveDark,
                                     ]}
                                 >
                                     {t("explore.tafsir.surahNumber", {
@@ -378,28 +490,29 @@ export function WebAppTafsirRoute({
                 </View>
             ) : null}
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={[styles.error, isDark && styles.errorDark]}>{error}</Text> : null}
             {loading ? (
-                <View style={styles.state}>
-                    <ActivityIndicator color='#047857' size='small' />
-                    <Text style={styles.stateText}>{loadingText}</Text>
+                <View style={[styles.state, isDark && styles.stateDark]}>
+                    <ActivityIndicator color={isDark ? '#34d399' : '#047857'} size='small' />
+                    <Text style={[styles.stateText, isDark && styles.stateTextDark]}>{loadingText}</Text>
                 </View>
             ) : null}
 
             {!isAsbabun && !loading && !filteredSurahs.length ? (
-                <View style={styles.empty}>
-                    <BookOpen color='#cbd5e1' size={38} strokeWidth={1.7} />
-                    <Text style={styles.emptyText}>
+                <View style={[styles.empty, isDark && styles.emptyDark]}>
+                    <BookOpen color={isDark ? '#64748b' : '#cbd5e1'} size={38} strokeWidth={1.7} />
+                    <Text style={[styles.emptyText, isDark && styles.emptyTextDark]}>
                         {t("explore.tafsir.surahNotFound")}
                     </Text>
                 </View>
             ) : null}
 
             {!isAsbabun && filteredSurahs.length ? (
-                <View style={styles.surahGrid}>
+                <View style={[styles.surahGrid, isDark && styles.surahGridDark]}>
                     {filteredSurahs.map((surah) => (
                         <SurahCard
                             active={selectedSurahNumber === surah.number}
+                            isDark={isDark}
                             key={surah.number}
                             onPress={() => onSelectSurah(surah.number)}
                             surah={surah}
@@ -411,26 +524,26 @@ export function WebAppTafsirRoute({
             ) : null}
 
             {showInitialAsbabunState ? (
-                <View style={styles.asbabunInitialState}>
-                    <Text style={styles.emptyText}>
+                <View style={[styles.asbabunInitialState, isDark && styles.asbabunInitialStateDark]}>
+                    <Text style={[styles.emptyText, isDark && styles.emptyTextDark]}>
                         {t("explore.tafsir.asbabunInitial")}
                     </Text>
-                    <Text style={styles.asbabunSourceHint}>
+                    <Text style={[styles.asbabunSourceHint, isDark && styles.asbabunSourceHintDark]}>
                         {t("explore.tafsir.asbabunSourceHint")}
                     </Text>
                 </View>
             ) : null}
 
             {selectedSurahNumber && !loading ? (
-                <View style={styles.resultsHeader}>
-                    <Text style={styles.resultsTitle}>
+                <View style={[styles.resultsHeader, isDark && styles.resultsHeaderDark]}>
+                    <Text style={[styles.resultsTitle, isDark && styles.resultsTitleDark]}>
                         {selectedSurah
                             ? selectedSurah.name
                             : t("explore.tafsir.surahNumber", {
                                   number: selectedSurahNumber,
                               })}
                     </Text>
-                    <Text style={styles.resultsCount}>
+                    <Text style={[styles.resultsCount, isDark && styles.resultsCountDark]}>
                         {isAsbabun
                             ? t("explore.tafsir.historyCount", {
                                   count: items.length,
@@ -443,14 +556,15 @@ export function WebAppTafsirRoute({
             ) : null}
 
             {!loading && selectedSurahNumber && !error && !items.length ? (
-                <Text style={styles.emptyText}>{emptyResultText}</Text>
+                <Text style={[styles.emptyText, isDark && styles.emptyTextDark]}>{emptyResultText}</Text>
             ) : null}
 
             {!loading && items.length ? (
-                <View style={styles.results}>
+                <View style={[styles.results, isDark && styles.resultsDark]}>
                     {items.map((item, index) =>
                         isAsbabun ? (
                             <AsbabunResultCard
+                                isDark={isDark}
                                 item={item}
                                 key={`${item?.id ?? "asbabun"}-${index}`}
                                 onOpen={onOpenItem}
@@ -459,6 +573,7 @@ export function WebAppTafsirRoute({
                             />
                         ) : (
                             <TafsirResultCard
+                                isDark={isDark}
                                 item={item}
                                 key={`${item?.id ?? "tafsir"}-${index}`}
                                 onOpen={onOpenItem}
@@ -613,16 +728,28 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.sm,
         paddingVertical: 7,
     },
+    quickPillDark: {
+        backgroundColor: "#1e293b",
+    },
     quickPillActive: {
         backgroundColor: "#d1fae5",
+    },
+    quickPillActiveDark: {
+        backgroundColor: "#064e3b",
     },
     quickPillText: {
         color: "#64748b",
         fontSize: 12,
         fontWeight: "800",
     },
+    quickPillTextDark: {
+        color: "#94a3b8",
+    },
     quickPillTextActive: {
         color: "#047857",
+    },
+    quickPillTextActiveDark: {
+        color: "#34d399",
     },
     input: {
         color: "#111827",
@@ -729,7 +856,7 @@ const styles = StyleSheet.create({
         color: "#111827",
         fontFamily: "Kitab-Regular",
         fontSize: 24,
-        lineHeight: 36,
+        lineHeight: 46,
         textAlign: "right",
         writingDirection: "rtl",
     },
@@ -833,5 +960,119 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         marginBottom: spacing.sm,
         padding: spacing.sm,
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    headerDark: {
+        borderBottomColor: "#243044",
+    },
+    arabicHeadingDark: {
+        color: "#34d399",
+    },
+    iconWrapDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.12)",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    noticeDark: {
+        backgroundColor: "rgba(245, 158, 11, 0.12)",
+        borderColor: "rgba(245, 158, 11, 0.32)",
+    },
+    noticeTextDark: {
+        color: "#fbbf24",
+    },
+    searchBoxDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    inputDark: {
+        color: "#f8fafc",
+    },
+    surahGridDark: {},
+    surahCardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    surahNumberDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.12)",
+    },
+    surahNumberTextDark: {
+        color: "#34d399",
+    },
+    surahNameDark: {
+        color: "#f8fafc",
+    },
+    surahMeaningDark: {
+        color: "#94a3b8",
+    },
+    resultsHeaderDark: {},
+    resultsTitleDark: {
+        color: "#f8fafc",
+    },
+    resultsCountDark: {
+        color: "#94a3b8",
+    },
+    resultsDark: {},
+    resultCardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    resultTitleDark: {
+        color: "#f8fafc",
+    },
+    resultMetaDark: {
+        color: "#94a3b8",
+    },
+    arabicTextDark: {
+        color: "#f8fafc",
+    },
+    translationTextDark: {
+        color: "#cbd5e1",
+    },
+    tafsirPanelDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+    },
+    tafsirSourceDark: {
+        color: "#34d399",
+    },
+    tafsirTextDark: {
+        color: "#cbd5e1",
+    },
+    asbabunAyahPillDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.12)",
+        color: "#34d399",
+    },
+    asbabunSourceDark: {
+        color: "#94a3b8",
+    },
+    asbabunContentDark: {
+        color: "#cbd5e1",
+    },
+    asbabunInitialStateDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    asbabunSourceHintDark: {
+        color: "#94a3b8",
+    },
+    stateDark: {},
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    emptyDark: {},
+    emptyTextDark: {
+        color: "#94a3b8",
+    },
+    errorDark: {
+        backgroundColor: "#3f1d1d",
+        color: "#fecaca",
     },
 });

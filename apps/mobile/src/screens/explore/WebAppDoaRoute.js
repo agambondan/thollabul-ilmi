@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
 
@@ -83,7 +84,7 @@ const filterDoas = (items, query, category, t) => {
     });
 };
 
-function DoaCard({ item, onOpen, t }) {
+function DoaCard({ activeDark, item, onOpen, t }) {
     const category = getCategory(item);
     const arabic = getArabic(item);
     const latin = getLatin(item);
@@ -94,46 +95,102 @@ function DoaCard({ item, onOpen, t }) {
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[
+                styles.card,
+                activeDark && {
+                    backgroundColor: "#111827",
+                    borderColor: "#374151",
+                },
+            ]}
             testID='web-app-doa-card'
         >
             <View style={styles.cardHeader}>
                 <View style={styles.cardTitleGroup}>
-                    <Text numberOfLines={2} style={styles.cardTitle}>
+                    <Text
+                        numberOfLines={2}
+                        style={[
+                            styles.cardTitle,
+                            activeDark && { color: "#f9fafb" },
+                        ]}
+                    >
                         {item?.title || t("explore.doa.fallbackTitle")}
                     </Text>
                     <View style={styles.metaRow}>
                         {category ? (
-                            <Text style={styles.categoryPill}>
+                            <Text
+                                style={[
+                                    styles.categoryPill,
+                                    activeDark && {
+                                        backgroundColor: "#064e3b",
+                                        color: "#a7f3d0",
+                                    },
+                                ]}
+                            >
                                 {getCategoryLabel(category, t)}
                             </Text>
                         ) : null}
                         {hasAudio(item) ? (
-                            <Text style={styles.audioPill}>
+                            <Text
+                                style={[
+                                    styles.audioPill,
+                                    activeDark && {
+                                        backgroundColor: "#1e3a8a",
+                                        color: "#93c5fd",
+                                    },
+                                ]}
+                            >
                                 {t("explore.doa.audio")}
                             </Text>
                         ) : null}
                     </View>
                 </View>
-                <BookOpen color='#047857' size={18} strokeWidth={2.1} />
+                <BookOpen
+                    color={activeDark ? "#34d399" : "#047857"}
+                    size={18}
+                    strokeWidth={2.1}
+                />
             </View>
             {arabic ? (
-                <Text numberOfLines={3} style={styles.arabicText}>
+                <Text
+                    numberOfLines={3}
+                    style={[
+                        styles.arabicText,
+                        activeDark && { color: "#a7f3d0" },
+                    ]}
+                >
                     {arabic}
                 </Text>
             ) : null}
             {latin ? (
-                <Text numberOfLines={2} style={styles.latinText}>
+                <Text
+                    numberOfLines={2}
+                    style={[
+                        styles.latinText,
+                        activeDark && { color: "#9ca3af" },
+                    ]}
+                >
                     {latin}
                 </Text>
             ) : null}
             {body ? (
-                <Text numberOfLines={3} style={styles.bodyText}>
+                <Text
+                    numberOfLines={3}
+                    style={[
+                        styles.bodyText,
+                        activeDark && { color: "#d1d5db" },
+                    ]}
+                >
                     {body}
                 </Text>
             ) : null}
             {source ? (
-                <Text numberOfLines={1} style={styles.sourceText}>
+                <Text
+                    numberOfLines={1}
+                    style={[
+                        styles.sourceText,
+                        activeDark && { color: "#6b7280" },
+                    ]}
+                >
                     {source}
                 </Text>
             ) : null}
@@ -152,6 +209,8 @@ export function WebAppDoaRoute({
     pagination,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const activeDark = isDarkThemePref ?? false;
     const [query, setQuery] = useState("");
     const [category, setCategory] = useState("");
 
@@ -201,31 +260,65 @@ export function WebAppDoaRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[
+                styles.root,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}
         >
             <View testID='explore-web-app-doa-surface' />
-            <View style={styles.header}>
-                <Text style={styles.arabicTitle}>الدُّعَاء</Text>
-                <Text style={styles.title}>{t("explore.doa.title")}</Text>
-                <Text style={styles.subtitle}>{t("explore.doa.subtitle")}</Text>
+            <View style={[
+                styles.header,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}>
+                <Text style={[
+                    styles.arabicTitle,
+                    activeDark && { color: "#34d399" },
+                ]}>الدُّعَاء</Text>
+                <Text style={[
+                    styles.title,
+                    activeDark && { color: "#f9fafb" },
+                ]}>{t("explore.doa.title")}</Text>
+                <Text style={[
+                    styles.subtitle,
+                    activeDark && { color: "#9ca3af" },
+                ]}>{t("explore.doa.subtitle")}</Text>
             </View>
 
-            <View style={styles.searchBox}>
-                <Search color='#9ca3af' size={16} strokeWidth={2} />
+            <View style={[
+                styles.searchBox,
+                activeDark && {
+                    backgroundColor: "#1e293b",
+                    borderColor: "#374151",
+                },
+            ]}>
+                <Search
+                    color={activeDark ? "#6b7280" : "#9ca3af"}
+                    size={16}
+                    strokeWidth={2}
+                />
                 <TextInput
                     onChangeText={setQuery}
                     placeholder={t("explore.doa.searchPlaceholder")}
-                    placeholderTextColor='#9ca3af'
-                    style={styles.input}
+                    placeholderTextColor={activeDark ? "#6b7280" : "#9ca3af"}
+                    style={[
+                        styles.input,
+                        activeDark && { color: "#f9fafb" },
+                    ]}
                     testID='web-app-doa-search'
                     value={query}
                 />
             </View>
 
-            <View style={styles.categoryRow}>
+            <View style={[
+                styles.categoryRow,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}>
                 {categories.map((item) => (
                     <Pressable
                         accessibilityRole='button'
@@ -235,6 +328,11 @@ export function WebAppDoaRoute({
                             styles.categoryChip,
                             category === item.value &&
                                 styles.categoryChipActive,
+                            activeDark && {
+                                backgroundColor: category === item.value
+                                    ? "#047857"
+                                    : "#1e293b",
+                            },
                         ]}
                         testID='web-app-doa-category'
                     >
@@ -243,6 +341,11 @@ export function WebAppDoaRoute({
                                 styles.categoryChipText,
                                 category === item.value &&
                                     styles.categoryChipTextActive,
+                                activeDark && {
+                                    color: category === item.value
+                                        ? "#ffffff"
+                                        : "#94a3b8",
+                                },
                             ]}
                         >
                             {item.label}
@@ -251,47 +354,81 @@ export function WebAppDoaRoute({
                 ))}
             </View>
 
-            <View style={styles.countRow}>
-                <Text style={styles.countText}>{countText}</Text>
+            <View style={[
+                styles.countRow,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}>
+                <Text style={[
+                    styles.countText,
+                    activeDark && { color: "#9ca3af" },
+                ]}>{countText}</Text>
                 {query ? (
                     <Pressable
                         accessibilityRole='button'
                         onPress={() => setQuery("")}
                         testID='web-app-doa-reset-search'
                     >
-                        <Text style={styles.resetText}>
+                        <Text style={[
+                            styles.resetText,
+                            activeDark && { color: "#34d399" },
+                        ]}>
                             {t("explore.doa.reset")}
                         </Text>
                     </Pressable>
                 ) : null}
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={[
+                styles.error,
+                activeDark && { color: "#f87171" },
+            ]}>{error}</Text> : null}
             {loading ? (
-                <View style={styles.state}>
+                <View style={[
+                    styles.state,
+                    activeDark && { backgroundColor: "#0f172a" },
+                ]}>
                     <ActivityIndicator color='#047857' size='small' />
-                    <Text style={styles.stateText}>
+                    <Text style={[
+                        styles.stateText,
+                        activeDark && { color: "#9ca3af" },
+                    ]}>
                         {t("explore.doa.loading")}
                     </Text>
                 </View>
             ) : null}
             {!loading && filteredItems.length === 0 ? (
-                <View style={styles.empty}>
-                    <Text style={styles.emptyTitle}>
+                <View style={[
+                    styles.empty,
+                    activeDark && {
+                        backgroundColor: "#111827",
+                        borderColor: "#374151",
+                    },
+                ]}>
+                    <Text style={[
+                        styles.emptyTitle,
+                        activeDark && { color: "#f9fafb" },
+                    ]}>
                         {items.length
                             ? t("explore.doa.emptyFilteredTitle")
                             : t("explore.doa.emptyTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[
+                        styles.emptyText,
+                        activeDark && { color: "#9ca3af" },
+                    ]}>
                         {t("explore.doa.emptyText")}
                     </Text>
                 </View>
             ) : null}
 
-            <View style={styles.cards}>
+            <View style={[
+                styles.cards,
+                activeDark && { backgroundColor: "#0f172a" },
+            ]}>
                 {!loading
                     ? filteredItems.map((item, index) => (
                           <DoaCard
+                              activeDark={activeDark}
                               item={item}
                               key={`${item?.id ?? "doa"}-${index}`}
                               onOpen={onOpenItem}
@@ -310,10 +447,14 @@ export function WebAppDoaRoute({
                     style={[
                         styles.loadMoreButton,
                         pagination.loadingMore && styles.disabledButton,
+                        activeDark && { backgroundColor: "#059669" },
                     ]}
                     testID='web-app-doa-load-more'
                 >
-                    <Text style={styles.loadMoreText}>
+                    <Text style={[
+                        styles.loadMoreText,
+                        activeDark && { color: "#ffffff" },
+                    ]}>
                         {pagination.loadingMore
                             ? t("explore.doa.loadingShort")
                             : t("explore.doa.loadMore")}
@@ -343,10 +484,11 @@ const styles = StyleSheet.create({
         color: "#047857",
         fontFamily: "Kitab-Regular",
         fontSize: 32,
-        lineHeight: 44,
+        lineHeight: 52,
         marginBottom: 2,
         textAlign: "center",
         writingDirection: "rtl",
+        paddingVertical: 4,
     },
     title: {
         color: "#064e3b",
@@ -392,6 +534,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: spacing.md,
         paddingVertical: 7,
+        minHeight: 44,
+        justifyContent: "center",
     },
     categoryChipActive: {
         backgroundColor: "#047857",
@@ -513,11 +657,12 @@ const styles = StyleSheet.create({
     arabicText: {
         color: "#064e3b",
         fontFamily: "Kitab-Regular",
-        fontSize: 23,
-        lineHeight: 42,
+        fontSize: 24,
+        lineHeight: 46,
         marginTop: spacing.sm,
         textAlign: "right",
         writingDirection: "rtl",
+        paddingVertical: 4,
     },
     latinText: {
         color: "#64748b",
