@@ -367,6 +367,71 @@ null)`) fallback ke `null` params kalau gak diisi, jadi gak ada feature spesifik
 - Kamus Arab: search selalu "Tidak ada hasil" bahkan buat chip "Kosakata Populer" bawaan
   app sendiri kayak "Iman" (`modern-belajar-kamus-search.png`).
 
+## Sesi 5 (2026-09-25, lanjutan) — Fix batch atas temuan Sesi 4
+
+Semua item fixable di atas dikerjakan paralel (6 agent + 1 fix manual), diverifikasi unit
+test + rebuild APK/emulator sebelum commit (`d3964972`).
+
+**FIXED:**
+
+- **#1 Menu "Tokoh Islam"/"Peta Interaktif" dead-end** — `MobileMenuSheet.js` sekarang
+  set `params: { featureKey: "tokoh" }` / `{ featureKey: "historical-map" }`, mengikuti
+  pola entry "Target Belajar" yang sudah lebih dulu benar. Verified: Tokoh Islam
+  ke-reach normal (`01-tokoh-islam.png`); Peta Interaktif routing-nya sekarang benar
+  juga, TAPI screen-nya sendiri crash — lihat "Bug baru ditemukan sesi ini" di bawah.
+- **#2 Menu "Amalan" salah arah** — root cause ternyata dua lapis: `params.featureKey`
+  memang belum diset (sama seperti #1), TAPI menambahkannya saja tidak cukup karena
+  `App.js` tidak pernah mengoper `deepLinkTarget` ke `IbadahScreen` sama sekali (beda
+  dengan Quran/Hadith/Belajar/Profile yang menerimanya). Fix final: route "Amalan" ke
+  `tab: "belajar"` (bukan `"ibadah"`) — konsisten dengan arsitektur yang sudah
+  didokumentasikan di Sesi 1 ("kartu Doa/Dzikir/Asmaul Husna di hub Ibadah menavigasi ke
+  stack tab Belajar, bukan bug"). Verified via emulator: PASS.
+- **#4 (bagian Hafalan/Muroja'ah)** — bukan bug di `QuranScreen.js` (itu guard code
+  disengaja untuk gap desain Modern yang belum ada UI switcher-nya, dikonfirmasi via git
+  archaeology `commit b0bae822`). Fix real: `MobileMenuSheet.js` "Tilawah"/"Hafalan"/
+  "Muroja'ah" di-route ke `tab: "belajar"` + `featureKey` masing-masing (dashboard Modern
+  untuk ketiganya ternyata SUDAH ada, cuma belum di-wire). Verified via emulator: PASS
+  untuk ketiganya (nampilkan judul + login-gate yang benar, bukan hub kosong generik).
+- **#5 Modul & Kelas "Langkah 1 dari 0"** — root cause: `normalizeExploreItem()` di
+  `explore.js` strip field `steps` dari item API asli (cuma nyisa di `item.raw.steps`),
+  `WebAppLessonsRoute.js` baca `activeModule?.steps` langsung yang jadi `undefined`.
+  Fix: fallback ke `raw.steps`. Verified via emulator: "Langkah 1 dari 7" (real count).
+- **#6 Chip Panduan Sholat nampilin citation mentah** — root cause: `SholatGuide` gak
+  punya field kategori sama sekali, `getFilterCategory()` di
+  `WebAppReferenceListRoute.js` fallback ke field `meta` (citation hadis). Fallback
+  dihapus. Verified via emulator: chip bersih (Semua/Wudhu/Sholat/Sunnah/Dzikir/Umum).
+- **Kamus Arab search selalu kosong** (bug lama) — root cause BUKAN data/backend (66
+  entri tersedia, endpoint jalan normal, dikonfirmasi curl ke local + production).
+  `handleSelectSuggestion` di `WebAppKamusRoute.js` cuma ngisi kotak search tanpa
+  pernah manggil API. Fix: trigger search langsung saat chip di-tap. Ditambah test
+  regresi di `exploreScreen.test.js`. Verified via emulator: hasil nyata muncul untuk
+  "Iman".
+
+**TIDAK di-fix, dilaporkan terpisah:**
+
+- **Tafsir "konten ayat gak render"** (bug lama) — ditelusuri end-to-end (route
+  backend, seed data, response shape, render tree via integration test) dan **gak bisa
+  direproduksi** di `master` yang bersih — kemungkinan besar laporan Sesi 4 diambil dari
+  APK yang di-build dari working tree kotor (banyak perubahan belum-commit sesi lain
+  ikut ke-build), bukan dari `master` bersih. Perlu re-test dari build bersih sebelum
+  dianggap masih ada.
+- **"Tilawah"/"Hafalan"/"Muroja'ah" bukan tracker dedicated** (poin #4 sebagian) — sudah
+  terjawab: dashboard-nya memang sudah ada, tinggal login-gate normal untuk guest.
+  Bukan gap desain lagi.
+
+**Bug BARU ditemukan sesi ini (efek samping verifikasi fix #1):**
+
+- **"Peta Interaktif" sekarang routing benar tapi APP CRASH TOTAL saat screen dibuka.**
+  `logcat`: `java.lang.RuntimeException: API key not found ... com.rnmaps.maps.MapView`.
+  Dikonfirmasi: `AndroidManifest.xml` gak punya `com.google.android.geo.API_KEY`
+  meta-data sama sekali, dan gak ada Google Maps API key dikonfigurasi di manapun di
+  repo (`app.json`, `.env*`). Ini **bukan bug kode** — fitur peta butuh credential asli
+  dari Google Cloud Console (dengan billing aktif) yang cuma bisa disediakan pemilik
+  project, bukan sesuatu yang bisa di-fix lewat kode. **Prioritas naik** dibanding
+  sebelumnya: dulu cuma dead-end diam-diam, sekarang app crash total begitu user tap
+  menu ini — perlu keputusan: (a) urus API key beneran, atau (b) sementara tambah guard
+  supaya nunjukkin "Peta belum tersedia" alih-alih crash, sampai key-nya ada.
+
 ### Bug lama dikonfirmasi FIXED (regression check pass)
 
 - Sholat Tracker/Log Sholat crash (`Mosque` icon, lihat Sesi 2) — gak crash lagi, render
