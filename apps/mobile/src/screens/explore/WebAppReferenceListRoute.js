@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
@@ -272,17 +273,23 @@ const getLeadingLabel = (item, index, leading, t) => {
     return "";
 };
 
-function CategoryPill({ active, label, onPress, testID }) {
+function CategoryPill({ active, isDark, label, onPress, testID }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={onPress}
-            style={[styles.categoryPill, active && styles.categoryPillActive]}
+            style={[
+                styles.categoryPill,
+                isDark && styles.categoryPillDark,
+                active && styles.categoryPillActive,
+                active && isDark && styles.categoryPillActiveDark,
+            ]}
             testID={testID}
         >
             <Text
                 style={[
                     styles.categoryPillText,
+                    isDark && styles.categoryPillTextDark,
                     active && styles.categoryPillTextActive,
                 ]}
             >
@@ -292,7 +299,7 @@ function CategoryPill({ active, label, onPress, testID }) {
     );
 }
 
-function ReferenceCard({ config, index, item, onOpen, t }) {
+function ReferenceCard({ config, index, isDark, item, onOpen, t }) {
     const leading = getLeadingLabel(item, index, config.leading, t);
     const meta = getItemMeta(item);
     const body = getItemBody(item);
@@ -302,36 +309,76 @@ function ReferenceCard({ config, index, item, onOpen, t }) {
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[styles.card, isDark && styles.cardDark]}
             testID='web-app-reference-card'
         >
             <View style={styles.cardTop}>
                 {leading ? (
-                    <View style={styles.leadingBadge}>
-                        <Text numberOfLines={2} style={styles.leadingText}>
+                    <View
+                        style={[
+                            styles.leadingBadge,
+                            isDark && styles.leadingBadgeDark,
+                        ]}
+                    >
+                        <Text
+                            numberOfLines={2}
+                            style={[
+                                styles.leadingText,
+                                isDark && styles.leadingTextDark,
+                            ]}
+                        >
                             {leading}
                         </Text>
                     </View>
                 ) : null}
                 <View style={styles.cardMain}>
                     {meta ? (
-                        <Text style={styles.metaBadge}>{titleCase(meta)}</Text>
+                        <Text
+                            style={[
+                                styles.metaBadge,
+                                isDark && styles.metaBadgeDark,
+                            ]}
+                        >
+                            {titleCase(meta)}
+                        </Text>
                     ) : null}
-                    <Text numberOfLines={2} style={styles.cardTitle}>
+                    <Text
+                        numberOfLines={2}
+                        style={[
+                            styles.cardTitle,
+                            isDark && styles.cardTitleDark,
+                        ]}
+                    >
                         {getItemTitle(item, index, t)}
                     </Text>
                     {arabic ? (
-                        <Text numberOfLines={2} style={styles.arabicText}>
+                        <Text
+                            numberOfLines={2}
+                            style={[
+                                styles.arabicText,
+                                isDark && styles.arabicTextDark,
+                            ]}
+                        >
                             {arabic}
                         </Text>
                     ) : null}
                     {body ? (
-                        <Text numberOfLines={3} style={styles.cardBody}>
+                        <Text
+                            numberOfLines={3}
+                            style={[
+                                styles.cardBody,
+                                isDark && styles.cardBodyDark,
+                            ]}
+                        >
                             {body}
                         </Text>
                     ) : null}
                 </View>
-                <ChevronDown color='#9ca3af' size={22} strokeWidth={2.1} />
+                <ChevronDown
+                    color={isDark ? "#64748b" : "#9ca3af"}
+                    size={22}
+                    strokeWidth={2.1}
+                />
             </View>
         </Pressable>
     );
@@ -347,8 +394,11 @@ export function WebAppReferenceListRoute({
     onOpenItem,
     pagination,
     routeKey,
+    isDarkTheme = false,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDark = isDarkTheme || isDarkThemePref;
     const [category, setCategory] = useState("");
     const [search, setSearch] = useState("");
     const config = getConfig(feature, providedConfig, routeKey, t);
@@ -379,38 +429,61 @@ export function WebAppReferenceListRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                isDark && styles.contentDark,
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDark && styles.rootDark]}
         >
             <View testID={`explore-web-app-${key}-surface`} />
             <View style={styles.header}>
                 {config.arabicHeading ? (
-                    <Text style={styles.headerArabic}>
+                    <Text
+                        style={[
+                            styles.headerArabic,
+                            isDark && styles.headerArabicDark,
+                        ]}
+                    >
                         {config.arabicHeading}
                     </Text>
                 ) : null}
-                <Text style={styles.title}>{config.title}</Text>
+                <Text style={[styles.title, isDark && styles.titleDark]}>
+                    {config.title}
+                </Text>
                 {config.subtitle ? (
-                    <Text style={styles.subtitle}>{config.subtitle}</Text>
+                    <Text
+                        style={[styles.subtitle, isDark && styles.subtitleDark]}
+                    >
+                        {config.subtitle}
+                    </Text>
                 ) : null}
             </View>
 
-            <View style={styles.search}>
-                <Search color='#9ca3af' size={16} strokeWidth={2} />
+            <View style={[styles.search, isDark && styles.searchDark]}>
+                <Search
+                    color={isDark ? "#64748b" : "#9ca3af"}
+                    size={16}
+                    strokeWidth={2}
+                />
                 <TextInput
                     onChangeText={setSearch}
                     placeholder={config.searchPlaceholder}
-                    placeholderTextColor='#9ca3af'
-                    style={styles.input}
+                    placeholderTextColor={isDark ? "#64748b" : "#9ca3af"}
+                    style={[styles.input, isDark && styles.inputDark]}
                     testID={`web-app-${key}-search`}
                     value={search}
                 />
             </View>
 
             <View style={styles.summaryRow}>
-                <Text style={styles.summaryText}>
+                <Text
+                    style={[
+                        styles.summaryText,
+                        isDark && styles.summaryTextDark,
+                    ]}
+                >
                     {search || category
                         ? t("explore.reference.filteredCount", {
                               filtered: filteredItems.length,
@@ -428,7 +501,12 @@ export function WebAppReferenceListRoute({
                         onPress={() => setSearch("")}
                         testID={`web-app-${key}-reset-search`}
                     >
-                        <Text style={styles.resetText}>
+                        <Text
+                            style={[
+                                styles.resetText,
+                                isDark && styles.resetTextDark,
+                            ]}
+                        >
                             {t("explore.reference.reset")}
                         </Text>
                     </Pressable>
@@ -439,6 +517,7 @@ export function WebAppReferenceListRoute({
                 <View style={styles.categoryWrap}>
                     <CategoryPill
                         active={!category}
+                        isDark={isDark}
                         label={t("explore.reference.all")}
                         onPress={() => setCategory("")}
                         testID={`web-app-${key}-category`}
@@ -446,6 +525,7 @@ export function WebAppReferenceListRoute({
                     {categories.map((item) => (
                         <CategoryPill
                             active={category === item}
+                            isDark={isDark}
                             key={item}
                             label={titleCase(item)}
                             onPress={() =>
@@ -458,21 +538,34 @@ export function WebAppReferenceListRoute({
             ) : null}
 
             {error ? (
-                <Text style={styles.error}>{t("explore.reference.error")}</Text>
+                <Text style={[styles.error, isDark && styles.errorDark]}>
+                    {t("explore.reference.error")}
+                </Text>
             ) : null}
             {loading ? (
-                <View style={styles.state}>
-                    <ActivityIndicator color='#059669' size='small' />
-                    <Text style={styles.stateText}>{config.loadingText}</Text>
+                <View style={[styles.state, isDark && styles.stateDark]}>
+                    <ActivityIndicator
+                        color={isDark ? "#34d399" : "#059669"}
+                        size='small'
+                    />
+                    <Text
+                        style={[
+                            styles.stateText,
+                            isDark && styles.stateTextDark,
+                        ]}
+                    >
+                        {config.loadingText}
+                    </Text>
                 </View>
             ) : null}
 
             {!loading && !error && filteredItems.length ? (
-                <View style={styles.list}>
+                <View style={[styles.list, isDark && styles.listDark]}>
                     {filteredItems.map((item, index) => (
                         <ReferenceCard
                             config={config}
                             index={index}
+                            isDark={isDark}
                             item={item}
                             key={`${getItemId(item, index)}-${index}`}
                             onOpen={onOpenItem}
@@ -483,14 +576,28 @@ export function WebAppReferenceListRoute({
             ) : null}
 
             {!loading && !error && !filteredItems.length ? (
-                <View style={styles.empty}>
-                    <BookOpen color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDark && styles.emptyDark]}>
+                    <BookOpen
+                        color={isDark ? "#64748b" : "#9ca3af"}
+                        size={32}
+                        strokeWidth={1.8}
+                    />
+                    <Text
+                        style={[
+                            styles.emptyTitle,
+                            isDark && styles.emptyTitleDark,
+                        ]}
+                    >
                         {items.length
                             ? t("explore.reference.emptyFilteredTitle")
                             : config.emptyText}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text
+                        style={[
+                            styles.emptyText,
+                            isDark && styles.emptyTextDark,
+                        ]}
+                    >
                         {items.length
                             ? t("explore.reference.emptyFilteredText")
                             : t("explore.reference.emptyText")}
@@ -746,5 +853,84 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 13,
         fontWeight: "900",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    headerArabicDark: {
+        color: "#34d399",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    searchDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    inputDark: {
+        color: "#f8fafc",
+    },
+    summaryTextDark: {
+        color: "#94a3b8",
+    },
+    resetTextDark: {
+        color: "#34d399",
+    },
+    categoryPillDark: {
+        backgroundColor: "#111827",
+    },
+    categoryPillActiveDark: {
+        backgroundColor: "#059669",
+    },
+    categoryPillTextDark: {
+        color: "#cbd5e1",
+    },
+    listDark: {},
+    cardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    leadingBadgeDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.15)",
+    },
+    leadingTextDark: {
+        color: "#34d399",
+    },
+    metaBadgeDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.15)",
+        color: "#34d399",
+    },
+    cardTitleDark: {
+        color: "#f8fafc",
+    },
+    arabicTextDark: {
+        color: "#f8fafc",
+    },
+    cardBodyDark: {
+        color: "#cbd5e1",
+    },
+    errorDark: {
+        backgroundColor: "#3f1d1d",
+        color: "#fecaca",
+    },
+    stateDark: {},
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    emptyDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
 });
