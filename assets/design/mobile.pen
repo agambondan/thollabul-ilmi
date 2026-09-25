@@ -37414,110 +37414,6 @@
       ]
     },
     {
-      "type": "frame",
-      "id": "A8E3W",
-      "x": 20280,
-      "y": -947,
-      "name": "TEST Sub Header",
-      "width": 375,
-      "fill": "$surface",
-      "gap": 12,
-      "padding": [
-        12,
-        20
-      ],
-      "alignItems": "center",
-      "children": [
-        {
-          "id": "hM4JQ",
-          "type": "ref",
-          "ref": "b5ILqb",
-          "name": "Back",
-          "descendants": {
-            "VX9BQ": {
-              "icon": "arrow-left"
-            }
-          }
-        },
-        {
-          "type": "text",
-          "id": "V9y1J",
-          "name": "Title",
-          "fill": "$ink",
-          "textGrowth": "fixed-width",
-          "width": "fill_container",
-          "content": "Kajian",
-          "fontFamily": "$font-heading",
-          "fontSize": 20,
-          "fontWeight": "700"
-        },
-        {
-          "type": "frame",
-          "id": "x9E8s",
-          "name": "Actions",
-          "gap": 8,
-          "alignItems": "center",
-          "children": [
-            {
-              "id": "BKVSs",
-              "type": "ref",
-              "ref": "b5ILqb",
-              "name": "Search",
-              "descendants": {
-                "VX9BQ": {
-                  "icon": "search"
-                }
-              }
-            },
-            {
-              "id": "ENjmE",
-              "type": "ref",
-              "ref": "b5ILqb",
-              "name": "Menu",
-              "descendants": {
-                "VX9BQ": {
-                  "icon": "menu"
-                }
-              }
-            },
-            {
-              "type": "frame",
-              "id": "P6PGy",
-              "name": "Avatar",
-              "width": 36,
-              "height": 36,
-              "fill": "$primary",
-              "cornerRadius": "$radius-pill",
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "TBz4E",
-                  "name": "Initial",
-                  "fill": "$primary-foreground",
-                  "content": "T",
-                  "fontFamily": "$font-body",
-                  "fontSize": 15,
-                  "fontWeight": "700"
-                }
-              ]
-            },
-            {
-              "type": "icon",
-              "id": "RS19o",
-              "name": "Chevron",
-              "width": 16,
-              "height": 16,
-              "icon": "chevron-down",
-              "library": "lucide",
-              "fill": "$text-secondary"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "type": "ellipse",
       "id": "A7Rb32",
       "x": 6543,
@@ -37560,103 +37456,6 @@
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
-    },
-    {
-      "type": "frame",
-      "id": "T1EZn",
-      "x": 20735,
-      "y": -947,
-      "name": "TEST2 Back+Title",
-      "width": 375,
-      "fill": "$surface",
-      "gap": 12,
-      "padding": [
-        12,
-        20
-      ],
-      "alignItems": "center",
-      "children": [
-        {
-          "id": "DriOX",
-          "type": "ref",
-          "ref": "b5ILqb",
-          "name": "Back",
-          "descendants": {
-            "VX9BQ": {
-              "icon": "arrow-left"
-            }
-          }
-        },
-        {
-          "type": "text",
-          "id": "v39AbL",
-          "name": "Title",
-          "fill": "$ink",
-          "textGrowth": "fixed-width",
-          "width": "fill_container",
-          "content": "Kajian",
-          "fontFamily": "$font-heading",
-          "fontSize": 20,
-          "fontWeight": "700"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "LC9PO",
-      "x": 21190,
-      "y": -947,
-      "name": "TEST3 Back only",
-      "width": 375,
-      "fill": "$surface",
-      "gap": 12,
-      "padding": [
-        12,
-        20
-      ],
-      "alignItems": "center",
-      "children": [
-        {
-          "id": "J1ThRU",
-          "type": "ref",
-          "ref": "b5ILqb",
-          "name": "Back",
-          "descendants": {
-            "VX9BQ": {
-              "icon": "arrow-left"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "QuTZ4",
-      "x": 21645,
-      "y": -947,
-      "name": "TEST4 Title only",
-      "width": 375,
-      "fill": "$surface",
-      "gap": 12,
-      "padding": [
-        12,
-        20
-      ],
-      "alignItems": "center",
-      "children": [
-        {
-          "type": "text",
-          "id": "WLqlk",
-          "name": "Title",
-          "fill": "$ink",
-          "textGrowth": "fixed-width",
-          "width": "fill_container",
-          "content": "Kajian",
-          "fontFamily": "$font-heading",
-          "fontSize": 20,
-          "fontWeight": "700"
-        }
-      ]
     },
     {
       "type": "frame",
@@ -38464,81 +38263,6 @@
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
-    },
-    {
-      "type": "frame",
-      "id": "S6DbA9",
-      "x": 22100,
-      "y": -947,
-      "name": "TEST5 no-align",
-      "width": 375,
-      "fill": "$surface",
-      "gap": 12,
-      "padding": [
-        12,
-        20
-      ],
-      "children": [
-        {
-          "type": "text",
-          "id": "ZCYRh",
-          "name": "Title",
-          "fill": "$ink",
-          "textGrowth": "fixed-width",
-          "width": "fill_container",
-          "content": "Kajian",
-          "fontFamily": "$font-heading",
-          "fontSize": 20,
-          "fontWeight": "700"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "lgDua",
-      "x": 22555,
-      "y": -947,
-      "name": "TEST6 plain-width",
-      "width": 375,
-      "fill": "$surface",
-      "gap": 12,
-      "padding": [
-        12,
-        20
-      ],
-      "alignItems": "center",
-      "children": [
-        {
-          "type": "text",
-          "id": "DY3cB",
-          "name": "Title",
-          "fill": "$ink",
-          "content": "Kajian",
-          "fontFamily": "$font-heading",
-          "fontSize": 20,
-          "fontWeight": "700"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "oAman",
-      "x": 23010,
-      "y": -947,
-      "name": "TEST7 rect-only",
-      "width": 200,
-      "height": 200,
-      "fill": "#FFFFFF",
-      "children": [
-        {
-          "type": "rectangle",
-          "id": "Rgtat",
-          "name": "Red Box",
-          "fill": "#FF0000",
-          "width": 100,
-          "height": 100
-        }
-      ]
     },
     {
       "type": "frame",
@@ -39407,6 +39131,571 @@
                           "name": "Label",
                           "fill": "$ink",
                           "content": "Reset koreksi",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "pS7Eh",
+              "type": "ref",
+              "ref": "Nzfmr",
+              "width": "fill_container",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HZtpy",
+                  "name": "Content",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qdN6u",
+                      "name": "Card Header",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "m12BEY",
+                          "name": "Title",
+                          "fill": "$ink",
+                          "content": "Pengingat Adzan",
+                          "fontFamily": "$font-heading",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Lmlea",
+                          "name": "Active Count",
+                          "fill": "$primary",
+                          "content": "5 aktif",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "N5HL9",
+                      "name": "Divider 1",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VN6bj",
+                      "name": "Toggle Row Notifikasi Lokal",
+                      "width": "fill_container",
+                      "padding": [
+                        4,
+                        0
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "X3Sda",
+                          "name": "Label Col",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "y5Z1Ml",
+                              "name": "Title",
+                              "fill": "$ink",
+                              "content": "Notifikasi Lokal",
+                              "fontFamily": "$font-body",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "A5InW9",
+                              "name": "Subtitle",
+                              "fill": "$text-secondary",
+                              "content": "Aktif",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HR6AJ",
+                          "name": "Pill",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            8,
+                            18
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wxF6N",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "Aktif",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "UpoJ4",
+                      "name": "Divider 2",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OiQYZ",
+                      "name": "Toggle Row Audio Adzan",
+                      "width": "fill_container",
+                      "padding": [
+                        4,
+                        0
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Z1cwyr",
+                          "name": "Label Col",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LmVcu",
+                              "name": "Title",
+                              "fill": "$ink",
+                              "content": "Audio Adzan",
+                              "fontFamily": "$font-body",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "ceMqg",
+                              "name": "Subtitle",
+                              "fill": "$text-secondary",
+                              "content": "Nonaktif",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "fqTSl",
+                          "name": "Pill",
+                          "fill": "$chip-fill",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            8,
+                            18
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "K8Cczx",
+                              "name": "Label",
+                              "fill": "$ink",
+                              "content": "Mati",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "o4PbT",
+                      "name": "Jeda Label",
+                      "fill": "$text-secondary",
+                      "content": "JEDA PENGINGAT",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "v2luN",
+                      "name": "Pill Row 0",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "MMZV4",
+                          "name": "Pill Saat waktu masuk",
+                          "width": "fill_container",
+                          "fill": "$chip-fill",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "E5TAfX",
+                              "name": "Label",
+                              "fill": "$ink",
+                              "content": "Saat waktu masuk",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PTbyL",
+                          "name": "Pill 5 menit",
+                          "width": "fill_container",
+                          "fill": "$chip-fill",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ksFuZ",
+                              "name": "Label",
+                              "fill": "$ink",
+                              "content": "5 menit",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hRq8t",
+                      "name": "Pill Row 1",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "i1HTQl",
+                          "name": "Pill 10 menit",
+                          "width": "fill_container",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "oBoHO",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "10 menit",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "LsOsQ",
+                          "name": "Pill 15 menit",
+                          "width": "fill_container",
+                          "fill": "$chip-fill",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ZU8XN",
+                              "name": "Label",
+                              "fill": "$ink",
+                              "content": "15 menit",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wQxL0",
+                      "name": "Pill Row 2",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Dm5YH",
+                          "name": "Pill 30 menit",
+                          "width": "fill_container",
+                          "fill": "$chip-fill",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "F1DG25",
+                              "name": "Label",
+                              "fill": "$ink",
+                              "content": "30 menit",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Daym2",
+                      "name": "Waktu Label",
+                      "fill": "$text-secondary",
+                      "content": "WAKTU SHOLAT",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.5
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R5jrm",
+                      "name": "Pill Row 0",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bDtZe",
+                          "name": "Pill Subuh",
+                          "width": "fill_container",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "mUuQI",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "Subuh",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "UwYGC",
+                          "name": "Pill Dzuhur",
+                          "width": "fill_container",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "qDDnc",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "Dzuhur",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kbrOu",
+                      "name": "Pill Row 1",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "qelF4",
+                          "name": "Pill Asr",
+                          "width": "fill_container",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "H1l4WB",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "Asr",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "E4p2uR",
+                          "name": "Pill Maghrib",
+                          "width": "fill_container",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "SUnIt",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "Maghrib",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XIRIX",
+                      "name": "Pill Row 2",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "H3ZSI",
+                          "name": "Pill Isya",
+                          "width": "fill_container",
+                          "fill": "$primary",
+                          "cornerRadius": "$radius-pill",
+                          "padding": [
+                            10,
+                            0
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "mhBJr",
+                              "name": "Label",
+                              "fill": "$primary-foreground",
+                              "content": "Isya",
+                              "fontFamily": "$font-body",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VkVBx",
+                      "name": "Reset Reminder Button",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": "$radius-pill",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner",
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YWMIF",
+                          "name": "Label",
+                          "fill": "$ink",
+                          "content": "Atur ulang pengingat",
                           "fontFamily": "$font-body",
                           "fontSize": 14,
                           "fontWeight": "700"
