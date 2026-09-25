@@ -115782,7 +115782,7 @@
       "clip": true,
       "width": 375,
       "height": 812,
-      "fill": "#0F172A99",
+      "fill": "$bg",
       "layout": "vertical",
       "padding": "$pad-screen",
       "justifyContent": "center",
@@ -115790,119 +115790,208 @@
       "children": [
         {
           "type": "frame",
-          "id": "G9C5r5",
-          "name": "Permission Dialog",
+          "id": "TEONr",
+          "name": "Status Bar",
           "width": "fill_container",
-          "fill": "$surface",
-          "cornerRadius": "$radius-card",
-          "layout": "vertical",
-          "gap": "$gap-md",
-          "padding": "$pad-card",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
           "alignItems": "center",
           "children": [
             {
-              "type": "icon",
-              "id": "x4iF5",
-              "name": "Location Icon",
-              "width": 32,
-              "height": 32,
-              "icon": "location_on",
-              "library": "Material Symbols Rounded",
-              "fill": "$primary"
-            },
-            {
               "type": "text",
-              "id": "KpNU1",
-              "name": "Message",
+              "id": "gmtrg",
+              "name": "Time",
               "fill": "$ink",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Izinkan Thullaabul 'Ilmi mengakses lokasi perangkat ini?",
-              "textAlign": "center",
+              "content": "9:41",
               "fontFamily": "$font-body",
-              "fontSize": 15,
+              "fontSize": 14,
               "fontWeight": "600"
             },
             {
               "type": "frame",
-              "id": "Z1BHku",
-              "name": "Button - Saat menggunakan aplikasi",
-              "width": "fill_container",
-              "fill": "$chip-fill",
-              "cornerRadius": "$radius-card",
-              "padding": [
-                "$gap-sm",
-                "$gap-md"
-              ],
-              "justifyContent": "center",
+              "id": "GxdrB",
+              "name": "Status Icons",
+              "gap": 6,
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "G7Zxt",
-                  "name": "Label",
-                  "fill": "$primary",
-                  "content": "Saat menggunakan aplikasi",
-                  "textAlign": "center",
-                  "fontFamily": "$font-body",
-                  "fontSize": 14,
-                  "fontWeight": "600"
+                  "type": "icon",
+                  "id": "U79DmW",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "GffjV",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vqF3K",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Awn7f",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Dim Overlay",
+              "fill": "#0F172A99",
+              "width": 375,
+              "height": 674
             },
             {
               "type": "frame",
-              "id": "nCdjQ",
-              "name": "Button - Hanya sekali",
-              "width": "fill_container",
-              "fill": "$chip-fill",
+              "id": "nVFJe",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Permission Dialog",
+              "width": 300,
+              "fill": "$surface",
               "cornerRadius": "$radius-card",
-              "padding": [
-                "$gap-sm",
-                "$gap-md"
-              ],
-              "justifyContent": "center",
-              "alignItems": "center",
+              "layout": "vertical",
+              "gap": "$gap-md",
+              "padding": "$pad-card",
               "children": [
                 {
+                  "type": "icon",
+                  "id": "y4cSmT",
+                  "width": 32,
+                  "height": 32,
+                  "icon": "location_on",
+                  "library": "Material Symbols Rounded",
+                  "fill": "$primary"
+                },
+                {
                   "type": "text",
-                  "id": "dgUd9",
-                  "name": "Label",
-                  "fill": "$primary",
-                  "content": "Hanya sekali",
-                  "textAlign": "center",
+                  "id": "K9Gh7W",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Izinkan Thullaabul 'Ilmi mengakses lokasi perangkat ini?",
                   "fontFamily": "$font-body",
                   "fontSize": 14,
-                  "fontWeight": "600"
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "YY0iJ",
+                  "name": "Button - Saat menggunakan aplikasi",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-card",
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hDBnG",
+                      "fill": "$primary",
+                      "content": "Saat menggunakan aplikasi",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "r0p87q",
+                  "name": "Button - Hanya sekali",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-card",
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "mcB7P",
+                      "fill": "$primary",
+                      "content": "Hanya sekali",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "N81w7",
+                  "name": "Button - Tolak",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-card",
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iC0oI",
+                      "fill": "$primary",
+                      "content": "Tolak",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bqYXU",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
             {
-              "type": "frame",
-              "id": "EzY4v",
-              "name": "Button - Tolak",
-              "width": "fill_container",
-              "fill": "$chip-fill",
-              "cornerRadius": "$radius-card",
-              "padding": [
-                "$gap-sm",
-                "$gap-md"
-              ],
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "tSAgk",
-                  "name": "Label",
-                  "fill": "$primary",
-                  "content": "Tolak",
-                  "textAlign": "center",
-                  "fontFamily": "$font-body",
-                  "fontSize": 14,
-                  "fontWeight": "600"
-                }
-              ]
+              "id": "G7VcN",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
             }
           ]
         }
@@ -141500,140 +141589,221 @@
       "alignItems": "center",
       "children": [
         {
-          "type": "rectangle",
-          "id": "jZhZz",
-          "layoutPosition": "absolute",
-          "x": 0,
-          "y": 0,
-          "name": "Dim Overlay",
-          "fill": "#0F172ACC",
-          "width": 375,
-          "height": 700
-        },
-        {
           "type": "frame",
-          "id": "hREvH",
-          "name": "Permission Dialog Card",
-          "width": 300,
-          "fill": "$surface",
-          "cornerRadius": "$radius-card",
-          "layout": "vertical",
-          "gap": "$gap-md",
-          "padding": "$pad-card",
+          "id": "k7Opv",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
           "alignItems": "center",
           "children": [
             {
+              "type": "text",
+              "id": "Sddss",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
               "type": "frame",
-              "id": "Ih02e",
-              "name": "Icon Wrap",
-              "width": 48,
-              "height": 48,
-              "fill": "$chip-fill",
-              "cornerRadius": "$radius-pill",
-              "justifyContent": "center",
+              "id": "iKb4v",
+              "name": "Status Icons",
+              "gap": 6,
               "alignItems": "center",
               "children": [
                 {
                   "type": "icon",
-                  "id": "WQNDH",
-                  "name": "Bell Icon",
-                  "width": 24,
-                  "height": 24,
-                  "icon": "notifications",
-                  "library": "Material Symbols Rounded",
-                  "fill": "$primary"
+                  "id": "Q7XE2T",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "m92eO",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mP5Re",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
             {
-              "type": "text",
-              "id": "FTkIz",
-              "name": "Dialog Message",
-              "fill": "$ink",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Thullaabul 'Ilmi ingin mengirim notifikasi",
-              "lineHeight": 1.4,
-              "textAlign": "center",
-              "fontFamily": "$font-body",
-              "fontSize": 15,
-              "fontWeight": "600"
-            },
-            {
-              "type": "text",
-              "id": "g7ihqf",
-              "name": "Dialog Sub",
-              "fill": "$text-secondary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Izinkan aplikasi mengirim notifikasi pengingat adzan tepat waktu.",
-              "lineHeight": 1.4,
-              "textAlign": "center",
-              "fontFamily": "$font-body",
-              "fontSize": 12,
-              "fontWeight": "normal"
+              "type": "rectangle",
+              "id": "RR0BG",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Dim Overlay",
+              "fill": "#0F172A99",
+              "width": 375,
+              "height": 562
             },
             {
               "type": "frame",
-              "id": "lLJ0z",
-              "name": "Button Col",
-              "width": "fill_container",
+              "id": "tzUUV",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Permission Dialog Card",
+              "width": 300,
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
               "layout": "vertical",
-              "gap": "$gap-sm",
+              "gap": "$gap-md",
+              "padding": "$pad-card",
               "children": [
                 {
                   "type": "frame",
-                  "id": "QWqYT",
-                  "name": "Allow Button",
-                  "width": "fill_container",
+                  "id": "t7gxHW",
+                  "name": "Icon Wrap",
+                  "width": 48,
+                  "height": 48,
                   "fill": "$chip-fill",
-                  "cornerRadius": 8,
-                  "padding": [
-                    12,
-                    0
-                  ],
+                  "cornerRadius": "$radius-pill",
+                  "layout": "vertical",
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "text",
-                      "id": "Dt4s0",
-                      "name": "Label",
-                      "fill": "$primary",
-                      "content": "Izinkan",
-                      "fontFamily": "$font-body",
-                      "fontSize": 14,
-                      "fontWeight": "700"
+                      "type": "icon",
+                      "id": "KfN2Q",
+                      "width": 24,
+                      "height": 24,
+                      "icon": "notifications",
+                      "library": "Material Symbols Rounded",
+                      "fill": "$primary"
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "JR2oA",
-                  "name": "Deny Button",
+                  "type": "text",
+                  "id": "F5Be7y",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "fill": "$chip-fill",
-                  "cornerRadius": 8,
-                  "padding": [
-                    12,
-                    0
-                  ],
-                  "justifyContent": "center",
-                  "alignItems": "center",
+                  "content": "Thullaabul 'Ilmi ingin mengirim notifikasi",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "OKKXU",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Izinkan aplikasi mengirim notifikasi pengingat adzan tepat waktu.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "H5J3Ma",
+                  "name": "Button Col",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
                   "children": [
                     {
-                      "type": "text",
-                      "id": "N11Pe",
-                      "name": "Label",
-                      "fill": "$primary",
-                      "content": "Jangan Izinkan",
-                      "fontFamily": "$font-body",
-                      "fontSize": 14,
-                      "fontWeight": "700"
+                      "type": "frame",
+                      "id": "B3ugf",
+                      "name": "Allow Button",
+                      "width": "fill_container",
+                      "fill": "$chip-fill",
+                      "cornerRadius": 8,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "UzJIV",
+                          "fill": "$primary",
+                          "content": "Izinkan",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JsMYh",
+                      "name": "Deny Button",
+                      "width": "fill_container",
+                      "fill": "$chip-fill",
+                      "cornerRadius": 8,
+                      "padding": [
+                        12,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "LfQZO",
+                          "fill": "$primary",
+                          "content": "Jangan Izinkan",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
                     }
                   ]
                 }
               ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zQO63",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "SNLAQ",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
             }
           ]
         }
