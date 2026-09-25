@@ -64,6 +64,64 @@ percaya laporan agent (disiplin yang sama yang dulu menemukan insiden penghapusa
    layar baru "Kajian - Modern" (stat card, tab Transkrip/Tersimpan/Kajian, filter kategori,
    kartu video kajian).
 
+**Insiden penghapusan #2 (2026-09-25)**: sesi/agent lain (di window pen.dev yang sama) kembali
+menghapus SELURUH area flow diagram di atas (7 lane + komponen `Flow/HandoffCard` + header) —
+diverifikasi node-by-node (`Get` per id, semua "Can't find node"), sementara komponen inti
+(Button/Primary, Card, screen hub, dst.) tidak terganggu. Root cause sama seperti insiden #1:
+"active canvas" pen.dev itu satu pointer shared per window, bukan per-sesi. Ke-7 lane di atas
+sudah **dibangun ulang** dengan id node baru (id lama di atas sudah basi/tidak berlaku — cari
+ulang lewat nama kalau perlu id pastinya).
+
+**Mitigasi baru (berlaku seterusnya)**: setiap 1 use case/lane selesai dibangun DAN
+diverifikasi (`Get`+bounds, bukan cuma laporan agent), langsung `git add` (scope: cuma
+`assets/design/mobile.pen`, jangan `git add -A`) + commit + `git push` ke `origin/master` saat
+itu juga — jangan tunggu semua lane selesai. Ini membatasi kerugian ke maksimal 1 lane yang
+belum ter-commit kalau kanvas kehapus lagi, bukan seluruh kerjaan. Catatan teknis: file
+on-disk `mobile.pen` yang di-`git diff` kadang **lag beberapa detik-menit** di belakang state
+live kanvas (bukan langsung ter-flush tiap edit) — kalau `git add` tidak menghasilkan diff
+padahal baru saja menyelesaikan lane baru, JANGAN asumsikan lane-nya hilang; tunggu file
+`mtime` berubah dulu (poll `stat -c %Y`), baru commit.
+
+**Perluasan scope (2026-09-25)**: user menunjukkan kalau 1 feature bisa punya 1-10 usecase,
+dan ada ~50 feature di roadmap ⇒ potensi 50-500 usecase total. Kesepakatan: 1 usecase PRIMARY
+per feature dulu (bukan exhaustive 10/feature), prioritaskan feature yang SUDAH punya UI nyata
+di app (grounded via screenshot asli) di atas feature yang masih murni roadmap/belum
+dibangun. Lanjutan lane (round 2, y mulai 26400, stride 3750 tetap) — semua dibangun via
+agent paralel + commit-per-lane:
+
+8. **Baca Doa Harian** (y=26400) — Beranda → tab Ibadah → Ibadah hub (Harian) → tap "Doa" →
+   layar baru "Doa - Modern" (filter kategori, kartu-kartu doa).
+9. **Baca Asmaul Husna** (y=30150) — Beranda → tab Ibadah → Ibadah hub (Dzikir & Bacaan) → tap
+   "Asmaul Husna" → layar baru "Asmaul Husna - Modern" (search, filter, kartu nama).
+10. **Gunakan Tasbih Digital** (y=33900) — Beranda → tab Ibadah → Ibadah hub (Alat) → tap
+    "Tasbih" → layar baru "Tasbih - Modern" (counter besar, target, pilih dzikir).
+11. **Hitung Zakat** (y=37650) — Beranda → tab Ibadah → Ibadah hub (Alat) → tap "Zakat" →
+    layar baru "Zakat - Modern" (jenis zakat, input harta, hasil perhitungan).
+12. **Hitung Waris (Faraidh)** (y=41400) — Beranda → tab Ibadah → Ibadah hub (Alat) → tap
+    "Faraidh" → layar baru "Faraidh - Modern" (harta & pengurang, ahli waris, hasil
+    pembagian).
+13. **Baca Tafsir Al-Qur'an** (y=45150) — Beranda → tab Belajar → Belajar hub (Referensi) →
+    tap "Tafsir" → layar baru "Tafsir - Modern" (daftar surah) → tap surah → layar baru
+    "Tafsir Detail - Modern" (ayat + terjemahan + tafsir ringkas).
+14. **Baca Siroh Nabawiyah** (y=48900) — Beranda → tab Belajar → Belajar hub (Siroh &
+    Sejarah) → tap "Siroh" → layar baru "Siroh - Modern" (daftar peristiwa, pakai komponen
+    baru `Siroh/EventCard`) → tap peristiwa → layar baru "Siroh Detail - Modern" (narasi
+    lengkap 1 peristiwa).
+15. **Baca Fiqh Ringkas** (y=52650) — Beranda → tab Belajar → Belajar hub (Fiqh & Panduan) →
+    tap "Fiqh Ringkas" → layar baru "Fiqh Ringkas - Modern" (daftar topik) → tap topik →
+    layar baru "Fiqh Detail - Modern" (penjelasan 1 topik, contoh: Thaharah).
+
+**Catatan penting round 2**: beberapa tile (Zakat, Faraidh) namanya di file screenshot
+tertulis "belajar" tapi tap path sebenarnya di app adalah **Ibadah hub → section Alat** —
+sudah diverifikasi via `Get` struktur hub, bukan cuma nebak dari nama file. Kalau nambah lane
+baru dan nama file screenshot ambigu, selalu cross-check ke struktur hub asli dulu.
+
+**Belum digarap (kandidat round 3+)**: Komunitas, Blog/Artikel, Radio Islam, Leaderboard,
+Muhasabah/Jurnal, Kamus, Imsakiyah, Wirid Saya, Khatam, Modul & Kelas/Lessons Detail (semua
+sudah punya screenshot asli, tinggal dibangun) — plus tile tanpa screenshot dedicated
+(Hafalan, Jurnal quick-action, Statistik, Bookmark, Catatan, Target Belajar, Log Sholat,
+Manasik, Kalender Hijriah, Masjid, Dzikir, Wirid non-Saya, Lainnya).
+
 Semua HandoffCard pakai instance (`ref`) dari komponen `Flow/HandoffCard` (id `epPoG`, definisi
 diparkir di `x=-600,y=-600` — JANGAN pindah/edit definisinya langsung, lihat gotcha #1).
 
@@ -177,3 +235,22 @@ dibuat, dan gak kelihatan sampai user zoom in manual.
    ini kontensi di render backend, bukan data rusak (selalu dobel-cek lewat `Get`+`ctx.bounds`
    dulu sebelum menyimpulkan). Kalau ini terjadi: jangan buang banyak retry, catat node id-nya,
    lanjut kerjaan lain, lalu screenshot ulang setelah beban paralel selesai/berkurang.
+10. **Workaround lain buat blank persisten (terbukti berhasil di beberapa agent round 2)**:
+    kalau screen baru tetap blank walau bounds-nya sudah benar, `Copy()` seluruh screen itu ke
+    posisi (x,y) yang SAMA PERSIS, lalu `Delete()` versi originalnya — hasil copy-nya biasanya
+    langsung render normal. Lebih murah daripada rebuild dari nol.
+11. **Jangan `Insert()` langsung ke path slot instance** (`instanceId + "/slotChildId"`) — ini
+    silently succeeds (gak ada error) tapi kontennya gak pernah muncul. Pola yang benar:
+    `Replace(instanceId + "/slotChildId", {...frame baru...})` dulu, baru `Insert()` ke id hasil
+    `Replace`-nya.
+12. Field warna semantik yang belum ada token-nya (misal warning/amber buat kartu peringatan)
+    boleh pakai hex literal langsung (`#FFFBEB` dst.) — jangan bikin token variabel baru cuma
+    buat 1 pemakaian, dan jangan maksa pakai token existing yang gak sesuai maknanya.
+13. **Nama tile di file screenshot vs tap path asli bisa beda** (misal `modern-belajar-zakat.png`
+    tapi Zakat sebenarnya tile Ibadah hub, bukan Belajar) — screenshot dipakai buat grounding
+    KONTEN, tapi tap path/entry point tetap harus diverifikasi dari struktur hub asli
+    (`Get` pada `EBKk2`/`yOkbK` dst.), jangan nebak dari nama file semata.
+14. **Disiplin recovery kalau kanvas kehapus lagi (sudah kejadian 2x)**: jangan langsung
+    rebuild — verifikasi dulu satu-satu via `Get(id)` per node yang seharusnya ada (bukan cuma
+    beberapa sampel), baru simpulkan seberapa parah. Begitu rebuild selesai per-lane, langsung
+    commit+push (lihat catatan insiden #2 di section Status) sebelum lanjut ke lane berikutnya.
