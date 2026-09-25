@@ -4,6 +4,7 @@
 > File: [`assets/design/mobile.pen`](../assets/design/mobile.pen) — dibuka/diedit lewat pencil MCP tools
 > (`mcp__pencil__*`) di pen.dev. **Jangan pernah buka/Read/Grep file `.pen`** — encrypted,
 > cuma bisa diakses via tool-nya.
+> Katalog tabel semua usecase (ringkas, 1 baris per usecase): [`MOBILE_USE_CASE_FLOWS.md`](./MOBILE_USE_CASE_FLOWS.md).
 
 ## Apa ini
 
@@ -47,9 +48,9 @@ percaya laporan agent (disiplin yang sama yang dulu menemukan insiden penghapusa
 2. **Baca Surah Al-Qur'an** (y=3850) — Beranda → tab Al-Quran → Quran hub → tap surah → layar
    baru "Quran Reader - Modern" (Al-Fatihah ayat 1, arabic+terjemahan, nav ayat, progress dots).
 3. **Baca Hadis** (y=7600) — Beranda → tab Hadis → Hadis Hub → tap hadis → Hadis Detail
-   (pakai screen yang sudah ada, tidak perlu dibangun baru). *Catatan: lompat langsung dari
+   (pakai screen yang sudah ada, tidak perlu dibangun baru). _Catatan: lompat langsung dari
    daftar kitab ke detail 1 hadis, belum ada layar antara "daftar hadis dalam 1 kitab" —
-   lihat `modern-hadis-reader.png` kalau mau ditambah nanti.*
+   lihat `modern-hadis-reader.png` kalau mau ditambah nanti._
 4. **Cari Arah Kiblat** (y=11350) — Beranda → tab Ibadah → Ibadah hub → tap kartu Qibla →
    layar baru "Kiblat - Modern" (kompas + info jarak/sudut/lokasi, representasi state
    "sudah dapat lokasi", bukan state loading yang ada di screenshot asli).
@@ -124,15 +125,15 @@ agent paralel + commit-per-lane (beberapa digabung 1 commit kalau selesai bersam
 17. **Dengarkan Radio Islam** (y=60150) — Beranda → Belajar hub (Kajian & Artikel) → tap
     "Radio Islam" → layar baru "Radio Islam - Modern" (now-playing card, daftar stasiun).
 18. **Baca Artikel/Blog Islami** (y=63900) — Beranda → Belajar hub (Kajian & Artikel) → tap
-    "Artikel" → layar baru "Artikel - Modern" (search, kartu artikel). *Hanya 3 screen —
-    screenshot asli cuma nunjukin state list, belum ada reading-view detail.*
+    "Artikel" → layar baru "Artikel - Modern" (search, kartu artikel). _Hanya 3 screen —
+    screenshot asli cuma nunjukin state list, belum ada reading-view detail._
 19. **Lihat Leaderboard** (y=67650) — Beranda → Belajar hub (Personal Ringkas) → tap
     "Leaderboard" → layar baru "Leaderboard - Modern" (filter Streak Sholat/Hafalan, ranked
     list, rank 1 di-highlight).
 20. **Isi Jurnal Muhasabah** (y=71400) — Beranda (kartu "Jurnal Muhasabah" langsung di
-    Beranda, BUKAN via hub) → layar baru "Jurnal Muhasabah - Modern". *Merepresentasikan state
+    Beranda, BUKAN via hub) → layar baru "Jurnal Muhasabah - Modern". _Merepresentasikan state
     app SEKARANG apa adanya: fitur masih gated/locked ("Buka Profil untuk masuk"), belum ada
-    editor jurnal sungguhan — jangan dianggap bug, itu memang state asli yang di-screenshot.*
+    editor jurnal sungguhan — jangan dianggap bug, itu memang state asli yang di-screenshot._
 21. **Cari Istilah di Kamus Arab** (y=75150) — Beranda → Belajar hub (Referensi) → tap "Kamus
     Arab" → layar baru "Kamus - Modern" (search) → cari → layar baru "Kamus Search - Modern"
     (hasil tabel Arab/Transliterasi/Arti).
@@ -140,11 +141,11 @@ agent paralel + commit-per-lane (beberapa digabung 1 commit kalau selesai bersam
     Waktu) → tap "Imsakiyah" → layar baru "Imsakiyah - Modern" (tabel jadwal bulanan, baris
     hari-ini di-highlight).
 23. **Kelola Wirid Saya** (y=82650) — Beranda → tab Ibadah → Ibadah hub (Dzikir & Bacaan) →
-    tap "Wirid Saya" → layar baru "Wirid Saya - Modern" (empty/login-gated state). *Catatan:
+    tap "Wirid Saya" → layar baru "Wirid Saya - Modern" (empty/login-gated state). _Catatan:
     tile "Wirid Saya" ada di DUA hub (Ibadah Dzikir&Bacaan DAN Belajar Fiqh&Panduan) — dipilih
     Ibadah sebagai kanonis, meski screenshot asli keliatannya di-capture lewat Belajar (tab
     bar-nya Belajar yang aktif). Kalau mau konsisten 100% ke screenshot, bisa di-flip ke
-    Belajar nanti.*
+    Belajar nanti._
 24. **Rencanakan Khatam Al-Qur'an** (y=86400) — Beranda → tab Ibadah → Ibadah hub (Rencana) →
     tap "Khatam" → layar baru "Khatam - Modern" (target tanggal, progress bar, statistik
     juz/halaman).
