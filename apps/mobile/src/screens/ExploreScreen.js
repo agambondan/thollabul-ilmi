@@ -1382,76 +1382,73 @@ export function ExploreScreen({
     }, [activeFeature?.key, selectedItem]);
 
     const updateHeader = useCallback(() => {
-        if (!isActive || !navigation?.setHeader) return;
+        if (!isActive) return;
+
+        let onBack = null;
+        let title = null;
 
         if (selectedItem) {
-            navigation.setHeader({
-                showBack: true,
-                title: selectedItem?.title || "Detail",
-                onBack: () => {
-                    setSelectedItem(null);
-                    return true;
-                },
-            });
+            title = selectedItem?.title || "Detail";
+            onBack = () => {
+                setSelectedItem(null);
+                return true;
+            };
         } else if (showFaraidhHistory) {
-            navigation.setHeader({
-                showBack: true,
-                title: t("explore.faraidh.historyTitle"),
-                onBack: () => {
-                    setShowFaraidhHistory(false);
-                    return true;
-                },
-            });
+            title = t("explore.faraidh.historyTitle");
+            onBack = () => {
+                setShowFaraidhHistory(false);
+                return true;
+            };
         } else if (editingUserWirdId) {
-            navigation.setHeader({
-                showBack: true,
-                title: t("explore.wird.editTitle"),
-                onBack: () => {
-                    setEditingUserWirdId("");
-                    setUserWirdForm(emptyUserWirdForm);
-                    return true;
-                },
-            });
+            title = t("explore.wird.editTitle");
+            onBack = () => {
+                setEditingUserWirdId("");
+                setUserWirdForm(emptyUserWirdForm);
+                return true;
+            };
         } else if (activeFeature?.type === "forum" && forumView !== "list") {
-            navigation.setHeader({
-                showBack: true,
-                title: forumDetail?.title || t("explore.forum.detailTitle"),
-                onBack: () => {
-                    setForumView("list");
-                    setForumDetail(null);
-                    setForumAnswers([]);
-                    setForumError("");
-                    return true;
-                },
-            });
+            title = forumDetail?.title || t("explore.forum.detailTitle");
+            onBack = () => {
+                setForumView("list");
+                setForumDetail(null);
+                setForumAnswers([]);
+                setForumError("");
+                return true;
+            };
         } else if (
             (activeFeature?.key === "tafsir" ||
                 activeFeature?.key === "asbabun-nuzul") &&
             selectedSurahNumber
         ) {
             const surah = surahs.find((s) => s.number === selectedSurahNumber);
-            navigation.setHeader({
-                showBack: true,
-                title: surah
-                    ? surah.name
-                    : t("explore.tafsir.surahNumber", { number: selectedSurahNumber }),
-                onBack: () => {
-                    setSelectedSurahNumber(null);
-                    setItems([]);
-                    return true;
-                },
-            });
+            title = surah
+                ? surah.name
+                : t("explore.tafsir.surahNumber", {
+                      number: selectedSurahNumber,
+                  });
+            onBack = () => {
+                setSelectedSurahNumber(null);
+                setItems([]);
+                return true;
+            };
         } else if (activeFeature) {
-            navigation.setHeader({
+            title = activeFeature.title;
+            onBack = () => {
+                clearFeature();
+                return true;
+            };
+        }
+
+        if (onBack) {
+            navigation?.setBack?.(onBack);
+            navigation?.setHeader?.({
                 showBack: true,
-                title: activeFeature.title,
-                onBack: () => {
-                    clearFeature();
-                    return true;
-                },
+                title,
+                onBack,
             });
         } else {
-            navigation.setHeader(null);
+            navigation?.clearBack?.();
+            navigation?.setHeader?.(null);
         }
     }, [
         isActive,
@@ -1469,8 +1466,13 @@ export function ExploreScreen({
     ]);
 
     useEffect(() => {
+        if (!isActive) {
+            navigation?.clearBack?.();
+            navigation?.setHeader?.(null);
+            return;
+        }
         updateHeader();
-    }, [updateHeader]);
+    }, [isActive, updateHeader, navigation]);
 
     const scoreQuiz = () => {
         if (!items.length) return 0;

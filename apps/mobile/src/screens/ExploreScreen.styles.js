@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
         borderWidth: 2,
         justifyContent: "center",
         marginTop: spacing.md,
-        minHeight: 46,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppCatalogInput: {
@@ -296,7 +296,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         marginTop: spacing.md,
-        minHeight: 46,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppNotesList: {
