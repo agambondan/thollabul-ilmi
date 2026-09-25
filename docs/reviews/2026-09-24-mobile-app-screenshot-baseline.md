@@ -3,7 +3,9 @@
 Tanggal: `2026-09-24`
 Scope: `apps/mobile` (native Android, bukan web export)
 Status: `SELESAI` — Sesi 1: 30 screenshot. Sesi 2 (lanjutan, drilling sub-route Belajar/Ibadah):
-+22 screenshot baru (termasuk 1 crash bug ditemukan dan didokumentasikan). Beberapa route
++22 screenshot baru (termasuk 1 crash bug ditemukan dan didokumentasikan). Sesi 4
+(2026-09-25, rebuild penuh): 82 screenshot menutupi semua 47 fitur di
+`MOBILE_USE_CASE_FLOWS.md`, 6 bug baru + 6 regresi terverifikasi fixed. Beberapa route
 tetap tidak reachable / dilewati — lihat detail di masing-masing bagian "Gap" per sesi.
 
 Screenshot lama di `output/` (`output/playwright/`, `output/native/2026-05-*`, dll.) sudah basi —
@@ -136,8 +138,9 @@ a string ... but got: undefined`. Dugaan kuat: `WebAppSholatTrackerRoute.js` men
   `Mosque` dari `lucide-react-native` (`import { CheckCircle2, Circle, Mosque } from
 "lucide-react-native"`) — kemungkinan `Mosque` bukan export valid di versi
   `lucide-react-native` yang dipakai, jadi komponen `undefined` saat dirender. Screenshot
-  dialog crash: `modern-ibadah-sholat-tracker-CRASH.png`. **Perlu di-fix**, bukan cuma
-  dicatat — ini blocking, bukan sekadar UI gap.
+  dialog crash: `modern-ibadah-sholat-tracker-CRASH.png`. **FIXED** — `Mosque` diganti
+  `Landmark` di `WebAppSholatTrackerRoute.js` (icon yang sama dipakai `MobileMenuSheet.js`),
+  diverifikasi ulang di emulator: Sholat Tracker render normal, tidak crash lagi.
 - **Menu item "Amalan" (hamburger menu) salah arah**: tap "Amalan" di Menu → "Ibadah &
   Tracker" cuma buka hub Ibadah biasa (`view` kosong), bukan feature "Amalan Harian"
   (`featureKey: "amalan"`). Reproduced 2x. Kartu "Amalan Harian" sendiri tidak ketemu di
@@ -229,3 +232,157 @@ a string ... but got: undefined`. Dugaan kuat: `WebAppSholatTrackerRoute.js` men
   in-app (back button, tab tap) tidak konsisten mengembalikan ke hub (lihat temuan navigasi
   di atas). Ini menambah overhead ~6-8 detik per rute tapi jauh lebih reliable daripada
   mengandalkan back navigation.
+
+## Sesi 3 (2026-09-24, lanjutan) — Riset flow Login & Jadwal Sholat/Reminder
+
+Tujuan: ground-truth dua user flow buat didiagramkan di `assets/design/mobile.pen`
+(lihat [`MOBILE_PENDEV_REDESIGN.md`](../MOBILE_PENDEV_REDESIGN.md)) — Login dan
+Jadwal Sholat & Set Reminder. Fresh install (Login) dan lokasi manual Jakarta
+(-6.2088/106.8456, Jadwal Sholat) karena GPS emulator tidak pernah memberi fix asli.
+
+### Login
+
+Tidak ada onboarding/intro carousel — alur asli: splash blank → dialog izin lokasi (OS,
+bukan UI app) → Beranda mode tamu → avatar header → dropdown menu (Profil/Bookmark/
+Catatan/Statistik/Notifikasi/toggle tema/bahasa) → Profil → tile "Masuk / Daftar" → layar
+**"Akun"**. Login/Daftar/Lupa-Sandi **bukan 3 route terpisah** — satu komponen
+(`SessionCard.js`) dengan 3-way tab switcher. Tab Masuk: tombol "Masuk dengan Google"
+(`expo-web-browser` OAuth ke `/api/v1/auth/google?source=mobile`) + divider "ATAU" +
+email/password. Tab Daftar: sama + Nama, toggle channel verifikasi Email/WhatsApp
+(WhatsApp aktif, expose field nomor HP), password + ulangi password. Tab Lupa Sandi:
+email + "Kirim Tautan Reset". 13 screenshot tersimpan (`modern-login.png`,
+`modern-register.png`, `modern-register-whatsapp.png`, `modern-forgot-password.png`,
+`modern-avatar-menu.png`, dst + varian classic).
+
+### Jadwal Sholat & Set Reminder
+
+Alur: Beranda → Ibadah → "Jadwal Sholat" → layar Jadwal (sekarang dengan lokasi manual,
+data waktu sholat asli) → icon gear di header → **layar yang sama** swap ke view
+"Pengaturan Sholat" (bukan modal/route terpisah, state lokal di `PrayerScreen.js`) → card
+"Pengingat Adzan": toggle "Notifikasi Lokal" (memicu dialog izin POST_NOTIFICATIONS
+pertama kali), toggle "Audio Adzan" (buka picker 8 suara muadzin), pill "JEDA PENGINGAT"
+(0/5/10/15/30 menit), multi-select "WAKTU SHOLAT" (Subuh–Isya), tombol "Atur ulang
+pengingat". Field/preference key lengkap ada di `src/storage/preferences.js` dan
+`src/utils/adzanSounds.js`.
+
+- **Bug ditemukan & FIXED — toggle "Audio Adzan" di tema Modern bikin card Pengingat
+  Adzan hilang/blank**: root cause di `PrayerScreen.js` — blok render daftar
+  `ADZAN_SOUNDS` (picker suara muadzin) ke-duplikat, nyangkut di dalam `.map()` baris
+  koreksi waktu per-sholat (harusnya cuma ada di dalam card "Pengingat Adzan", persis
+  seperti versi Classic yang sudah benar). Efeknya, picker suara ikut ke-render ulang di
+  setiap baris koreksi ketika toggle aktif — bukan cuma salah tempat, juga jadi sumber
+  crash/blank-render yang dilaporkan. Blok duplikat dihapus, `npm test -- --runInBand`
+  full (56 suite/790 test) tetap hijau setelah fix.
+- Tab bar Classic sempat gak konsisten muncul di accessibility tree setelah cold
+  launch/scroll — kemungkinan sama dengan flakiness yang sudah dicatat di sesi sebelumnya.
+
+## Sesi 4 (2026-09-25) — Rebuild penuh + screenshot semua 47 fitur
+
+Tujuan: rebuild APK dari working tree terbaru (banyak perubahan belum-commit dari sesi
+paralel lain masuk ke build ini), install ulang di emulator, dan screenshot ulang
+**semua 47 fitur** di [`MOBILE_USE_CASE_FLOWS.md`](../MOBILE_USE_CASE_FLOWS.md) sebagai
+checklist — supaya ketahuan kalau ada drift antara app asli dan mockup `mobile.pen`.
+Task read-only QA, tidak ada source code yang diubah.
+
+### Setup
+
+- Build & install sama seperti sesi sebelumnya (`assembleRelease`, JAVA_HOME
+  java-17-openjdk, `adb install -r`, tidak ada signature mismatch).
+- Build path ini tidak set `EXPO_PUBLIC_API_URL` → fallback ke API production
+  `https://api.thollabulilmi.site` (lihat `src/api/client.js`), jadi semua data yang
+  tampil (soal quiz, harga emas Zakat, 165 hasil global search, dll) itu data asli.
+- Lokasi di-set manual Jakarta (`adb emu geo fix 106.8456 -6.2088`) — jalan buat waktu
+  sholat di Beranda, tapi Qibla tetap stuck "Mendeteksi lokasi..." terlepas dari geo fix.
+- Chronicle MCP unreachable (`connection refused :18081`) di awal sesi — infra issue di
+  luar kendali sesi ini, dilanjut tanpa Chronicle.
+- **Catatan penamaan folder**: screenshot tersimpan di
+  `apps/mobile/output/native/2026-09-26/` (82 file) — nama folder salah tanggal (harusnya
+  `2026-09-25`, sesuai tanggal sesi asli), kemungkinan agent salah hitung tanggal saat
+  bikin folder. Bukan bug kode, cuma penamaan; dibiarkan apa adanya biar link ke file di
+  bawah tetap valid. Folder ini gitignored sama seperti baseline sesi 1-3, jadi tidak
+  ke-commit.
+
+### Coverage vs 47-fitur `MOBILE_USE_CASE_FLOWS.md`
+
+Captured (tema Modern kecuali disebut lain): 1, 2a/b/c, 3a/b (3c cuma di Classic — lihat
+bug di bawah), 4a/b, 5, 6a/c/f (6b/6e parsial, 6d kelewat), 7, 8, 9, 10a/b, 11-16, 17a,
+18-26, 29, 30, 32-40, 41 (broken state), 43 (alias behavior — lihat bug), 44 (bug), 45,
+46, 47. Plus bonus di luar 47-list: Perawi Hadis (list + diagram Sanad), Jurnal
+Muhasabah Modern, dropdown avatar, full flow login/register/lupa-sandi, global search
+165 hasil, dan spot-check Classic (Beranda full-page, Hadis hub/detail, Quran list + tab
+Murojaah yang jalan normal, Profile guest).
+
+**Dilewati/tidak lengkap:**
+
+- **10c (counter Wirid Asmaul Husna), 27/28 (tile cepat Hafalan/Jurnal sebagai screen
+  terpisah), 31 (Catatan Pribadi), 42 (Peta Interaktif)** — budget waktu, atau (Peta
+  Interaktif) kena dead-end bug yang persis sama dengan Tokoh Islam jadi duplikat
+  screenshot dianggap tidak worth waktunya.
+- **6b/6d/6e** (dialog izin notifikasi, state reminder-off, toast konfirmasi) — AVD ini
+  sudah pernah grant `POST_NOTIFICATIONS` dari sesi sebelumnya (bukan fresh install) jadi
+  dialognya gak muncul lagi; tap reminder-off ke-miss dan gak dicoba ulang; toast
+  konfirmasi gak sempat ke-capture.
+- **3d (tap kata / Mufrodat)** — gak berhasil dipicu di UI manapun. Root cause di kode:
+  `QuranScreenRenderers.js` cuma render layout per-kata kalau `hasPerKataDataForAll`
+  true untuk SEMUA ayat di halaman mushaf itu; kondisi ini gak kejadian di halaman yang
+  dicoba, dan fallback row layout-nya emang gak punya touch target per-kata sama sekali.
+- **17b (Diskusi & Komentar)** — ke-block sama gated/empty state Komunitas (butuh post
+  asli yang gak ada tanpa login).
+- **Splash / dialog izin lokasi OS** — gak ke-capture ulang karena AVD ini sudah pernah
+  grant izinnya dari sesi sebelumnya (bukan indikasi regresi kode, cuma state AVD).
+- **Tema Classic** — cuma spot-check sesuai prioritas task (Modern duluan). Tab bar
+  Classic invisible total pas cold launch sesi ini — lebih parah dari catatan baseline
+  sesi 1 ("auto-hide setelah scroll") — dan makan waktu navigasi signifikan.
+
+### Bug baru ditemukan sesi ini
+
+1. **Menu "Tokoh Islam" dan "Peta Interaktif" dead-end** — dua-duanya cuma buka hub
+   Belajar polos, bukan target screen-nya. Root cause: `MobileMenuSheet.js` baris
+   231-244, dua entry ini gak punya field `params: { featureKey: ... }`.
+   `WebAppShell.js` baris 84 (`onTabChange?.(item?.tab ?? item?.key, item?.params ??
+null)`) fallback ke `null` params kalau gak diisi, jadi gak ada feature spesifik yang
+   ke-select. Key asli yang terdaftar di `data/mobileFeatures.js`: `"tokoh"` dan
+   `"historical-map"` — belum di-wire ke `params` entry menu manapun. Screenshot:
+   `modern-tokoh-islam.png`.
+2. **Menu "Amalan" masih salah arah ke hub Ibadah polos** — bug class sama dengan #1,
+   sudah didokumentasikan di Sesi 2 di atas, dikonfirmasi **MASIH ADA**
+   (`modern-amalan.png`).
+3. **Tab Hafalan & Murojaah di Al-Quran gak ke-reach sama sekali di tema Modern** —
+   `QuranScreen.js` baris 1915-1919 force-reset `quranTab` balik ke `"surah"` tiap kali
+   `isWebAppLayout` true. Confirmed jalan normal di Classic
+   (`classic-quran-murojaah.png`), confirmed force-reset di Modern.
+4. **Menu "Tilawah" cuma alias tab Quran**, bukan tracker screen tersendiri (`tab:
+"quran"` di `MobileMenuSheet.js` baris 102) — sama juga entry "Hafalan"/"Muroja'ah" di
+   menu. Perlu di-flag karena `MOBILE_USE_CASE_FLOWS.md`/`mobile.pen` mengasumsikan flow
+   dedicated buat fitur-fitur ini.
+5. **Modul & Kelas lesson detail nampilin "Langkah 1 dari 0"** — total step counter 0
+   padahal ini step-wizard (`modern-belajar-lessons-detail-langkah0-bug.png`).
+6. **Chip filter kategori Panduan Sholat nampilin teks mentah kutipan hadis** bukan label
+   kategori yang bersih (`modern-belajar-panduan-sholat.png`).
+
+### Bug lama dikonfirmasi MASIH ADA
+
+- Tafsir: pilih surah ke-highlight tapi konten ayat gak pernah render
+  (`modern-belajar-tafsir-surah-selected.png`).
+- Kamus Arab: search selalu "Tidak ada hasil" bahkan buat chip "Kosakata Populer" bawaan
+  app sendiri kayak "Iman" (`modern-belajar-kamus-search.png`).
+
+### Bug lama dikonfirmasi FIXED (regression check pass)
+
+- Sholat Tracker/Log Sholat crash (`Mosque` icon, lihat Sesi 2) — gak crash lagi, render
+  normal (`modern-ibadah-log-sholat.png`).
+- Audio Adzan duplicate-block di `PrayerScreen.js` (lihat Sesi 3) — picker muadzin
+  render normal di tempatnya, gak blank/crash (`modern-ibadah-prayer-audio-adzan.png`).
+- Forum Tanya Jawab — sekarang ke-reach langsung dari hub Belajar
+  (`modern-belajar-forum.png`), sebelumnya gak ada entry point (Sesi 2).
+- Perpustakaan/Library — sekarang ke-reach & fungsional
+  (`modern-belajar-perpustakaan.png`), sebelumnya gak ada entry point (Sesi 2).
+- Sejarah Islam — sekarang load 20 event asli, gak stuck "0 peristiwa" lagi (Sesi 2)
+  (`modern-belajar-sejarah-islam.png`).
+- Artikel/Blog — sekarang load konten, gak infinite spinner lagi (Sesi 2)
+  (`modern-belajar-blog.png`) — meski ada 2 gambar render placeholder abu-abu kosong
+  (kemungkinan broken image URL yang terpisah, bukan bug loading-state).
+
+Semua screenshot: `apps/mobile/output/native/2026-09-26/*.png` (lihat catatan penamaan
+folder di atas), konvensi nama file `modern-`/`classic-` konsisten dengan sesi
+sebelumnya.
