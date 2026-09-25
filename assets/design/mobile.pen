@@ -181899,16 +181899,6 @@
     },
     {
       "type": "frame",
-      "id": "JguSG",
-      "x": 4900,
-      "y": 138820,
-      "name": "Row Check Wrapper",
-      "width": 1220,
-      "height": 1700,
-      "layout": "none"
-    },
-    {
-      "type": "frame",
       "id": "F3hep",
       "x": 6160,
       "y": 127600,
@@ -182226,6 +182216,7 @@
                   "type": "frame",
                   "id": "CIRPC",
                   "name": "Today Box",
+                  "width": "fill_container",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-card",
                   "layout": "vertical",
@@ -182497,7 +182488,7 @@
                   "type": "frame",
                   "id": "w6wrU0",
                   "name": "Disclaimer",
-                  "width": "fit_content(0)",
+                  "width": "fill_container",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-card",
                   "layout": "vertical",
