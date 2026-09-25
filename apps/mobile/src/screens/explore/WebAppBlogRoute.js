@@ -8,6 +8,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 
@@ -19,6 +20,7 @@ function BlogCard({
     getItemKey,
     getRaw,
     getTitle,
+    isDark,
     item,
     onOpen,
 }) {
@@ -39,39 +41,56 @@ function BlogCard({
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[styles.card, isDark && styles.cardDark]}
             testID='web-app-blog-card'
         >
             {cover ? (
                 <Image
                     accessibilityIgnoresInvertColors
                     source={{ uri: cover }}
-                    style={styles.cover}
+                    style={[styles.cover, isDark && styles.coverDark]}
                 />
             ) : null}
             <View style={styles.body}>
                 {category ? (
-                    <Text style={styles.category}>{category}</Text>
+                    <Text
+                        style={[styles.category, isDark && styles.categoryDark]}
+                    >
+                        {category}
+                    </Text>
                 ) : null}
-                <Text numberOfLines={2} style={styles.title}>
+                <Text
+                    numberOfLines={2}
+                    style={[styles.title, isDark && styles.titleDark]}
+                >
                     {getTitle(item)}
                 </Text>
                 {getExcerpt(item) ? (
-                    <Text numberOfLines={2} style={styles.excerpt}>
+                    <Text
+                        numberOfLines={2}
+                        style={[styles.excerpt, isDark && styles.excerptDark]}
+                    >
                         {getExcerpt(item)}
                     </Text>
                 ) : null}
                 {author || publishedAt ? (
                     <View style={styles.metaRow}>
                         {author ? (
-                            <Text numberOfLines={1} style={styles.meta}>
+                            <Text
+                                numberOfLines={1}
+                                style={[styles.meta, isDark && styles.metaDark]}
+                            >
                                 {author}
                             </Text>
                         ) : (
                             <View />
                         )}
                         {publishedAt ? (
-                            <Text style={styles.meta}>{publishedAt}</Text>
+                            <Text
+                                style={[styles.meta, isDark && styles.metaDark]}
+                            >
+                                {publishedAt}
+                            </Text>
                         ) : null}
                     </View>
                 ) : null}
@@ -99,30 +118,38 @@ export function WebAppBlogRoute({
     onRetry,
     onSelectCategory,
     onSearch,
+    isDarkTheme = false,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDark = isDarkTheme || isDarkThemePref;
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                isDark && styles.contentDark,
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDark && styles.rootDark]}
         >
             <View testID='explore-web-app-blog-surface' />
             <View style={styles.header}>
-                <Text style={styles.heading}>{t("explore.blog.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.heading, isDark && styles.headingDark]}>
+                    {t("explore.blog.title")}
+                </Text>
+                <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
                     {t("explore.blog.subtitle")}
                 </Text>
             </View>
 
-            <View style={styles.search}>
+            <View style={[styles.search, isDark && styles.searchDark]}>
                 <TextInput
                     onChangeText={onSearch}
                     placeholder={t("explore.blog.searchPlaceholder")}
-                    placeholderTextColor='#9ca3af'
-                    style={styles.input}
+                    placeholderTextColor={isDark ? "#64748b" : "#9ca3af"}
+                    style={[styles.input, isDark && styles.inputDark]}
                     testID='web-app-blog-search'
                     value={blogSearch}
                 />
@@ -135,13 +162,18 @@ export function WebAppBlogRoute({
                         onPress={() => onSelectCategory("")}
                         style={[
                             styles.categoryPill,
+                            isDark && styles.categoryPillDark,
                             !blogCategory && styles.categoryPillActive,
+                            !blogCategory &&
+                                isDark &&
+                                styles.categoryPillActiveDark,
                         ]}
                         testID='web-app-blog-category-all'
                     >
                         <Text
                             style={[
                                 styles.categoryPillText,
+                                isDark && styles.categoryPillTextDark,
                                 !blogCategory && styles.categoryPillTextActive,
                             ]}
                         >
@@ -155,15 +187,21 @@ export function WebAppBlogRoute({
                             onPress={() => onSelectCategory(category.value)}
                             style={[
                                 styles.categoryPill,
+                                isDark && styles.categoryPillDark,
                                 blogCategory.toLowerCase() ===
                                     category.value.toLowerCase() &&
                                     styles.categoryPillActive,
+                                blogCategory.toLowerCase() ===
+                                    category.value.toLowerCase() &&
+                                    isDark &&
+                                    styles.categoryPillActiveDark,
                             ]}
                             testID={`web-app-blog-category-${category.value}`}
                         >
                             <Text
                                 style={[
                                     styles.categoryPillText,
+                                    isDark && styles.categoryPillTextDark,
                                     blogCategory.toLowerCase() ===
                                         category.value.toLowerCase() &&
                                         styles.categoryPillTextActive,
@@ -178,7 +216,9 @@ export function WebAppBlogRoute({
 
             {error ? (
                 <View style={styles.errorBox}>
-                    <Text style={styles.error}>{error}</Text>
+                    <Text style={[styles.error, isDark && styles.errorDark]}>
+                        {error}
+                    </Text>
                     {onRetry ? (
                         <Pressable
                             accessibilityRole='button'
@@ -193,9 +233,17 @@ export function WebAppBlogRoute({
                 </View>
             ) : null}
             {loading ? (
-                <View style={styles.state}>
-                    <ActivityIndicator color='#047857' size='small' />
-                    <Text style={styles.stateText}>
+                <View style={[styles.state, isDark && styles.stateDark]}>
+                    <ActivityIndicator
+                        color={isDark ? "#34d399" : "#047857"}
+                        size='small'
+                    />
+                    <Text
+                        style={[
+                            styles.stateText,
+                            isDark && styles.stateTextDark,
+                        ]}
+                    >
                         {t("explore.blog.loading")}
                     </Text>
                 </View>
@@ -211,6 +259,7 @@ export function WebAppBlogRoute({
                             getItemKey={getItemKey}
                             getRaw={getRaw}
                             getTitle={(entry) => getTitle(entry, index)}
+                            isDark={isDark}
                             item={item}
                             key={`${getItemKey(item)}-${index}`}
                             onOpen={onOpenItem}
@@ -219,14 +268,31 @@ export function WebAppBlogRoute({
                 </View>
             ) : null}
             {!loading && !error && !filteredItems.length ? (
-                <View style={styles.empty}>
-                    <Text style={styles.emptyArabic}>كِتَابَةً</Text>
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDark && styles.emptyDark]}>
+                    <Text
+                        style={[
+                            styles.emptyArabic,
+                            isDark && styles.emptyArabicDark,
+                        ]}
+                    >
+                        كِتَابَةً
+                    </Text>
+                    <Text
+                        style={[
+                            styles.emptyTitle,
+                            isDark && styles.emptyTitleDark,
+                        ]}
+                    >
                         {hasItems
                             ? t("explore.blog.emptyFilteredTitle")
                             : t("explore.blog.emptyTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text
+                        style={[
+                            styles.emptyText,
+                            isDark && styles.emptyTextDark,
+                        ]}
+                    >
                         {hasItems
                             ? t("explore.blog.emptyFilteredText")
                             : t("explore.blog.emptyText")}
@@ -428,5 +494,78 @@ const styles = StyleSheet.create({
         lineHeight: 19,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    headingDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    searchDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    inputDark: {
+        color: "#f8fafc",
+    },
+    categoryPillDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    categoryPillActiveDark: {
+        backgroundColor: "#047857",
+        borderColor: "#047857",
+    },
+    categoryPillTextDark: {
+        color: "#cbd5e1",
+    },
+    cardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    coverDark: {
+        backgroundColor: "#1e293b",
+    },
+    categoryDark: {
+        color: "#34d399",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    excerptDark: {
+        color: "#cbd5e1",
+    },
+    metaDark: {
+        color: "#94a3b8",
+    },
+    stateDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    errorDark: {
+        backgroundColor: "#3f1d1d",
+        color: "#fecaca",
+    },
+    emptyDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    emptyArabicDark: {
+        color: "#34d399",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
 });
