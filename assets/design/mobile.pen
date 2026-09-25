@@ -35411,7 +35411,15 @@
                       "content": "Akhlak"
                     }
                   }
-                },
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "p1WbHK",
+              "name": "Category Chips Row 2",
+              "gap": 8,
+              "children": [
                 {
                   "id": "ndXdS",
                   "type": "ref",
@@ -35422,15 +35430,7 @@
                       "content": "Tafsir"
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "p1WbHK",
-              "name": "Category Chips Row 2",
-              "gap": 8,
-              "children": [
+                },
                 {
                   "id": "W1Uyy",
                   "type": "ref",
@@ -39707,8 +39707,165 @@
               ]
             }
           ]
+        },
+        {
+          "type": "frame",
+          "id": "eetDw",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "s6dYis",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/RPER3": {
+                  "fill": "#00000000"
+                },
+                "x9sk1l/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "#00000000"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "YdN7T/nM62E": {
+                  "fill": "$primary"
+                },
+                "YdN7T/dMeH6": {
+                  "fill": "$primary"
+                },
+                "HSkNE/RPER3": {
+                  "fill": "#00000000"
+                },
+                "HSkNE/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "HSkNE/dMeH6": {
+                  "fill": "$text-secondary"
+                }
+              }
+            }
+          ]
         }
       ]
+    },
+    {
+      "type": "ellipse",
+      "id": "tjgOf",
+      "x": 6543,
+      "y": 15176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "dkosO",
+      "x": 6555,
+      "y": 15179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "J6dI2",
+      "x": 6595,
+      "y": 15173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "d8HX6",
+      "x": 6543,
+      "y": 15159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap ikon gear",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "E3S98",
+      "x": 6088,
+      "y": 22676,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "peRPn",
+      "x": 6100,
+      "y": 22679,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "VAFDj",
+      "x": 6140,
+      "y": 22673,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "aREiH",
+      "x": 6088,
+      "y": 22659,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap 'Kajian'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
     }
   ],
   "themes": {
