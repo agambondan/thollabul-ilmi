@@ -36,6 +36,14 @@ Belum digarap: sub-halaman detail lain (Quran reader per-surah, Ibadah sub-tools
 ~25 sub-route Belajar secara detail). Cek dulu `docs/INDEX.md` / tanya user sebelum menganggap
 scope ini final.
 
+> **⚠️ Y-position di bawah ini SUDAH BASI (2026-09-25)**: kanvas usecase sudah di-reorganize
+> dari "1 usecase = 1 lane vertikal" jadi "1 feature = 1 baris, usecase berdampingan ke
+> kanan" — lihat aturan layout terbaru di section
+> [Use Case + UI Flow diagram](#use-case--ui-flow-diagram-rules-desain-wajib) dan katalog
+> usecase terkini di [`MOBILE_USE_CASE_FLOWS.md`](./MOBILE_USE_CASE_FLOWS.md). Narasi di
+> bawah ini dibiarkan sebagai riwayat kronologis (kapan usecase apa dibangun, insiden apa
+> yang terjadi), bukan acuan posisi Y yang masih valid.
+
 **Use Case + UI Flow lanes** (area kanvas `x≈4910` ke kanan, lihat section di bawah) — 7 lane
 wajib per keputusan user, semua entry point dari Beranda - Modern. **Semua 7 lane SELESAI
 dibangun** (2026-09-24), Y-stride 3750px per lane, diverifikasi manual node-by-node lewat
@@ -195,26 +203,39 @@ Use Case + UI Flow, bukan cuma screen lepas berdiri sendiri — ini permintaan e
 jadi berlaku ke semua pekerjaan berikutnya di `mobile.pen`, tidak cuma dua contoh yang sudah
 ada.
 
-Bentuknya (contoh yang sudah ada: alur "Baca Surah Al-Qur'an" dan "Baca Hadis", area kanvas
-mulai `x≈4910`):
+Bentuknya (area kanvas mulai `x≈4910`):
 
 - Header 2 kolom di baris paling atas: teks **"USE CASE"** (kiri) dan **"UI AND FLOW"**
   (kanan), dipisahkan garis vertikal pendek + garis horizontal (underline) — **cuma
   setinggi header**, jangan dibuat garis panjang menembus ke bawah, karena akan numpuk
   sama connector line di lane manapun.
-- Tiap alur = satu "lane" horizontal, isinya:
+- **Layout wajib: 1 baris (row/Y tetap) = 1 FEATURE, bukan 1 usecase** (aturan direvisi
+  2026-09-25 setelah kanvas sempat jadi 33 lane vertikal terpisah dan kepanjangan/susah
+  di-scan). Kalau satu feature punya lebih dari 1 usecase (mis. Login: Masuk/Daftar/Lupa
+  Sandi), SEMUA usecase-nya ditaruh **berdampingan ke kanan** di baris yang sama — usecase
+  kedua mulai ~150px setelah layar terakhir usecase pertama (lebih lebar dari gap 80px
+  antar-screen biasa, supaya batas antar-usecase kelihatan). **Jangan** bikin baris/Y baru
+  untuk usecase tambahan dari feature yang sudah punya baris — itu cuma buat feature yang
+  benar-benar baru. Tambahkan label kecil teks di atas baris (`"FITUR: <nama> (N usecase)"`)
+  kalau baris itu punya >1 usecase, biar kelihatan pengelompokannya.
+- Tiap usecase (di dalam baris feature-nya) = satu urutan horizontal, isinya:
     1. Kartu hijau `Flow/HandoffCard` (reusable, di kolom "Use Case") — badge HAND-OFF,
        judul use case, deskripsi singkat alurnya, "Person in Charge".
-    2. Connector: titik kecil (ellipse) + garis tipis + icon `chevron-right`, jangan
-       ditempel pas di tepi card (kasih jarak ~8px) supaya tidak numpuk sama border card.
-    3. Screen-screen yang terlibat, disusun berurutan sesuai urutan tap user, masing-masing
-       dihubungkan connector yang sama.
-- **Screen di dalam lane HARUS hasil `Copy()` dari screen yang sudah ada di grid utama**,
-  bukan dibangun ulang dari nol — supaya konsisten dan menghindari bug render `Insert()`
-  mentah (lihat gotcha #3 di bawah).
-- Spasi antar lane: hitung dari tinggi konten lane sebelumnya yang sebenarnya (`Get` +
-  `ctx.bounds`), jangan menebak — dua kali kejadian jarak lane kelebihan (~580px kosong)
-  karena ditebak asal, bukan diukur.
+    2. Connector: titik kecil (ellipse) + garis tipis + icon `chevron-right` (dari icon set
+       "Material Symbols Rounded", snake_case — lihat gotcha #7), jangan ditempel pas di
+       tepi card (kasih jarak ~8px) supaya tidak numpuk sama border card.
+    3. Screen-screen yang terlibat, disusun berurutan sesuai urutan tap user (gap 80px antar
+       screen), masing-masing dihubungkan connector yang sama, dengan label teks kecil di
+       atas tiap connector menjelaskan aksi tap-nya (mis. "Tap tab Ibadah").
+- **Screen di dalam usecase HARUS hasil `Copy()` dari screen yang sudah ada di grid utama**
+  (atau dari usecase lain yang sudah dibangun), bukan dibangun ulang dari nol — supaya
+  konsisten dan menghindari bug render `Insert()` mentah (lihat gotcha #3 di bawah).
+- Spasi antar baris (feature): hitung dari tinggi konten TERTINGGI di antara semua usecase
+  feature itu (`Get` + `ctx.bounds`), jangan menebak. Stride seragam 3750px per baris sudah
+  terbukti aman untuk layar setinggi Belajar hub (~3346px) + buffer.
+- Katalog lengkap semua usecase (nama, alur tap, layar, grounding) ada di tabel
+  [`MOBILE_USE_CASE_FLOWS.md`](./MOBILE_USE_CASE_FLOWS.md) — **itu sumber kebenaran untuk
+  daftar usecase**, jangan cari-cari lagi di riwayat commit dokumen ini.
 
 **Gotcha khusus bagian ini** — sudah dua kali kejadian (`Quran/AyatCard`, lalu
 `Flow/HandoffCard`): begitu selesai `Copy()` dari sebuah komponen reusable buat pertama
