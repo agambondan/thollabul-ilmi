@@ -432,6 +432,25 @@ test + rebuild APK/emulator sebelum commit (`d3964972`).
   menu ini — perlu keputusan: (a) urus API key beneran, atau (b) sementara tambah guard
   supaya nunjukkin "Peta belum tersedia" alih-alih crash, sampai key-nya ada.
 
+    **RESOLVED (commit `960b32ab`)** — dipilih opsi ketiga: ganti total dari
+    `react-native-maps`/Google Maps ke `react-native-webview` (sudah jadi dependency)
+    yang render halaman HTML berisi Leaflet.js + tile OpenStreetMap, gratis dan tanpa API
+    key sama sekali. `HistoricalMapView.native.js` ditulis ulang; `HistoricalMapScreen.js`
+    dan pemanggil lain tidak perlu berubah karena signature komponen (`locations`,
+    `isWebAppLayout`, `webAppTheme`) tetap sama. Sempat kena 1 bug susulan saat
+    verifikasi: tile gelap awalnya pakai CartoDB `dark_all` yang ternyata **juga** sekarang
+    butuh API key/registrasi (muncul watermark "API KEY REQUIRED" alih-alih tile asli) —
+    diganti pakai tile OSM yang sama dengan mode terang plus CSS `filter: invert()` yang
+    di-scope cuma ke `.leaflet-tile-pane` (marker/popup tetap warna normal). Diverifikasi
+    2x rebuild APK + emulator: mode terang (tile + popup marker "Karbala" jalan normal,
+    `10-peta-interaktif-fixed.png`/`11-peta-interaktif-marker-popup.png`) dan mode gelap
+    (genuinely dark-toned, bukan watermark, popup "Tlemcen" tetap kebaca,
+    `13-peta-interaktif-dark-fixed.png`/`14-peta-interaktif-dark-marker-popup.png`), plus
+    regression check mode terang setelah fix gelap (`15-peta-interaktif-light-regression-check.png`).
+    `react-native-maps` jadi dependency tak terpakai di `package.json` — sengaja belum
+    dihapus (butuh verifikasi terpisah kalau mau prebuild ulang project Android tanpa
+    modul native ini), dicatat sebagai follow-up opsional.
+
 ### Bug lama dikonfirmasi FIXED (regression check pass)
 
 - Sholat Tracker/Log Sholat crash (`Mosque` icon, lihat Sesi 2) — gak crash lagi, render
