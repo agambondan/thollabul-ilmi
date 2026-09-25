@@ -1,5 +1,5 @@
 {
-  "version": "2.17",
+  "version": "2.19",
   "children": [
     {
       "type": "frame",
@@ -111645,6 +111645,5210 @@
           ]
         }
       ]
+    },
+    {
+      "id": "ynlvY",
+      "type": "ref",
+      "ref": "r7P5jg",
+      "name": "Flow/HandoffCard - Baca Hadis dalam 1 Kitab",
+      "x": 4910,
+      "y": 105150,
+      "descendants": {
+        "h7m7Yb": {
+          "content": "Baca Hadis dalam 1 Kitab"
+        },
+        "e2jF9": {
+          "content": "User membuka tab Hadis, memilih satu kitab (mis. Shahih Bukhari), melihat daftar hadis dalam kitab itu, lalu membaca detail satu hadis."
+        },
+        "VOnZ7": {
+          "content": "Mobile Team"
+        }
+      }
+    },
+    {
+      "type": "frame",
+      "id": "J3GRVo",
+      "x": 5250,
+      "y": 105150,
+      "name": "Beranda - Modern (hadis-reader)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "lCXGu",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "xxUgY",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "OXxa1",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "LjJzN",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "sDCjT",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "edj20",
+          "name": "Top Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "padding": [
+            12,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "lkf05",
+              "name": "Brand",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "T3PkdZ",
+                  "name": "Logo",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$primary",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Ff8PZ",
+                      "name": "Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "book-open",
+                      "library": "lucide",
+                      "fill": "$primary-foreground"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Sfpqk",
+                  "name": "AppName",
+                  "fill": "$ink",
+                  "content": "Thullaabul 'Ilmi",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "i6S1Im",
+              "name": "Actions",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "SPnZr",
+                  "type": "ref",
+                  "ref": "b5ILqb",
+                  "name": "Search",
+                  "descendants": {
+                    "VX9BQ": {
+                      "icon": "search"
+                    }
+                  }
+                },
+                {
+                  "id": "Qiawr",
+                  "type": "ref",
+                  "ref": "b5ILqb",
+                  "name": "Notification",
+                  "descendants": {
+                    "VX9BQ": {
+                      "icon": "menu"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "oAt9d",
+                  "name": "Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$primary",
+                  "cornerRadius": "$radius-pill",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Xm2QH",
+                      "name": "Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "user",
+                      "library": "lucide",
+                      "fill": "$primary-foreground"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "VhWFM",
+                  "name": "Chevron",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-down",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uUsMH",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "qETcn",
+              "name": "Greeting Block",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jrq1c",
+                  "name": "Greeting",
+                  "fill": "$ink",
+                  "content": "Assalamu'alaikum, Tamu",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "mQrJ9",
+                  "name": "Date",
+                  "fill": "$text-secondary",
+                  "content": "Kamis, 24 September 2026",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZSIXX",
+              "name": "Prayer Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$primary",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "$shadow-color",
+                "offset": {
+                  "x": 0,
+                  "y": "$shadow-offset-y"
+                },
+                "blur": "$shadow-blur"
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vw33d",
+                  "name": "Top Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Uy6fK",
+                      "name": "Location Pill",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "gap": 6,
+                      "padding": [
+                        6,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "rezlq",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "timer",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "P0Cqv",
+                          "name": "Label",
+                          "fill": "$primary",
+                          "content": "UKIAH",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CUFx0",
+                      "name": "Date Stack",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bBoy3",
+                          "name": "Date",
+                          "fill": "$ink",
+                          "content": "Kamis, 24 September 2026",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "M5yqp",
+                          "name": "Hijri Row",
+                          "gap": 4,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "esoBl",
+                              "name": "Icon",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "moon",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "xAgXa",
+                              "name": "Hijri",
+                              "fill": "$primary",
+                              "content": "11 Rabiul Akhir 1448 H",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qjuMs",
+                  "name": "Countdown Block",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ijyF3",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "MENUJU SUBUH",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.5
+                    },
+                    {
+                      "type": "text",
+                      "id": "zypt2",
+                      "name": "Time",
+                      "fill": "$ink",
+                      "content": "19:21",
+                      "fontFamily": "$font-body",
+                      "fontSize": 44,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VSLwY",
+                      "name": "Subtext",
+                      "fill": "$text-secondary",
+                      "content": "Subuh dalam 6 jam 52 menit",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pzLB7",
+                      "name": "Timer Pill",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "eDqyt",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "timer",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YTm6H",
+                          "name": "Time",
+                          "fill": "$primary",
+                          "content": "06:52:09",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zuQNQ",
+                  "name": "Divider",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "$border"
+                },
+                {
+                  "type": "frame",
+                  "id": "d4NnCP",
+                  "name": "Prayer Row",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "id": "BCdtD",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Subuh",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Subuh",
+                          "fill": "$primary"
+                        },
+                        "lrr0b": {
+                          "icon": "moon",
+                          "fill": "$primary"
+                        },
+                        "LV2IC": {
+                          "content": "19:21",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "TW2sp",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Terbit",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Terbit",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sunrise",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "21:01",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "alZt8",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Dzuhur",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Dzuhur",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sun",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "03:05",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "UIRxf",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Ashar",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Ashar",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sun",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "06:30",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "ttzhe",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Maghrib",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Maghrib",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sunset",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "09:07",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "gomad",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Isya",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Isya",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "moon",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "10:37",
+                          "fill": "$ink"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LQqVQ",
+              "name": "Ayat Card",
+              "width": "fill_container",
+              "fill": "$highlight-fill",
+              "cornerRadius": "$radius-card",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yME1B",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CtVeN",
+                      "name": "Title Group",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "m0Vsc",
+                          "name": "Icon",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "wo4N6",
+                          "name": "Label",
+                          "fill": "$primary",
+                          "content": "AYAT HARI INI",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OwCHV",
+                      "name": "Nav",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "RnuxJ",
+                          "type": "ref",
+                          "ref": "b5ILqb",
+                          "name": "Prev",
+                          "descendants": {
+                            "VX9BQ": {
+                              "icon": "chevron-left"
+                            }
+                          }
+                        },
+                        {
+                          "id": "simJt",
+                          "type": "ref",
+                          "ref": "b5ILqb",
+                          "name": "Next",
+                          "descendants": {
+                            "VX9BQ": {
+                              "icon": "chevron-right"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "BJiiG",
+                  "name": "Arabic",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "وَإِذَا الْعِشَارُ عُطِّلَتْ",
+                  "textAlign": "right",
+                  "fontFamily": "$font-body",
+                  "fontSize": 24,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "hsRze",
+                  "name": "Translation",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "\"dan apabila unta-unta yang bunting ditinggalkan (tidak diperdulikan)\"",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "N0uKZW",
+                  "name": "Footer",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "KsQbh",
+                      "name": "Ref",
+                      "fill": "$primary",
+                      "content": "At-Takwir · Ayah 4",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "XbAVm",
+                      "name": "Link",
+                      "fill": "$primary",
+                      "content": "Selengkapnya ->",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xNqxb",
+                  "name": "Dots",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UuHJL",
+                      "name": "Active Dot",
+                      "width": 20,
+                      "height": 6,
+                      "fill": "$primary",
+                      "cornerRadius": 3
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "J6Kn40",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "igsNb",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "icnHa",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "RprEb",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "GXQMs",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "bRJm0",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "uYPJ3",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "nse6p",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "fPwx1",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "r31rAh",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "r3ZXlf",
+              "name": "Saran Sekarang",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ajer3",
+                  "name": "Label",
+                  "fill": "$text-secondary",
+                  "content": "SARAN SEKARANG",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "700",
+                  "letterSpacing": 0.5
+                },
+                {
+                  "type": "frame",
+                  "id": "v43YVn",
+                  "name": "Suggestion Card",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "JjccB",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kiblat",
+                      "width": 160,
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "compass"
+                        },
+                        "JiISP": {
+                          "content": "Kiblat"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rdLMT",
+              "name": "Terakhir Dibuka",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "q9k2g",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NOvlS",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "d2nJ6",
+                          "name": "Title",
+                          "fill": "$ink",
+                          "content": "Terakhir Dibuka",
+                          "fontFamily": "$font-heading",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "XJwHy",
+                          "name": "Subtitle",
+                          "fill": "$text-secondary",
+                          "content": "Lanjutkan fitur yang baru kamu pakai",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "ZPpat",
+                      "name": "Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "timer",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "reXUU",
+                  "name": "Sholat Tracker Row",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 12,
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "IGLgO",
+                      "name": "Icon Chip",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-tile",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "QwIMg",
+                          "name": "Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "landmark",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nX0AK",
+                      "name": "Text",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "eShja",
+                          "name": "Title",
+                          "fill": "$ink",
+                          "content": "Sholat Tracker",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "dOtPM",
+                          "name": "Subtitle",
+                          "fill": "$text-secondary",
+                          "content": "Catat sholat hari ini",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "TzkVm",
+                      "name": "Chevron",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ySqyV",
+              "name": "Akses Cepat",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YtSVS",
+                  "name": "Title",
+                  "fill": "$ink",
+                  "content": "Akses Cepat",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "iRauq",
+                  "name": "Row 1",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "id": "f527vi",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kiblat",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "compass"
+                        },
+                        "JiISP": {
+                          "content": "KIBLAT"
+                        }
+                      }
+                    },
+                    {
+                      "id": "KBJwd",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Hafalan",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "book-check"
+                        },
+                        "JiISP": {
+                          "content": "HAFALAN"
+                        }
+                      }
+                    },
+                    {
+                      "id": "z4NqNl",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Jurnal",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "smile"
+                        },
+                        "JiISP": {
+                          "content": "JURNAL"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Z7CjVg",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kuis",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "help-circle"
+                        },
+                        "JiISP": {
+                          "content": "KUIS"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "h8gXeV",
+                  "name": "Row 2",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "id": "zCINC",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kajian",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "video"
+                        },
+                        "JiISP": {
+                          "content": "KAJIAN"
+                        }
+                      }
+                    },
+                    {
+                      "id": "TD6LU",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Tafsir",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "file-text"
+                        },
+                        "JiISP": {
+                          "content": "TAFSIR"
+                        }
+                      }
+                    },
+                    {
+                      "id": "llpr0",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Hadis",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "book"
+                        },
+                        "JiISP": {
+                          "content": "HADIS"
+                        }
+                      }
+                    },
+                    {
+                      "id": "u8o3nV",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Lainnya",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "layout-grid"
+                        },
+                        "JiISP": {
+                          "content": "LAINNYA"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "B9Wn7u",
+              "name": "Jurnal Muhasabah Row",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 12,
+              "padding": "$pad-card",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "RKEj6",
+                  "name": "Icon Chip",
+                  "width": 40,
+                  "height": 40,
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-tile",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "S9hBFC",
+                      "name": "Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "smile",
+                      "library": "lucide",
+                      "fill": "$primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "txk0U",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xzFWl",
+                      "name": "Title",
+                      "fill": "$ink",
+                      "content": "Jurnal Muhasabah",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tCqGy",
+                      "name": "Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "Bagaimana imanmu hari ini?",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "TCHTM",
+                  "name": "Chevron",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "chevron-right",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JlN5x",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "rRTqU",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "n3bMa",
+      "x": 5178,
+      "y": 105226,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "S9aqzJ",
+      "x": 5190,
+      "y": 105229,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "C50Hd4",
+      "x": 5230,
+      "y": 105223,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "HAPoB",
+      "x": 5178,
+      "y": 105209,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "FUeY7",
+      "x": 5705,
+      "y": 105150,
+      "name": "Hadis Hub - Modern (hadis-reader)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "v5HY4l",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "vuvrM",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "kjlRW",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Fl7mF",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "m57j5",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ahCL2",
+          "name": "Top Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "padding": [
+            12,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "B6VIag",
+              "name": "Brand",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PHNtN",
+                  "name": "Logo",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$primary",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "KbRuE",
+                      "name": "Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "book-open",
+                      "library": "lucide",
+                      "fill": "$primary-foreground"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "CZqEV",
+                  "name": "AppName",
+                  "fill": "$ink",
+                  "content": "Thullaabul 'Ilmi",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "T2IpFK",
+              "name": "Actions",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "doqoj",
+                  "type": "ref",
+                  "ref": "b5ILqb",
+                  "name": "Search",
+                  "descendants": {
+                    "VX9BQ": {
+                      "icon": "search"
+                    }
+                  }
+                },
+                {
+                  "id": "Iv74x",
+                  "type": "ref",
+                  "ref": "b5ILqb",
+                  "name": "Notification",
+                  "descendants": {
+                    "VX9BQ": {
+                      "icon": "menu"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "G70Wfx",
+                  "name": "Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$primary",
+                  "cornerRadius": "$radius-pill",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "LOELC",
+                      "name": "Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "user",
+                      "library": "lucide",
+                      "fill": "$primary-foreground"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "Mildo",
+                  "name": "Chevron",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-down",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Y0zPO0",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-md",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "m51qR9",
+              "name": "Filter Row",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "id": "dYtJM",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Book",
+                  "fill": "$primary",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Book",
+                      "fill": "$primary-foreground"
+                    }
+                  }
+                },
+                {
+                  "id": "BMLoY",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Theme",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Theme",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "gRxcS",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Chapter",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Chapter",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "vc6Mu",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Hadith",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Hadith",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IP6YU",
+              "name": "Search Bar",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-pill",
+              "stroke": "$primary",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 10,
+              "padding": [
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "xtTUW",
+                  "name": "Icon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "OwziT",
+                  "name": "Placeholder",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Cari nomor, kitab, tema, atau teks hadis",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VUrXV",
+              "name": "Book List",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "id": "hyfBj",
+                  "type": "ref",
+                  "ref": "i53KW",
+                  "name": "Shahih Bukhari",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ELVj7": {
+                      "fill": "#B91C1C"
+                    },
+                    "o5u5T1": {
+                      "content": "BUKHARI"
+                    },
+                    "L5Qaq": {
+                      "content": "Shahih Bukhari"
+                    },
+                    "W902G": {
+                      "content": "7563 Hadith"
+                    }
+                  }
+                },
+                {
+                  "id": "kssb0",
+                  "type": "ref",
+                  "ref": "i53KW",
+                  "name": "Shahih Muslim",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ELVj7": {
+                      "fill": "#0F172A"
+                    },
+                    "o5u5T1": {
+                      "content": "MUSLIM"
+                    },
+                    "L5Qaq": {
+                      "content": "Shahih Muslim"
+                    },
+                    "W902G": {
+                      "content": "7563 Hadith"
+                    }
+                  }
+                },
+                {
+                  "id": "odjbO",
+                  "type": "ref",
+                  "ref": "i53KW",
+                  "name": "Sunan Abu Daud",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ELVj7": {
+                      "fill": "#0F172A"
+                    },
+                    "o5u5T1": {
+                      "content": "ABU DAUD"
+                    },
+                    "L5Qaq": {
+                      "content": "Sunan Abu Daud"
+                    },
+                    "W902G": {
+                      "content": "5274 Hadith"
+                    }
+                  }
+                },
+                {
+                  "id": "ZOquO",
+                  "type": "ref",
+                  "ref": "i53KW",
+                  "name": "Sunan Tirmidzi",
+                  "width": "fill_container",
+                  "descendants": {
+                    "ELVj7": {
+                      "fill": "#0F766E"
+                    },
+                    "o5u5T1": {
+                      "content": "TIRMIDZI"
+                    },
+                    "L5Qaq": {
+                      "content": "Sunan Tirmidzi"
+                    },
+                    "W902G": {
+                      "content": "3956 Hadith"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "N4LnF",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "bZTR8",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$primary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$primary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "R7Xv9",
+      "x": 5633,
+      "y": 105226,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "k4reV",
+      "x": 5645,
+      "y": 105229,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "jP1pH",
+      "x": 5685,
+      "y": 105223,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "e5fHH",
+      "x": 5633,
+      "y": 105209,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Hadis",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "JIOzb",
+      "x": 6160,
+      "y": 105150,
+      "name": "Hadis Reader - Modern",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "bvQfD",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "xFIxz",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "cdzrk",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "X2luM",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "dPM6x",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vEOqo",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "glRKw",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "bvqvL",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Shahih Bukhari",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "eZ5ag",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-md",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "DTqau",
+              "name": "Subtitle",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "7.563 Hadis dalam kitab ini",
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "LaANR",
+              "name": "Hadith List",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$gap-md",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K03Yg",
+                  "name": "Hadith Row 1",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": "$gap-md",
+                  "padding": "$pad-card",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Iowvp",
+                      "name": "Number Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "w2RDF0",
+                          "name": "Number Label",
+                          "fill": "$primary",
+                          "content": "No. 1",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "W5ol4",
+                      "name": "Preview",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Telah menceritakan kepada kami [Al Humaidi Abdullah bin Az Zubair] dia berkata, Telah menceritakan ke...",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "q63TB",
+                  "name": "Hadith Row 2",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": "$gap-md",
+                  "padding": "$pad-card",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "vslyn",
+                      "name": "Number Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "p396c",
+                          "name": "Number Label",
+                          "fill": "$primary",
+                          "content": "No. 2",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "hdtwA",
+                      "name": "Preview",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Telah menceritakan kepada kami [Abdullah bin Yusuf] berkata, telah mengabarkan kepada kami [...]",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UOtKv",
+                  "name": "Hadith Row 3",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": "$gap-md",
+                  "padding": "$pad-card",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qQHGQ",
+                      "name": "Number Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ztTRn",
+                          "name": "Number Label",
+                          "fill": "$primary",
+                          "content": "No. 3",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Px7CT",
+                      "name": "Preview",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Telah menceritakan kepada kami [Yahya bin Bukair] berkata, Telah menceritakan kepada kami d...",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bvgyL",
+                  "name": "Hadith Row 4",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": "$gap-md",
+                  "padding": "$pad-card",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZJNNu",
+                      "name": "Number Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "q1HlNZ",
+                          "name": "Number Label",
+                          "fill": "$primary",
+                          "content": "No. 4",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "M9sung",
+                      "name": "Preview",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Telah menceritakan kepada kami [Musa bin Isma'il] dia berkata, Telah menceritakan kepada kami [Abu 'A...",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EO3a5",
+                  "name": "Hadith Row 5",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": "$gap-md",
+                  "padding": "$pad-card",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hM7QG",
+                      "name": "Number Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "SQcr9",
+                          "name": "Number Label",
+                          "fill": "$primary",
+                          "content": "No. 5",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "S9Icvg",
+                      "name": "Preview",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Telah menceritakan kepada kami [Abu Ma'mar] dia berkata, Telah menceritakan kepada kami [Abdul Warits]...",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZzvjV",
+                  "name": "Hadith Row 6",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": "$gap-md",
+                  "padding": "$pad-card",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mQ9xP",
+                      "name": "Number Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "GL3of",
+                          "name": "Number Label",
+                          "fill": "$primary",
+                          "content": "No. 6",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "d2iM8T",
+                      "name": "Preview",
+                      "fill": "$ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Telah menceritakan kepada kami [Abdan] dia berkata, Telah mengabarkan kepada kami [Abdullah]...",
+                      "lineHeight": 1.4,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "xRbKd",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "U1pfF0",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$primary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$primary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "DXhsi",
+      "x": 6088,
+      "y": 105226,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "iw9ui",
+      "x": 6100,
+      "y": 105229,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "m7ZQ9e",
+      "x": 6140,
+      "y": 105223,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "x3IHE",
+      "x": 6088,
+      "y": 105209,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap 'Buka Reader' pada kitab",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "id": "AUC71",
+      "type": "ref",
+      "ref": "r7P5jg",
+      "x": 4910,
+      "y": 101400,
+      "descendants": {
+        "h7m7Yb": {
+          "content": "Reset Password (Lupa Sandi)"
+        },
+        "e2jF9": {
+          "content": "User membuka menu Profil, memilih Masuk/Daftar, lalu meminta tautan reset password lewat tab Lupa Sandi."
+        },
+        "VOnZ7": {
+          "content": "Mobile Team"
+        }
+      }
+    },
+    {
+      "type": "frame",
+      "id": "lf64H",
+      "x": 5250,
+      "y": 101400,
+      "name": "Beranda - Modern (Lupa Sandi flow)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "JC3QU",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "AYR68",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "W0JhMl",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "qVJij",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "ns3KN",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "cGKyg",
+          "name": "Top Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "padding": [
+            12,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "aATBN",
+              "name": "Brand",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eCBP8",
+                  "name": "Logo",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$primary",
+                  "cornerRadius": 10,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "mdSdB",
+                      "name": "Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "book-open",
+                      "library": "lucide",
+                      "fill": "$primary-foreground"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "h4blhX",
+                  "name": "AppName",
+                  "fill": "$ink",
+                  "content": "Thullaabul 'Ilmi",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "J3fBc",
+              "name": "Actions",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "baCrQ",
+                  "type": "ref",
+                  "ref": "b5ILqb",
+                  "name": "Search",
+                  "descendants": {
+                    "VX9BQ": {
+                      "icon": "search"
+                    }
+                  }
+                },
+                {
+                  "id": "swOcP",
+                  "type": "ref",
+                  "ref": "b5ILqb",
+                  "name": "Notification",
+                  "descendants": {
+                    "VX9BQ": {
+                      "icon": "menu"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "wkHCB",
+                  "name": "Avatar",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$primary",
+                  "cornerRadius": "$radius-pill",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "IaquL",
+                      "name": "Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "user",
+                      "library": "lucide",
+                      "fill": "$primary-foreground"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "wmdsC",
+                  "name": "Chevron",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-down",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yxD9k",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "It7gj",
+              "name": "Greeting Block",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "T3lRT",
+                  "name": "Greeting",
+                  "fill": "$ink",
+                  "content": "Assalamu'alaikum, Tamu",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 24,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "lXOck",
+                  "name": "Date",
+                  "fill": "$text-secondary",
+                  "content": "Kamis, 24 September 2026",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "k9imIU",
+              "name": "Prayer Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$primary",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "$shadow-color",
+                "offset": {
+                  "x": 0,
+                  "y": "$shadow-offset-y"
+                },
+                "blur": "$shadow-blur"
+              },
+              "layout": "vertical",
+              "gap": 14,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BskKp",
+                  "name": "Top Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "u2Qp8a",
+                      "name": "Location Pill",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "gap": 6,
+                      "padding": [
+                        6,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Of99C",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "timer",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DQMoC",
+                          "name": "Label",
+                          "fill": "$primary",
+                          "content": "UKIAH",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R7di8",
+                      "name": "Date Stack",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "alignItems": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "V5S6j",
+                          "name": "Date",
+                          "fill": "$ink",
+                          "content": "Kamis, 24 September 2026",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YZsfH",
+                          "name": "Hijri Row",
+                          "gap": 4,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "suvPR",
+                              "name": "Icon",
+                              "width": 12,
+                              "height": 12,
+                              "icon": "moon",
+                              "library": "lucide",
+                              "fill": "$primary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "E6ah6P",
+                              "name": "Hijri",
+                              "fill": "$primary",
+                              "content": "11 Rabiul Akhir 1448 H",
+                              "fontFamily": "$font-body",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "S1DjEP",
+                  "name": "Countdown Block",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "oBBzB",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "MENUJU SUBUH",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.5
+                    },
+                    {
+                      "type": "text",
+                      "id": "Jwp04",
+                      "name": "Time",
+                      "fill": "$ink",
+                      "content": "19:21",
+                      "fontFamily": "$font-body",
+                      "fontSize": 44,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "nBnWI",
+                      "name": "Subtext",
+                      "fill": "$text-secondary",
+                      "content": "Subuh dalam 6 jam 52 menit",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LjGmu",
+                      "name": "Timer Pill",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "gap": 6,
+                      "padding": [
+                        8,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "T4Pp4",
+                          "name": "Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "timer",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "xJBKC",
+                          "name": "Time",
+                          "fill": "$primary",
+                          "content": "06:52:09",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qB4Ck",
+                  "name": "Divider",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "$border"
+                },
+                {
+                  "type": "frame",
+                  "id": "gTaGC",
+                  "name": "Prayer Row",
+                  "width": "fill_container",
+                  "children": [
+                    {
+                      "id": "jeDTh",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Subuh",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Subuh",
+                          "fill": "$primary"
+                        },
+                        "lrr0b": {
+                          "icon": "moon",
+                          "fill": "$primary"
+                        },
+                        "LV2IC": {
+                          "content": "19:21",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "S6MOEK",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Terbit",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Terbit",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sunrise",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "21:01",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "pzFhP",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Dzuhur",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Dzuhur",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sun",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "03:05",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "g1Y4gI",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Ashar",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Ashar",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sun",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "06:30",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "lbl5U",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Maghrib",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Maghrib",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "sunset",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "09:07",
+                          "fill": "$ink"
+                        }
+                      }
+                    },
+                    {
+                      "id": "clQ5M",
+                      "type": "ref",
+                      "ref": "hhqT2",
+                      "name": "Isya",
+                      "width": "fill_container",
+                      "descendants": {
+                        "f17XQu": {
+                          "content": "Isya",
+                          "fill": "$text-secondary"
+                        },
+                        "lrr0b": {
+                          "icon": "moon",
+                          "fill": "$text-secondary"
+                        },
+                        "LV2IC": {
+                          "content": "10:37",
+                          "fill": "$ink"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TPVN9",
+              "name": "Ayat Card",
+              "width": "fill_container",
+              "fill": "$highlight-fill",
+              "cornerRadius": "$radius-card",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xYeC3",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "YjMB7",
+                      "name": "Title Group",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "fdPho",
+                          "name": "Icon",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "book-open",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kPgeu",
+                          "name": "Label",
+                          "fill": "$primary",
+                          "content": "AYAT HARI INI",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OmJRf",
+                      "name": "Nav",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "zPsRs",
+                          "type": "ref",
+                          "ref": "b5ILqb",
+                          "name": "Prev",
+                          "descendants": {
+                            "VX9BQ": {
+                              "icon": "chevron-left"
+                            }
+                          }
+                        },
+                        {
+                          "id": "mQCOw",
+                          "type": "ref",
+                          "ref": "b5ILqb",
+                          "name": "Next",
+                          "descendants": {
+                            "VX9BQ": {
+                              "icon": "chevron-right"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "l1SXAr",
+                  "name": "Arabic",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "وَإِذَا الْعِشَارُ عُطِّلَتْ",
+                  "textAlign": "right",
+                  "fontFamily": "$font-body",
+                  "fontSize": 24,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "oOg0v",
+                  "name": "Translation",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "\"dan apabila unta-unta yang bunting ditinggalkan (tidak diperdulikan)\"",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "NeQbc",
+                  "name": "Footer",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ukCMY",
+                      "name": "Ref",
+                      "fill": "$primary",
+                      "content": "At-Takwir · Ayah 4",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "j0f7j2",
+                      "name": "Link",
+                      "fill": "$primary",
+                      "content": "Selengkapnya ->",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "d9gE04",
+                  "name": "Dots",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "MsCqa",
+                      "name": "Active Dot",
+                      "width": 20,
+                      "height": 6,
+                      "fill": "$primary",
+                      "cornerRadius": 3
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "FGQj8",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "jKHBu",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "GWjDj",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "yLP5J",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "De8U1",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "s48Hi1",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "XHLPP",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "k7zwLl",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "dG4eJ",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "ellipse",
+                      "id": "B4zF1",
+                      "name": "Dot",
+                      "fill": "$border",
+                      "width": 6,
+                      "height": 6
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "XOL0a",
+              "name": "Saran Sekarang",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Xr177",
+                  "name": "Label",
+                  "fill": "$text-secondary",
+                  "content": "SARAN SEKARANG",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "700",
+                  "letterSpacing": 0.5
+                },
+                {
+                  "type": "frame",
+                  "id": "n6I14",
+                  "name": "Suggestion Card",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "ukN4m",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kiblat",
+                      "width": 160,
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "compass"
+                        },
+                        "JiISP": {
+                          "content": "Kiblat"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VWbzi",
+              "name": "Terakhir Dibuka",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "v6UN2",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "jcoDh",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TE6Dr",
+                          "name": "Title",
+                          "fill": "$ink",
+                          "content": "Terakhir Dibuka",
+                          "fontFamily": "$font-heading",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ggviF",
+                          "name": "Subtitle",
+                          "fill": "$text-secondary",
+                          "content": "Lanjutkan fitur yang baru kamu pakai",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "LQOh5",
+                      "name": "Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "timer",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kI7g0",
+                  "name": "Sholat Tracker Row",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-card",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 12,
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "lYBeI",
+                      "name": "Icon Chip",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-tile",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "pdtbL",
+                          "name": "Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "landmark",
+                          "library": "lucide",
+                          "fill": "$primary"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "V9JnQ",
+                      "name": "Text",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "B1peRV",
+                          "name": "Title",
+                          "fill": "$ink",
+                          "content": "Sholat Tracker",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "A0d2E",
+                          "name": "Subtitle",
+                          "fill": "$text-secondary",
+                          "content": "Catat sholat hari ini",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "aV8Dl",
+                      "name": "Chevron",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "XnabL",
+              "name": "Akses Cepat",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "NlZW6",
+                  "name": "Title",
+                  "fill": "$ink",
+                  "content": "Akses Cepat",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "YlH8S",
+                  "name": "Row 1",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "id": "OeFHy",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kiblat",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "compass"
+                        },
+                        "JiISP": {
+                          "content": "KIBLAT"
+                        }
+                      }
+                    },
+                    {
+                      "id": "nlo1d",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Hafalan",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "book-check"
+                        },
+                        "JiISP": {
+                          "content": "HAFALAN"
+                        }
+                      }
+                    },
+                    {
+                      "id": "YjHwj",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Jurnal",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "smile"
+                        },
+                        "JiISP": {
+                          "content": "JURNAL"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Dh3IA",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kuis",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "help-circle"
+                        },
+                        "JiISP": {
+                          "content": "KUIS"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yjIAm",
+                  "name": "Row 2",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "id": "eog8B",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Kajian",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "video"
+                        },
+                        "JiISP": {
+                          "content": "KAJIAN"
+                        }
+                      }
+                    },
+                    {
+                      "id": "jGMha",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Tafsir",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "file-text"
+                        },
+                        "JiISP": {
+                          "content": "TAFSIR"
+                        }
+                      }
+                    },
+                    {
+                      "id": "SY2Ix",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Hadis",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "book"
+                        },
+                        "JiISP": {
+                          "content": "HADIS"
+                        }
+                      }
+                    },
+                    {
+                      "id": "ZBmxQ",
+                      "type": "ref",
+                      "ref": "XRpo4",
+                      "name": "Lainnya",
+                      "width": "fill_container",
+                      "descendants": {
+                        "TsDRQ": {
+                          "icon": "layout-grid"
+                        },
+                        "JiISP": {
+                          "content": "LAINNYA"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ssl8u",
+              "name": "Jurnal Muhasabah Row",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 12,
+              "padding": "$pad-card",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "h7Fa3",
+                  "name": "Icon Chip",
+                  "width": 40,
+                  "height": 40,
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-tile",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "q0pg8",
+                      "name": "Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "smile",
+                      "library": "lucide",
+                      "fill": "$primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "K1qDEV",
+                  "name": "Text",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fAoeP",
+                      "name": "Title",
+                      "fill": "$ink",
+                      "content": "Jurnal Muhasabah",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "T65RR8",
+                      "name": "Subtitle",
+                      "fill": "$text-secondary",
+                      "content": "Bagaimana imanmu hari ini?",
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon",
+                  "id": "pcGnT",
+                  "name": "Chevron",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "chevron-right",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Vhy1k",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "eNxUO",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "N5vgxb",
+      "x": 5178,
+      "y": 101476,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "noIvO",
+      "x": 5190,
+      "y": 101479,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "m8Sfp",
+      "x": 5230,
+      "y": 101473,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "hJE1n",
+      "x": 5178,
+      "y": 101459,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "GjsMb",
+      "x": 5705,
+      "y": 101400,
+      "name": "Profile - Modern (Lupa Sandi flow)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "o9cmjd",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "eadWE",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "q3kUqn",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "KXStB",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "s1JVVD",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "dT5bj",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "vaw8J",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "guGZE",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Profil",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ESrf2",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "gSx4j",
+              "name": "Account Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": "$pad-card",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "W291tH",
+                  "name": "Avatar",
+                  "width": 80,
+                  "height": 80,
+                  "fill": "$primary",
+                  "cornerRadius": "$radius-pill",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "obMpk",
+                      "name": "Initial",
+                      "fill": "$primary-foreground",
+                      "content": "T",
+                      "fontFamily": "$font-heading",
+                      "fontSize": 32,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "lY1pl",
+                  "name": "Eyebrow",
+                  "fill": "$primary",
+                  "content": "AKUN",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "700",
+                  "letterSpacing": 0.5
+                },
+                {
+                  "type": "text",
+                  "id": "X0RfWf",
+                  "name": "Name",
+                  "fill": "$ink",
+                  "content": "Thullabul Ilmi",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "rSFQc",
+                  "name": "Status",
+                  "fill": "$text-secondary",
+                  "content": "Belum masuk ke akun",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "vjKTI",
+                  "type": "ref",
+                  "ref": "E4PLm9",
+                  "name": "Settings Button",
+                  "descendants": {
+                    "FPLmj": {
+                      "icon": "settings"
+                    },
+                    "CgNeq": {
+                      "content": "Pengaturan"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "gxK6Y",
+              "name": "Pencapaian",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "id": "J9P2K",
+                  "type": "ref",
+                  "ref": "L7RtND",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "descendants": {
+                    "KpPJL": {
+                      "content": "Pencapaian"
+                    },
+                    "JIfvL": {
+                      "content": "Lihat semua"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "yh2DP",
+                  "name": "Hint",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Masuk untuk melihat badge yang sudah kamu raih.",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "lEuxN",
+                  "name": "Grid",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "u3SaJ",
+                      "name": "Row 1",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "id": "jPZBb",
+                          "type": "ref",
+                          "ref": "BCg4v",
+                          "name": "Konsisten 3 Hari",
+                          "width": "fill_container",
+                          "descendants": {
+                            "nwZfW": {
+                              "fill": "$border"
+                            },
+                            "oRZWJ": {
+                              "icon": "flame",
+                              "fill": "$text-secondary"
+                            },
+                            "e664U": {
+                              "content": "Konsisten 3 Hari"
+                            },
+                            "tao2u": {
+                              "content": "Belajar 3 hari berturut-turut"
+                            }
+                          }
+                        },
+                        {
+                          "id": "oiw5O",
+                          "type": "ref",
+                          "ref": "BCg4v",
+                          "name": "Seminggu Penuh",
+                          "width": "fill_container",
+                          "descendants": {
+                            "nwZfW": {
+                              "fill": "$border"
+                            },
+                            "oRZWJ": {
+                              "icon": "calendar-check",
+                              "fill": "$text-secondary"
+                            },
+                            "e664U": {
+                              "content": "Seminggu Penuh"
+                            },
+                            "tao2u": {
+                              "content": "Streak 7 hari"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sNMcI",
+                      "name": "Row 2",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "id": "l3WVVI",
+                          "type": "ref",
+                          "ref": "BCg4v",
+                          "name": "Sebulan Istiqomah",
+                          "width": "fill_container",
+                          "descendants": {
+                            "nwZfW": {
+                              "fill": "$border"
+                            },
+                            "oRZWJ": {
+                              "icon": "award",
+                              "fill": "$text-secondary"
+                            },
+                            "e664U": {
+                              "content": "Sebulan Istiqomah"
+                            },
+                            "tao2u": {
+                              "content": "Streak 30 hari"
+                            }
+                          }
+                        },
+                        {
+                          "id": "VXhlB",
+                          "type": "ref",
+                          "ref": "BCg4v",
+                          "name": "100 Hari Bersama",
+                          "width": "fill_container",
+                          "descendants": {
+                            "nwZfW": {
+                              "fill": "$border"
+                            },
+                            "oRZWJ": {
+                              "icon": "medal",
+                              "fill": "$text-secondary"
+                            },
+                            "e664U": {
+                              "content": "100 Hari Bersama"
+                            },
+                            "tao2u": {
+                              "content": "Streak 100 hari"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dKg7c",
+                      "name": "Row 3",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "id": "AEIUv",
+                          "type": "ref",
+                          "ref": "BCg4v",
+                          "name": "Hafal Pertama",
+                          "width": "fill_container",
+                          "descendants": {
+                            "nwZfW": {
+                              "fill": "$border"
+                            },
+                            "oRZWJ": {
+                              "icon": "bookmark-check",
+                              "fill": "$text-secondary"
+                            },
+                            "e664U": {
+                              "content": "Hafal Pertama"
+                            },
+                            "tao2u": {
+                              "content": "Hafal 1 surah"
+                            }
+                          }
+                        },
+                        {
+                          "id": "aZoXP",
+                          "type": "ref",
+                          "ref": "BCg4v",
+                          "name": "5 Surah Hafal",
+                          "width": "fill_container",
+                          "descendants": {
+                            "nwZfW": {
+                              "fill": "$border"
+                            },
+                            "oRZWJ": {
+                              "icon": "layers",
+                              "fill": "$text-secondary"
+                            },
+                            "e664U": {
+                              "content": "5 Surah Hafal"
+                            },
+                            "tao2u": {
+                              "content": "Hafal 5 surah"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d5yPTu",
+              "name": "Aksi Akun",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "id": "jzS35",
+                  "type": "ref",
+                  "ref": "BCg4v",
+                  "name": "Masuk / Daftar",
+                  "width": "fill_container",
+                  "descendants": {
+                    "oRZWJ": {
+                      "icon": "log-in"
+                    },
+                    "e664U": {
+                      "content": "Masuk / Daftar"
+                    },
+                    "tao2u": {
+                      "content": "Login untuk fitur personal"
+                    }
+                  }
+                },
+                {
+                  "id": "UYgN1",
+                  "type": "ref",
+                  "ref": "BCg4v",
+                  "name": "Leaderboard",
+                  "width": "fill_container",
+                  "descendants": {
+                    "oRZWJ": {
+                      "icon": "settings"
+                    },
+                    "e664U": {
+                      "content": "Pengaturan"
+                    },
+                    "tao2u": {
+                      "content": "Tampilan dan penyimpanan lokal"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PLkyl",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "h0OXiL",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "sKhjM",
+      "x": 5633,
+      "y": 101476,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Owf0O",
+      "x": 5645,
+      "y": 101479,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "viFUK",
+      "x": 5685,
+      "y": 101473,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "JXdSq",
+      "x": 5633,
+      "y": 101459,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap avatar → Profil",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "UDRvG",
+      "x": 6615,
+      "y": 105150,
+      "name": "Hadis Detail - Modern (hadis-reader)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Pcfer",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "jiPG8",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "q5xA0p",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "r88DR0",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "sQxUD",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z6h3NT",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "fXU7r",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "fQwma",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Detail Hadith",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "T5WHsa",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-md",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "NXUzb",
+              "name": "Subtitle",
+              "fill": "$text-secondary",
+              "content": "Shahih Bukhari No. 1",
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "Z0Pupa",
+              "name": "Summary Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "OLL6x",
+                  "name": "Eyebrow",
+                  "fill": "$primary",
+                  "content": "DETAIL HADITH",
+                  "fontFamily": "$font-body",
+                  "fontSize": 11,
+                  "fontWeight": "700",
+                  "letterSpacing": 0.5
+                },
+                {
+                  "type": "text",
+                  "id": "LpNEr",
+                  "name": "Title",
+                  "fill": "$ink",
+                  "content": "Revelation",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "SSveq",
+                  "name": "Tags",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "id": "mrCCJ",
+                      "type": "ref",
+                      "ref": "tX2OL",
+                      "name": "Shahih Bukhari",
+                      "descendants": {
+                        "bLuxC": {
+                          "content": "Shahih Bukhari"
+                        }
+                      }
+                    },
+                    {
+                      "id": "xT0V3",
+                      "type": "ref",
+                      "ref": "tX2OL",
+                      "name": "No. 1",
+                      "descendants": {
+                        "bLuxC": {
+                          "content": "No. 1"
+                        }
+                      }
+                    },
+                    {
+                      "id": "X68SYL",
+                      "type": "ref",
+                      "ref": "tX2OL",
+                      "name": "Shahih",
+                      "descendants": {
+                        "bLuxC": {
+                          "content": "Shahih"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dxXip",
+              "name": "Tab Row",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-pill",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 6,
+              "padding": 4,
+              "children": [
+                {
+                  "id": "BfstT",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Teks",
+                  "width": "fill_container",
+                  "fill": "$primary",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Teks",
+                      "fill": "$primary-foreground"
+                    }
+                  }
+                },
+                {
+                  "id": "h2djD",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Sanad",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Sanad",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "CB3TA",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Perawi",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Perawi",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "S9Q2JP",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Takhrij",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Takhrij",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "E9XzcA",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Ayat",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Ayat",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "uPhj8",
+                  "type": "ref",
+                  "ref": "tX2OL",
+                  "name": "Catatan",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "descendants": {
+                    "bLuxC": {
+                      "content": "Catatan",
+                      "fill": "$text-secondary"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BkzUb",
+              "name": "Text Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 14,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "cVXCr",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "jfRtm",
+                      "name": "Title",
+                      "fill": "$ink",
+                      "content": "Revelation",
+                      "fontFamily": "$font-heading",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "yXlvL",
+                      "name": "Grade",
+                      "fill": "$primary",
+                      "content": "Shahih",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "HjvLh",
+                  "name": "Arabic",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "حَدَّثَنَا الْحُمَيْدِيُّ عَبْدُ اللَّهِ بْنُ الزُّبَيْرِ، قَالَ: حَدَّثَنَا سُفْيَانُ، قَالَ: حَدَّثَنَا يَحْيَى بْنُ سَعِيدٍ الْأَنْصَارِيُّ، قَالَ: أَخْبَرَنِي مُحَمَّدُ بْنُ إِبْرَاهِيمَ التَّيْمِيُّ، أَنَّهُ سَمِعَ عَلْقَمَةَ بْنَ وَقَّاصٍ اللَّيْثِيَّ يَقُولُ: سَمِعْتُ عُمَرَ بْنَ الْخَطَّابِ رَضِيَ اللَّهُ عَنْهُ عَلَى الْمِنْبَرِ، قَالَ: سَمِعْتُ رَسُولَ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ يَقُولُ: إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى",
+                  "lineHeight": 1.8,
+                  "textAlign": "right",
+                  "fontFamily": "$font-body",
+                  "fontSize": 19,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "L6y1mi",
+                  "name": "Translation",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "\"Sesungguhnya setiap amalan tergantung niatnya, dan setiap orang akan mendapatkan sesuai apa yang ia niatkan...\"",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nAL1V",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "oEjWG",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$primary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$primary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "XiF8O",
+      "x": 6543,
+      "y": 105226,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "GEfW1",
+      "x": 6555,
+      "y": 105229,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "MfQwB",
+      "x": 6595,
+      "y": 105223,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "t4ehgm",
+      "x": 6543,
+      "y": 105209,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap salah satu hadis",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "OnxXV",
+      "x": 6160,
+      "y": 101400,
+      "name": "Lupa Sandi - Modern",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "a18Z0j",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "LQHO9",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "Lz6fu",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "ckYsW",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "qDHcI",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "i1WjKO",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "rmTkW",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "j0JiS",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Akun",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "BkvFC",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": "$pad-screen",
+          "children": [
+            {
+              "type": "frame",
+              "id": "toCCa",
+              "name": "Akun Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "tdjgJ",
+                  "fill": "$ink",
+                  "content": "Akun",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "FmaTv",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Masuk untuk menyinkronkan bookmark, progress, catatan, dan pengingat.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "QsSWO",
+                  "name": "Tabs",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-pill",
+                  "gap": 4,
+                  "padding": 4,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yoSvd",
+                      "name": "Masuk Tab",
+                      "width": "fill_container",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "layout": "vertical",
+                      "padding": [
+                        8,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D9er3x",
+                          "fill": "$text-secondary",
+                          "content": "Masuk",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jXBoc",
+                      "name": "Daftar Tab",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "padding": [
+                        8,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DaBY5",
+                          "fill": "$text-secondary",
+                          "content": "Daftar",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "E6z5ZK",
+                      "name": "Lupa Sandi Tab",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "layout": "vertical",
+                      "padding": [
+                        8,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "N8r6tn",
+                          "fill": "$primary",
+                          "content": "Lupa Sandi",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pYEPX",
+                  "name": "Email Field",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-tile",
+                  "padding": [
+                    12,
+                    14
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "jM3zZ",
+                      "fill": "$text-secondary",
+                      "content": "Email",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VAdKy",
+                  "name": "Submit Button",
+                  "width": "fill_container",
+                  "fill": "$primary",
+                  "cornerRadius": "$radius-pill",
+                  "layout": "vertical",
+                  "padding": [
+                    14,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GwAoH",
+                      "fill": "$primary-foreground",
+                      "content": "Kirim Tautan Reset",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nzG51",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "OrkF0",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "f45PfX",
+      "x": 6088,
+      "y": 101476,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "U9CUXf",
+      "x": 6100,
+      "y": 101479,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "etrCI",
+      "x": 6140,
+      "y": 101473,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "K9cBq",
+      "x": 6088,
+      "y": 101459,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tile 'Masuk/Daftar' → tab Lupa Sandi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "id": "L7hzu",
+      "type": "ref",
+      "ref": "r7P5jg",
+      "x": 4910,
+      "y": 93900,
+      "name": "Flow Card - Buka Aplikasi Pertama Kali",
+      "descendants": {
+        "h7m7Yb": {
+          "content": "Buka Aplikasi Pertama Kali"
+        },
+        "e2jF9": {
+          "content": "User membuka aplikasi untuk pertama kali: splash screen, izin lokasi dari OS, lalu masuk ke Beranda mode tamu."
+        },
+        "VOnZ7": {
+          "content": "Mobile Team"
+        }
+      }
+    },
+    {
+      "id": "nqIeA",
+      "type": "ref",
+      "ref": "r7P5jg",
+      "x": 4910,
+      "y": 120150,
+      "descendants": {
+        "h7m7Yb": {
+          "content": "Konfirmasi Reminder Terjadwal"
+        },
+        "e2jF9": {
+          "content": "User menekan 'Atur ulang pengingat' di Pengaturan Sholat, lalu mendapat konfirmasi bahwa pengingat sudah dijadwalkan."
+        },
+        "VOnZ7": {
+          "content": "Mobile Team"
+        }
+      }
+    },
+    {
+      "type": "frame",
+      "id": "z555jf",
+      "x": 5250,
+      "y": 93900,
+      "name": "Splash - Modern",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "height": 812,
+      "fill": "$bg",
+      "layout": "vertical",
+      "gap": "$gap-md",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "mbeuc",
+          "name": "Logo",
+          "width": 80,
+          "height": 80,
+          "fill": "$primary",
+          "cornerRadius": "$radius-card",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "fRGlh",
+              "name": "Icon",
+              "width": 44,
+              "height": 44,
+              "icon": "book-open",
+              "library": "lucide",
+              "fill": "$primary-foreground"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "n9pcu",
+          "name": "AppName",
+          "fill": "$ink",
+          "content": "Thullaabul 'Ilmi",
+          "textAlign": "center",
+          "fontFamily": "$font-heading",
+          "fontSize": 22,
+          "fontWeight": "700"
+        },
+        {
+          "type": "text",
+          "id": "cCAXF",
+          "name": "Tagline",
+          "fill": "$text-secondary",
+          "content": "Aplikasi Islamic Knowledge",
+          "textAlign": "center",
+          "fontFamily": "$font-body",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "dDkx3",
+      "x": 5178,
+      "y": 93976,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "WSIgb",
+      "x": 5190,
+      "y": 93979,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "wTIDM",
+      "x": 5230,
+      "y": 93973,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "SyyhK",
+      "x": 5178,
+      "y": 93959,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Install & buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
     }
   ],
   "themes": {
