@@ -67356,13 +67356,13 @@
             },
             {
               "type": "frame",
-              "id": "OBoz0",
+              "id": "oZYUv",
               "name": "Filter Row 1",
               "width": "fill_container",
               "gap": 8,
               "children": [
                 {
-                  "id": "i99wzq",
+                  "id": "MQpTt",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Semua",
@@ -67376,7 +67376,7 @@
                   }
                 },
                 {
-                  "id": "KaPKk",
+                  "id": "bVh3R",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Thaharah",
@@ -67386,18 +67386,9 @@
                       "fill": "$text-secondary"
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "cicM3",
-              "name": "Filter Row 2",
-              "width": "fill_container",
-              "gap": 8,
-              "children": [
+                },
                 {
-                  "id": "eI8yL",
+                  "id": "lsoOm",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Sholat",
@@ -67407,9 +67398,18 @@
                       "fill": "$text-secondary"
                     }
                   }
-                },
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iXBmr",
+              "name": "Filter Row 2",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
                 {
-                  "id": "y4qVdE",
+                  "id": "y1aqW",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Zakat",
@@ -67421,7 +67421,7 @@
                   }
                 },
                 {
-                  "id": "chaWd",
+                  "id": "H4HmP",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Puasa",
@@ -67433,7 +67433,7 @@
                   }
                 },
                 {
-                  "id": "fINPy",
+                  "id": "zviHa",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Haji",
@@ -67445,7 +67445,7 @@
                   }
                 },
                 {
-                  "id": "PU4TE",
+                  "id": "USDky",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Muamalah",
@@ -67460,13 +67460,13 @@
             },
             {
               "type": "frame",
-              "id": "jqszX",
+              "id": "cPnyA",
               "name": "Filter Row 3",
               "width": "fill_container",
               "gap": 8,
               "children": [
                 {
-                  "id": "BgoX8",
+                  "id": "OD5yr",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Umum",
@@ -67478,7 +67478,7 @@
                   }
                 },
                 {
-                  "id": "K40k7y",
+                  "id": "V8GjQv",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Nikah",
@@ -67490,7 +67490,7 @@
                   }
                 },
                 {
-                  "id": "OuVA7",
+                  "id": "F0hyJ",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Jenazah",
@@ -70794,36 +70794,23 @@
     },
     {
       "type": "frame",
-      "id": "pSLPF",
+      "id": "Vigno",
       "x": 6160,
       "y": 45150,
-      "name": "Level1",
+      "name": "P1",
       "width": 200,
+      "height": 150,
       "fill": "#DDDDDD",
       "layout": "vertical",
       "padding": 10,
       "children": [
         {
           "type": "frame",
-          "id": "MrfK5",
-          "name": "Level2",
+          "id": "S6Imm",
+          "name": "P2",
           "width": 100,
           "height": 60,
-          "fill": "#88AA88",
-          "justifyContent": "center",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "text",
-              "id": "FiojL",
-              "name": "Time",
-              "fill": "#000000",
-              "content": "DEEP",
-              "fontFamily": "$font-body",
-              "fontSize": 16,
-              "fontWeight": "600"
-            }
-          ]
+          "fill": "#88AA88"
         }
       ]
     }
