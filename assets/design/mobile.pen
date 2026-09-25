@@ -66526,6 +66526,7 @@
           "id": "Jy0UK",
           "name": "Content",
           "width": "fill_container",
+          "fill": "$bg",
           "layout": "vertical",
           "gap": 14,
           "padding": [
@@ -67332,6 +67333,7 @@
           "id": "S00Trj",
           "name": "Tab Bar Wrapper",
           "width": "fill_container",
+          "fill": "$bg",
           "layout": "vertical",
           "padding": [
             8,
@@ -68361,6 +68363,10 @@
           "id": "rcxTY",
           "name": "Content",
           "width": "fill_container",
+          "fill": "$bg",
+          "stroke": "#000000ff",
+          "strokeWidth": 1,
+          "strokeAlignment": "inner",
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -68611,6 +68617,7 @@
           "id": "OG2LD",
           "name": "Tab Bar Wrapper",
           "width": "fill_container",
+          "fill": "$bg",
           "layout": "vertical",
           "padding": [
             8,
@@ -227033,6 +227040,7 @@
           "id": "EKDBj",
           "name": "Tab Bar Wrapper",
           "width": "fill_container",
+          "fill": "#d9d9d9ff",
           "layout": "vertical",
           "padding": [
             8,
