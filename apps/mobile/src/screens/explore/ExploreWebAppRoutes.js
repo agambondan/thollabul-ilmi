@@ -2910,6 +2910,7 @@ const renderWebAppBookmarksScreen = () => {
         return (
             <WebAppLibraryRoute
                 error={error}
+                isDarkTheme={isDarkTheme}
                 items={items}
                 libraryProgressFilter={libraryProgressFilter}
                 libraryProgressMap={libraryProgressMap}

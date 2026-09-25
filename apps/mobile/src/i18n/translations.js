@@ -312,6 +312,7 @@ const dictionaries = {
         "explore.forum.loadMoreError":
             "Pertanyaan berikutnya belum bisa dimuat.",
         "explore.forum.loading": "Memuat forum...",
+        "explore.forum.loadingMore": "Memuat lebih banyak...",
         "explore.forum.loadingShort": "Memuat...",
         "explore.forumLoadError": "Forum belum bisa dimuat.",
         "explore.forum.noAnswers": "Belum ada jawaban.",
@@ -1569,6 +1570,7 @@ const dictionaries = {
         "explore.forum.loadMore": "Load more",
         "explore.forum.loadMoreError": "More questions could not be loaded.",
         "explore.forum.loading": "Loading forum...",
+        "explore.forum.loadingMore": "Loading more...",
         "explore.forum.loadingShort": "Loading...",
         "explore.forumLoadError": "Forum could not be loaded.",
         "explore.forum.noAnswers": "No answers yet.",

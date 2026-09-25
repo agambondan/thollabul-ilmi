@@ -1786,6 +1786,7 @@ export function ExploreScreen({
             handleLikeFeedItem,
             handleReportFeedItem,
             handleTogglePinnedFeature,
+            isDarkTheme,
             items,
             kajianCategory,
             navigation,
