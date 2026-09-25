@@ -928,7 +928,7 @@ export const styles = StyleSheet.create({
         gap: spacing.sm,
         justifyContent: "center",
         marginTop: spacing.md,
-        minHeight: 46,
+        minHeight: touchTarget,
     },
     signOutText: {
         color: colors.danger,

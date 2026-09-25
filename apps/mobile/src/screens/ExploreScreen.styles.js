@@ -1073,6 +1073,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.md,
         justifyContent: "center",
         marginBottom: spacing.sm,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     primaryButtonText: {
