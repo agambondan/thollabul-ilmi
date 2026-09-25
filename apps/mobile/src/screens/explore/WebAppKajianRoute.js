@@ -19,8 +19,9 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../../theme";
+import { colors, radius, spacing, touchTarget } from "../../theme";
 import { KajianPlayerModal } from "../../components/KajianPlayerModal";
 import { readSession } from "../../storage/session";
 import {
@@ -133,6 +134,7 @@ function KajianCard({
     getType,
     getUrl,
     index,
+    isDarkTheme,
     item,
     onOpenItem,
     onOpenPlayer,
@@ -173,7 +175,7 @@ function KajianCard({
                 }
                 onOpenItem(item);
             }}
-            style={styles.card}
+            style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-kajian-card'
         >
             {videoId ? (
@@ -198,25 +200,26 @@ function KajianCard({
                         <Text
                             style={[
                                 styles.badge,
-                                type === "video" && styles.badgeVideo,
+                                isDarkTheme && styles.badgeDark,
+                                type === "video" && (isDarkTheme ? styles.badgeVideoDark : styles.badgeVideo),
                             ]}
                         >
                             {type}
                         </Text>
                     ) : null}
-                    {topic ? <Text style={styles.badge}>{topic}</Text> : null}
+                    {topic ? <Text style={[styles.badge, isDarkTheme && styles.badgeDark]}>{topic}</Text> : null}
                 </View>
                 {url ? (
-                    <ExternalLink color='#9ca3af' size={16} strokeWidth={2.2} />
+                    <ExternalLink color={isDarkTheme ? "#9ca3af" : "#9ca3af"} size={16} strokeWidth={2.2} />
                 ) : null}
             </View>
-            <Text numberOfLines={2} style={styles.cardTitle}>
+            <Text numberOfLines={2} style={[styles.cardTitle, isDarkTheme && styles.cardTitleDark]}>
                 {getTitle(item, index)}
             </Text>
-            {speaker ? <Text style={styles.speaker}>{speaker}</Text> : null}
-            {duration ? <Text style={styles.duration}>{duration}</Text> : null}
+            {speaker ? <Text style={[styles.speaker, isDarkTheme && styles.speakerDark]}>{speaker}</Text> : null}
+            {duration ? <Text style={[styles.duration, isDarkTheme && styles.durationDark]}>{duration}</Text> : null}
             {description ? (
-                <Text numberOfLines={3} style={styles.description}>
+                <Text numberOfLines={3} style={[styles.description, isDarkTheme && styles.descriptionDark]}>
                     {description}
                 </Text>
             ) : null}
@@ -225,10 +228,11 @@ function KajianCard({
 }
 
 function TranscriptCard({
-    item,
-    onOpenUrl,
-    onOpenPlayer,
     highlightTerms = [],
+    isDarkTheme,
+    item,
+    onOpenPlayer,
+    onOpenUrl,
     query = "",
 }) {
     const videoId = item.video_id || getYouTubeId(item.timestamp_url);
@@ -242,7 +246,7 @@ function TranscriptCard({
                     ? onOpenPlayer(item)
                     : onOpenUrl(item.timestamp_url)
             }
-            style={styles.transcriptCard}
+            style={[styles.transcriptCard, isDarkTheme && styles.transcriptCardDark]}
         >
             <View style={styles.transcriptContent}>
                 {videoId ? (
@@ -267,24 +271,24 @@ function TranscriptCard({
                             {badge.text}
                         </Text>
                         {item.match_count > 1 ? (
-                            <Text style={styles.matchCount}>
+                            <Text style={[styles.matchCount, isDarkTheme && styles.matchCountDark]}>
                                 {item.match_count} potongan cocok
                             </Text>
                         ) : null}
                     </View>
 
-                    <Text numberOfLines={2} style={styles.transcriptTitle}>
+                    <Text numberOfLines={2} style={[styles.transcriptTitle, isDarkTheme && styles.transcriptTitleDark]}>
                         {item.title}
                     </Text>
 
-                    <Text style={styles.transcriptSpeaker}>
+                    <Text style={[styles.transcriptSpeaker, isDarkTheme && styles.transcriptSpeakerDark]}>
                         {item.speaker} · ⏱️ {item.timestamp}
                     </Text>
 
                     <HighlightedText
                         numberOfLines={3}
                         query={query}
-                        style={styles.transcriptSnippet}
+                        style={[styles.transcriptSnippet, isDarkTheme && styles.transcriptSnippetDark]}
                         terms={[
                             ...highlightTerms,
                             ...(item.matched_terms || []),
@@ -304,10 +308,10 @@ function TranscriptCard({
     );
 }
 
-function KajianStat({ accent = "#047857", formatValue, label, value }) {
+function KajianStat({ accent = "#047857", formatValue, isDarkTheme, label, value }) {
     return (
-        <View style={styles.statCard}>
-            <Text style={styles.statLabel}>{label}</Text>
+        <View style={[styles.statCard, isDarkTheme && styles.statCardDark]}>
+            <Text style={[styles.statLabel, isDarkTheme && styles.statLabelDark]}>{label}</Text>
             <Text style={[styles.statValue, { color: accent }]}>
                 {formatValue(value)}
             </Text>
@@ -341,6 +345,7 @@ export function WebAppKajianRoute({
     summary,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme } = useLayoutModePreference();
     const [tab, setTab] = useState("list");
 
     // Transcript Search State
@@ -632,17 +637,17 @@ export function WebAppKajianRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-kajian-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>
                     {t("explore.kajian.title") || "Kajian Islam"}
                 </Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
                     {t("explore.kajian.subtitle") ||
                         "Rekaman kajian dari ustadz-ustadz ahlus sunnah"}
                 </Text>
@@ -651,35 +656,40 @@ export function WebAppKajianRoute({
             <View style={styles.stats}>
                 <KajianStat
                     formatValue={formatStat}
+                    isDarkTheme={isDarkTheme}
                     label={t("explore.kajian.totalStat")}
                     value={summary.total}
                 />
                 <KajianStat
                     formatValue={formatStat}
+                    isDarkTheme={isDarkTheme}
                     label={t("explore.kajian.videoStat")}
                     value={summary.videoCount}
                 />
                 <KajianStat
                     formatValue={formatStat}
+                    isDarkTheme={isDarkTheme}
                     label={t("explore.kajian.categoryStat")}
                     value={summary.categoryCount}
                 />
             </View>
 
             {/* Tab Switcher */}
-            <View style={styles.tabContainer}>
+            <View style={[styles.tabContainer, isDarkTheme && styles.tabContainerDark]}>
                 <Pressable
                     accessibilityRole='button'
                     onPress={() => setTab("transcript")}
                     style={[
                         styles.tabButton,
-                        tab === "transcript" && styles.tabButtonActive,
+                        isDarkTheme && styles.tabButtonDark,
+                        tab === "transcript" && (isDarkTheme ? styles.tabButtonActiveDark : styles.tabButtonActive),
                     ]}
                     testID='web-app-kajian-tab-transcript'
                 >
                     <Text
                         style={[
                             styles.tabButtonText,
+                            isDarkTheme && styles.tabButtonTextDark,
                             tab === "transcript" && styles.tabButtonTextActive,
                         ]}
                     >
@@ -691,13 +701,15 @@ export function WebAppKajianRoute({
                     onPress={() => setTab("bookmarks")}
                     style={[
                         styles.tabButton,
-                        tab === "bookmarks" && styles.tabButtonActive,
+                        isDarkTheme && styles.tabButtonDark,
+                        tab === "bookmarks" && (isDarkTheme ? styles.tabButtonActiveDark : styles.tabButtonActive),
                     ]}
                     testID='web-app-kajian-tab-bookmarks'
                 >
                     <Text
                         style={[
                             styles.tabButtonText,
+                            isDarkTheme && styles.tabButtonTextDark,
                             tab === "bookmarks" && styles.tabButtonTextActive,
                         ]}
                     >
@@ -709,13 +721,15 @@ export function WebAppKajianRoute({
                     onPress={() => setTab("list")}
                     style={[
                         styles.tabButton,
-                        tab === "list" && styles.tabButtonActive,
+                        isDarkTheme && styles.tabButtonDark,
+                        tab === "list" && (isDarkTheme ? styles.tabButtonActiveDark : styles.tabButtonActive),
                     ]}
                     testID='web-app-kajian-tab-list'
                 >
                     <Text
                         style={[
                             styles.tabButtonText,
+                            isDarkTheme && styles.tabButtonTextDark,
                             tab === "list" && styles.tabButtonTextActive,
                         ]}
                     >
@@ -727,13 +741,13 @@ export function WebAppKajianRoute({
             {tab === "transcript" ? (
                 <View>
                     {/* Search Input */}
-                    <View style={styles.searchBar}>
+                    <View style={[styles.searchBar, isDarkTheme && styles.searchBarDark]}>
                         <Search color='#10b981' size={18} />
                         <TextInput
                             onChangeText={setTranscriptQuery}
                             placeholder='Cari tema: "adab", "riba", "nikah", "doa"...'
-                            placeholderTextColor='#9ca3af'
-                            style={styles.searchInput}
+                            placeholderTextColor={isDarkTheme ? "#64748b" : "#9ca3af"}
+                            style={[styles.searchInput, isDarkTheme && styles.searchInputDark]}
                             value={transcriptQuery}
                         />
                     </View>
@@ -746,6 +760,7 @@ export function WebAppKajianRoute({
                                 onPress={() => setSearchMode(m.key)}
                                 style={[
                                     styles.modeButton,
+                                    isDarkTheme && styles.modeButtonDark,
                                     searchMode === m.key &&
                                         (m.key === "exact"
                                             ? styles.modeButtonExact
@@ -758,13 +773,14 @@ export function WebAppKajianRoute({
                                 <Text
                                     style={[
                                         styles.modeLabel,
+                                        isDarkTheme && styles.modeLabelDark,
                                         searchMode === m.key &&
                                             styles.modeLabelActive,
                                     ]}
                                 >
                                     {m.label}
                                 </Text>
-                                <Text numberOfLines={1} style={styles.modeDesc}>
+                                <Text numberOfLines={1} style={[styles.modeDesc, isDarkTheme && styles.modeDescDark]}>
                                     {m.desc}
                                 </Text>
                             </Pressable>
@@ -774,7 +790,7 @@ export function WebAppKajianRoute({
                     {/* Speaker Filter Pills */}
                     {speakers.length > 0 && (
                         <View style={styles.speakerSection}>
-                            <Text style={styles.speakerLabel}>
+                            <Text style={[styles.speakerLabel, isDarkTheme && styles.speakerLabelDark]}>
                                 FILTER USTADZ:
                             </Text>
                             <ScrollView
@@ -786,6 +802,7 @@ export function WebAppKajianRoute({
                                     onPress={() => setSpeakerFilter("")}
                                     style={[
                                         styles.speakerPill,
+                                        isDarkTheme && styles.speakerPillDark,
                                         !speakerFilter &&
                                             styles.speakerPillActive,
                                     ]}
@@ -793,6 +810,7 @@ export function WebAppKajianRoute({
                                     <Text
                                         style={[
                                             styles.speakerPillText,
+                                            isDarkTheme && styles.speakerPillTextDark,
                                             !speakerFilter &&
                                                 styles.speakerPillTextActive,
                                         ]}
@@ -810,6 +828,7 @@ export function WebAppKajianRoute({
                                         }
                                         style={[
                                             styles.speakerPill,
+                                            isDarkTheme && styles.speakerPillDark,
                                             speakerFilter === s &&
                                                 styles.speakerPillActive,
                                         ]}
@@ -817,6 +836,7 @@ export function WebAppKajianRoute({
                                         <Text
                                             style={[
                                                 styles.speakerPillText,
+                                                isDarkTheme && styles.speakerPillTextDark,
                                                 speakerFilter === s &&
                                                     styles.speakerPillTextActive,
                                             ]}
@@ -836,13 +856,13 @@ export function WebAppKajianRoute({
                     {transcriptLoading ? (
                         <View style={styles.state}>
                             <ActivityIndicator color={ACCENT} size='small' />
-                            <Text style={styles.stateText}>
+                            <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                                 Mencari potongan transkrip...
                             </Text>
                         </View>
                     ) : transcriptResults.length > 0 ? (
                         <View style={styles.grid}>
-                            <Text style={styles.resultsCount}>
+                            <Text style={[styles.resultsCount, isDarkTheme && styles.resultsCountDark]}>
                                 {transcriptMeta?.mode === "semantic"
                                     ? `${transcriptResults.length} dari ${transcriptTotalLabel} kajian yang membahas tema ini`
                                     : `${transcriptResults.length} dari ${transcriptTotalLabel} potongan transkrip${
@@ -856,6 +876,7 @@ export function WebAppKajianRoute({
                                     highlightTerms={
                                         transcriptMeta?.expanded_terms || []
                                     }
+                                    isDarkTheme={isDarkTheme}
                                     item={item}
                                     key={item.id}
                                     onOpenUrl={onOpenUrl}
@@ -893,16 +914,16 @@ export function WebAppKajianRoute({
                     ) : (
                         <View style={styles.empty}>
                             <Search
-                                color='#9ca3af'
+                                color={isDarkTheme ? "#64748b" : "#9ca3af"}
                                 size={32}
                                 strokeWidth={1.8}
                             />
-                            <Text style={styles.emptyTitle}>
+                            <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {transcriptQuery
                                     ? "Tidak ada hasil transkrip"
                                     : "Ketik kata kunci untuk mencari di transkrip"}
                             </Text>
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                                 Cari potongan video berdasarkan tema atau teks
                                 ceramah ustadz.
                             </Text>
@@ -912,20 +933,20 @@ export function WebAppKajianRoute({
             ) : tab === "bookmarks" ? (
                 <View>
                     {/* Search Bookmark */}
-                    <View style={styles.searchBar}>
+                    <View style={[styles.searchBar, isDarkTheme && styles.searchBarDark]}>
                         <Bookmark color='#f59e0b' size={18} />
                         <TextInput
                             onChangeText={setSavedQuery}
                             placeholder={t("explore.kajian.filterBookmarks")}
-                            placeholderTextColor='#9ca3af'
-                            style={styles.searchInput}
+                            placeholderTextColor={isDarkTheme ? "#64748b" : "#9ca3af"}
+                            style={[styles.searchInput, isDarkTheme && styles.searchInputDark]}
                             value={savedQuery}
                         />
                     </View>
 
                     {filteredSaved.length > 0 ? (
                         <View style={styles.grid}>
-                            <Text style={styles.resultsCount}>
+                            <Text style={[styles.resultsCount, isDarkTheme && styles.resultsCountDark]}>
                                 {t("explore.kajian.savedCount", {
                                     count: filteredSaved.length,
                                 })}
@@ -936,11 +957,13 @@ export function WebAppKajianRoute({
                                     style={styles.savedCardWrapper}
                                 >
                                     <TranscriptCard
+                                        isDarkTheme={isDarkTheme}
                                         item={item}
                                         onOpenUrl={onOpenUrl}
                                         onOpenPlayer={setPlayerItem}
                                     />
                                     <Pressable
+                                        accessibilityRole='button'
                                         onPress={() =>
                                             removeSavedBookmark(item.id)
                                         }
@@ -957,16 +980,16 @@ export function WebAppKajianRoute({
                     ) : (
                         <View style={styles.empty}>
                             <Bookmark
-                                color='#9ca3af'
+                                color={isDarkTheme ? "#64748b" : "#9ca3af"}
                                 size={32}
                                 strokeWidth={1.8}
                             />
-                            <Text style={styles.emptyTitle}>
+                            <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {savedQuery
                                     ? t("explore.kajian.noMatchingBookmarks")
                                     : t("explore.kajian.emptyBookmarks")}
                             </Text>
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                                 {t("explore.kajian.emptyBookmarksHint")}
                             </Text>
                         </View>
@@ -974,12 +997,12 @@ export function WebAppKajianRoute({
                 </View>
             ) : (
                 <View>
-                    <View style={styles.search}>
+                    <View style={[styles.search, isDarkTheme && styles.searchDark]}>
                         <TextInput
                             onChangeText={onSearch}
                             placeholder={t("explore.kajian.searchPlaceholder")}
-                            placeholderTextColor='#9ca3af'
-                            style={styles.input}
+                            placeholderTextColor={isDarkTheme ? "#64748b" : "#9ca3af"}
+                            style={[styles.input, isDarkTheme && styles.inputDark]}
                             testID='web-app-kajian-search'
                             value={kajianSearch}
                         />
@@ -991,13 +1014,15 @@ export function WebAppKajianRoute({
                             onPress={() => onSelectCategory("")}
                             style={[
                                 styles.category,
-                                !kajianCategory && styles.categoryActive,
+                                isDarkTheme && styles.categoryDark,
+                                !kajianCategory && (isDarkTheme ? styles.categoryActiveDark : styles.categoryActive),
                             ]}
                             testID='web-app-kajian-category-all'
                         >
                             <Text
                                 style={[
                                     styles.categoryText,
+                                    isDarkTheme && styles.categoryTextDark,
                                     !kajianCategory &&
                                         styles.categoryTextActive,
                                 ]}
@@ -1018,14 +1043,16 @@ export function WebAppKajianRoute({
                                 }
                                 style={[
                                     styles.category,
+                                    isDarkTheme && styles.categoryDark,
                                     kajianCategory === category &&
-                                        styles.categoryActive,
+                                        (isDarkTheme ? styles.categoryActiveDark : styles.categoryActive),
                                 ]}
                                 testID={`web-app-kajian-category-${category}`}
                             >
                                 <Text
                                     style={[
                                         styles.categoryText,
+                                        isDarkTheme && styles.categoryTextDark,
                                         kajianCategory === category &&
                                             styles.categoryTextActive,
                                     ]}
@@ -1040,7 +1067,7 @@ export function WebAppKajianRoute({
                     {loading ? (
                         <View style={styles.state}>
                             <ActivityIndicator color={ACCENT} size='small' />
-                            <Text style={styles.stateText}>
+                            <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
                                 {t("explore.kajian.loading")}
                             </Text>
                         </View>
@@ -1058,6 +1085,7 @@ export function WebAppKajianRoute({
                                     getType={getType}
                                     getUrl={getUrl}
                                     index={index}
+                                    isDarkTheme={isDarkTheme}
                                     item={item}
                                     key={`${getItemKey(item)}-${index}`}
                                     onOpenItem={onOpenItem}
@@ -1070,14 +1098,14 @@ export function WebAppKajianRoute({
                     {!loading && !error && !filteredItems.length ? (
                         <View style={styles.empty}>
                             <BookOpen
-                                color='#9ca3af'
+                                color={isDarkTheme ? "#64748b" : "#9ca3af"}
                                 size={32}
                                 strokeWidth={1.8}
                             />
-                            <Text style={styles.emptyTitle}>
+                            <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {t("explore.kajian.emptyTitle")}
                             </Text>
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
                                 {t("explore.common.changeSearchOrFilter")}
                             </Text>
                         </View>
@@ -1100,11 +1128,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         flex: 1,
     },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
     content: {
         backgroundColor: "#f8fafc",
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
+    },
+    contentDark: {
+        backgroundColor: "#020617",
     },
     header: {
         paddingBottom: spacing.sm,
@@ -1115,11 +1149,17 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 28,
     },
+    titleDark: {
+        color: "#f8fafc",
+    },
     subtitle: {
         color: "#6b7280",
         fontSize: 14,
         lineHeight: 20,
         marginTop: 2,
+    },
+    subtitleDark: {
+        color: "#94a3b8",
     },
     tabContainer: {
         backgroundColor: "#e5e7eb",
@@ -1128,12 +1168,19 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
         padding: 3,
     },
+    tabContainerDark: {
+        backgroundColor: "#1e293b",
+    },
     tabButton: {
         alignItems: "center",
         borderRadius: 9,
         flex: 1,
         justifyContent: "center",
+        minHeight: 40,
         paddingVertical: 8,
+    },
+    tabButtonDark: {
+        backgroundColor: "transparent",
     },
     tabButtonActive: {
         backgroundColor: "#ffffff",
@@ -1143,10 +1190,17 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 2,
     },
+    tabButtonActiveDark: {
+        backgroundColor: "#0f172a",
+        elevation: 1,
+    },
     tabButtonText: {
         color: "#6b7280",
         fontSize: 13,
         fontWeight: "700",
+    },
+    tabButtonTextDark: {
+        color: "#94a3b8",
     },
     tabButtonTextActive: {
         color: "#047857",
@@ -1163,12 +1217,19 @@ const styles = StyleSheet.create({
         marginBottom: spacing.sm,
         paddingHorizontal: spacing.md,
     },
+    searchBarDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#059669",
+    },
     searchInput: {
         color: "#111827",
         flex: 1,
         fontSize: 14,
         minHeight: 44,
         padding: 0,
+    },
+    searchInputDark: {
+        color: "#f8fafc",
     },
     modeContainer: {
         flexDirection: "row",
@@ -1185,7 +1246,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 4,
         justifyContent: "center",
+        minHeight: 40,
         paddingVertical: 8,
+    },
+    modeButtonDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
     },
     modeButtonHybrid: {
         backgroundColor: "#10b981",
@@ -1207,6 +1273,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "700",
     },
+    modeLabelDark: {
+        color: "#cbd5e1",
+    },
     modeLabelActive: {
         color: "#ffffff",
     },
@@ -1220,6 +1289,9 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
         marginBottom: 4,
     },
+    speakerLabelDark: {
+        color: "#94a3b8",
+    },
     speakerScroll: {
         gap: 6,
         paddingBottom: 2,
@@ -1229,8 +1301,14 @@ const styles = StyleSheet.create({
         borderColor: "#e5e7eb",
         borderRadius: 999,
         borderWidth: 1,
+        minHeight: 32,
+        justifyContent: "center",
         paddingHorizontal: 12,
         paddingVertical: 5,
+    },
+    speakerPillDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
     },
     speakerPillActive: {
         backgroundColor: "#10b981",
@@ -1241,6 +1319,9 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontWeight: "700",
     },
+    speakerPillTextDark: {
+        color: "#cbd5e1",
+    },
     speakerPillTextActive: {
         color: "#ffffff",
     },
@@ -1250,6 +1331,9 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 4,
     },
+    resultsCountDark: {
+        color: "#94a3b8",
+    },
     highlight: {
         backgroundColor: "#fef08a",
         color: "#111827",
@@ -1258,6 +1342,9 @@ const styles = StyleSheet.create({
         color: "#047857",
         fontSize: 10,
         fontWeight: "700",
+    },
+    matchCountDark: {
+        color: "#34d399",
     },
     modeBadgeFuzzy: {
         backgroundColor: "#fef3c7",
@@ -1274,6 +1361,9 @@ const styles = StyleSheet.create({
         marginTop: 2,
         textAlign: "center",
     },
+    modeDescDark: {
+        color: "#94a3b8",
+    },
     loadMoreButton: {
         alignItems: "center",
         alignSelf: "center",
@@ -1281,7 +1371,7 @@ const styles = StyleSheet.create({
         borderRadius: radius.md,
         justifyContent: "center",
         marginTop: spacing.sm,
-        minHeight: 40,
+        minHeight: 44,
         minWidth: 160,
         paddingHorizontal: spacing.lg,
         paddingVertical: 10,
@@ -1301,6 +1391,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         overflow: "hidden",
         padding: spacing.md,
+    },
+    transcriptCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
     },
     transcriptContent: {
         flexDirection: "row",
@@ -1366,11 +1460,17 @@ const styles = StyleSheet.create({
         lineHeight: 17,
         marginBottom: 2,
     },
+    transcriptTitleDark: {
+        color: "#f8fafc",
+    },
     transcriptSpeaker: {
         color: "#047857",
         fontSize: 11,
         fontWeight: "700",
         marginBottom: 4,
+    },
+    transcriptSpeakerDark: {
+        color: "#34d399",
     },
     transcriptSnippet: {
         color: "#4b5563",
@@ -1378,6 +1478,9 @@ const styles = StyleSheet.create({
         fontStyle: "italic",
         lineHeight: 16,
         marginBottom: 6,
+    },
+    transcriptSnippetDark: {
+        color: "#cbd5e1",
     },
     watchRow: {
         alignItems: "center",
@@ -1399,8 +1502,9 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         marginTop: 4,
         marginRight: 6,
-        paddingVertical: 2,
-        paddingHorizontal: 6,
+        minHeight: 40,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
     },
     removeBookmarkText: {
         fontSize: 11,
@@ -1449,11 +1553,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
     },
+    statCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
     statLabel: {
         color: "#9ca3af",
         fontSize: 10,
         fontWeight: "800",
         letterSpacing: 0,
+    },
+    statLabelDark: {
+        color: "#94a3b8",
     },
     statValue: {
         fontSize: 18,
@@ -1470,11 +1581,18 @@ const styles = StyleSheet.create({
         minHeight: 46,
         paddingHorizontal: spacing.md,
     },
+    searchDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#059669",
+    },
     input: {
         color: "#111827",
         fontSize: 14,
         minHeight: 42,
         padding: 0,
+    },
+    inputDark: {
+        color: "#f8fafc",
     },
     categories: {
         flexDirection: "row",
@@ -1487,19 +1605,31 @@ const styles = StyleSheet.create({
         borderColor: "#f3f4f6",
         borderRadius: 999,
         borderWidth: 1,
-        minHeight: 26,
+        minHeight: 32,
+        justifyContent: "center",
         paddingHorizontal: 12,
         paddingVertical: 5,
+    },
+    categoryDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
     },
     categoryActive: {
         backgroundColor: "#10b981",
         borderColor: "#10b981",
+    },
+    categoryActiveDark: {
+        backgroundColor: "#065f46",
+        borderColor: "#059669",
     },
     categoryText: {
         color: "#4b5563",
         fontSize: 12,
         fontWeight: "800",
         textTransform: "capitalize",
+    },
+    categoryTextDark: {
+        color: "#cbd5e1",
     },
     categoryTextActive: {
         color: "#ffffff",
@@ -1527,6 +1657,9 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "700",
     },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
     grid: {
         gap: spacing.md,
     },
@@ -1537,6 +1670,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         minHeight: 132,
         padding: spacing.md,
+    },
+    cardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
     },
     cardHeader: {
         alignItems: "flex-start",
@@ -1564,10 +1701,20 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         textTransform: "capitalize",
     },
+    badgeDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+        borderColor: "#065f46",
+        color: "#6ee7b7",
+    },
     badgeVideo: {
         backgroundColor: "#fee2e2",
         borderColor: "#fee2e2",
         color: "#ef4444",
+    },
+    badgeVideoDark: {
+        backgroundColor: "rgba(127, 29, 29, 0.35)",
+        borderColor: "#991b1b",
+        color: "#fca5a5",
     },
     cardTitle: {
         color: "#1f2937",
@@ -1575,11 +1722,17 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 19,
     },
+    cardTitleDark: {
+        color: "#f8fafc",
+    },
     speaker: {
         color: "#047857",
         fontSize: 12,
         fontWeight: "900",
         marginTop: 5,
+    },
+    speakerDark: {
+        color: "#34d399",
     },
     duration: {
         color: "#9ca3af",
@@ -1587,11 +1740,17 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         marginTop: 5,
     },
+    durationDark: {
+        color: "#94a3b8",
+    },
     description: {
         color: "#6b7280",
         fontSize: 12,
         lineHeight: 18,
         marginTop: 6,
+    },
+    descriptionDark: {
+        color: "#94a3b8",
     },
     empty: {
         alignItems: "center",
@@ -1603,11 +1762,18 @@ const styles = StyleSheet.create({
         minHeight: 180,
         padding: spacing.lg,
     },
+    emptyDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
     emptyTitle: {
         color: "#1f2937",
         fontSize: 16,
         fontWeight: "900",
         marginTop: spacing.sm,
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
     },
     emptyText: {
         color: "#6b7280",
@@ -1615,5 +1781,8 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
 });

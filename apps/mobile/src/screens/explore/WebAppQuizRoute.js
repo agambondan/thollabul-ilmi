@@ -9,8 +9,9 @@ import {
     View,
 } from "react-native";
 
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, radius, spacing } from "../../theme";
+import { colors, radius, spacing, touchTarget } from "../../theme";
 import { quizOptions } from "../ExploreScreen.helpers";
 import { staticQuizQuestions } from "../../data/staticQuiz";
 
@@ -119,19 +120,19 @@ const getSelectedCorrect = (item, selected) => {
     return isCorrectOption(item, selected, quizOptions.indexOf(selected.key));
 };
 
-function OptionButton({ disabled, index, item, onPress, option, selected }) {
+function OptionButton({ disabled, index, isDarkTheme, item, onPress, option, selected }) {
     const correct = isCorrectOption(item, option, index);
     const isSelected = selected?.key === option.key;
     const answered = Boolean(selected);
     const stateStyle = !answered
-        ? null
+        ? (isDarkTheme ? styles.optionButtonDark : null)
         : correct
-          ? styles.optionCorrect
+          ? (isDarkTheme ? styles.optionCorrectDark : styles.optionCorrect)
           : isSelected
-            ? styles.optionWrong
-            : styles.optionMuted;
+            ? (isDarkTheme ? styles.optionWrongDark : styles.optionWrong)
+            : (isDarkTheme ? styles.optionMutedDark : styles.optionMuted);
     const textStyle = !answered
-        ? null
+        ? (isDarkTheme ? styles.optionTextDark : null)
         : correct
           ? styles.optionTextCorrect
           : isSelected
@@ -147,39 +148,42 @@ function OptionButton({ disabled, index, item, onPress, option, selected }) {
             style={[styles.optionButton, stateStyle]}
             testID='web-app-quiz-option'
         >
-            <Text style={[styles.optionLetter, textStyle]}>{option.key}</Text>
-            <Text style={[styles.optionText, textStyle]}>{option.label}</Text>
+            <Text style={[styles.optionLetter, isDarkTheme && !answered && styles.optionLetterDark, textStyle]}>{option.key}</Text>
+            <Text style={[styles.optionText, isDarkTheme && !answered && styles.optionTextDark, textStyle]}>{option.label}</Text>
             {answered && correct ? (
-                <CheckCircle2 color='#047857' size={18} strokeWidth={2.3} />
+                <CheckCircle2 color={isDarkTheme ? "#34d399" : "#047857"} size={18} strokeWidth={2.3} />
             ) : null}
             {answered && isSelected && !correct ? (
-                <XCircle color='#dc2626' size={18} strokeWidth={2.3} />
+                <XCircle color={isDarkTheme ? "#f87171" : "#dc2626"} size={18} strokeWidth={2.3} />
             ) : null}
         </Pressable>
     );
 }
 
-function ResultRow({ answer, index, item, t }) {
+function ResultRow({ answer, index, isDarkTheme, item, t }) {
     const correct = getSelectedCorrect(item, answer);
     return (
         <View
             style={[
                 styles.resultRow,
-                correct ? styles.resultRowCorrect : styles.resultRowWrong,
+                isDarkTheme && styles.resultRowDark,
+                correct
+                    ? (isDarkTheme ? styles.resultRowCorrectDark : styles.resultRowCorrect)
+                    : (isDarkTheme ? styles.resultRowWrongDark : styles.resultRowWrong),
             ]}
         >
             {correct ? (
-                <CheckCircle2 color='#047857' size={17} strokeWidth={2.2} />
+                <CheckCircle2 color={isDarkTheme ? "#34d399" : "#047857"} size={17} strokeWidth={2.2} />
             ) : (
-                <XCircle color='#dc2626' size={17} strokeWidth={2.2} />
+                <XCircle color={isDarkTheme ? "#f87171" : "#dc2626"} size={17} strokeWidth={2.2} />
             )}
             <Text
                 numberOfLines={1}
                 style={[
                     styles.resultRowText,
                     correct
-                        ? styles.resultRowTextCorrect
-                        : styles.resultRowTextWrong,
+                        ? (isDarkTheme ? styles.resultRowTextCorrectDark : styles.resultRowTextCorrect)
+                        : (isDarkTheme ? styles.resultRowTextWrongDark : styles.resultRowTextWrong),
                 ]}
             >
                 {getQuestionText(item, index, t)}
@@ -201,6 +205,7 @@ export function WebAppQuizRoute({
     setAnswers = () => {},
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [done, setDone] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("Semua");
@@ -306,36 +311,36 @@ export function WebAppQuizRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-quiz-surface' />
 
             {loading ? (
-                <View style={styles.stateCard}>
-                    <ActivityIndicator color='#047857' size='small' />
-                    <Text style={styles.stateText}>
+                <View style={[styles.stateCard, isDarkTheme && styles.stateCardDark]}>
+                    <ActivityIndicator color={isDarkTheme ? "#34d399" : "#047857"} size='small' />
+                    <Text style={[styles.stateText, isDarkTheme && styles.textMutedDark]}>
                         {t("explore.quiz.loading")}
                     </Text>
                 </View>
             ) : null}
 
             {!loading && !total ? (
-                <View style={styles.emptyCard}>
-                    <View style={styles.emptyIcon}>
-                        <Brain color='#7c3aed' size={34} strokeWidth={2.2} />
+                <View style={[styles.emptyCard, isDarkTheme && styles.emptyCardDark]}>
+                    <View style={[styles.emptyIcon, isDarkTheme && styles.emptyIconDark]}>
+                        <Brain color={isDarkTheme ? "#a78bfa" : "#7c3aed"} size={34} strokeWidth={2.2} />
                     </View>
-                    <Text style={styles.emptyTitle}>
+                    <Text style={[styles.emptyTitle, isDarkTheme && styles.textPrimaryDark]}>
                         {t("explore.quiz.title")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, isDarkTheme && styles.textMutedDark]}>
                         {error || t("explore.quiz.emptyText")}
                     </Text>
                     <Pressable
                         accessibilityRole='button'
                         onPress={restart}
-                        style={styles.primaryButton}
+                        style={[styles.primaryButton, isDarkTheme && styles.primaryButtonDark]}
                     >
                         <Text style={styles.primaryButtonText}>
                             {t("explore.quiz.retry")}
@@ -347,10 +352,10 @@ export function WebAppQuizRoute({
             {!loading && total && !done ? (
                 <>
                     <View style={styles.header}>
-                        <Text style={styles.title}>
+                        <Text style={[styles.title, isDarkTheme && styles.textPrimaryDark]}>
                             {t("explore.quiz.title")}
                         </Text>
-                        <Text style={styles.subtitle}>
+                        <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
                             {t("explore.quiz.subtitle")}
                         </Text>
                     </View>
@@ -375,14 +380,15 @@ export function WebAppQuizRoute({
                                     }}
                                     style={[
                                         styles.categoryPill,
-                                        isSelected && styles.categoryPillActive,
+                                        isDarkTheme && styles.categoryPillDark,
+                                        isSelected && (isDarkTheme ? styles.categoryPillActiveDark : styles.categoryPillActive),
                                     ]}
                                 >
                                     <Text
                                         style={[
                                             styles.categoryPillText,
-                                            isSelected &&
-                                                styles.categoryPillTextActive,
+                                            isDarkTheme && styles.categoryPillTextDark,
+                                            isSelected && styles.categoryPillTextActive,
                                         ]}
                                     >
                                         {cat}
@@ -393,17 +399,17 @@ export function WebAppQuizRoute({
                     </ScrollView>
 
                     <View style={styles.progressHeader}>
-                        <Text style={styles.progressLabel}>
+                        <Text style={[styles.progressLabel, isDarkTheme && styles.textMutedDark]}>
                             {t("explore.quiz.progressLabel", {
                                 current: currentIndex + 1,
                                 total,
                             })}
                         </Text>
-                        <Text style={styles.progressScore}>
+                        <Text style={[styles.progressScore, isDarkTheme && styles.progressScoreDark]}>
                             {t("explore.quiz.scoreCorrect", { score })}
                         </Text>
                     </View>
-                    <View style={styles.progressTrack}>
+                    <View style={[styles.progressTrack, isDarkTheme && styles.progressTrackDark]}>
                         <View
                             style={[
                                 styles.progressFill,
@@ -413,13 +419,13 @@ export function WebAppQuizRoute({
                     </View>
 
                     {getCategory(currentItem) ? (
-                        <Text style={styles.categoryBadge}>
+                        <Text style={[styles.categoryBadge, isDarkTheme && styles.categoryBadgeDark]}>
                             {getCategory(currentItem)}
                         </Text>
                     ) : null}
 
-                    <View style={styles.questionCard}>
-                        <Text style={styles.questionText}>
+                    <View style={[styles.questionCard, isDarkTheme && styles.questionCardDark]}>
+                        <Text style={[styles.questionText, isDarkTheme && styles.textPrimaryDark]}>
                             {getQuestionText(currentItem, currentIndex, t)}
                         </Text>
                     </View>
@@ -429,6 +435,7 @@ export function WebAppQuizRoute({
                             <OptionButton
                                 disabled={Boolean(selected)}
                                 index={index}
+                                isDarkTheme={isDarkTheme}
                                 item={currentItem}
                                 key={`${getItemId(currentItem, currentIndex)}-${option.key}`}
                                 onPress={() => answerCurrent(option)}
@@ -442,17 +449,18 @@ export function WebAppQuizRoute({
                         <View
                             style={[
                                 styles.explanationCard,
+                                isDarkTheme && styles.explanationCardDark,
                                 getSelectedCorrect(currentItem, selected)
-                                    ? styles.explanationCorrect
-                                    : styles.explanationWrong,
+                                    ? (isDarkTheme ? styles.explanationCorrectDark : styles.explanationCorrect)
+                                    : (isDarkTheme ? styles.explanationWrongDark : styles.explanationWrong),
                             ]}
                         >
                             <Text
                                 style={[
                                     styles.explanationTitle,
                                     getSelectedCorrect(currentItem, selected)
-                                        ? styles.explanationTitleCorrect
-                                        : styles.explanationTitleWrong,
+                                        ? (isDarkTheme ? styles.explanationTitleCorrectDark : styles.explanationTitleCorrect)
+                                        : (isDarkTheme ? styles.explanationTitleWrongDark : styles.explanationTitleWrong),
                                 ]}
                             >
                                 {getSelectedCorrect(currentItem, selected)
@@ -460,7 +468,7 @@ export function WebAppQuizRoute({
                                     : t("explore.quiz.answerWrong")}
                             </Text>
                             {getExplanation(currentItem) ? (
-                                <Text style={styles.explanationText}>
+                                <Text style={[styles.explanationText, isDarkTheme && styles.explanationTextDark]}>
                                     {getExplanation(currentItem)}
                                 </Text>
                             ) : null}
@@ -471,7 +479,7 @@ export function WebAppQuizRoute({
                         <Pressable
                             accessibilityRole='button'
                             onPress={goNext}
-                            style={styles.primaryButton}
+                            style={[styles.primaryButton, isDarkTheme && styles.primaryButtonDark]}
                         >
                             <Text style={styles.primaryButtonText}>
                                 {currentIndex + 1 >= total
@@ -484,18 +492,18 @@ export function WebAppQuizRoute({
             ) : null}
 
             {!loading && total && done ? (
-                <View style={styles.resultCard}>
-                    <View style={styles.resultIcon}>
-                        <Brain color='#047857' size={36} strokeWidth={2.2} />
+                <View style={[styles.resultCard, isDarkTheme && styles.resultCardDark]}>
+                    <View style={[styles.resultIcon, isDarkTheme && styles.resultIconDark]}>
+                        <Brain color={isDarkTheme ? "#34d399" : "#047857"} size={36} strokeWidth={2.2} />
                     </View>
-                    <Text style={styles.resultTitle}>
+                    <Text style={[styles.resultTitle, isDarkTheme && styles.textPrimaryDark]}>
                         {t("explore.quiz.finished")}
                     </Text>
-                    <Text style={styles.resultScore}>
+                    <Text style={[styles.resultScore, isDarkTheme && styles.resultScoreDark]}>
                         {score}
-                        <Text style={styles.resultTotal}>/{total}</Text>
+                        <Text style={[styles.resultTotal, isDarkTheme && styles.textMutedDark]}>/{total}</Text>
                     </Text>
-                    <View style={styles.resultTrack}>
+                    <View style={[styles.resultTrack, isDarkTheme && styles.resultTrackDark]}>
                         <View
                             style={[
                                 styles.resultFill,
@@ -505,7 +513,7 @@ export function WebAppQuizRoute({
                             ]}
                         />
                     </View>
-                    <Text style={styles.resultText}>
+                    <Text style={[styles.resultText, isDarkTheme && styles.textMutedDark]}>
                         {t("explore.quiz.percentCorrect", {
                             percent: total
                                 ? Math.round((score / total) * 100)
@@ -517,6 +525,7 @@ export function WebAppQuizRoute({
                             <ResultRow
                                 answer={answers[getItemId(item, index)]}
                                 index={index}
+                                isDarkTheme={isDarkTheme}
                                 item={item}
                                 key={getItemId(item, index)}
                                 t={t}
@@ -526,7 +535,7 @@ export function WebAppQuizRoute({
                     <Pressable
                         accessibilityRole='button'
                         onPress={restart}
-                        style={styles.primaryButton}
+                        style={[styles.primaryButton, isDarkTheme && styles.primaryButtonDark]}
                     >
                         <RotateCcw
                             color='#ffffff'
@@ -548,11 +557,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         flex: 1,
     },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
     content: {
         backgroundColor: "#f8fafc",
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
+    },
+    contentDark: {
+        backgroundColor: "#020617",
     },
     header: {
         marginBottom: spacing.md,
@@ -570,17 +585,30 @@ const styles = StyleSheet.create({
         borderColor: "#e2e8f0",
         borderRadius: 999,
         borderWidth: 1,
+        minHeight: 36,
+        justifyContent: "center",
         paddingHorizontal: spacing.sm + 4,
         paddingVertical: spacing.xs,
+    },
+    categoryPillDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
     },
     categoryPillActive: {
         backgroundColor: "#047857",
         borderColor: "#047857",
     },
+    categoryPillActiveDark: {
+        backgroundColor: "#065f46",
+        borderColor: "#059669",
+    },
     categoryPillText: {
         color: "#64748b",
         fontSize: 12,
         fontWeight: "700",
+    },
+    categoryPillTextDark: {
+        color: "#94a3b8",
     },
     categoryPillTextActive: {
         color: "#ffffff",
@@ -598,6 +626,9 @@ const styles = StyleSheet.create({
         lineHeight: 19,
         marginTop: 3,
     },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
     progressHeader: {
         alignItems: "center",
         flexDirection: "row",
@@ -614,12 +645,18 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "900",
     },
+    progressScoreDark: {
+        color: "#34d399",
+    },
     progressTrack: {
         backgroundColor: "#e5e7eb",
         borderRadius: 999,
         height: 8,
         marginBottom: spacing.md,
         overflow: "hidden",
+    },
+    progressTrackDark: {
+        backgroundColor: "#1e293b",
     },
     progressFill: {
         backgroundColor: "#10b981",
@@ -638,6 +675,10 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         textTransform: "capitalize",
     },
+    categoryBadgeDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+        color: "#6ee7b7",
+    },
     questionCard: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
@@ -645,6 +686,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: spacing.md,
         padding: spacing.lg,
+    },
+    questionCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
     },
     questionText: {
         color: "#111827",
@@ -668,18 +713,35 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
     },
+    optionButtonDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
     optionCorrect: {
         backgroundColor: "#ecfdf5",
+        borderColor: "#10b981",
+    },
+    optionCorrectDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
         borderColor: "#10b981",
     },
     optionWrong: {
         backgroundColor: "#fef2f2",
         borderColor: "#f87171",
     },
+    optionWrongDark: {
+        backgroundColor: "rgba(127, 29, 29, 0.35)",
+        borderColor: "#f87171",
+    },
     optionMuted: {
         backgroundColor: "#f8fafc",
         borderColor: "#e5e7eb",
         opacity: 0.72,
+    },
+    optionMutedDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+        opacity: 0.6,
     },
     optionLetter: {
         backgroundColor: "#f3f4f6",
@@ -693,12 +755,19 @@ const styles = StyleSheet.create({
         textAlign: "center",
         width: 28,
     },
+    optionLetterDark: {
+        backgroundColor: "#1e293b",
+        color: "#cbd5e1",
+    },
     optionText: {
         color: "#374151",
         flex: 1,
         fontSize: 13,
         fontWeight: "800",
         lineHeight: 19,
+    },
+    optionTextDark: {
+        color: "#e2e8f0",
     },
     optionTextCorrect: {
         color: "#047857",
@@ -714,11 +783,22 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
         padding: spacing.md,
     },
+    explanationCardDark: {
+        borderWidth: 1,
+    },
     explanationCorrect: {
         backgroundColor: "#ecfdf5",
     },
+    explanationCorrectDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.3)",
+        borderColor: "#059669",
+    },
     explanationWrong: {
         backgroundColor: "#fef2f2",
+    },
+    explanationWrongDark: {
+        backgroundColor: "rgba(127, 29, 29, 0.3)",
+        borderColor: "#991b1b",
     },
     explanationTitle: {
         fontSize: 13,
@@ -728,14 +808,23 @@ const styles = StyleSheet.create({
     explanationTitleCorrect: {
         color: "#047857",
     },
+    explanationTitleCorrectDark: {
+        color: "#34d399",
+    },
     explanationTitleWrong: {
         color: "#dc2626",
+    },
+    explanationTitleWrongDark: {
+        color: "#f87171",
     },
     explanationText: {
         color: "#475569",
         fontSize: 12,
         fontWeight: "700",
         lineHeight: 18,
+    },
+    explanationTextDark: {
+        color: "#cbd5e1",
     },
     primaryButton: {
         alignItems: "center",
@@ -747,6 +836,9 @@ const styles = StyleSheet.create({
         minHeight: 48,
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
+    },
+    primaryButtonDark: {
+        backgroundColor: "#059669",
     },
     primaryButtonText: {
         color: "#ffffff",
@@ -764,6 +856,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         padding: spacing.lg,
     },
+    stateCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
     stateText: {
         color: "#64748b",
         fontSize: 13,
@@ -779,6 +875,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         padding: spacing.lg,
     },
+    emptyCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
     emptyIcon: {
         alignItems: "center",
         backgroundColor: "#ede9fe",
@@ -787,6 +887,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: spacing.md,
         width: 56,
+    },
+    emptyIconDark: {
+        backgroundColor: "#2e1065",
     },
     emptyTitle: {
         color: "#111827",
@@ -810,6 +913,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: spacing.lg,
     },
+    resultCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#1e293b",
+    },
     resultIcon: {
         alignItems: "center",
         backgroundColor: "#ecfdf5",
@@ -818,6 +925,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: spacing.md,
         width: 64,
+    },
+    resultIconDark: {
+        backgroundColor: "#064e3b",
     },
     resultTitle: {
         color: "#111827",
@@ -831,6 +941,9 @@ const styles = StyleSheet.create({
         lineHeight: 66,
         marginTop: spacing.sm,
     },
+    resultScoreDark: {
+        color: "#34d399",
+    },
     resultTotal: {
         color: "#94a3b8",
         fontSize: 28,
@@ -843,6 +956,9 @@ const styles = StyleSheet.create({
         marginTop: spacing.md,
         overflow: "hidden",
         width: "100%",
+    },
+    resultTrackDark: {
+        backgroundColor: "#1e293b",
     },
     resultFill: {
         backgroundColor: "#10b981",
@@ -867,11 +983,22 @@ const styles = StyleSheet.create({
         gap: spacing.sm,
         padding: spacing.sm,
     },
+    resultRowDark: {
+        borderWidth: 1,
+    },
     resultRowCorrect: {
         backgroundColor: "#ecfdf5",
     },
+    resultRowCorrectDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+        borderColor: "#059669",
+    },
     resultRowWrong: {
         backgroundColor: "#fef2f2",
+    },
+    resultRowWrongDark: {
+        backgroundColor: "rgba(127, 29, 29, 0.35)",
+        borderColor: "#991b1b",
     },
     resultRowText: {
         flex: 1,
@@ -881,7 +1008,19 @@ const styles = StyleSheet.create({
     resultRowTextCorrect: {
         color: "#047857",
     },
+    resultRowTextCorrectDark: {
+        color: "#34d399",
+    },
     resultRowTextWrong: {
         color: "#dc2626",
+    },
+    resultRowTextWrongDark: {
+        color: "#f87171",
+    },
+    textPrimaryDark: {
+        color: "#f8fafc",
+    },
+    textMutedDark: {
+        color: "#94a3b8",
     },
 });
