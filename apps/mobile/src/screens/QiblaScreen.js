@@ -92,7 +92,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
 export function QiblaScreen({ navigation, onOpenTab }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
-    const webAppTheme = getThemeColors({ isDark: isDarkTheme, isClassic: false });
+    const webAppTheme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: false });
     const { width } = useWindowDimensions();
     const [coords, setCoords] = useState(null);
     const [direction, setDirection] = useState(null);

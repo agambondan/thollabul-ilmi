@@ -232,7 +232,7 @@ export function PaperHomeDashboard(props) {
 }
 
 export function WebAppHomeDashboard(props) {
-    const dashboardColors = getThemeColors({ isDark: props.isDarkTheme, isClassic: false });
+    const dashboardColors = getThemeColors({ isDark: props.isDarkTheme, isPaperLayout: false });
     return (
         <DashboardContent
             {...props}
@@ -256,7 +256,7 @@ function PaperHomeHeader({
     onOpenTab,
 }) {
     const { t } = useMobileLocale();
-    const theme = getThemeColors({ isDark: false, isClassic: true });
+    const theme = getThemeColors({ isDark: false, isPaperLayout: true });
 
     return (
         <View style={styles.header} testID='home-classic-header'>
@@ -370,7 +370,7 @@ function DashboardContent({
 }) {
     const isWebApp = layout === homeDashboardLayouts.webApp;
     const dashboardColors = isWebApp
-        ? getThemeColors({ isDark: isDarkTheme, isClassic: false })
+        ? getThemeColors({ isDark: isDarkTheme, isPaperLayout: false })
         : null;
     const webStyles = isWebApp ? createWebDashboardStyles(dashboardColors) : {};
     const primary = isWebApp ? dashboardColors.primary : colors.primary;
@@ -1022,7 +1022,11 @@ function ContextShortcutsCard({
             >
                 {t("home.suggestions.title")}
             </Text>
-            <View style={styles.contextRow}>
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.contextPillRow}
+            >
                 {items.map(({ Icon, featureKey, label, params, sub, tab }) => (
                     <Pressable
                         accessibilityRole='button'
@@ -1038,14 +1042,14 @@ function ContextShortcutsCard({
                             )
                         }
                         style={[
-                            styles.contextItem,
+                            styles.contextPill,
                             isWebApp && styles.webAppActionTile,
                             webStyles.actionTile,
                         ]}
                     >
                         <View
                             style={[
-                                styles.contextIcon,
+                                styles.contextPillIcon,
                                 isWebApp && styles.webAppIconTile,
                                 webStyles.iconTile,
                             ]}
@@ -1054,7 +1058,7 @@ function ContextShortcutsCard({
                         </View>
                         <Text
                             style={[
-                                styles.contextItemLabel,
+                                styles.contextPillLabel,
                                 isWebApp && styles.webAppTitleText,
                                 webStyles.titleText,
                             ]}
@@ -1063,7 +1067,7 @@ function ContextShortcutsCard({
                         </Text>
                         <Text
                             style={[
-                                styles.contextItemSub,
+                                styles.contextPillSub,
                                 isWebApp && styles.webAppMutedText,
                                 webStyles.mutedText,
                             ]}
@@ -1072,7 +1076,7 @@ function ContextShortcutsCard({
                         </Text>
                     </Pressable>
                 ))}
-            </View>
+            </ScrollView>
         </View>
     );
 }
@@ -1476,6 +1480,43 @@ const styles = StyleSheet.create({
         marginBottom: spacing.sm,
         textTransform: "uppercase",
     },
+    contextPillRow: {
+        flexDirection: "row",
+        gap: spacing.sm,
+        paddingVertical: 2,
+    },
+    contextPill: {
+        alignItems: "center",
+        backgroundColor: colors.bg,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: "row",
+        gap: spacing.xs,
+        minHeight: 44,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.xs,
+    },
+    contextPillIcon: {
+        alignItems: "center",
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.faint,
+        borderRadius: radius.sm,
+        borderWidth: 1,
+        height: 28,
+        justifyContent: "center",
+        width: 28,
+    },
+    contextPillLabel: {
+        color: colors.ink,
+        fontSize: 12,
+        fontWeight: "900",
+    },
+    contextPillSub: {
+        color: colors.muted,
+        fontSize: 11,
+        marginLeft: 2,
+    },
     contextRow: {
         flexDirection: "row",
         gap: spacing.sm,
@@ -1655,7 +1696,7 @@ const styles = StyleSheet.create({
         ...arabicTypography.small,
         fontFamily: webDashboardFontFamily,
         fontSize: 24,
-        lineHeight: 40,
+        lineHeight: 44,
         marginBottom: spacing.sm,
         textAlign: "right",
         writingDirection: "rtl",

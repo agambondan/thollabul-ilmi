@@ -412,6 +412,9 @@ export function TokohTarikhContent() {
                         ]}
                         onPress={() => {}}
                     >
+                        <View style={styles.handleWrapper}>
+                            <View style={styles.handle} />
+                        </View>
                         {selected && (
                             <ScrollView showsVerticalScrollIndicator={false}>
                                 <Pressable
@@ -760,6 +763,20 @@ const styles = StyleSheet.create({
         borderTopRightRadius: radius.xl,
         maxHeight: "85%",
         padding: spacing.lg,
+    },
+    handleWrapper: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom: spacing.sm,
+        paddingTop: spacing.xs,
+        width: "100%",
+    },
+    handle: {
+        alignSelf: "center",
+        backgroundColor: colors.borderStrong,
+        borderRadius: 3,
+        height: 4,
+        width: 40,
     },
     modalClose: {
         alignItems: "center",

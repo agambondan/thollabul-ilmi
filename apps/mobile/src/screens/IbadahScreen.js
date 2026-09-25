@@ -17,6 +17,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Card } from "../components/Card";
 import { CompactRow, SectionHeader } from "../components/Paper";
 import { Screen } from "../components/Screen";
+import { useFeedback } from "../context/FeedbackContext";
+import { hapticTap } from "../utils/haptics";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { colors, getThemeColors, radius, spacing } from "../theme";
@@ -187,6 +189,7 @@ const WEB_APP_IBADAH_LIGHT = {
     muted: "#64748b",
     primaryTile: "#ecfdf5",
     primaryTileBorder: "#a7f3d0",
+    ripple: "#d1fae5",
     surface: "#ffffff",
     text: "#475569",
     tile: "#f8fafc",
@@ -201,6 +204,7 @@ const WEB_APP_IBADAH_DARK = {
     muted: colors.dark.muted,
     primaryTile: "#064e3b",
     primaryTileBorder: "rgba(52, 211, 153, 0.45)",
+    ripple: "#1f2937",
     surface: "#111827",
     text: "#cbd5e1",
     tile: "#1e293b",
@@ -217,6 +221,7 @@ function IbadahHub({ navigation, onOpenTab }) {
     const webTheme = getIbadahWebAppTheme(isDarkTheme);
 
     const openRow = (row) => {
+        hapticTap();
         if (row.view) {
             navigation?.open?.("ibadah", row.view);
             return;
@@ -309,7 +314,7 @@ function IbadahHub({ navigation, onOpenTab }) {
                                     <Pressable
                                         accessibilityRole='button'
                                         android_ripple={{
-                                            color: "#1f2937",
+                                            color: webTheme.ripple,
                                             borderless: false,
                                         }}
                                         key={

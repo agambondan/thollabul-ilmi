@@ -204,7 +204,7 @@ function SubScreen({ title, onBack, children }) {
     const { t } = useMobileLocale();
     const theme = getThemeColors({
         isDark: isDarkTheme,
-        isClassic: !isWebAppLayout,
+        isPaperLayout: !isWebAppLayout,
     });
 
     return (
@@ -272,7 +272,7 @@ function MenuRow({ Icon, label, meta, danger, onPress }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const theme = getThemeColors({
         isDark: isDarkTheme,
-        isClassic: !isWebAppLayout,
+        isPaperLayout: !isWebAppLayout,
     });
 
     return (

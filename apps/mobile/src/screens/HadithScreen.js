@@ -246,6 +246,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         : WEB_APP_HADITH_THEMES.light;
     const handledDeepLinkId = useRef(null);
     const loadingMoreRef = useRef(false);
+    const webAppScrollRef = useRef(null);
+    const [showScrollTop, setShowScrollTop] = useState(false);
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null);
     const [hadiths, setHadiths] = useState([]);
@@ -1752,51 +1754,80 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         const showBookShelf = !selectedBook && !query;
 
         return (
-            <ScrollView
-                contentContainerStyle={[
-                    styles.webAppHadithContent,
-                    { backgroundColor: webAppTheme.bg },
-                ]}
-                keyboardShouldPersistTaps='handled'
-                refreshControl={
-                    <RefreshControl
-                        refreshing={loading}
-                        onRefresh={refreshAll}
-                        tintColor={webAppTheme.accent}
-                    />
-                }
-                scrollEventThrottle={250}
-                showsVerticalScrollIndicator={false}
-                style={[
-                    styles.webAppHadithScroll,
-                    { backgroundColor: webAppTheme.bg },
-                ]}
-                testID='hadith-web-app-scroll'
-            >
-                <View testID='hadith-web-app-list' />
-                {renderWebAppHadithHeader()}
-                {message ? (
-                    <Text
+            <View style={styles.webAppHadithWrapper}>
+                <ScrollView
+                    ref={webAppScrollRef}
+                    contentContainerStyle={[
+                        styles.webAppHadithContent,
+                        { backgroundColor: webAppTheme.bg },
+                    ]}
+                    keyboardShouldPersistTaps='handled'
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={refreshAll}
+                            tintColor={webAppTheme.accent}
+                        />
+                    }
+                    onScroll={({ nativeEvent }) => {
+                        const offset = nativeEvent.contentOffset?.y ?? 0;
+                        setShowScrollTop(offset > 300);
+                    }}
+                    scrollEventThrottle={250}
+                    showsVerticalScrollIndicator={false}
+                    style={[
+                        styles.webAppHadithScroll,
+                        { backgroundColor: webAppTheme.bg },
+                    ]}
+                    testID='hadith-web-app-scroll'
+                >
+                    <View testID='hadith-web-app-list' />
+                    {renderWebAppHadithHeader()}
+                    {message ? (
+                        <Text
+                            style={[
+                                styles.webAppMessage,
+                                { color: webAppTheme.accent },
+                            ]}
+                        >
+                            {message}
+                        </Text>
+                    ) : null}
+                    {showBookShelf ? (
+                        <>
+                            {loading && books.length === 0 ? (
+                                <ActivityIndicator color={webAppTheme.accent} />
+                            ) : null}
+                            {books.map(renderWebAppBookCard)}
+                        </>
+                    ) : (
+                        renderWebAppHadithResults()
+                    )}
+                    {renderHadithActionSheet()}
+                </ScrollView>
+                {showScrollTop ? (
+                    <Pressable
+                        accessibilityRole='button'
+                        accessibilityLabel={t("common.scrollToTop")}
+                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                        onPress={() => webAppScrollRef.current?.scrollTo({ y: 0, animated: true })}
                         style={[
-                            styles.webAppMessage,
-                            { color: webAppTheme.accent },
+                            styles.webAppScrollTopButton,
+                            {
+                                backgroundColor: webAppTheme.surface,
+                                borderColor: webAppTheme.border,
+                            },
                         ]}
                     >
-                        {message}
-                    </Text>
+                        <ArrowLeft
+                            color={webAppTheme.accent}
+                            size={18}
+                            strokeWidth={2.4}
+                            style={{ transform: [{ rotate: "90deg" }] }}
+                        />
+                    </Pressable>
                 ) : null}
-                {showBookShelf ? (
-                    <>
-                        {loading && books.length === 0 ? (
-                            <ActivityIndicator color={webAppTheme.accent} />
-                        ) : null}
-                        {books.map(renderWebAppBookCard)}
-                    </>
-                ) : (
-                    renderWebAppHadithResults()
-                )}
-                {renderHadithActionSheet()}
-            </ScrollView>
+            </View>
         );
     }
 
@@ -2039,6 +2070,26 @@ const styles = StyleSheet.create({
     },
     webAppDetailTabText: {
         color: "#cbd5e1",
+    },
+    webAppHadithWrapper: {
+        flex: 1,
+        position: "relative",
+    },
+    webAppScrollTopButton: {
+        position: "absolute",
+        bottom: 24,
+        right: 20,
+        height: 44,
+        width: 44,
+        borderRadius: 22,
+        borderWidth: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
     webAppHadithScroll: {
         backgroundColor: WEB_APP_HADITH_BG,

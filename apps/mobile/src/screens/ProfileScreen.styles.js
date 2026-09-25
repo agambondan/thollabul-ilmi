@@ -1002,7 +1002,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         color: colors.ink,
         fontSize: 14,
-        minHeight: 46,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     formButton: {
@@ -1012,7 +1012,7 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.sm,
         justifyContent: "center",
-        minHeight: 46,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     formButtonDisabled: {
@@ -1110,12 +1110,14 @@ export const styles = StyleSheet.create({
         paddingVertical: 4,
     },
     sessionRevokeButton: {
+        alignItems: "center",
         backgroundColor: "#fee2e2",
         borderColor: "#fecaca",
         borderRadius: 999,
         borderWidth: 1,
-        paddingHorizontal: spacing.sm,
-        paddingVertical: 5,
+        justifyContent: "center",
+        minHeight: touchTarget,
+        paddingHorizontal: spacing.md,
     },
     sessionRevokeText: {
         color: colors.danger,
