@@ -41124,16 +41124,6 @@
                   "fill": "$text-secondary"
                 }
               ]
-            },
-            {
-              "type": "text",
-              "id": "W7nh1t",
-              "name": "ZZ_TEST",
-              "fill": "#FF0000",
-              "content": "ZZTESTVISIBLE",
-              "fontFamily": "Inter",
-              "fontSize": 20,
-              "fontWeight": "normal"
             }
           ]
         },
@@ -69112,131 +69102,12 @@
     },
     {
       "type": "frame",
-      "id": "h2DsG",
-      "x": 6160,
-      "y": 38000,
-      "name": "TEST minimal",
-      "width": 300,
-      "fill": "#FFFFFF",
-      "layout": "vertical",
-      "gap": 8,
-      "padding": 16,
-      "children": [
-        {
-          "type": "text",
-          "id": "MaEEm",
-          "name": "T1",
-          "fill": "#111111",
-          "content": "Plain text works",
-          "fontFamily": "Inter",
-          "fontSize": 16,
-          "fontWeight": "normal"
-        },
-        {
-          "type": "icon",
-          "id": "JGbIn",
-          "name": "IconTest",
-          "width": 20,
-          "height": 20,
-          "icon": "vibrate",
-          "library": "lucide",
-          "fill": "#111111"
-        },
-        {
-          "type": "text",
-          "id": "aj5wN",
-          "name": "T2",
-          "fill": "#111111",
-          "content": "سُبْحَانَ اللَّهِ",
-          "fontFamily": "Noto Naskh Arabic",
-          "fontSize": 24,
-          "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "ZUAdE",
-      "x": 6560,
-      "y": 38000,
-      "name": "TEST2 nopad",
-      "width": 200,
-      "fill": "#EEEEEE",
-      "layout": "vertical",
-      "children": [
-        {
-          "type": "text",
-          "id": "p4pFb",
-          "name": "A",
-          "fill": "#000000",
-          "content": "Hello",
-          "fontFamily": "Inter",
-          "fontSize": 16,
-          "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "vIw10",
-      "x": 6560,
-      "y": 38100,
-      "name": "TEST3 horizontal",
-      "width": 200,
-      "fill": "#EEEEEE",
-      "children": [
-        {
-          "type": "text",
-          "id": "vKlfL",
-          "name": "B",
-          "fill": "#000000",
-          "content": "World",
-          "fontFamily": "Inter",
-          "fontSize": 16,
-          "fontWeight": "normal"
-        },
-        {
-          "type": "text",
-          "id": "hAMNE",
-          "name": "C_new",
-          "fill": "#FF0000",
-          "content": "NewOne",
-          "fontFamily": "Inter",
-          "fontSize": 16,
-          "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "FjEEQ",
-      "x": 6160,
-      "y": 45150,
-      "name": "Test Simple",
-      "width": 200,
-      "height": 90,
-      "fill": "#EEEEEE",
-      "children": [
-        {
-          "type": "text",
-          "id": "y4Px1x",
-          "name": "A",
-          "fill": "#000000",
-          "content": "AAAA",
-          "fontFamily": "Inter",
-          "fontSize": 16,
-          "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "frame",
       "id": "WaZAN",
       "x": 100000,
       "y": 100000,
       "name": "ZZTEST",
       "layout": "vertical",
-      "gap": 8,
+      "gap": 20,
       "children": [
         {
           "type": "text",
@@ -69257,6 +69128,390 @@
           "fontFamily": "Inter",
           "fontSize": 20,
           "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "zLbcQ",
+      "x": 6160,
+      "y": 48900,
+      "name": "Siroh - Modern",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "g00tR",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Fi2ks",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "I8tStV",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "ApTJV",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "iS5vu",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "B0drrC",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "teWHu",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "O8IkF",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Siroh Nabawiyah",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Y4Sxy3",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": [
+            20,
+            20,
+            0,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ywkYY",
+              "name": "Header Block",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Nw1mg",
+                  "name": "Title",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Siroh Nabawiyah",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 26,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "FffSC",
+                  "name": "Subtitle",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Kisah perjalanan hidup Rasulullah Muhammad ﷺ",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "x1sjgI",
+              "name": "Search Bar",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 10,
+              "padding": [
+                12,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "dnAZe",
+                  "name": "Search Icon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "search",
+                  "library": "Material Symbols Rounded",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "BvvrE",
+                  "name": "Placeholder",
+                  "fill": "$text-secondary",
+                  "content": "Cari judul bab atau kata kunci...",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CxxjW",
+              "name": "Cards List",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$gap-md",
+              "children": [
+                {
+                  "id": "fL1iY",
+                  "type": "ref",
+                  "ref": "fcD7f",
+                  "name": "Nasab Rasulullah",
+                  "width": "fill_container",
+                  "descendants": {
+                    "smI6q/bLuxC": {
+                      "content": "Nasab & Kelahiran Nabi"
+                    },
+                    "jdD5g": {
+                      "content": "1"
+                    },
+                    "EBHSv": {
+                      "content": "Nasab Rasulullah"
+                    },
+                    "tX7jL": {
+                      "content": "Muhammad bin Abdullah bin Abdul Muthalib bin Hasyim bin Abdu Manaf bin Qushay bin Kilab bin M…"
+                    }
+                  }
+                },
+                {
+                  "id": "M8rn1",
+                  "type": "ref",
+                  "ref": "fcD7f",
+                  "name": "Kelahiran Nabi Muhammad",
+                  "width": "fill_container",
+                  "descendants": {
+                    "smI6q/bLuxC": {
+                      "content": "Nasab & Kelahiran Nabi"
+                    },
+                    "jdD5g": {
+                      "content": "2"
+                    },
+                    "EBHSv": {
+                      "content": "Kelahiran Nabi Muhammad"
+                    },
+                    "tX7jL": {
+                      "content": "Nabi Muhammad lahir di Makkah Al-Mukarramah pada hari Senin, 12 Rabi'ul Awwal t…"
+                    }
+                  }
+                },
+                {
+                  "id": "XwVnH",
+                  "type": "ref",
+                  "ref": "fcD7f",
+                  "name": "Pemeliharaan oleh Kakek dan Paman",
+                  "width": "fill_container",
+                  "descendants": {
+                    "smI6q/bLuxC": {
+                      "content": "Nasab & Kelahiran Nabi"
+                    },
+                    "jdD5g": {
+                      "content": "3"
+                    },
+                    "EBHSv": {
+                      "content": "Pemeliharaan oleh Kakek dan Paman"
+                    },
+                    "tX7jL": {
+                      "content": "Setelah ibunda Aminah wafat, Nabi diasuh oleh kakeknya Abdul Muthalib — pemimpin Quraisy yan…"
+                    }
+                  }
+                },
+                {
+                  "id": "KUjwB",
+                  "type": "ref",
+                  "ref": "fcD7f",
+                  "name": "Perjalanan ke Syam bersama Abu Thalib",
+                  "width": "fill_container",
+                  "descendants": {
+                    "smI6q/bLuxC": {
+                      "content": "Masa Kecil & Remaja"
+                    },
+                    "jdD5g": {
+                      "content": "4"
+                    },
+                    "EBHSv": {
+                      "content": "Perjalanan ke Syam bersama Abu Thalib"
+                    },
+                    "tX7jL": {
+                      "content": "Pada usia 12 tahun, Nabi menyertai pamannya Abu Thalib dalam perjalanan dagang ke Syam (Sur…"
+                    }
+                  }
+                },
+                {
+                  "id": "mKKDM",
+                  "type": "ref",
+                  "ref": "fcD7f",
+                  "name": "Pernikahan dengan Khadijah binti Khuwaylid",
+                  "width": "fill_container",
+                  "descendants": {
+                    "smI6q/bLuxC": {
+                      "content": "Masa Kecil & Remaja"
+                    },
+                    "jdD5g": {
+                      "content": "5"
+                    },
+                    "EBHSv": {
+                      "content": "Pernikahan dengan Khadijah binti Khuwaylid"
+                    },
+                    "tX7jL": {
+                      "content": "Setelah menyaksikan laporan Maisarah tentang kejujuran dan kemuliaan Muhammad dalam per…"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "iMUoE",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "VrI80",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/RPER3": {
+                  "fill": "#00000000"
+                },
+                "x9sk1l/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "#00000000"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/RPER3": {
+                  "fill": "#00000000"
+                },
+                "YdN7T/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "HSkNE/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "HSkNE/nM62E": {
+                  "fill": "$primary"
+                },
+                "HSkNE/dMeH6": {
+                  "fill": "$primary"
+                }
+              }
+            }
+          ]
         }
       ]
     }
