@@ -15498,94 +15498,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "FKnsu",
-      "x": 5178,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "C16lEz",
-      "x": 5190,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "kfj9E",
-      "x": 5230,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "VRFV6",
-      "x": 5178,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
-      "type": "ellipse",
-      "id": "c0V5DW",
-      "x": 5633,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "QapMG",
-      "x": 5645,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "PvDbi",
-      "x": 5685,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "NtUhY",
-      "x": 5633,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap avatar di header",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "MKjnP",
       "x": 5705,
@@ -15964,50 +15876,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "MtISL",
-      "x": 5948,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "cL6FC",
-      "x": 5960,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "xuTGP",
-      "x": 6000,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "Q0NLi",
-      "x": 5948,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Profil'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -16495,50 +16363,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "fq6fn",
-      "x": 6403,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "qEAMW",
-      "x": 6415,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "i07SEm",
-      "x": 6455,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "paQxe",
-      "x": 6403,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tile 'Masuk / Daftar'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "aAYeS",
       "x": 6475,
@@ -16976,7 +16800,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 11350,
+      "y": 7600,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Surah Al-Qur'an"
@@ -18255,50 +18079,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "PEhv4",
-      "x": 5178,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "MEdWc",
-      "x": 5190,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "YNQl5",
-      "x": 5230,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "S9Jsg",
-      "x": 5178,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "bJ5sz",
       "x": 5705,
@@ -18746,50 +18526,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "Z73V13",
-      "x": 5633,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "c7BKe",
-      "x": 5645,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "nXQ40",
-      "x": 5685,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "IijnO",
-      "x": 5633,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Hadis",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "G3df0",
       "x": 6160,
@@ -19218,54 +18954,10 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "JJAJ0",
-      "x": 6088,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "r7QQgL",
-      "x": 6100,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "fHv9g",
-      "x": 6140,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "X8Km3",
-      "x": 6088,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap salah satu hadis",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "Z4cKy",
       "x": 5250,
-      "y": 11350,
+      "y": 7600,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -20527,54 +20219,10 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "G4hmba",
-      "x": 5178,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "PHOW6",
-      "x": 5190,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "x9cdg",
-      "x": 5230,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "la31s",
-      "x": 5178,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "VuiYx",
       "x": 5705,
-      "y": 11350,
+      "y": 7600,
       "name": "Quran - Modern",
       "theme": {
         "style": "modern"
@@ -21108,54 +20756,10 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "TDSO4",
-      "x": 5633,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "PTia5",
-      "x": 5645,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "bbJcu",
-      "x": 5685,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "oqBvb",
-      "x": 5633,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Al-Quran",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "STXFG",
       "x": 6160,
-      "y": 11350,
+      "y": 7600,
       "name": "Quran Reader - Modern",
       "theme": {
         "style": "modern"
@@ -25759,7 +25363,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 18850,
+      "y": 15100,
       "descendants": {
         "h7m7Yb": {
           "content": "Cari Arah Kiblat"
@@ -25776,7 +25380,7 @@
       "type": "frame",
       "id": "X9JaSP",
       "x": 5250,
-      "y": 18850,
+      "y": 15100,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -27038,54 +26642,10 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "O887fh",
-      "x": 5178,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "nLTP0",
-      "x": 5190,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "TwPrR",
-      "x": 5230,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "zAcZS",
-      "x": 5178,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "Cmekx",
       "x": 5705,
-      "y": 18850,
+      "y": 15100,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -27853,54 +27413,10 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "mXCKl",
-      "x": 5633,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "dVVzL",
-      "x": 5645,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "ie3Ap",
-      "x": 5685,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "w4EVg",
-      "x": 5633,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "O2PFKE",
       "x": 6160,
-      "y": 18850,
+      "y": 15100,
       "name": "Kiblat - Modern",
       "theme": {
         "style": "modern"
@@ -33965,50 +33481,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "ZmG1r",
-      "x": 5178,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "phLz2",
-      "x": 5190,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "Ppjue",
-      "x": 5230,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "x8MKB",
-      "x": 5178,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "nuC8a",
       "x": 5705,
@@ -34778,94 +34250,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "krv5X",
-      "x": 5633,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "uK5K1",
-      "x": 5645,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "IBMu5",
-      "x": 5685,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "X4tToz",
-      "x": 5633,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
-      "type": "ellipse",
-      "id": "swJ5N",
-      "x": 6088,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "o2rcWX",
-      "x": 6100,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "MyTmX",
-      "x": 6140,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "cXFfc",
-      "x": 6088,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap surah (mis. Al-Fatihah)",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -36693,50 +36077,6 @@
       "fontWeight": "600"
     },
     {
-      "type": "ellipse",
-      "id": "o8NQiK",
-      "x": 6088,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "f7RHP",
-      "x": 6100,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "wHoo5",
-      "x": 6140,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "SgZEy",
-      "x": 6088,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Jadwal Sholat'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "e5kCc",
       "x": 6160,
@@ -38219,50 +37559,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "v43dO",
-      "x": 6088,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "kCxo0",
-      "x": 6100,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "Ea7iE",
-      "x": 6140,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "TTOwg",
-      "x": 6088,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap kartu Qibla",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -39778,50 +39074,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "tjgOf",
-      "x": 6543,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "dkosO",
-      "x": 6555,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "J6dI2",
-      "x": 6595,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "d8HX6",
-      "x": 6543,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap ikon gear",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "ellipse",
@@ -112931,50 +112183,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "n3bMa",
-      "x": 6953,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "S9aqzJ",
-      "x": 6965,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "C50Hd4",
-      "x": 7005,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "HAPoB",
-      "x": 6953,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "FUeY7",
       "x": 7480,
@@ -113420,50 +112628,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "R7Xv9",
-      "x": 7408,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "k4reV",
-      "x": 7420,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "jP1pH",
-      "x": 7460,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "e5fHH",
-      "x": 7408,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Hadis",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -113973,50 +113137,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "DXhsi",
-      "x": 7863,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "iw9ui",
-      "x": 7875,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "m7ZQ9e",
-      "x": 7915,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "x3IHE",
-      "x": 7863,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Buka Reader' pada kitab",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "id": "AUC71",
@@ -115302,50 +114422,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "N5vgxb",
-      "x": 9043,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "noIvO",
-      "x": 9055,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "m8Sfp",
-      "x": 9095,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "hJE1n",
-      "x": 9043,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "GjsMb",
       "x": 9570,
@@ -115831,50 +114907,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "sKhjM",
-      "x": 9498,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "Owf0O",
-      "x": 9510,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "viFUK",
-      "x": 9550,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "JXdSq",
-      "x": 9498,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap avatar → Profil",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "UDRvG",
       "x": 8390,
@@ -116303,50 +115335,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "XiF8O",
-      "x": 8318,
-      "y": 11426,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "GEfW1",
-      "x": 8330,
-      "y": 11429,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "MfQwB",
-      "x": 8370,
-      "y": 11423,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "t4ehgm",
-      "x": 8318,
-      "y": 11409,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap salah satu hadis",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "OnxXV",
       "x": 10025,
@@ -116661,55 +115649,11 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "f45PfX",
-      "x": 9953,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "U9CUXf",
-      "x": 9965,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "etrCI",
-      "x": 10005,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "K9cBq",
-      "x": 9953,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tile 'Masuk/Daftar' → tab Lupa Sandi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "id": "L7hzu",
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 3850,
+      "y": 100,
       "name": "Flow Card - Buka Aplikasi Pertama Kali",
       "descendants": {
         "h7m7Yb": {
@@ -116746,7 +115690,7 @@
       "type": "frame",
       "id": "z555jf",
       "x": 5250,
-      "y": 3850,
+      "y": 100,
       "name": "Splash - Modern",
       "theme": {
         "style": "modern"
@@ -116808,50 +115752,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "dDkx3",
-      "x": 5178,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "WSIgb",
-      "x": 5190,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "wTIDM",
-      "x": 5230,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "SyyhK",
-      "x": 5178,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Install & buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "id": "cn0Ys",
       "type": "ref",
       "ref": "r7P5jg",
@@ -116874,7 +115774,7 @@
       "type": "frame",
       "id": "Y9PyW",
       "x": 5705,
-      "y": 3850,
+      "y": 100,
       "name": "Izin Lokasi - Modern",
       "theme": {
         "style": "modern"
@@ -117007,50 +115907,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "r4hCj",
-      "x": 5633,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "r78oZk",
-      "x": 5645,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "l7XtUr",
-      "x": 5685,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "SPCu5",
-      "x": 5633,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Splash selesai, OS minta izin lokasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -118318,50 +117174,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "vVpTn",
-      "x": 16328,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "lGL7L",
-      "x": 16340,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "O3PJX",
-      "x": 16380,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "gNys6",
-      "x": 16328,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "R08OLt",
       "x": 16855,
@@ -119131,50 +117943,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "Wxcfz",
-      "x": 16783,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "hIRGZ",
-      "x": 16795,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "dM7T6",
-      "x": 16835,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "MqPof",
-      "x": 16783,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -120692,50 +119460,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "otZhd",
-      "x": 17238,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "a1gUL",
-      "x": 17250,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "HPAIQ",
-      "x": 17290,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "qN3qy",
-      "x": 17238,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "r8Nm5A",
       "x": 14170,
@@ -122001,50 +120725,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "F36Nm",
-      "x": 14098,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "T1ERA",
-      "x": 14110,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "Vgtfb",
-      "x": 14150,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "inARZ",
-      "x": 14098,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "xTALn",
       "x": 14625,
@@ -122814,50 +121494,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "J55c0",
-      "x": 14553,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "KMwQn",
-      "x": 14565,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "Z6DYY7",
-      "x": 14605,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "Z3nSgc",
-      "x": 14553,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -124375,54 +123011,10 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "p5VJH",
-      "x": 15008,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "saaxq",
-      "x": 15020,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "IdVZa",
-      "x": 15060,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "wTqAQ",
-      "x": 15008,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "M1Ew7",
       "x": 6160,
-      "y": 3850,
+      "y": 100,
       "name": "Beranda - Modern (First Launch)",
       "theme": {
         "style": "modern"
@@ -125682,50 +124274,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "wHBY5",
-      "x": 6088,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "ToupF",
-      "x": 6100,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "LmXt0",
-      "x": 6140,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "pEQZB",
-      "x": 6088,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Izinkan / lanjut sebagai tamu",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "id": "nhpIT",
@@ -127012,50 +125560,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "tjK7M",
-      "x": 9638,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "A1GTU",
-      "x": 9650,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "stVug",
-      "x": 9690,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "W7SxW",
-      "x": 9638,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "J5AlJ",
       "x": 10165,
@@ -127825,50 +126329,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "As7Ov",
-      "x": 10093,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "gt5Mu",
-      "x": 10105,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "E6wbVZ",
-      "x": 10145,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "GXwAm",
-      "x": 10093,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -129386,50 +127846,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "NFFDy",
-      "x": 10548,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "t12qQ",
-      "x": 10560,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "TSvA8",
-      "x": 10600,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "S9A5U",
-      "x": 10548,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "btyAN",
       "x": 11075,
@@ -130945,94 +129361,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "Uu3BR",
-      "x": 11003,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "xXvdn",
-      "x": 11015,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "Sk7P9",
-      "x": 11055,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "DG72A",
-      "x": 11003,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Ubah 'Jeda Pengingat' & 'Waktu Sholat'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
-      "type": "ellipse",
-      "id": "xcmB3",
-      "x": 17693,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "c3Io1",
-      "x": 17705,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "EYJxF",
-      "x": 17745,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "hMnok",
-      "x": 17693,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Scroll ke atas → 'Metode Jadwal'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "id": "t2tZy",
       "type": "ref",
       "ref": "r7P5jg",
@@ -132317,50 +130645,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "GMFbY",
-      "x": 7268,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "n3cMKv",
-      "x": 7280,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "emxNB",
-      "x": 7320,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "O3ccU",
-      "x": 7268,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "cYTZ4",
       "x": 7795,
@@ -132844,50 +131128,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "yVWaa",
-      "x": 7723,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "tN6wr",
-      "x": 7735,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "uZhKi",
-      "x": 7775,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "jqHwu",
-      "x": 7723,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap avatar → Profil",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -134972,50 +133212,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "ZjuQ7",
-      "x": 15463,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "fwSg1",
-      "x": 15475,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "QhHlg",
-      "x": 15515,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "mEi67",
-      "x": 15463,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Atur ulang pengingat'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "id": "cngjj",
       "type": "ref",
       "ref": "r7P5jg",
@@ -136299,50 +134495,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "sRTnA",
-      "x": 11868,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "oncg3",
-      "x": 11880,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "fee1x",
-      "x": 11920,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "rUo0T",
-      "x": 11868,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "lzTt5",
       "x": 12395,
@@ -137112,50 +135264,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "fKyn1",
-      "x": 12323,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "I89Sjh",
-      "x": 12335,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "sv1pW",
-      "x": 12375,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "Y0WsU9",
-      "x": 12323,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -138671,50 +136779,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "UAPew",
-      "x": 12778,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "pvjZ6",
-      "x": 12790,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "s9A8Dz",
-      "x": 12830,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "Qd7d5",
-      "x": 12778,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "type": "frame",
@@ -140242,50 +138306,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "RgQ49",
-      "x": 13233,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "r4Bqq",
-      "x": 13245,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "msodS",
-      "x": 13285,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "YX4pw",
-      "x": 13233,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Matikan toggle 'Notifikasi Lokal'",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "n3Z04V",
       "x": 8250,
@@ -140897,50 +138917,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "ellipse",
-      "id": "buJfn",
-      "x": 8178,
-      "y": 3926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "nBTUk",
-      "x": 8190,
-      "y": 3929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "uBJTq",
-      "x": 8230,
-      "y": 3923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "r6hUe8",
-      "x": 8178,
-      "y": 3909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tile 'Masuk/Daftar' → tab Daftar",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
     },
     {
       "id": "u0I1i",
@@ -142227,50 +140203,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "pZvTi",
-      "x": 7408,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "AA22E",
-      "x": 7420,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "t7MjY",
-      "x": 7460,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "p6fbgr",
-      "x": 7408,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Buka aplikasi",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "Q3uPys",
       "x": 7935,
@@ -143042,50 +140974,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "v0rIph",
-      "x": 7863,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "JmKAA",
-      "x": 7875,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "gulI0",
-      "x": 7915,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "RBNwT",
-      "x": 7863,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap tab Ibadah",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "T78DGU",
       "x": 8390,
@@ -143594,50 +141482,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "dwocw",
-      "x": 8318,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "HrNEc",
-      "x": 8330,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "dgkL5",
-      "x": 8370,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "heG0c",
-      "x": 8318,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "frame",
       "id": "i3z72h",
       "x": 8845,
@@ -143796,50 +141640,6 @@
       ]
     },
     {
-      "type": "ellipse",
-      "id": "rhqBS",
-      "x": 8773,
-      "y": 18926,
-      "name": "Connector Dot",
-      "fill": "#0F9D6D",
-      "width": 8,
-      "height": 8
-    },
-    {
-      "type": "rectangle",
-      "id": "u6toJ",
-      "x": 8785,
-      "y": 18929,
-      "name": "Connector Line",
-      "fill": "#0F9D6D",
-      "width": 40,
-      "height": 2
-    },
-    {
-      "type": "icon",
-      "id": "pjDwu",
-      "x": 8825,
-      "y": 18923,
-      "name": "chevron_right",
-      "width": 14,
-      "height": 14,
-      "icon": "chevron_right",
-      "library": "Material Symbols Rounded",
-      "fill": "#0F9D6D"
-    },
-    {
-      "type": "text",
-      "id": "NWUmF",
-      "x": 8773,
-      "y": 18909,
-      "name": "Connector Label",
-      "fill": "#0F9D6D",
-      "content": "Toggle 'Notifikasi Lokal' pertama kali",
-      "fontFamily": "Inter",
-      "fontSize": 9,
-      "fontWeight": "600"
-    },
-    {
       "type": "text",
       "id": "hrpQy",
       "x": 4910,
@@ -143877,6 +141677,2206 @@
       "fontSize": 13,
       "fontWeight": "700",
       "letterSpacing": 0.5
+    },
+    {
+      "type": "ellipse",
+      "id": "YqAkC",
+      "x": 5178,
+      "y": 176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "JQKVo",
+      "x": 5190,
+      "y": 179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "i8XmSw",
+      "x": 5230,
+      "y": 173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "WOh4r",
+      "x": 5178,
+      "y": 159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Install & buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "r2gN9R",
+      "x": 5633,
+      "y": 176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "jUteM",
+      "x": 5645,
+      "y": 179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "pj9dJ",
+      "x": 5685,
+      "y": 173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "fx1dV",
+      "x": 5633,
+      "y": 159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Splash selesai",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "e7wEj",
+      "x": 6088,
+      "y": 176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "NoKc1",
+      "x": 6100,
+      "y": 179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "bLLOC",
+      "x": 6140,
+      "y": 173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "r4tBL",
+      "x": 6088,
+      "y": 159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Izinkan lokasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "v70HN",
+      "x": 5178,
+      "y": 7676,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "VYI0G",
+      "x": 5190,
+      "y": 7679,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "jB2WK",
+      "x": 5230,
+      "y": 7673,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "O7wq1J",
+      "x": 5178,
+      "y": 7659,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "HYOFO",
+      "x": 5633,
+      "y": 7676,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "SF3PJ",
+      "x": 5645,
+      "y": 7679,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "v6xunE",
+      "x": 5685,
+      "y": 7673,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "vT08F",
+      "x": 5633,
+      "y": 7659,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Al-Quran",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "BDmah",
+      "x": 6088,
+      "y": 7676,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Y4VYD1",
+      "x": 6100,
+      "y": 7679,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "zbfV5",
+      "x": 6140,
+      "y": 7673,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "DxOzQ",
+      "x": 6088,
+      "y": 7659,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap surah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "hM4ml",
+      "x": 5178,
+      "y": 15176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "kAP8r",
+      "x": 5190,
+      "y": 15179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "w38b5I",
+      "x": 5230,
+      "y": 15173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "Q0HBa0",
+      "x": 5178,
+      "y": 15159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "X6ZhP9",
+      "x": 5633,
+      "y": 15176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "KunO4",
+      "x": 5645,
+      "y": 15179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "GvOVO",
+      "x": 5685,
+      "y": 15173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "S1kKvP",
+      "x": 5633,
+      "y": 15159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "auhtH",
+      "x": 6088,
+      "y": 15176,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "gzvZ7",
+      "x": 6100,
+      "y": 15179,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "VPOeU",
+      "x": 6140,
+      "y": 15173,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "Q1xWz6",
+      "x": 6088,
+      "y": 15159,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap kartu Qibla",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "f1db3",
+      "x": 5178,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "EN5iV",
+      "x": 5190,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "g00hOm",
+      "x": 5230,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "yCEEw",
+      "x": 5178,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "ldTRw",
+      "x": 5633,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "CoQp9",
+      "x": 5645,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "sbDca",
+      "x": 5685,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "eDehg",
+      "x": 5633,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap avatar",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "XrZsy",
+      "x": 5948,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Aqgmo",
+      "x": 5960,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "OfF3P",
+      "x": 6000,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "OHeVz",
+      "x": 5948,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap 'Profil'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "SuIoq",
+      "x": 6403,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "qVmVs",
+      "x": 6415,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "PfkIY",
+      "x": 6455,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "r7hop",
+      "x": 6403,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap 'Masuk/Daftar'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "eKnLO",
+      "x": 7268,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "cfS25",
+      "x": 7280,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Yc9VS",
+      "x": 7320,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "HZzwH",
+      "x": 7268,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "v2q5f",
+      "x": 7723,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "L6dHYA",
+      "x": 7735,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "eAbBU",
+      "x": 7775,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "VzTfG",
+      "x": 7723,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap avatar>Profil",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "b5OPtN",
+      "x": 8178,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "pMYb6",
+      "x": 8190,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "u9cJ7",
+      "x": 8230,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "i0Mk9E",
+      "x": 8178,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tab Daftar",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "Mudks",
+      "x": 9043,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "l4i6SO",
+      "x": 9055,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "sWJwO",
+      "x": 9095,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "eTcSj",
+      "x": 9043,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "J8vrr",
+      "x": 9498,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "nj3Zi",
+      "x": 9510,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Me0U6",
+      "x": 9550,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "Yy7bs",
+      "x": 9498,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap avatar>Profil",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "qPVFR",
+      "x": 9953,
+      "y": 3926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Q8Olh",
+      "x": 9965,
+      "y": 3929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "PHz3l",
+      "x": 10005,
+      "y": 3923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "nx0HR",
+      "x": 9953,
+      "y": 3909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tab Lupa Sandi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "J6Y2I",
+      "x": 5178,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "vs0VU",
+      "x": 5190,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "M37YEN",
+      "x": 5230,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "GtLfX",
+      "x": 5178,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "nE4kE",
+      "x": 5633,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "O6LZwS",
+      "x": 5645,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "tb2f9",
+      "x": 5685,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "TF2yW",
+      "x": 5633,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Hadis",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "BUkdi",
+      "x": 6088,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "C2Sy9O",
+      "x": 6100,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "LI5J1",
+      "x": 6140,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "WskJ2",
+      "x": 6088,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap hadis",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "wAi1l",
+      "x": 6953,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "n4yM9b",
+      "x": 6965,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "D4oVhs",
+      "x": 7005,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "ryT3L",
+      "x": 6953,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "ANXxT",
+      "x": 7408,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "b0u1B",
+      "x": 7420,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "YsuDn",
+      "x": 7460,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "i4Cdr",
+      "x": 7408,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Hadis",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "i4b2r",
+      "x": 7863,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "cL8lD",
+      "x": 7875,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "eVUFc",
+      "x": 7915,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "JKRnY",
+      "x": 7863,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka Reader",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "b6D8M",
+      "x": 8318,
+      "y": 11426,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "TNTR5",
+      "x": 8330,
+      "y": 11429,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "POGCp",
+      "x": 8370,
+      "y": 11423,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "XY1in",
+      "x": 8318,
+      "y": 11409,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap hadis",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "sV7Pf",
+      "x": 5178,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "wP4gK",
+      "x": 5190,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "BX3JO",
+      "x": 5230,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "YWq2z",
+      "x": 5178,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "NAv3T",
+      "x": 5633,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "i3Bd5",
+      "x": 5645,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "XcPtd",
+      "x": 5685,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "ZGlxC",
+      "x": 5633,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "Xs0an",
+      "x": 6088,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "a84D3",
+      "x": 6100,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "X9of8",
+      "x": 6140,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "XLQ9u",
+      "x": 6088,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap 'Jadwal Sholat'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "mOYdl",
+      "x": 6543,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "MOQgW",
+      "x": 6555,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "d2c8T",
+      "x": 6595,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "JtyLE",
+      "x": 6543,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap ikon gear",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "ZCyqz",
+      "x": 7408,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "eLKqi",
+      "x": 7420,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "AhKjS",
+      "x": 7460,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "fy5ki",
+      "x": 7408,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "OKEyP",
+      "x": 7863,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "wm0xg",
+      "x": 7875,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Vs7Lc",
+      "x": 7915,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "Javy2",
+      "x": 7863,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "RLbn7",
+      "x": 8318,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Qppgi",
+      "x": 8330,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Qqu1c",
+      "x": 8370,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "PMIdt",
+      "x": 8318,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka Pengaturan",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "V9pPf8",
+      "x": 8773,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "BVvZQ",
+      "x": 8785,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "i2y1B",
+      "x": 8825,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "zOW4A",
+      "x": 8773,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Toggle Notifikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "q0JMEs",
+      "x": 9638,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "XIlCj",
+      "x": 9650,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Vkij1",
+      "x": 9690,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "QrKx4",
+      "x": 9638,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "b2EgKB",
+      "x": 10093,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "cWQgz",
+      "x": 10105,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "SQWFD",
+      "x": 10145,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "KShJq",
+      "x": 10093,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "SwKU2",
+      "x": 10548,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "uPrkR",
+      "x": 10560,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "akotf",
+      "x": 10600,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "uCKwF",
+      "x": 10548,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka Pengaturan",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "kD5Ka",
+      "x": 11003,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "EKOUZ",
+      "x": 11015,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "Y53tAG",
+      "x": 11055,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "R2uHkJ",
+      "x": 11003,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Ubah Jeda & Waktu",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "hpA8x",
+      "x": 11868,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "MDIam",
+      "x": 11880,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "cZVvx",
+      "x": 11920,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "X734ep",
+      "x": 11868,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "Zjiuh",
+      "x": 12323,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "tmYhB",
+      "x": 12335,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "cWITW",
+      "x": 12375,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "Z8wrA",
+      "x": 12323,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "ukVQy",
+      "x": 12778,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "kujwi",
+      "x": 12790,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "P37Q6q",
+      "x": 12830,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "x3kW4",
+      "x": 12778,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka Pengaturan",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "ZmNiA",
+      "x": 13233,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "y9J2Ri",
+      "x": 13245,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "jgMRK",
+      "x": 13285,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "QN8Ry",
+      "x": 13233,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Matikan Notifikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "z7HGDb",
+      "x": 14098,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "V4r2CO",
+      "x": 14110,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "U23md",
+      "x": 14150,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "o12BC",
+      "x": 14098,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "Lh9M3",
+      "x": 14553,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "NZUa8",
+      "x": 14565,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "q9LMQb",
+      "x": 14605,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "KUI35",
+      "x": 14553,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "UNkzD",
+      "x": 15008,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "K8HPSy",
+      "x": 15020,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "w903Dv",
+      "x": 15060,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "KRNdn",
+      "x": 15008,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka Pengaturan",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "vVAqA",
+      "x": 15463,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "tPe7f",
+      "x": 15475,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "k2zlEF",
+      "x": 15515,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "ETvpN",
+      "x": 15463,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Atur ulang",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "LpJvG",
+      "x": 16328,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "tkbVY",
+      "x": 16340,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "jBEKe",
+      "x": 16380,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "CKiD1",
+      "x": 16328,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka aplikasi",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "IiQc3",
+      "x": 16783,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Q7ZPZ",
+      "x": 16795,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "d1TIK",
+      "x": 16835,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "j0qnT",
+      "x": 16783,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tab Ibadah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "fCrmX",
+      "x": 17238,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "P0SnzY",
+      "x": 17250,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "cBKoQ",
+      "x": 17290,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "Bblzh",
+      "x": 17238,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Buka Pengaturan",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "wcMl7",
+      "x": 17693,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "IUjEQ",
+      "x": 17705,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "bkt0z",
+      "x": 17745,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "YoQxY",
+      "x": 17693,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Metode Jadwal",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
     }
   ],
   "themes": {
