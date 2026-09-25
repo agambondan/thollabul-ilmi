@@ -12589,6 +12589,7 @@
           "id": "nqiIH",
           "name": "Content",
           "width": "fill_container",
+          "height": 674,
           "layout": "vertical",
           "gap": "$gap-md",
           "padding": [
@@ -16476,6 +16477,7 @@
           "id": "w9Xt6U",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
@@ -20897,6 +20899,7 @@
           "id": "aNXK6",
           "name": "Content",
           "width": "fill_container",
+          "height": 591,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -20905,6 +20908,7 @@
             8,
             20
           ],
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -68363,6 +68367,7 @@
           "id": "rcxTY",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "stroke": "#000000ff",
           "strokeWidth": 1,
@@ -68375,6 +68380,7 @@
             8,
             20
           ],
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -70209,9 +70215,11 @@
           "id": "IekEp",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -86838,6 +86846,7 @@
           "id": "UwSbm",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -89701,6 +89710,7 @@
           "id": "z7l59",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "layout": "vertical",
           "gap": "$gap-md",
@@ -101491,9 +101501,11 @@
           "id": "kQHDj",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-md",
           "padding": "$pad-screen",
+          "justifyContent": "center",
           "children": [
             {
               "type": "text",
@@ -101717,6 +101729,7 @@
           "id": "MqjAn",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -106370,6 +106383,7 @@
           "id": "qL4Gc",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -106770,6 +106784,7 @@
           "id": "lXLBa",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -107422,6 +107437,7 @@
           "id": "eDjND",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "children": [
             {
@@ -107720,6 +107736,7 @@
           "id": "Z69gTO",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "layout": "vertical",
           "gap": "$gap-lg",
@@ -108215,6 +108232,7 @@
           "id": "m1Yda",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -108807,6 +108825,7 @@
           "id": "MoATn",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
@@ -109211,6 +109230,7 @@
           "id": "s7x1SQ",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -115455,9 +115475,11 @@
           "id": "BkvFC",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -134188,6 +134210,7 @@
           "id": "BOAdb",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
@@ -142458,6 +142481,7 @@
           "id": "oVXaR",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -142863,7 +142887,7 @@
       },
       "clip": true,
       "width": 375,
-      "height": 700,
+      "height": 812,
       "fill": "$bg",
       "layout": "vertical",
       "padding": "$pad-screen",
@@ -142929,7 +142953,7 @@
           "id": "mP5Re",
           "name": "Content",
           "width": "fill_container",
-          "height": "fill_container",
+          "height": 634,
           "layout": "vertical",
           "justifyContent": "center",
           "alignItems": "center",
@@ -155952,6 +155976,7 @@
           "id": "HEouR",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
@@ -159832,6 +159857,7 @@
           "id": "oLoYW",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
@@ -172088,6 +172114,7 @@
           "id": "gpTOY",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -177720,6 +177747,7 @@
           "id": "btLmb",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": "$pad-screen",
@@ -182562,6 +182590,7 @@
           "id": "Huqtg",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -182837,6 +182866,7 @@
           "id": "QT3Ls",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -183642,6 +183672,7 @@
           "id": "yfwS0",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "layout": "vertical",
           "gap": "$gap-lg",
@@ -193891,6 +193922,7 @@
           "id": "HMShK",
           "name": "Content",
           "width": "fill_container",
+          "height": 567,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -193899,6 +193931,7 @@
             8,
             20
           ],
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -197726,7 +197759,7 @@
           "name": "Backdrop",
           "clip": true,
           "width": 375,
-          "height": 220,
+          "height": 357,
           "layout": "none",
           "children": [
             {
@@ -199002,7 +199035,7 @@
               "name": "Dim Tint",
               "fill": "#0F172A66",
               "width": 375,
-              "height": 220
+              "height": 357
             }
           ]
         },
@@ -200314,6 +200347,7 @@
           "id": "JYHQb",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "layout": "vertical",
           "gap": "$gap-lg",
@@ -200897,12 +200931,14 @@
           "id": "DR6bf",
           "name": "Content",
           "width": "fill_container",
+          "height": 686,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
             8,
             20
           ],
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -218413,7 +218449,7 @@
           "name": "Backdrop",
           "clip": true,
           "width": 375,
-          "height": 220,
+          "height": 293,
           "layout": "none",
           "children": [
             {
@@ -219689,7 +219725,7 @@
               "name": "Dim Tint",
               "fill": "#0F172A66",
               "width": 375,
-              "height": 220
+              "height": 293
             }
           ]
         },
@@ -226877,6 +226913,7 @@
           "id": "e7Diy",
           "name": "Content",
           "width": "fill_container",
+          "height": 567,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
@@ -226885,6 +226922,7 @@
             8,
             20
           ],
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -231832,6 +231870,7 @@
           "id": "o6esx",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "layout": "vertical",
           "gap": "$gap-lg",
@@ -232226,7 +232265,9 @@
           "id": "Pwbm3",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
+          "justifyContent": "center",
           "children": [
             {
               "type": "frame",
@@ -235534,6 +235575,7 @@
           "id": "k9cf0",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "fill": "$bg",
           "layout": "vertical",
           "gap": "$gap-lg",
@@ -235936,6 +235978,7 @@
           "id": "avb5u",
           "name": "Content",
           "width": "fill_container",
+          "height": 610,
           "layout": "vertical",
           "gap": "$gap-lg",
           "padding": [
