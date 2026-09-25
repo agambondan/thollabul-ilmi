@@ -10,8 +10,9 @@ import {
     View,
 } from "react-native";
 
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
+import { colors, getThemeColors, radius, spacing } from "../../theme";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
 
 const DEFAULT_CATEGORIES = [
@@ -88,17 +89,22 @@ const getCategories = (items) => {
         });
 };
 
-function CategoryPill({ active, label, onPress, testID }) {
+function CategoryPill({ active, isDarkTheme, label, onPress, testID }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={onPress}
-            style={[styles.categoryPill, active && styles.categoryPillActive]}
+            style={[
+                styles.categoryPill,
+                isDarkTheme && styles.categoryPillDark,
+                active && styles.categoryPillActive,
+            ]}
             testID={testID}
         >
             <Text
                 style={[
                     styles.categoryPillText,
+                    isDarkTheme && styles.categoryPillTextDark,
                     active && styles.categoryPillTextActive,
                 ]}
             >
@@ -108,35 +114,56 @@ function CategoryPill({ active, label, onPress, testID }) {
     );
 }
 
-function FiqhCard({ item, onOpen, t }) {
+function FiqhCard({ isDarkTheme, item, onOpen, t }) {
     const category = getFiqhDisplayCategory(item);
 
     return (
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-fiqh-card'
         >
             <View style={styles.cardMain}>
                 {category ? (
-                    <Text style={styles.categoryBadge}>
+                    <Text
+                        style={[
+                            styles.categoryBadge,
+                            isDarkTheme && styles.categoryBadgeDark,
+                        ]}
+                    >
                         {titleCase(category)}
                     </Text>
                 ) : (
-                    <View style={styles.categoryDash} />
+                    <View
+                        style={[
+                            styles.categoryDash,
+                            isDarkTheme && styles.categoryDashDark,
+                        ]}
+                    />
                 )}
-                <Text numberOfLines={1} style={styles.cardTitle}>
+                <Text
+                    numberOfLines={1}
+                    style={[
+                        styles.cardTitle,
+                        isDarkTheme && styles.cardTitleDark,
+                    ]}
+                >
                     {getFiqhTitle(item, t("explore.fiqh.fallbackTitle"))}
                 </Text>
             </View>
-            <ChevronDown color='#9ca3af' size={22} strokeWidth={2.1} />
+            <ChevronDown
+                color={isDarkTheme ? "#9ca3af" : "#6b7280"}
+                size={22}
+                strokeWidth={2.1}
+            />
         </Pressable>
     );
 }
 
 export function WebAppFiqhRoute({
     error,
+    isDarkTheme: isDarkThemeProp,
     items,
     loading,
     onLoadMore,
@@ -144,6 +171,8 @@ export function WebAppFiqhRoute({
     pagination,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDarkTheme = isDarkThemeProp ?? isDarkThemePref;
     const [category, setCategory] = useState("");
     const [search, setSearch] = useState("");
     const categories = useMemo(() => getCategories(items), [items]);
@@ -168,33 +197,45 @@ export function WebAppFiqhRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                isDarkTheme && styles.contentDark,
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-fiqh-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.fiqh.title")}</Text>
-                <Text style={styles.count}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>
+                    {t("explore.fiqh.title")}
+                </Text>
+                <Text style={[styles.count, isDarkTheme && styles.countDark]}>
                     {t("explore.fiqh.count", { count: items.length })}
                 </Text>
             </View>
 
             <View style={styles.filterWrap}>
-                <View style={styles.search}>
-                    <Search color='#9ca3af' size={16} strokeWidth={2} />
+                <View style={[styles.search, isDarkTheme && styles.searchDark]}>
+                    <Search
+                        color={isDarkTheme ? "#9ca3af" : "#6b7280"}
+                        size={16}
+                        strokeWidth={2}
+                    />
                     <TextInput
                         onChangeText={setSearch}
                         placeholder={t("explore.fiqh.searchPlaceholder")}
-                        placeholderTextColor='#9ca3af'
-                        style={styles.input}
+                        placeholderTextColor={
+                            isDarkTheme ? "#9ca3af" : "#9ca3af"
+                        }
+                        style={[styles.input, isDarkTheme && styles.inputDark]}
                         testID='web-app-fiqh-search'
                         value={search}
                     />
                 </View>
                 <CategoryPill
                     active={!category}
+                    isDarkTheme={isDarkTheme}
                     label={t("explore.common.all")}
                     onPress={() => setCategory("")}
                     testID='web-app-fiqh-category-all'
@@ -202,6 +243,7 @@ export function WebAppFiqhRoute({
                 {categories.map((item) => (
                     <CategoryPill
                         active={category === item}
+                        isDarkTheme={isDarkTheme}
                         key={item}
                         label={titleCase(item)}
                         onPress={() =>
@@ -213,7 +255,7 @@ export function WebAppFiqhRoute({
             </View>
 
             {error ? (
-                <Text style={styles.error}>
+                <Text style={[styles.error, isDarkTheme && styles.errorDark]}>
                     {t("explore.common.refreshError", {
                         subject: t("explore.fiqh.fallbackTitle"),
                     })}
@@ -221,8 +263,16 @@ export function WebAppFiqhRoute({
             ) : null}
             {loading ? (
                 <View style={styles.state}>
-                    <ActivityIndicator color='#4d7c0f' size='small' />
-                    <Text style={styles.stateText}>
+                    <ActivityIndicator
+                        color={isDarkTheme ? "#34d399" : "#047857"}
+                        size='small'
+                    />
+                    <Text
+                        style={[
+                            styles.stateText,
+                            isDarkTheme && styles.stateTextDark,
+                        ]}
+                    >
                         {t("explore.fiqh.loading")}
                     </Text>
                 </View>
@@ -233,6 +283,7 @@ export function WebAppFiqhRoute({
                     {filteredItems.map((item, index) => (
                         <FiqhCard
                             index={index}
+                            isDarkTheme={isDarkTheme}
                             item={item}
                             key={`${getFiqhId(item)}-${index}`}
                             onOpen={onOpenItem}
@@ -243,9 +294,18 @@ export function WebAppFiqhRoute({
             ) : null}
 
             {!loading && !error && !filteredItems.length ? (
-                <View style={styles.empty}>
-                    <Scale color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                    <Scale
+                        color={isDarkTheme ? "#9ca3af" : "#6b7280"}
+                        size={32}
+                        strokeWidth={1.8}
+                    />
+                    <Text
+                        style={[
+                            styles.emptyTitle,
+                            isDarkTheme && styles.emptyTitleDark,
+                        ]}
+                    >
                         {items.length
                             ? t("explore.common.notFound", {
                                   subject: t("explore.fiqh.fallbackTitle"),
@@ -254,7 +314,12 @@ export function WebAppFiqhRoute({
                                   subject: t("explore.fiqh.fallbackTitle"),
                               })}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text
+                        style={[
+                            styles.emptyText,
+                            isDarkTheme && styles.emptyTextDark,
+                        ]}
+                    >
                         {items.length
                             ? t("explore.common.changeSearchOrFilter")
                             : t("explore.common.retryLater")}
@@ -273,12 +338,18 @@ export function WebAppFiqhRoute({
                         onPress={onLoadMore}
                         style={[
                             styles.loadMoreButton,
+                            isDarkTheme && styles.loadMoreButtonDark,
                             pagination.loadingMore &&
                                 styles.loadMoreButtonDisabled,
                         ]}
                         testID='web-app-fiqh-load-more'
                     >
-                        <Text style={styles.loadMoreText}>
+                        <Text
+                            style={[
+                                styles.loadMoreText,
+                                isDarkTheme && styles.loadMoreTextDark,
+                            ]}
+                        >
                             {pagination.loadingMore
                                 ? t("explore.common.loadingShort")
                                 : t("explore.common.loadMore")}
@@ -295,11 +366,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         flex: 1,
     },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
     content: {
         backgroundColor: "#f8fafc",
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
+    },
+    contentDark: {
+        backgroundColor: "#020617",
     },
     header: {
         marginBottom: spacing.md,
@@ -310,11 +387,17 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 28,
     },
+    titleDark: {
+        color: "#f8fafc",
+    },
     count: {
         color: "#6b7280",
         fontSize: 13,
         fontWeight: "700",
         marginTop: 2,
+    },
+    countDark: {
+        color: "#94a3b8",
     },
     filterWrap: {
         alignItems: "center",
@@ -335,12 +418,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.sm,
         width: 176,
     },
+    searchDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     input: {
         color: "#111827",
         fontSize: 14,
         minHeight: 36,
         padding: 0,
         width: 128,
+    },
+    inputDark: {
+        color: "#f8fafc",
     },
     categoryPill: {
         backgroundColor: "#f3f4f6",
@@ -351,6 +441,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.md,
         paddingVertical: 9,
     },
+    categoryPillDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     categoryPillActive: {
         backgroundColor: "#047857",
         borderColor: "#047857",
@@ -359,6 +453,9 @@ const styles = StyleSheet.create({
         color: "#4b5563",
         fontSize: 12,
         fontWeight: "800",
+    },
+    categoryPillTextDark: {
+        color: "#94a3b8",
     },
     categoryPillTextActive: {
         color: "#ffffff",
@@ -379,6 +476,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
     },
+    cardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#1e293b",
+    },
     cardMain: {
         alignItems: "center",
         flexDirection: "row",
@@ -396,11 +497,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.sm,
         paddingVertical: 4,
     },
+    categoryBadgeDark: {
+        backgroundColor: "#064e3b33",
+        color: "#34d399",
+    },
     categoryDash: {
         backgroundColor: "#d9f99d",
         borderRadius: 999,
         height: 4,
         width: 18,
+    },
+    categoryDashDark: {
+        backgroundColor: "#065f46",
     },
     cardTitle: {
         color: "#111827",
@@ -408,6 +516,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "900",
         lineHeight: 20,
+    },
+    cardTitleDark: {
+        color: "#f8fafc",
     },
     cardText: {
         color: "#4b5563",
@@ -443,6 +554,9 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "800",
     },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
     error: {
         backgroundColor: "#fef2f2",
         borderColor: "#fecaca",
@@ -454,6 +568,10 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
         padding: spacing.md,
     },
+    errorDark: {
+        backgroundColor: "#3f1d1d",
+        color: "#fecaca",
+    },
     empty: {
         alignItems: "center",
         backgroundColor: "#ffffff",
@@ -464,6 +582,10 @@ const styles = StyleSheet.create({
         minHeight: 190,
         padding: spacing.lg,
     },
+    emptyDark: {
+        backgroundColor: "#111827",
+        borderColor: "#1e293b",
+    },
     emptyTitle: {
         color: "#374151",
         fontSize: 15,
@@ -471,12 +593,18 @@ const styles = StyleSheet.create({
         marginTop: spacing.sm,
         textAlign: "center",
     },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
     emptyText: {
         color: "#6b7280",
         fontSize: 13,
         lineHeight: 20,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
     },
     loadMoreWrap: {
         alignItems: "center",
@@ -490,6 +618,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
     },
+    loadMoreButtonDark: {
+        backgroundColor: "#111827",
+        borderColor: "#065f46",
+    },
     loadMoreButtonDisabled: {
         opacity: 0.6,
     },
@@ -497,5 +629,8 @@ const styles = StyleSheet.create({
         color: "#047857",
         fontSize: 13,
         fontWeight: "900",
+    },
+    loadMoreTextDark: {
+        color: "#34d399",
     },
 });
