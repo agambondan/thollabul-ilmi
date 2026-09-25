@@ -22,8 +22,9 @@ import {
     getForumQuestions,
     voteForum,
 } from "../../api/forum";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { radius, spacing } from "../../theme";
+import { colors, getThemeColors, radius, spacing } from "../../theme";
 
 const formatCount = (value) => Number(value ?? 0).toLocaleString("id-ID");
 
@@ -36,48 +37,87 @@ function ForumStat({ label, value }) {
     );
 }
 
-function QuestionCard({ item, onOpen, t }) {
+function QuestionCard({ isDarkTheme, item, onOpen, t }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.questionCard}
+            style={[
+                styles.questionCard,
+                isDarkTheme && styles.questionCardDark,
+            ]}
             testID='web-app-forum-question-card'
         >
             <View style={styles.questionTop}>
-                <Text numberOfLines={2} style={styles.questionTitle}>
+                <Text
+                    numberOfLines={2}
+                    style={[
+                        styles.questionTitle,
+                        isDarkTheme && styles.questionTitleDark,
+                    ]}
+                >
                     {item.title || t("explore.forum.questionFallback")}
                 </Text>
                 {item.isAnswered ? (
-                    <Text style={styles.answeredBadge}>
+                    <Text
+                        style={[
+                            styles.answeredBadge,
+                            isDarkTheme && styles.answeredBadgeDark,
+                        ]}
+                    >
                         {t("explore.forum.answered")}
                     </Text>
                 ) : null}
             </View>
             {item.body ? (
-                <Text numberOfLines={2} style={styles.questionBody}>
+                <Text
+                    numberOfLines={2}
+                    style={[
+                        styles.questionBody,
+                        isDarkTheme && styles.questionBodyDark,
+                    ]}
+                >
                     {item.body}
                 </Text>
             ) : null}
             {item.tags?.length ? (
                 <View style={styles.tagRow}>
                     {item.tags.slice(0, 3).map((tag) => (
-                        <Text key={tag} style={styles.tag}>
+                        <Text
+                            key={tag}
+                            style={[styles.tag, isDarkTheme && styles.tagDark]}
+                        >
                             {tag}
                         </Text>
                     ))}
                 </View>
             ) : null}
             <View style={styles.metaRow}>
-                <Text numberOfLines={1} style={styles.metaText}>
+                <Text
+                    numberOfLines={1}
+                    style={[
+                        styles.metaText,
+                        isDarkTheme && styles.metaTextDark,
+                    ]}
+                >
                     {item.user?.name || t("explore.forum.userFallback")}
                 </Text>
-                <Text style={styles.metaText}>
+                <Text
+                    style={[
+                        styles.metaText,
+                        isDarkTheme && styles.metaTextDark,
+                    ]}
+                >
                     {t("explore.forum.answerCount", {
                         count: formatCount(item.answerCount),
                     })}
                 </Text>
-                <Text style={styles.metaText}>
+                <Text
+                    style={[
+                        styles.metaText,
+                        isDarkTheme && styles.metaTextDark,
+                    ]}
+                >
                     {t("explore.forum.voteCount", {
                         count: formatCount(item.voteCount),
                     })}
@@ -127,6 +167,7 @@ export function WebAppForumRoute({
     showInfo,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme } = useLayoutModePreference();
 
     const runSearch = async () => {
         setForumLoading(true);
@@ -303,7 +344,12 @@ export function WebAppForumRoute({
     const renderList = () => (
         <>
             <View style={styles.searchRow}>
-                <View style={styles.searchBox}>
+                <View
+                    style={[
+                        styles.searchBox,
+                        isDarkTheme && styles.searchBoxDark,
+                    ]}
+                >
                     <Search color='#94a3b8' size={16} strokeWidth={2} />
                     <TextInput
                         onChangeText={setForumSearch}
@@ -311,7 +357,7 @@ export function WebAppForumRoute({
                         placeholder={t("explore.forum.searchPlaceholder")}
                         placeholderTextColor='#94a3b8'
                         returnKeyType='search'
-                        style={styles.input}
+                        style={[styles.input, isDarkTheme && styles.inputDark]}
                         testID='web-app-forum-search'
                         value={forumSearch}
                     />
@@ -338,6 +384,7 @@ export function WebAppForumRoute({
                 <View style={styles.list}>
                     {forumQuestions.map((item) => (
                         <QuestionCard
+                            isDarkTheme={isDarkTheme}
                             item={item}
                             key={item.id || item.slug}
                             onOpen={openQuestion}
@@ -347,16 +394,26 @@ export function WebAppForumRoute({
                 </View>
             ) : null}
             {!forumLoading && !forumQuestions.length ? (
-                <View style={styles.empty}>
+                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
                     <MessageCircle
                         color='#94a3b8'
                         size={34}
                         strokeWidth={1.8}
                     />
-                    <Text style={styles.emptyTitle}>
+                    <Text
+                        style={[
+                            styles.emptyTitle,
+                            isDarkTheme && styles.emptyTitleDark,
+                        ]}
+                    >
                         {t("explore.forum.emptyTitle")}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text
+                        style={[
+                            styles.emptyText,
+                            isDarkTheme && styles.emptyTextDark,
+                        ]}
+                    >
                         {t("explore.forum.emptyText")}
                     </Text>
                 </View>
@@ -364,14 +421,22 @@ export function WebAppForumRoute({
             {forumHasMore ? (
                 <Pressable
                     accessibilityRole='button'
-                    accessibilityState={{ disabled: forumLoading }}
                     disabled={forumLoading}
                     onPress={loadMore}
-                    style={styles.loadMore}
+                    style={[
+                        styles.loadMore,
+                        isDarkTheme && styles.loadMoreDark,
+                    ]}
+                    testID='web-app-forum-load-more'
                 >
-                    <Text style={styles.loadMoreText}>
+                    <Text
+                        style={[
+                            styles.loadMoreText,
+                            isDarkTheme && styles.loadMoreTextDark,
+                        ]}
+                    >
                         {forumLoading
-                            ? t("explore.forum.loadingShort")
+                            ? t("explore.forum.loadingMore")
                             : t("explore.forum.loadMore")}
                     </Text>
                 </Pressable>
@@ -380,7 +445,7 @@ export function WebAppForumRoute({
     );
 
     const renderAsk = () => (
-        <View style={styles.panel}>
+        <View style={[styles.panel, isDarkTheme && styles.panelDark]}>
             <Pressable
                 accessibilityRole='button'
                 onPress={() => {
@@ -389,16 +454,28 @@ export function WebAppForumRoute({
                 }}
                 style={styles.routeLink}
             >
-                <Text style={styles.routeLinkText}>
+                <Text
+                    style={[
+                        styles.routeLinkText,
+                        isDarkTheme && styles.routeLinkTextDark,
+                    ]}
+                >
                     {t("explore.forum.title")}
                 </Text>
             </Pressable>
-            <Text style={styles.panelTitle}>{t("explore.forum.askTitle")}</Text>
+            <Text
+                style={[
+                    styles.panelTitle,
+                    isDarkTheme && styles.panelTitleDark,
+                ]}
+            >
+                {t("explore.forum.askTitle")}
+            </Text>
             <TextInput
                 onChangeText={setForumAskTitle}
                 placeholder={t("explore.forum.askTitlePlaceholder")}
                 placeholderTextColor='#94a3b8'
-                style={styles.formInput}
+                style={[styles.formInput, isDarkTheme && styles.formInputDark]}
                 value={forumAskTitle}
             />
             <TextInput
@@ -406,7 +483,11 @@ export function WebAppForumRoute({
                 onChangeText={setForumAskBody}
                 placeholder={t("explore.forum.askBodyPlaceholder")}
                 placeholderTextColor='#94a3b8'
-                style={[styles.formInput, styles.textArea]}
+                style={[
+                    styles.formInput,
+                    styles.textArea,
+                    isDarkTheme && styles.formInputDark,
+                ]}
                 textAlignVertical='top'
                 value={forumAskBody}
             />
@@ -415,7 +496,7 @@ export function WebAppForumRoute({
                 onChangeText={setForumAskTags}
                 placeholder={t("explore.forum.askTagsPlaceholder")}
                 placeholderTextColor='#94a3b8'
-                style={styles.formInput}
+                style={[styles.formInput, isDarkTheme && styles.formInputDark]}
                 value={forumAskTags}
             />
             <Pressable
@@ -444,7 +525,7 @@ export function WebAppForumRoute({
     );
 
     const renderDetail = () => (
-        <View style={styles.panel}>
+        <View style={[styles.panel, isDarkTheme && styles.panelDark]}>
             <Pressable
                 accessibilityRole='button'
                 onPress={() => {
@@ -454,36 +535,71 @@ export function WebAppForumRoute({
                 }}
                 style={styles.routeLink}
             >
-                <Text style={styles.routeLinkText}>
+                <Text
+                    style={[
+                        styles.routeLinkText,
+                        isDarkTheme && styles.routeLinkTextDark,
+                    ]}
+                >
                     {t("explore.forum.title")}
                 </Text>
             </Pressable>
             {!forumDetail ? (
-                <Text style={styles.emptyText}>
+                <Text
+                    style={[
+                        styles.emptyText,
+                        isDarkTheme && styles.emptyTextDark,
+                    ]}
+                >
                     {t("explore.forum.questionNotFound")}
                 </Text>
             ) : (
                 <>
-                    <Text style={styles.panelTitle}>
+                    <Text
+                        style={[
+                            styles.panelTitle,
+                            isDarkTheme && styles.panelTitleDark,
+                        ]}
+                    >
                         {forumDetail.title ||
                             t("explore.forum.detailTitleFallback")}
                     </Text>
                     {forumDetail.body ? (
-                        <Text style={styles.detailBody}>
+                        <Text
+                            style={[
+                                styles.detailBody,
+                                isDarkTheme && styles.detailBodyDark,
+                            ]}
+                        >
                             {forumDetail.body}
                         </Text>
                     ) : null}
                     <View style={styles.metaRow}>
-                        <Text style={styles.metaText}>
+                        <Text
+                            style={[
+                                styles.metaText,
+                                isDarkTheme && styles.metaTextDark,
+                            ]}
+                        >
                             {forumDetail.user?.name ||
                                 t("explore.forum.userFallback")}
                         </Text>
-                        <Text style={styles.metaText}>
+                        <Text
+                            style={[
+                                styles.metaText,
+                                isDarkTheme && styles.metaTextDark,
+                            ]}
+                        >
                             {t("explore.forum.answerCount", {
                                 count: formatCount(forumDetail.answerCount),
                             })}
                         </Text>
-                        <Text style={styles.metaText}>
+                        <Text
+                            style={[
+                                styles.metaText,
+                                isDarkTheme && styles.metaTextDark,
+                            ]}
+                        >
                             {t("explore.forum.voteCount", {
                                 count: formatCount(forumDetail.voteCount),
                             })}
@@ -498,14 +614,22 @@ export function WebAppForumRoute({
                             }}
                             disabled={forumVotingId === `${forumDetail.id}-1`}
                             onPress={() => voteQuestion(1)}
-                            style={styles.voteButton}
+                            style={[
+                                styles.voteButton,
+                                isDarkTheme && styles.voteButtonDark,
+                            ]}
                         >
                             <ThumbsUp
                                 color='#2563eb'
                                 size={15}
                                 strokeWidth={2.2}
                             />
-                            <Text style={styles.voteButtonText}>
+                            <Text
+                                style={[
+                                    styles.voteButtonText,
+                                    isDarkTheme && styles.voteButtonTextDark,
+                                ]}
+                            >
                                 {t("explore.forum.questionVote")}
                             </Text>
                         </Pressable>
@@ -517,33 +641,67 @@ export function WebAppForumRoute({
                             }}
                             disabled={forumVotingId === `${forumDetail.id}--1`}
                             onPress={() => voteQuestion(-1)}
-                            style={styles.voteButton}
+                            style={[
+                                styles.voteButton,
+                                isDarkTheme && styles.voteButtonDark,
+                            ]}
                         >
                             <ThumbsDown
                                 color='#64748b'
                                 size={15}
                                 strokeWidth={2.2}
                             />
-                            <Text style={styles.voteButtonText}>
+                            <Text
+                                style={[
+                                    styles.voteButtonText,
+                                    isDarkTheme && styles.voteButtonTextDark,
+                                ]}
+                            >
                                 {t("explore.forum.questionVote")}
                             </Text>
                         </Pressable>
                     </View>
-                    <Text style={styles.sectionTitle}>
+                    <Text
+                        style={[
+                            styles.sectionTitle,
+                            isDarkTheme && styles.sectionTitleDark,
+                        ]}
+                    >
                         {t("explore.forum.answersTitle")}
                     </Text>
                     {forumAnswers.length ? (
                         forumAnswers.map((answer) => (
-                            <View key={answer.id} style={styles.answerCard}>
-                                <Text style={styles.detailBody}>
+                            <View
+                                key={answer.id}
+                                style={[
+                                    styles.answerCard,
+                                    isDarkTheme && styles.answerCardDark,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.detailBody,
+                                        isDarkTheme && styles.detailBodyDark,
+                                    ]}
+                                >
                                     {answer.body}
                                 </Text>
                                 <View style={styles.answerMeta}>
-                                    <Text style={styles.metaText}>
+                                    <Text
+                                        style={[
+                                            styles.metaText,
+                                            isDarkTheme && styles.metaTextDark,
+                                        ]}
+                                    >
                                         {answer.user?.name ||
                                             t("explore.forum.userFallback")}
                                     </Text>
-                                    <Text style={styles.metaText}>
+                                    <Text
+                                        style={[
+                                            styles.metaText,
+                                            isDarkTheme && styles.metaTextDark,
+                                        ]}
+                                    >
                                         {t("explore.forum.voteCount", {
                                             count: formatCount(
                                                 answer.voteCount,
@@ -568,9 +726,19 @@ export function WebAppForumRoute({
                                             onPress={() =>
                                                 voteAnswer(answer, value)
                                             }
-                                            style={styles.smallVoteButton}
+                                            style={[
+                                                styles.smallVoteButton,
+                                                isDarkTheme &&
+                                                    styles.smallVoteButtonDark,
+                                            ]}
                                         >
-                                            <Text style={styles.voteButtonText}>
+                                            <Text
+                                                style={[
+                                                    styles.voteButtonText,
+                                                    isDarkTheme &&
+                                                        styles.voteButtonTextDark,
+                                                ]}
+                                            >
                                                 {value > 0
                                                     ? t("explore.forum.upvote")
                                                     : t(
@@ -587,9 +755,19 @@ export function WebAppForumRoute({
                                                 `accept-${answer.id}`
                                             }
                                             onPress={() => acceptAnswer(answer)}
-                                            style={styles.smallVoteButton}
+                                            style={[
+                                                styles.smallVoteButton,
+                                                isDarkTheme &&
+                                                    styles.smallVoteButtonDark,
+                                            ]}
                                         >
-                                            <Text style={styles.voteButtonText}>
+                                            <Text
+                                                style={[
+                                                    styles.voteButtonText,
+                                                    isDarkTheme &&
+                                                        styles.voteButtonTextDark,
+                                                ]}
+                                            >
                                                 {t(
                                                     "explore.forum.acceptAction",
                                                 )}
@@ -600,7 +778,12 @@ export function WebAppForumRoute({
                             </View>
                         ))
                     ) : (
-                        <Text style={styles.emptyText}>
+                        <Text
+                            style={[
+                                styles.emptyText,
+                                isDarkTheme && styles.emptyTextDark,
+                            ]}
+                        >
                             {t("explore.forum.noAnswers")}
                         </Text>
                     )}
@@ -613,7 +796,11 @@ export function WebAppForumRoute({
                                     "explore.forum.answerPlaceholder",
                                 )}
                                 placeholderTextColor='#94a3b8'
-                                style={[styles.formInput, styles.answerInput]}
+                                style={[
+                                    styles.formInput,
+                                    styles.answerInput,
+                                    isDarkTheme && styles.formInputDark,
+                                ]}
                                 textAlignVertical='top'
                                 value={forumAnswerDraft}
                             />
@@ -639,7 +826,12 @@ export function WebAppForumRoute({
                             </Pressable>
                         </>
                     ) : (
-                        <Text style={styles.emptyText}>
+                        <Text
+                            style={[
+                                styles.emptyText,
+                                isDarkTheme && styles.emptyTextDark,
+                            ]}
+                        >
                             {t("explore.forum.answerLoginRequired")}
                         </Text>
                     )}
@@ -650,30 +842,87 @@ export function WebAppForumRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                isDarkTheme && styles.contentDark,
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
         >
             <View testID='explore-web-app-forum-surface' />
             <View style={styles.header}>
-                <View style={styles.iconWrap}>
-                    <MessageCircle color='#2563eb' size={30} strokeWidth={2} />
+                <View
+                    style={[
+                        styles.iconWrap,
+                        isDarkTheme && styles.iconWrapDark,
+                    ]}
+                >
+                    <MessageCircle
+                        color={isDarkTheme ? "#60a5fa" : "#2563eb"}
+                        size={30}
+                        strokeWidth={2}
+                    />
                 </View>
-                <Text style={styles.title}>{t("explore.forum.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>
+                    {t("explore.forum.title")}
+                </Text>
+                <Text
+                    style={[
+                        styles.subtitle,
+                        isDarkTheme && styles.subtitleDark,
+                    ]}
+                >
                     {t("explore.forum.subtitle")}
                 </Text>
             </View>
             <View style={styles.summaryRow}>
-                <ForumStat
-                    label={t("explore.forum.statQuestions")}
-                    value={forumTotal}
-                />
-                <ForumStat
-                    label={t("explore.forum.statPage")}
-                    value={forumPage + 1}
-                />
+                <View
+                    style={[
+                        styles.statPill,
+                        isDarkTheme && styles.statPillDark,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.statValue,
+                            isDarkTheme && styles.statValueDark,
+                        ]}
+                    >
+                        {formatCount(forumTotal)}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.statLabel,
+                            isDarkTheme && styles.statLabelDark,
+                        ]}
+                    >
+                        {t("explore.forum.statQuestions")}
+                    </Text>
+                </View>
+                <View
+                    style={[
+                        styles.statPill,
+                        isDarkTheme && styles.statPillDark,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.statValue,
+                            isDarkTheme && styles.statValueDark,
+                        ]}
+                    >
+                        {formatCount(forumPage + 1)}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.statLabel,
+                            isDarkTheme && styles.statLabelDark,
+                        ]}
+                    >
+                        {t("explore.forum.statPage")}
+                    </Text>
+                </View>
             </View>
             {forumError ? <Text style={styles.error}>{forumError}</Text> : null}
             {forumLoading ? (
@@ -695,11 +944,17 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         flex: 1,
     },
+    rootDark: {
+        backgroundColor: "#0f172a",
+    },
     content: {
         backgroundColor: "#f8fafc",
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
+    },
+    contentDark: {
+        backgroundColor: "#0f172a",
     },
     header: {
         alignItems: "center",
@@ -714,6 +969,9 @@ const styles = StyleSheet.create({
         marginBottom: spacing.sm,
         width: 64,
     },
+    iconWrapDark: {
+        backgroundColor: "#1e3a5f",
+    },
     title: {
         color: "#111827",
         fontSize: 24,
@@ -721,12 +979,18 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         textAlign: "center",
     },
+    titleDark: {
+        color: "#f8fafc",
+    },
     subtitle: {
         color: "#64748b",
         fontSize: 14,
         fontWeight: "600",
         marginTop: 3,
         textAlign: "center",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
     },
     summaryRow: {
         flexDirection: "row",
@@ -741,10 +1005,17 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: spacing.sm,
     },
+    statPillDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     statValue: {
         color: "#111827",
         fontSize: 17,
         fontWeight: "900",
+    },
+    statValueDark: {
+        color: "#f8fafc",
     },
     statLabel: {
         color: "#64748b",
@@ -752,6 +1023,9 @@ const styles = StyleSheet.create({
         fontWeight: "800",
         marginTop: 2,
         textTransform: "uppercase",
+    },
+    statLabelDark: {
+        color: "#94a3b8",
     },
     searchRow: {
         flexDirection: "row",
@@ -767,8 +1041,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         gap: spacing.sm,
-        minHeight: 42,
+        minHeight: 44,
         paddingHorizontal: spacing.sm,
+    },
+    searchBoxDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
     },
     input: {
         color: "#111827",
@@ -777,6 +1055,9 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         paddingVertical: 8,
     },
+    inputDark: {
+        color: "#e2e8f0",
+    },
     askButton: {
         alignItems: "center",
         backgroundColor: "#2563eb",
@@ -784,7 +1065,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 5,
         justifyContent: "center",
-        minHeight: 42,
+        minHeight: 44,
         paddingHorizontal: spacing.md,
     },
     askButtonText: {
@@ -802,6 +1083,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: spacing.md,
     },
+    questionCardDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     questionTop: {
         alignItems: "flex-start",
         flexDirection: "row",
@@ -814,6 +1099,9 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 20,
     },
+    questionTitleDark: {
+        color: "#f8fafc",
+    },
     answeredBadge: {
         backgroundColor: "#dcfce7",
         borderRadius: 999,
@@ -823,12 +1111,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 3,
     },
+    answeredBadgeDark: {
+        backgroundColor: "#064e3b",
+        color: "#6ee7b7",
+    },
     questionBody: {
         color: "#64748b",
         fontSize: 13,
         fontWeight: "600",
         lineHeight: 19,
         marginTop: spacing.xs,
+    },
+    questionBodyDark: {
+        color: "#94a3b8",
     },
     tagRow: {
         flexDirection: "row",
@@ -845,6 +1140,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 7,
         paddingVertical: 3,
     },
+    tagDark: {
+        backgroundColor: "#1e3a5f",
+        color: "#93c5fd",
+    },
     metaRow: {
         alignItems: "center",
         flexDirection: "row",
@@ -857,6 +1156,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "700",
     },
+    metaTextDark: {
+        color: "#64748b",
+    },
     empty: {
         alignItems: "center",
         backgroundColor: "#ffffff",
@@ -865,11 +1167,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: spacing.xl,
     },
+    emptyDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     emptyTitle: {
         color: "#111827",
         fontSize: 16,
         fontWeight: "900",
         marginTop: spacing.sm,
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
     },
     emptyText: {
         color: "#64748b",
@@ -878,19 +1187,31 @@ const styles = StyleSheet.create({
         lineHeight: 19,
         marginTop: spacing.xs,
     },
+    emptyTextDark: {
+        color: "#94a3b8",
+    },
     loadMore: {
         alignItems: "center",
         backgroundColor: "#ffffff",
         borderColor: "#cbd5e1",
         borderRadius: 12,
         borderWidth: 1,
+        justifyContent: "center",
+        minHeight: 44,
         marginTop: spacing.md,
         paddingVertical: 11,
+    },
+    loadMoreDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#475569",
     },
     loadMoreText: {
         color: "#2563eb",
         fontSize: 13,
         fontWeight: "900",
+    },
+    loadMoreTextDark: {
+        color: "#93c5fd",
     },
     panel: {
         backgroundColor: "#ffffff",
@@ -899,14 +1220,23 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: spacing.md,
     },
+    panelDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
     routeLink: {
         alignSelf: "flex-start",
+        justifyContent: "center",
         marginBottom: spacing.sm,
+        minHeight: 44,
     },
     routeLinkText: {
         color: "#2563eb",
         fontSize: 12,
         fontWeight: "900",
+    },
+    routeLinkTextDark: {
+        color: "#93c5fd",
     },
     panelTitle: {
         color: "#111827",
@@ -914,6 +1244,9 @@ const styles = StyleSheet.create({
         fontWeight: "900",
         lineHeight: 24,
         marginBottom: spacing.sm,
+    },
+    panelTitleDark: {
+        color: "#f8fafc",
     },
     formInput: {
         backgroundColor: "#f8fafc",
@@ -926,6 +1259,11 @@ const styles = StyleSheet.create({
         marginBottom: spacing.sm,
         paddingHorizontal: spacing.md,
         paddingVertical: 10,
+    },
+    formInputDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#334155",
+        color: "#e2e8f0",
     },
     textArea: {
         minHeight: 118,
@@ -962,19 +1300,30 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flexDirection: "row",
         gap: 5,
+        justifyContent: "center",
+        minHeight: 44,
         paddingHorizontal: spacing.sm,
         paddingVertical: 8,
+    },
+    voteButtonDark: {
+        backgroundColor: "#1e3a5f",
     },
     voteButtonText: {
         color: "#1e40af",
         fontSize: 12,
         fontWeight: "900",
     },
+    voteButtonTextDark: {
+        color: "#93c5fd",
+    },
     sectionTitle: {
         color: "#111827",
         fontSize: 15,
         fontWeight: "900",
         marginTop: spacing.md,
+    },
+    sectionTitleDark: {
+        color: "#f8fafc",
     },
     answerCard: {
         backgroundColor: "#f8fafc",
@@ -983,6 +1332,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginTop: spacing.sm,
         padding: spacing.sm,
+    },
+    answerCardDark: {
+        backgroundColor: "#0f172a",
+        borderColor: "#334155",
     },
     answerMeta: {
         flexDirection: "row",
@@ -995,13 +1348,22 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "900",
     },
+    acceptedTextDark: {
+        color: "#6ee7b7",
+    },
     smallVoteButton: {
         backgroundColor: "#ffffff",
         borderColor: "#dbeafe",
         borderRadius: 9,
         borderWidth: 1,
+        justifyContent: "center",
+        minHeight: 44,
         paddingHorizontal: spacing.sm,
         paddingVertical: 7,
+    },
+    smallVoteButtonDark: {
+        backgroundColor: "#1e293b",
+        borderColor: "#334155",
     },
     answerInput: {
         marginTop: spacing.md,
