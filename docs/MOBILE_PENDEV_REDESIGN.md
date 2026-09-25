@@ -116,14 +116,51 @@ tertulis "belajar" tapi tap path sebenarnya di app adalah **Ibadah hub → secti
 sudah diverifikasi via `Get` struktur hub, bukan cuma nebak dari nama file. Kalau nambah lane
 baru dan nama file screenshot ambigu, selalu cross-check ke struktur hub asli dulu.
 
-**Belum digarap (kandidat round 3+)**: Komunitas, Blog/Artikel, Radio Islam, Leaderboard,
-Muhasabah/Jurnal, Kamus, Imsakiyah, Wirid Saya, Khatam, Modul & Kelas/Lessons Detail (semua
-sudah punya screenshot asli, tinggal dibangun) — plus tile tanpa screenshot dedicated
-(Hafalan, Jurnal quick-action, Statistik, Bookmark, Catatan, Target Belajar, Log Sholat,
-Manasik, Kalender Hijriah, Masjid, Dzikir, Wirid non-Saya, Lainnya).
+**Round 3 (2026-09-25, y mulai 56400, stride 3750 tetap)** — 10 lane lagi, dibangun via 10
+agent paralel + commit-per-lane (beberapa digabung 1 commit kalau selesai bersamaan):
 
-Semua HandoffCard pakai instance (`ref`) dari komponen `Flow/HandoffCard` (id `epPoG`, definisi
-diparkir di `x=-600,y=-600` — JANGAN pindah/edit definisinya langsung, lihat gotcha #1).
+16. **Ikut Komunitas Belajar** (y=56400) — Beranda → Belajar hub (Kajian & Artikel) → tap
+    "Komunitas" → layar baru "Komunitas - Modern" (obrolan komunitas, empty-chat state).
+17. **Dengarkan Radio Islam** (y=60150) — Beranda → Belajar hub (Kajian & Artikel) → tap
+    "Radio Islam" → layar baru "Radio Islam - Modern" (now-playing card, daftar stasiun).
+18. **Baca Artikel/Blog Islami** (y=63900) — Beranda → Belajar hub (Kajian & Artikel) → tap
+    "Artikel" → layar baru "Artikel - Modern" (search, kartu artikel). *Hanya 3 screen —
+    screenshot asli cuma nunjukin state list, belum ada reading-view detail.*
+19. **Lihat Leaderboard** (y=67650) — Beranda → Belajar hub (Personal Ringkas) → tap
+    "Leaderboard" → layar baru "Leaderboard - Modern" (filter Streak Sholat/Hafalan, ranked
+    list, rank 1 di-highlight).
+20. **Isi Jurnal Muhasabah** (y=71400) — Beranda (kartu "Jurnal Muhasabah" langsung di
+    Beranda, BUKAN via hub) → layar baru "Jurnal Muhasabah - Modern". *Merepresentasikan state
+    app SEKARANG apa adanya: fitur masih gated/locked ("Buka Profil untuk masuk"), belum ada
+    editor jurnal sungguhan — jangan dianggap bug, itu memang state asli yang di-screenshot.*
+21. **Cari Istilah di Kamus Arab** (y=75150) — Beranda → Belajar hub (Referensi) → tap "Kamus
+    Arab" → layar baru "Kamus - Modern" (search) → cari → layar baru "Kamus Search - Modern"
+    (hasil tabel Arab/Transliterasi/Arti).
+22. **Lihat Jadwal Imsakiyah Ramadan** (y=78900) — Beranda → tab Ibadah → Ibadah hub (Arah &
+    Waktu) → tap "Imsakiyah" → layar baru "Imsakiyah - Modern" (tabel jadwal bulanan, baris
+    hari-ini di-highlight).
+23. **Kelola Wirid Saya** (y=82650) — Beranda → tab Ibadah → Ibadah hub (Dzikir & Bacaan) →
+    tap "Wirid Saya" → layar baru "Wirid Saya - Modern" (empty/login-gated state). *Catatan:
+    tile "Wirid Saya" ada di DUA hub (Ibadah Dzikir&Bacaan DAN Belajar Fiqh&Panduan) — dipilih
+    Ibadah sebagai kanonis, meski screenshot asli keliatannya di-capture lewat Belajar (tab
+    bar-nya Belajar yang aktif). Kalau mau konsisten 100% ke screenshot, bisa di-flip ke
+    Belajar nanti.*
+24. **Rencanakan Khatam Al-Qur'an** (y=86400) — Beranda → tab Ibadah → Ibadah hub (Rencana) →
+    tap "Khatam" → layar baru "Khatam - Modern" (target tanggal, progress bar, statistik
+    juz/halaman).
+25. **Ikuti Modul & Kelas Belajar** (y=90150) — Beranda → tab Belajar → Belajar hub (Modul &
+    Kelas) → tap modul → layar baru "Modul & Kelas - Modern" (daftar modul + progress) → buka
+    pelajaran → layar baru "Lessons Detail - Modern" (isi pelajaran, contoh: Tata Cara Wudhu).
+
+**Belum digarap (kandidat round 4+)**: tile tanpa screenshot dedicated — Hafalan, Jurnal
+quick-action (beda dari Muhasabah), Statistik, Bookmark, Catatan, Target Belajar, Log Sholat,
+Manasik, Kalender Hijriah, Masjid, Dzikir (bukan Wirid), Lainnya. Untuk ini perlu ambil
+screenshot baru dari emulator dulu (satu-satu, gak bisa paralel — cuma 1 device), atau terima
+grounding lebih tipis (cuma dari label/icon tile di hub, tanpa screenshot destination).
+
+Semua HandoffCard pakai instance (`ref`) dari komponen `Flow/HandoffCard` (id **`r7P5jg`** —
+id lama `epPoG` sudah basi sejak insiden penghapusan #2, definisi diparkir di `x=-600,y=-600`
+— JANGAN pindah/edit definisinya langsung, lihat gotcha #1).
 
 ## Sistem desain
 
