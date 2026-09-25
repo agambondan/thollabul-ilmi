@@ -24,10 +24,19 @@ riwayat awal kerjaan ini sempat salah karena konten di-karang dari hasil baca ko
 (`theme.js`, dll) tanpa lihat rendering asli, dan hasilnya meleset jauh dari app sungguhan
 (quick actions cuma 4 padahal aslinya 8, dsb).
 
-## Status (2026-09-24)
+## Status (2026-09-25 update)
 
-Layar yang sudah ada, masing-masing 2 tema (Classic di atas, Modern di bawah, disusun grid
-per kolom fitur — lihat catatan layout di bawah):
+**Use Case + UI Flow: 61 usecase selesai di 47 feature** — katalog lengkap ada di
+[`MOBILE_USE_CASE_FLOWS.md`](./MOBILE_USE_CASE_FLOWS.md), termasuk hasil 2 ronde audit kode
+(`apps/mobile/src/`) yang menemukan feature nyata di app yang belum tercatat di
+`docs/api/FEATURE_ROADMAP.md` (Tokoh Tarikh, Peta Islam Interaktif — sudah ditambahkan ke
+roadmap sebagai #51/#52) maupun yang terlewat dari audit tile-hub awal (Flashcard/Wirid Asmaul
+Husna, Mufrodat, Diskusi Komentar, Tilawah Tracker, Amalan Harian, Asbabun Nuzul, Panduan
+Sholat, Wirid Sunnah). Lihat gotcha #15-18 di bawah untuk pola kerja yang terbukti di ronde ini
+(bulk-move tanpa predicate Get, extend row yang sudah ada, reuse screen "Menu Lainnya").
+
+Layar dasar (bukan usecase flow) yang sudah ada, masing-masing 2 tema (Classic di atas, Modern
+di bawah, disusun grid per kolom fitur — lihat catatan layout di bawah):
 
 - Beranda, Quran (hub saja), Hadis (hub + detail), Ibadah (hub, 5 section lengkap), Belajar
   (hub, 7 section lengkap), Profile.
@@ -313,3 +322,32 @@ dibuat, dan gak kelihatan sampai user zoom in manual.
     rebuild — verifikasi dulu satu-satu via `Get(id)` per node yang seharusnya ada (bukan cuma
     beberapa sampel), baru simpulkan seberapa parah. Begitu rebuild selesai per-lane, langsung
     commit+push (lihat catatan insiden #2 di section Status) sebelum lanjut ke lane berikutnya.
+15. **Bahaya `Get()` dengan predicate function di file besar (>500 top-level node)**: bentuk
+    `Get(n => kondisi, callback)` bisa crash (`TypeError: cannot read property of undefined`)
+    di file sebesar ini, walaupun predicate-nya sendiri aman (cek `typeof n.y === "number"`
+    dulu). Root cause-nya di traversal internal-nya, bukan kode kita. **Solusi**: pakai
+    `Get(document, callback, {depth:1})` (tanpa predicate, iterasi top-level children) lalu
+    filter manual di dalam callback — ini terbukti aman dipakai untuk bulk-move ratusan node
+    sekaligus (reorganisasi kanvas 2026-09-25, lihat Status). Untuk node spesifik yang known-id,
+    tetap pakai `Get(id, callback, {depth:N})` seperti biasa.
+16. **Kalau nambah usecase ke row yang SUDAH ADA** (bukan bikin row baru): SELALU
+    `Get(lastKnownScreenId)` dulu buat verifikasi x/width TERKINI sebelum menghitung posisi
+    usecase baru — jangan asumsi dari dokumentasi/id lama, karena bisa sudah berubah akibat
+    fix/reorganisasi. Juga cek dulu tidak ada node lain yang sudah nongkrong di y-band yang
+    sama (indikasi ada agent lain yang sudah/sedang nambah usecase di row yang sama secara
+    bersamaan) sebelum mulai — kalau ketemu, STOP dan lapor, jangan lanjut menimpa.
+17. **Pola "Menu Lainnya" buat feature yang di-reach lewat hamburger/menu icon** (bukan lewat
+    tab hub): dari kode asli, beberapa feature (Tokoh Tarikh, Peta Islam, Tilawah, Amalan)
+    ternyata di-reach lewat `MobileMenuSheet.js`, bukan tile di Ibadah/Belajar hub. Sudah ada
+    pola standar: 1 screen "Menu Lainnya" (bottom-sheet, dibuat pertama kali untuk Tokoh
+    Tarikh) yang di-`Copy()` ulang tiap kali ada feature baru yang butuh entry point serupa,
+    lalu ditambah 1 baris tile baru (highlight yang relevan, un-highlight yang lain biar cuma
+    1 item aktif per lane). Jangan bikin dari nol tiap kali — cari dulu apakah sudah ada
+    screen "Menu Lainnya" lain di dokumen buat di-Copy().
+18. **Dua fitur bisa share 1 layar backend yang sama** (ditemukan saat audit kode
+    2026-09-25): "Reading Progress" dari roadmap ternyata layar yang SAMA dengan "Khatam
+    Tracker" yang sudah dibangun (`KhatamScreen.js`), cuma beda entry point yang diklaim di
+    roadmap. Sebelum bikin usecase baru buat item roadmap yang "terdengar mirip" sama yang
+    sudah ada, audit dulu apakah itu benar-benar layar/endpoint berbeda atau cuma penamaan
+    ganda untuk hal yang sama — lihat tabel "Dikecualikan" di
+    [`MOBILE_USE_CASE_FLOWS.md`](./MOBILE_USE_CASE_FLOWS.md).

@@ -5,99 +5,122 @@
 > [`MOBILE_PENDEV_REDESIGN.md`](./MOBILE_PENDEV_REDESIGN.md) — dokumen ini cuma katalog
 > ringkas, buat referensi cepat.
 
-Status: **34 usecase selesai** di **26 feature** (per 2026-09-25).
+Status (2026-09-25): **61 usecase selesai** di **47 feature**. Semua feature dari audit
+`docs/api/FEATURE_ROADMAP.md` + audit kode `apps/mobile/src/` sudah tercakup, kecuali yang
+memang tidak punya UI mobile sama sekali (lihat bagian "Dikecualikan" di bawah).
 
 ## Layout kanvas: 1 feature = 1 baris (row)
 
-**Aturan wajib mulai sekarang**: kanvas disusun **per FEATURE, bukan per usecase**. Setiap
-feature dapat satu baris horizontal (satu nilai Y tetap). Kalau feature itu punya lebih dari
-1 usecase (mis. Login punya 3: Masuk/Daftar/Lupa Sandi), semua usecase-nya ditaruh
-**berdampingan ke kanan** di baris yang sama (HandoffCard usecase kedua mulai ~150px setelah
-layar terakhir usecase pertama) — **bukan** dibuatkan baris/lane baru ke bawah. Baris baru
-(Y baru) hanya untuk FEATURE baru, bukan untuk usecase tambahan dari feature yang sudah ada.
+Setiap feature dapat satu baris horizontal (satu nilai Y tetap). Kalau feature itu punya lebih
+dari 1 usecase, semua usecase-nya ditaruh **berdampingan ke kanan** di baris yang sama (gap
+150px antar-usecase, gap 80px antar-screen dalam 1 usecase) — bukan baris baru ke bawah. Baris
+baru (Y baru) hanya untuk FEATURE baru.
 
-Ini perbaikan dari pendekatan awal (setiap usecase dapat lane vertikal sendiri) yang bikin
-kanvas jadi sangat panjang ke bawah dan sulit di-scan — lihat riwayat perubahan di
-`MOBILE_PENDEV_REDESIGN.md`.
+6 feature yang sudah punya >1 usecase:
 
-3 feature yang sudah punya >1 usecase, disusun sebagai 1 baris dengan label kecil di atasnya
-("FITUR: ..."):
+| Feature                  | Usecase (urutan kiri→kanan)                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| Login / Akun             | Masuk → Daftar Akun Baru → Reset Password                                           |
+| Baca Hadis               | Hadis Detail langsung → Hadis Reader per kitab                                      |
+| Jadwal Sholat & Reminder | Alur utama → izin notifikasi → atur waktu → nonaktifkan → konfirmasi → ganti metode |
+| Baca Surah Al-Qur'an     | Baca Surah → Audio Murotal → Muroja'ah → Mufrodat (arti kata per kata)              |
+| Baca Asmaul Husna        | List → Flashcard → Wirid (counter per nama)                                         |
+| Ikut Komunitas Belajar   | Obrolan Komunitas → Diskusi & Komentar pada konten feed                             |
 
-- **Login / Akun** (3 usecase, berdampingan): Masuk → Daftar Akun Baru → Reset Password
-- **Baca Hadis** (2 usecase, berdampingan): Hadis Detail langsung → Hadis Reader per kitab
-- **Jadwal Sholat & Reminder** (6 usecase, berdampingan): alur utama → izin notifikasi →
-  atur waktu → nonaktifkan → konfirmasi terjadwal → ganti metode
+## Daftar Usecase Lengkap
 
-## Daftar Usecase (dikelompokkan per Feature)
+| No  | Feature                        | Usecase                    | Alur Tap Singkat                                                   | Grounding                                                       |
+| --- | ------------------------------ | -------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------- |
+| 1   | First Launch                   | Buka Aplikasi Pertama Kali | Splash → izin lokasi OS → Beranda tamu                             | modern-launch-splash.png, -location-permission.png              |
+| 2a  | Login / Akun                   | Masuk                      | Beranda → avatar → Profil → Masuk/Daftar (tab Masuk)               | modern-login.png                                                |
+| 2b  | Login / Akun                   | Daftar Akun Baru           | ...→ tab Daftar (channel WhatsApp)                                 | modern-register-whatsapp.png                                    |
+| 2c  | Login / Akun                   | Reset Password             | ...→ tab Lupa Sandi                                                | modern-forgot-password.png                                      |
+| 3a  | Baca Surah Al-Qur'an           | Baca Surah                 | Beranda → Quran Hub → pilih surah                                  | modern-quran-surah-reader.png                                   |
+| 3b  | Baca Surah Al-Qur'an           | Audio Murotal              | ...reader → player murotal (qari/scrubber/kontrol)                 | `QuranAudioRangePanel.js`                                       |
+| 3c  | Baca Surah Al-Qur'an           | Muroja'ah                  | ...→ tab Murojaah → nilai sendiri hafalan                          | `QuranScreen.helpers.js` QURAN_TABS                             |
+| 3d  | Baca Surah Al-Qur'an           | Mufrodat (arti kata)       | ...reader → tap 1 kata Arab → arti+akar kata                       | `getMufrodatByPage/BySurah`                                     |
+| 4a  | Baca Hadis                     | Baca Hadis                 | Beranda → Hadis Hub → pilih hadis                                  | modern-hadis-detail.png                                         |
+| 4b  | Baca Hadis                     | Hadis Reader per Kitab     | ...→ "Buka Reader" pada kitab → daftar hadis → pilih               | modern-hadis-reader.png                                         |
+| 5   | Cari Arah Kiblat               | —                          | Beranda → Ibadah Hub → kartu Qibla                                 | modern-ibadah-qibla.png                                         |
+| 6a  | Jadwal Sholat & Reminder       | Cek Jadwal & Set Reminder  | Beranda → Ibadah → Jadwal Sholat → ikon gear                       | modern-ibadah-prayer-with-location.png                          |
+| 6b  | Jadwal Sholat & Reminder       | Izin Notifikasi            | ...→ toggle Notifikasi Lokal pertama kali                          | -notification-permission.png                                    |
+| 6c  | Jadwal Sholat & Reminder       | Atur Waktu & Sholat        | ...→ ubah Jeda Pengingat & Waktu Sholat                            | -lead-and-prayers.png, -lead-changed.png                        |
+| 6d  | Jadwal Sholat & Reminder       | Nonaktifkan Reminder       | ...→ matikan toggle                                                | -reminder-off.png                                               |
+| 6e  | Jadwal Sholat & Reminder       | Konfirmasi Terjadwal       | ...→ "Atur ulang pengingat"                                        | -scheduled-confirmation.png                                     |
+| 6f  | Jadwal Sholat & Reminder       | Ganti Metode Jadwal        | ...→ Metode Jadwal (Kemenag/MWL/dll)                               | -settings-top.png                                               |
+| 7   | Ikuti Kuis Islami              | —                          | Beranda → Belajar Hub → Quiz Islami → jawab                        | modern-belajar-quiz.png, -answer.png                            |
+| 8   | Ikuti Kajian Islam             | —                          | Beranda → Belajar Hub → Kajian                                     | modern-belajar-kajian.png                                       |
+| 9   | Baca Doa Harian                | —                          | Beranda → Ibadah Hub (Harian) → Doa                                | modern-ibadah-doa.png                                           |
+| 10a | Baca Asmaul Husna              | List                       | Beranda → Ibadah Hub (Dzikir & Bacaan) → Asmaul Husna              | modern-ibadah-asmaul-husna.png                                  |
+| 10b | Baca Asmaul Husna              | Flashcard                  | ...→ mode Flashcard → hafal via kartu balik                        | `WebAppAsmaulFlashcardRoute`                                    |
+| 10c | Baca Asmaul Husna              | Wirid (counter per nama)   | ...→ pilih nama → wirid dengan penghitung                          | `WebAppAsmaulWiridRoute`                                        |
+| 11  | Gunakan Tasbih Digital         | —                          | Beranda → Ibadah Hub (Alat) → Tasbih                               | modern-ibadah-tasbih.png                                        |
+| 12  | Hitung Zakat                   | —                          | Beranda → Ibadah Hub (Alat) → Zakat                                | modern-belajar-zakat.png                                        |
+| 13  | Hitung Waris (Faraidh)         | —                          | Beranda → Ibadah Hub (Alat) → Faraidh                              | modern-belajar-faraidh.png                                      |
+| 14  | Baca Tafsir Al-Qur'an          | —                          | Beranda → Belajar Hub (Referensi) → Tafsir → pilih surah           | modern-belajar-tafsir.png                                       |
+| 15  | Baca Siroh Nabawiyah           | —                          | Beranda → Belajar Hub (Siroh & Sejarah) → Siroh → peristiwa        | modern-belajar-siroh.png                                        |
+| 16  | Baca Fiqh Ringkas              | —                          | Beranda → Belajar Hub (Fiqh & Panduan) → Fiqh Ringkas → topik      | modern-belajar-fiqh.png                                         |
+| 17a | Ikut Komunitas Belajar         | Obrolan Komunitas          | Beranda → Belajar Hub (Kajian & Artikel) → Komunitas               | modern-belajar-komunitas.png                                    |
+| 17b | Ikut Komunitas Belajar         | Diskusi & Komentar         | ...→ post ayat/hadis di feed → beri komentar                       | `getCommentsByRef`/`createComment`                              |
+| 18  | Dengarkan Radio Islam          | —                          | Beranda → Belajar Hub (Kajian & Artikel) → Radio Islam             | classic-belajar-radio-islam.png                                 |
+| 19  | Baca Artikel/Blog Islami       | —                          | Beranda → Belajar Hub (Kajian & Artikel) → Artikel                 | modern-belajar-blog.png                                         |
+| 20  | Lihat Leaderboard              | —                          | Beranda → Belajar Hub (Personal Ringkas) → Leaderboard             | modern-belajar-leaderboard.png                                  |
+| 21  | Isi Jurnal Muhasabah           | —                          | Beranda → kartu "Jurnal Muhasabah" (bukan via hub)                 | classic-belajar-muhasabah.png                                   |
+| 22  | Cari Istilah di Kamus Arab     | —                          | Beranda → Belajar Hub (Referensi) → Kamus Arab → cari              | modern-belajar-kamus.png                                        |
+| 23  | Lihat Jadwal Imsakiyah Ramadan | —                          | Beranda → Ibadah Hub (Arah & Waktu) → Imsakiyah                    | modern-belajar-imsakiyah.png                                    |
+| 24  | Kelola Wirid Saya              | —                          | Beranda → Ibadah Hub (Dzikir & Bacaan) → Wirid Saya                | modern-belajar-wirid-saya.png                                   |
+| 25  | Rencanakan Khatam Al-Qur'an    | —                          | Beranda → Ibadah Hub (Rencana) → Khatam                            | modern-ibadah-khatam.png                                        |
+| 26  | Ikuti Modul & Kelas Belajar    | —                          | Beranda → Belajar Hub (Modul & Kelas) → pilih modul                | modern-belajar-lessons-detail.png                               |
+| 27  | Kelola Hafalan Al-Qur'an       | —                          | Beranda (Akses Cepat) → tile Hafalan                               | tile `POVC6` (icon book-check)                                  |
+| 28  | Buka Jurnal (Akses Cepat)      | —                          | Beranda (Akses Cepat) → tile Jurnal                                | tile `wumCV` (kemungkinan alias Muhasabah)                      |
+| 29  | Lihat Statistik Belajar        | —                          | Beranda → Belajar Hub (Personal Ringkas) → Statistik               | tile (icon activity)                                            |
+| 30  | Kelola Bookmark                | —                          | Beranda → Belajar Hub (Personal Ringkas) → Bookmark                | tile (icon bookmark)                                            |
+| 31  | Kelola Catatan Pribadi         | —                          | Beranda → Belajar Hub (Personal Ringkas) → Catatan                 | tile (icon file-text)                                           |
+| 32  | Atur Target Belajar            | —                          | Beranda → Belajar Hub (Personal Ringkas) → Target Belajar          | tile (icon target)                                              |
+| 33  | Catat Log Sholat Harian        | —                          | Beranda → Ibadah Hub (Rencana) → Log Sholat                        | modern-ibadah-sholat-tracker-CRASH.png (state crash, dibenerin) |
+| 34  | Pelajari Manasik Haji & Umrah  | —                          | Beranda → Ibadah Hub (Rencana) → Manasik                           | tile (icon map)                                                 |
+| 35  | Lihat Kalender Hijriah         | —                          | Beranda → Ibadah Hub (Arah & Waktu) → Kalender Hijriah             | modern-belajar-hijri.png                                        |
+| 36  | Cari Masjid Terdekat           | —                          | Beranda → Ibadah Hub (Arah & Waktu) → Masjid                       | tile (icon map-pin)                                             |
+| 37  | Baca Dzikir Pagi/Petang        | —                          | Beranda → Ibadah Hub (Dzikir & Bacaan) → Dzikir                    | tile (icon sparkles)                                            |
+| 38  | Buka Menu Lainnya              | —                          | Beranda (Akses Cepat) → tile Lainnya                               | tile `Wj3vJ` (icon layout-grid)                                 |
+| 39  | Cari Konten Lintas Fitur       | —                          | Beranda → ikon search di header                                    | `GlobalSearchScreen.js`                                         |
+| 40  | Jelajahi Sejarah Islam         | —                          | Beranda → Belajar Hub (Siroh & Sejarah) → Sejarah Islam            | `/api/v1/history`, distinct dari Siroh                          |
+| 41  | Baca Biografi Tokoh Sejarah    | —                          | Beranda → ikon menu → Menu Lainnya → Tokoh Tarikh → detail         | `TokohTarikhContent.js`                                         |
+| 42  | Jelajahi Peta Islam Interaktif | —                          | Beranda → ikon menu → Peta Islam                                   | `HistoricalMapScreen.js`                                        |
+| 43  | Catat Tilawah Harian           | —                          | Beranda → ikon menu → Menu Lainnya → Tilawah                       | feature key `tilawah`                                           |
+| 44  | Isi Checklist Amalan Harian    | —                          | Beranda → ikon menu → Amalan                                       | `WebAppAmalanRoute.js`                                          |
+| 45  | Baca Asbabun Nuzul             | —                          | Beranda → Belajar Hub (Referensi) → Asbabun Nuzul → surah → detail | feature key `asbabun-nuzul`                                     |
+| 46  | Baca Panduan Sholat Lengkap    | —                          | Beranda → Belajar Hub (Fiqh & Panduan) → Panduan Sholat            | feature key `panduan-sholat`                                    |
+| 47  | Baca Bacaan Sunnah & Wirid     | —                          | Beranda → Ibadah Hub (Dzikir & Bacaan) → Wirid                     | feature key `wirid` ("Wirid Sunnah")                            |
 
-| No  | Feature                        | Usecase                            | Alur Tap                                                                          | Layar Baru yang Dibangun                           | Grounding (screenshot)                                                                   |
-| --- | ------------------------------ | ---------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| 1   | First Launch                   | Buka Aplikasi Pertama Kali         | Splash → OS izin lokasi → Beranda (tamu)                                          | Splash - Modern, Izin Lokasi - Modern              | modern-launch-splash.png, modern-launch-location-permission.png                          |
-| 2a  | Login / Akun                   | Login / Masuk ke Akun              | Beranda → avatar → menu → Profil → "Masuk/Daftar" → tab Masuk                     | Akun - Modern                                      | modern-login.png, modern-avatar-menu.png                                                 |
-| 2b  | Login / Akun                   | Daftar Akun Baru                   | ...→ "Masuk/Daftar" → tab Daftar (channel WhatsApp)                               | Daftar Akun - Modern                               | modern-register.png, modern-register-whatsapp.png                                        |
-| 2c  | Login / Akun                   | Reset Password (Lupa Sandi)        | ...→ "Masuk/Daftar" → tab Lupa Sandi                                              | Lupa Sandi - Modern                                | modern-forgot-password.png                                                               |
-| 3   | Baca Surah Al-Qur'an           | Baca Surah Al-Qur'an               | Beranda → tab Al-Quran → Quran Hub → tap surah                                    | Quran Reader - Modern                              | modern-quran-surah-reader.png                                                            |
-| 4a  | Baca Hadis                     | Baca Hadis                         | Beranda → tab Hadis → Hadis Hub → tap hadis                                       | _(pakai Hadis Detail yang sudah ada)_              | modern-hadis.png, modern-hadis-detail.png                                                |
-| 4b  | Baca Hadis                     | Baca Hadis dalam 1 Kitab           | ...→ tap "Buka Reader" pada kitab → daftar hadis → pilih hadis                    | Hadis Reader - Modern                              | modern-hadis-reader.png                                                                  |
-| 5   | Cari Arah Kiblat               | Cari Arah Kiblat                   | Beranda → tab Ibadah → Ibadah Hub → kartu Qibla                                   | Kiblat - Modern                                    | modern-ibadah-qibla.png                                                                  |
-| 6a  | Jadwal Sholat & Reminder       | Cek Jadwal Sholat & Set Reminder   | Beranda → tab Ibadah → Ibadah Hub → Jadwal Sholat → ikon gear                     | Jadwal Sholat - Modern, Pengaturan Sholat - Modern | modern-ibadah-prayer-with-location.png, modern-ibadah-prayer-reminder-enabled.png        |
-| 6b  | Jadwal Sholat & Reminder       | Izinkan Notifikasi Reminder Adzan  | ...→ toggle "Notifikasi Lokal" pertama kali → dialog izin OS                      | Izin Notifikasi - Modern                           | modern-ibadah-prayer-reminder-notification-permission.png                                |
-| 6c  | Jadwal Sholat & Reminder       | Atur Waktu & Sholat untuk Reminder | ...→ ubah "Jeda Pengingat" & "Waktu Sholat"                                       | _(state Pengaturan Sholat berubah)_                | modern-ibadah-prayer-reminder-lead-and-prayers.png, lead-changed.png                     |
-| 6d  | Jadwal Sholat & Reminder       | Nonaktifkan Reminder Adzan         | ...→ matikan toggle "Notifikasi Lokal"                                            | _(state Pengaturan Sholat off)_                    | modern-ibadah-prayer-reminder-off.png                                                    |
-| 6e  | Jadwal Sholat & Reminder       | Konfirmasi Reminder Terjadwal      | ...→ tap "Atur ulang pengingat"                                                   | Konfirmasi Reminder - Modern                       | modern-ibadah-prayer-reminder-scheduled-confirmation.png                                 |
-| 6f  | Jadwal Sholat & Reminder       | Ganti Metode Perhitungan Jadwal    | ...→ scroll ke atas → "Metode Jadwal"                                             | Metode Jadwal - Modern                             | modern-ibadah-prayer-settings-top.png                                                    |
-| 7   | Ikuti Kuis Islami              | Ikuti Kuis Islami                  | Beranda → tab Belajar → Belajar Hub → Quiz Islami → pilih jawaban                 | Kuis Soal - Modern, Kuis Jawaban - Modern          | modern-belajar-quiz.png, modern-belajar-quiz-answer.png                                  |
-| 8   | Ikuti Kajian Islam             | Ikuti Kajian Islam                 | Beranda → tab Belajar → Belajar Hub → Kajian                                      | Kajian - Modern                                    | modern-belajar-kajian.png                                                                |
-| 9   | Baca Doa Harian                | Baca Doa Harian                    | Beranda → tab Ibadah → Ibadah Hub (Harian) → Doa                                  | Doa - Modern                                       | modern-ibadah-doa.png                                                                    |
-| 10  | Baca Asmaul Husna              | Baca Asmaul Husna                  | Beranda → tab Ibadah → Ibadah Hub (Dzikir & Bacaan) → Asmaul Husna                | Asmaul Husna - Modern                              | modern-ibadah-asmaul-husna.png                                                           |
-| 11  | Gunakan Tasbih Digital         | Gunakan Tasbih Digital             | Beranda → tab Ibadah → Ibadah Hub (Alat) → Tasbih                                 | Tasbih - Modern                                    | modern-ibadah-tasbih.png                                                                 |
-| 12  | Hitung Zakat                   | Hitung Zakat                       | Beranda → tab Ibadah → Ibadah Hub (Alat) → Zakat                                  | Zakat - Modern                                     | modern-belajar-zakat.png _(nama file "belajar", tap path aslinya Ibadah)_                |
-| 13  | Hitung Waris (Faraidh)         | Hitung Waris (Faraidh)             | Beranda → tab Ibadah → Ibadah Hub (Alat) → Faraidh                                | Faraidh - Modern                                   | modern-belajar-faraidh.png _(nama file "belajar", tap path aslinya Ibadah)_              |
-| 14  | Baca Tafsir Al-Qur'an          | Baca Tafsir Al-Qur'an              | Beranda → tab Belajar → Belajar Hub (Referensi) → Tafsir → pilih surah            | Tafsir - Modern, Tafsir Detail - Modern            | modern-belajar-tafsir.png, modern-belajar-tafsir-surah-selected.png                      |
-| 15  | Baca Siroh Nabawiyah           | Baca Siroh Nabawiyah               | Beranda → tab Belajar → Belajar Hub (Siroh & Sejarah) → Siroh → pilih peristiwa   | Siroh - Modern, Siroh Detail - Modern              | modern-belajar-siroh.png, modern-belajar-siroh-detail.png                                |
-| 16  | Baca Fiqh Ringkas              | Baca Fiqh Ringkas                  | Beranda → tab Belajar → Belajar Hub (Fiqh & Panduan) → Fiqh Ringkas → pilih topik | Fiqh Ringkas - Modern, Fiqh Detail - Modern        | modern-belajar-fiqh.png, modern-belajar-fiqh-detail.png                                  |
-| 17  | Ikut Komunitas Belajar         | Ikut Komunitas Belajar             | Beranda → tab Belajar → Belajar Hub (Kajian & Artikel) → Komunitas                | Komunitas - Modern                                 | modern-belajar-komunitas.png                                                             |
-| 18  | Dengarkan Radio Islam          | Dengarkan Radio Islam              | Beranda → tab Belajar → Belajar Hub (Kajian & Artikel) → Radio Islam              | Radio Islam - Modern                               | classic-belajar-radio-islam.png _(cuma ada di tema Classic, konten di-reskin ke Modern)_ |
-| 19  | Baca Artikel/Blog Islami       | Baca Artikel/Blog Islami           | Beranda → tab Belajar → Belajar Hub (Kajian & Artikel) → Artikel                  | Artikel - Modern                                   | modern-belajar-blog.png                                                                  |
-| 20  | Lihat Leaderboard              | Lihat Leaderboard                  | Beranda → tab Belajar → Belajar Hub (Personal Ringkas) → Leaderboard              | Leaderboard - Modern                               | modern-belajar-leaderboard.png, modern-belajar-leaderboard-hafalan.png                   |
-| 21  | Isi Jurnal Muhasabah           | Isi Jurnal Muhasabah               | Beranda → kartu "Jurnal Muhasabah" _(langsung di Beranda, bukan via hub)_         | Jurnal Muhasabah - Modern                          | classic-belajar-muhasabah.png                                                            |
-| 22  | Cari Istilah di Kamus Arab     | Cari Istilah di Kamus Arab         | Beranda → tab Belajar → Belajar Hub (Referensi) → Kamus Arab → cari               | Kamus - Modern, Kamus Search - Modern              | modern-belajar-kamus.png, modern-belajar-kamus-search.png                                |
-| 23  | Lihat Jadwal Imsakiyah Ramadan | Lihat Jadwal Imsakiyah Ramadan     | Beranda → tab Ibadah → Ibadah Hub (Arah & Waktu) → Imsakiyah                      | Imsakiyah - Modern                                 | modern-belajar-imsakiyah.png _(nama file "belajar", tap path aslinya Ibadah)_            |
-| 24  | Kelola Wirid Saya              | Kelola Wirid Saya                  | Beranda → tab Ibadah → Ibadah Hub (Dzikir & Bacaan) → Wirid Saya                  | Wirid Saya - Modern                                | modern-belajar-wirid-saya.png                                                            |
-| 25  | Rencanakan Khatam Al-Qur'an    | Rencanakan Khatam Al-Qur'an        | Beranda → tab Ibadah → Ibadah Hub (Rencana) → Khatam                              | Khatam - Modern                                    | modern-ibadah-khatam.png                                                                 |
-| 26  | Ikuti Modul & Kelas Belajar    | Ikuti Modul & Kelas Belajar        | Beranda → tab Belajar → Belajar Hub (Modul & Kelas) → pilih modul                 | Modul & Kelas - Modern, Lessons Detail - Modern    | modern-belajar-lessons-detail.png                                                        |
+## Dikecualikan (Tidak Perlu Usecase)
 
-## Belum Digarap (Kandidat Round Berikutnya)
+Feature dari roadmap yang dikonfirmasi **tidak punya UI mobile sama sekali** (audit kode
+2026-09-25, `apps/mobile/src/`), murni backend/konsep, atau belum diimplementasi:
 
-Feature/tile berikut belum punya usecase karena belum ada screenshot asli yang dedicated
-(butuh screenshot baru dari emulator dulu, satu-satu — cuma 1 device, gak bisa paralel):
-
-| Feature                                    | Kemungkinan Lokasi Tile                  |
-| ------------------------------------------ | ---------------------------------------- |
-| Hafalan                                    | Beranda (Akses Cepat) / Belajar          |
-| Jurnal (quick-action, beda dari Muhasabah) | Beranda (Akses Cepat)                    |
-| Statistik                                  | Belajar Hub (Personal Ringkas) / Profile |
-| Bookmark                                   | Belajar Hub (Personal Ringkas)           |
-| Catatan                                    | Belajar Hub (Personal Ringkas)           |
-| Target Belajar                             | Belajar Hub (Personal Ringkas)           |
-| Log Sholat                                 | Ibadah Hub (Rencana)                     |
-| Manasik                                    | Ibadah Hub (Rencana) / Belajar (Siroh)   |
-| Kalender Hijriah                           | Ibadah Hub (Arah & Waktu)                |
-| Masjid                                     | Ibadah Hub (Arah & Waktu)                |
-| Dzikir                                     | Ibadah Hub (Dzikir & Bacaan)             |
-| Lainnya                                    | Ibadah Hub (grid "Lainnya")              |
+| Feature                        | Alasan                                                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| Streak & Daily Habit           | Cuma angka yang numpang di Profile/Leaderboard/Log Sholat, tidak ada layar sendiri                                             |
+| Rekap & Laporan Bulanan        | Belum diimplementasi di mobile sama sekali                                                                                     |
+| Sharing Card Metadata          | Murni backend, nol UI mobile                                                                                                   |
+| User Roles Granular            | Murni backend/admin, nol UI mobile                                                                                             |
+| Open API & Partner Integration | Murni backend untuk pihak ketiga, nol UI mobile                                                                                |
+| Share to Feed                  | Dead stub — tombol "+ Buat Postingan" ada tapi tanpa `onPress` handler                                                         |
+| Reading Progress               | Sama dengan feature "Khatam" yang sudah dibangun (usecase #25) — 1 screen yang sama (`KhatamScreen.js`), cuma beda entry point |
 
 ## Catatan
 
-- Semua usecase pakai `Flow/HandoffCard` (komponen reusable id `r7P5jg` per 2026-09-25 —
-  cek ulang lewat `Get`/nama kalau id ini sudah basi lagi, lihat riwayat insiden penghapusan
-  di [`MOBILE_PENDEV_REDESIGN.md`](./MOBILE_PENDEV_REDESIGN.md)).
-- Beberapa nama file screenshot mengandung "belajar" padahal tap path asli ada di Ibadah hub
-  (Zakat, Faraidh, Imsakiyah) — sudah diverifikasi via struktur hub asli, bukan cuma dari nama
-  file. Lihat gotcha #13 di `MOBILE_PENDEV_REDESIGN.md`.
-- Layar "Pengaturan Sholat" untuk usecase 6b (Izinkan Notifikasi) dibangun ulang dari nol
-  oleh agent-nya karena id acuan yang diberikan sudah basi saat itu — belum direkonsiliasi
-  ke screen kanonis yang dipakai 6a/6c/6d/6e/6f (`hutG2`). Perlu dicek/disamakan nanti.
-- Dokumen ini adalah katalog usecase (fokus: struktur flow & urutan tap, dan pengelompokan
-  per feature). Detail desain visual/UI tiap layar adalah tanggung jawab pekerjaan lanjutan
-  (bukan cakupan dokumen ini).
+- Semua usecase pakai `Flow/HandoffCard` (komponen reusable id `r7P5jg` per 2026-09-25 — cek
+  ulang lewat `Get`/nama kalau id ini sudah basi lagi akibat insiden penghapusan kanvas, lihat
+  riwayat di [`MOBILE_PENDEV_REDESIGN.md`](./MOBILE_PENDEV_REDESIGN.md)).
+- Sebagian usecase digrounding dari screenshot asli (`apps/mobile/output/native/2026-09-24/`),
+  sebagian dari tile hub asli (icon/label/subtitle dibaca langsung dari `Get` pada dokumen live,
+  bukan ditebak), dan sebagian dari audit kode langsung (`apps/mobile/src/`) untuk feature yang
+  belum punya screenshot maupun tile UI kalau ternyata reachable lewat menu (`MobileMenuSheet.js`).
+- Beberapa feature (Search, Tokoh Tarikh, Peta Islam Interaktif, Tilawah, Amalan) di-reach lewat
+  ikon menu/hamburger di header Beranda, bukan lewat tab hub — direpresentasikan dengan layar
+  "Menu Lainnya" (bottom-sheet) sebagai perantara, mengikuti pola bottom-sheet modal yang sudah
+  jadi standar desain project ini.
+- Dokumen ini adalah katalog usecase (fokus: struktur flow & urutan tap, pengelompokan per
+  feature). Detail desain visual/UI tiap layar adalah tanggung jawab pekerjaan lanjutan (bukan
+  cakupan dokumen ini).
