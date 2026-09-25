@@ -1,4 +1,5 @@
 import { QURAN_FONT_FAMILIES } from "../constants/quranFonts";
+import { colors } from "../theme";
 
 export const MEMORIZATION_MODES = [
     { key: "off", label: "Normal" },
@@ -68,12 +69,12 @@ export const AUDIO_SPEED_OPTIONS = [0.75, 1, 1.25, 1.5, 2];
 
 export const SWIPE_TRIGGER_DISTANCE = 34;
 export const SWIPE_EDGE_GUARD = 48;
-export const WEB_APP_QURAN_BG = "#020617";
-export const WEB_APP_QURAN_SURFACE = "#1e293b";
-export const WEB_APP_QURAN_BORDER = "#334155";
-export const WEB_APP_QURAN_MUTED = "#94a3b8";
-export const WEB_APP_QURAN_ACCENT = "#34d399";
-export const WEB_APP_QURAN_ACCENT_BG = "#0f2f2f";
+export const WEB_APP_QURAN_BG = colors.dark.bg;
+export const WEB_APP_QURAN_SURFACE = colors.dark.surfaceMuted;
+export const WEB_APP_QURAN_BORDER = colors.dark.border;
+export const WEB_APP_QURAN_MUTED = colors.dark.muted;
+export const WEB_APP_QURAN_ACCENT = colors.dark.primary;
+export const WEB_APP_QURAN_ACCENT_BG = colors.dark.primaryBg;
 export const SURAH_PREFIX_PATTERN = /^\s*(سُورَةُ|سُورَة|سورة)\s+/u;
 export const SURAH_PAGE_SIZE = 20;
 export const SURAH_TARGET_PREFETCH_RADIUS = 1;

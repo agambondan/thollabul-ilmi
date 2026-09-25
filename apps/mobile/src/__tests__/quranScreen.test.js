@@ -126,7 +126,9 @@ jest.mock("lucide-react-native", () => {
         "Minus",
         "MoreVertical",
         "Pause",
+        "Play",
         "Plus",
+        "Repeat",
         "Save",
         "Search",
         "SkipBack",
@@ -384,7 +386,7 @@ describe("QuranScreen", () => {
         expect(
             StyleSheet.flatten(getByTestId("quran-web-app-list").props.style)
                 .backgroundColor,
-        ).toBe("#ffffff");
+        ).toBe("#f8fafc");
         expect(
             StyleSheet.flatten(getByText("Al-Quran").props.style).color,
         ).toBe("#111827");
@@ -672,6 +674,12 @@ describe("QuranScreen", () => {
             expect(getByText("Audio Surat")).toBeTruthy();
         });
 
+        fireEvent.press(getByText("Audio Surat"));
+
+        await waitFor(() => {
+            expect(getByTestId("audio-start-surah")).toBeTruthy();
+        });
+
         fireEvent.changeText(getByTestId("audio-start-surah"), "1");
         fireEvent.changeText(getByTestId("audio-end-surah"), "1");
         fireEvent.changeText(getByTestId("audio-end-ayah"), "2");
@@ -717,6 +725,12 @@ describe("QuranScreen", () => {
             expect(getByText("Audio Surat")).toBeTruthy();
         });
 
+        fireEvent.press(getByText("Audio Surat"));
+
+        await waitFor(() => {
+            expect(getByTestId("audio-start-surah")).toBeTruthy();
+        });
+
         fireEvent.changeText(getByTestId("audio-start-surah"), "1");
         fireEvent.changeText(getByTestId("audio-end-surah"), "1");
         fireEvent.changeText(getByTestId("audio-end-ayah"), "3");
@@ -741,7 +755,7 @@ describe("QuranScreen", () => {
         fireEvent.press(getByTestId("audio-range-expand"));
 
         await waitFor(() => {
-            expect(getByText("Audio Surat")).toBeTruthy();
+            expect(getByTestId("audio-range-sheet")).toBeTruthy();
         });
     });
 

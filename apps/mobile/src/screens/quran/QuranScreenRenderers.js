@@ -22,6 +22,7 @@ import {
     FlatList,
     Pressable,
     ScrollView,
+    StyleSheet,
     Text,
     TextInput,
     View,
@@ -30,6 +31,7 @@ import {
 import {
     AppActionSheet,
     ActionSheetRow,
+    ActionSheetSection,
 } from "../../components/AppActionSheet";
 import { AppModalSheet } from "../../components/AppModalSheet";
 import { Card, CardTitle } from "../../components/Card";
@@ -68,6 +70,7 @@ export function createQuranScreenRenderers(context) {
     const {
         activeNoteAyah,
         arabicFont,
+        audioPlayerOpen,
         audioQariOptions,
         audioRange,
         audioRangeCollapsed,
@@ -86,6 +89,7 @@ export function createQuranScreenRenderers(context) {
         hafalanLoading,
         hafalanSummary,
         hizbInput,
+        isDarkTheme,
         isWebAppLayout,
         loading,
         markAyahProgress,
@@ -128,6 +132,7 @@ export function createQuranScreenRenderers(context) {
         selectedSurah,
         setActiveNoteAyah,
         setAyahActionSheet,
+        setAudioPlayerOpen,
         setAudioRangeCollapsed,
         setHadithAyahModal,
         setHizbInput,
@@ -807,14 +812,18 @@ export function createQuranScreenRenderers(context) {
 
     const renderAudioRangePanel = () =>
         renderQuranAudioRangePanel({
+            audioPlayerOpen,
             audioQariOptions,
             audioRange,
             audioRangeCollapsed,
             audioQueueInfo,
             audioState,
+            isDarkTheme,
+            isWebAppLayout,
             selectAudioSpeed,
             selectQari,
             selectedSurah,
+            setAudioPlayerOpen,
             setAudioRangeCollapsed,
             skipRangeAudio,
             startRangeAudio,
@@ -954,6 +963,14 @@ export function createQuranScreenRenderers(context) {
                                 label='Menu baca'
                                 onPress={() => setReaderMenuVisible(true)}
                             />
+                            <IconActionButton
+                                Icon={Volume2}
+                                label={t("quran.audioRange.title")}
+                                onPress={() => {
+                                    setAudioPlayerOpen(true);
+                                    setAudioRangeCollapsed(false);
+                                }}
+                            />
                         </View>
                     </View>
                 </View>
@@ -1076,9 +1093,6 @@ export function createQuranScreenRenderers(context) {
                         </Pressable>
                     </View>
                 ) : null}
-                {selectedSurah.type === "surah"
-                    ? renderAudioRangePanel()
-                    : null}
                 {message ? <Text style={styles.message}>{message}</Text> : null}
                 {previewAyah && !isSeriousMode ? (
                     <View style={styles.targetPreview}>
@@ -1840,7 +1854,7 @@ export function createQuranScreenRenderers(context) {
         const isAudioPlaying = audioState.playingAyahId === ayah.id;
         const isBookmarked = Boolean(bookmarks[ayah.id]);
 
-        return (
+return (
             <AppActionSheet
                 onClose={() =>
                     setAyahActionSheet({ visible: false, ayah: null })
@@ -1849,12 +1863,14 @@ export function createQuranScreenRenderers(context) {
                 title='Aksi Cepat'
                 visible={visible}
             >
+                <ActionSheetSection title="Baca" />
                 <ActionSheetRow
                     Icon={BookOpen}
                     onPress={() => openAyahDetail(ayah)}
                     subtitle='Baca ayat, terjemahan, tafsir, dan catatan lebih luas'
                     title='Buka Detail'
                 />
+                <ActionSheetSection title="Audio" />
                 <ActionSheetRow
                     Icon={isAudioPlaying ? Pause : Volume2}
                     active={isAudioPlaying}
@@ -1868,10 +1884,11 @@ export function createQuranScreenRenderers(context) {
                         isAudioLoading
                             ? "Memuat audio"
                             : isAudioPlaying
-                              ? "Jeda audio"
-                              : "Putar audio"
+                            ? "Jeda audio"
+                            : "Putar audio"
                     }
                 />
+                <ActionSheetSection title="Referensi" />
                 <ActionSheetRow
                     Icon={BookOpen}
                     onPress={() => {
@@ -1892,6 +1909,7 @@ export function createQuranScreenRenderers(context) {
                 />
                 {user ? (
                     <>
+                        <ActionSheetSection title="Koleksi Pribadi" />
                         <ActionSheetRow
                             Icon={Save}
                             disabled={savingAyah === `progress:${ayah.id}`}
@@ -1925,8 +1943,8 @@ export function createQuranScreenRenderers(context) {
                                 savingAyah === `bookmark:${ayah.id}`
                                     ? "Menyimpan bookmark"
                                     : isBookmarked
-                                      ? "Hapus bookmark"
-                                      : "Bookmark"
+                                    ? "Hapus bookmark"
+                                    : "Bookmark"
                             }
                         />
                         <ActionSheetRow
@@ -2676,6 +2694,7 @@ export function createQuranScreenRenderers(context) {
     return {
         closeAyahDetail,
         openAyahDetail,
+        renderAudioRangePanel,
         renderAyahActionSheet,
         renderAyahCard,
         renderAyahDetailScreen,

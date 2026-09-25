@@ -1,34 +1,27 @@
 import { StyleSheet } from "react-native";
+import { getThemeColors } from "../theme";
+
+export const getQuranWebAppTheme = (isDark = false) => {
+    const t = getThemeColors({ isDark, isPaperLayout: false });
+    return {
+        accent: t.primary,
+        accentBg: t.primaryBg,
+        bg: t.bg,
+        border: t.border,
+        ctaBorder: t.borderSoft,
+        input: t.ink,
+        muted: isDark ? t.muted : "#64748b",
+        readerBg: isDark ? t.bg : t.surfaceMuted,
+        searchBorder: t.borderStrong,
+        surface: t.surface,
+        text: t.text,
+        title: t.title,
+    };
+};
 
 export const WEB_APP_QURAN_THEMES = {
-    dark: {
-        accent: "#34d399",
-        accentBg: "#0f2f2f",
-        bg: "#020617",
-        border: "#334155",
-        ctaBorder: "#059669",
-        input: "#e2e8f0",
-        muted: "#94a3b8",
-        readerBg: "#020617",
-        searchBorder: "#475569",
-        surface: "#1e293b",
-        text: "#cbd5e1",
-        title: "#f8fafc",
-    },
-    light: {
-        accent: "#047857",
-        accentBg: "#d1fae5",
-        bg: "#ffffff",
-        border: "#e5e7eb",
-        ctaBorder: "#a7f3d0",
-        input: "#0f172a",
-        muted: "#64748b",
-        readerBg: "#f8fafc",
-        searchBorder: "#a7f3d0",
-        surface: "#ffffff",
-        text: "#475569",
-        title: "#111827",
-    },
+    dark: getQuranWebAppTheme(true),
+    light: getQuranWebAppTheme(false),
 };
 
 export const createQuranWebAppThemeStyles = (theme) =>

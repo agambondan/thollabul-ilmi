@@ -214,6 +214,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         length: 0,
     });
     const [audioRangeCollapsed, setAudioRangeCollapsed] = useState(false);
+    const [audioPlayerOpen, setAudioPlayerOpen] = useState(false);
     const [hafalanList, setHafalanList] = useState([]);
     const [hafalanSummary, setHafalanSummary] = useState(null);
     const [hafalanLoading, setHafalanLoading] = useState(false);
@@ -652,7 +653,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     }, [load, loadBookmarks, loadProgress]);
 
     const resetReaderState = () => {
-        stopAudio();
+        stopRangeAudio();
         targetScrollKeyRef.current = null;
         surahPaginationRef.current = {
             hasMore: false,
@@ -768,7 +769,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             const [items, mufrodatItems] = await Promise.all([
                 getAyahsForPage(nextPage).catch(async (fetchErr) => {
                     const offlineItems = await getOfflineAyahsForPage(nextPage);
-                    if (offlineItems && offlineItems.length > 0) return offlineItems;
+                    if (offlineItems && offlineItems.length > 0)
+                        return offlineItems;
                     throw fetchErr;
                 }),
                 getMufrodatByPage(nextPage).catch(() => []),
@@ -839,7 +841,9 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             const pagesToLoad = getInitialSurahPages(targetPage, surah.ayahs);
             let pages;
             try {
-                const offlineAyahs = await getOfflineAyahsForSurah(surah.number);
+                const offlineAyahs = await getOfflineAyahsForSurah(
+                    surah.number,
+                );
                 if (offlineAyahs && offlineAyahs.length > 0) {
                     pages = pagesToLoad.map((page) => {
                         const pageSize = SURAH_PAGE_SIZE;
@@ -851,7 +855,9 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                             hasMore: end < offlineAyahs.length,
                             page,
                             total: offlineAyahs.length,
-                            totalPages: Math.ceil(offlineAyahs.length / pageSize),
+                            totalPages: Math.ceil(
+                                offlineAyahs.length / pageSize,
+                            ),
                         };
                     });
                 } else {
@@ -1064,11 +1070,11 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     };
 
     const closeReader = useCallback(() => {
-        stopAudio();
+        stopRangeAudio();
         setReaderMenuVisible(false);
         setSelectedDetailAyah(null);
         setSelectedSurah(null);
-    }, [stopAudio]);
+    }, [stopRangeAudio]);
 
     const navigateAdjacentSurah = useCallback(
         (delta) => {
@@ -1332,6 +1338,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         audioQueueIndexRef.current = 0;
         setAudioQueueInfo({ index: 0, length: 0 });
         setAudioRangeCollapsed(false);
+        setAudioPlayerOpen(false);
         stopAudio();
         setAudioRange((current) => ({
             ...current,
@@ -1579,6 +1586,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             return;
         }
         stopRangeAudio();
+        setAudioPlayerOpen(true);
         setMessage("");
         setAudioState((current) => ({
             ...current,
@@ -1913,11 +1921,15 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     useEffect(() => {
         if (!isActive || !navigation?.setHeader) return;
         if (isWebAppLayout && selectedSurah) {
-            const surahName = selectedSurah.name ?? `Surah ${selectedSurah.number}`;
+            const surahName =
+                selectedSurah.name ?? `Surah ${selectedSurah.number}`;
             navigation.setHeader({
                 showBack: true,
                 title: surahName,
-                subtitle: selectedSurah.type === "surah" ? `${selectedSurah.ayahs} ayah` : selectedSurah.meaning,
+                subtitle:
+                    selectedSurah.type === "surah"
+                        ? `${selectedSurah.ayahs} ayah`
+                        : selectedSurah.meaning,
                 onBack: () => {
                     closeReader();
                     return true;
@@ -1940,6 +1952,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         renderMushafPage,
         renderQuranListFooter,
         renderQuranListHeader,
+        renderAudioRangePanel,
         renderReaderFooter,
         renderReaderHeader,
         renderReaderMenuModal,
@@ -1950,6 +1963,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     } = createQuranScreenRenderers({
         activeNoteAyah,
         arabicFont,
+        audioPlayerOpen,
         audioQariOptions,
         audioRange,
         audioRangeCollapsed,
@@ -1968,6 +1982,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         hafalanLoading,
         hafalanSummary,
         hizbInput,
+        isDarkTheme,
         isWebAppLayout,
         loading,
         markAyahProgress,
@@ -2010,6 +2025,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         selectedSurah,
         setActiveNoteAyah,
         setAyahActionSheet,
+        setAudioPlayerOpen,
         setAudioRangeCollapsed,
         setHadithAyahModal,
         setHizbInput,
@@ -2122,6 +2138,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                             {renderMushafPage()}
                         </View>
                     </ScrollView>
+                    {renderAudioRangePanel()}
                 </>
             );
         }
@@ -2222,6 +2239,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                             : "quran-classic-reader"
                     }
                 />
+                {renderAudioRangePanel()}
             </>
         );
     }
