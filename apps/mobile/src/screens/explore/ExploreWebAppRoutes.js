@@ -2826,6 +2826,7 @@ const renderWebAppBookmarksScreen = () => {
             <WebAppReferenceListRoute
                 config={WEB_APP_REFERENCE_ROUTE_CONFIGS[activeFeature.key]}
                 error={error}
+                isDarkTheme={isDarkTheme}
                 items={items}
                 loading={loading}
                 onLoadMore={loadMoreFeature}
@@ -2897,6 +2898,7 @@ const renderWebAppBookmarksScreen = () => {
                 getRaw={getBlogRaw}
                 getTitle={getBlogTitle}
                 hasItems={Boolean(visibleItems.length)}
+                isDarkTheme={isDarkTheme}
                 loading={loading}
                 onOpenItem={openItemDetail}
                 onRetry={() => loadFeature(activeFeature)}
