@@ -200344,6 +200344,25 @@
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
+    },
+    {
+      "id": "pBcGV",
+      "type": "ref",
+      "ref": "r7P5jg",
+      "x": 10655,
+      "y": 7600,
+      "name": "Mufrodat - Handoff Card",
+      "descendants": {
+        "h7m7Yb": {
+          "content": "Lihat Arti Kata per Kata (Mufrodat)"
+        },
+        "e2jF9": {
+          "content": "User membuka pembacaan surah, lalu tap satu kata Arab untuk melihat arti kata-per-katanya."
+        },
+        "VOnZ7": {
+          "content": "Mobile Team"
+        }
+      }
     }
   ],
   "themes": {
