@@ -14219,7 +14219,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 100,
+      "y": 3850,
       "descendants": {
         "h7m7Yb": {
           "content": "Login / Masuk ke Akun"
@@ -14236,7 +14236,7 @@
       "type": "frame",
       "id": "wxXfr",
       "x": 5250,
-      "y": 100,
+      "y": 3850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -15501,7 +15501,7 @@
       "type": "ellipse",
       "id": "FKnsu",
       "x": 5178,
-      "y": 176,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -15511,7 +15511,7 @@
       "type": "rectangle",
       "id": "C16lEz",
       "x": 5190,
-      "y": 179,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -15521,7 +15521,7 @@
       "type": "icon",
       "id": "kfj9E",
       "x": 5230,
-      "y": 173,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -15533,7 +15533,7 @@
       "type": "text",
       "id": "VRFV6",
       "x": 5178,
-      "y": 159,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -15545,7 +15545,7 @@
       "type": "ellipse",
       "id": "c0V5DW",
       "x": 5633,
-      "y": 176,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -15555,7 +15555,7 @@
       "type": "rectangle",
       "id": "QapMG",
       "x": 5645,
-      "y": 179,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -15565,7 +15565,7 @@
       "type": "icon",
       "id": "PvDbi",
       "x": 5685,
-      "y": 173,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -15577,7 +15577,7 @@
       "type": "text",
       "id": "NtUhY",
       "x": 5633,
-      "y": 159,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap avatar di header",
@@ -15589,7 +15589,7 @@
       "type": "frame",
       "id": "MKjnP",
       "x": 5705,
-      "y": 100,
+      "y": 3850,
       "name": "Avatar Menu (Popover)",
       "theme": {
         "style": "modern"
@@ -15969,7 +15969,7 @@
       "type": "ellipse",
       "id": "MtISL",
       "x": 5948,
-      "y": 176,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -15979,7 +15979,7 @@
       "type": "rectangle",
       "id": "cL6FC",
       "x": 5960,
-      "y": 179,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -15989,7 +15989,7 @@
       "type": "icon",
       "id": "xuTGP",
       "x": 6000,
-      "y": 173,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -16001,7 +16001,7 @@
       "type": "text",
       "id": "Q0NLi",
       "x": 5948,
-      "y": 159,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Profil'",
@@ -16013,7 +16013,7 @@
       "type": "frame",
       "id": "telRI",
       "x": 6020,
-      "y": 100,
+      "y": 3850,
       "name": "Profile - Modern",
       "theme": {
         "style": "modern"
@@ -16498,7 +16498,7 @@
       "type": "ellipse",
       "id": "fq6fn",
       "x": 6403,
-      "y": 176,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -16508,7 +16508,7 @@
       "type": "rectangle",
       "id": "qEAMW",
       "x": 6415,
-      "y": 179,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -16518,7 +16518,7 @@
       "type": "icon",
       "id": "i07SEm",
       "x": 6455,
-      "y": 173,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -16530,7 +16530,7 @@
       "type": "text",
       "id": "paQxe",
       "x": 6403,
-      "y": 159,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Masuk / Daftar'",
@@ -16542,7 +16542,7 @@
       "type": "frame",
       "id": "aAYeS",
       "x": 6475,
-      "y": 100,
+      "y": 3850,
       "name": "Akun - Modern",
       "theme": {
         "style": "modern"
@@ -16958,7 +16958,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 7600,
+      "y": 11350,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Hadis"
@@ -16976,7 +16976,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 3850,
+      "y": 11350,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Surah Al-Qur'an"
@@ -16993,7 +16993,7 @@
       "type": "frame",
       "id": "p4vsRw",
       "x": 5250,
-      "y": 7600,
+      "y": 11350,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -18258,7 +18258,7 @@
       "type": "ellipse",
       "id": "PEhv4",
       "x": 5178,
-      "y": 7676,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -18268,7 +18268,7 @@
       "type": "rectangle",
       "id": "MEdWc",
       "x": 5190,
-      "y": 7679,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -18278,7 +18278,7 @@
       "type": "icon",
       "id": "YNQl5",
       "x": 5230,
-      "y": 7673,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -18290,7 +18290,7 @@
       "type": "text",
       "id": "S9Jsg",
       "x": 5178,
-      "y": 7659,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -18302,7 +18302,7 @@
       "type": "frame",
       "id": "bJ5sz",
       "x": 5705,
-      "y": 7600,
+      "y": 11350,
       "name": "Hadis Hub - Modern",
       "theme": {
         "style": "modern"
@@ -18749,7 +18749,7 @@
       "type": "ellipse",
       "id": "Z73V13",
       "x": 5633,
-      "y": 7676,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -18759,7 +18759,7 @@
       "type": "rectangle",
       "id": "c7BKe",
       "x": 5645,
-      "y": 7679,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -18769,7 +18769,7 @@
       "type": "icon",
       "id": "nXQ40",
       "x": 5685,
-      "y": 7673,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -18781,7 +18781,7 @@
       "type": "text",
       "id": "IijnO",
       "x": 5633,
-      "y": 7659,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Hadis",
@@ -18793,7 +18793,7 @@
       "type": "frame",
       "id": "G3df0",
       "x": 6160,
-      "y": 7600,
+      "y": 11350,
       "name": "Hadis Detail - Modern",
       "theme": {
         "style": "modern"
@@ -19221,7 +19221,7 @@
       "type": "ellipse",
       "id": "JJAJ0",
       "x": 6088,
-      "y": 7676,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -19231,7 +19231,7 @@
       "type": "rectangle",
       "id": "r7QQgL",
       "x": 6100,
-      "y": 7679,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -19241,7 +19241,7 @@
       "type": "icon",
       "id": "fHv9g",
       "x": 6140,
-      "y": 7673,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -19253,7 +19253,7 @@
       "type": "text",
       "id": "X8Km3",
       "x": 6088,
-      "y": 7659,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu hadis",
@@ -19265,7 +19265,7 @@
       "type": "frame",
       "id": "Z4cKy",
       "x": 5250,
-      "y": 3850,
+      "y": 11350,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -20530,7 +20530,7 @@
       "type": "ellipse",
       "id": "G4hmba",
       "x": 5178,
-      "y": 3926,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -20540,7 +20540,7 @@
       "type": "rectangle",
       "id": "PHOW6",
       "x": 5190,
-      "y": 3929,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -20550,7 +20550,7 @@
       "type": "icon",
       "id": "x9cdg",
       "x": 5230,
-      "y": 3923,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -20562,7 +20562,7 @@
       "type": "text",
       "id": "la31s",
       "x": 5178,
-      "y": 3909,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -20574,7 +20574,7 @@
       "type": "frame",
       "id": "VuiYx",
       "x": 5705,
-      "y": 3850,
+      "y": 11350,
       "name": "Quran - Modern",
       "theme": {
         "style": "modern"
@@ -21111,7 +21111,7 @@
       "type": "ellipse",
       "id": "TDSO4",
       "x": 5633,
-      "y": 3926,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -21121,7 +21121,7 @@
       "type": "rectangle",
       "id": "PTia5",
       "x": 5645,
-      "y": 3929,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -21131,7 +21131,7 @@
       "type": "icon",
       "id": "bbJcu",
       "x": 5685,
-      "y": 3923,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -21143,7 +21143,7 @@
       "type": "text",
       "id": "oqBvb",
       "x": 5633,
-      "y": 3909,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Al-Quran",
@@ -21155,7 +21155,7 @@
       "type": "frame",
       "id": "STXFG",
       "x": 6160,
-      "y": 3850,
+      "y": 11350,
       "name": "Quran Reader - Modern",
       "theme": {
         "style": "modern"
@@ -21578,7 +21578,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 18850,
+      "y": 22600,
       "descendants": {
         "h7m7Yb": {
           "content": "Ikuti Kuis Islami"
@@ -21595,7 +21595,7 @@
       "type": "frame",
       "id": "US7mF",
       "x": 5250,
-      "y": 18850,
+      "y": 22600,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -22860,7 +22860,7 @@
       "type": "ellipse",
       "id": "y09rDN",
       "x": 5178,
-      "y": 18926,
+      "y": 22676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -22870,7 +22870,7 @@
       "type": "rectangle",
       "id": "KhIEy",
       "x": 5190,
-      "y": 18929,
+      "y": 22679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -22880,7 +22880,7 @@
       "type": "icon",
       "id": "xKap4",
       "x": 5230,
-      "y": 18923,
+      "y": 22673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -22892,7 +22892,7 @@
       "type": "text",
       "id": "PY52n",
       "x": 5178,
-      "y": 18909,
+      "y": 22659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -22904,7 +22904,7 @@
       "type": "frame",
       "id": "NOZNB",
       "x": 5705,
-      "y": 18850,
+      "y": 22600,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -25714,7 +25714,7 @@
       "type": "ellipse",
       "id": "ykPmG",
       "x": 5633,
-      "y": 18926,
+      "y": 22676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -25724,7 +25724,7 @@
       "type": "rectangle",
       "id": "w2612",
       "x": 5645,
-      "y": 18929,
+      "y": 22679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -25734,7 +25734,7 @@
       "type": "icon",
       "id": "heQCr",
       "x": 5685,
-      "y": 18923,
+      "y": 22673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -25746,7 +25746,7 @@
       "type": "text",
       "id": "nCzfy",
       "x": 5633,
-      "y": 18909,
+      "y": 22659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -25759,7 +25759,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 11350,
+      "y": 18850,
       "descendants": {
         "h7m7Yb": {
           "content": "Cari Arah Kiblat"
@@ -25776,7 +25776,7 @@
       "type": "frame",
       "id": "X9JaSP",
       "x": 5250,
-      "y": 11350,
+      "y": 18850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -27041,7 +27041,7 @@
       "type": "ellipse",
       "id": "O887fh",
       "x": 5178,
-      "y": 11426,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -27051,7 +27051,7 @@
       "type": "rectangle",
       "id": "nLTP0",
       "x": 5190,
-      "y": 11429,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -27061,7 +27061,7 @@
       "type": "icon",
       "id": "TwPrR",
       "x": 5230,
-      "y": 11423,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -27073,7 +27073,7 @@
       "type": "text",
       "id": "zAcZS",
       "x": 5178,
-      "y": 11409,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -27085,7 +27085,7 @@
       "type": "frame",
       "id": "Cmekx",
       "x": 5705,
-      "y": 11350,
+      "y": 18850,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -27856,7 +27856,7 @@
       "type": "ellipse",
       "id": "mXCKl",
       "x": 5633,
-      "y": 11426,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -27866,7 +27866,7 @@
       "type": "rectangle",
       "id": "dVVzL",
       "x": 5645,
-      "y": 11429,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -27876,7 +27876,7 @@
       "type": "icon",
       "id": "ie3Ap",
       "x": 5685,
-      "y": 11423,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -27888,7 +27888,7 @@
       "type": "text",
       "id": "w4EVg",
       "x": 5633,
-      "y": 11409,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -27900,7 +27900,7 @@
       "type": "frame",
       "id": "O2PFKE",
       "x": 6160,
-      "y": 11350,
+      "y": 18850,
       "name": "Kiblat - Modern",
       "theme": {
         "style": "modern"
@@ -28505,7 +28505,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 22600,
+      "y": 26350,
       "descendants": {
         "h7m7Yb": {
           "content": "Ikuti Kajian Islam"
@@ -28522,7 +28522,7 @@
       "type": "frame",
       "id": "zP3wb",
       "x": 5250,
-      "y": 22600,
+      "y": 26350,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -29787,7 +29787,7 @@
       "type": "ellipse",
       "id": "KLjhy",
       "x": 5178,
-      "y": 22676,
+      "y": 26426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -29797,7 +29797,7 @@
       "type": "rectangle",
       "id": "CxSak",
       "x": 5190,
-      "y": 22679,
+      "y": 26429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -29807,7 +29807,7 @@
       "type": "icon",
       "id": "UmUda",
       "x": 5230,
-      "y": 22673,
+      "y": 26423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -29819,7 +29819,7 @@
       "type": "text",
       "id": "bb5Tv",
       "x": 5178,
-      "y": 22659,
+      "y": 26409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -29831,7 +29831,7 @@
       "type": "frame",
       "id": "UDMw0",
       "x": 5705,
-      "y": 22600,
+      "y": 26350,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -32641,7 +32641,7 @@
       "type": "ellipse",
       "id": "yBPJe",
       "x": 5633,
-      "y": 22676,
+      "y": 26426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -32651,7 +32651,7 @@
       "type": "rectangle",
       "id": "lm0ux",
       "x": 5645,
-      "y": 22679,
+      "y": 26429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -32661,7 +32661,7 @@
       "type": "icon",
       "id": "n50WZd",
       "x": 5685,
-      "y": 22673,
+      "y": 26423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -32673,7 +32673,7 @@
       "type": "text",
       "id": "Shrmy",
       "x": 5633,
-      "y": 22659,
+      "y": 26409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -32686,7 +32686,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 15100,
+      "y": 18850,
       "descendants": {
         "h7m7Yb": {
           "content": "Cek Jadwal Sholat & Set Reminder"
@@ -32703,7 +32703,7 @@
       "type": "frame",
       "id": "JODup",
       "x": 5250,
-      "y": 15100,
+      "y": 18850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -33968,7 +33968,7 @@
       "type": "ellipse",
       "id": "ZmG1r",
       "x": 5178,
-      "y": 15176,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -33978,7 +33978,7 @@
       "type": "rectangle",
       "id": "phLz2",
       "x": 5190,
-      "y": 15179,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -33988,7 +33988,7 @@
       "type": "icon",
       "id": "Ppjue",
       "x": 5230,
-      "y": 15173,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -34000,7 +34000,7 @@
       "type": "text",
       "id": "x8MKB",
       "x": 5178,
-      "y": 15159,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -34012,7 +34012,7 @@
       "type": "frame",
       "id": "nuC8a",
       "x": 5705,
-      "y": 15100,
+      "y": 18850,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -34783,7 +34783,7 @@
       "type": "ellipse",
       "id": "krv5X",
       "x": 5633,
-      "y": 15176,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -34793,7 +34793,7 @@
       "type": "rectangle",
       "id": "uK5K1",
       "x": 5645,
-      "y": 15179,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -34803,7 +34803,7 @@
       "type": "icon",
       "id": "IBMu5",
       "x": 5685,
-      "y": 15173,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -34815,7 +34815,7 @@
       "type": "text",
       "id": "X4tToz",
       "x": 5633,
-      "y": 15159,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -34827,7 +34827,7 @@
       "type": "ellipse",
       "id": "swJ5N",
       "x": 6088,
-      "y": 3926,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -34837,7 +34837,7 @@
       "type": "rectangle",
       "id": "o2rcWX",
       "x": 6100,
-      "y": 3929,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -34847,7 +34847,7 @@
       "type": "icon",
       "id": "MyTmX",
       "x": 6140,
-      "y": 3923,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -34859,7 +34859,7 @@
       "type": "text",
       "id": "cXFfc",
       "x": 6088,
-      "y": 3909,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap surah (mis. Al-Fatihah)",
@@ -34871,7 +34871,7 @@
       "type": "frame",
       "id": "XmCBy",
       "x": 6160,
-      "y": 22600,
+      "y": 26350,
       "name": "Kajian - Modern",
       "theme": {
         "style": "modern"
@@ -35699,7 +35699,7 @@
       "type": "frame",
       "id": "Va37S",
       "x": 6160,
-      "y": 15100,
+      "y": 18850,
       "name": "Jadwal Sholat - Modern",
       "theme": {
         "style": "modern"
@@ -36652,7 +36652,7 @@
       "type": "ellipse",
       "id": "v5d7CH",
       "x": 6088,
-      "y": 18926,
+      "y": 22676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -36662,7 +36662,7 @@
       "type": "rectangle",
       "id": "uP0cX",
       "x": 6100,
-      "y": 18929,
+      "y": 22679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -36672,7 +36672,7 @@
       "type": "icon",
       "id": "VsALZ",
       "x": 6140,
-      "y": 18923,
+      "y": 22673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -36684,7 +36684,7 @@
       "type": "text",
       "id": "IeTyT",
       "x": 6088,
-      "y": 18909,
+      "y": 22659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Quiz Islami'",
@@ -36696,7 +36696,7 @@
       "type": "ellipse",
       "id": "o8NQiK",
       "x": 6088,
-      "y": 15176,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -36706,7 +36706,7 @@
       "type": "rectangle",
       "id": "f7RHP",
       "x": 6100,
-      "y": 15179,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -36716,7 +36716,7 @@
       "type": "icon",
       "id": "wHoo5",
       "x": 6140,
-      "y": 15173,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -36728,7 +36728,7 @@
       "type": "text",
       "id": "SgZEy",
       "x": 6088,
-      "y": 15159,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Jadwal Sholat'",
@@ -36740,7 +36740,7 @@
       "type": "frame",
       "id": "e5kCc",
       "x": 6160,
-      "y": 18850,
+      "y": 22600,
       "name": "Kuis Soal - Modern",
       "theme": {
         "style": "modern"
@@ -37417,7 +37417,7 @@
       "type": "ellipse",
       "id": "A7Rb32",
       "x": 6543,
-      "y": 18926,
+      "y": 22676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -37427,7 +37427,7 @@
       "type": "rectangle",
       "id": "Vvliw",
       "x": 6555,
-      "y": 18929,
+      "y": 22679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -37437,7 +37437,7 @@
       "type": "icon",
       "id": "QxOrs",
       "x": 6595,
-      "y": 18923,
+      "y": 22673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -37449,7 +37449,7 @@
       "type": "text",
       "id": "NcS7r",
       "x": 6543,
-      "y": 18909,
+      "y": 22659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Pilih jawaban",
@@ -37461,7 +37461,7 @@
       "type": "frame",
       "id": "lcu0X",
       "x": 6615,
-      "y": 18850,
+      "y": 22600,
       "name": "Kuis Jawaban - Modern",
       "theme": {
         "style": "modern"
@@ -38224,7 +38224,7 @@
       "type": "ellipse",
       "id": "v43dO",
       "x": 6088,
-      "y": 11426,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -38234,7 +38234,7 @@
       "type": "rectangle",
       "id": "kCxo0",
       "x": 6100,
-      "y": 11429,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -38244,7 +38244,7 @@
       "type": "icon",
       "id": "Ea7iE",
       "x": 6140,
-      "y": 11423,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -38256,7 +38256,7 @@
       "type": "text",
       "id": "TTOwg",
       "x": 6088,
-      "y": 11409,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap kartu Qibla",
@@ -38268,7 +38268,7 @@
       "type": "frame",
       "id": "hutG2",
       "x": 6615,
-      "y": 15100,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern",
       "theme": {
         "style": "modern"
@@ -39783,7 +39783,7 @@
       "type": "ellipse",
       "id": "tjgOf",
       "x": 6543,
-      "y": 15176,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -39793,7 +39793,7 @@
       "type": "rectangle",
       "id": "dkosO",
       "x": 6555,
-      "y": 15179,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -39803,7 +39803,7 @@
       "type": "icon",
       "id": "J6dI2",
       "x": 6595,
-      "y": 15173,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -39815,7 +39815,7 @@
       "type": "text",
       "id": "d8HX6",
       "x": 6543,
-      "y": 15159,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap ikon gear",
@@ -39827,7 +39827,7 @@
       "type": "ellipse",
       "id": "E3S98",
       "x": 6088,
-      "y": 22676,
+      "y": 26426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -39837,7 +39837,7 @@
       "type": "rectangle",
       "id": "peRPn",
       "x": 6100,
-      "y": 22679,
+      "y": 26429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -39847,7 +39847,7 @@
       "type": "icon",
       "id": "VAFDj",
       "x": 6140,
-      "y": 22673,
+      "y": 26423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -39859,7 +39859,7 @@
       "type": "text",
       "id": "aREiH",
       "x": 6088,
-      "y": 22659,
+      "y": 26409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Kajian'",
@@ -39872,7 +39872,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 33900,
+      "y": 37600,
       "name": "HandoffCard - Tasbih",
       "descendants": {
         "h7m7Yb": {
@@ -39890,7 +39890,7 @@
       "type": "frame",
       "id": "rgLae",
       "x": 5250,
-      "y": 33900,
+      "y": 37600,
       "name": "Beranda - Modern (Tasbih flow)",
       "theme": {
         "style": "modern"
@@ -41155,7 +41155,7 @@
       "type": "ellipse",
       "id": "RClGG",
       "x": 5178,
-      "y": 33976,
+      "y": 37676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -41165,7 +41165,7 @@
       "type": "rectangle",
       "id": "VGZTY",
       "x": 5190,
-      "y": 33979,
+      "y": 37679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -41175,7 +41175,7 @@
       "type": "icon",
       "id": "cdzSJ",
       "x": 5230,
-      "y": 33973,
+      "y": 37673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -41187,7 +41187,7 @@
       "type": "text",
       "id": "Gl5oO",
       "x": 5178,
-      "y": 33959,
+      "y": 37659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -41199,7 +41199,7 @@
       "type": "frame",
       "id": "xbTum",
       "x": 5705,
-      "y": 33900,
+      "y": 37600,
       "name": "Ibadah - Modern (Tasbih flow)",
       "theme": {
         "style": "modern"
@@ -41970,7 +41970,7 @@
       "type": "ellipse",
       "id": "U6JZDC",
       "x": 5633,
-      "y": 33976,
+      "y": 37676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -41980,7 +41980,7 @@
       "type": "rectangle",
       "id": "nz3gF",
       "x": 5645,
-      "y": 33979,
+      "y": 37679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -41990,7 +41990,7 @@
       "type": "icon",
       "id": "Fpzww",
       "x": 5685,
-      "y": 33973,
+      "y": 37673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -42002,7 +42002,7 @@
       "type": "text",
       "id": "j0Mipv",
       "x": 5633,
-      "y": 33959,
+      "y": 37659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -42015,7 +42015,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 41400,
+      "y": 45100,
       "descendants": {
         "h7m7Yb": {
           "content": "Hitung Waris (Faraidh)"
@@ -42033,7 +42033,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 30150,
+      "y": 33850,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Asmaul Husna"
@@ -42050,7 +42050,7 @@
       "type": "frame",
       "id": "HpdUl",
       "x": 5250,
-      "y": 41400,
+      "y": 45100,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -43315,7 +43315,7 @@
       "type": "ellipse",
       "id": "wEngB",
       "x": 5178,
-      "y": 41476,
+      "y": 45176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -43325,7 +43325,7 @@
       "type": "rectangle",
       "id": "QMBat",
       "x": 5190,
-      "y": 41479,
+      "y": 45179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -43335,7 +43335,7 @@
       "type": "icon",
       "id": "VMiNA",
       "x": 5230,
-      "y": 41473,
+      "y": 45173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -43347,7 +43347,7 @@
       "type": "text",
       "id": "DQpKs",
       "x": 5178,
-      "y": 41459,
+      "y": 45159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -43359,7 +43359,7 @@
       "type": "frame",
       "id": "p7Vr2",
       "x": 5705,
-      "y": 41400,
+      "y": 45100,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -44130,7 +44130,7 @@
       "type": "ellipse",
       "id": "H7ZJsC",
       "x": 5633,
-      "y": 41476,
+      "y": 45176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -44140,7 +44140,7 @@
       "type": "rectangle",
       "id": "KJQL7",
       "x": 5645,
-      "y": 41479,
+      "y": 45179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -44150,7 +44150,7 @@
       "type": "icon",
       "id": "m0Knre",
       "x": 5685,
-      "y": 41473,
+      "y": 45173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -44162,7 +44162,7 @@
       "type": "text",
       "id": "U9VCLA",
       "x": 5633,
-      "y": 41459,
+      "y": 45159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -44174,7 +44174,7 @@
       "type": "frame",
       "id": "gDdpo",
       "x": 5250,
-      "y": 30150,
+      "y": 33850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -45439,7 +45439,7 @@
       "type": "ellipse",
       "id": "LLVKb",
       "x": 5178,
-      "y": 30226,
+      "y": 33926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -45449,7 +45449,7 @@
       "type": "rectangle",
       "id": "xOacX",
       "x": 5190,
-      "y": 30229,
+      "y": 33929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -45459,7 +45459,7 @@
       "type": "icon",
       "id": "sjEUi",
       "x": 5230,
-      "y": 30223,
+      "y": 33923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -45471,7 +45471,7 @@
       "type": "text",
       "id": "hJYge",
       "x": 5178,
-      "y": 30209,
+      "y": 33909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -45483,7 +45483,7 @@
       "type": "frame",
       "id": "Wgaxv",
       "x": 5705,
-      "y": 30150,
+      "y": 33850,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -46254,7 +46254,7 @@
       "type": "ellipse",
       "id": "Hd2R7",
       "x": 5633,
-      "y": 30226,
+      "y": 33926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -46264,7 +46264,7 @@
       "type": "rectangle",
       "id": "tAFNi",
       "x": 5645,
-      "y": 30229,
+      "y": 33929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -46274,7 +46274,7 @@
       "type": "icon",
       "id": "TADnu",
       "x": 5685,
-      "y": 30223,
+      "y": 33923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -46286,7 +46286,7 @@
       "type": "text",
       "id": "hNZfP",
       "x": 5633,
-      "y": 30209,
+      "y": 33909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -46299,7 +46299,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 26400,
+      "y": 30100,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Doa Harian"
@@ -46316,7 +46316,7 @@
       "type": "frame",
       "id": "abWWK",
       "x": 5250,
-      "y": 26400,
+      "y": 30100,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -47581,7 +47581,7 @@
       "type": "ellipse",
       "id": "UInXx",
       "x": 5178,
-      "y": 26476,
+      "y": 30176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -47591,7 +47591,7 @@
       "type": "rectangle",
       "id": "hBG5A",
       "x": 5190,
-      "y": 26479,
+      "y": 30179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -47601,7 +47601,7 @@
       "type": "icon",
       "id": "bxhfP",
       "x": 5230,
-      "y": 26473,
+      "y": 30173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -47613,7 +47613,7 @@
       "type": "text",
       "id": "Q1XJn7",
       "x": 5178,
-      "y": 26459,
+      "y": 30159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -47625,7 +47625,7 @@
       "type": "frame",
       "id": "WwtiT",
       "x": 5705,
-      "y": 26400,
+      "y": 30100,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -48396,7 +48396,7 @@
       "type": "ellipse",
       "id": "X5bPFb",
       "x": 5633,
-      "y": 26476,
+      "y": 30176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -48406,7 +48406,7 @@
       "type": "rectangle",
       "id": "w6byb4",
       "x": 5645,
-      "y": 26479,
+      "y": 30179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -48416,7 +48416,7 @@
       "type": "icon",
       "id": "GSkjZ",
       "x": 5685,
-      "y": 26473,
+      "y": 30173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -48428,7 +48428,7 @@
       "type": "text",
       "id": "kV9Xz",
       "x": 5633,
-      "y": 26459,
+      "y": 30159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -48440,7 +48440,7 @@
       "type": "frame",
       "id": "hF18N",
       "x": 6160,
-      "y": 26400,
+      "y": 30100,
       "name": "Doa - Modern",
       "theme": {
         "style": "modern"
@@ -49242,7 +49242,7 @@
       "type": "ellipse",
       "id": "rXCiU",
       "x": 6088,
-      "y": 26476,
+      "y": 30176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -49252,7 +49252,7 @@
       "type": "rectangle",
       "id": "Gb5Oi",
       "x": 6100,
-      "y": 26479,
+      "y": 30179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -49262,7 +49262,7 @@
       "type": "icon",
       "id": "YY9KY",
       "x": 6140,
-      "y": 26473,
+      "y": 30173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -49274,7 +49274,7 @@
       "type": "text",
       "id": "iKW2h",
       "x": 6088,
-      "y": 26459,
+      "y": 30159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Doa'",
@@ -49287,7 +49287,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 37650,
+      "y": 41350,
       "descendants": {
         "h7m7Yb": {
           "content": "Hitung Zakat"
@@ -49304,7 +49304,7 @@
       "type": "frame",
       "id": "t9YnK",
       "x": 5250,
-      "y": 37650,
+      "y": 41350,
       "name": "Beranda - Modern (Zakat lane)",
       "theme": {
         "style": "modern"
@@ -50569,7 +50569,7 @@
       "type": "ellipse",
       "id": "p8C4bC",
       "x": 5178,
-      "y": 37726,
+      "y": 41426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -50579,7 +50579,7 @@
       "type": "rectangle",
       "id": "sKU1y",
       "x": 5190,
-      "y": 37729,
+      "y": 41429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -50589,7 +50589,7 @@
       "type": "icon",
       "id": "k4jRE2",
       "x": 5230,
-      "y": 37723,
+      "y": 41423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -50601,7 +50601,7 @@
       "type": "text",
       "id": "TNSE7",
       "x": 5178,
-      "y": 37709,
+      "y": 41409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -50613,7 +50613,7 @@
       "type": "frame",
       "id": "GjZFS",
       "x": 5705,
-      "y": 37650,
+      "y": 41350,
       "name": "Ibadah - Modern (Zakat lane)",
       "theme": {
         "style": "modern"
@@ -51384,7 +51384,7 @@
       "type": "ellipse",
       "id": "ynzyG",
       "x": 5633,
-      "y": 37726,
+      "y": 41426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -51394,7 +51394,7 @@
       "type": "rectangle",
       "id": "CkNQD",
       "x": 5645,
-      "y": 37729,
+      "y": 41429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -51404,7 +51404,7 @@
       "type": "icon",
       "id": "d7uMh",
       "x": 5685,
-      "y": 37723,
+      "y": 41423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -51416,7 +51416,7 @@
       "type": "text",
       "id": "TjkrX",
       "x": 5633,
-      "y": 37709,
+      "y": 41409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -51428,7 +51428,7 @@
       "type": "frame",
       "id": "rbKkC",
       "x": 6160,
-      "y": 33900,
+      "y": 37600,
       "name": "Tasbih - Modern",
       "theme": {
         "style": "modern"
@@ -52179,7 +52179,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 45150,
+      "y": 48850,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Tafsir Al-Qur'an"
@@ -52196,7 +52196,7 @@
       "type": "frame",
       "id": "Fh8yC",
       "x": 5250,
-      "y": 45150,
+      "y": 48850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -53461,7 +53461,7 @@
       "type": "ellipse",
       "id": "DPP6h",
       "x": 5178,
-      "y": 45226,
+      "y": 48926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -53471,7 +53471,7 @@
       "type": "rectangle",
       "id": "wf5de",
       "x": 5190,
-      "y": 45229,
+      "y": 48929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -53481,7 +53481,7 @@
       "type": "icon",
       "id": "Cn3qL",
       "x": 5230,
-      "y": 45223,
+      "y": 48923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -53493,7 +53493,7 @@
       "type": "text",
       "id": "KYKmD",
       "x": 5178,
-      "y": 45209,
+      "y": 48909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -53505,7 +53505,7 @@
       "type": "frame",
       "id": "sGVrs",
       "x": 5705,
-      "y": 45150,
+      "y": 48850,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -56315,7 +56315,7 @@
       "type": "ellipse",
       "id": "wu8or",
       "x": 5633,
-      "y": 45226,
+      "y": 48926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -56325,7 +56325,7 @@
       "type": "rectangle",
       "id": "X3yhRu",
       "x": 5645,
-      "y": 45229,
+      "y": 48929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -56335,7 +56335,7 @@
       "type": "icon",
       "id": "iMdVH",
       "x": 5685,
-      "y": 45223,
+      "y": 48923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -56347,7 +56347,7 @@
       "type": "text",
       "id": "Pft4t",
       "x": 5633,
-      "y": 45209,
+      "y": 48909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -56359,7 +56359,7 @@
       "type": "ellipse",
       "id": "U9e8JM",
       "x": 6088,
-      "y": 41476,
+      "y": 45176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -56369,7 +56369,7 @@
       "type": "rectangle",
       "id": "fx9Bu",
       "x": 6100,
-      "y": 41479,
+      "y": 45179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -56379,7 +56379,7 @@
       "type": "icon",
       "id": "FqgV8",
       "x": 6140,
-      "y": 41473,
+      "y": 45173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -56391,7 +56391,7 @@
       "type": "text",
       "id": "cBHJy",
       "x": 6088,
-      "y": 41459,
+      "y": 45159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Faraidh'",
@@ -56403,7 +56403,7 @@
       "type": "frame",
       "id": "aHLqf",
       "x": 6160,
-      "y": 41400,
+      "y": 45100,
       "name": "Faraidh - Modern",
       "theme": {
         "style": "modern"
@@ -57184,7 +57184,7 @@
       "type": "frame",
       "id": "KRyIi",
       "x": 6160,
-      "y": 30150,
+      "y": 33850,
       "name": "Asmaul Husna - Modern",
       "theme": {
         "style": "modern"
@@ -57855,7 +57855,7 @@
       "type": "ellipse",
       "id": "OXnK0",
       "x": 6088,
-      "y": 30226,
+      "y": 33926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -57865,7 +57865,7 @@
       "type": "rectangle",
       "id": "U7HkKs",
       "x": 6100,
-      "y": 30229,
+      "y": 33929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -57875,7 +57875,7 @@
       "type": "icon",
       "id": "bJoFR",
       "x": 6140,
-      "y": 30223,
+      "y": 33923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -57887,7 +57887,7 @@
       "type": "text",
       "id": "b4T3pd",
       "x": 6088,
-      "y": 30209,
+      "y": 33909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Asmaul Husna'",
@@ -57900,7 +57900,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 48900,
+      "y": 52600,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Siroh Nabawiyah"
@@ -57917,7 +57917,7 @@
       "type": "frame",
       "id": "KW3iO",
       "x": 5250,
-      "y": 48900,
+      "y": 52600,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -59182,7 +59182,7 @@
       "type": "ellipse",
       "id": "sVfXf",
       "x": 5178,
-      "y": 48976,
+      "y": 52676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -59192,7 +59192,7 @@
       "type": "rectangle",
       "id": "qCya9",
       "x": 5190,
-      "y": 48979,
+      "y": 52679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -59202,7 +59202,7 @@
       "type": "icon",
       "id": "v4zRy",
       "x": 5230,
-      "y": 48973,
+      "y": 52673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -59214,7 +59214,7 @@
       "type": "text",
       "id": "YzU8g",
       "x": 5178,
-      "y": 48959,
+      "y": 52659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -59226,7 +59226,7 @@
       "type": "frame",
       "id": "jgGzq",
       "x": 5705,
-      "y": 48900,
+      "y": 52600,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -62036,7 +62036,7 @@
       "type": "ellipse",
       "id": "iyT7B",
       "x": 5633,
-      "y": 48976,
+      "y": 52676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -62046,7 +62046,7 @@
       "type": "rectangle",
       "id": "NgvQ7",
       "x": 5645,
-      "y": 48979,
+      "y": 52679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -62056,7 +62056,7 @@
       "type": "icon",
       "id": "K7iun",
       "x": 5685,
-      "y": 48973,
+      "y": 52673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -62068,7 +62068,7 @@
       "type": "text",
       "id": "zMVsB",
       "x": 5633,
-      "y": 48959,
+      "y": 52659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -62080,7 +62080,7 @@
       "type": "ellipse",
       "id": "U3KMwT",
       "x": 6088,
-      "y": 48976,
+      "y": 52676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -62090,7 +62090,7 @@
       "type": "rectangle",
       "id": "Wz6UX",
       "x": 6100,
-      "y": 48979,
+      "y": 52679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -62100,7 +62100,7 @@
       "type": "icon",
       "id": "r66BQ",
       "x": 6140,
-      "y": 48973,
+      "y": 52673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -62112,7 +62112,7 @@
       "type": "text",
       "id": "ThTrZ",
       "x": 6088,
-      "y": 48959,
+      "y": 52659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile Siroh",
@@ -62124,7 +62124,7 @@
       "type": "frame",
       "id": "fcD7f",
       "x": 7200,
-      "y": 48900,
+      "y": 52600,
       "name": "Siroh/EventCard",
       "reusable": true,
       "width": 335,
@@ -62233,7 +62233,7 @@
       "type": "frame",
       "id": "d4GLez",
       "x": 6160,
-      "y": 37650,
+      "y": 41350,
       "name": "Zakat - Modern",
       "theme": {
         "style": "modern"
@@ -62823,7 +62823,7 @@
       "type": "ellipse",
       "id": "Bfa33",
       "x": 6088,
-      "y": 37726,
+      "y": 41426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -62833,7 +62833,7 @@
       "type": "rectangle",
       "id": "ocmc8",
       "x": 6100,
-      "y": 37729,
+      "y": 41429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -62843,7 +62843,7 @@
       "type": "icon",
       "id": "cmneI",
       "x": 6140,
-      "y": 37723,
+      "y": 41423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -62855,7 +62855,7 @@
       "type": "text",
       "id": "X7SD3T",
       "x": 6088,
-      "y": 37709,
+      "y": 41409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Zakat'",
@@ -62867,7 +62867,7 @@
       "type": "ellipse",
       "id": "emP9y",
       "x": 6088,
-      "y": 45226,
+      "y": 48926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -62877,7 +62877,7 @@
       "type": "rectangle",
       "id": "bTTJx",
       "x": 6100,
-      "y": 45229,
+      "y": 48929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -62887,7 +62887,7 @@
       "type": "icon",
       "id": "E8ImWq",
       "x": 6140,
-      "y": 45223,
+      "y": 48923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -62899,7 +62899,7 @@
       "type": "text",
       "id": "T1Lncz",
       "x": 6088,
-      "y": 45209,
+      "y": 48909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile Tafsir",
@@ -62912,7 +62912,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 52650,
+      "y": 56350,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Fiqh Ringkas"
@@ -62929,7 +62929,7 @@
       "type": "frame",
       "id": "E4NKie",
       "x": 5250,
-      "y": 52650,
+      "y": 56350,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -64194,7 +64194,7 @@
       "type": "ellipse",
       "id": "QKjqR",
       "x": 5178,
-      "y": 52726,
+      "y": 56426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -64204,7 +64204,7 @@
       "type": "rectangle",
       "id": "Qs8a2",
       "x": 5190,
-      "y": 52729,
+      "y": 56429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -64214,7 +64214,7 @@
       "type": "icon",
       "id": "xAwOM",
       "x": 5230,
-      "y": 52723,
+      "y": 56423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -64226,7 +64226,7 @@
       "type": "text",
       "id": "h4pFfo",
       "x": 5178,
-      "y": 52709,
+      "y": 56409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -64238,7 +64238,7 @@
       "type": "frame",
       "id": "JnwMa",
       "x": 5705,
-      "y": 52650,
+      "y": 56350,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -67048,7 +67048,7 @@
       "type": "ellipse",
       "id": "LiR98",
       "x": 5633,
-      "y": 52726,
+      "y": 56426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -67058,7 +67058,7 @@
       "type": "rectangle",
       "id": "zCTUF",
       "x": 5645,
-      "y": 52729,
+      "y": 56429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -67068,7 +67068,7 @@
       "type": "icon",
       "id": "h1Qi0",
       "x": 5685,
-      "y": 52723,
+      "y": 56423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -67080,7 +67080,7 @@
       "type": "text",
       "id": "xWiWd",
       "x": 5633,
-      "y": 52709,
+      "y": 56409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -67092,7 +67092,7 @@
       "type": "frame",
       "id": "QVthT",
       "x": 6160,
-      "y": 52650,
+      "y": 56350,
       "name": "Fiqh Ringkas - Modern",
       "theme": {
         "style": "modern"
@@ -68150,7 +68150,7 @@
       "type": "ellipse",
       "id": "QOIHb",
       "x": 6088,
-      "y": 52726,
+      "y": 56426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -68160,7 +68160,7 @@
       "type": "rectangle",
       "id": "wPUau",
       "x": 6100,
-      "y": 52729,
+      "y": 56429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -68170,7 +68170,7 @@
       "type": "icon",
       "id": "CAdJI",
       "x": 6140,
-      "y": 52723,
+      "y": 56423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -68182,7 +68182,7 @@
       "type": "text",
       "id": "Iv7tW",
       "x": 6088,
-      "y": 52709,
+      "y": 56409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu topik",
@@ -68194,7 +68194,7 @@
       "type": "frame",
       "id": "zLbcQ",
       "x": 6160,
-      "y": 48900,
+      "y": 52600,
       "name": "Siroh - Modern",
       "theme": {
         "style": "modern"
@@ -68578,7 +68578,7 @@
       "type": "ellipse",
       "id": "ruI4G",
       "x": 6543,
-      "y": 48976,
+      "y": 52676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -68588,7 +68588,7 @@
       "type": "rectangle",
       "id": "FekYo",
       "x": 6555,
-      "y": 48979,
+      "y": 52679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -68598,7 +68598,7 @@
       "type": "icon",
       "id": "f99uv7",
       "x": 6595,
-      "y": 48973,
+      "y": 52673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -68610,7 +68610,7 @@
       "type": "text",
       "id": "P1avX",
       "x": 6543,
-      "y": 48959,
+      "y": 52659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu peristiwa",
@@ -68622,7 +68622,7 @@
       "type": "frame",
       "id": "gBkTF",
       "x": 6615,
-      "y": 48900,
+      "y": 52600,
       "name": "Siroh Detail - Modern",
       "theme": {
         "style": "modern"
@@ -69000,7 +69000,7 @@
       "type": "frame",
       "id": "NTZ5R",
       "x": 6615,
-      "y": 52650,
+      "y": 56350,
       "name": "Fiqh Detail - Modern",
       "theme": {
         "style": "modern"
@@ -69429,7 +69429,7 @@
       "type": "ellipse",
       "id": "Wg8sO",
       "x": 6543,
-      "y": 52726,
+      "y": 56426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -69439,7 +69439,7 @@
       "type": "rectangle",
       "id": "Jm1w5",
       "x": 6555,
-      "y": 52729,
+      "y": 56429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -69449,7 +69449,7 @@
       "type": "icon",
       "id": "q6G0f",
       "x": 6595,
-      "y": 52723,
+      "y": 56423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -69461,7 +69461,7 @@
       "type": "text",
       "id": "l1LrBB",
       "x": 6543,
-      "y": 52709,
+      "y": 56409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Baca detail Thaharah",
@@ -69473,7 +69473,7 @@
       "type": "ellipse",
       "id": "a2qFN",
       "x": 6088,
-      "y": 33976,
+      "y": 37676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -69483,7 +69483,7 @@
       "type": "rectangle",
       "id": "bM4jm",
       "x": 6100,
-      "y": 33979,
+      "y": 37679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -69493,7 +69493,7 @@
       "type": "icon",
       "id": "muRjF",
       "x": 6140,
-      "y": 33973,
+      "y": 37673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -69505,7 +69505,7 @@
       "type": "text",
       "id": "FtLJH",
       "x": 6088,
-      "y": 33959,
+      "y": 37659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Tasbih'",
@@ -69517,7 +69517,7 @@
       "type": "frame",
       "id": "OfHsj",
       "x": 6160,
-      "y": 45150,
+      "y": 48850,
       "name": "Tafsir - Modern",
       "theme": {
         "style": "modern"
@@ -70796,7 +70796,7 @@
       "type": "ellipse",
       "id": "JFmM4",
       "x": 6088,
-      "y": 45226,
+      "y": 48926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -70806,7 +70806,7 @@
       "type": "rectangle",
       "id": "Jnjun",
       "x": 6100,
-      "y": 45229,
+      "y": 48929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -70816,7 +70816,7 @@
       "type": "icon",
       "id": "r8EU5",
       "x": 6140,
-      "y": 45223,
+      "y": 48923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -70828,7 +70828,7 @@
       "type": "text",
       "id": "KXaT9",
       "x": 6088,
-      "y": 45209,
+      "y": 48909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile Tafsir",
@@ -70840,7 +70840,7 @@
       "type": "frame",
       "id": "u04hz",
       "x": 6615,
-      "y": 45150,
+      "y": 48850,
       "name": "Tafsir Detail - Modern",
       "theme": {
         "style": "modern"
@@ -71218,7 +71218,7 @@
       "type": "ellipse",
       "id": "hZCSS",
       "x": 6543,
-      "y": 45226,
+      "y": 48926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -71228,7 +71228,7 @@
       "type": "rectangle",
       "id": "V8gIvb",
       "x": 6555,
-      "y": 45229,
+      "y": 48929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -71238,7 +71238,7 @@
       "type": "icon",
       "id": "hND6z",
       "x": 6595,
-      "y": 45223,
+      "y": 48923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -71250,7 +71250,7 @@
       "type": "text",
       "id": "BmfmB",
       "x": 6543,
-      "y": 45209,
+      "y": 48909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu surah",
@@ -71263,7 +71263,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 78900,
+      "y": 82600,
       "descendants": {
         "h7m7Yb": {
           "content": "Lihat Jadwal Imsakiyah Ramadan"
@@ -71280,7 +71280,7 @@
       "type": "frame",
       "id": "mOgtz",
       "x": 5250,
-      "y": 78900,
+      "y": 82600,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -72545,7 +72545,7 @@
       "type": "ellipse",
       "id": "kXpOT",
       "x": 5178,
-      "y": 78976,
+      "y": 82676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -72555,7 +72555,7 @@
       "type": "rectangle",
       "id": "I7NPT",
       "x": 5190,
-      "y": 78979,
+      "y": 82679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -72565,7 +72565,7 @@
       "type": "icon",
       "id": "tVvhM",
       "x": 5230,
-      "y": 78973,
+      "y": 82673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -72577,7 +72577,7 @@
       "type": "text",
       "id": "lVd3O",
       "x": 5178,
-      "y": 78959,
+      "y": 82659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -72589,7 +72589,7 @@
       "type": "frame",
       "id": "egnPg",
       "x": 5705,
-      "y": 78900,
+      "y": 82600,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -73360,7 +73360,7 @@
       "type": "ellipse",
       "id": "N2MGDM",
       "x": 5633,
-      "y": 78976,
+      "y": 82676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -73370,7 +73370,7 @@
       "type": "rectangle",
       "id": "TMxVh",
       "x": 5645,
-      "y": 78979,
+      "y": 82679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -73380,7 +73380,7 @@
       "type": "icon",
       "id": "DdWbS",
       "x": 5685,
-      "y": 78973,
+      "y": 82673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -73392,7 +73392,7 @@
       "type": "text",
       "id": "ENmEh",
       "x": 5633,
-      "y": 78959,
+      "y": 82659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -73405,7 +73405,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 56400,
+      "y": 60100,
       "descendants": {
         "h7m7Yb": {
           "content": "Ikut Komunitas Belajar"
@@ -73422,7 +73422,7 @@
       "type": "frame",
       "id": "djUBA",
       "x": 5250,
-      "y": 56400,
+      "y": 60100,
       "name": "Beranda - Modern (Komunitas Lane)",
       "theme": {
         "style": "modern"
@@ -74687,7 +74687,7 @@
       "type": "ellipse",
       "id": "SsHsM",
       "x": 5178,
-      "y": 56476,
+      "y": 60176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -74697,7 +74697,7 @@
       "type": "rectangle",
       "id": "nXMxH",
       "x": 5190,
-      "y": 56479,
+      "y": 60179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -74707,7 +74707,7 @@
       "type": "icon",
       "id": "p3Rxg5",
       "x": 5230,
-      "y": 56473,
+      "y": 60173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -74719,7 +74719,7 @@
       "type": "text",
       "id": "WES4e",
       "x": 5178,
-      "y": 56459,
+      "y": 60159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -74731,7 +74731,7 @@
       "type": "frame",
       "id": "JwQTn",
       "x": 5705,
-      "y": 56400,
+      "y": 60100,
       "name": "Belajar - Modern (Komunitas Lane)",
       "theme": {
         "style": "modern"
@@ -77541,7 +77541,7 @@
       "type": "ellipse",
       "id": "nhDPx",
       "x": 5633,
-      "y": 56476,
+      "y": 60176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -77551,7 +77551,7 @@
       "type": "rectangle",
       "id": "EVK3e",
       "x": 5645,
-      "y": 56479,
+      "y": 60179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -77561,7 +77561,7 @@
       "type": "icon",
       "id": "U3nsuG",
       "x": 5685,
-      "y": 56473,
+      "y": 60173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -77573,7 +77573,7 @@
       "type": "text",
       "id": "WYMLt",
       "x": 5633,
-      "y": 56459,
+      "y": 60159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -77585,7 +77585,7 @@
       "type": "ellipse",
       "id": "qgrjE",
       "x": 6088,
-      "y": 56476,
+      "y": 60176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -77595,7 +77595,7 @@
       "type": "rectangle",
       "id": "TxtZX",
       "x": 6100,
-      "y": 56479,
+      "y": 60179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -77605,7 +77605,7 @@
       "type": "icon",
       "id": "HI5EW",
       "x": 6140,
-      "y": 56473,
+      "y": 60173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -77617,7 +77617,7 @@
       "type": "text",
       "id": "VvWpS",
       "x": 6088,
-      "y": 56459,
+      "y": 60159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Komunitas'",
@@ -77630,7 +77630,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 67650,
+      "y": 71350,
       "name": "HandoffCard - Leaderboard",
       "descendants": {
         "h7m7Yb": {
@@ -77649,7 +77649,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 71400,
+      "y": 75100,
       "descendants": {
         "h7m7Yb": {
           "content": "Isi Jurnal Muhasabah"
@@ -77666,7 +77666,7 @@
       "type": "frame",
       "id": "k6oqgm",
       "x": 5250,
-      "y": 71400,
+      "y": 75100,
       "name": "Beranda - Modern (Muhasabah)",
       "theme": {
         "style": "modern"
@@ -78931,7 +78931,7 @@
       "type": "ellipse",
       "id": "hVwQQ",
       "x": 5178,
-      "y": 71476,
+      "y": 75176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -78941,7 +78941,7 @@
       "type": "rectangle",
       "id": "bnCXT",
       "x": 5190,
-      "y": 71479,
+      "y": 75179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -78951,7 +78951,7 @@
       "type": "icon",
       "id": "jQWSt",
       "x": 5230,
-      "y": 71473,
+      "y": 75173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -78963,7 +78963,7 @@
       "type": "text",
       "id": "DXilv",
       "x": 5178,
-      "y": 71459,
+      "y": 75159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -78975,7 +78975,7 @@
       "type": "frame",
       "id": "vXIOc",
       "x": 5250,
-      "y": 67650,
+      "y": 71350,
       "name": "Beranda - Modern (Leaderboard lane)",
       "theme": {
         "style": "modern"
@@ -80240,7 +80240,7 @@
       "type": "ellipse",
       "id": "xrDWj",
       "x": 5178,
-      "y": 67726,
+      "y": 71426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -80250,7 +80250,7 @@
       "type": "rectangle",
       "id": "TXzVT",
       "x": 5190,
-      "y": 67729,
+      "y": 71429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -80260,7 +80260,7 @@
       "type": "icon",
       "id": "CZJx7",
       "x": 5230,
-      "y": 67723,
+      "y": 71423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -80272,7 +80272,7 @@
       "type": "text",
       "id": "d9HGE",
       "x": 5178,
-      "y": 67709,
+      "y": 71409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -80284,7 +80284,7 @@
       "type": "frame",
       "id": "QHqSM",
       "x": 5705,
-      "y": 67650,
+      "y": 71350,
       "name": "Belajar - Modern (Leaderboard lane)",
       "theme": {
         "style": "modern"
@@ -83094,7 +83094,7 @@
       "type": "ellipse",
       "id": "onqtE",
       "x": 5633,
-      "y": 67726,
+      "y": 71426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -83104,7 +83104,7 @@
       "type": "rectangle",
       "id": "RKhJ7",
       "x": 5645,
-      "y": 67729,
+      "y": 71429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -83114,7 +83114,7 @@
       "type": "icon",
       "id": "VZxSe",
       "x": 5685,
-      "y": 67723,
+      "y": 71423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -83126,7 +83126,7 @@
       "type": "text",
       "id": "XDs46",
       "x": 5633,
-      "y": 67709,
+      "y": 71409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -83138,7 +83138,7 @@
       "type": "ellipse",
       "id": "o7xi7",
       "x": 6088,
-      "y": 78976,
+      "y": 82676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -83148,7 +83148,7 @@
       "type": "rectangle",
       "id": "K5nSz",
       "x": 6100,
-      "y": 78979,
+      "y": 82679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -83158,7 +83158,7 @@
       "type": "icon",
       "id": "Eb5jF",
       "x": 6140,
-      "y": 78973,
+      "y": 82673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -83170,7 +83170,7 @@
       "type": "text",
       "id": "GAYxB",
       "x": 6088,
-      "y": 78959,
+      "y": 82659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Imsakiyah'",
@@ -83183,7 +83183,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 63900,
+      "y": 67600,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Artikel/Blog Islami"
@@ -83200,7 +83200,7 @@
       "type": "frame",
       "id": "llIBP",
       "x": 5250,
-      "y": 63900,
+      "y": 67600,
       "name": "Beranda - Modern (Blog)",
       "theme": {
         "style": "modern"
@@ -84465,7 +84465,7 @@
       "type": "ellipse",
       "id": "O1mQxa",
       "x": 5178,
-      "y": 63976,
+      "y": 67676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -84475,7 +84475,7 @@
       "type": "rectangle",
       "id": "WCXrN",
       "x": 5190,
-      "y": 63979,
+      "y": 67679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -84485,7 +84485,7 @@
       "type": "icon",
       "id": "i17sW",
       "x": 5230,
-      "y": 63973,
+      "y": 67673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -84497,7 +84497,7 @@
       "type": "text",
       "id": "YbAVr",
       "x": 5178,
-      "y": 63959,
+      "y": 67659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -84509,7 +84509,7 @@
       "type": "frame",
       "id": "RWyRL",
       "x": 5705,
-      "y": 63900,
+      "y": 67600,
       "name": "Belajar - Modern (Blog)",
       "theme": {
         "style": "modern"
@@ -87319,7 +87319,7 @@
       "type": "ellipse",
       "id": "NpZhm",
       "x": 5633,
-      "y": 63976,
+      "y": 67676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -87329,7 +87329,7 @@
       "type": "rectangle",
       "id": "H6A2W",
       "x": 5645,
-      "y": 63979,
+      "y": 67679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -87339,7 +87339,7 @@
       "type": "icon",
       "id": "J2YGS",
       "x": 5685,
-      "y": 63973,
+      "y": 67673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -87351,7 +87351,7 @@
       "type": "text",
       "id": "Vy8jz",
       "x": 5633,
-      "y": 63959,
+      "y": 67659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -87363,7 +87363,7 @@
       "type": "ellipse",
       "id": "h6wYmZ",
       "x": 6088,
-      "y": 67726,
+      "y": 71426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -87373,7 +87373,7 @@
       "type": "rectangle",
       "id": "v6LA0",
       "x": 6100,
-      "y": 67729,
+      "y": 71429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -87383,7 +87383,7 @@
       "type": "icon",
       "id": "HUrbc",
       "x": 6140,
-      "y": 67723,
+      "y": 71423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -87395,7 +87395,7 @@
       "type": "text",
       "id": "CyT7w",
       "x": 6088,
-      "y": 67709,
+      "y": 71409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Leaderboard'",
@@ -87407,7 +87407,7 @@
       "type": "ellipse",
       "id": "AcKvb",
       "x": 6088,
-      "y": 63976,
+      "y": 67676,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -87417,7 +87417,7 @@
       "type": "rectangle",
       "id": "aREqc",
       "x": 6100,
-      "y": 63979,
+      "y": 67679,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -87427,7 +87427,7 @@
       "type": "icon",
       "id": "msIHO",
       "x": 6140,
-      "y": 63973,
+      "y": 67673,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -87439,7 +87439,7 @@
       "type": "text",
       "id": "peuN2",
       "x": 6088,
-      "y": 63959,
+      "y": 67659,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu artikel",
@@ -87452,7 +87452,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 86400,
+      "y": 90100,
       "descendants": {
         "h7m7Yb": {
           "content": "Rencanakan Khatam Al-Qur'an"
@@ -87469,7 +87469,7 @@
       "type": "frame",
       "id": "oqxAp",
       "x": 6160,
-      "y": 67650,
+      "y": 71350,
       "name": "Leaderboard - Modern",
       "theme": {
         "style": "modern"
@@ -88173,7 +88173,7 @@
       "type": "frame",
       "id": "tcwcK",
       "x": 5250,
-      "y": 86400,
+      "y": 90100,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -89438,7 +89438,7 @@
       "type": "ellipse",
       "id": "v1CM0y",
       "x": 5178,
-      "y": 86476,
+      "y": 90176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -89448,7 +89448,7 @@
       "type": "rectangle",
       "id": "PNjO4",
       "x": 5190,
-      "y": 86479,
+      "y": 90179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -89458,7 +89458,7 @@
       "type": "icon",
       "id": "KT5Yk",
       "x": 5230,
-      "y": 86473,
+      "y": 90173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -89470,7 +89470,7 @@
       "type": "text",
       "id": "PHkrO",
       "x": 5178,
-      "y": 86459,
+      "y": 90159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -89482,7 +89482,7 @@
       "type": "frame",
       "id": "xRKOS",
       "x": 5705,
-      "y": 86400,
+      "y": 90100,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -90253,7 +90253,7 @@
       "type": "ellipse",
       "id": "M8bBnn",
       "x": 5633,
-      "y": 86476,
+      "y": 90176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -90263,7 +90263,7 @@
       "type": "rectangle",
       "id": "B5syG4",
       "x": 5645,
-      "y": 86479,
+      "y": 90179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -90273,7 +90273,7 @@
       "type": "icon",
       "id": "UoJ6G",
       "x": 5685,
-      "y": 86473,
+      "y": 90173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -90285,7 +90285,7 @@
       "type": "text",
       "id": "vJA6W",
       "x": 5633,
-      "y": 86459,
+      "y": 90159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -90298,7 +90298,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 75150,
+      "y": 78850,
       "descendants": {
         "h7m7Yb": {
           "content": "Cari Istilah di Kamus Arab"
@@ -90316,7 +90316,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 60150,
+      "y": 63850,
       "descendants": {
         "h7m7Yb": {
           "content": "Dengarkan Radio Islam"
@@ -90333,7 +90333,7 @@
       "type": "frame",
       "id": "wU9OF",
       "x": 6160,
-      "y": 78900,
+      "y": 82600,
       "name": "Imsakiyah - Modern",
       "theme": {
         "style": "modern"
@@ -91566,7 +91566,7 @@
       "type": "frame",
       "id": "cZ0RE",
       "x": 5250,
-      "y": 75150,
+      "y": 78850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -92831,7 +92831,7 @@
       "type": "ellipse",
       "id": "hA6EV",
       "x": 5178,
-      "y": 75226,
+      "y": 78926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -92841,7 +92841,7 @@
       "type": "rectangle",
       "id": "Aem6M",
       "x": 5190,
-      "y": 75229,
+      "y": 78929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -92851,7 +92851,7 @@
       "type": "icon",
       "id": "J8u0d",
       "x": 5230,
-      "y": 75223,
+      "y": 78923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -92863,7 +92863,7 @@
       "type": "text",
       "id": "c6iSGP",
       "x": 5178,
-      "y": 75209,
+      "y": 78909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -92875,7 +92875,7 @@
       "type": "frame",
       "id": "HzAsg",
       "x": 5705,
-      "y": 75150,
+      "y": 78850,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -95685,7 +95685,7 @@
       "type": "ellipse",
       "id": "KOB0T",
       "x": 5633,
-      "y": 75226,
+      "y": 78926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -95695,7 +95695,7 @@
       "type": "rectangle",
       "id": "CRfub",
       "x": 5645,
-      "y": 75229,
+      "y": 78929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -95705,7 +95705,7 @@
       "type": "icon",
       "id": "x7HDN1",
       "x": 5685,
-      "y": 75223,
+      "y": 78923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -95717,7 +95717,7 @@
       "type": "text",
       "id": "kYdGh",
       "x": 5633,
-      "y": 75209,
+      "y": 78909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -95729,7 +95729,7 @@
       "type": "frame",
       "id": "A7cqA",
       "x": 5250,
-      "y": 60150,
+      "y": 63850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -96994,7 +96994,7 @@
       "type": "ellipse",
       "id": "W6ipkV",
       "x": 5178,
-      "y": 60226,
+      "y": 63926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -97004,7 +97004,7 @@
       "type": "rectangle",
       "id": "FtM3W",
       "x": 5190,
-      "y": 60229,
+      "y": 63929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -97014,7 +97014,7 @@
       "type": "icon",
       "id": "ODjE1",
       "x": 5230,
-      "y": 60223,
+      "y": 63923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -97026,7 +97026,7 @@
       "type": "text",
       "id": "uN5T0",
       "x": 5178,
-      "y": 60209,
+      "y": 63909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -97038,7 +97038,7 @@
       "type": "frame",
       "id": "g5wBGo",
       "x": 5705,
-      "y": 60150,
+      "y": 63850,
       "name": "Belajar - Modern",
       "theme": {
         "style": "modern"
@@ -99848,7 +99848,7 @@
       "type": "ellipse",
       "id": "LEFmn",
       "x": 5633,
-      "y": 60226,
+      "y": 63926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -99858,7 +99858,7 @@
       "type": "rectangle",
       "id": "pfvcu",
       "x": 5645,
-      "y": 60229,
+      "y": 63929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -99868,7 +99868,7 @@
       "type": "icon",
       "id": "P1R0l",
       "x": 5685,
-      "y": 60223,
+      "y": 63923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -99880,7 +99880,7 @@
       "type": "text",
       "id": "S9CP3X",
       "x": 5633,
-      "y": 60209,
+      "y": 63909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -99892,7 +99892,7 @@
       "type": "ellipse",
       "id": "C3sAJ",
       "x": 6088,
-      "y": 60226,
+      "y": 63926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -99902,7 +99902,7 @@
       "type": "rectangle",
       "id": "asVuG",
       "x": 6100,
-      "y": 60229,
+      "y": 63929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -99912,7 +99912,7 @@
       "type": "icon",
       "id": "Y2ZwJW",
       "x": 6140,
-      "y": 60223,
+      "y": 63923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -99924,7 +99924,7 @@
       "type": "text",
       "id": "DpQd0",
       "x": 6088,
-      "y": 60209,
+      "y": 63909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Radio Islam'",
@@ -99937,7 +99937,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 82650,
+      "y": 86350,
       "descendants": {
         "h7m7Yb": {
           "content": "Kelola Wirid Saya"
@@ -99954,7 +99954,7 @@
       "type": "frame",
       "id": "M5Br30",
       "x": 5250,
-      "y": 82650,
+      "y": 86350,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -101219,7 +101219,7 @@
       "type": "ellipse",
       "id": "ikL4b",
       "x": 5178,
-      "y": 82726,
+      "y": 86426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -101229,7 +101229,7 @@
       "type": "rectangle",
       "id": "hpXc1",
       "x": 5190,
-      "y": 82729,
+      "y": 86429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -101239,7 +101239,7 @@
       "type": "icon",
       "id": "fvXgs",
       "x": 5230,
-      "y": 82723,
+      "y": 86423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -101251,7 +101251,7 @@
       "type": "text",
       "id": "Ex25g",
       "x": 5178,
-      "y": 82709,
+      "y": 86409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -101263,7 +101263,7 @@
       "type": "frame",
       "id": "gVDox",
       "x": 5705,
-      "y": 82650,
+      "y": 86350,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -102034,7 +102034,7 @@
       "type": "ellipse",
       "id": "dpHDr",
       "x": 5633,
-      "y": 82726,
+      "y": 86426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -102044,7 +102044,7 @@
       "type": "rectangle",
       "id": "bMdee",
       "x": 5645,
-      "y": 82729,
+      "y": 86429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -102054,7 +102054,7 @@
       "type": "icon",
       "id": "bHYgf",
       "x": 5685,
-      "y": 82723,
+      "y": 86423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -102066,7 +102066,7 @@
       "type": "text",
       "id": "JY7Yh",
       "x": 5633,
-      "y": 82709,
+      "y": 86409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -102078,7 +102078,7 @@
       "type": "ellipse",
       "id": "Pxelv",
       "x": 5633,
-      "y": 71476,
+      "y": 75176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -102088,7 +102088,7 @@
       "type": "rectangle",
       "id": "n8oBIu",
       "x": 5645,
-      "y": 71479,
+      "y": 75179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -102098,7 +102098,7 @@
       "type": "icon",
       "id": "Tdrpn",
       "x": 5685,
-      "y": 71473,
+      "y": 75173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -102110,7 +102110,7 @@
       "type": "text",
       "id": "Zhy0p",
       "x": 5633,
-      "y": 71459,
+      "y": 75159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap kartu 'Jurnal Muhasabah'",
@@ -102122,7 +102122,7 @@
       "type": "frame",
       "id": "tvJWD",
       "x": 5705,
-      "y": 71400,
+      "y": 75100,
       "name": "Jurnal Muhasabah - Modern",
       "theme": {
         "style": "modern"
@@ -102348,7 +102348,7 @@
       "type": "frame",
       "id": "RpFOH",
       "x": 6160,
-      "y": 60150,
+      "y": 63850,
       "name": "Radio Islam - Modern",
       "theme": {
         "style": "modern"
@@ -102821,7 +102821,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 90150,
+      "y": 93850,
       "descendants": {
         "h7m7Yb": {
           "content": "Ikuti Modul & Kelas Belajar"
@@ -102838,7 +102838,7 @@
       "type": "frame",
       "id": "kiD0q",
       "x": 5250,
-      "y": 90150,
+      "y": 93850,
       "name": "Beranda - Modern (modul-kelas)",
       "theme": {
         "style": "modern"
@@ -104103,7 +104103,7 @@
       "type": "ellipse",
       "id": "g2Hn7d",
       "x": 5178,
-      "y": 90226,
+      "y": 93926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -104113,7 +104113,7 @@
       "type": "rectangle",
       "id": "I9VVjM",
       "x": 5190,
-      "y": 90229,
+      "y": 93929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -104123,7 +104123,7 @@
       "type": "icon",
       "id": "TSsN3",
       "x": 5230,
-      "y": 90223,
+      "y": 93923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -104135,7 +104135,7 @@
       "type": "text",
       "id": "MP3ho",
       "x": 5178,
-      "y": 90209,
+      "y": 93909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -104147,7 +104147,7 @@
       "type": "frame",
       "id": "N28Yuo",
       "x": 5705,
-      "y": 90150,
+      "y": 93850,
       "name": "Belajar - Modern (modul-kelas)",
       "theme": {
         "style": "modern"
@@ -106957,7 +106957,7 @@
       "type": "ellipse",
       "id": "P1NPnu",
       "x": 5633,
-      "y": 90226,
+      "y": 93926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -106967,7 +106967,7 @@
       "type": "rectangle",
       "id": "GCmKx",
       "x": 5645,
-      "y": 90229,
+      "y": 93929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -106977,7 +106977,7 @@
       "type": "icon",
       "id": "vQXjr",
       "x": 5685,
-      "y": 90223,
+      "y": 93923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -106989,7 +106989,7 @@
       "type": "text",
       "id": "SIxxr",
       "x": 5633,
-      "y": 90209,
+      "y": 93909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Belajar",
@@ -107001,7 +107001,7 @@
       "type": "frame",
       "id": "x3yXG",
       "x": 6160,
-      "y": 75150,
+      "y": 78850,
       "name": "Kamus - Modern",
       "theme": {
         "style": "modern"
@@ -107357,7 +107357,7 @@
       "type": "ellipse",
       "id": "i3ax47",
       "x": 6088,
-      "y": 75226,
+      "y": 78926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -107367,7 +107367,7 @@
       "type": "rectangle",
       "id": "nWOHp",
       "x": 6100,
-      "y": 75229,
+      "y": 78929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -107377,7 +107377,7 @@
       "type": "icon",
       "id": "FE0WQ",
       "x": 6140,
-      "y": 75223,
+      "y": 78923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -107389,7 +107389,7 @@
       "type": "text",
       "id": "tzLn4",
       "x": 6088,
-      "y": 75209,
+      "y": 78909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Cari istilah",
@@ -107401,7 +107401,7 @@
       "type": "frame",
       "id": "i6H38V",
       "x": 6160,
-      "y": 63900,
+      "y": 67600,
       "name": "Artikel - Modern",
       "theme": {
         "style": "modern"
@@ -108053,7 +108053,7 @@
       "type": "frame",
       "id": "V050T",
       "x": 6160,
-      "y": 56400,
+      "y": 60100,
       "name": "Komunitas - Modern",
       "theme": {
         "style": "modern"
@@ -108351,7 +108351,7 @@
       "type": "frame",
       "id": "tIu9X",
       "x": 6160,
-      "y": 86400,
+      "y": 90100,
       "name": "Khatam - Modern",
       "theme": {
         "style": "modern"
@@ -108846,7 +108846,7 @@
       "type": "frame",
       "id": "EbFtX",
       "x": 6615,
-      "y": 75150,
+      "y": 78850,
       "name": "Kamus Search - Modern",
       "theme": {
         "style": "modern"
@@ -109394,7 +109394,7 @@
       "type": "ellipse",
       "id": "pH7Y2",
       "x": 6543,
-      "y": 75226,
+      "y": 78926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -109404,7 +109404,7 @@
       "type": "rectangle",
       "id": "u5LCUy",
       "x": 6555,
-      "y": 75229,
+      "y": 78929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -109414,7 +109414,7 @@
       "type": "icon",
       "id": "F9sH64",
       "x": 6595,
-      "y": 75223,
+      "y": 78923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -109426,7 +109426,7 @@
       "type": "text",
       "id": "M898g4",
       "x": 6543,
-      "y": 75209,
+      "y": 78909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap Cari",
@@ -109438,7 +109438,7 @@
       "type": "frame",
       "id": "Xhb6P",
       "x": 6160,
-      "y": 82650,
+      "y": 86350,
       "name": "Wirid Saya - Modern",
       "theme": {
         "style": "modern"
@@ -109754,7 +109754,7 @@
       "type": "ellipse",
       "id": "h0ChO",
       "x": 6088,
-      "y": 86476,
+      "y": 90176,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -109764,7 +109764,7 @@
       "type": "rectangle",
       "id": "b6fliW",
       "x": 6100,
-      "y": 86479,
+      "y": 90179,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -109774,7 +109774,7 @@
       "type": "icon",
       "id": "j0KGyP",
       "x": 6140,
-      "y": 86473,
+      "y": 90173,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -109786,7 +109786,7 @@
       "type": "text",
       "id": "UhinW",
       "x": 6088,
-      "y": 86459,
+      "y": 90159,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Khatam'",
@@ -109798,7 +109798,7 @@
       "type": "ellipse",
       "id": "qI9b7",
       "x": 6088,
-      "y": 82726,
+      "y": 86426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -109808,7 +109808,7 @@
       "type": "rectangle",
       "id": "gNqch",
       "x": 6100,
-      "y": 82729,
+      "y": 86429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -109818,7 +109818,7 @@
       "type": "icon",
       "id": "HOtKo",
       "x": 6140,
-      "y": 82723,
+      "y": 86423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -109830,7 +109830,7 @@
       "type": "text",
       "id": "nWCDk",
       "x": 6088,
-      "y": 82709,
+      "y": 86409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Wirid Saya'",
@@ -109842,7 +109842,7 @@
       "type": "frame",
       "id": "t8v2U",
       "x": 6160,
-      "y": 90150,
+      "y": 93850,
       "name": "Modul & Kelas - Modern",
       "theme": {
         "style": "modern"
@@ -110714,7 +110714,7 @@
       "type": "ellipse",
       "id": "hBnE7",
       "x": 6088,
-      "y": 90226,
+      "y": 93926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -110724,7 +110724,7 @@
       "type": "rectangle",
       "id": "ttk9g",
       "x": 6100,
-      "y": 90229,
+      "y": 93929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -110734,7 +110734,7 @@
       "type": "icon",
       "id": "M25DW",
       "x": 6140,
-      "y": 90223,
+      "y": 93923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -110746,7 +110746,7 @@
       "type": "text",
       "id": "ytW12",
       "x": 6088,
-      "y": 90209,
+      "y": 93909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu modul",
@@ -110758,7 +110758,7 @@
       "type": "ellipse",
       "id": "s2ROAT",
       "x": 6543,
-      "y": 90226,
+      "y": 93926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -110768,7 +110768,7 @@
       "type": "rectangle",
       "id": "HOFnd",
       "x": 6555,
-      "y": 90229,
+      "y": 93929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -110778,7 +110778,7 @@
       "type": "icon",
       "id": "vZn6m",
       "x": 6595,
-      "y": 90223,
+      "y": 93923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -110790,7 +110790,7 @@
       "type": "text",
       "id": "v3gSrm",
       "x": 6543,
-      "y": 90209,
+      "y": 93909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka detail pelajaran",
@@ -110802,7 +110802,7 @@
       "type": "frame",
       "id": "CD7Zu",
       "x": 6615,
-      "y": 90150,
+      "y": 93850,
       "name": "Lessons Detail - Modern",
       "theme": {
         "style": "modern"
@@ -111651,8 +111651,8 @@
       "type": "ref",
       "ref": "r7P5jg",
       "name": "Flow/HandoffCard - Baca Hadis dalam 1 Kitab",
-      "x": 4910,
-      "y": 105150,
+      "x": 6685,
+      "y": 11350,
       "descendants": {
         "h7m7Yb": {
           "content": "Baca Hadis dalam 1 Kitab"
@@ -111668,8 +111668,8 @@
     {
       "type": "frame",
       "id": "J3GRVo",
-      "x": 5250,
-      "y": 105150,
+      "x": 7025,
+      "y": 11350,
       "name": "Beranda - Modern (hadis-reader)",
       "theme": {
         "style": "modern"
@@ -112933,8 +112933,8 @@
     {
       "type": "ellipse",
       "id": "n3bMa",
-      "x": 5178,
-      "y": 105226,
+      "x": 6953,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -112943,8 +112943,8 @@
     {
       "type": "rectangle",
       "id": "S9aqzJ",
-      "x": 5190,
-      "y": 105229,
+      "x": 6965,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -112953,8 +112953,8 @@
     {
       "type": "icon",
       "id": "C50Hd4",
-      "x": 5230,
-      "y": 105223,
+      "x": 7005,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -112965,8 +112965,8 @@
     {
       "type": "text",
       "id": "HAPoB",
-      "x": 5178,
-      "y": 105209,
+      "x": 6953,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -112977,8 +112977,8 @@
     {
       "type": "frame",
       "id": "FUeY7",
-      "x": 5705,
-      "y": 105150,
+      "x": 7480,
+      "y": 11350,
       "name": "Hadis Hub - Modern (hadis-reader)",
       "theme": {
         "style": "modern"
@@ -113424,8 +113424,8 @@
     {
       "type": "ellipse",
       "id": "R7Xv9",
-      "x": 5633,
-      "y": 105226,
+      "x": 7408,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -113434,8 +113434,8 @@
     {
       "type": "rectangle",
       "id": "k4reV",
-      "x": 5645,
-      "y": 105229,
+      "x": 7420,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -113444,8 +113444,8 @@
     {
       "type": "icon",
       "id": "jP1pH",
-      "x": 5685,
-      "y": 105223,
+      "x": 7460,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -113456,8 +113456,8 @@
     {
       "type": "text",
       "id": "e5fHH",
-      "x": 5633,
-      "y": 105209,
+      "x": 7408,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Hadis",
@@ -113468,8 +113468,8 @@
     {
       "type": "frame",
       "id": "JIOzb",
-      "x": 6160,
-      "y": 105150,
+      "x": 7935,
+      "y": 11350,
       "name": "Hadis Reader - Modern",
       "theme": {
         "style": "modern"
@@ -113977,8 +113977,8 @@
     {
       "type": "ellipse",
       "id": "DXhsi",
-      "x": 6088,
-      "y": 105226,
+      "x": 7863,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -113987,8 +113987,8 @@
     {
       "type": "rectangle",
       "id": "iw9ui",
-      "x": 6100,
-      "y": 105229,
+      "x": 7875,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -113997,8 +113997,8 @@
     {
       "type": "icon",
       "id": "m7ZQ9e",
-      "x": 6140,
-      "y": 105223,
+      "x": 7915,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -114009,8 +114009,8 @@
     {
       "type": "text",
       "id": "x3IHE",
-      "x": 6088,
-      "y": 105209,
+      "x": 7863,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Buka Reader' pada kitab",
@@ -114022,8 +114022,8 @@
       "id": "AUC71",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 101400,
+      "x": 8775,
+      "y": 3850,
       "descendants": {
         "h7m7Yb": {
           "content": "Reset Password (Lupa Sandi)"
@@ -114039,8 +114039,8 @@
     {
       "type": "frame",
       "id": "lf64H",
-      "x": 5250,
-      "y": 101400,
+      "x": 9115,
+      "y": 3850,
       "name": "Beranda - Modern (Lupa Sandi flow)",
       "theme": {
         "style": "modern"
@@ -115304,8 +115304,8 @@
     {
       "type": "ellipse",
       "id": "N5vgxb",
-      "x": 5178,
-      "y": 101476,
+      "x": 9043,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -115314,8 +115314,8 @@
     {
       "type": "rectangle",
       "id": "noIvO",
-      "x": 5190,
-      "y": 101479,
+      "x": 9055,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -115324,8 +115324,8 @@
     {
       "type": "icon",
       "id": "m8Sfp",
-      "x": 5230,
-      "y": 101473,
+      "x": 9095,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -115336,8 +115336,8 @@
     {
       "type": "text",
       "id": "hJE1n",
-      "x": 5178,
-      "y": 101459,
+      "x": 9043,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -115348,8 +115348,8 @@
     {
       "type": "frame",
       "id": "GjsMb",
-      "x": 5705,
-      "y": 101400,
+      "x": 9570,
+      "y": 3850,
       "name": "Profile - Modern (Lupa Sandi flow)",
       "theme": {
         "style": "modern"
@@ -115833,8 +115833,8 @@
     {
       "type": "ellipse",
       "id": "sKhjM",
-      "x": 5633,
-      "y": 101476,
+      "x": 9498,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -115843,8 +115843,8 @@
     {
       "type": "rectangle",
       "id": "Owf0O",
-      "x": 5645,
-      "y": 101479,
+      "x": 9510,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -115853,8 +115853,8 @@
     {
       "type": "icon",
       "id": "viFUK",
-      "x": 5685,
-      "y": 101473,
+      "x": 9550,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -115865,8 +115865,8 @@
     {
       "type": "text",
       "id": "JXdSq",
-      "x": 5633,
-      "y": 101459,
+      "x": 9498,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap avatar → Profil",
@@ -115877,8 +115877,8 @@
     {
       "type": "frame",
       "id": "UDRvG",
-      "x": 6615,
-      "y": 105150,
+      "x": 8390,
+      "y": 11350,
       "name": "Hadis Detail - Modern (hadis-reader)",
       "theme": {
         "style": "modern"
@@ -116305,8 +116305,8 @@
     {
       "type": "ellipse",
       "id": "XiF8O",
-      "x": 6543,
-      "y": 105226,
+      "x": 8318,
+      "y": 11426,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -116315,8 +116315,8 @@
     {
       "type": "rectangle",
       "id": "GEfW1",
-      "x": 6555,
-      "y": 105229,
+      "x": 8330,
+      "y": 11429,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -116325,8 +116325,8 @@
     {
       "type": "icon",
       "id": "MfQwB",
-      "x": 6595,
-      "y": 105223,
+      "x": 8370,
+      "y": 11423,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -116337,8 +116337,8 @@
     {
       "type": "text",
       "id": "t4ehgm",
-      "x": 6543,
-      "y": 105209,
+      "x": 8318,
+      "y": 11409,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap salah satu hadis",
@@ -116349,8 +116349,8 @@
     {
       "type": "frame",
       "id": "OnxXV",
-      "x": 6160,
-      "y": 101400,
+      "x": 10025,
+      "y": 3850,
       "name": "Lupa Sandi - Modern",
       "theme": {
         "style": "modern"
@@ -116663,8 +116663,8 @@
     {
       "type": "ellipse",
       "id": "f45PfX",
-      "x": 6088,
-      "y": 101476,
+      "x": 9953,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -116673,8 +116673,8 @@
     {
       "type": "rectangle",
       "id": "U9CUXf",
-      "x": 6100,
-      "y": 101479,
+      "x": 9965,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -116683,8 +116683,8 @@
     {
       "type": "icon",
       "id": "etrCI",
-      "x": 6140,
-      "y": 101473,
+      "x": 10005,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -116695,8 +116695,8 @@
     {
       "type": "text",
       "id": "K9cBq",
-      "x": 6088,
-      "y": 101459,
+      "x": 9953,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Masuk/Daftar' → tab Lupa Sandi",
@@ -116709,7 +116709,7 @@
       "type": "ref",
       "ref": "r7P5jg",
       "x": 4910,
-      "y": 93900,
+      "y": 3850,
       "name": "Flow Card - Buka Aplikasi Pertama Kali",
       "descendants": {
         "h7m7Yb": {
@@ -116727,8 +116727,8 @@
       "id": "nqIeA",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 120150,
+      "x": 13830,
+      "y": 18850,
       "name": "HandoffCard - Konfirmasi Reminder Terjadwal",
       "descendants": {
         "h7m7Yb": {
@@ -116746,7 +116746,7 @@
       "type": "frame",
       "id": "z555jf",
       "x": 5250,
-      "y": 93900,
+      "y": 3850,
       "name": "Splash - Modern",
       "theme": {
         "style": "modern"
@@ -116811,7 +116811,7 @@
       "type": "ellipse",
       "id": "dDkx3",
       "x": 5178,
-      "y": 93976,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -116821,7 +116821,7 @@
       "type": "rectangle",
       "id": "WSIgb",
       "x": 5190,
-      "y": 93979,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -116831,7 +116831,7 @@
       "type": "icon",
       "id": "wTIDM",
       "x": 5230,
-      "y": 93973,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -116843,7 +116843,7 @@
       "type": "text",
       "id": "SyyhK",
       "x": 5178,
-      "y": 93959,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Install & buka aplikasi",
@@ -116855,8 +116855,8 @@
       "id": "cn0Ys",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 123900,
+      "x": 16060,
+      "y": 18850,
       "name": "HandoffCard - Metode Jadwal",
       "descendants": {
         "h7m7Yb": {
@@ -116874,7 +116874,7 @@
       "type": "frame",
       "id": "Y9PyW",
       "x": 5705,
-      "y": 93900,
+      "y": 3850,
       "name": "Izin Lokasi - Modern",
       "theme": {
         "style": "modern"
@@ -117012,7 +117012,7 @@
       "type": "ellipse",
       "id": "r4hCj",
       "x": 5633,
-      "y": 93976,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -117022,7 +117022,7 @@
       "type": "rectangle",
       "id": "r78oZk",
       "x": 5645,
-      "y": 93979,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -117032,7 +117032,7 @@
       "type": "icon",
       "id": "l7XtUr",
       "x": 5685,
-      "y": 93973,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -117044,7 +117044,7 @@
       "type": "text",
       "id": "SPCu5",
       "x": 5633,
-      "y": 93959,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Splash selesai, OS minta izin lokasi",
@@ -117055,8 +117055,8 @@
     {
       "type": "frame",
       "id": "qwy9B",
-      "x": 5250,
-      "y": 123900,
+      "x": 16400,
+      "y": 18850,
       "name": "Beranda - Modern (Metode Jadwal flow)",
       "theme": {
         "style": "modern"
@@ -118320,8 +118320,8 @@
     {
       "type": "ellipse",
       "id": "vVpTn",
-      "x": 5178,
-      "y": 123976,
+      "x": 16328,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -118330,8 +118330,8 @@
     {
       "type": "rectangle",
       "id": "lGL7L",
-      "x": 5190,
-      "y": 123979,
+      "x": 16340,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -118340,8 +118340,8 @@
     {
       "type": "icon",
       "id": "O3PJX",
-      "x": 5230,
-      "y": 123973,
+      "x": 16380,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -118352,8 +118352,8 @@
     {
       "type": "text",
       "id": "gNys6",
-      "x": 5178,
-      "y": 123959,
+      "x": 16328,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -118364,8 +118364,8 @@
     {
       "type": "frame",
       "id": "R08OLt",
-      "x": 5705,
-      "y": 123900,
+      "x": 16855,
+      "y": 18850,
       "name": "Ibadah - Modern (Metode Jadwal flow)",
       "theme": {
         "style": "modern"
@@ -119135,8 +119135,8 @@
     {
       "type": "ellipse",
       "id": "Wxcfz",
-      "x": 5633,
-      "y": 123976,
+      "x": 16783,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -119145,8 +119145,8 @@
     {
       "type": "rectangle",
       "id": "hIRGZ",
-      "x": 5645,
-      "y": 123979,
+      "x": 16795,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -119155,8 +119155,8 @@
     {
       "type": "icon",
       "id": "dM7T6",
-      "x": 5685,
-      "y": 123973,
+      "x": 16835,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -119167,8 +119167,8 @@
     {
       "type": "text",
       "id": "MqPof",
-      "x": 5633,
-      "y": 123959,
+      "x": 16783,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -119179,8 +119179,8 @@
     {
       "type": "frame",
       "id": "NO0hz",
-      "x": 6160,
-      "y": 123900,
+      "x": 17310,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern (Metode Jadwal flow)",
       "theme": {
         "style": "modern"
@@ -120694,8 +120694,8 @@
     {
       "type": "ellipse",
       "id": "otZhd",
-      "x": 6088,
-      "y": 123976,
+      "x": 17238,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -120704,8 +120704,8 @@
     {
       "type": "rectangle",
       "id": "a1gUL",
-      "x": 6100,
-      "y": 123979,
+      "x": 17250,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -120714,8 +120714,8 @@
     {
       "type": "icon",
       "id": "HPAIQ",
-      "x": 6140,
-      "y": 123973,
+      "x": 17290,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -120726,8 +120726,8 @@
     {
       "type": "text",
       "id": "qN3qy",
-      "x": 6088,
-      "y": 123959,
+      "x": 17238,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
@@ -120738,8 +120738,8 @@
     {
       "type": "frame",
       "id": "r8Nm5A",
-      "x": 5250,
-      "y": 120150,
+      "x": 14170,
+      "y": 18850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -122003,8 +122003,8 @@
     {
       "type": "ellipse",
       "id": "F36Nm",
-      "x": 5178,
-      "y": 120226,
+      "x": 14098,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -122013,8 +122013,8 @@
     {
       "type": "rectangle",
       "id": "T1ERA",
-      "x": 5190,
-      "y": 120229,
+      "x": 14110,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -122023,8 +122023,8 @@
     {
       "type": "icon",
       "id": "Vgtfb",
-      "x": 5230,
-      "y": 120223,
+      "x": 14150,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -122035,8 +122035,8 @@
     {
       "type": "text",
       "id": "inARZ",
-      "x": 5178,
-      "y": 120209,
+      "x": 14098,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -122047,8 +122047,8 @@
     {
       "type": "frame",
       "id": "xTALn",
-      "x": 5705,
-      "y": 120150,
+      "x": 14625,
+      "y": 18850,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -122818,8 +122818,8 @@
     {
       "type": "ellipse",
       "id": "J55c0",
-      "x": 5633,
-      "y": 120226,
+      "x": 14553,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -122828,8 +122828,8 @@
     {
       "type": "rectangle",
       "id": "KMwQn",
-      "x": 5645,
-      "y": 120229,
+      "x": 14565,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -122838,8 +122838,8 @@
     {
       "type": "icon",
       "id": "Z6DYY7",
-      "x": 5685,
-      "y": 120223,
+      "x": 14605,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -122850,8 +122850,8 @@
     {
       "type": "text",
       "id": "Z3nSgc",
-      "x": 5633,
-      "y": 120209,
+      "x": 14553,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -122862,8 +122862,8 @@
     {
       "type": "frame",
       "id": "fSiwa",
-      "x": 6160,
-      "y": 120150,
+      "x": 15080,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern",
       "theme": {
         "style": "modern"
@@ -124377,8 +124377,8 @@
     {
       "type": "ellipse",
       "id": "p5VJH",
-      "x": 6088,
-      "y": 120226,
+      "x": 15008,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -124387,8 +124387,8 @@
     {
       "type": "rectangle",
       "id": "saaxq",
-      "x": 6100,
-      "y": 120229,
+      "x": 15020,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -124397,8 +124397,8 @@
     {
       "type": "icon",
       "id": "IdVZa",
-      "x": 6140,
-      "y": 120223,
+      "x": 15060,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -124409,8 +124409,8 @@
     {
       "type": "text",
       "id": "wTqAQ",
-      "x": 6088,
-      "y": 120209,
+      "x": 15008,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
@@ -124422,7 +124422,7 @@
       "type": "frame",
       "id": "M1Ew7",
       "x": 6160,
-      "y": 93900,
+      "y": 3850,
       "name": "Beranda - Modern (First Launch)",
       "theme": {
         "style": "modern"
@@ -125687,7 +125687,7 @@
       "type": "ellipse",
       "id": "wHBY5",
       "x": 6088,
-      "y": 93976,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -125697,7 +125697,7 @@
       "type": "rectangle",
       "id": "ToupF",
       "x": 6100,
-      "y": 93979,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -125707,7 +125707,7 @@
       "type": "icon",
       "id": "LmXt0",
       "x": 6140,
-      "y": 93973,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -125719,7 +125719,7 @@
       "type": "text",
       "id": "pEQZB",
       "x": 6088,
-      "y": 93959,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Izinkan / lanjut sebagai tamu",
@@ -125731,8 +125731,8 @@
       "id": "nhpIT",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 112650,
+      "x": 9370,
+      "y": 18850,
       "name": "Flow/HandoffCard - Atur Waktu Reminder",
       "descendants": {
         "h7m7Yb": {
@@ -125749,8 +125749,8 @@
     {
       "type": "frame",
       "id": "kcCte",
-      "x": 5250,
-      "y": 112650,
+      "x": 9710,
+      "y": 18850,
       "name": "Beranda - Modern",
       "theme": {
         "style": "modern"
@@ -127014,8 +127014,8 @@
     {
       "type": "ellipse",
       "id": "tjK7M",
-      "x": 5178,
-      "y": 112726,
+      "x": 9638,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -127024,8 +127024,8 @@
     {
       "type": "rectangle",
       "id": "A1GTU",
-      "x": 5190,
-      "y": 112729,
+      "x": 9650,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -127034,8 +127034,8 @@
     {
       "type": "icon",
       "id": "stVug",
-      "x": 5230,
-      "y": 112723,
+      "x": 9690,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -127046,8 +127046,8 @@
     {
       "type": "text",
       "id": "W7SxW",
-      "x": 5178,
-      "y": 112709,
+      "x": 9638,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -127058,8 +127058,8 @@
     {
       "type": "frame",
       "id": "J5AlJ",
-      "x": 5705,
-      "y": 112650,
+      "x": 10165,
+      "y": 18850,
       "name": "Ibadah - Modern",
       "theme": {
         "style": "modern"
@@ -127829,8 +127829,8 @@
     {
       "type": "ellipse",
       "id": "As7Ov",
-      "x": 5633,
-      "y": 112726,
+      "x": 10093,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -127839,8 +127839,8 @@
     {
       "type": "rectangle",
       "id": "gt5Mu",
-      "x": 5645,
-      "y": 112729,
+      "x": 10105,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -127849,8 +127849,8 @@
     {
       "type": "icon",
       "id": "E6wbVZ",
-      "x": 5685,
-      "y": 112723,
+      "x": 10145,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -127861,8 +127861,8 @@
     {
       "type": "text",
       "id": "GXwAm",
-      "x": 5633,
-      "y": 112709,
+      "x": 10093,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -127873,8 +127873,8 @@
     {
       "type": "frame",
       "id": "Rxp1Y",
-      "x": 6160,
-      "y": 112650,
+      "x": 10620,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern",
       "theme": {
         "style": "modern"
@@ -129388,8 +129388,8 @@
     {
       "type": "ellipse",
       "id": "NFFDy",
-      "x": 6088,
-      "y": 112726,
+      "x": 10548,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -129398,8 +129398,8 @@
     {
       "type": "rectangle",
       "id": "t12qQ",
-      "x": 6100,
-      "y": 112729,
+      "x": 10560,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -129408,8 +129408,8 @@
     {
       "type": "icon",
       "id": "TSvA8",
-      "x": 6140,
-      "y": 112723,
+      "x": 10600,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -129420,8 +129420,8 @@
     {
       "type": "text",
       "id": "S9A5U",
-      "x": 6088,
-      "y": 112709,
+      "x": 10548,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
@@ -129432,8 +129432,8 @@
     {
       "type": "frame",
       "id": "btyAN",
-      "x": 6615,
-      "y": 112650,
+      "x": 11075,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern (reminder changed)",
       "theme": {
         "style": "modern"
@@ -130947,8 +130947,8 @@
     {
       "type": "ellipse",
       "id": "Uu3BR",
-      "x": 6543,
-      "y": 112726,
+      "x": 11003,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -130957,8 +130957,8 @@
     {
       "type": "rectangle",
       "id": "xXvdn",
-      "x": 6555,
-      "y": 112729,
+      "x": 11015,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -130967,8 +130967,8 @@
     {
       "type": "icon",
       "id": "Sk7P9",
-      "x": 6595,
-      "y": 112723,
+      "x": 11055,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -130979,8 +130979,8 @@
     {
       "type": "text",
       "id": "DG72A",
-      "x": 6543,
-      "y": 112709,
+      "x": 11003,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Ubah 'Jeda Pengingat' & 'Waktu Sholat'",
@@ -130991,8 +130991,8 @@
     {
       "type": "ellipse",
       "id": "xcmB3",
-      "x": 6543,
-      "y": 123976,
+      "x": 17693,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -131001,8 +131001,8 @@
     {
       "type": "rectangle",
       "id": "c3Io1",
-      "x": 6555,
-      "y": 123979,
+      "x": 17705,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -131011,8 +131011,8 @@
     {
       "type": "icon",
       "id": "EYJxF",
-      "x": 6595,
-      "y": 123973,
+      "x": 17745,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -131023,8 +131023,8 @@
     {
       "type": "text",
       "id": "hMnok",
-      "x": 6543,
-      "y": 123959,
+      "x": 17693,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Scroll ke atas → 'Metode Jadwal'",
@@ -131036,8 +131036,8 @@
       "id": "t2tZy",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 97650,
+      "x": 7000,
+      "y": 3850,
       "name": "Daftar Akun Baru - HandoffCard",
       "descendants": {
         "h7m7Yb": {
@@ -131054,8 +131054,8 @@
     {
       "type": "frame",
       "id": "tQX48",
-      "x": 5250,
-      "y": 97650,
+      "x": 7340,
+      "y": 3850,
       "name": "Beranda - Modern (daftar-akun)",
       "theme": {
         "style": "modern"
@@ -132319,8 +132319,8 @@
     {
       "type": "ellipse",
       "id": "GMFbY",
-      "x": 5178,
-      "y": 97726,
+      "x": 7268,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -132329,8 +132329,8 @@
     {
       "type": "rectangle",
       "id": "n3cMKv",
-      "x": 5190,
-      "y": 97729,
+      "x": 7280,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -132339,8 +132339,8 @@
     {
       "type": "icon",
       "id": "emxNB",
-      "x": 5230,
-      "y": 97723,
+      "x": 7320,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -132351,8 +132351,8 @@
     {
       "type": "text",
       "id": "O3ccU",
-      "x": 5178,
-      "y": 97709,
+      "x": 7268,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -132363,8 +132363,8 @@
     {
       "type": "frame",
       "id": "cYTZ4",
-      "x": 5705,
-      "y": 97650,
+      "x": 7795,
+      "y": 3850,
       "name": "Profile - Modern (daftar-akun)",
       "theme": {
         "style": "modern"
@@ -132848,8 +132848,8 @@
     {
       "type": "ellipse",
       "id": "yVWaa",
-      "x": 5633,
-      "y": 97726,
+      "x": 7723,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -132858,8 +132858,8 @@
     {
       "type": "rectangle",
       "id": "tN6wr",
-      "x": 5645,
-      "y": 97729,
+      "x": 7735,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -132868,8 +132868,8 @@
     {
       "type": "icon",
       "id": "uZhKi",
-      "x": 5685,
-      "y": 97723,
+      "x": 7775,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -132880,8 +132880,8 @@
     {
       "type": "text",
       "id": "jqHwu",
-      "x": 5633,
-      "y": 97709,
+      "x": 7723,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap avatar → Profil",
@@ -132892,8 +132892,8 @@
     {
       "type": "frame",
       "id": "TLnQK",
-      "x": 6615,
-      "y": 120150,
+      "x": 15535,
+      "y": 18850,
       "name": "Konfirmasi Reminder - Modern",
       "theme": {
         "style": "modern"
@@ -134466,8 +134466,8 @@
     {
       "type": "frame",
       "id": "vWGMH",
-      "x": 6615,
-      "y": 123900,
+      "x": 17765,
+      "y": 18850,
       "name": "Metode Jadwal - Modern",
       "theme": {
         "style": "modern"
@@ -134974,8 +134974,8 @@
     {
       "type": "ellipse",
       "id": "ZjuQ7",
-      "x": 6543,
-      "y": 120226,
+      "x": 15463,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -134984,8 +134984,8 @@
     {
       "type": "rectangle",
       "id": "fwSg1",
-      "x": 6555,
-      "y": 120229,
+      "x": 15475,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -134994,8 +134994,8 @@
     {
       "type": "icon",
       "id": "QhHlg",
-      "x": 6595,
-      "y": 120223,
+      "x": 15515,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -135006,8 +135006,8 @@
     {
       "type": "text",
       "id": "mEi67",
-      "x": 6543,
-      "y": 120209,
+      "x": 15463,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Atur ulang pengingat'",
@@ -135019,8 +135019,8 @@
       "id": "cngjj",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 116400,
+      "x": 11600,
+      "y": 18850,
       "descendants": {
         "h7m7Yb": {
           "content": "Nonaktifkan Reminder Adzan"
@@ -135036,8 +135036,8 @@
     {
       "type": "frame",
       "id": "w5P7IT",
-      "x": 5250,
-      "y": 116400,
+      "x": 11940,
+      "y": 18850,
       "name": "Beranda - Modern (Reminder Adzan)",
       "theme": {
         "style": "modern"
@@ -136301,8 +136301,8 @@
     {
       "type": "ellipse",
       "id": "sRTnA",
-      "x": 5178,
-      "y": 116476,
+      "x": 11868,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -136311,8 +136311,8 @@
     {
       "type": "rectangle",
       "id": "oncg3",
-      "x": 5190,
-      "y": 116479,
+      "x": 11880,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -136321,8 +136321,8 @@
     {
       "type": "icon",
       "id": "fee1x",
-      "x": 5230,
-      "y": 116473,
+      "x": 11920,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -136333,8 +136333,8 @@
     {
       "type": "text",
       "id": "rUo0T",
-      "x": 5178,
-      "y": 116459,
+      "x": 11868,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -136345,8 +136345,8 @@
     {
       "type": "frame",
       "id": "lzTt5",
-      "x": 5705,
-      "y": 116400,
+      "x": 12395,
+      "y": 18850,
       "name": "Ibadah - Modern (Reminder Adzan)",
       "theme": {
         "style": "modern"
@@ -137116,8 +137116,8 @@
     {
       "type": "ellipse",
       "id": "fKyn1",
-      "x": 5633,
-      "y": 116476,
+      "x": 12323,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -137126,8 +137126,8 @@
     {
       "type": "rectangle",
       "id": "I89Sjh",
-      "x": 5645,
-      "y": 116479,
+      "x": 12335,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -137136,8 +137136,8 @@
     {
       "type": "icon",
       "id": "sv1pW",
-      "x": 5685,
-      "y": 116473,
+      "x": 12375,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -137148,8 +137148,8 @@
     {
       "type": "text",
       "id": "Y0WsU9",
-      "x": 5633,
-      "y": 116459,
+      "x": 12323,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
@@ -137160,8 +137160,8 @@
     {
       "type": "frame",
       "id": "dAPoS",
-      "x": 6160,
-      "y": 116400,
+      "x": 12850,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern (sebelum dimatikan)",
       "theme": {
         "style": "modern"
@@ -138675,8 +138675,8 @@
     {
       "type": "ellipse",
       "id": "UAPew",
-      "x": 6088,
-      "y": 116476,
+      "x": 12778,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -138685,8 +138685,8 @@
     {
       "type": "rectangle",
       "id": "pvjZ6",
-      "x": 6100,
-      "y": 116479,
+      "x": 12790,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -138695,8 +138695,8 @@
     {
       "type": "icon",
       "id": "s9A8Dz",
-      "x": 6140,
-      "y": 116473,
+      "x": 12830,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -138707,8 +138707,8 @@
     {
       "type": "text",
       "id": "Qd7d5",
-      "x": 6088,
-      "y": 116459,
+      "x": 12778,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
@@ -138719,8 +138719,8 @@
     {
       "type": "frame",
       "id": "XhC5L",
-      "x": 6615,
-      "y": 116400,
+      "x": 13305,
+      "y": 18850,
       "name": "Pengaturan Sholat - Modern (Reminder Off)",
       "theme": {
         "style": "modern"
@@ -140244,8 +140244,8 @@
     {
       "type": "ellipse",
       "id": "RgQ49",
-      "x": 6543,
-      "y": 116476,
+      "x": 13233,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -140254,8 +140254,8 @@
     {
       "type": "rectangle",
       "id": "r4Bqq",
-      "x": 6555,
-      "y": 116479,
+      "x": 13245,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -140264,8 +140264,8 @@
     {
       "type": "icon",
       "id": "msodS",
-      "x": 6595,
-      "y": 116473,
+      "x": 13285,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -140276,8 +140276,8 @@
     {
       "type": "text",
       "id": "YX4pw",
-      "x": 6543,
-      "y": 116459,
+      "x": 13233,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Matikan toggle 'Notifikasi Lokal'",
@@ -140288,8 +140288,8 @@
     {
       "type": "frame",
       "id": "n3Z04V",
-      "x": 6160,
-      "y": 97650,
+      "x": 8250,
+      "y": 3850,
       "name": "Daftar Akun - Modern",
       "theme": {
         "style": "modern"
@@ -140901,8 +140901,8 @@
     {
       "type": "ellipse",
       "id": "buJfn",
-      "x": 6088,
-      "y": 97726,
+      "x": 8178,
+      "y": 3926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -140911,8 +140911,8 @@
     {
       "type": "rectangle",
       "id": "nBTUk",
-      "x": 6100,
-      "y": 97729,
+      "x": 8190,
+      "y": 3929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -140921,8 +140921,8 @@
     {
       "type": "icon",
       "id": "uBJTq",
-      "x": 6140,
-      "y": 97723,
+      "x": 8230,
+      "y": 3923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -140933,8 +140933,8 @@
     {
       "type": "text",
       "id": "r6hUe8",
-      "x": 6088,
-      "y": 97709,
+      "x": 8178,
+      "y": 3909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tile 'Masuk/Daftar' → tab Daftar",
@@ -140946,8 +140946,8 @@
       "id": "u0I1i",
       "type": "ref",
       "ref": "r7P5jg",
-      "x": 4910,
-      "y": 108900,
+      "x": 7140,
+      "y": 18850,
       "name": "Flow/HandoffCard - Izin Notifikasi Reminder Adzan",
       "descendants": {
         "h7m7Yb": {
@@ -140964,8 +140964,8 @@
     {
       "type": "frame",
       "id": "ejguS",
-      "x": 5250,
-      "y": 108900,
+      "x": 7480,
+      "y": 18850,
       "name": "Beranda - Modern (izin-notifikasi)",
       "theme": {
         "style": "modern"
@@ -142229,8 +142229,8 @@
     {
       "type": "ellipse",
       "id": "pZvTi",
-      "x": 5178,
-      "y": 108976,
+      "x": 7408,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -142239,8 +142239,8 @@
     {
       "type": "rectangle",
       "id": "AA22E",
-      "x": 5190,
-      "y": 108979,
+      "x": 7420,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -142249,8 +142249,8 @@
     {
       "type": "icon",
       "id": "t7MjY",
-      "x": 5230,
-      "y": 108973,
+      "x": 7460,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -142261,8 +142261,8 @@
     {
       "type": "text",
       "id": "p6fbgr",
-      "x": 5178,
-      "y": 108959,
+      "x": 7408,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Buka aplikasi",
@@ -142273,8 +142273,8 @@
     {
       "type": "frame",
       "id": "Q3uPys",
-      "x": 5705,
-      "y": 108900,
+      "x": 7935,
+      "y": 18850,
       "name": "Ibadah - Modern (izin-notifikasi)",
       "theme": {
         "style": "modern"
@@ -143044,8 +143044,8 @@
     {
       "type": "ellipse",
       "id": "v0rIph",
-      "x": 5633,
-      "y": 108976,
+      "x": 7863,
+      "y": 18926,
       "name": "Connector Dot",
       "fill": "#0F9D6D",
       "width": 8,
@@ -143054,8 +143054,8 @@
     {
       "type": "rectangle",
       "id": "JmKAA",
-      "x": 5645,
-      "y": 108979,
+      "x": 7875,
+      "y": 18929,
       "name": "Connector Line",
       "fill": "#0F9D6D",
       "width": 40,
@@ -143064,8 +143064,8 @@
     {
       "type": "icon",
       "id": "gulI0",
-      "x": 5685,
-      "y": 108973,
+      "x": 7915,
+      "y": 18923,
       "name": "chevron_right",
       "width": 14,
       "height": 14,
@@ -143076,14 +143076,807 @@
     {
       "type": "text",
       "id": "RBNwT",
-      "x": 5633,
-      "y": 108959,
+      "x": 7863,
+      "y": 18909,
       "name": "Connector Label",
       "fill": "#0F9D6D",
       "content": "Tap tab Ibadah",
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "T78DGU",
+      "x": 8390,
+      "y": 18850,
+      "name": "Pengaturan Sholat - Modern (izin-notifikasi)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "htLBn",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "rFrgj",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "QIIKN",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "sr4ax",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "I7oZs",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "aNkxp",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "f6uE2",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "x9eYHF",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Pengaturan Sholat",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oVXaR",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": [
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "iuJKQ",
+              "name": "Pengingat Adzan Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": "$gap-md",
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "S4R0g",
+                  "name": "Card Header Row",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "B3UMuI",
+                      "name": "Card Title",
+                      "fill": "$ink",
+                      "content": "Pengingat Adzan",
+                      "fontFamily": "$font-heading",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C6DS5",
+                      "name": "Active Badge",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        4,
+                        10
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "L3BThe",
+                          "name": "Active Count",
+                          "fill": "$primary",
+                          "content": "0 aktif",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NJtNx",
+                  "name": "Notifikasi Lokal Row",
+                  "width": "fill_container",
+                  "gap": "$gap-md",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Q1zo4A",
+                      "name": "Toggle Text Col",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "o7K7qg",
+                          "name": "Toggle Label",
+                          "fill": "$ink",
+                          "content": "Notifikasi Lokal",
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "U4FHQb",
+                          "name": "Toggle Desc",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Kirim pengingat adzan langsung dari perangkat ini",
+                          "lineHeight": 1.3,
+                          "fontFamily": "$font-body",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "u7kiPY",
+                      "name": "Switch Track (Off)",
+                      "width": 44,
+                      "height": 24,
+                      "fill": "$border",
+                      "cornerRadius": "$radius-pill",
+                      "padding": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "ktp6Y",
+                          "name": "Switch Knob",
+                          "fill": "$surface",
+                          "width": 20,
+                          "height": 20
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ceiLD",
+                  "name": "Prayer Row",
+                  "width": "fill_container",
+                  "gap": "$gap-sm",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "y7f2ol",
+                      "name": "Subuh Chip",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-tile",
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IydsB",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Subuh",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LJ7YP",
+                      "name": "Dzuhur Chip",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-tile",
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "eXbzx",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Dzuhur",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NUY86",
+                  "name": "Prayer Row",
+                  "width": "fill_container",
+                  "gap": "$gap-sm",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "x0L9F",
+                      "name": "Asr Chip",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-tile",
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "t8LCDE",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Asr",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "G09EZ",
+                      "name": "Maghrib Chip",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-tile",
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "E1O4fT",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Maghrib",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UQcCE",
+                  "name": "Prayer Row",
+                  "width": "fill_container",
+                  "gap": "$gap-sm",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cGsev",
+                      "name": "Isya Chip",
+                      "width": "fill_container",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-tile",
+                      "padding": [
+                        10,
+                        0
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "vHxSH",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Isya",
+                          "fontFamily": "$font-body",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z0zR28",
+                      "name": "Spacer",
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nIY1b",
+                  "name": "Reset Button",
+                  "width": "fill_container",
+                  "cornerRadius": "$radius-pill",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "L0PhVX",
+                      "name": "Label",
+                      "fill": "$ink",
+                      "content": "Atur ulang pengingat",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mi3Tn",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "q8FPvQ",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/RPER3": {
+                  "fill": "#00000000"
+                },
+                "x9sk1l/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "#00000000"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "YdN7T/nM62E": {
+                  "fill": "$primary"
+                },
+                "YdN7T/dMeH6": {
+                  "fill": "$primary"
+                },
+                "HSkNE/RPER3": {
+                  "fill": "#00000000"
+                },
+                "HSkNE/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "HSkNE/dMeH6": {
+                  "fill": "$text-secondary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "dwocw",
+      "x": 8318,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "HrNEc",
+      "x": 8330,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "dgkL5",
+      "x": 8370,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "heG0c",
+      "x": 8318,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap 'Jadwal Sholat' → gear → Pengaturan Sholat",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "i3z72h",
+      "x": 8845,
+      "y": 18850,
+      "name": "Izin Notifikasi - Modern (izin-notifikasi)",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "height": 700,
+      "fill": "$bg",
+      "layout": "vertical",
+      "padding": "$pad-screen",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "jZhZz",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Dim Overlay",
+          "fill": "#0F172ACC",
+          "width": 375,
+          "height": 700
+        },
+        {
+          "type": "frame",
+          "id": "hREvH",
+          "name": "Permission Dialog Card",
+          "width": 300,
+          "fill": "$surface",
+          "cornerRadius": "$radius-card",
+          "layout": "vertical",
+          "gap": "$gap-md",
+          "padding": "$pad-card",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Ih02e",
+              "name": "Icon Wrap",
+              "width": 48,
+              "height": 48,
+              "fill": "$chip-fill",
+              "cornerRadius": "$radius-pill",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "WQNDH",
+                  "name": "Bell Icon",
+                  "width": 24,
+                  "height": 24,
+                  "icon": "notifications",
+                  "library": "Material Symbols Rounded",
+                  "fill": "$primary"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "FTkIz",
+              "name": "Dialog Message",
+              "fill": "$ink",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Thullaabul 'Ilmi ingin mengirim notifikasi",
+              "lineHeight": 1.4,
+              "textAlign": "center",
+              "fontFamily": "$font-body",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "g7ihqf",
+              "name": "Dialog Sub",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Izinkan aplikasi mengirim notifikasi pengingat adzan tepat waktu.",
+              "lineHeight": 1.4,
+              "textAlign": "center",
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "lLJ0z",
+              "name": "Button Col",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$gap-sm",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QWqYT",
+                  "name": "Allow Button",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": 8,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Dt4s0",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Izinkan",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JR2oA",
+                  "name": "Deny Button",
+                  "width": "fill_container",
+                  "fill": "$chip-fill",
+                  "cornerRadius": 8,
+                  "padding": [
+                    12,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "N11Pe",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Jangan Izinkan",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "rhqBS",
+      "x": 8773,
+      "y": 18926,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "u6toJ",
+      "x": 8785,
+      "y": 18929,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "pjDwu",
+      "x": 8825,
+      "y": 18923,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "NWUmF",
+      "x": 8773,
+      "y": 18909,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Toggle 'Notifikasi Lokal' pertama kali",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "text",
+      "id": "hrpQy",
+      "x": 4910,
+      "y": 3822,
+      "name": "Row Feature Label",
+      "fill": "$ink",
+      "content": "FITUR: LOGIN / AKUN (3 usecase)",
+      "fontFamily": "Inter",
+      "fontSize": 13,
+      "fontWeight": "700",
+      "letterSpacing": 0.5
+    },
+    {
+      "type": "text",
+      "id": "VctqR",
+      "x": 4910,
+      "y": 11322,
+      "name": "Row Feature Label",
+      "fill": "$ink",
+      "content": "FITUR: BACA HADIS (2 usecase)",
+      "fontFamily": "Inter",
+      "fontSize": 13,
+      "fontWeight": "700",
+      "letterSpacing": 0.5
+    },
+    {
+      "type": "text",
+      "id": "KVpJV",
+      "x": 4910,
+      "y": 18822,
+      "name": "Row Feature Label",
+      "fill": "$ink",
+      "content": "FITUR: JADWAL SHOLAT & REMINDER (6 usecase)",
+      "fontFamily": "Inter",
+      "fontSize": 13,
+      "fontWeight": "700",
+      "letterSpacing": 0.5
     }
   ],
   "themes": {
