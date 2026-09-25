@@ -96,6 +96,7 @@ export function WebAppBlogRoute({
     hasItems,
     loading,
     onOpenItem,
+    onRetry,
     onSelectCategory,
     onSearch,
 }) {
@@ -175,7 +176,22 @@ export function WebAppBlogRoute({
                 </View>
             ) : null}
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? (
+                <View style={styles.errorBox}>
+                    <Text style={styles.error}>{error}</Text>
+                    {onRetry ? (
+                        <Pressable
+                            accessibilityRole='button'
+                            onPress={onRetry}
+                            style={styles.retryButton}
+                        >
+                            <Text style={styles.retryButtonText}>
+                                {t("explore.common.retryLater")}
+                            </Text>
+                        </Pressable>
+                    ) : null}
+                </View>
+            ) : null}
             {loading ? (
                 <View style={styles.state}>
                     <ActivityIndicator color='#047857' size='small' />
@@ -357,6 +373,9 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "800",
     },
+    errorBox: {
+        marginBottom: spacing.md,
+    },
     error: {
         backgroundColor: "#fef2f2",
         borderColor: "#fecaca",
@@ -365,8 +384,21 @@ const styles = StyleSheet.create({
         color: "#b91c1c",
         fontSize: 13,
         fontWeight: "800",
-        marginBottom: spacing.md,
         padding: spacing.md,
+    },
+    retryButton: {
+        alignItems: "center",
+        backgroundColor: "#047857",
+        borderRadius: radius.md,
+        justifyContent: "center",
+        marginTop: spacing.xs,
+        paddingHorizontal: spacing.md,
+        paddingVertical: 10,
+    },
+    retryButtonText: {
+        color: "#ffffff",
+        fontSize: 13,
+        fontWeight: "800",
     },
     empty: {
         alignItems: "center",

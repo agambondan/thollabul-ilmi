@@ -20,6 +20,7 @@ import { CompactRow, SectionHeader } from "../../components/Paper";
 import { allFeatures, belajarFeatureGroups } from "../../data/mobileFeatures";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors, radius, spacing } from "../../theme";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 
 export const LOCAL_TOOL_TYPES = [
     "tasbih",
@@ -39,50 +40,71 @@ export const LOCAL_TOOL_TYPES = [
 ];
 
 const featureIcons = {
+    amalan: ListChecks,
     "asbabun-nuzul": BookOpen,
     "asmaul-flashcard": Star,
     "asmaul-husna": Star,
+    "asmaul-wirid": Star,
     blog: BookOpen,
     bookmarks: Bookmark,
     "community-feed": MessageCircle,
+    doa: BookOpen,
+    dzikir: BookOpen,
+    faraidh: Scale,
     fiqh: BookOpen,
+    forum: MessageCircle,
     goals: Star,
+    hafalan: BookOpen,
+    hijri: Star,
+    "historical-map": Globe,
+    imsakiyah: BookOpen,
     "jarh-tadil": Scale,
     kajian: Video,
     kamus: Star,
     komunitas: Users,
     leaderboard: Users,
     lessons: BookOpen,
+    library: BookOpen,
     manasik: BookOpen,
     masjid: MapPin,
+    muhasabah: StickyNote,
+    murojaah: BookOpen,
     notes: StickyNote,
+    notifications: MessageCircle,
     "panduan-sholat": BookOpen,
     perawi: Users,
     quiz: HelpCircle,
     "radio-islamic": Radio,
     sejarah: Globe,
+    "sholat-tracker": ListChecks,
     siroh: Users,
     stats: Globe,
     tafsir: BookOpen,
+    tasbih: Star,
+    tilawah: BookOpen,
+    tokoh: Users,
     "user-wird": ListChecks,
+    wirid: BookOpen,
+    zakat: Scale,
 };
 
-const catalogSections = belajarFeatureGroups.map((group) => ({
-    key: group.key,
-    meta: group.meta,
-    rows: group.features.map((feature) => ({
-        Icon: featureIcons[feature.key] ?? BookOpen,
-        featureKey: feature.key,
-    })),
-    title: group.label,
-}));
+const buildCatalogSections = () =>
+    belajarFeatureGroups.map((group) => ({
+        key: group.key,
+        meta: group.meta,
+        rows: group.features.map((feature) => ({
+            Icon: featureIcons[feature.key] ?? BookOpen,
+            featureKey: feature.key,
+        })),
+        title: group.label,
+    }));
 
 const normalizeSearchText = (value = "") => `${value}`.trim().toLowerCase();
 
 const matchesCatalogQuery = (section, feature, query) => {
     const text = [
-        section.title,
-        section.meta,
+        section?.title,
+        section?.meta,
         feature?.title,
         feature?.subtitle,
         feature?.group,
@@ -129,7 +151,11 @@ export const getFeatureBadges = (
 
 export const getVisibleCatalogSections = (featureSearch) => {
     const query = normalizeSearchText(featureSearch);
-    return catalogSections
+    const sections = buildCatalogSections();
+
+    const matchedKeys = new Set();
+
+    const filteredSections = sections
         .map((section) => {
             const rows = section.rows
                 .map((row) => ({
@@ -142,9 +168,34 @@ export const getVisibleCatalogSections = (featureSearch) => {
                         (!query ||
                             matchesCatalogQuery(section, row.feature, query)),
                 );
+
+            rows.forEach((row) => matchedKeys.add(row.feature.key));
             return { ...section, rows };
         })
         .filter((section) => section.rows.length > 0);
+
+    if (query) {
+        const extraFeatures = allFeatures.filter(
+            (feature) =>
+                !matchedKeys.has(feature.key) &&
+                matchesCatalogQuery(null, feature, query),
+        );
+
+        if (extraFeatures.length > 0) {
+            filteredSections.push({
+                key: "search-extra-features",
+                meta: "Alat & Fitur Terkait",
+                rows: extraFeatures.map((feature) => ({
+                    Icon: featureIcons[feature.key] ?? BookOpen,
+                    feature,
+                    featureKey: feature.key,
+                })),
+                title: "Fitur Lainnya",
+            });
+        }
+    }
+
+    return filteredSections;
 };
 
 function FeatureCatalogBase({

@@ -372,6 +372,7 @@ export const belajarFeatureGroups = [
             "kajian",
             "blog",
             "radio-islamic",
+            "forum",
         ]),
     },
     {
@@ -398,6 +399,7 @@ export const belajarFeatureGroups = [
             "jarh-tadil",
             "asmaul-husna",
             "asmaul-flashcard",
+            "library",
         ]),
     },
     {

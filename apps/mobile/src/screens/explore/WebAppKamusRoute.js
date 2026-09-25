@@ -57,6 +57,17 @@ const getRoot = (item) =>
             getRaw(item).source,
     );
 
+const SUGGESTED_TERMS = [
+    { arabic: "إيمان", label: "Iman" },
+    { arabic: "كتاب", label: "Kitab" },
+    { arabic: "صلاة", label: "Sholat" },
+    { arabic: "تقوى", label: "Taqwa" },
+    { arabic: "علم", label: "Ilmu" },
+    { arabic: "رحمة", label: "Rahmat" },
+    { arabic: "قلب", label: "Qalb" },
+    { arabic: "جنة", label: "Jannah" },
+];
+
 function KamusResultCard({ item }) {
     return (
         <View style={styles.resultCard} testID='web-app-kamus-result-card'>
@@ -90,6 +101,10 @@ export function WebAppKamusRoute({
 }) {
     const { t } = useMobileLocale();
     const query = dictionaryQuery.trim();
+
+    const handleSelectSuggestion = (term) => {
+        onUpdateQuery(term.label);
+    };
 
     return (
         <ScrollView
@@ -154,6 +169,28 @@ export function WebAppKamusRoute({
                     <Text style={styles.emptyText}>
                         {t("explore.kamus.minCharsText")}
                     </Text>
+
+                    <View style={styles.suggestionsContainer}>
+                        <Text style={styles.suggestionsHeader}>
+                            Kosakata Populer:
+                        </Text>
+                        <View style={styles.suggestionChips}>
+                            {SUGGESTED_TERMS.map((term) => (
+                                <Pressable
+                                    key={term.label}
+                                    onPress={() => handleSelectSuggestion(term)}
+                                    style={styles.suggestionChip}
+                                >
+                                    <Text style={styles.suggestionChipLatin}>
+                                        {term.label}
+                                    </Text>
+                                    <Text style={styles.suggestionChipArabic}>
+                                        {term.arabic}
+                                    </Text>
+                                </Pressable>
+                            ))}
+                        </View>
+                    </View>
                 </View>
             ) : null}
 
@@ -165,6 +202,27 @@ export function WebAppKamusRoute({
                     <Text style={styles.emptyText}>
                         {t("explore.kamus.noResultText", { query })}
                     </Text>
+                    <View style={styles.suggestionsContainer}>
+                        <Text style={styles.suggestionsHeader}>
+                            Coba kata kunci lain:
+                        </Text>
+                        <View style={styles.suggestionChips}>
+                            {SUGGESTED_TERMS.map((term) => (
+                                <Pressable
+                                    key={term.label}
+                                    onPress={() => handleSelectSuggestion(term)}
+                                    style={styles.suggestionChip}
+                                >
+                                    <Text style={styles.suggestionChipLatin}>
+                                        {term.label}
+                                    </Text>
+                                    <Text style={styles.suggestionChipArabic}>
+                                        {term.arabic}
+                                    </Text>
+                                </Pressable>
+                            ))}
+                        </View>
+                    </View>
                 </View>
             ) : null}
 
@@ -286,6 +344,45 @@ const styles = StyleSheet.create({
         lineHeight: 19,
         marginTop: spacing.xs,
         textAlign: "center",
+    },
+    suggestionsContainer: {
+        marginTop: spacing.lg,
+        width: "100%",
+    },
+    suggestionsHeader: {
+        color: "#64748b",
+        fontSize: 12,
+        fontWeight: "700",
+        marginBottom: spacing.sm,
+        textAlign: "center",
+    },
+    suggestionChips: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: spacing.xs,
+        justifyContent: "center",
+    },
+    suggestionChip: {
+        alignItems: "center",
+        backgroundColor: "#ffffff",
+        borderColor: "#e2e8f0",
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: "row",
+        gap: 6,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: 6,
+    },
+    suggestionChipLatin: {
+        color: "#1e293b",
+        fontSize: 13,
+        fontWeight: "700",
+    },
+    suggestionChipArabic: {
+        color: "#059669",
+        fontFamily: "Kitab-Regular",
+        fontSize: 15,
+        lineHeight: 20,
     },
     error: {
         backgroundColor: "#fef2f2",

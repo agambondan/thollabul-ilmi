@@ -1156,7 +1156,14 @@ export function ExploreScreen({
     }, [dictionaryQuery, t]);
 
     const loadSurahContent = async (surahNumber) => {
-        if (!activeFeature?.contentType || !surahNumber) return;
+        if (!surahNumber) {
+            setSelectedSurahNumber(null);
+            setSelectedItem(null);
+            setItems([]);
+            setError("");
+            return;
+        }
+        if (!activeFeature?.contentType) return;
 
         setSelectedSurahNumber(surahNumber);
         setSelectedItem(null);
@@ -1430,6 +1437,7 @@ export function ExploreScreen({
                     : t("explore.tafsir.surahNumber", { number: selectedSurahNumber }),
                 onBack: () => {
                     setSelectedSurahNumber(null);
+                    setItems([]);
                     return true;
                 },
             });

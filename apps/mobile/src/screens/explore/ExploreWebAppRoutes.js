@@ -355,8 +355,8 @@ export function renderExploreWebAppRoute(context) {
         );
     };
 
-    const renderWebAppBookmarksScreen = () => {
-        const groupedBookmarks = visibleItems.reduce((acc, item) => {
+const renderWebAppBookmarksScreen = () => {
+        const groupedBookmarks = items.reduce((acc, item) => {
             const type = normalizeBookmarkType(
                 item?.raw?.ref_type ?? item?.meta,
             );
@@ -367,62 +367,137 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <ScrollView
-                contentContainerStyle={styles.webAppBookmarksContent}
+                contentContainerStyle={[
+                    styles.webAppBookmarksContent,
+                    webAppExploreThemeStyles.content,
+                ]}
                 keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
-                style={styles.webAppBookmarksRoot}
+                style={[
+                    styles.webAppBookmarksRoot,
+                    webAppExploreThemeStyles.root,
+                ]}
             >
                 <View testID='explore-web-app-bookmarks-surface' />
-                <View style={styles.webAppBookmarksHeader}>
+                <View
+                    style={[
+                        styles.webAppBookmarksHeader,
+                        webAppExploreThemeStyles.hero,
+                    ]}
+                >
                     <Pressable
                         accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
-                        style={styles.webAppBookmarksBack}
+                        style={[
+                            styles.webAppBookmarksBack,
+                            webAppExploreThemeStyles.backButton,
+                        ]}
                         testID='web-app-bookmarks-back'
                     >
-                        <Text style={styles.webAppBookmarksBackText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksBackText,
+                                webAppExploreThemeStyles.backText,
+                            ]}
+                        >
                             Kembali
                         </Text>
                     </Pressable>
-                    <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+                    <Text
+                        style={[
+                            styles.webAppCatalogEyebrow,
+                            webAppExploreThemeStyles.eyebrow,
+                        ]}
+                    >
+                        PERSONAL
+                    </Text>
                     <View style={styles.webAppBookmarksTitleRow}>
-                        <Text style={styles.webAppCatalogTitle}>Bookmark</Text>
-                        <Text style={styles.webAppBookmarksCount}>
+                        <Text
+                            style={[
+                                styles.webAppCatalogTitle,
+                                webAppExploreThemeStyles.title,
+                            ]}
+                        >
+                            Bookmark
+                        </Text>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksCount,
+                                webAppExploreThemeStyles.countBadge,
+                            ]}
+                        >
                             {items.length} item
                         </Text>
                     </View>
-                    <Text style={styles.webAppCatalogSubtitle}>
+                    <Text
+                        style={[
+                            styles.webAppCatalogSubtitle,
+                            webAppExploreThemeStyles.subtitle,
+                        ]}
+                    >
                         Ayat, hadith, dan referensi yang kamu simpan dari
                         dashboard belajar.
                     </Text>
                 </View>
 
                 {error ? (
-                    <Text style={styles.webAppBookmarksError}>{error}</Text>
+                    <Text
+                        style={[
+                            styles.webAppBookmarksError,
+                            webAppExploreThemeStyles.errorBox,
+                        ]}
+                    >
+                        {error}
+                    </Text>
                 ) : null}
                 {loading ? (
-                    <View style={styles.webAppBookmarksState}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksState,
+                            webAppExploreThemeStyles.stateBox,
+                        ]}
+                    >
                         <ActivityIndicator
                             color={WEB_APP_EXPLORE_ACCENT}
                             size='small'
                         />
-                        <Text style={styles.webAppBookmarksStateText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksStateText,
+                                webAppExploreThemeStyles.stateText,
+                            ]}
+                        >
                             Memuat bookmark...
                         </Text>
                     </View>
                 ) : null}
                 {!loading && !error && !items.length ? (
-                    <View style={styles.webAppBookmarksEmpty}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksEmpty,
+                            webAppExploreThemeStyles.empty,
+                        ]}
+                    >
                         <Bookmark
-                            color={WEB_APP_EXPLORE_MUTED}
+                            color={WEB_APP_EXPLORE_ACCENT}
                             size={32}
                             strokeWidth={1.8}
                         />
-                        <Text style={styles.webAppBookmarksEmptyTitle}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyTitle,
+                                webAppExploreThemeStyles.emptyTitle,
+                            ]}
+                        >
                             Belum ada bookmark.
                         </Text>
-                        <Text style={styles.webAppBookmarksEmptyText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyText,
+                                webAppExploreThemeStyles.emptyText,
+                            ]}
+                        >
                             Tandai ayat atau hadith favoritmu saat membaca.
                         </Text>
                     </View>
@@ -436,21 +511,24 @@ export function renderExploreWebAppRoute(context) {
                                     style={styles.webAppBookmarksGroup}
                                 >
                                     <View
-                                        style={
-                                            styles.webAppBookmarksGroupHeader
-                                        }
+                                        style={[
+                                            styles.webAppBookmarksGroupHeader,
+                                            webAppExploreThemeStyles.groupHeader,
+                                        ]}
                                     >
                                         <Text
-                                            style={
-                                                styles.webAppBookmarksGroupTitle
-                                            }
+                                            style={[
+                                                styles.webAppBookmarksGroupTitle,
+                                                webAppExploreThemeStyles.groupTitle,
+                                            ]}
                                         >
                                             {getBookmarkTypeLabel(type)}
                                         </Text>
                                         <Text
-                                            style={
-                                                styles.webAppBookmarksGroupCount
-                                            }
+                                            style={[
+                                                styles.webAppBookmarksGroupCount,
+                                                webAppExploreThemeStyles.groupCount,
+                                            ]}
                                         >
                                             {groupItems.length}
                                         </Text>
@@ -555,73 +633,156 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <ScrollView
-                contentContainerStyle={styles.webAppBookmarksContent}
+                contentContainerStyle={[
+                    styles.webAppBookmarksContent,
+                    webAppExploreThemeStyles.content,
+                ]}
                 keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
-                style={styles.webAppBookmarksRoot}
+                style={[
+                    styles.webAppBookmarksRoot,
+                    webAppExploreThemeStyles.root,
+                ]}
             >
                 <View testID='explore-web-app-notes-surface' />
-                <View style={styles.webAppBookmarksHeader}>
+                <View
+                    style={[
+                        styles.webAppBookmarksHeader,
+                        webAppExploreThemeStyles.hero,
+                    ]}
+                >
                     <Pressable
                         accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
-                        style={styles.webAppBookmarksBack}
+                        style={[
+                            styles.webAppBookmarksBack,
+                            webAppExploreThemeStyles.backButton,
+                        ]}
                         testID='web-app-notes-back'
                     >
-                        <Text style={styles.webAppBookmarksBackText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksBackText,
+                                webAppExploreThemeStyles.backText,
+                            ]}
+                        >
                             Kembali
                         </Text>
                     </Pressable>
-                    <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+                    <Text
+                        style={[
+                            styles.webAppCatalogEyebrow,
+                            webAppExploreThemeStyles.eyebrow,
+                        ]}
+                    >
+                        PERSONAL
+                    </Text>
                     <View style={styles.webAppBookmarksTitleRow}>
-                        <Text style={styles.webAppCatalogTitle}>Catatan</Text>
-                        <Text style={styles.webAppBookmarksCount}>
+                        <Text
+                            style={[
+                                styles.webAppCatalogTitle,
+                                webAppExploreThemeStyles.title,
+                            ]}
+                        >
+                            Catatan
+                        </Text>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksCount,
+                                webAppExploreThemeStyles.countBadge,
+                            ]}
+                        >
                             {items.length} item
                         </Text>
                     </View>
-                    <Text style={styles.webAppCatalogSubtitle}>
+                    <Text
+                        style={[
+                            styles.webAppCatalogSubtitle,
+                            webAppExploreThemeStyles.subtitle,
+                        ]}
+                    >
                         Ringkasan tadabbur, kajian, dan refleksi pribadi dalam
                         tampilan dashboard.
                     </Text>
                 </View>
 
-                <View style={styles.webAppNotesSearch}>
+                <View
+                    style={[
+                        styles.webAppNotesSearch,
+                        webAppExploreThemeStyles.search,
+                    ]}
+                >
                     <TextInput
                         onChangeText={setNotesSearch}
                         placeholder='Cari judul, isi, atau tag catatan...'
-                        placeholderTextColor={WEB_APP_EXPLORE_MUTED}
-                        style={styles.webAppCatalogInput}
+                        placeholderTextColor={webAppExploreTheme?.muted ?? WEB_APP_EXPLORE_MUTED}
+                        style={[
+                            styles.webAppCatalogInput,
+                            webAppExploreThemeStyles.input,
+                        ]}
                         testID='web-app-notes-search'
                         value={notesSearch}
                     />
                 </View>
 
                 {error ? (
-                    <Text style={styles.webAppBookmarksError}>{error}</Text>
+                    <Text
+                        style={[
+                            styles.webAppBookmarksError,
+                            webAppExploreThemeStyles.errorBox,
+                        ]}
+                    >
+                        {error}
+                    </Text>
                 ) : null}
                 {loading ? (
-                    <View style={styles.webAppBookmarksState}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksState,
+                            webAppExploreThemeStyles.stateBox,
+                        ]}
+                    >
                         <ActivityIndicator
                             color={WEB_APP_EXPLORE_ACCENT}
                             size='small'
                         />
-                        <Text style={styles.webAppBookmarksStateText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksStateText,
+                                webAppExploreThemeStyles.stateText,
+                            ]}
+                        >
                             Memuat catatan...
                         </Text>
                     </View>
                 ) : null}
                 {!loading && !error && !items.length ? (
-                    <View style={styles.webAppBookmarksEmpty}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksEmpty,
+                            webAppExploreThemeStyles.empty,
+                        ]}
+                    >
                         <StickyNote
-                            color={WEB_APP_EXPLORE_MUTED}
+                            color={WEB_APP_EXPLORE_ACCENT}
                             size={32}
                             strokeWidth={1.8}
                         />
-                        <Text style={styles.webAppBookmarksEmptyTitle}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyTitle,
+                                webAppExploreThemeStyles.emptyTitle,
+                            ]}
+                        >
                             Belum ada catatan.
                         </Text>
-                        <Text style={styles.webAppBookmarksEmptyText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyText,
+                                webAppExploreThemeStyles.emptyText,
+                            ]}
+                        >
                             Buka detail konten untuk menambahkan catatan
                             pertama.
                         </Text>
@@ -631,17 +792,37 @@ export function renderExploreWebAppRoute(context) {
                 !error &&
                 items.length > 0 &&
                 filteredNotes.length === 0 ? (
-                    <View style={styles.webAppBookmarksEmpty}>
-                        <Text style={styles.webAppBookmarksEmptyTitle}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksEmpty,
+                            webAppExploreThemeStyles.empty,
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyTitle,
+                                webAppExploreThemeStyles.emptyTitle,
+                            ]}
+                        >
                             Catatan tidak ditemukan.
                         </Text>
-                        <Text style={styles.webAppBookmarksEmptyText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyText,
+                                webAppExploreThemeStyles.emptyText,
+                            ]}
+                        >
                             Coba kata kunci lain atau kosongkan pencarian.
                         </Text>
                     </View>
                 ) : null}
                 {!loading && !error && filteredNotes.length > 0 ? (
-                    <View style={styles.webAppNotesList}>
+                    <View
+                        style={[
+                            styles.webAppNotesList,
+                            webAppExploreThemeStyles.content,
+                        ]}
+                    >
                         {filteredNotes.map(renderWebAppNoteCard)}
                     </View>
                 ) : null}
@@ -666,20 +847,36 @@ export function renderExploreWebAppRoute(context) {
                 key={`${getExploreItemKey(item)}-${index}`}
                 onLongPress={() => setItemActionSheet({ visible: true, item })}
                 onPress={() => openItemDetail(item)}
-                style={styles.webAppGoalCard}
+                style={[styles.webAppGoalCard, webAppExploreThemeStyles.card]}
                 testID='web-app-goal-card'
             >
-                <View style={styles.webAppGoalHeader}>
-                    <View style={styles.webAppGoalIcon}>
+                <View
+                    style={[
+                        styles.webAppGoalHeader,
+                        webAppExploreThemeStyles.groupHeader,
+                    ]}
+                >
+                    <View
+                        style={[
+                            styles.webAppGoalIcon,
+                            webAppExploreThemeStyles.iconBox,
+                        ]}
+                    >
                         {completed ? (
                             <CheckCircle2
-                                color={WEB_APP_EXPLORE_ACCENT}
+                                color={
+                                    webAppExploreTheme?.accent ??
+                                    WEB_APP_EXPLORE_ACCENT
+                                }
                                 size={18}
                                 strokeWidth={2.2}
                             />
                         ) : (
                             <Flag
-                                color={WEB_APP_EXPLORE_ACCENT}
+                                color={
+                                    webAppExploreTheme?.accent ??
+                                    WEB_APP_EXPLORE_ACCENT
+                                }
                                 size={18}
                                 strokeWidth={2.2}
                             />
@@ -688,14 +885,20 @@ export function renderExploreWebAppRoute(context) {
                     <View style={styles.webAppGoalTitleBlock}>
                         <Text
                             numberOfLines={2}
-                            style={styles.webAppBookmarkTitle}
+                            style={[
+                                styles.webAppBookmarkTitle,
+                                webAppExploreThemeStyles.cardTitle,
+                            ]}
                         >
                             {item.title || "Target belajar"}
                         </Text>
                         {metaLine ? (
                             <Text
                                 numberOfLines={2}
-                                style={styles.webAppBookmarkText}
+                                style={[
+                                    styles.webAppBookmarkText,
+                                    webAppExploreThemeStyles.cardText,
+                                ]}
                             >
                                 {metaLine}
                             </Text>
@@ -711,11 +914,22 @@ export function renderExploreWebAppRoute(context) {
                     </Text>
                 </View>
                 {item.body ? (
-                    <Text numberOfLines={3} style={styles.webAppGoalBody}>
+                    <Text
+                        numberOfLines={3}
+                        style={[
+                            styles.webAppGoalBody,
+                            webAppExploreThemeStyles.cardText,
+                        ]}
+                    >
                         {item.body}
                     </Text>
                 ) : null}
-                <View style={styles.webAppGoalProgressTrack}>
+                <View
+                    style={[
+                        styles.webAppGoalProgressTrack,
+                        webAppExploreThemeStyles.progressTrack,
+                    ]}
+                >
                     <View
                         style={[
                             styles.webAppGoalProgressFill,
@@ -726,7 +940,12 @@ export function renderExploreWebAppRoute(context) {
                     />
                 </View>
                 <View style={styles.webAppBookmarkFooter}>
-                    <Text style={styles.webAppBookmarkHint}>
+                    <Text
+                        style={[
+                            styles.webAppBookmarkHint,
+                            webAppExploreThemeStyles.cardMeta,
+                        ]}
+                    >
                         {progress}% progres
                     </Text>
                     <Pressable
@@ -755,64 +974,143 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <ScrollView
-                contentContainerStyle={styles.webAppBookmarksContent}
+                contentContainerStyle={[
+                    styles.webAppBookmarksContent,
+                    webAppExploreThemeStyles.content,
+                ]}
                 keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
-                style={styles.webAppBookmarksRoot}
+                style={[
+                    styles.webAppBookmarksRoot,
+                    webAppExploreThemeStyles.root,
+                ]}
             >
                 <View testID='explore-web-app-goals-surface' />
-                <View style={styles.webAppBookmarksHeader}>
+                <View
+                    style={[
+                        styles.webAppBookmarksHeader,
+                        webAppExploreThemeStyles.hero,
+                    ]}
+                >
                     <Pressable
                         accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
-                        style={styles.webAppBookmarksBack}
+                        style={[
+                            styles.webAppBookmarksBack,
+                            webAppExploreThemeStyles.backButton,
+                        ]}
                         testID='web-app-goals-back'
                     >
-                        <Text style={styles.webAppBookmarksBackText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksBackText,
+                                webAppExploreThemeStyles.backText,
+                            ]}
+                        >
                             Kembali
                         </Text>
                     </Pressable>
-                    <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+                    <Text
+                        style={[
+                            styles.webAppCatalogEyebrow,
+                            webAppExploreThemeStyles.eyebrow,
+                        ]}
+                    >
+                        PERSONAL
+                    </Text>
                     <View style={styles.webAppBookmarksTitleRow}>
-                        <Text style={styles.webAppCatalogTitle}>
+                        <Text
+                            style={[
+                                styles.webAppCatalogTitle,
+                                webAppExploreThemeStyles.title,
+                            ]}
+                        >
                             Target Belajar
                         </Text>
-                        <Text style={styles.webAppBookmarksCount}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksCount,
+                                webAppExploreThemeStyles.countBadge,
+                            ]}
+                        >
                             {items.length} target
                         </Text>
                     </View>
-                    <Text style={styles.webAppCatalogSubtitle}>
+                    <Text
+                        style={[
+                            styles.webAppCatalogSubtitle,
+                            webAppExploreThemeStyles.subtitle,
+                        ]}
+                    >
                         Target hafalan, kajian, dan rutinitas ilmu dalam
                         tampilan dashboard.
                     </Text>
                 </View>
 
                 {error ? (
-                    <Text style={styles.webAppBookmarksError}>{error}</Text>
+                    <Text
+                        style={[
+                            styles.webAppBookmarksError,
+                            webAppExploreThemeStyles.errorBox,
+                        ]}
+                    >
+                        {error}
+                    </Text>
                 ) : null}
                 {loading ? (
-                    <View style={styles.webAppBookmarksState}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksState,
+                            webAppExploreThemeStyles.stateBox,
+                        ]}
+                    >
                         <ActivityIndicator
-                            color={WEB_APP_EXPLORE_ACCENT}
+                            color={
+                                webAppExploreTheme?.accent ??
+                                WEB_APP_EXPLORE_ACCENT
+                            }
                             size='small'
                         />
-                        <Text style={styles.webAppBookmarksStateText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksStateText,
+                                webAppExploreThemeStyles.stateText,
+                            ]}
+                        >
                             Memuat target...
                         </Text>
                     </View>
                 ) : null}
                 {!loading && !error && !items.length ? (
-                    <View style={styles.webAppBookmarksEmpty}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksEmpty,
+                            webAppExploreThemeStyles.empty,
+                        ]}
+                    >
                         <Flag
-                            color={WEB_APP_EXPLORE_MUTED}
+                            color={
+                                webAppExploreTheme?.muted ??
+                                WEB_APP_EXPLORE_MUTED
+                            }
                             size={32}
                             strokeWidth={1.8}
                         />
-                        <Text style={styles.webAppBookmarksEmptyTitle}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyTitle,
+                                webAppExploreThemeStyles.emptyTitle,
+                            ]}
+                        >
                             Belum ada target.
                         </Text>
-                        <Text style={styles.webAppBookmarksEmptyText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyText,
+                                webAppExploreThemeStyles.emptyText,
+                            ]}
+                        >
                             Buat target belajar dari dashboard web atau fitur
                             personal yang tersedia.
                         </Text>
@@ -821,23 +1119,48 @@ export function renderExploreWebAppRoute(context) {
                 {!loading && !error && visibleItems.length > 0 ? (
                     <>
                         <View style={styles.webAppGoalsSummary}>
-                            <View style={styles.webAppGoalSummaryPill}>
+                            <View
+                                style={[
+                                    styles.webAppGoalSummaryPill,
+                                    webAppExploreThemeStyles.statCard,
+                                ]}
+                            >
                                 <Circle
-                                    color={WEB_APP_EXPLORE_ACCENT}
+                                    color={
+                                        webAppExploreTheme?.accent ??
+                                        WEB_APP_EXPLORE_ACCENT
+                                    }
                                     size={12}
                                     strokeWidth={2.2}
                                 />
-                                <Text style={styles.webAppGoalSummaryText}>
+                                <Text
+                                    style={[
+                                        styles.webAppGoalSummaryText,
+                                        webAppExploreThemeStyles.statNumber,
+                                    ]}
+                                >
                                     {activeGoals} aktif
                                 </Text>
                             </View>
-                            <View style={styles.webAppGoalSummaryPill}>
+                            <View
+                                style={[
+                                    styles.webAppGoalSummaryPill,
+                                    webAppExploreThemeStyles.statCard,
+                                ]}
+                            >
                                 <CheckCircle2
-                                    color='#9ca3af'
+                                    color={
+                                        webAppExploreTheme?.muted ?? "#9ca3af"
+                                    }
                                     size={13}
                                     strokeWidth={2.2}
                                 />
-                                <Text style={styles.webAppGoalSummaryText}>
+                                <Text
+                                    style={[
+                                        styles.webAppGoalSummaryText,
+                                        webAppExploreThemeStyles.statNumber,
+                                    ]}
+                                >
                                     {completedGoals} selesai
                                 </Text>
                             </View>
@@ -867,22 +1190,48 @@ export function renderExploreWebAppRoute(context) {
                 key={`${getExploreItemKey(item)}-${index}`}
                 onLongPress={() => setItemActionSheet({ visible: true, item })}
                 onPress={() => openItemDetail(item)}
-                style={styles.webAppMuhasabahCard}
+                style={[
+                    styles.webAppMuhasabahCard,
+                    webAppExploreThemeStyles.card,
+                ]}
                 testID='web-app-muhasabah-card'
             >
-                <View style={styles.webAppMuhasabahHeader}>
-                    <View style={styles.webAppNoteIcon}>
+                <View
+                    style={[
+                        styles.webAppMuhasabahHeader,
+                        webAppExploreThemeStyles.groupHeader,
+                    ]}
+                >
+                    <View
+                        style={[
+                            styles.webAppNoteIcon,
+                            webAppExploreThemeStyles.iconBox,
+                        ]}
+                    >
                         <Pencil
-                            color={WEB_APP_EXPLORE_ACCENT}
+                            color={
+                                webAppExploreTheme?.accent ??
+                                WEB_APP_EXPLORE_ACCENT
+                            }
                             size={18}
                             strokeWidth={2}
                         />
                     </View>
                     <View style={styles.webAppMuhasabahTitleBlock}>
-                        <Text style={styles.webAppBookmarkType}>MUHASABAH</Text>
+                        <Text
+                            style={[
+                                styles.webAppBookmarkType,
+                                webAppExploreThemeStyles.eyebrow,
+                            ]}
+                        >
+                            MUHASABAH
+                        </Text>
                         <Text
                             numberOfLines={1}
-                            style={styles.webAppBookmarkTitle}
+                            style={[
+                                styles.webAppBookmarkTitle,
+                                webAppExploreThemeStyles.cardTitle,
+                            ]}
                         >
                             {dateLabel || item.title || "Refleksi diri"}
                         </Text>
@@ -890,12 +1239,23 @@ export function renderExploreWebAppRoute(context) {
                     <Text style={styles.webAppMuhasabahMood}>{moodLabel}</Text>
                 </View>
                 {content ? (
-                    <Text numberOfLines={4} style={styles.webAppMuhasabahText}>
+                    <Text
+                        numberOfLines={4}
+                        style={[
+                            styles.webAppMuhasabahText,
+                            webAppExploreThemeStyles.cardText,
+                        ]}
+                    >
                         {content}
                     </Text>
                 ) : null}
                 <View style={styles.webAppBookmarkFooter}>
-                    <Text style={styles.webAppBookmarkHint}>
+                    <Text
+                        style={[
+                            styles.webAppBookmarkHint,
+                            webAppExploreThemeStyles.cardMeta,
+                        ]}
+                    >
                         Ketuk untuk membaca
                     </Text>
                     <Pressable
@@ -925,62 +1285,143 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <ScrollView
-                contentContainerStyle={styles.webAppBookmarksContent}
+                contentContainerStyle={[
+                    styles.webAppBookmarksContent,
+                    webAppExploreThemeStyles.content,
+                ]}
                 keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
-                style={styles.webAppBookmarksRoot}
+                style={[
+                    styles.webAppBookmarksRoot,
+                    webAppExploreThemeStyles.root,
+                ]}
             >
                 <View testID='explore-web-app-muhasabah-surface' />
-                <View style={styles.webAppBookmarksHeader}>
+                <View
+                    style={[
+                        styles.webAppBookmarksHeader,
+                        webAppExploreThemeStyles.hero,
+                    ]}
+                >
                     <Pressable
                         accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
-                        style={styles.webAppBookmarksBack}
+                        style={[
+                            styles.webAppBookmarksBack,
+                            webAppExploreThemeStyles.backButton,
+                        ]}
                         testID='web-app-muhasabah-back'
                     >
-                        <Text style={styles.webAppBookmarksBackText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksBackText,
+                                webAppExploreThemeStyles.backText,
+                            ]}
+                        >
                             Kembali
                         </Text>
                     </Pressable>
-                    <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+                    <Text
+                        style={[
+                            styles.webAppCatalogEyebrow,
+                            webAppExploreThemeStyles.eyebrow,
+                        ]}
+                    >
+                        PERSONAL
+                    </Text>
                     <View style={styles.webAppBookmarksTitleRow}>
-                        <Text style={styles.webAppCatalogTitle}>Muhasabah</Text>
-                        <Text style={styles.webAppBookmarksCount}>
+                        <Text
+                            style={[
+                                styles.webAppCatalogTitle,
+                                webAppExploreThemeStyles.title,
+                            ]}
+                        >
+                            Muhasabah
+                        </Text>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksCount,
+                                webAppExploreThemeStyles.countBadge,
+                            ]}
+                        >
                             {items.length} catatan
                         </Text>
                     </View>
-                    <Text style={styles.webAppCatalogSubtitle}>
+                    <Text
+                        style={[
+                            styles.webAppCatalogSubtitle,
+                            webAppExploreThemeStyles.subtitle,
+                        ]}
+                    >
                         Jurnal refleksi harian untuk menjaga arah belajar dan
                         ibadah.
                     </Text>
                 </View>
 
                 {error ? (
-                    <Text style={styles.webAppBookmarksError}>{error}</Text>
+                    <Text
+                        style={[
+                            styles.webAppBookmarksError,
+                            webAppExploreThemeStyles.errorBox,
+                        ]}
+                    >
+                        {error}
+                    </Text>
                 ) : null}
                 {loading ? (
-                    <View style={styles.webAppBookmarksState}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksState,
+                            webAppExploreThemeStyles.stateBox,
+                        ]}
+                    >
                         <ActivityIndicator
-                            color={WEB_APP_EXPLORE_ACCENT}
+                            color={
+                                webAppExploreTheme?.accent ??
+                                WEB_APP_EXPLORE_ACCENT
+                            }
                             size='small'
                         />
-                        <Text style={styles.webAppBookmarksStateText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksStateText,
+                                webAppExploreThemeStyles.stateText,
+                            ]}
+                        >
                             Memuat muhasabah...
                         </Text>
                     </View>
                 ) : null}
                 {!loading && !error && !items.length ? (
-                    <View style={styles.webAppBookmarksEmpty}>
+                    <View
+                        style={[
+                            styles.webAppBookmarksEmpty,
+                            webAppExploreThemeStyles.empty,
+                        ]}
+                    >
                         <Pencil
-                            color={WEB_APP_EXPLORE_MUTED}
+                            color={
+                                webAppExploreTheme?.muted ??
+                                WEB_APP_EXPLORE_MUTED
+                            }
                             size={32}
                             strokeWidth={1.8}
                         />
-                        <Text style={styles.webAppBookmarksEmptyTitle}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyTitle,
+                                webAppExploreThemeStyles.emptyTitle,
+                            ]}
+                        >
                             Belum ada muhasabah.
                         </Text>
-                        <Text style={styles.webAppBookmarksEmptyText}>
+                        <Text
+                            style={[
+                                styles.webAppBookmarksEmptyText,
+                                webAppExploreThemeStyles.emptyText,
+                            ]}
+                        >
                             Tulis refleksi dari dashboard web atau lanjutkan
                             saat sudah login.
                         </Text>
@@ -989,27 +1430,52 @@ export function renderExploreWebAppRoute(context) {
                 {!loading && !error && visibleItems.length > 0 ? (
                     <>
                         <View style={styles.webAppMuhasabahSummary}>
-                            <View style={styles.webAppGoalSummaryPill}>
+                            <View
+                                style={[
+                                    styles.webAppGoalSummaryPill,
+                                    webAppExploreThemeStyles.statCard,
+                                ]}
+                            >
                                 <StickyNote
-                                    color={WEB_APP_EXPLORE_ACCENT}
-                                    size={14}
-                                    strokeWidth={2.2}
-                                />
-                                <Text style={styles.webAppGoalSummaryText}>
-                                    {visibleItems.length} refleksi
-                                </Text>
-                            </View>
-                            <View style={styles.webAppGoalSummaryPill}>
-                                <CheckCircle2
                                     color={
-                                        hasTodayEntry
-                                            ? WEB_APP_EXPLORE_ACCENT
-                                            : "#9ca3af"
+                                        webAppExploreTheme?.accent ??
+                                        WEB_APP_EXPLORE_ACCENT
                                     }
                                     size={14}
                                     strokeWidth={2.2}
                                 />
-                                <Text style={styles.webAppGoalSummaryText}>
+                                <Text
+                                    style={[
+                                        styles.webAppGoalSummaryText,
+                                        webAppExploreThemeStyles.statNumber,
+                                    ]}
+                                >
+                                    {visibleItems.length} refleksi
+                                </Text>
+                            </View>
+                            <View
+                                style={[
+                                    styles.webAppGoalSummaryPill,
+                                    webAppExploreThemeStyles.statCard,
+                                ]}
+                            >
+                                <CheckCircle2
+                                    color={
+                                        hasTodayEntry
+                                            ? webAppExploreTheme?.accent ??
+                                              WEB_APP_EXPLORE_ACCENT
+                                            : webAppExploreTheme?.muted ??
+                                              "#9ca3af"
+                                    }
+                                    size={14}
+                                    strokeWidth={2.2}
+                                />
+                                <Text
+                                    style={[
+                                        styles.webAppGoalSummaryText,
+                                        webAppExploreThemeStyles.statNumber,
+                                    ]}
+                                >
                                     {hasTodayEntry
                                         ? "Hari ini terisi"
                                         : "Hari ini kosong"}
@@ -2433,6 +2899,7 @@ export function renderExploreWebAppRoute(context) {
                 hasItems={Boolean(visibleItems.length)}
                 loading={loading}
                 onOpenItem={openItemDetail}
+                onRetry={() => loadFeature(activeFeature)}
                 onSearch={setBlogSearch}
                 onSelectCategory={setBlogCategory}
             />
@@ -2473,11 +2940,13 @@ export function renderExploreWebAppRoute(context) {
         return (
             <WebAppFiqhRoute
                 error={error}
+                isDarkTheme={isDarkTheme}
                 items={items}
                 loading={loading}
                 onLoadMore={loadMoreFeature}
                 onOpenItem={openItemDetail}
                 pagination={pagination}
+                webAppExploreThemeStyles={webAppExploreThemeStyles}
             />
         );
     }
