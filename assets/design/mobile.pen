@@ -182665,6 +182665,50 @@
           ]
         }
       ]
+    },
+    {
+      "type": "ellipse",
+      "id": "pqhxm",
+      "x": 6088,
+      "y": 127676,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "v31QHU",
+      "x": 6100,
+      "y": 127679,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "k9uNg",
+      "x": 6140,
+      "y": 127673,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "pINIE",
+      "x": 6088,
+      "y": 127659,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tile 'Kalender Hijriah'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
     }
   ],
   "themes": {
