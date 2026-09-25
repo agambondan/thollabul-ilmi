@@ -24,6 +24,7 @@ import {
 import { useFeedback } from "../context/FeedbackContext";
 import { useSession } from "../context/SessionContext";
 import { colors, radius, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import {
     getPushNotificationAvailability,
     getPushNotificationRegistration,
@@ -178,16 +179,96 @@ const NOTIF_TABS = [
     { key: "inbox", label: "Kotak Masuk" },
 ];
 
-const WEB_APP_NOTIF_SURFACE = "#111827";
-const WEB_APP_NOTIF_TILE = "#1e293b";
-const WEB_APP_NOTIF_BORDER = "#243044";
-const WEB_APP_NOTIF_ACCENT = "#34d399";
-const WEB_APP_NOTIF_MUTED = "#94a3b8";
+const createWebAppNotifStyles = (isDark) => {
+    const accent = isDark ? "#34d399" : "#047857";
+    const muted = isDark ? "#94a3b8" : "#64748b";
+    const surface = isDark ? "#111827" : "#ffffff";
+    const tile = isDark ? "#1e293b" : "#f8fafc";
+    const border = isDark ? "#243044" : "#e5e7eb";
+    const textStrong = isDark ? "#f8fafc" : "#111827";
+    const secondaryText = isDark ? "#d1fae5" : "#047857";
+
+    return StyleSheet.create({
+        webAppCard: {
+            backgroundColor: surface,
+            borderColor: border,
+            borderRadius: radius.md,
+            shadowOpacity: 0,
+        },
+        webAppCardMeta: {
+            color: accent,
+        },
+        webAppCardTitle: {
+            color: textStrong,
+            fontFamily: undefined,
+        },
+        webAppIconBox: {
+            backgroundColor: tile,
+            borderColor: border,
+        },
+        webAppInboxItem: {
+            borderBottomColor: border,
+        },
+        webAppMessage: {
+            color: accent,
+        },
+        webAppPanel: {
+            backgroundColor: tile,
+            borderColor: border,
+        },
+        webAppSecondaryButton: {
+            backgroundColor: tile,
+            borderColor: border,
+        },
+        webAppSecondaryText: {
+            color: secondaryText,
+        },
+        webAppSettingRow: {
+            borderBottomColor: border,
+        },
+        webAppTab: {
+            backgroundColor: surface,
+        },
+        webAppTabActive: {
+            borderBottomColor: accent,
+        },
+        webAppTabs: {
+            borderBottomColor: border,
+        },
+        webAppTabText: {
+            color: muted,
+        },
+        webAppTabTextActive: {
+            color: accent,
+        },
+        webAppTextMuted: {
+            color: muted,
+        },
+        webAppTextStrong: {
+            color: textStrong,
+        },
+        webAppTimeInput: {
+            backgroundColor: tile,
+            borderColor: border,
+            color: textStrong,
+        },
+        webAppToggle: {
+            backgroundColor: tile,
+            borderColor: border,
+        },
+        webAppToggleText: {
+            color: muted,
+        },
+    });
+};
 
 export function NotificationCenter({ variant = "classic" }) {
     const { session } = useSession();
     const { showError, showSuccess } = useFeedback();
     const isWebApp = variant === "webApp";
+    const { isDarkTheme } = useLayoutModePreference();
+    const webAppStyles = isWebApp ? createWebAppNotifStyles(isDarkTheme) : null;
+    const webAppAccent = isDarkTheme ? "#34d399" : "#047857";
     const hasSession = Boolean(session?.token);
     const [activeTab, setActiveTab] = useState("settings");
     const [settings, setSettings] = useState(defaultSettings);
@@ -695,7 +776,9 @@ export function NotificationCenter({ variant = "classic" }) {
                     : "notification-center-classic"
             }
         >
-            <View style={[styles.tabs, isWebApp ? styles.webAppTabs : null]}>
+            <View
+                style={[styles.tabs, isWebApp ? webAppStyles.webAppTabs : null]}
+            >
                 {visibleTabs.map((tab) => (
                     <Pressable
                         accessibilityRole='tab'
@@ -711,22 +794,22 @@ export function NotificationCenter({ variant = "classic" }) {
                         }}
                         style={[
                             styles.tab,
-                            isWebApp ? styles.webAppTab : null,
+                            isWebApp ? webAppStyles.webAppTab : null,
                             activeTab === tab.key ? styles.tabActive : null,
                             isWebApp && activeTab === tab.key
-                                ? styles.webAppTabActive
+                                ? webAppStyles.webAppTabActive
                                 : null,
                         ]}
                     >
                         <Text
                             style={[
                                 styles.tabText,
-                                isWebApp ? styles.webAppTabText : null,
+                                isWebApp ? webAppStyles.webAppTabText : null,
                                 activeTab === tab.key
                                     ? styles.tabTextActive
                                     : null,
                                 isWebApp && activeTab === tab.key
-                                    ? styles.webAppTabTextActive
+                                    ? webAppStyles.webAppTabTextActive
                                     : null,
                             ]}
                         >
@@ -740,15 +823,19 @@ export function NotificationCenter({ variant = "classic" }) {
             </View>
 
             {activeTab === "settings" ? (
-                <Card style={isWebApp ? styles.webAppCard : null}>
+                <Card style={isWebApp ? webAppStyles.webAppCard : null}>
                     <CardTitle
                         meta={
                             hasSession
                                 ? `${activeReminderCount} aktif · sinkron cloud`
                                 : `${activeReminderCount} aktif · lokal`
                         }
-                        metaStyle={isWebApp ? styles.webAppCardMeta : null}
-                        titleStyle={isWebApp ? styles.webAppCardTitle : null}
+                        metaStyle={
+                            isWebApp ? webAppStyles.webAppCardMeta : null
+                        }
+                        titleStyle={
+                            isWebApp ? webAppStyles.webAppCardTitle : null
+                        }
                     >
                         Pengaturan Notifikasi
                     </CardTitle>
@@ -756,13 +843,15 @@ export function NotificationCenter({ variant = "classic" }) {
                         <View
                             style={[
                                 styles.localNotice,
-                                isWebApp ? styles.webAppPanel : null,
+                                isWebApp ? webAppStyles.webAppPanel : null,
                             ]}
                         >
                             <Text
                                 style={[
                                     styles.localNoticeTitle,
-                                    isWebApp ? styles.webAppTextStrong : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextStrong
+                                        : null,
                                 ]}
                             >
                                 Reminder lokal tetap aktif
@@ -770,7 +859,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             <Text
                                 style={[
                                     styles.localNoticeText,
-                                    isWebApp ? styles.webAppTextMuted : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextMuted
+                                        : null,
                                 ]}
                             >
                                 Simpan jadwal di HP ini. Login diperlukan hanya
@@ -781,21 +872,17 @@ export function NotificationCenter({ variant = "classic" }) {
                     <View
                         style={[
                             styles.pushBox,
-                            isWebApp ? styles.webAppPanel : null,
+                            isWebApp ? webAppStyles.webAppPanel : null,
                         ]}
                     >
                         <View
                             style={[
                                 styles.pushIcon,
-                                isWebApp ? styles.webAppIconBox : null,
+                                isWebApp ? webAppStyles.webAppIconBox : null,
                             ]}
                         >
                             <BellRing
-                                color={
-                                    isWebApp
-                                        ? WEB_APP_NOTIF_ACCENT
-                                        : colors.primary
-                                }
+                                color={isWebApp ? webAppAccent : colors.primary}
                                 size={18}
                                 strokeWidth={2.2}
                             />
@@ -804,7 +891,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             <Text
                                 style={[
                                     styles.settingTitle,
-                                    isWebApp ? styles.webAppTextStrong : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextStrong
+                                        : null,
                                 ]}
                             >
                                 Push native
@@ -812,7 +901,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             <Text
                                 style={[
                                     styles.settingMeta,
-                                    isWebApp ? styles.webAppTextMuted : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextMuted
+                                        : null,
                                 ]}
                             >
                                 {hasSession
@@ -834,7 +925,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             onPress={enablePush}
                             style={[
                                 styles.pushButton,
-                                isWebApp ? styles.webAppSecondaryButton : null,
+                                isWebApp
+                                    ? webAppStyles.webAppSecondaryButton
+                                    : null,
                                 !hasSession ||
                                 pushState.loading ||
                                 !pushNotificationsSupported()
@@ -852,7 +945,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.pushButtonText,
                                         isWebApp
-                                            ? styles.webAppSecondaryText
+                                            ? webAppStyles.webAppSecondaryText
                                             : null,
                                     ]}
                                 >
@@ -880,7 +973,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             onPress={testPush}
                             style={[
                                 styles.secondaryButtonCompact,
-                                isWebApp ? styles.webAppSecondaryButton : null,
+                                isWebApp
+                                    ? webAppStyles.webAppSecondaryButton
+                                    : null,
                                 !hasSession ||
                                 pushState.testLoading ||
                                 pushState.status !== "enabled"
@@ -898,7 +993,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.secondaryText,
                                         isWebApp
-                                            ? styles.webAppSecondaryText
+                                            ? webAppStyles.webAppSecondaryText
                                             : null,
                                     ]}
                                 >
@@ -909,7 +1004,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         <Text
                             style={[
                                 styles.pushHint,
-                                isWebApp ? styles.webAppTextMuted : null,
+                                isWebApp ? webAppStyles.webAppTextMuted : null,
                             ]}
                         >
                             {!hasSession
@@ -922,14 +1017,16 @@ export function NotificationCenter({ variant = "classic" }) {
                     <View
                         style={[
                             styles.settingRow,
-                            isWebApp ? styles.webAppSettingRow : null,
+                            isWebApp ? webAppStyles.webAppSettingRow : null,
                         ]}
                     >
                         <View style={styles.settingBody}>
                             <Text
                                 style={[
                                     styles.settingTitle,
-                                    isWebApp ? styles.webAppTextStrong : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextStrong
+                                        : null,
                                 ]}
                             >
                                 Quiet hours
@@ -937,7 +1034,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             <Text
                                 style={[
                                     styles.settingMeta,
-                                    isWebApp ? styles.webAppTextMuted : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextMuted
+                                        : null,
                                 ]}
                             >
                                 Tahan reminder di jam tenang
@@ -957,7 +1056,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             }
                             style={[
                                 styles.toggle,
-                                isWebApp ? styles.webAppToggle : null,
+                                isWebApp ? webAppStyles.webAppToggle : null,
                                 quietHours.is_active
                                     ? styles.toggleActive
                                     : null,
@@ -966,7 +1065,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             <Text
                                 style={[
                                     styles.toggleText,
-                                    isWebApp ? styles.webAppToggleText : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppToggleText
+                                        : null,
                                     quietHours.is_active
                                         ? styles.toggleTextActive
                                         : null,
@@ -1058,7 +1159,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             key={item.type}
                             style={[
                                 styles.settingRow,
-                                isWebApp ? styles.webAppSettingRow : null,
+                                isWebApp ? webAppStyles.webAppSettingRow : null,
                             ]}
                         >
                             <View style={styles.settingBody}>
@@ -1066,7 +1167,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.settingTitle,
                                         isWebApp
-                                            ? styles.webAppTextStrong
+                                            ? webAppStyles.webAppTextStrong
                                             : null,
                                     ]}
                                 >
@@ -1076,7 +1177,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.settingMeta,
                                         isWebApp
-                                            ? styles.webAppTextMuted
+                                            ? webAppStyles.webAppTextMuted
                                             : null,
                                     ]}
                                 >
@@ -1098,7 +1199,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.timeInput,
                                         isWebApp
-                                            ? styles.webAppTimeInput
+                                            ? webAppStyles.webAppTimeInput
                                             : null,
                                     ]}
                                     value={item.time}
@@ -1116,7 +1217,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.timeButton,
                                         isWebApp
-                                            ? styles.webAppSecondaryButton
+                                            ? webAppStyles.webAppSecondaryButton
                                             : null,
                                     ]}
                                 >
@@ -1124,7 +1225,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                         style={[
                                             styles.timeButtonText,
                                             isWebApp
-                                                ? styles.webAppSecondaryText
+                                                ? webAppStyles.webAppSecondaryText
                                                 : null,
                                         ]}
                                     >
@@ -1145,7 +1246,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                 }
                                 style={[
                                     styles.toggle,
-                                    isWebApp ? styles.webAppToggle : null,
+                                    isWebApp ? webAppStyles.webAppToggle : null,
                                     item.is_active ? styles.toggleActive : null,
                                 ]}
                             >
@@ -1153,7 +1254,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                     style={[
                                         styles.toggleText,
                                         isWebApp
-                                            ? styles.webAppToggleText
+                                            ? webAppStyles.webAppToggleText
                                             : null,
                                         item.is_active
                                             ? styles.toggleTextActive
@@ -1169,7 +1270,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         <View
                             style={[
                                 styles.previewBox,
-                                isWebApp ? styles.webAppPanel : null,
+                                isWebApp ? webAppStyles.webAppPanel : null,
                             ]}
                         >
                             <SectionHeader
@@ -1207,13 +1308,15 @@ export function NotificationCenter({ variant = "classic" }) {
                         <View
                             style={[
                                 styles.previewBox,
-                                isWebApp ? styles.webAppPanel : null,
+                                isWebApp ? webAppStyles.webAppPanel : null,
                             ]}
                         >
                             <Text
                                 style={[
                                     styles.previewTitle,
-                                    isWebApp ? styles.webAppTextStrong : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextStrong
+                                        : null,
                                 ]}
                             >
                                 Belum ada reminder aktif
@@ -1221,7 +1324,9 @@ export function NotificationCenter({ variant = "classic" }) {
                             <Text
                                 style={[
                                     styles.previewNote,
-                                    isWebApp ? styles.webAppTextMuted : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppTextMuted
+                                        : null,
                                 ]}
                             >
                                 Aktifkan minimal satu kategori untuk
@@ -1287,7 +1392,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         <Text
                             style={[
                                 styles.message,
-                                isWebApp ? styles.webAppMessage : null,
+                                isWebApp ? webAppStyles.webAppMessage : null,
                             ]}
                         >
                             {message}
@@ -1329,11 +1434,15 @@ export function NotificationCenter({ variant = "classic" }) {
                     ) : null}
                 </Card>
             ) : (
-                <Card style={isWebApp ? styles.webAppCard : null}>
+                <Card style={isWebApp ? webAppStyles.webAppCard : null}>
                     <CardTitle
                         meta={`${unreadCount} belum dibaca`}
-                        metaStyle={isWebApp ? styles.webAppCardMeta : null}
-                        titleStyle={isWebApp ? styles.webAppCardTitle : null}
+                        metaStyle={
+                            isWebApp ? webAppStyles.webAppCardMeta : null
+                        }
+                        titleStyle={
+                            isWebApp ? webAppStyles.webAppCardTitle : null
+                        }
                     >
                         Kotak Masuk
                     </CardTitle>
@@ -1390,7 +1499,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         <Text
                             style={[
                                 styles.body,
-                                isWebApp ? styles.webAppTextMuted : null,
+                                isWebApp ? webAppStyles.webAppTextMuted : null,
                             ]}
                         >
                             {inboxFilter === "important"
@@ -1407,7 +1516,9 @@ export function NotificationCenter({ variant = "classic" }) {
                                 key={item.id}
                                 style={[
                                     styles.inboxItem,
-                                    isWebApp ? styles.webAppInboxItem : null,
+                                    isWebApp
+                                        ? webAppStyles.webAppInboxItem
+                                        : null,
                                     !item.is_read ? styles.unreadItem : null,
                                 ]}
                             >
@@ -1416,14 +1527,14 @@ export function NotificationCenter({ variant = "classic" }) {
                                         style={[
                                             styles.inboxIcon,
                                             isWebApp
-                                                ? styles.webAppIconBox
+                                                ? webAppStyles.webAppIconBox
                                                 : null,
                                         ]}
                                     >
                                         <InboxIcon
                                             color={
                                                 isWebApp
-                                                    ? WEB_APP_NOTIF_ACCENT
+                                                    ? webAppAccent
                                                     : colors.primary
                                             }
                                             size={17}
@@ -1432,18 +1543,23 @@ export function NotificationCenter({ variant = "classic" }) {
                                     </View>
                                     <View style={styles.inboxCopy}>
                                         <View style={styles.inboxBadgeRow}>
-                                            {item.channel && item.channel !== "inbox" ? (
+                                            {item.channel &&
+                                            item.channel !== "inbox" ? (
                                                 <View
                                                     style={[
                                                         styles.inboxBadge,
-                                                        styles[`channelBadge_${item.channel}`] ||
+                                                        styles[
+                                                            `channelBadge_${item.channel}`
+                                                        ] ||
                                                             styles.channelBadge_inbox,
                                                     ]}
                                                 >
                                                     <Text
                                                         style={[
                                                             styles.inboxBadgeText,
-                                                            styles[`channelBadgeText_${item.channel}`] ||
+                                                            styles[
+                                                                `channelBadgeText_${item.channel}`
+                                                            ] ||
                                                                 styles.channelBadgeText_inbox,
                                                         ]}
                                                     >
@@ -1451,11 +1567,13 @@ export function NotificationCenter({ variant = "classic" }) {
                                                     </Text>
                                                 </View>
                                             ) : null}
-                                            {item.priority && item.priority !== "normal" ? (
+                                            {item.priority &&
+                                            item.priority !== "normal" ? (
                                                 <View
                                                     style={[
                                                         styles.inboxBadge,
-                                                        item.priority === "critical"
+                                                        item.priority ===
+                                                        "critical"
                                                             ? styles.priorityBadge_critical
                                                             : styles.priorityBadge_important,
                                                     ]}
@@ -1463,12 +1581,14 @@ export function NotificationCenter({ variant = "classic" }) {
                                                     <Text
                                                         style={[
                                                             styles.inboxBadgeText,
-                                                            item.priority === "critical"
+                                                            item.priority ===
+                                                            "critical"
                                                                 ? styles.priorityBadgeText_critical
                                                                 : styles.priorityBadgeText_important,
                                                         ]}
                                                     >
-                                                        {item.priority === "critical"
+                                                        {item.priority ===
+                                                        "critical"
                                                             ? "KRITIS"
                                                             : "PENTING"}
                                                     </Text>
@@ -1504,7 +1624,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                             titleStyle={[
                                                 styles.inboxTitle,
                                                 isWebApp
-                                                    ? styles.webAppTextStrong
+                                                    ? webAppStyles.webAppTextStrong
                                                     : null,
                                             ]}
                                         />
@@ -1513,7 +1633,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                                 style={[
                                                     styles.body,
                                                     isWebApp
-                                                        ? styles.webAppTextMuted
+                                                        ? webAppStyles.webAppTextMuted
                                                         : null,
                                                 ]}
                                             >
@@ -1524,7 +1644,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                             style={[
                                                 styles.settingMeta,
                                                 isWebApp
-                                                    ? styles.webAppTextMuted
+                                                    ? webAppStyles.webAppTextMuted
                                                     : null,
                                             ]}
                                         >
@@ -1546,7 +1666,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                                     style={[
                                                         styles.inboxActionButton,
                                                         isWebApp
-                                                            ? styles.webAppSecondaryButton
+                                                            ? webAppStyles.webAppSecondaryButton
                                                             : null,
                                                     ]}
                                                 >
@@ -1554,7 +1674,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                                         style={[
                                                             styles.inboxActionText,
                                                             isWebApp
-                                                                ? styles.webAppSecondaryText
+                                                                ? webAppStyles.webAppSecondaryText
                                                                 : null,
                                                         ]}
                                                     >
@@ -1629,7 +1749,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         <Text
                             style={[
                                 styles.message,
-                                isWebApp ? styles.webAppMessage : null,
+                                isWebApp ? webAppStyles.webAppMessage : null,
                             ]}
                         >
                             {message}
@@ -2135,75 +2255,5 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surfaceMuted,
         borderRadius: radius.md,
         paddingHorizontal: spacing.md,
-    },
-    webAppCard: {
-        backgroundColor: WEB_APP_NOTIF_SURFACE,
-        borderColor: WEB_APP_NOTIF_BORDER,
-        borderRadius: radius.md,
-        shadowOpacity: 0,
-    },
-    webAppCardMeta: {
-        color: WEB_APP_NOTIF_ACCENT,
-    },
-    webAppCardTitle: {
-        color: "#f8fafc",
-        fontFamily: undefined,
-    },
-    webAppIconBox: {
-        backgroundColor: WEB_APP_NOTIF_TILE,
-        borderColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppInboxItem: {
-        borderBottomColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppMessage: {
-        color: WEB_APP_NOTIF_ACCENT,
-    },
-    webAppPanel: {
-        backgroundColor: WEB_APP_NOTIF_TILE,
-        borderColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppSecondaryButton: {
-        backgroundColor: WEB_APP_NOTIF_TILE,
-        borderColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppSecondaryText: {
-        color: "#d1fae5",
-    },
-    webAppSettingRow: {
-        borderBottomColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppTab: {
-        backgroundColor: WEB_APP_NOTIF_SURFACE,
-    },
-    webAppTabActive: {
-        borderBottomColor: WEB_APP_NOTIF_ACCENT,
-    },
-    webAppTabs: {
-        borderBottomColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppTabText: {
-        color: WEB_APP_NOTIF_MUTED,
-    },
-    webAppTabTextActive: {
-        color: WEB_APP_NOTIF_ACCENT,
-    },
-    webAppTextMuted: {
-        color: WEB_APP_NOTIF_MUTED,
-    },
-    webAppTextStrong: {
-        color: "#f8fafc",
-    },
-    webAppTimeInput: {
-        backgroundColor: WEB_APP_NOTIF_TILE,
-        borderColor: WEB_APP_NOTIF_BORDER,
-        color: "#f8fafc",
-    },
-    webAppToggle: {
-        backgroundColor: WEB_APP_NOTIF_TILE,
-        borderColor: WEB_APP_NOTIF_BORDER,
-    },
-    webAppToggleText: {
-        color: WEB_APP_NOTIF_MUTED,
     },
 });
