@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 import {
@@ -61,17 +62,23 @@ const uniqueValues = (items, resolver) =>
         a.localeCompare(b),
     );
 
-function FilterPill({ active, label, onPress, testID }) {
+function FilterPill({ active, isDark, label, onPress, testID }) {
     return (
         <Pressable
             accessibilityRole='button'
             onPress={onPress}
-            style={[styles.filterPill, active && styles.filterPillActive]}
+            style={[
+                styles.filterPill,
+                isDark && styles.filterPillDark,
+                active && styles.filterPillActive,
+                active && isDark && styles.filterPillActiveDark,
+            ]}
             testID={testID}
         >
             <Text
                 style={[
                     styles.filterPillText,
+                    isDark && styles.filterPillTextDark,
                     active && styles.filterPillTextActive,
                 ]}
             >
@@ -81,7 +88,7 @@ function FilterPill({ active, label, onPress, testID }) {
     );
 }
 
-function ProgressSummary({ items, progressMap, t }) {
+function ProgressSummary({ isDark, items, progressMap, t }) {
     const progressItems = Object.values(progressMap);
     const trackedBooks = progressItems
         .map((progress) => {
@@ -97,17 +104,34 @@ function ProgressSummary({ items, progressMap, t }) {
         .filter(({ book, bookId }) => book || bookId);
 
     return (
-        <View style={styles.progressPanel}>
+        <View
+            style={[styles.progressPanel, isDark && styles.progressPanelDark]}
+        >
             <View style={styles.progressHeader}>
                 <View style={styles.progressTitleBlock}>
-                    <Text style={styles.progressTitle}>
+                    <Text
+                        style={[
+                            styles.progressTitle,
+                            isDark && styles.progressTitleDark,
+                        ]}
+                    >
                         {t("explore.library.progressTitle")}
                     </Text>
-                    <Text style={styles.progressSubtitle}>
+                    <Text
+                        style={[
+                            styles.progressSubtitle,
+                            isDark && styles.progressSubtitleDark,
+                        ]}
+                    >
                         {t("explore.library.progressSubtitle")}
                     </Text>
                 </View>
-                <Text style={styles.progressCount}>
+                <Text
+                    style={[
+                        styles.progressCount,
+                        isDark && styles.progressCountDark,
+                    ]}
+                >
                     {t("explore.library.progressCount", {
                         count: progressItems.length,
                     })}
@@ -121,16 +145,30 @@ function ProgressSummary({ items, progressMap, t }) {
                         .map(({ book, bookId, progress }) => (
                             <View
                                 key={`${bookId}-${progress?.status ?? "reading"}`}
-                                style={styles.progressCard}
+                                style={[
+                                    styles.progressCard,
+                                    isDark && styles.progressCardDark,
+                                ]}
                             >
                                 <View style={styles.progressCardTop}>
-                                    <Text style={styles.progressBadge}>
+                                    <Text
+                                        style={[
+                                            styles.progressBadge,
+                                            isDark && styles.progressBadgeDark,
+                                        ]}
+                                    >
                                         {getLibraryProgressLabel(
                                             progress?.status,
                                         )}
                                     </Text>
                                     {progress?.current_page ? (
-                                        <Text style={styles.progressPage}>
+                                        <Text
+                                            style={[
+                                                styles.progressPage,
+                                                isDark &&
+                                                    styles.progressPageDark,
+                                            ]}
+                                        >
                                             {t("explore.library.pageLabel", {
                                                 page: progress.current_page,
                                             })}
@@ -139,7 +177,10 @@ function ProgressSummary({ items, progressMap, t }) {
                                 </View>
                                 <Text
                                     numberOfLines={2}
-                                    style={styles.progressBookTitle}
+                                    style={[
+                                        styles.progressBookTitle,
+                                        isDark && styles.progressBookTitleDark,
+                                    ]}
                                 >
                                     {book
                                         ? getBookTitle(
@@ -159,7 +200,10 @@ function ProgressSummary({ items, progressMap, t }) {
                                 {progress?.note ? (
                                     <Text
                                         numberOfLines={2}
-                                        style={styles.progressNote}
+                                        style={[
+                                            styles.progressNote,
+                                            isDark && styles.progressNoteDark,
+                                        ]}
                                     >
                                         {progress.note}
                                     </Text>
@@ -168,7 +212,12 @@ function ProgressSummary({ items, progressMap, t }) {
                         ))}
                 </View>
             ) : (
-                <Text style={styles.progressEmpty}>
+                <Text
+                    style={[
+                        styles.progressEmpty,
+                        isDark && styles.progressEmptyDark,
+                    ]}
+                >
                     {t("explore.library.progressEmpty")}
                 </Text>
             )}
@@ -176,7 +225,7 @@ function ProgressSummary({ items, progressMap, t }) {
     );
 }
 
-function LibraryCard({ index, item, onOpen, progress, t }) {
+function LibraryCard({ index, isDark, item, onOpen, progress, t }) {
     const meta = getBookMeta(item);
     const description = getBookDescription(item);
 
@@ -184,25 +233,43 @@ function LibraryCard({ index, item, onOpen, progress, t }) {
         <Pressable
             accessibilityRole='button'
             onPress={() => onOpen(item)}
-            style={styles.card}
+            style={[styles.card, isDark && styles.cardDark]}
             testID='web-app-library-card'
         >
             <View style={styles.cardTop}>
-                <View style={styles.bookIcon}>
-                    <BookOpen color={ACCENT} size={19} strokeWidth={2.1} />
+                <View style={[styles.bookIcon, isDark && styles.bookIconDark]}>
+                    <BookOpen
+                        color={isDark ? "#34d399" : ACCENT}
+                        size={19}
+                        strokeWidth={2.1}
+                    />
                 </View>
                 {meta.sourceUrl ? (
-                    <ExternalLink color='#d1d5db' size={16} strokeWidth={2.2} />
+                    <ExternalLink
+                        color={isDark ? "#64748b" : "#d1d5db"}
+                        size={16}
+                        strokeWidth={2.2}
+                    />
                 ) : null}
             </View>
 
             {progress ? (
                 <View style={styles.progressInline}>
-                    <Text style={styles.inlineBadge}>
+                    <Text
+                        style={[
+                            styles.inlineBadge,
+                            isDark && styles.inlineBadgeDark,
+                        ]}
+                    >
                         {getLibraryProgressLabel(progress.status)}
                     </Text>
                     {progress.current_page ? (
-                        <Text style={styles.inlinePage}>
+                        <Text
+                            style={[
+                                styles.inlinePage,
+                                isDark && styles.inlinePageDark,
+                            ]}
+                        >
                             {t("explore.library.pageLabel", {
                                 page: progress.current_page,
                             })}
@@ -211,7 +278,10 @@ function LibraryCard({ index, item, onOpen, progress, t }) {
                 </View>
             ) : null}
 
-            <Text numberOfLines={2} style={styles.cardTitle}>
+            <Text
+                numberOfLines={2}
+                style={[styles.cardTitle, isDark && styles.cardTitleDark]}
+            >
                 {getBookTitle(
                     item,
                     index,
@@ -219,31 +289,50 @@ function LibraryCard({ index, item, onOpen, progress, t }) {
                 )}
             </Text>
             {description ? (
-                <Text numberOfLines={3} style={styles.cardDescription}>
+                <Text
+                    numberOfLines={3}
+                    style={[
+                        styles.cardDescription,
+                        isDark && styles.cardDescriptionDark,
+                    ]}
+                >
                     {description}
                 </Text>
             ) : null}
 
-            <View style={styles.metaRow}>
+            <View style={[styles.metaRow, isDark && styles.metaRowDark]}>
                 {meta.author ? (
-                    <Text numberOfLines={1} style={styles.meta}>
+                    <Text
+                        numberOfLines={1}
+                        style={[styles.meta, isDark && styles.metaDark]}
+                    >
                         {meta.author}
                     </Text>
                 ) : null}
                 {meta.category ? (
-                    <Text numberOfLines={1} style={styles.meta}>
+                    <Text
+                        numberOfLines={1}
+                        style={[styles.meta, isDark && styles.metaDark]}
+                    >
                         {meta.category}
                     </Text>
                 ) : null}
                 {meta.level ? (
-                    <Text numberOfLines={1} style={styles.meta}>
+                    <Text
+                        numberOfLines={1}
+                        style={[styles.meta, isDark && styles.metaDark]}
+                    >
                         {meta.level}
                     </Text>
                 ) : null}
                 {meta.format ? (
                     <Text
                         numberOfLines={1}
-                        style={[styles.meta, styles.metaUpper]}
+                        style={[
+                            styles.meta,
+                            styles.metaUpper,
+                            isDark && styles.metaDark,
+                        ]}
                     >
                         {meta.format}
                     </Text>
@@ -264,8 +353,11 @@ export function WebAppLibraryRoute({
     onSelectProgressFilter,
     pagination,
     session,
+    isDarkTheme = false,
 }) {
     const { t } = useMobileLocale();
+    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
+    const isDark = isDarkTheme ?? isDarkThemePref;
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("");
     const [level, setLevel] = useState("");
@@ -318,36 +410,42 @@ export function WebAppLibraryRoute({
 
     return (
         <ScrollView
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                isDark && styles.contentDark,
+            ]}
             keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
-            style={styles.root}
+            style={[styles.root, isDark && styles.rootDark]}
         >
             <View testID='explore-web-app-library-surface' />
             <View style={styles.header}>
-                <Text style={styles.eyebrow}>
+                <Text style={[styles.eyebrow, isDark && styles.eyebrowDark]}>
                     {t("explore.library.eyebrow")}
                 </Text>
-                <Text style={styles.title}>{t("explore.library.title")}</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, isDark && styles.titleDark]}>
+                    {t("explore.library.title")}
+                </Text>
+                <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
                     {t("explore.library.subtitle")}
                 </Text>
             </View>
 
             {isAuthenticated ? (
                 <ProgressSummary
+                    isDark={isDark}
                     items={items}
                     progressMap={libraryProgressMap}
                     t={t}
                 />
             ) : null}
 
-            <View style={styles.search}>
+            <View style={[styles.search, isDark && styles.searchDark]}>
                 <TextInput
                     onChangeText={setSearch}
                     placeholder={t("explore.library.searchPlaceholder")}
-                    placeholderTextColor='#9ca3af'
-                    style={styles.input}
+                    placeholderTextColor={isDark ? "#64748b" : "#9ca3af"}
+                    style={[styles.input, isDark && styles.inputDark]}
                     testID='web-app-library-search'
                     value={search}
                 />
@@ -356,6 +454,7 @@ export function WebAppLibraryRoute({
             <View style={styles.filterGroup}>
                 <FilterPill
                     active={!category}
+                    isDark={isDark}
                     label={t("explore.library.allCategories")}
                     onPress={() => setCategory("")}
                     testID='web-app-library-category-all'
@@ -363,6 +462,7 @@ export function WebAppLibraryRoute({
                 {categories.map((item) => (
                     <FilterPill
                         active={category === item}
+                        isDark={isDark}
                         key={item}
                         label={item}
                         onPress={() =>
@@ -377,6 +477,7 @@ export function WebAppLibraryRoute({
                 <View style={styles.filterGroup}>
                     <FilterPill
                         active={!level}
+                        isDark={isDark}
                         label={t("explore.library.allLevels")}
                         onPress={() => setLevel("")}
                         testID='web-app-library-level-all'
@@ -384,6 +485,7 @@ export function WebAppLibraryRoute({
                     {levels.map((item) => (
                         <FilterPill
                             active={level === item}
+                            isDark={isDark}
                             key={item}
                             label={item}
                             onPress={() => setLevel(level === item ? "" : item)}
@@ -397,6 +499,7 @@ export function WebAppLibraryRoute({
                 <View style={styles.filterGroup}>
                     <FilterPill
                         active={!libraryProgressFilter}
+                        isDark={isDark}
                         label={t("explore.library.allProgress")}
                         onPress={() => onSelectProgressFilter("")}
                         testID='web-app-library-progress-all'
@@ -404,6 +507,7 @@ export function WebAppLibraryRoute({
                     {LIBRARY_PROGRESS_STATUSES.map((item) => (
                         <FilterPill
                             active={libraryProgressFilter === item.key}
+                            isDark={isDark}
                             key={item.key}
                             label={item.label}
                             onPress={() =>
@@ -420,16 +524,21 @@ export function WebAppLibraryRoute({
             ) : null}
 
             {error ? (
-                <Text style={styles.error}>
+                <Text style={[styles.error, isDark && styles.errorDark]}>
                     {t("explore.common.refreshError", {
                         subject: t("explore.library.title"),
                     })}
                 </Text>
             ) : null}
             {loading ? (
-                <View style={styles.state}>
+                <View style={[styles.state, isDark && styles.stateDark]}>
                     <ActivityIndicator color={ACCENT} size='small' />
-                    <Text style={styles.stateText}>
+                    <Text
+                        style={[
+                            styles.stateText,
+                            isDark && styles.stateTextDark,
+                        ]}
+                    >
                         {t("explore.library.loading")}
                     </Text>
                 </View>
@@ -445,6 +554,7 @@ export function WebAppLibraryRoute({
                         return (
                             <LibraryCard
                                 index={index}
+                                isDark={isDark}
                                 item={item}
                                 key={`${bookId}-${index}`}
                                 onOpen={onOpenItem}
@@ -457,9 +567,18 @@ export function WebAppLibraryRoute({
             ) : null}
 
             {!loading && !error && !filteredItems.length ? (
-                <View style={styles.empty}>
-                    <BookOpen color='#9ca3af' size={32} strokeWidth={1.8} />
-                    <Text style={styles.emptyTitle}>
+                <View style={[styles.empty, isDark && styles.emptyDark]}>
+                    <BookOpen
+                        color={isDark ? "#64748b" : "#9ca3af"}
+                        size={32}
+                        strokeWidth={1.8}
+                    />
+                    <Text
+                        style={[
+                            styles.emptyTitle,
+                            isDark && styles.emptyTitleDark,
+                        ]}
+                    >
                         {items.length
                             ? t("explore.common.notFound", {
                                   subject: t("explore.library.title"),
@@ -468,7 +587,12 @@ export function WebAppLibraryRoute({
                                   subject: t("explore.library.title"),
                               })}
                     </Text>
-                    <Text style={styles.emptyText}>
+                    <Text
+                        style={[
+                            styles.emptyText,
+                            isDark && styles.emptyTextDark,
+                        ]}
+                    >
                         {items.length
                             ? t("explore.common.changeSearchOrFilter")
                             : t("explore.common.retryLater")}
@@ -487,12 +611,18 @@ export function WebAppLibraryRoute({
                         onPress={onLoadMore}
                         style={[
                             styles.loadMoreButton,
+                            isDark && styles.loadMoreButtonDark,
                             pagination.loadingMore &&
                                 styles.loadMoreButtonDisabled,
                         ]}
                         testID='web-app-library-load-more'
                     >
-                        <Text style={styles.loadMoreText}>
+                        <Text
+                            style={[
+                                styles.loadMoreText,
+                                isDark && styles.loadMoreTextDark,
+                            ]}
+                        >
                             {pagination.loadingMore
                                 ? t("explore.common.loadingShort")
                                 : t("explore.common.loadMore")}
@@ -819,5 +949,129 @@ const styles = StyleSheet.create({
         color: "#047857",
         fontSize: 13,
         fontWeight: "900",
+    },
+    rootDark: {
+        backgroundColor: "#020617",
+    },
+    contentDark: {
+        backgroundColor: "#020617",
+    },
+    eyebrowDark: {
+        color: "#34d399",
+    },
+    titleDark: {
+        color: "#f8fafc",
+    },
+    subtitleDark: {
+        color: "#94a3b8",
+    },
+    progressPanelDark: {
+        backgroundColor: "#064e3b",
+        borderColor: "#047857",
+    },
+    progressTitleDark: {
+        color: "#ecfdf5",
+    },
+    progressSubtitleDark: {
+        color: "#a7f3d0",
+    },
+    progressCountDark: {
+        backgroundColor: "#111827",
+        color: "#34d399",
+    },
+    progressCardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#047857",
+    },
+    progressBadgeDark: {
+        backgroundColor: "rgba(52, 211, 153, 0.2)",
+        color: "#34d399",
+    },
+    progressPageDark: {
+        color: "#94a3b8",
+    },
+    progressBookTitleDark: {
+        color: "#f8fafc",
+    },
+    progressNoteDark: {
+        color: "#94a3b8",
+    },
+    progressEmptyDark: {
+        backgroundColor: "#111827",
+        borderColor: "#047857",
+        color: "#94a3b8",
+    },
+    searchDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    inputDark: {
+        color: "#f8fafc",
+    },
+    filterPillDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    filterPillActiveDark: {
+        backgroundColor: "#047857",
+        borderColor: "#047857",
+    },
+    filterPillTextDark: {
+        color: "#cbd5e1",
+    },
+    stateDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    stateTextDark: {
+        color: "#94a3b8",
+    },
+    errorDark: {
+        backgroundColor: "#3f1d1d",
+        color: "#fecaca",
+    },
+    gridDark: {},
+    cardDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    bookIconDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+    },
+    inlineBadgeDark: {
+        backgroundColor: "rgba(6, 78, 59, 0.35)",
+        color: "#34d399",
+    },
+    inlinePageDark: {
+        color: "#94a3b8",
+    },
+    cardTitleDark: {
+        color: "#f8fafc",
+    },
+    cardDescriptionDark: {
+        color: "#cbd5e1",
+    },
+    metaRowDark: {
+        borderTopColor: "#243044",
+    },
+    metaDark: {
+        color: "#94a3b8",
+    },
+    emptyDark: {
+        backgroundColor: "#111827",
+        borderColor: "#243044",
+    },
+    emptyTitleDark: {
+        color: "#f8fafc",
+    },
+    emptyTextDark: {
+        color: "#94a3b8",
+    },
+    loadMoreButtonDark: {
+        backgroundColor: "#111827",
+        borderColor: "#047857",
+    },
+    loadMoreTextDark: {
+        color: "#34d399",
     },
 });
