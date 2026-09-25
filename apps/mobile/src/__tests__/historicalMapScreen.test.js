@@ -46,7 +46,7 @@ beforeEach(() => {
 
 describe("HistoricalMapContent", () => {
     test("keeps the classic map surface intact", async () => {
-        const { getByText, getByTestId, queryByTestId } = render(
+        const { getByTestId, queryByTestId } = render(
             <HistoricalMapContent />,
         );
 
@@ -55,7 +55,9 @@ describe("HistoricalMapContent", () => {
         });
 
         expect(queryByTestId("historical-map-web-app-surface")).toBeNull();
-        expect(getByText("Makkah")).toBeTruthy();
+        expect(getByTestId("mock-webview").props.source.html).toContain(
+            "Makkah",
+        );
         expect(client.requestJson).toHaveBeenCalledWith(
             "/api/v1/locations?size=100",
         );
