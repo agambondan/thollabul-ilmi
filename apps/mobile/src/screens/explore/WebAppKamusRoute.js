@@ -109,6 +109,7 @@ export function WebAppKamusRoute({
 
     const handleSelectSuggestion = (term) => {
         onUpdateQuery(term.label);
+        onSearch(term.label);
     };
 
     return (

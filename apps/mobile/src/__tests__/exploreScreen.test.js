@@ -2074,6 +2074,46 @@ describe("ExploreScreen", () => {
         });
     });
 
+    test("tapping a Kamus 'Kosakata Populer' chip runs the search instead of showing no-result", async () => {
+        useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+        exploreApi.searchDictionary.mockResolvedValueOnce([
+            {
+                id: "dict-35",
+                title: "Iman",
+                arabic: "إِيمَان",
+                body: "Keimanan, Kepercayaan",
+                raw: {
+                    arabic: "إِيمَان",
+                    definition: "Keimanan, Kepercayaan",
+                    id: 35,
+                    latin: "Iman",
+                    root: "أمن",
+                },
+            },
+        ]);
+
+        const { getByText, queryByText } = await renderExploreScreen({
+            deepLinkTarget: {
+                id: "kamus-route",
+                params: { featureKey: "kamus" },
+            },
+        });
+
+        await waitFor(() => {
+            expect(getByText("Ketik minimal 2 karakter.")).toBeTruthy();
+        });
+
+        fireEvent.press(getByText("Iman"));
+
+        await waitFor(() => {
+            expect(exploreApi.searchDictionary).toHaveBeenCalledWith("Iman");
+            expect(getByText("إِيمَان")).toBeTruthy();
+            expect(getByText("Keimanan, Kepercayaan")).toBeTruthy();
+        });
+
+        expect(queryByText("Tidak ada hasil.")).toBeNull();
+    });
+
     test("uses dashboard Tafsir route surface in web app layout", async () => {
         useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
         clientApi.getSurahs.mockResolvedValueOnce([

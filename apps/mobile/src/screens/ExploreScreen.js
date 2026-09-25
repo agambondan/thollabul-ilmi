@@ -1143,11 +1143,13 @@ export function ExploreScreen({
         [onOpenTab, t],
     );
 
-    const runDictionarySearch = useCallback(async () => {
+    const runDictionarySearch = useCallback(async (queryOverride) => {
+        const term =
+            typeof queryOverride === "string" ? queryOverride : dictionaryQuery;
         setLoading(true);
         setError("");
         try {
-            setItems(await searchDictionary(dictionaryQuery));
+            setItems(await searchDictionary(term));
         } catch (err) {
             setError(err?.message ?? t("explore.dictionarySearchError"));
         } finally {

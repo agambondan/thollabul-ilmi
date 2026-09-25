@@ -258,8 +258,7 @@ const getFilterCategory = (item) =>
         getRaw(item).category ??
             getRaw(item).jenis_nilai ??
             getRaw(item).type ??
-            getRaw(item).occasion ??
-            item?.meta,
+            getRaw(item).occasion,
     )
         .toLowerCase()
         .replace(/\s+/g, "_")

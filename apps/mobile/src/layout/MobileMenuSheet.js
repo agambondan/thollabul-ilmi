@@ -99,21 +99,24 @@ export const webAppMenuGroups = [
                 key: "tilawah",
                 label: "Tilawah",
                 labelKey: "menu.tilawah",
-                tab: "quran",
+                params: { featureKey: "tilawah" },
+                tab: "belajar",
             },
             {
                 Icon: Book,
                 key: "hafalan",
                 label: "Hafalan",
                 labelKey: "menu.hafalan",
-                tab: "quran",
+                params: { featureKey: "hafalan" },
+                tab: "belajar",
             },
             {
                 Icon: Repeat,
                 key: "muroja-ah",
                 label: "Muroja'ah",
                 labelKey: "menu.murojaah",
-                tab: "quran",
+                params: { featureKey: "murojaah" },
+                tab: "belajar",
             },
             {
                 Icon: Repeat,
@@ -127,7 +130,8 @@ export const webAppMenuGroups = [
                 key: "amalan",
                 label: "Amalan",
                 labelKey: "menu.amalan",
-                tab: "ibadah",
+                params: { featureKey: "amalan" },
+                tab: "belajar",
             },
             {
                 Icon: Sparkles,
@@ -233,6 +237,7 @@ export const webAppMenuGroups = [
                 key: "tokoh",
                 label: "Tokoh Islam",
                 labelKey: "menu.islamicFigure",
+                params: { featureKey: "tokoh" },
                 tab: "belajar",
             },
             {
@@ -240,6 +245,7 @@ export const webAppMenuGroups = [
                 key: "peta",
                 label: "Peta Interaktif",
                 labelKey: "menu.interactiveMap",
+                params: { featureKey: "historical-map" },
                 tab: "belajar",
             },
             {

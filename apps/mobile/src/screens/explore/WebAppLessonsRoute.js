@@ -184,8 +184,11 @@ export function WebAppLessonsRoute({
     const activeModule = modules.find(
         (m) => (m.slug || m.id) === activeModuleId,
     );
-    const totalSteps = activeModule?.steps?.length || 0;
-    const step = activeModule?.steps?.[activeStepIdx];
+    const moduleSteps = activeModule?.steps?.length
+        ? activeModule.steps
+        : activeModule?.raw?.steps || [];
+    const totalSteps = moduleSteps.length;
+    const step = moduleSteps[activeStepIdx];
 
     const saveProgress = async (stepNum, done) => {
         if (!activeModule?.id) return;
