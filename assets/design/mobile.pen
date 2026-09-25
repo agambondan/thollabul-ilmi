@@ -48570,7 +48570,7 @@
                   "name": "Arabic Heading",
                   "fill": "$primary",
                   "content": "الدَّعَاء",
-                  "fontFamily": "$font-heading",
+                  "fontFamily": "Noto Naskh Arabic",
                   "fontSize": 34,
                   "fontWeight": "700"
                 },
@@ -51526,7 +51526,7 @@
               "id": "fWTDO",
               "name": "Title",
               "fill": "$ink",
-              "content": "Profil",
+              "content": "Tasbih",
               "fontFamily": "$font-heading",
               "fontSize": 18,
               "fontWeight": "700"
@@ -51800,6 +51800,375 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "frame",
+              "id": "T1HOY",
+              "name": "Stats Row",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "H25Ko",
+                  "name": "Tile Hitungan",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-tile",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "a0WjfZ",
+                      "name": "Value",
+                      "fill": "$primary",
+                      "content": "0",
+                      "fontFamily": "$font-heading",
+                      "fontSize": 22,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "a9f24",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Hitungan",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "FUkEf",
+                  "name": "Tile Target",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-tile",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AG5V7",
+                      "name": "Value",
+                      "fill": "$accent",
+                      "content": "33",
+                      "fontFamily": "$font-heading",
+                      "fontSize": 22,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "n2M5UT",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Target",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "R8lEjM",
+                  "name": "Tile Total Hari Ini",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radius-tile",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": "$pad-card",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "eBtkw",
+                      "name": "Value",
+                      "fill": "$ink",
+                      "content": "0",
+                      "fontFamily": "$font-heading",
+                      "fontSize": 22,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "z11yM5",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Total Hari Ini",
+                      "fontFamily": "$font-body",
+                      "fontSize": 11,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bhYX8",
+              "name": "Atur Target Row",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "padding": "$pad-card",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d6K9C",
+                  "name": "Label",
+                  "fill": "$ink",
+                  "content": "Atur Target",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "s01JHz",
+                  "name": "Target Input",
+                  "fill": "$bg",
+                  "cornerRadius": "$radius-tile",
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    8,
+                    18
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "BAT0l",
+                      "name": "Value",
+                      "fill": "$ink",
+                      "content": "33",
+                      "fontFamily": "$font-body",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PVXda",
+              "name": "Section Pilih Dzikir",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "BGiIO",
+                  "name": "Section Title",
+                  "fill": "$ink",
+                  "content": "Pilih Dzikir",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "WOoOJ",
+                  "name": "Row 1",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "L85TNs",
+                      "name": "Chip Subhanallah",
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        8,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "RasGi",
+                          "name": "Label",
+                          "fill": "$primary-foreground",
+                          "content": "Subhanallah",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wMesQ",
+                      "name": "Chip Alhamdulillah",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        8,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "IsALw",
+                          "name": "Label",
+                          "fill": "$ink",
+                          "content": "Alhamdulillah",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "pAcHB",
+                  "name": "Row 2",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "z0E4rl",
+                      "name": "Chip Allahu Akbar",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        8,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "o2SUGW",
+                          "name": "Label",
+                          "fill": "$ink",
+                          "content": "Allahu Akbar",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iBKWj",
+                      "name": "Chip La ilaha illallah",
+                      "fill": "$chip-fill",
+                      "cornerRadius": "$radius-pill",
+                      "padding": [
+                        8,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "LQxwy",
+                          "name": "Label",
+                          "fill": "$ink",
+                          "content": "La ilaha illallah",
+                          "fontFamily": "$font-body",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zgvAt",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "ZhDxj",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/RPER3": {
+                  "fill": "#00000000"
+                },
+                "x9sk1l/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "#00000000"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "YdN7T/nM62E": {
+                  "fill": "$primary"
+                },
+                "YdN7T/dMeH6": {
+                  "fill": "$primary"
+                },
+                "HSkNE/RPER3": {
+                  "fill": "#00000000"
+                },
+                "HSkNE/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "HSkNE/dMeH6": {
+                  "fill": "$text-secondary"
+                }
+              }
             }
           ]
         }
@@ -61746,7 +62115,7 @@
       "y": 48959,
       "name": "Connector Label",
       "fill": "#0F9D6D",
-      "content": "Tap salah satu peristiwa",
+      "content": "Tap tile Siroh",
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
@@ -62605,7 +62974,7 @@
         },
         {
           "type": "frame",
-          "id": "gnscf",
+          "id": "Ah6EB",
           "name": "Content",
           "width": "fill_container",
           "layout": "vertical",
@@ -62614,7 +62983,7 @@
           "children": [
             {
               "type": "frame",
-              "id": "UVqBZ",
+              "id": "gs8Zm",
               "name": "Header Block",
               "width": "fill_container",
               "layout": "vertical",
@@ -62622,7 +62991,7 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "zbF3n",
+                  "id": "gkxSC",
                   "name": "Icon Chip",
                   "width": 56,
                   "height": 56,
@@ -62633,8 +63002,8 @@
                   "children": [
                     {
                       "type": "icon",
-                      "id": "YvX8o",
-                      "name": "Icon",
+                      "id": "tO2nm",
+                      "name": "Wifi",
                       "width": 26,
                       "height": 26,
                       "icon": "book-open",
@@ -62645,8 +63014,8 @@
                 },
                 {
                   "type": "text",
-                  "id": "nL7A2",
-                  "name": "Title",
+                  "id": "DrL69",
+                  "name": "Time",
                   "fill": "$ink",
                   "content": "Tafsir",
                   "fontFamily": "$font-heading",
@@ -62655,8 +63024,8 @@
                 },
                 {
                   "type": "text",
-                  "id": "fxLJs",
-                  "name": "Subtitle",
+                  "id": "jFYsK",
+                  "name": "Time",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
@@ -62669,7 +63038,7 @@
             },
             {
               "type": "frame",
-              "id": "f2nPFw",
+              "id": "Pa41x",
               "name": "Notice Card",
               "width": "fill_container",
               "fill": "#FFFBEB",
@@ -62683,8 +63052,8 @@
               "children": [
                 {
                   "type": "text",
-                  "id": "GvpYC",
-                  "name": "Notice Label",
+                  "id": "G4Bfi",
+                  "name": "Time",
                   "fill": "#92400E",
                   "content": "Catatan:",
                   "fontFamily": "$font-body",
@@ -62693,8 +63062,8 @@
                 },
                 {
                   "type": "text",
-                  "id": "TLG73",
-                  "name": "Notice Body",
+                  "id": "l82D5",
+                  "name": "Time",
                   "fill": "#B45309",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
@@ -62708,7 +63077,7 @@
             },
             {
               "type": "frame",
-              "id": "Rkyp1",
+              "id": "g7cgc",
               "name": "Search Bar",
               "width": "fill_container",
               "fill": "$surface",
@@ -62725,8 +63094,8 @@
               "children": [
                 {
                   "type": "icon",
-                  "id": "d2OGE5",
-                  "name": "Search Icon",
+                  "id": "dFWEp",
+                  "name": "Wifi",
                   "width": 18,
                   "height": 18,
                   "icon": "search",
@@ -62735,8 +63104,8 @@
                 },
                 {
                   "type": "text",
-                  "id": "GSnrV",
-                  "name": "Placeholder",
+                  "id": "V6JEz8",
+                  "name": "Time",
                   "fill": "$text-secondary",
                   "content": "Cari nama atau nomor surah",
                   "fontFamily": "$font-body",
@@ -62747,7 +63116,7 @@
             },
             {
               "type": "frame",
-              "id": "LHDxX",
+              "id": "FAoMS",
               "name": "Grid",
               "width": "fill_container",
               "layout": "vertical",
@@ -62755,14 +63124,14 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "n77eRo",
+                  "id": "WF107",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "JBwWX",
+                      "id": "o8lda3",
                       "name": "Al-Fatihah",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -62776,7 +63145,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "qlLs1",
+                          "id": "Ii8Zi",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -62787,8 +63156,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "q1BV7L",
-                              "name": "Number",
+                              "id": "qBKCe",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "1",
                               "fontFamily": "$font-body",
@@ -62799,8 +63168,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "R9CpP",
-                          "name": "Surah Title",
+                          "id": "jUP5q",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -62811,8 +63180,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "S0kN6C",
-                          "name": "Surah Subtitle",
+                          "id": "G0MyDN",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -62825,7 +63194,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "ST8cf",
+                      "id": "u71ua",
                       "name": "Al-Baqarah",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -62839,7 +63208,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "xPunR",
+                          "id": "Wspe0",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -62850,8 +63219,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "tgpc9",
-                              "name": "Number",
+                              "id": "l1Kb8e",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "2",
                               "fontFamily": "$font-body",
@@ -62862,8 +63231,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "EYztD",
-                          "name": "Surah Title",
+                          "id": "Nmv9c",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -62874,8 +63243,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "YmFoL",
-                          "name": "Surah Subtitle",
+                          "id": "SN1e8",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -62890,14 +63259,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "tQeII",
+                  "id": "Uerli",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "ix003",
+                      "id": "KEhBb",
                       "name": "Ali 'Imran",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -62911,7 +63280,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "XbA6c",
+                          "id": "SegDh",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -62922,8 +63291,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "GD4FB",
-                              "name": "Number",
+                              "id": "Xt7AO",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "3",
                               "fontFamily": "$font-body",
@@ -62934,8 +63303,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "nXc47",
-                          "name": "Surah Title",
+                          "id": "KuqzE",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -62946,8 +63315,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "LzdM7",
-                          "name": "Surah Subtitle",
+                          "id": "VxG8f",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -62960,7 +63329,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "upnSb",
+                      "id": "vdITm",
                       "name": "An-Nisa",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -62974,7 +63343,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "KrMim",
+                          "id": "KVUk5",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -62985,8 +63354,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "HlmNN",
-                              "name": "Number",
+                              "id": "L8cZI",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "4",
                               "fontFamily": "$font-body",
@@ -62997,8 +63366,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "IsQjH",
-                          "name": "Surah Title",
+                          "id": "eR5HM",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63009,8 +63378,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "l3EH5G",
-                          "name": "Surah Subtitle",
+                          "id": "Awrym",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63025,14 +63394,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "UgLbc",
+                  "id": "mHcYL",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "JpXmE",
+                      "id": "GxHNJ",
                       "name": "Al-Ma'idah",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63046,7 +63415,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "ccSk5",
+                          "id": "vw0nR",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63057,8 +63426,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "nNXjq",
-                              "name": "Number",
+                              "id": "CY46R",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "5",
                               "fontFamily": "$font-body",
@@ -63069,8 +63438,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "W0gYBK",
-                          "name": "Surah Title",
+                          "id": "Jp7QG",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63081,8 +63450,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "J1IJ5f",
-                          "name": "Surah Subtitle",
+                          "id": "Y0BG5",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63095,7 +63464,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "q1uUe",
+                      "id": "ozYrh",
                       "name": "Al-An'am",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63109,7 +63478,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "q5uVzo",
+                          "id": "fj7kr",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63120,8 +63489,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "TxX4f",
-                              "name": "Number",
+                              "id": "rBnzw",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "6",
                               "fontFamily": "$font-body",
@@ -63132,8 +63501,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "GI89a",
-                          "name": "Surah Title",
+                          "id": "zZjhk",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63144,8 +63513,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "r286rH",
-                          "name": "Surah Subtitle",
+                          "id": "rBjyj",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63160,14 +63529,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "bN0jb",
+                  "id": "LZD29",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "Hg4xX",
+                      "id": "PTytd",
                       "name": "Al-A'raf",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63181,7 +63550,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "kkmC5",
+                          "id": "u1QJxj",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63192,8 +63561,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "pRV9q",
-                              "name": "Number",
+                              "id": "dw1vB",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "7",
                               "fontFamily": "$font-body",
@@ -63204,8 +63573,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "A40Nmf",
-                          "name": "Surah Title",
+                          "id": "j1jIN",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63216,8 +63585,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "aSQY0",
-                          "name": "Surah Subtitle",
+                          "id": "Ks8YO",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63230,7 +63599,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "L49wz",
+                      "id": "m9gXfK",
                       "name": "Al-Anfal",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63244,7 +63613,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "KoGys",
+                          "id": "djBle",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63255,8 +63624,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "JB4BV",
-                              "name": "Number",
+                              "id": "wle4R",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "8",
                               "fontFamily": "$font-body",
@@ -63267,8 +63636,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "m8AnG",
-                          "name": "Surah Title",
+                          "id": "eTLwg",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63279,8 +63648,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "SQz8D",
-                          "name": "Surah Subtitle",
+                          "id": "tmgoU",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63295,14 +63664,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "l02jM",
+                  "id": "YqiIb",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "wouZh",
+                      "id": "AEhM2",
                       "name": "At-Taubah",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63316,7 +63685,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "ykB72",
+                          "id": "Hb7rD",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63327,8 +63696,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "RFBnu",
-                              "name": "Number",
+                              "id": "WUenB",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "9",
                               "fontFamily": "$font-body",
@@ -63339,8 +63708,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "UsCPa",
-                          "name": "Surah Title",
+                          "id": "C0P0Vg",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63351,8 +63720,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "it8SK",
-                          "name": "Surah Subtitle",
+                          "id": "EXbwn",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63365,7 +63734,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "O50QHM",
+                      "id": "I9n89",
                       "name": "Yunus",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63379,7 +63748,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "pTqaM",
+                          "id": "u43Zww",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63390,8 +63759,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "A8R5t",
-                              "name": "Number",
+                              "id": "tr4hQ",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "10",
                               "fontFamily": "$font-body",
@@ -63402,8 +63771,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "oRY7J",
-                          "name": "Surah Title",
+                          "id": "j772g",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63414,8 +63783,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "Mq5r2",
-                          "name": "Surah Subtitle",
+                          "id": "UroWL",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63430,14 +63799,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "jPgEf",
+                  "id": "WTONf",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "GVETN",
+                      "id": "j6LFwh",
                       "name": "Hud",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63451,7 +63820,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "WUySG",
+                          "id": "LNvAI",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63462,8 +63831,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "qFdf1",
-                              "name": "Number",
+                              "id": "ASIEE",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "11",
                               "fontFamily": "$font-body",
@@ -63474,8 +63843,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "UlKtP",
-                          "name": "Surah Title",
+                          "id": "gwfHw",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63486,8 +63855,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "DylxF",
-                          "name": "Surah Subtitle",
+                          "id": "D1GXkp",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63500,7 +63869,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "Y8JfjR",
+                      "id": "Cnp3E",
                       "name": "Yusuf",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63514,7 +63883,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "XHZbr",
+                          "id": "Ec71g",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63525,8 +63894,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "Aw9EM",
-                              "name": "Number",
+                              "id": "rSahs",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "12",
                               "fontFamily": "$font-body",
@@ -63537,8 +63906,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "CibFC",
-                          "name": "Surah Title",
+                          "id": "mGjXb",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63549,8 +63918,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "ECJtW",
-                          "name": "Surah Subtitle",
+                          "id": "hkzOK",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63565,14 +63934,14 @@
                 },
                 {
                   "type": "frame",
-                  "id": "QV9Yh",
+                  "id": "WyjLf",
                   "name": "Row",
                   "width": "fill_container",
                   "gap": "$gap-md",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "zTkUv",
+                      "id": "ruA1g",
                       "name": "Ar-Ra'd",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63586,7 +63955,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "wha8l",
+                          "id": "ZXpva",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63597,8 +63966,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "gsmRF",
-                              "name": "Number",
+                              "id": "XTgRr",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "13",
                               "fontFamily": "$font-body",
@@ -63609,8 +63978,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "EymNO",
-                          "name": "Surah Title",
+                          "id": "l9r9I",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63621,8 +63990,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "SYCRG",
-                          "name": "Surah Subtitle",
+                          "id": "G6m0y",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63635,7 +64004,7 @@
                     },
                     {
                       "type": "frame",
-                      "id": "A9hQwb",
+                      "id": "GBHFJ",
                       "name": "Ibrahim",
                       "width": "fill_container",
                       "fill": "$surface",
@@ -63649,7 +64018,7 @@
                       "children": [
                         {
                           "type": "frame",
-                          "id": "T1Vb9",
+                          "id": "z1AFT",
                           "name": "Number Badge",
                           "width": 32,
                           "height": 32,
@@ -63660,8 +64029,8 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "emqii",
-                              "name": "Number",
+                              "id": "hatLk",
+                              "name": "Time",
                               "fill": "$primary",
                               "content": "14",
                               "fontFamily": "$font-body",
@@ -63672,8 +64041,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "wAHK2",
-                          "name": "Surah Title",
+                          "id": "bSqa4",
+                          "name": "Time",
                           "fill": "$ink",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -63684,8 +64053,8 @@
                         },
                         {
                           "type": "text",
-                          "id": "g9B8Ff",
-                          "name": "Surah Subtitle",
+                          "id": "ATPFz",
+                          "name": "Time",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -68181,11 +68550,11 @@
         },
         {
           "type": "frame",
-          "id": "vqSPd",
+          "id": "Jy0UK",
           "name": "Content",
           "width": "fill_container",
           "layout": "vertical",
-          "gap": "$gap-md",
+          "gap": 14,
           "padding": [
             16,
             20,
@@ -68195,7 +68564,7 @@
           "children": [
             {
               "type": "frame",
-              "id": "zRFLF",
+              "id": "q92l0F",
               "name": "Title Block",
               "width": "fill_container",
               "layout": "vertical",
@@ -68203,7 +68572,7 @@
               "children": [
                 {
                   "type": "text",
-                  "id": "VYXEi",
+                  "id": "N8gKoH",
                   "name": "Heading",
                   "fill": "$ink",
                   "content": "Fiqh Ringkas",
@@ -68213,7 +68582,7 @@
                 },
                 {
                   "type": "text",
-                  "id": "v4nKI",
+                  "id": "Bpb4W",
                   "name": "Subheading",
                   "fill": "$text-secondary",
                   "content": "8 materi fiqh",
@@ -68225,7 +68594,7 @@
             },
             {
               "type": "frame",
-              "id": "wFSFC",
+              "id": "zRGRe",
               "name": "Search Bar",
               "width": "fill_container",
               "fill": "$surface",
@@ -68242,17 +68611,17 @@
               "children": [
                 {
                   "type": "icon",
-                  "id": "vn1az",
+                  "id": "j5HqIq",
                   "name": "Icon",
                   "width": 18,
                   "height": 18,
                   "icon": "search",
-                  "library": "Material Symbols Rounded",
+                  "library": "lucide",
                   "fill": "$text-secondary"
                 },
                 {
                   "type": "text",
-                  "id": "kkRTY",
+                  "id": "OHTjt",
                   "name": "Placeholder",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
@@ -68266,13 +68635,13 @@
             },
             {
               "type": "frame",
-              "id": "xHvrE",
+              "id": "OBoz0",
               "name": "Filter Row 1",
               "width": "fill_container",
               "gap": 8,
               "children": [
                 {
-                  "id": "ZeX2t",
+                  "id": "i99wzq",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Semua",
@@ -68286,7 +68655,7 @@
                   }
                 },
                 {
-                  "id": "TgbWj",
+                  "id": "KaPKk",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Thaharah",
@@ -68301,13 +68670,13 @@
             },
             {
               "type": "frame",
-              "id": "r22NPz",
+              "id": "cicM3",
               "name": "Filter Row 2",
               "width": "fill_container",
               "gap": 8,
               "children": [
                 {
-                  "id": "QtJt8",
+                  "id": "eI8yL",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Sholat",
@@ -68319,7 +68688,7 @@
                   }
                 },
                 {
-                  "id": "QcbWC",
+                  "id": "y4qVdE",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Zakat",
@@ -68331,7 +68700,7 @@
                   }
                 },
                 {
-                  "id": "IiVNx",
+                  "id": "chaWd",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Puasa",
@@ -68343,7 +68712,7 @@
                   }
                 },
                 {
-                  "id": "A15Jp",
+                  "id": "fINPy",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Haji",
@@ -68355,7 +68724,7 @@
                   }
                 },
                 {
-                  "id": "Y71FOv",
+                  "id": "PU4TE",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Muamalah",
@@ -68370,13 +68739,13 @@
             },
             {
               "type": "frame",
-              "id": "EHVdD",
+              "id": "jqszX",
               "name": "Filter Row 3",
               "width": "fill_container",
               "gap": 8,
               "children": [
                 {
-                  "id": "l4uDW",
+                  "id": "BgoX8",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Umum",
@@ -68388,7 +68757,7 @@
                   }
                 },
                 {
-                  "id": "luafX",
+                  "id": "K40k7y",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Nikah",
@@ -68400,7 +68769,7 @@
                   }
                 },
                 {
-                  "id": "DXI6H",
+                  "id": "OuVA7",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Jenazah",
@@ -68415,7 +68784,7 @@
             },
             {
               "type": "frame",
-              "id": "p3Zohn",
+              "id": "vJZO1",
               "name": "Topic List",
               "width": "fill_container",
               "layout": "vertical",
@@ -68423,7 +68792,7 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "GFbXY",
+                  "id": "buW3L",
                   "name": "Thaharah",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68437,14 +68806,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "W73cmX",
+                      "id": "BDrHJ",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "WPgsj",
+                          "id": "v5XhTH",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68457,7 +68826,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "Gz2Cg",
+                              "id": "SbTYx",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Thaharah",
@@ -68469,7 +68838,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "DIVFj",
+                          "id": "v0GFN",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Thaharah",
@@ -68481,7 +68850,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "pX7hi",
+                      "id": "L5rBPD",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68493,7 +68862,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "bFGc1",
+                  "id": "wXLWn",
                   "name": "Sholat",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68507,14 +68876,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "x7Zxf",
+                      "id": "oI2gy",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "SsSIc",
+                          "id": "U7Tq17",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68527,7 +68896,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "vXRDy",
+                              "id": "J9EON7",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Sholat",
@@ -68539,7 +68908,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "B2FqEH",
+                          "id": "SvWYL",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Sholat",
@@ -68551,7 +68920,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "hF9fc",
+                      "id": "XHXWn",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68563,7 +68932,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "lQK2e",
+                  "id": "w1Njgj",
                   "name": "Puasa",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68577,14 +68946,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "n2FWC7",
+                      "id": "vuhqc",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "WA6mI",
+                          "id": "fZgDn",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68597,7 +68966,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "V2NyPy",
+                              "id": "nb0SD",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Puasa",
@@ -68609,7 +68978,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "T8d2A",
+                          "id": "JV18e",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Puasa",
@@ -68621,7 +68990,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "p9pnmA",
+                      "id": "lLpbn",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68633,7 +69002,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "J7ODS",
+                  "id": "myo3h",
                   "name": "Zakat",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68647,14 +69016,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "waRrE",
+                      "id": "Z8CDTq",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "q700m2",
+                          "id": "ElzHn",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68667,7 +69036,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "JCY43",
+                              "id": "BgjTo",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Zakat",
@@ -68679,7 +69048,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "a1JL0",
+                          "id": "xGeLx",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Zakat",
@@ -68691,7 +69060,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "eh7Gr",
+                      "id": "NnMJB",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68703,7 +69072,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "Tgeyo",
+                  "id": "giDyg",
                   "name": "Haji & Umrah",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68717,14 +69086,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "Y3Jui",
+                      "id": "eQjGM",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "jCHIk",
+                          "id": "t3uUwU",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68737,7 +69106,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "nimO4",
+                              "id": "L4RmXb",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Haji & Umrah",
@@ -68749,7 +69118,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "guE5z",
+                          "id": "ql9C6",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Haji & Umrah",
@@ -68761,7 +69130,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "hfdge",
+                      "id": "WQb4g",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68773,7 +69142,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "FPxHI",
+                  "id": "dtBzO",
                   "name": "Muamalah",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68787,14 +69156,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "r8L7c5",
+                      "id": "nsoL6",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "xBE5V",
+                          "id": "v92tp",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68807,7 +69176,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "C6SIWW",
+                              "id": "WXsF5",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Muamalah",
@@ -68819,7 +69188,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "zIWlG",
+                          "id": "OxlmC",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Muamalah",
@@ -68831,7 +69200,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "yO9jw",
+                      "id": "nCGqS",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68843,7 +69212,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "MNK2p",
+                  "id": "X9K9V",
                   "name": "Nikah",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68857,14 +69226,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "m53shg",
+                      "id": "xQQ3x",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "eoQPM",
+                          "id": "Z3Kja",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68877,7 +69246,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "q4NEaq",
+                              "id": "v15VbL",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Nikah",
@@ -68889,7 +69258,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "rt4P2",
+                          "id": "mhzzI",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Nikah",
@@ -68901,7 +69270,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "dIOIs",
+                      "id": "SwxJ9",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -68913,7 +69282,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "voZwF",
+                  "id": "GOYKr",
                   "name": "Jenazah",
                   "width": "fill_container",
                   "fill": "$surface",
@@ -68927,14 +69296,14 @@
                   "children": [
                     {
                       "type": "frame",
-                      "id": "OJuDj",
+                      "id": "KA3s2",
                       "name": "Left",
                       "gap": 12,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "eWKvf",
+                          "id": "sf7VB",
                           "name": "Chip",
                           "fill": "$chip-fill",
                           "cornerRadius": "$radius-pill",
@@ -68947,7 +69316,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "p6irx1",
+                              "id": "uKLLn",
                               "name": "Chip Label",
                               "fill": "$primary",
                               "content": "Jenazah",
@@ -68959,7 +69328,7 @@
                         },
                         {
                           "type": "text",
-                          "id": "tYPKz",
+                          "id": "zgadf",
                           "name": "Title",
                           "fill": "$ink",
                           "content": "Jenazah",
@@ -68971,7 +69340,7 @@
                     },
                     {
                       "type": "icon",
-                      "id": "cMsxS",
+                      "id": "A3kiIb",
                       "name": "Chevron",
                       "width": 18,
                       "height": 18,
@@ -69099,37 +69468,6 @@
       "fontFamily": "Inter",
       "fontSize": 9,
       "fontWeight": "600"
-    },
-    {
-      "type": "frame",
-      "id": "WaZAN",
-      "x": 100000,
-      "y": 100000,
-      "name": "ZZTEST",
-      "layout": "vertical",
-      "gap": 20,
-      "children": [
-        {
-          "type": "text",
-          "id": "xKPNs",
-          "name": "A",
-          "fill": "#000000",
-          "content": "Hello",
-          "fontFamily": "Inter",
-          "fontSize": 20,
-          "fontWeight": "normal"
-        },
-        {
-          "type": "text",
-          "id": "I1hcN",
-          "name": "B",
-          "fill": "#000000",
-          "content": "World",
-          "fontFamily": "Inter",
-          "fontSize": 20,
-          "fontWeight": "normal"
-        }
-      ]
     },
     {
       "type": "frame",
@@ -69512,6 +69850,978 @@
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "ruI4G",
+      "x": 6543,
+      "y": 48976,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "FekYo",
+      "x": 6555,
+      "y": 48979,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "f99uv7",
+      "x": 6595,
+      "y": 48973,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "P1avX",
+      "x": 6543,
+      "y": 48959,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap salah satu peristiwa",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "gBkTF",
+      "x": 6615,
+      "y": 48900,
+      "name": "Siroh Detail - Modern",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Ggffy",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "avuJA",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "X88cxe",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "f02okK",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "Mvbjp",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "c7gAnu",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "dtPtc",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "CVwvA",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Nasab Rasulullah",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZLcgZ",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-md",
+          "padding": [
+            16,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "HU4Zw",
+              "name": "Kembali Button",
+              "cornerRadius": "$radius-pill",
+              "stroke": "$primary",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 6,
+              "padding": [
+                8,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "PxCp8",
+                  "name": "Back Icon",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "arrow-left",
+                  "library": "lucide",
+                  "fill": "$primary"
+                },
+                {
+                  "type": "text",
+                  "id": "UuumP",
+                  "name": "Label",
+                  "fill": "$primary",
+                  "content": "Kembali",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "PpYhZ",
+              "name": "Eyebrow",
+              "fill": "$primary",
+              "content": "ILMU",
+              "fontFamily": "$font-body",
+              "fontSize": 11,
+              "fontWeight": "700",
+              "letterSpacing": 0.5
+            },
+            {
+              "type": "text",
+              "id": "A9FVvw",
+              "name": "Event Title",
+              "fill": "$ink",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Nasab Rasulullah",
+              "fontFamily": "$font-heading",
+              "fontSize": 24,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "n2wdXr",
+              "name": "Citation",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Sirah Ibnu Hisyam 1/1-2; Ar-Raheeq Al-Makhtum hlm. 24-27 (Shafiyyurrahman Al-Mubarakfuri)",
+              "lineHeight": 1.4,
+              "fontFamily": "$font-body",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "LHMYu",
+              "name": "Text Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HVOPy",
+                  "name": "Paragraph",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Muhammad bin Abdullah bin Abdul Muthalib bin Hasyim bin Abdu Manaf bin Qushay bin Kilab bin Murrah bin Ka'ab bin Lu'ay bin Ghalib bin Fihr bin Malik bin An-Nadhr bin Kinanah bin Khuzaymah bin Mudrikah bin Ilyas bin Mudhar bin Nizar bin Ma'ad bin Adnan.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$font-body",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Do7uR",
+                  "name": "Paragraph",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Nasab ini disepakati kesahihannya hingga Adnan. Adnan adalah keturunan Nabi Ismail bin Ibrahim 'alayhimassalam.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$font-body",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "btrAo",
+                  "name": "Paragraph",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dari sisi ibu: Aminah binti Wahb bin Abdu Manaf bin Zuhrah bin Kilab — bertemu dengan nasab ayah pada Kilab bin Murrah.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$font-body",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "ktPLp",
+                  "name": "Paragraph",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sumber: Sirah Ibn Hisham, Ar-Raheeq Al-Makhtum oleh Shafiyyurrahman Al-Mubarakfuri.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$font-body",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "h1VlBw",
+                  "name": "Divider",
+                  "fill": "$border",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "text",
+                  "id": "qAKEa",
+                  "name": "Info Heading",
+                  "fill": "$ink",
+                  "content": "Info",
+                  "fontFamily": "$font-body",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "P4whLe",
+                  "name": "Info Citation",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sirah Ibnu Hisyam 1/1-2; Ar-Raheeq Al-Makhtum hlm. 24-27 (Shafiyyurrahman Al-Mubarakfuri)",
+                  "lineHeight": 1.4,
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "PZZOI",
+                  "name": "Info Reference",
+                  "fill": "$text-secondary",
+                  "content": "Rujukan: siroh #1",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ILyGM",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "gmvUq",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/RPER3": {
+                  "fill": "#00000000"
+                },
+                "x9sk1l/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "#00000000"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/RPER3": {
+                  "fill": "#00000000"
+                },
+                "YdN7T/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "HSkNE/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "HSkNE/nM62E": {
+                  "fill": "$primary"
+                },
+                "HSkNE/dMeH6": {
+                  "fill": "$primary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "NTZ5R",
+      "x": 6615,
+      "y": 52650,
+      "name": "Fiqh Detail - Modern",
+      "theme": {
+        "style": "modern"
+      },
+      "clip": true,
+      "width": 375,
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "LWH6e",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "JrZUK",
+              "name": "Time",
+              "fill": "$ink",
+              "content": "9:41",
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "u59zeL",
+              "name": "Status Icons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "coHOS",
+                  "name": "Wifi",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "Xxb5b",
+                  "name": "Battery",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "M9kZ2t",
+          "name": "Sub Header",
+          "width": "fill_container",
+          "fill": "$surface",
+          "stroke": "$border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 12,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "HLvmj",
+              "type": "ref",
+              "ref": "b5ILqb",
+              "name": "Back",
+              "descendants": {
+                "VX9BQ": {
+                  "icon": "arrow-left"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "p83ON9",
+              "name": "Title",
+              "fill": "$ink",
+              "content": "Thaharah",
+              "fontFamily": "$font-heading",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "rcxTY",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$gap-lg",
+          "padding": [
+            20,
+            20,
+            8,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "BjKaz",
+              "name": "Kembali",
+              "fill": "$surface",
+              "cornerRadius": "$radius-pill",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "gap": 6,
+              "padding": [
+                8,
+                16
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "GKmiR",
+                  "name": "Icon",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "arrow-left",
+                  "library": "lucide",
+                  "fill": "$primary"
+                },
+                {
+                  "type": "text",
+                  "id": "FZP5U",
+                  "name": "Label",
+                  "fill": "$primary",
+                  "content": "Kembali",
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uZ1JS",
+              "name": "Title Block",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VjCDZ",
+                  "name": "Eyebrow",
+                  "fill": "$primary",
+                  "content": "ILMU",
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "700",
+                  "letterSpacing": 0.5
+                },
+                {
+                  "type": "text",
+                  "id": "U0ZtS",
+                  "name": "Title",
+                  "fill": "$ink",
+                  "content": "Thaharah",
+                  "fontFamily": "$font-heading",
+                  "fontSize": 30,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "zoOyZ",
+                  "name": "Subtitle",
+                  "fill": "$text-secondary",
+                  "content": "Fiqh Ringkas",
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Xy8Qb",
+              "name": "Summary Card",
+              "width": "fill_container",
+              "fill": "$surface",
+              "cornerRadius": "$radius-card",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": "$gap-md",
+              "padding": "$pad-card",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "NYKUl",
+                  "name": "Description",
+                  "fill": "$ink",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Hukum-hukum bersuci: wudhu, mandi wajib, tayammum, najis",
+                  "lineHeight": 1.4,
+                  "fontFamily": "$font-body",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "rectangle",
+                  "id": "kPKu9",
+                  "name": "Divider",
+                  "fill": "$border",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "R2oTfK",
+                  "name": "Info Block",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "BaPBS",
+                      "name": "Info Label",
+                      "fill": "$ink",
+                      "content": "Info",
+                      "fontFamily": "$font-body",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "S9aVdg",
+                      "name": "Kategori",
+                      "fill": "$text-secondary",
+                      "content": "Fiqh Ringkas",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VdF33",
+                      "name": "Rujukan",
+                      "fill": "$text-secondary",
+                      "content": "Rujukan: fiqh #1",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xXq8L",
+              "name": "Actions Row",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "S0EjRi",
+                  "name": "Catatan",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-pill",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "oGKKX",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "file-text",
+                      "library": "lucide",
+                      "fill": "$primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "XB7mi",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Catatan",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ov5Ay",
+                  "name": "Buka Sumber",
+                  "fill": "$chip-fill",
+                  "cornerRadius": "$radius-pill",
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "C31fZ7",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "external-link",
+                      "library": "lucide",
+                      "fill": "$primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZSclM",
+                      "name": "Label",
+                      "fill": "$primary",
+                      "content": "Buka sumber",
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "OG2LD",
+          "name": "Tab Bar Wrapper",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "id": "uAINp",
+              "type": "ref",
+              "ref": "YZR0c",
+              "name": "Tab Bar",
+              "width": "fill_container",
+              "descendants": {
+                "V6haj/RPER3": {
+                  "fill": "#00000000"
+                },
+                "V6haj/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "V6haj/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/RPER3": {
+                  "fill": "#00000000"
+                },
+                "x9sk1l/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "x9sk1l/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/RPER3": {
+                  "fill": "#00000000"
+                },
+                "QBRwz/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "QBRwz/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/RPER3": {
+                  "fill": "#00000000"
+                },
+                "YdN7T/nM62E": {
+                  "fill": "$text-secondary"
+                },
+                "YdN7T/dMeH6": {
+                  "fill": "$text-secondary"
+                },
+                "HSkNE/RPER3": {
+                  "fill": "$chip-fill"
+                },
+                "HSkNE/nM62E": {
+                  "fill": "$primary"
+                },
+                "HSkNE/dMeH6": {
+                  "fill": "$primary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ellipse",
+      "id": "Wg8sO",
+      "x": 6543,
+      "y": 52726,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "Jm1w5",
+      "x": 6555,
+      "y": 52729,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "q6G0f",
+      "x": 6595,
+      "y": 52723,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "l1LrBB",
+      "x": 6543,
+      "y": 52709,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Baca detail Thaharah",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "ellipse",
+      "id": "a2qFN",
+      "x": 6088,
+      "y": 33976,
+      "name": "Connector Dot",
+      "fill": "#0F9D6D",
+      "width": 8,
+      "height": 8
+    },
+    {
+      "type": "rectangle",
+      "id": "bM4jm",
+      "x": 6100,
+      "y": 33979,
+      "name": "Connector Line",
+      "fill": "#0F9D6D",
+      "width": 40,
+      "height": 2
+    },
+    {
+      "type": "icon",
+      "id": "muRjF",
+      "x": 6140,
+      "y": 33973,
+      "name": "chevron_right",
+      "width": 14,
+      "height": 14,
+      "icon": "chevron_right",
+      "library": "Material Symbols Rounded",
+      "fill": "#0F9D6D"
+    },
+    {
+      "type": "text",
+      "id": "FtLJH",
+      "x": 6088,
+      "y": 33959,
+      "name": "Connector Label",
+      "fill": "#0F9D6D",
+      "content": "Tap tile 'Tasbih'",
+      "fontFamily": "Inter",
+      "fontSize": 9,
+      "fontWeight": "600"
+    },
+    {
+      "type": "frame",
+      "id": "igqwN",
+      "x": 6615,
+      "y": 53282,
+      "name": "PROBE2",
+      "width": 200,
+      "height": 200,
+      "fill": "#FFFFFF",
+      "layout": "vertical",
+      "gap": 10,
+      "padding": 10,
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "P0ISi",
+          "name": "Red Box",
+          "fill": "#FF0000",
+          "width": 100,
+          "height": 40
+        },
+        {
+          "type": "text",
+          "id": "I9Fsg",
+          "name": "Probe Text",
+          "fill": "#000000",
+          "content": "Hello World",
+          "fontFamily": "Inter",
+          "fontSize": 20,
+          "fontWeight": "700"
         }
       ]
     }
