@@ -925,6 +925,40 @@ Expose API terbuka untuk aplikasi pihak ketiga — developer bisa query Quran, H
 
 ---
 
+### 51. Tokoh Tarikh
+
+**Status: SUDAH ADA di mobile app** (ditemukan 2026-09-25 lewat audit kode, belum tercatat di
+roadmap ini sebelumnya). Direktori tokoh-tokoh sejarah Islam — biografi ringkas per tokoh,
+terpisah dari fitur Siroh Nabawiyah (#11, biografi Nabi ﷺ).
+
+**Lokasi mobile:** `apps/mobile/src/screens/TokohTarikhContent.js`, menu entry terpisah di
+`apps/mobile/src/layout/MobileMenuSheet.js` (`menu.islamicHistory` group, icon `History`).
+
+**Model & Endpoint:** belum diverifikasi ke API service — perlu audit terpisah untuk konfirmasi
+apakah datanya sudah punya endpoint dedicated atau masih statis/hardcoded di mobile.
+
+---
+
+### 52. Peta Islam Interaktif
+
+**Status: SUDAH ADA di mobile app** (ditemukan 2026-09-25 lewat audit kode, belum tercatat di
+roadmap ini sebelumnya). Peta sejarah Islam interaktif — kemungkinan menampilkan lokasi
+peristiwa/tokoh penting secara geografis, berkaitan dengan fitur Islamic History Timeline (#44)
+tapi bentuknya peta, bukan daftar timeline linear.
+
+**Lokasi mobile:** `apps/mobile/src/screens/HistoricalMapScreen.js` dan
+`apps/mobile/src/screens/HistoricalMapView.js`.
+
+**Model & Endpoint:** belum diverifikasi ke API service — perlu audit terpisah.
+
+---
+
+> **Catatan audit 2026-09-25**: baris "Web App: Belum ada di repo ini" di tabel
+> [Ringkasan Status Web App / API Service](#ringkasan-status-web-app--api-service) di atas
+> sudah usang — `apps/mobile/` (React Native/Expo) sudah punya puluhan screen fitur yang jalan,
+> termasuk kedua fitur di atas. Perlu audit ulang menyeluruh kalau mau tabel status itu akurat
+> lagi; di luar scope perubahan ini (cuma menambah 2 temuan fitur yang belum tercatat).
+
 ## Urutan Pengerjaan yang Disarankan
 
 ```
