@@ -34810,12 +34810,12 @@
             },
             {
               "type": "frame",
-              "id": "j1lr4U",
-              "name": "Category Chips Row 1",
+              "id": "R82RP",
+              "name": "Category Chips Row",
               "gap": 8,
               "children": [
                 {
-                  "id": "sKqtZ",
+                  "id": "VtFLt",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Semua",
@@ -34828,7 +34828,7 @@
                   }
                 },
                 {
-                  "id": "oeLBY",
+                  "id": "b6zVJ",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Aqidah",
@@ -34839,7 +34839,7 @@
                   }
                 },
                 {
-                  "id": "kFJB3",
+                  "id": "QMEcP",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Fiqh",
@@ -34850,7 +34850,7 @@
                   }
                 },
                 {
-                  "id": "b8HIS",
+                  "id": "ZInFg",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Akhlak",
@@ -34859,17 +34859,9 @@
                       "content": "Akhlak"
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "p1WbHK",
-              "name": "Category Chips Row 2",
-              "gap": 8,
-              "children": [
+                },
                 {
-                  "id": "ndXdS",
+                  "id": "cnLxJ",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Tafsir",
@@ -34880,7 +34872,7 @@
                   }
                 },
                 {
-                  "id": "W1Uyy",
+                  "id": "FdT2F",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Hadits",
@@ -34891,7 +34883,7 @@
                   }
                 },
                 {
-                  "id": "ioTR2",
+                  "id": "o9WJoH",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Sirah",
@@ -34902,7 +34894,7 @@
                   }
                 },
                 {
-                  "id": "g6RyW9",
+                  "id": "j5nmIE",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Umum",
@@ -47956,13 +47948,13 @@
             },
             {
               "type": "frame",
-              "id": "QPBOl",
-              "name": "Chip Row 1",
+              "id": "KBeC3",
+              "name": "Chip Row",
               "gap": 6,
               "children": [
                 {
                   "type": "frame",
-                  "id": "gugcw",
+                  "id": "ywp0u",
                   "name": "Semua",
                   "fill": "$primary",
                   "cornerRadius": "$radius-pill",
@@ -47973,7 +47965,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "G3uoK",
+                      "id": "Twtcm",
                       "name": "Label",
                       "fill": "$primary-foreground",
                       "content": "Semua",
@@ -47985,7 +47977,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "ilEbJ",
+                  "id": "ph1Mg",
                   "name": "Pagi",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -47996,7 +47988,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "wxEKN",
+                      "id": "zegk0",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Pagi",
@@ -48008,7 +48000,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "kIxau",
+                  "id": "hMz5P",
                   "name": "Petang",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48019,7 +48011,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "Zqy0s",
+                      "id": "IHzO7",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Petang",
@@ -48031,7 +48023,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "t3rrZM",
+                  "id": "e557a",
                   "name": "Makan",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48042,7 +48034,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "cXa8W",
+                      "id": "eUrFq",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Makan",
@@ -48054,7 +48046,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "V77oS",
+                  "id": "X10ejv",
                   "name": "Tidur",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48065,7 +48057,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "OoMf1",
+                      "id": "QH3Ko",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Tidur",
@@ -48074,18 +48066,10 @@
                       "fontWeight": "600"
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "o7OYb",
-              "name": "Chip Row 2",
-              "gap": 6,
-              "children": [
+                },
                 {
                   "type": "frame",
-                  "id": "RWvrJ",
+                  "id": "gLR3b",
                   "name": "Bangun",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48096,7 +48080,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "i3WyJc",
+                      "id": "aCQsB",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Bangun",
@@ -48108,7 +48092,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "T1CLhQ",
+                  "id": "elrAw",
                   "name": "Kamar mandi",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48119,7 +48103,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "MbLyo",
+                      "id": "pAehA",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Kamar mandi",
@@ -48131,7 +48115,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "rEwi4",
+                  "id": "Vv0bR",
                   "name": "Masjid",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48142,7 +48126,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "ya8hN",
+                      "id": "Kx72Y",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Masjid",
@@ -48151,18 +48135,10 @@
                       "fontWeight": "600"
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "wF12D",
-              "name": "Chip Row 3",
-              "gap": 6,
-              "children": [
+                },
                 {
                   "type": "frame",
-                  "id": "YLvXC",
+                  "id": "w68Rv5",
                   "name": "Safar",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48173,7 +48149,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "qkcXe",
+                      "id": "oAvT6",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Safar",
@@ -48185,7 +48161,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "UMupo",
+                  "id": "peq4r",
                   "name": "Belajar",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48196,7 +48172,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "FXLMq",
+                      "id": "Y80ca",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Belajar",
@@ -48208,7 +48184,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "GWexc",
+                  "id": "wbXrg",
                   "name": "Umum",
                   "fill": "$chip-fill",
                   "cornerRadius": "$radius-pill",
@@ -48219,7 +48195,7 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "pc6Jd",
+                      "id": "i575QR",
                       "name": "Label",
                       "fill": "$text-secondary",
                       "content": "Umum",
@@ -66679,13 +66655,12 @@
             },
             {
               "type": "frame",
-              "id": "oZYUv",
-              "name": "Filter Row 1",
-              "width": "fill_container",
+              "id": "ibGUi",
+              "name": "Filter Row",
               "gap": 8,
               "children": [
                 {
-                  "id": "MQpTt",
+                  "id": "F1kLG",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Semua",
@@ -66693,13 +66668,12 @@
                   "descendants": {
                     "bLuxC": {
                       "content": "Semua",
-                      "fill": "$primary-foreground",
-                      "fontWeight": "700"
+                      "fill": "$primary-foreground"
                     }
                   }
                 },
                 {
-                  "id": "bVh3R",
+                  "id": "nEQ33",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Thaharah",
@@ -66711,7 +66685,7 @@
                   }
                 },
                 {
-                  "id": "lsoOm",
+                  "id": "GxxuM",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Sholat",
@@ -66721,18 +66695,9 @@
                       "fill": "$text-secondary"
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "iXBmr",
-              "name": "Filter Row 2",
-              "width": "fill_container",
-              "gap": 8,
-              "children": [
+                },
                 {
-                  "id": "y1aqW",
+                  "id": "VfZE4",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Zakat",
@@ -66744,7 +66709,7 @@
                   }
                 },
                 {
-                  "id": "H4HmP",
+                  "id": "Nevha",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Puasa",
@@ -66756,7 +66721,7 @@
                   }
                 },
                 {
-                  "id": "zviHa",
+                  "id": "cP6Y8",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Haji",
@@ -66768,7 +66733,7 @@
                   }
                 },
                 {
-                  "id": "USDky",
+                  "id": "UjfCi",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Muamalah",
@@ -66778,18 +66743,9 @@
                       "fill": "$text-secondary"
                     }
                   }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "cPnyA",
-              "name": "Filter Row 3",
-              "width": "fill_container",
-              "gap": 8,
-              "children": [
+                },
                 {
-                  "id": "OD5yr",
+                  "id": "B1WuY4",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Umum",
@@ -66801,7 +66757,7 @@
                   }
                 },
                 {
-                  "id": "V8GjQv",
+                  "id": "NHyIu",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Nikah",
@@ -66813,7 +66769,7 @@
                   }
                 },
                 {
-                  "id": "F0hyJ",
+                  "id": "PwukY",
                   "type": "ref",
                   "ref": "tX2OL",
                   "name": "Jenazah",
