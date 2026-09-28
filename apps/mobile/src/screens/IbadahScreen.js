@@ -21,7 +21,7 @@ import { useFeedback } from "../context/FeedbackContext";
 import { hapticTap } from "../utils/haptics";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { colors, getThemeColors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import { KhatamScreen } from "./KhatamScreen";
 import { PrayerScreen } from "./PrayerScreen";
 import { QiblaScreen } from "./QiblaScreen";
@@ -538,10 +538,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "rgba(52, 211, 153, 0.10)",
         borderRadius: 8,
-        height: 34,
+        height: touchTarget,
         justifyContent: "center",
         marginBottom: spacing.sm,
-        width: 34,
+        width: touchTarget,
     },
     webAppIconWrapPrimary: {
         backgroundColor: "#059669",

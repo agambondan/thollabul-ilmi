@@ -48,7 +48,7 @@ import { SessionCard } from "../components/SessionCard";
 import { useSession } from "../context/SessionContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { defaultLayoutMode, useLayoutMode } from "../layout/LayoutModeProvider";
+import { useLayoutMode } from "../layout/LayoutModeProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
 import { colors, getThemeColors } from "../theme";
 import { styles, WEB_APP_PROFILE_THEMES } from "./ProfileScreen.styles";
@@ -407,34 +407,28 @@ function AppearanceSettings({ onUserUpdated, user }) {
     const {
         setLayoutMode: setAppLayoutMode,
         setThemePreference: setAppThemePreference,
+        layoutMode,
     } = useLayoutMode();
     const { setLanguage: setAppLanguage, t } = useMobileLocale();
     const [theme, setTheme] = useState("system");
     const [language, setLanguage] = useState(user?.preferred_lang ?? "idn");
-    const [layoutMode, setLayoutMode] = useState(defaultLayoutMode);
     const [saving, setSaving] = useState("");
     const [message, setMessage] = useState("");
 
     useEffect(() => {
         let mounted = true;
         const load = async () => {
-            const [storedTheme, storedLanguage, storedLayoutMode] =
-                await Promise.all([
-                    readPreference(preferenceKeys.appTheme, "system"),
-                    readPreference(
-                        preferenceKeys.appLanguage,
-                        user?.preferred_lang ?? "idn",
-                    ),
-                    readPreference(
-                        preferenceKeys.appLayoutMode,
-                        defaultLayoutMode,
-                    ),
-                ]);
+            const [storedTheme, storedLanguage] = await Promise.all([
+                readPreference(preferenceKeys.appTheme, "system"),
+                readPreference(
+                    preferenceKeys.appLanguage,
+                    user?.preferred_lang ?? "idn",
+                ),
+            ]);
 
             if (!mounted) return;
             setTheme(storedTheme);
             setLanguage(user?.preferred_lang ?? storedLanguage);
-            setLayoutMode(storedLayoutMode);
         };
 
         load();
@@ -462,8 +456,7 @@ function AppearanceSettings({ onUserUpdated, user }) {
         setSaving("layout");
         setMessage("");
         try {
-            const storedMode = await setAppLayoutMode(nextMode);
-            setLayoutMode(storedMode);
+            await setAppLayoutMode(nextMode);
             setMessage(t("layout.saved"));
         } catch (err) {
             setMessage(err?.message ?? t("layout.saveError"));

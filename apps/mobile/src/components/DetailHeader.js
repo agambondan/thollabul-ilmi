@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 import { hapticTap } from "../utils/haptics";
 
 export function DetailHeader({
@@ -93,9 +93,9 @@ const styles = StyleSheet.create({
         borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
-        height: 34,
+        height: touchTarget,
         justifyContent: "center",
-        width: 34,
+        width: touchTarget,
     },
     title: {
         color: colors.ink,

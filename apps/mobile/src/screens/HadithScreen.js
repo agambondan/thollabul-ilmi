@@ -54,7 +54,7 @@ import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { getOfflineItems, getOfflineOverview } from "../storage/offlineContent";
 import { arabicTypography } from "../styles/arabicTypography";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 
 const HADITH_LIST_PAGE_SIZE = 20;
 const WEB_APP_HADITH_BG = "#020617";
@@ -881,7 +881,10 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     />
                 ) : (
                     <View
-                        style={[styles.webAppBookCover, getBookCoverStyle(book)]}
+                        style={[
+                            styles.webAppBookCover,
+                            getBookCoverStyle(book),
+                        ]}
                     >
                         <Text
                             numberOfLines={2}
@@ -1840,7 +1843,12 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         accessibilityRole='button'
                         accessibilityLabel={t("common.scrollToTop")}
                         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                        onPress={() => webAppScrollRef.current?.scrollTo({ y: 0, animated: true })}
+                        onPress={() =>
+                            webAppScrollRef.current?.scrollTo({
+                                y: 0,
+                                animated: true,
+                            })
+                        }
                         style={[
                             styles.webAppScrollTopButton,
                             {
@@ -2049,7 +2057,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: spacing.xs,
         marginBottom: spacing.md,
-        minHeight: 32,
+        minHeight: touchTarget,
     },
     webAppDetailBackText: {
         color: WEB_APP_HADITH_ACCENT,
@@ -2093,7 +2101,7 @@ const styles = StyleSheet.create({
         borderColor: WEB_APP_HADITH_BORDER,
     },
     webAppDetailTabButton: {
-        minHeight: 34,
+        minHeight: touchTarget,
     },
     webAppDetailTabButtonActive: {
         backgroundColor: WEB_APP_HADITH_ACCENT,
@@ -2145,7 +2153,7 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         flex: 1,
         justifyContent: "center",
-        minHeight: 36,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
     },
     webAppHadithTabActive: {
@@ -2167,14 +2175,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
-        minHeight: 38,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppHadithSearchInput: {
         color: "#e2e8f0",
         flex: 1,
         fontSize: 14,
-        minHeight: 36,
+        minHeight: touchTarget,
         padding: 0,
     },
     webAppBookCard: {
@@ -2247,7 +2255,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#059669",
         borderRadius: 6,
         justifyContent: "center",
-        minHeight: 34,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppBookActionText: {

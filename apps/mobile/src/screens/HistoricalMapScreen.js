@@ -8,7 +8,7 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { colors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
 import { HistoricalMapView } from "./HistoricalMapView";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
@@ -718,7 +718,7 @@ const styles = StyleSheet.create({
     webAppToggleBtn: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        minHeight: 36,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.sm,
         paddingVertical: 7,
     },

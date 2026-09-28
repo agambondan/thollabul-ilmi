@@ -175,6 +175,12 @@ export const styles = StyleSheet.create({
         textAlign: "right",
         writingDirection: "rtl",
     },
+    webAppReaderArabicTitleDark: {
+        color: "#f8fafc",
+    },
+    webAppReaderBismillahDark: {
+        color: "#cbd5e1",
+    },
     webAppSurahPagerRow: {
         marginBottom: spacing.md,
     },

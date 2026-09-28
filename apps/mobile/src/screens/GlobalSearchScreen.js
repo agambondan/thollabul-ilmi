@@ -34,7 +34,7 @@ import {
     readRecentSearches,
     rememberRecentSearch,
 } from "../storage/recentSearches";
-import { colors, radius, shadows, spacing } from "../theme";
+import { colors, radius, shadows, spacing, touchTarget } from "../theme";
 
 const MIN_QUERY_LENGTH = 2;
 const PAGE_SIZE = 20;
@@ -1616,7 +1616,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flex: 1,
         justifyContent: "center",
-        minHeight: 38,
+        minHeight: touchTarget,
         paddingHorizontal: spacing.md,
         paddingVertical: 8,
     },
