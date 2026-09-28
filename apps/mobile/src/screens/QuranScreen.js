@@ -20,6 +20,7 @@ import {
 } from "lucide-react-native";
 import {
     ActivityIndicator,
+    BackHandler,
     FlatList,
     Pressable,
     RefreshControl,
@@ -153,6 +154,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     const mushafPageRequestRef = useRef(0);
     const swipeInFlightRef = useRef(false);
     const swipeTouchRef = useRef(null);
+    const swipeGestureActiveRef = useRef(false);
     const surahPaginationRef = useRef({
         hasMore: false,
         loading: false,
@@ -231,6 +233,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     // Modal state
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [tajweedVisible, setTajweedVisible] = useState(false);
+    const [navigatorModalVisible, setNavigatorModalVisible] = useState(false);
     const [referenceModal, setReferenceModal] = useState({
         visible: false,
         type: null,
@@ -1158,6 +1161,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     const beginReaderTouch = useCallback(
         (event) => {
             const touch = event.nativeEvent;
+            swipeGestureActiveRef.current = false;
             swipeTouchRef.current = {
                 lastX: touch.pageX,
                 lastY: touch.pageY,
@@ -1176,6 +1180,11 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         const touch = event.nativeEvent;
         swipeTouchRef.current.lastX = touch.pageX;
         swipeTouchRef.current.lastY = touch.pageY;
+        const dx = touch.pageX - swipeTouchRef.current.startX;
+        const dy = touch.pageY - swipeTouchRef.current.startY;
+        if (Math.abs(dx) >= 10 && Math.abs(dx) > Math.abs(dy)) {
+            swipeGestureActiveRef.current = true;
+        }
     }, []);
 
     const endReaderTouch = useCallback(() => {
@@ -1578,10 +1587,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         await playRangeQueueItem(nextIndex, sessionId);
     };
 
-    const playAyahAudio = async (ayah) => {
+    const playAyahAudio = async (ayah, qariSlugOverride, options = {}) => {
         if (!selectedSurah) return;
         const surahNumber = selectedSurah.number ?? ayah.surahNumber;
-        if (audioState.playingAyahId === ayah.id) {
+        if (!options.forceRestart && audioState.playingAyahId === ayah.id) {
             stopRangeAudio();
             return;
         }
@@ -1595,7 +1604,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         }));
         try {
             const sources = await getSourcesForAyah({ ...ayah, surahNumber });
-            const source = pickAudioSource(sources);
+            const source = pickAudioSource(sources, qariSlugOverride);
             setAudioState((current) => ({
                 ...current,
                 activeAyahId: ayah.id,
@@ -1653,6 +1662,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const selectQari = async (ayahId, qariSlug) => {
         audioQariRef.current = qariSlug;
+        const singleAyahId = audioState.playingAyahId;
         setAudioState((current) => ({
             ...current,
             activeAyahId: ayahId ?? current.activeAyahId,
@@ -1674,6 +1684,13 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             const sessionId = audioRangeSessionRef.current + 1;
             audioRangeSessionRef.current = sessionId;
             playRangeQueueItem(resumeIndex, sessionId);
+        } else if (!hasQueue && singleAyahId) {
+            const ayahToResume =
+                ayahs.find((item) => item.id === singleAyahId) ??
+                mushafPageAyahs.find((item) => item.id === singleAyahId);
+            if (ayahToResume) {
+                playAyahAudio(ayahToResume, qariSlug, { forceRestart: true });
+            }
         }
     };
 
@@ -1759,6 +1776,84 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             navigation?.clearBack?.();
         }
     }, [isActive, selectedDetailAyah, selectedSurah, navigation]);
+
+    // Hardware back handler for audio player, modal sheets, and action sheets
+    useEffect(() => {
+        if (!isActive) return;
+        const backAction = () => {
+            // Priority 1: Close any open modal/sheet first
+            if (settingsVisible) {
+                setSettingsVisible(false);
+                return true;
+            }
+            if (tajweedVisible) {
+                setTajweedVisible(false);
+                return true;
+            }
+            if (referenceModal.visible) {
+                setReferenceModal({ visible: false, type: null, ayah: null });
+                return true;
+            }
+            if (munasabahModal.visible) {
+                setMunasabahModal({ visible: false, ayah: null, items: [], loading: false, error: "" });
+                return true;
+            }
+            if (hadithAyahModal.visible) {
+                setHadithAyahModal({ visible: false, ayah: null, items: [], loading: false, error: "" });
+                return true;
+            }
+            if (ayahActionSheet.visible) {
+                setAyahActionSheet({ visible: false, ayah: null });
+                return true;
+            }
+            if (selectedDetailAyah) {
+                closeAyahDetail();
+                return true;
+            }
+            // Priority 2: Audio player back handling
+            if (audioPlayerOpen) {
+                if (!audioRangeCollapsed) {
+                    setAudioRangeCollapsed(true);
+                    return true;
+                }
+                stopRangeAudio();
+                return true;
+            }
+            // Priority 3: Exit surah reader
+            if (selectedSurah) {
+                setSelectedSurah(null);
+                return true;
+            }
+            // Priority 4: Clear back stack
+            navigation?.clearBack?.();
+            return false;
+        };
+        const subscription = BackHandler.addEventListener("hardwareBackPress", backAction);
+        return () => subscription.remove();
+    }, [
+        isActive,
+        settingsVisible,
+        tajweedVisible,
+        referenceModal.visible,
+        munasabahModal.visible,
+        hadithAyahModal.visible,
+        ayahActionSheet.visible,
+        selectedDetailAyah,
+        audioPlayerOpen,
+        audioRangeCollapsed,
+        selectedSurah,
+        closeAyahDetail,
+        navigation,
+        setSettingsVisible,
+        setTajweedVisible,
+        setReferenceModal,
+        setMunasabahModal,
+        setHadithAyahModal,
+        setAyahActionSheet,
+        setAudioRangeCollapsed,
+        setSelectedSurah,
+        stopRangeAudio,
+    ]);
 
     useEffect(() => {
         let mounted = true;
@@ -1919,6 +2014,12 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     }, [isWebAppLayout, quranTab]);
 
     useEffect(() => {
+        if (selectedSurah) {
+            setNavigatorModalVisible(false);
+        }
+    }, [selectedSurah]);
+
+    useEffect(() => {
         if (!isActive || !navigation?.setHeader) return;
         if (isWebAppLayout && selectedSurah) {
             const surahName =
@@ -1950,6 +2051,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         renderHadithAyahModal,
         renderMunasabahModal,
         renderMushafPage,
+        renderNavigatorModal,
         renderQuranListFooter,
         renderQuranListHeader,
         renderAudioRangePanel,
@@ -1997,6 +2099,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         mushafPageNumber,
         mushafWordsByAyah,
         navigatorMode,
+        navigatorModalVisible,
         openHadithAyahModal,
         openHizb,
         openMunasabahModal,
@@ -2032,6 +2135,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         setMunasabahModal,
         setMurojaahForm,
         setNavigatorMode,
+        setNavigatorModalVisible,
         setPageInput,
         setQuranTab,
         setReaderMenuVisible,
@@ -2049,6 +2153,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         submitMurojaah,
         surahQuery,
         surahs,
+        swipeGestureActiveRef,
         tafsirMode,
         tajweedVisible,
         targetAyah,
@@ -2245,54 +2350,61 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     }
 
     return (
-        <FlatList
-            contentContainerStyle={[
-                styles.quranListContent,
-                isWebAppLayout ? styles.webAppQuranListContent : null,
-                isWebAppLayout ? webAppQuranThemeStyles.quranListContent : null,
-            ]}
-            data={quranTab === "surah" ? filteredSurahs : []}
-            keyExtractor={(surah) => `${surah.number}-${surah.name}`}
-            keyboardShouldPersistTaps='handled'
-            ListEmptyComponent={
-                quranTab === "surah" ? (
-                    loading && surahs.length === 0 ? (
-                        <ActivityIndicator color={colors.primary} />
-                    ) : (
-                        <EmptyState
-                            title='Surah tidak ditemukan'
-                            description='Coba kata kunci lain.'
-                        />
-                    )
-                ) : null
-            }
-            ListFooterComponent={renderQuranListFooter}
-            ListHeaderComponent={renderQuranListHeader}
-            onMomentumScrollBegin={handleScrollActivity}
-            onScroll={handleScrollActivity}
-            onScrollBeginDrag={handleScrollActivity}
-            refreshControl={
-                <RefreshControl
-                    onRefresh={refreshAll}
-                    refreshing={loading}
-                    tintColor={
-                        isWebAppLayout
-                            ? webAppQuranTheme.accent
-                            : colors.primary
-                    }
-                />
-            }
-            renderItem={renderSurahRow}
-            scrollEventThrottle={250}
-            showsVerticalScrollIndicator={false}
-            style={[
-                styles.quranScroll,
-                isWebAppLayout ? styles.webAppQuranScroll : null,
-                isWebAppLayout ? webAppQuranThemeStyles.quranScroll : null,
-            ]}
-            testID={
-                isWebAppLayout ? "quran-web-app-list" : "quran-classic-list"
-            }
-        />
+        <>
+            {renderNavigatorModal()}
+            <FlatList
+                contentContainerStyle={[
+                    styles.quranListContent,
+                    isWebAppLayout ? styles.webAppQuranListContent : null,
+                    isWebAppLayout
+                        ? webAppQuranThemeStyles.quranListContent
+                        : null,
+                ]}
+                data={quranTab === "surah" ? filteredSurahs : []}
+                keyExtractor={(surah) => `${surah.number}-${surah.name}`}
+                keyboardShouldPersistTaps='handled'
+                ListEmptyComponent={
+                    quranTab === "surah" ? (
+                        loading && surahs.length === 0 ? (
+                            <ActivityIndicator color={colors.primary} />
+                        ) : (
+                            <EmptyState
+                                title='Surah tidak ditemukan'
+                                description='Coba kata kunci lain.'
+                            />
+                        )
+                    ) : null
+                }
+                ListFooterComponent={renderQuranListFooter()}
+                ListHeaderComponent={renderQuranListHeader()}
+                onMomentumScrollBegin={handleScrollActivity}
+                onScroll={handleScrollActivity}
+                onScrollBeginDrag={handleScrollActivity}
+                refreshControl={
+                    <RefreshControl
+                        onRefresh={refreshAll}
+                        refreshing={loading}
+                        tintColor={
+                            isWebAppLayout
+                                ? webAppQuranTheme.accent
+                                : colors.primary
+                        }
+                    />
+                }
+                renderItem={renderSurahRow}
+                scrollEventThrottle={250}
+                showsVerticalScrollIndicator={false}
+                style={[
+                    styles.quranScroll,
+                    isWebAppLayout ? styles.webAppQuranScroll : null,
+                    isWebAppLayout ? webAppQuranThemeStyles.quranScroll : null,
+                ]}
+                testID={
+                    isWebAppLayout
+                        ? "quran-web-app-list"
+                        : "quran-classic-list"
+                }
+            />
+        </>
     );
 }

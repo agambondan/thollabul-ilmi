@@ -104,6 +104,7 @@ export function createQuranScreenRenderers(context) {
         mushafPageNumber,
         mushafWordsByAyah,
         navigatorMode,
+        navigatorModalVisible,
         openHadithAyahModal,
         openHizb,
         openMunasabahModal,
@@ -139,6 +140,7 @@ export function createQuranScreenRenderers(context) {
         setMunasabahModal,
         setMurojaahForm,
         setNavigatorMode,
+        setNavigatorModalVisible,
         setPageInput,
         setQuranTab,
         setReaderMenuVisible,
@@ -156,6 +158,7 @@ export function createQuranScreenRenderers(context) {
         submitMurojaah,
         surahQuery,
         surahs,
+        swipeGestureActiveRef,
         tafsirMode,
         tajweedVisible,
         targetAyah,
@@ -535,12 +538,14 @@ export function createQuranScreenRenderers(context) {
                             return (
                                 <Text
                                     key={`${ayah.id}-${ayah.surahNumber ?? selectedSurah.number}-${ayah.number}-${fragment.fragmentIndex}`}
-                                    onPress={() =>
+                                    onPress={() => {
+                                        if (swipeGestureActiveRef.current)
+                                            return;
                                         setAyahActionSheet({
                                             visible: true,
                                             ayah,
-                                        })
-                                    }
+                                        });
+                                    }}
                                     style={
                                         isTargetAyah
                                             ? styles.mushafInlineTarget
@@ -606,7 +611,10 @@ export function createQuranScreenRenderers(context) {
                 key={`mushaf-perkata-${ayahKey}`}
                 accessibilityRole='button'
                 accessibilityLabel={`Aksi ayat ${ayah.number}`}
-                onPress={() => setAyahActionSheet({ visible: true, ayah })}
+                onPress={() => {
+                    if (swipeGestureActiveRef.current) return;
+                    setAyahActionSheet({ visible: true, ayah });
+                }}
                 style={[
                     styles.mushafPerKataAyah,
                     isTargetAyah ? styles.mushafPerKataAyahTarget : null,
@@ -2109,6 +2117,7 @@ return (
                         </View>
                     </View>
                     <Text
+                        numberOfLines={2}
                         style={[
                             styles.webAppSurahArabic,
                             webAppQuranThemeStyles.surahArabic,
@@ -2206,7 +2215,7 @@ return (
             </View>
             <Pressable
                 accessibilityRole='button'
-                onPress={() => openPage(pageInput)}
+                onPress={() => setNavigatorModalVisible(true)}
                 style={[
                     styles.webAppMushafCta,
                     webAppQuranThemeStyles.mushafCta,
@@ -2337,7 +2346,10 @@ return (
                     />
                     <Pressable
                         accessibilityRole='button'
-                        onPress={() => openHizb()}
+                        onPress={() => {
+                            setNavigatorModalVisible(false);
+                            openHizb();
+                        }}
                         style={styles.compactPrimaryButton}
                     >
                         <Text style={styles.primaryButtonText}>Buka Hizb</Text>
@@ -2355,7 +2367,10 @@ return (
                     />
                     <Pressable
                         accessibilityRole='button'
-                        onPress={() => openPage()}
+                        onPress={() => {
+                            setNavigatorModalVisible(false);
+                            openPage();
+                        }}
                         style={styles.compactPrimaryButton}
                     >
                         <Text style={styles.primaryButtonText}>
@@ -2365,6 +2380,16 @@ return (
                 </View>
             )}
         </Card>
+    );
+
+    const renderNavigatorModal = () => (
+        <AppModalSheet
+            onClose={() => setNavigatorModalVisible(false)}
+            title='Navigasi Mushaf'
+            visible={navigatorModalVisible}
+        >
+            {renderNavigatorPanel()}
+        </AppModalSheet>
     );
 
     const renderQuranListFooter = () => {
@@ -2702,6 +2727,7 @@ return (
         renderHadithAyahModal,
         renderMunasabahModal,
         renderMushafPage,
+        renderNavigatorModal,
         renderQuranListFooter,
         renderQuranListHeader,
         renderReaderFooter,

@@ -419,11 +419,19 @@ describe("QuranScreen", () => {
         });
         client.getAyahsForPage.mockResolvedValue([mockAyah(1, 1)]);
 
-        const { getByTestId } = await renderQuranScreen();
+        const { getAllByText, getByTestId, getByText } =
+            await renderQuranScreen();
 
         fireEvent.press(
             await waitFor(() => getByTestId("quran-web-app-mushaf-cta")),
         );
+
+        await waitFor(() => {
+            expect(getAllByText("Navigasi Mushaf").length).toBeGreaterThan(0);
+            expect(getByText("Buka Halaman")).toBeTruthy();
+        });
+
+        fireEvent.press(getByText("Buka Halaman"));
 
         await waitFor(() => {
             expect(client.getAyahsForPage).toHaveBeenCalledWith(1);
@@ -600,9 +608,9 @@ describe("QuranScreen", () => {
         });
     });
 
-    it("renders bookmark and note buttons in ayah action sheet", async () => {
+    it("renders bookmark and note buttons in ayah detail for authenticated user", async () => {
         useSession.mockReturnValue({ user: { id: "user-1" }, loading: false });
-        const { getByText } = await renderQuranScreen();
+        const { getByText, getByTestId } = await renderQuranScreen();
 
         await waitFor(() => {
             expect(getByText("Surah 1")).toBeTruthy();
@@ -612,6 +620,40 @@ describe("QuranScreen", () => {
 
         await waitFor(() => {
             expect(client.getAyahsForSurahPage).toHaveBeenCalled();
+        });
+
+        fireEvent.press(getByText("Ayah 1 translation"));
+
+        await waitFor(() => {
+            expect(getByTestId("pill-Putar audio")).toBeTruthy();
+            expect(getByTestId("pill-Tafsir")).toBeTruthy();
+            expect(getByTestId("pill-Asbabun")).toBeTruthy();
+            expect(getByTestId("pill-Bookmark")).toBeTruthy();
+            expect(getByTestId("pill-Catatan")).toBeTruthy();
+        });
+    });
+
+    it("hides bookmark and note buttons in ayah detail for guest user", async () => {
+        useSession.mockReturnValue({ user: null, loading: false });
+        const { getByText, getByTestId, queryByTestId } =
+            await renderQuranScreen();
+
+        await waitFor(() => {
+            expect(getByText("Surah 1")).toBeTruthy();
+        });
+
+        fireEvent.press(getByText("Surah 1"));
+
+        await waitFor(() => {
+            expect(client.getAyahsForSurahPage).toHaveBeenCalled();
+        });
+
+        fireEvent.press(getByText("Ayah 1 translation"));
+
+        await waitFor(() => {
+            expect(getByTestId("pill-Tafsir")).toBeTruthy();
+            expect(queryByTestId("pill-Bookmark")).toBeNull();
+            expect(queryByTestId("pill-Catatan")).toBeNull();
         });
     });
 
