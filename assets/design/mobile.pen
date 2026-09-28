@@ -1377,7 +1377,21 @@
               "type": "ref",
               "ref": "YZR0c",
               "name": "Tab Bar",
-              "width": "fill_container"
+              "width": "fill_container",
+              "descendants": {
+                "x9sk1l/dMeH6": {
+                  "enabled": false
+                },
+                "QBRwz/dMeH6": {
+                  "enabled": false
+                },
+                "YdN7T/dMeH6": {
+                  "enabled": false
+                },
+                "HSkNE/dMeH6": {
+                  "enabled": false
+                }
+              }
             }
           ]
         }
@@ -3601,7 +3615,8 @@
                   "fill": "$text-secondary"
                 },
                 "V6haj/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "x9sk1l/RPER3": {
                   "fill": "#00000000"
@@ -3610,7 +3625,8 @@
                   "fill": "$text-secondary"
                 },
                 "x9sk1l/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "QBRwz/RPER3": {
                   "fill": "#00000000"
@@ -3619,7 +3635,8 @@
                   "fill": "$text-secondary"
                 },
                 "QBRwz/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "YdN7T/RPER3": {
                   "fill": "$chip-fill"
@@ -3637,7 +3654,8 @@
                   "fill": "$text-secondary"
                 },
                 "HSkNE/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 }
               }
             }
@@ -6864,7 +6882,8 @@
                   "fill": "$text-secondary"
                 },
                 "V6haj/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "x9sk1l/RPER3": {
                   "fill": "#00000000"
@@ -6873,7 +6892,8 @@
                   "fill": "$text-secondary"
                 },
                 "x9sk1l/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "QBRwz/RPER3": {
                   "fill": "#00000000"
@@ -6882,7 +6902,8 @@
                   "fill": "$text-secondary"
                 },
                 "QBRwz/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "YdN7T/RPER3": {
                   "fill": "#00000000"
@@ -6891,7 +6912,8 @@
                   "fill": "$text-secondary"
                 },
                 "YdN7T/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "HSkNE/RPER3": {
                   "fill": "$chip-fill"
@@ -10311,7 +10333,21 @@
               "type": "ref",
               "ref": "YZR0c",
               "name": "Tab Bar",
-              "width": "fill_container"
+              "width": "fill_container",
+              "descendants": {
+                "x9sk1l/dMeH6": {
+                  "enabled": false
+                },
+                "QBRwz/dMeH6": {
+                  "enabled": false
+                },
+                "YdN7T/dMeH6": {
+                  "enabled": false
+                },
+                "HSkNE/dMeH6": {
+                  "enabled": false
+                }
+              }
             }
           ]
         }
@@ -11811,7 +11847,8 @@
                   "fill": "$text-secondary"
                 },
                 "V6haj/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
                 },
                 "x9sk1l/RPER3": {
                   "fill": "$chip-fill"
@@ -11821,6 +11858,15 @@
                 },
                 "x9sk1l/dMeH6": {
                   "fill": "$primary"
+                },
+                "QBRwz/dMeH6": {
+                  "enabled": false
+                },
+                "YdN7T/dMeH6": {
+                  "enabled": false
+                },
+                "HSkNE/dMeH6": {
+                  "enabled": false
                 }
               }
             }
@@ -12913,7 +12959,11 @@
                   "fill": "$text-secondary"
                 },
                 "V6haj/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
+                },
+                "x9sk1l/dMeH6": {
+                  "enabled": false
                 },
                 "QBRwz/RPER3": {
                   "fill": "$chip-fill"
@@ -12923,6 +12973,12 @@
                 },
                 "QBRwz/dMeH6": {
                   "fill": "$primary"
+                },
+                "YdN7T/dMeH6": {
+                  "enabled": false
+                },
+                "HSkNE/dMeH6": {
+                  "enabled": false
                 }
               }
             }
@@ -13735,7 +13791,11 @@
                   "fill": "$text-secondary"
                 },
                 "V6haj/dMeH6": {
-                  "fill": "$text-secondary"
+                  "fill": "$text-secondary",
+                  "enabled": false
+                },
+                "x9sk1l/dMeH6": {
+                  "enabled": false
                 },
                 "QBRwz/RPER3": {
                   "fill": "$chip-fill"
@@ -13745,6 +13805,12 @@
                 },
                 "QBRwz/dMeH6": {
                   "fill": "$primary"
+                },
+                "YdN7T/dMeH6": {
+                  "enabled": false
+                },
+                "HSkNE/dMeH6": {
+                  "enabled": false
                 }
               }
             }
