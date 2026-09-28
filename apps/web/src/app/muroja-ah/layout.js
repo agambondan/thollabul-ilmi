@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/muroja-ah" },
     openGraph: openGraphFor("/muroja-ah"),
-    title: "Review",
+    title: "Muroja'ah",
     description:
-        "Schedule and track Quran memorization review, including last reviewed surahs and review priorities.",
+        "Jadwalkan dan lacak muroja'ah hafalan Al-Quran, termasuk surah terakhir diulang dan prioritas pengulangan.",
 };
 export default function MurojaahLayout({ children }) {
     return children;

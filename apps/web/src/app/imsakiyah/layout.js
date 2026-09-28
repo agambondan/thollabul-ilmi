@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/imsakiyah" },
     openGraph: openGraphFor("/imsakiyah"),
-    title: "Imsakiyah Schedule — Thullaabul Ilmi",
+    title: "Jadwal Imsakiyah",
     description:
-        "A complete imsakiyah schedule with imsak, fajr, sunrise, dhuhr, asr, maghrib, and isha times for cities across Indonesia.",
+        "Jadwal imsakiyah lengkap dengan waktu imsak, subuh, terbit, dzuhur, ashar, maghrib, dan isya untuk kota-kota di Indonesia.",
 };
 
 const ImsakiyahLayout = ({ children }) => children;

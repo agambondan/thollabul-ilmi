@@ -3,7 +3,7 @@ import ForumAskPage, {
 } from "@/app/forum/ask/ForumAskPageClient";
 
 export const metadata = {
-    title: `Ajukan Pertanyaan — Forum Diskusi — Thullaabul 'Ilmi`,
+    title: `Ajukan Pertanyaan — Forum Diskusi`,
     description:
         "Ajukan pertanyaan seputar Islam ke forum diskusi Thullaabul 'Ilmi.",
     robots: { index: false, follow: true },

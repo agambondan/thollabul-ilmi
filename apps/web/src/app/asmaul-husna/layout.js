@@ -5,7 +5,7 @@ export const metadata = {
     openGraph: openGraphFor("/asmaul-husna"),
     title: "Asmaul Husna",
     description:
-        "The 99 beautiful names of Allah with meanings, transliteration, and deeper explanations.",
+        "99 nama indah Allah lengkap dengan arti, transliterasi, dan penjelasan lebih mendalam.",
 };
 export default function AsmaulHusnaLayout({ children }) {
     return children;

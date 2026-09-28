@@ -5,7 +5,7 @@ export const metadata = {
     openGraph: openGraphFor("/asbabun-nuzul"),
     title: "Asbabun Nuzul",
     description:
-        "Study the reasons behind Quranic revelation to understand the historical context of each verse.",
+        "Pelajari sebab-sebab turunnya ayat Al-Quran untuk memahami konteks historis di balik setiap ayat.",
 };
 export default function AsbabunNuzulLayout({ children }) {
     return children;

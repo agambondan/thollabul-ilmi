@@ -29,7 +29,7 @@ async function getInitialItems() {
 
 export const metadata = {
     alternates: { canonical: "/wirid" },
-    title: "Wirid & Dzikir Harian — Thullaabul 'Ilmi",
+    title: "Wirid & Dzikir Harian",
     description:
         "Wirid harian untuk berbagai kesempatan: hari Jumat, Arafah, Ramadan, Lailatul Qadar, dan hari raya.",
 };

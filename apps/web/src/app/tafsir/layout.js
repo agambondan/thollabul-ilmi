@@ -5,7 +5,7 @@ export const metadata = {
     openGraph: openGraphFor("/tafsir"),
     title: "Tafsir Al-Quran",
     description:
-        "Read Quran tafsir by surah and verse to understand Quranic meanings more deeply through trusted scholarly explanations.",
+        "Baca tafsir Al-Quran per surah dan ayat untuk memahami makna Al-Quran lebih dalam lewat penjelasan ulama terpercaya.",
 };
 export default function TafsirLayout({ children }) {
     return children;

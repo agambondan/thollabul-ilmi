@@ -5,7 +5,7 @@ export const revalidate = 86400;
 
 export const metadata = {
     alternates: { canonical: "/tasbih" },
-    title: "Tasbih Digital & Counter Dzikir — Thullaabul 'Ilmi Board",
+    title: "Tasbih Digital & Counter Dzikir",
     description:
         "Tasbih digital online untuk menghitung dzikir harian dengan target, getar haptic, dan pilihan kalimat thoyyibah.",
 };

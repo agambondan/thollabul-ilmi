@@ -37,10 +37,10 @@ export async function generateMetadata(props) {
 
     const title = surah
         ? `Surah ${name}${arabicName ? ` (${arabicName})` : ""} — Al-Quran`
-        : `Al-Quran — Thullaabul 'Ilmi`;
+        : `Al-Quran`;
     const description = surah
-        ? `Read Surah ${name}${surahNumber ? ` (surah no. ${surahNumber})` : ""}${meaning ? `, meaning "${meaning}"` : ""}, with color-coded Tajweed, tafsir, translation, and recitation audio.`
-        : `Read the complete 30 juz of the Quran with color-coded Tajweed, tafsir, translation, and recitation audio.`;
+        ? `Baca Surah ${name}${surahNumber ? ` (surah nomor ${surahNumber})` : ""}${meaning ? `, artinya "${meaning}"` : ""}, lengkap dengan Tajweed berwarna, tafsir, terjemahan, dan audio murottal.`
+        : `Baca Al-Quran lengkap 30 juz dengan Tajweed berwarna, tafsir, terjemahan, dan audio murottal.`;
 
     const urlPath = surahSlug ? `/quran/surah/${surahSlug}` : "/quran";
     const canonicalUrl = `${SITE_URL}${urlPath}`;

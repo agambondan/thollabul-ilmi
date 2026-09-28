@@ -5,7 +5,7 @@ export const revalidate = 86400;
 
 export const metadata = {
     alternates: { canonical: "/asbabun-nuzul" },
-    title: "Asbabun Nuzul Al-Quran — Thullaabul 'Ilmi Board",
+    title: "Asbabun Nuzul Al-Quran",
     description:
         "Sebab-sebab turunnya ayat Al-Quran (Asbabun Nuzul) berdasarkan riwayat dan tafsir terpercaya (Ibnu Katsir, Al-Wahidi, Al-Baghawi).",
 };

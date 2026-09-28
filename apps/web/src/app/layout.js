@@ -19,7 +19,7 @@ const websiteJsonLd = {
     name: "Thullaabul 'Ilmi",
     url: SITE_URL,
     description:
-        "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, Asmaul Husna, sirah, and 30+ more features.",
+        "Portal ilmu Islam dengan Al-Quran, Hadits, doa, dzikir, Asmaul Husna, sirah, dan 30+ fitur lainnya.",
     potentialAction: {
         "@type": "SearchAction",
         target: {
@@ -28,6 +28,19 @@ const websiteJsonLd = {
         },
         "query-input": "required name=search_term_string",
     },
+};
+
+const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Thullaabul 'Ilmi",
+    url: SITE_URL,
+    logo: `${SITE_URL}${OG_IMAGE.url}`,
+    sameAs: [
+        "https://instagram.com/tholabul.ilmi",
+        "https://twitter.com/tholabululmi",
+        "https://github.com/tholabul-ilmi",
+    ],
 };
 
 export const metadata = {
@@ -42,33 +55,33 @@ export const metadata = {
     appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: "default" },
     formatDetection: { telephone: false },
     description:
-        "Thullaabul 'Ilmi is a complete Islamic knowledge portal with the 30 juz Quran, color-coded Tajweed, tafsir, vocabulary, recitation audio, 9 authentic Hadith books, daily prayers, dhikr, Asmaul Husna, sirah, memorization tracking, recitation tracking, daily deeds, Hijri calendar, leaderboard, Islamic blog, and 30+ more features.",
+        "Thullaabul 'Ilmi adalah portal ilmu Islam lengkap dengan Al-Quran 30 juz, Tajweed berwarna, tafsir, kosakata, audio murottal, 9 kitab Hadits shahih, doa harian, dzikir, Asmaul Husna, sirah, pelacak hafalan, pelacak tilawah, amalan harian, kalender Hijriyah, leaderboard, blog Islami, dan 30+ fitur lainnya.",
     keywords: [
-        "online Quran",
-        "authentic hadith",
-        "quran tafsir",
-        "color-coded tajweed",
-        "recitation audio",
-        "quran vocabulary",
+        "Al-Quran online",
+        "hadits shahih",
+        "tafsir Al-Quran",
+        "tajweed berwarna",
+        "audio murottal",
+        "kosakata Al-Quran",
         "asbabun nuzul",
-        "daily prayers",
-        "morning evening dhikr",
+        "doa harian",
+        "dzikir pagi petang",
         "asmaul husna",
-        "prophetic biography",
-        "quran memorization",
-        "recitation tracker",
-        "daily deeds",
-        "hijri calendar",
-        "memorization leaderboard",
-        "islamic blog",
-        "islamic knowledge",
-        "islamic portal",
-        "learn quran",
+        "sirah nabawiyah",
+        "hafalan Al-Quran",
+        "pelacak tilawah",
+        "amalan harian",
+        "kalender hijriyah",
+        "leaderboard hafalan",
+        "blog islami",
+        "ilmu Islam",
+        "portal Islam",
+        "belajar Al-Quran",
     ],
     openGraph: {
         title: SITE_NAME,
         description:
-            "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, Asmaul Husna, sirah, memorization tracking, recitation tracking, daily deeds, Hijri calendar, and 30+ more features.",
+            "Portal ilmu Islam dengan Al-Quran, Hadits, doa, dzikir, Asmaul Husna, sirah, pelacak hafalan dan tilawah, amalan harian, kalender Hijriyah, dan 30+ fitur lainnya.",
         type: "website",
         siteName: SITE_NAME,
         locale: "id_ID",
@@ -79,7 +92,7 @@ export const metadata = {
         card: "summary_large_image",
         title: SITE_NAME,
         description:
-            "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, and 30+ more features.",
+            "Portal ilmu Islam dengan Al-Quran, Hadits, doa, dzikir, dan 30+ fitur lainnya.",
         images: [OG_IMAGE.url],
     },
     other: {
@@ -109,9 +122,9 @@ export default async function RootLayout({ children }) {
                 </Script>
                 <Script
                     async
-                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2005235442054436"
-                    crossOrigin="anonymous"
-                    strategy="afterInteractive"
+                    src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2005235442054436'
+                    crossOrigin='anonymous'
+                    strategy='afterInteractive'
                 />
                 <link
                     rel='preconnect'
@@ -156,6 +169,12 @@ export default async function RootLayout({ children }) {
                     type='application/ld+json'
                     dangerouslySetInnerHTML={{
                         __html: serializeJsonLd(websiteJsonLd),
+                    }}
+                />
+                <script
+                    type='application/ld+json'
+                    dangerouslySetInnerHTML={{
+                        __html: serializeJsonLd(organizationJsonLd),
                     }}
                 />
                 <LocaleProvider initialLang={initialLang}>

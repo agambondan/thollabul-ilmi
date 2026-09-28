@@ -1,14 +1,14 @@
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata = {
-    title: "Tokoh Tarikh — Thullaabul 'Ilmi",
+    title: "Tokoh Tarikh",
     description:
         "Biografi para sahabat, tabi'in, tabi'ut tabi'in, imam mazhab, ulama klasik, dan ilmuwan Islam terkemuka.",
     alternates: {
         canonical: `${SITE_URL}/tokoh`,
     },
     openGraph: {
-        title: "Tokoh Tarikh — Thullaabul 'Ilmi",
+        title: "Tokoh Tarikh",
         description:
             "Biografi para sahabat, tabi'in, tabi'ut tabi'in, imam mazhab, ulama klasik, dan ilmuwan Islam terkemuka.",
         url: `${SITE_URL}/tokoh`,
@@ -18,7 +18,7 @@ export const metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Tokoh Tarikh — Thullaabul 'Ilmi",
+        title: "Tokoh Tarikh",
         description:
             "Biografi para sahabat, tabi'in, tabi'ut tabi'in, imam mazhab, ulama klasik, dan ilmuwan Islam terkemuka.",
         images: [OG_IMAGE.url],

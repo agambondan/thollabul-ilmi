@@ -33,7 +33,7 @@ export async function generateMetadata(props) {
     const book = normalizeBook(initialBook);
 
     if (!book) {
-        return { title: `Perpustakaan — Thullaabul 'Ilmi` };
+        return { title: `Perpustakaan` };
     }
 
     const bookTitle = book.title || "Kitab";

@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/search" },
     openGraph: openGraphFor("/search"),
-    title: "Search",
+    title: "Pencarian",
     description:
-        "Search Quran verses and hadiths by keywords in Indonesian, Arabic, or transliteration.",
+        "Cari ayat Al-Quran dan hadits berdasarkan kata kunci dalam Bahasa Indonesia, Arab, atau transliterasi.",
 };
 export default function SearchLayout({ children }) {
     return children;

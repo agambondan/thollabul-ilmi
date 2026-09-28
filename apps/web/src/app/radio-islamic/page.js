@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata = {
     alternates: { canonical: "/radio-islamic" },
     openGraph: openGraphFor("/radio-islamic"),
-    title: "Radio Islam Indonesia & Frekuensi Domisili — Thullaabul 'Ilmi",
+    title: "Radio Islam Indonesia & Frekuensi Domisili",
     description:
         "Daftar radio Islam di Jakarta dan kota-kota di Indonesia berdasarkan frekuensi dan domisili, lengkap dengan streaming online dan penjelasan alokasi frekuensi daerah.",
 };

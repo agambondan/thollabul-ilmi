@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/hijri" },
     openGraph: openGraphFor("/hijri"),
-    title: "Hijri Calendar",
+    title: "Kalender Hijriyah",
     description:
-        "Convert Gregorian dates to Hijri, check today in the Hijri calendar, and view important Islamic dates throughout the year.",
+        "Konversi tanggal Masehi ke Hijriyah, cek tanggal Hijriyah hari ini, dan lihat hari-hari penting Islam sepanjang tahun.",
 };
 export default function HijriLayout({ children }) {
     return children;

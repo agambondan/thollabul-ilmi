@@ -5,7 +5,7 @@ export const revalidate = 86400;
 
 export const metadata = {
     alternates: { canonical: "/sejarah" },
-    title: "Garis Waktu Sejarah Islam — Thullaabul 'Ilmi Board",
+    title: "Garis Waktu Sejarah Islam",
     description:
         "Timeline dan kronologi sejarah peradaban Islam: era kenabian, khulafaur rasyidin, dinasti kekhalifahan, dan tokoh ulama besar.",
 };

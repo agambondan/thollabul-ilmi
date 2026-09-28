@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata = {
     alternates: { canonical: "/masjid" },
     openGraph: openGraphFor("/masjid"),
-    title: "Daftar Masjid Jakarta & Sekitarnya — Thullaabul 'Ilmi",
+    title: "Daftar Masjid Jakarta & Sekitarnya",
     description:
         "Daftar masjid ahlussunnah waljama'ah di Jakarta & Bodetabek: Masjid Jami' Al-Barkah (Rodja), Masjid Nur-Salma Kuningan, Masjid Nurim Blok M, Masjid Sunda Kelapa, Masjid Al-Ikhlas Cipete, Baitussalam Billy Moon, BSD, Cibubur. Cari fasilitas, lokasi, dan jarak GPS.",
 };

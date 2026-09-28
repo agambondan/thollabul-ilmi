@@ -21,11 +21,11 @@ export async function generateMetadata(props) {
     const params = await props.params;
     const post = await getBlogPost(params.slug);
 
-    const title = post?.title ?? `Blog — Thullaabul 'Ilmi`;
+    const title = post?.title ?? `Blog Islami`;
     const description =
         post?.excerpt ??
         post?.summary ??
-        `Read Islamic articles on Thullaabul 'Ilmi.`;
+        `Baca artikel Islami di Thullaabul 'Ilmi.`;
     const image = post?.image ?? post?.cover_image ?? null;
     const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
 

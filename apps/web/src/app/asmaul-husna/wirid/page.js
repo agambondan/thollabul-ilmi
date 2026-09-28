@@ -4,7 +4,7 @@ import { AsmaulWiridContent } from "./AsmaulWiridContent";
 export { AsmaulWiridContent };
 
 export const metadata = {
-    title: "Wirid Asmaul Husna - Tholabul 'Ilmi",
+    title: "Wirid Asmaul Husna",
     description:
         "Hitung wirid 99 nama Allah dengan mudah. Wirid harian interaktif dengan penyimpanan otomatis.",
 };

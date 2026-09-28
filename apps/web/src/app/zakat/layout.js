@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/zakat" },
     openGraph: openGraphFor("/zakat"),
-    title: "Zakat Calculator",
+    title: "Kalkulator Zakat",
     description:
-        "Calculate maal, fitrah, and income zakat according to Islamic rules, with automatic nisab estimation based on current gold prices.",
+        "Hitung zakat maal, fitrah, dan penghasilan sesuai ketentuan syariat, dengan estimasi nisab otomatis berdasarkan harga emas terkini.",
 };
 export default function ZakatLayout({ children }) {
     return children;

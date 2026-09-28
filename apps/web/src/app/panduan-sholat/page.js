@@ -4,7 +4,7 @@ export const revalidate = 86400;
 
 export const metadata = {
     alternates: { canonical: "/panduan-sholat" },
-    title: "Panduan Sholat Lengkap — Thullaabul 'Ilmi Board",
+    title: "Panduan Sholat Lengkap",
     description:
         "Panduan tata cara sholat wajib 5 waktu dan sholat sunnah lengkap dengan rukun, bacaan Arab, latin, dan terjemahan.",
 };

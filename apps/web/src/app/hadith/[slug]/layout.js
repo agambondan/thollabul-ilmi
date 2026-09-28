@@ -10,13 +10,11 @@ export async function generateMetadata(props) {
     const params = await props.params;
     const books = await getBooks();
     const book = books.find((k) => k.slug === params.slug);
-    const bookName = book?.translation?.en ?? book?.translation?.idn ?? null;
-    const title = bookName
-        ? `${bookName} — Hadith`
-        : `Hadith — Thullaabul 'Ilmi`;
+    const bookName = book?.translation?.idn ?? book?.translation?.en ?? null;
+    const title = bookName ? `Kitab ${bookName} — Hadits` : `Hadits`;
     const description = bookName
-        ? `Read the complete hadith collection from ${bookName}. Browse by theme and chapter.`
-        : `Read and study hadith from major collections including Bukhari, Muslim, Abu Dawud, and others.`;
+        ? `Baca kumpulan hadits lengkap dari Kitab ${bookName}. Jelajahi berdasarkan tema dan bab.`
+        : `Baca dan pelajari hadits dari kitab-kitab utama termasuk Bukhari, Muslim, Abu Daud, dan lainnya.`;
     const canonicalUrl = `${SITE_URL}/hadith/${params.slug}`;
 
     return {

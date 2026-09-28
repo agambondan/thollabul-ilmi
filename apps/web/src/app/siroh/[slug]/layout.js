@@ -44,12 +44,12 @@ export async function generateMetadata(props) {
     const content = await getSirohContent(params.slug);
 
     const title = content?.title
-        ? `${content.title} — Prophet's Biography`
-        : `Prophet's Biography — Thullaabul 'Ilmi`;
+        ? `${content.title} — Sirah Nabawiyah`
+        : `Sirah Nabawiyah`;
     const description =
         content?.summary ??
         content?.excerpt ??
-        `Read the biography of Prophet Muhammad ﷺ in clear, chapter-based lessons.`;
+        `Baca sirah (biografi) Nabi Muhammad ﷺ dalam pembahasan yang jelas per bab.`;
 
     const canonicalUrl = `${SITE_URL}/siroh/${params.slug}`;
 

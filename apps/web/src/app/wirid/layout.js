@@ -3,18 +3,18 @@ import { openGraphFor, SITE_URL } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/wirid" },
     openGraph: openGraphFor("/wirid"),
-    title: "Wird & Sunnah Readings",
+    title: "Wirid & Bacaan Sunnah",
     description:
-        "A collection of wird and sunnah readings for special moments, including Friday, Ramadan, Arafah Day, Laylatul Qadr, Eid al-Fitr, and Eid al-Adha.",
+        "Kumpulan wirid dan bacaan sunnah untuk momen-momen khusus, termasuk hari Jumat, Ramadan, hari Arafah, Lailatul Qadar, Idul Fitri, dan Idul Adha.",
 };
 
 const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Wird & Sunnah Readings",
+    name: "Wirid & Bacaan Sunnah",
     url: `${SITE_URL}/wirid`,
     description:
-        "A collection of wird and sunnah readings for special moments with Arabic text, transliteration, and translation.",
+        "Kumpulan wirid dan bacaan sunnah untuk momen-momen khusus lengkap dengan teks Arab, transliterasi, dan terjemahan.",
     isPartOf: {
         "@type": "WebSite",
         name: "Thullaabul 'Ilmi",

@@ -3,18 +3,18 @@ import { openGraphFor, SITE_URL } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/blog" },
     openGraph: openGraphFor("/blog"),
-    title: "Islamic Blog",
+    title: "Blog Islami",
     description:
-        "Read articles on Islamic knowledge, Quran, Hadith, prayer, fasting, and modern Muslim life.",
+        "Baca artikel seputar ilmu Islam, Al-Quran, Hadits, sholat, puasa, dan kehidupan muslim modern.",
 };
 
 const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "Islamic Blog — Thullaabul 'Ilmi",
+    name: "Blog Islami — Thullaabul 'Ilmi",
     url: `${SITE_URL}/blog`,
     description:
-        "Islamic articles on Quran, Hadith, prayer, fasting, and modern Muslim life.",
+        "Artikel Islami seputar Al-Quran, Hadits, sholat, puasa, dan kehidupan muslim modern.",
     publisher: {
         "@type": "Organization",
         name: "Thullaabul 'Ilmi",

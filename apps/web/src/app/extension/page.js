@@ -5,7 +5,7 @@ import ExtensionClient from "./ExtensionClient";
 export const metadata = {
     alternates: { canonical: "/extension" },
     openGraph: openGraphFor("/extension"),
-    title: "Chrome Extension — Thullaabul 'Ilmi Board",
+    title: "Chrome Extension",
     description:
         "Dashboard New Tab Islami untuk browser Chrome, Brave, dan Edge: jadwal sholat, kalender Hijriyah, checklist sholat, dan kutipan hadits harian.",
 };

@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/jadwal-sholat" },
     openGraph: openGraphFor("/jadwal-sholat"),
-    title: "Prayer Schedule",
+    title: "Jadwal Sholat",
     description:
-        "Five daily prayer times for cities in Indonesia, with automatic location detection, next prayer display, and the Kemenag RI calculation method.",
+        "Jadwal sholat 5 waktu untuk kota-kota di Indonesia, dengan deteksi lokasi otomatis, penanda sholat berikutnya, dan metode perhitungan Kemenag RI.",
 };
 export default function JadwalSholatLayout({ children }) {
     return children;

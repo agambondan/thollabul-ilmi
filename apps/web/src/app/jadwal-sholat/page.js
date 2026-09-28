@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata = {
     alternates: { canonical: "/jadwal-sholat" },
     openGraph: openGraphFor("/jadwal-sholat"),
-    title: "Jadwal Sholat Hari Ini — Thullaabul 'Ilmi",
+    title: "Jadwal Sholat Hari Ini",
     description:
         "Jadwal ibadah harian akurat dengan lokasi, metode (Kemenag, MWL, ISNA, dll), dan madhab (Syafi'i, Hanafi).",
 };

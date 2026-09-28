@@ -3,18 +3,18 @@ import { openGraphFor, SITE_URL } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/siroh" },
     openGraph: openGraphFor("/siroh"),
-    title: "Prophet's Biography",
+    title: "Sirah Nabawiyah",
     description:
-        "Read the biography of Prophet Muhammad ﷺ in clear, chapter-based lessons.",
+        "Baca sirah (biografi) Nabi Muhammad ﷺ dalam pembahasan yang jelas per bab.",
 };
 
 const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Prophet's Biography (Sirah)",
+    name: "Sirah Nabawiyah",
     url: `${SITE_URL}/siroh`,
     description:
-        "Biography of Prophet Muhammad ﷺ in clear, chapter-based lessons.",
+        "Biografi Nabi Muhammad ﷺ dalam pembahasan yang jelas per bab.",
     isPartOf: {
         "@type": "WebSite",
         name: "Thullaabul 'Ilmi",

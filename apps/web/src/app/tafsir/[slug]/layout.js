@@ -39,10 +39,10 @@ export async function generateMetadata(props) {
     const arabicName = surah?.name ?? "";
     const title = surah
         ? `Tafsir Surah ${name}${arabicName ? ` (${arabicName})` : ""}`
-        : `Tafsir Surah — Thullaabul 'Ilmi`;
+        : `Tafsir Surah`;
     const description = surah
-        ? `Read the complete tafsir of Surah ${name}, with explanations of the meaning and context of each Quranic verse.`
-        : `Read tafsir and explanations of Quranic meanings by surah on Thullaabul Ilmi.`;
+        ? `Baca tafsir lengkap Surah ${name}, dengan penjelasan makna dan konteks tiap ayat Al-Quran.`
+        : `Baca tafsir dan penjelasan makna Al-Quran per surah di Thullaabul 'Ilmi.`;
     const canonicalUrl = `${SITE_URL}/tafsir/${params.slug}`;
 
     return {

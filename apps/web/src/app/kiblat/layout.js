@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/kiblat" },
     openGraph: openGraphFor("/kiblat"),
-    title: "Qibla Direction",
+    title: "Arah Kiblat",
     description:
-        "Find the Qibla direction toward the Ka'bah from your location using GPS and your device compass, including distance to Makkah.",
+        "Temukan arah kiblat menuju Ka'bah dari lokasimu memakai GPS dan kompas perangkat, lengkap dengan jarak ke Makkah.",
 };
 export default function KiblatLayout({ children }) {
     return children;

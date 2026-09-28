@@ -53,15 +53,44 @@ export default function PwaInstallNotice() {
         if (!isMobileDevice()) return;
 
         setIsIos(isIosDevice());
-        setHidden(false);
 
         const handler = (event) => {
             event.preventDefault();
             setPrompt(event);
         };
-
         window.addEventListener("beforeinstallprompt", handler);
-        return () => window.removeEventListener("beforeinstallprompt", handler);
+
+        // Defer until the user has scrolled near the bottom of the page so
+        // this fixed banner never becomes the element Googlebot's mobile
+        // render pass treats as prominent content — its UA matches the
+        // Android check above, so without this gate it would otherwise see
+        // the banner immediately on mount. Mirrors the same
+        // IntersectionObserver + delay pattern in NotificationPermissionPrompt.
+        let cancelled = false;
+        let timer = null;
+        const sentinel = document.createElement("div");
+        sentinel.style.cssText =
+            "position:fixed;left:0;bottom:0;width:1px;height:1px;pointer-events:none;opacity:0;";
+        document.body.appendChild(sentinel);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    timer = setTimeout(() => {
+                        if (!cancelled) setHidden(false);
+                    }, 1200);
+                }
+            },
+            { rootMargin: "0px 0px 200px 0px" },
+        );
+        observer.observe(sentinel);
+
+        return () => {
+            cancelled = true;
+            window.removeEventListener("beforeinstallprompt", handler);
+            if (timer) clearTimeout(timer);
+            observer.disconnect();
+            if (sentinel.parentNode) sentinel.parentNode.removeChild(sentinel);
+        };
     }, []);
 
     const dismiss = () => {

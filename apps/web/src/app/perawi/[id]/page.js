@@ -30,7 +30,7 @@ export async function generateMetadata(props) {
     const perawi = await getPerawi(params.id);
 
     if (!perawi) {
-        return { title: `Perawi Hadits — Thullaabul 'Ilmi` };
+        return { title: `Perawi Hadits` };
     }
 
     const name = perawi.nama_latin || perawi.nama_lengkap || "Perawi Hadits";

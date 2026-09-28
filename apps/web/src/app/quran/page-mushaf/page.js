@@ -6,7 +6,7 @@ export const revalidate = 86400;
 
 export const metadata = {
     alternates: { canonical: "/quran/page-mushaf" },
-    title: "Al-Quran Mushaf Halaman — Thullaabul 'Ilmi Board",
+    title: "Al-Quran Mushaf Halaman",
     description:
         "Baca Al-Quran per halaman (mushaf standar 604 halaman) lengkap dengan bantuan mufrodat per kata.",
 };

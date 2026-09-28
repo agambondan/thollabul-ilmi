@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/dzikir" },
     openGraph: openGraphFor("/dzikir"),
-    title: "Dhikr & Wird",
+    title: "Dzikir & Wirid",
     description:
-        "A collection of morning and evening dhikr, daily wird, and situational dhikr from Hisnul Muslim and Al-Adhkar.",
+        "Kumpulan dzikir pagi-petang, wirid harian, dan dzikir situasional dari kitab Hisnul Muslim dan Al-Adzkar.",
 };
 export default function DzikirLayout({ children }) {
     return children;

@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/leaderboard" },
     openGraph: openGraphFor("/leaderboard"),
-    title: "Leaderboard",
+    title: "Papan Peringkat",
     description:
-        "Quran memorization and learning streak rankings for Thullaabul Ilmi users, designed for healthy motivation.",
+        "Peringkat hafalan Al-Quran dan streak belajar pengguna Thullaabul 'Ilmi, dirancang untuk motivasi yang sehat.",
 };
 export default function LeaderboardLayout({ children }) {
     return children;

@@ -5,9 +5,9 @@ import ContactPageClient from "./ContactPageClient";
 export const metadata = {
     alternates: { canonical: "/contact" },
     openGraph: openGraphFor("/contact"),
-    title: "Contact",
+    title: "Kontak",
     description:
-        "Contact the Thullaabul 'Ilmi team for feedback, bug reports, and collaboration.",
+        "Hubungi tim Thullaabul 'Ilmi untuk kritik, saran, laporan bug, atau kolaborasi.",
 };
 
 export default function ContactPage() {

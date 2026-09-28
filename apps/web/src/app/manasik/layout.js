@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/manasik" },
     openGraph: openGraphFor("/manasik"),
-    title: "Hajj & Umrah Manasik — Thullaabul Ilmi",
+    title: "Manasik Haji & Umrah",
     description:
-        "A complete guide to Hajj and Umrah rituals from ihram intention to tahallul, with readings and explanations.",
+        "Panduan lengkap tata cara ibadah haji dan umrah dari niat ihram hingga tahallul, lengkap dengan bacaan dan penjelasannya.",
 };
 
 const ManasikLayout = ({ children }) => children;

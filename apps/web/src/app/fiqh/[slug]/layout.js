@@ -39,9 +39,7 @@ export async function generateMetadata(props) {
     const params = await props.params;
     const item = await getFiqhItem(params.slug);
 
-    const title = item?.title
-        ? `${item.title} — Fiqh Ringkas`
-        : `Fiqh Ringkas — Thullaabul 'Ilmi Board`;
+    const title = item?.title ? `${item.title} — Fiqh Ringkas` : `Fiqh Ringkas`;
     const description = item?.content
         ? item.content.slice(0, 160)
         : "Panduan fiqh ibadah dan muamalah ringkas berdasarkan dalil shahih.";

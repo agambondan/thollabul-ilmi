@@ -5,7 +5,7 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/belajar" },
     openGraph: openGraphFor("/belajar"),
-    title: "Pusat Belajar — Thullaabul 'Ilmi",
+    title: "Pusat Belajar",
     description:
         "Pusat belajar ilmu Islam komprehensif: modul interaktif, kajian, sejarah, fiqh, dan kamus.",
 };

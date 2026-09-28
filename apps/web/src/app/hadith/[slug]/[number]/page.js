@@ -15,7 +15,7 @@ export async function generateMetadata(props) {
 
     if (!hadith) {
         return {
-            title: `Hadith — Thullaabul 'Ilmi`,
+            title: `Hadith`,
         };
     }
 

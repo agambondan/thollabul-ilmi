@@ -5,7 +5,7 @@ export const revalidate = 86400;
 
 export const metadata = {
     alternates: { canonical: "/fiqh" },
-    title: "Fiqh Ringkas — Thullaabul 'Ilmi Board",
+    title: "Fiqh Ringkas",
     description:
         "Panduan fiqh ibadah dan muamalah ringkas berdasarkan dalil shahih: thaharah, sholat, puasa, zakat, haji, dan lainnya.",
 };

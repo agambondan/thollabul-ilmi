@@ -5,7 +5,7 @@ export const metadata = {
     openGraph: openGraphFor("/quran"),
     title: "Al-Quran",
     description:
-        "Read the complete 30 juz of the Quran with color-coded Tajweed to support recitation learning.",
+        "Baca Al-Quran lengkap 30 juz dengan Tajweed berwarna untuk membantu belajar tilawah.",
 };
 
 const collectionJsonLd = {

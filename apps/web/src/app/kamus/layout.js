@@ -3,9 +3,9 @@ import { openGraphFor } from "@/lib/site";
 export const metadata = {
     alternates: { canonical: "/kamus" },
     openGraph: openGraphFor("/kamus"),
-    title: "Arabic Dictionary",
+    title: "Kamus Arab-Indonesia",
     description:
-        "An Arabic-Indonesian dictionary for Quranic and Islamic vocabulary, with meanings, transliteration, and roots.",
+        "Kamus Arab-Indonesia untuk kosakata Al-Quran dan istilah Islam, lengkap dengan arti, transliterasi, dan akar kata.",
 };
 export default function KamusLayout({ children }) {
     return children;
