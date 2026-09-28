@@ -171,11 +171,11 @@ Diverifikasi dengan `next build` bersih (exit code 0, semua route ter-generate) 
 
 **Bug tambahan yang ditemukan & diperbaiki selama verifikasi ini**: title tag `/perawi`, `/perawi/[id]`, dan `/library` sempat dobel " — Thullaabul 'Ilmi" (mis. "... — Thullaabul 'Ilmi — Thullaabul 'Ilmi") karena root `layout.js` sudah otomatis menambahkan suffix itu lewat `title.template`, dan kode baru menambahkannya lagi secara manual. Sudah diperbaiki di ketiga file. **Pola bug yang sama masih ada di `komunitas/page.js`** (pre-existing, di luar scope sesi ini) — title-nya juga dobel suffix; belum diperbaiki, perlu audit terpisah kalau mau dituntaskan sitewide.
 
-### 6.5 Yang TIDAK diperbaiki (butuh keputusan produk, bukan kode)
+### 6.5 Yang TIDAK diperbaiki di sesi ini (lihat bagian 7 & 9 untuk update)
 
-- **P0-2 Library** — sifat "republish PDF pihak ketiga" tidak berubah oleh fix SSR di atas; itu cuma memastikan Google _bisa melihat_ apa yang sudah ada (judul, deskripsi admin), bukan menambah nilai konten baru. Kalau AdSense reviewer masih menilai ini "aggregated content", solusinya konten (tulis ringkasan/ulasan lebih panjang per buku, atau kurangi jumlah buku yang disitemapkan ke yang benar-benar sudah dideskripsikan lengkap), bukan kode.
-- **P0-3 Kajian** — 7.366 transkrip auto-caption mentah tidak disentuh. Ini konten yang sengaja ada untuk dakwah/pencarian, mengedit ulang 7.366 entri di luar scope teknis. Catatan mitigasi: halaman `/kajian` sendiri (index channel) tetap ada di sitemap karena isinya daftar channel yang dikurasi, bukan transkrip mentah — transkrip mentah hanya muncul sebagai hasil pencarian client-side (tidak ada URL per-hasil-pencarian yang disitemapkan), jadi risiko indexing-nya lebih rendah dari yang awalnya diperkirakan; risiko utama justru kalau reviewer manusia AdSense mengetik query di kotak pencarian saat review manual.
-- **P1-1 Quran/Hadis tafsir/sanad di balik toggle** — tidak diubah. Memindahkan tafsir/mufrodat/munasabah (Quran) atau sanad/takhrij (Hadis) ke SSR-by-default berarti setiap page-load surah/hadis akan selalu fetch data tambahan itu meski user tak pernah buka panelnya — trade-off performa vs SEO yang perlu keputusan sadar dari product owner, bukan diputuskan sepihak di sesi ini.
+- ~~P0-2 Library~~ — **diperbaiki di bagian 8** (sesi lanjutan 2026-09-28).
+- **P0-3 Kajian** — 7.366 transkrip auto-caption mentah tidak disentuh. Ini konten yang sengaja ada untuk dakwah/pencarian, mengedit ulang 7.366 entri di luar scope teknis, dan berisiko fabrikasi (lihat bagian 9). Catatan mitigasi: halaman `/kajian` sendiri (index channel) tetap ada di sitemap karena isinya daftar channel yang dikurasi, bukan transkrip mentah — transkrip mentah hanya muncul sebagai hasil pencarian client-side (tidak ada URL per-hasil-pencarian yang disitemapkan), jadi risiko indexing-nya lebih rendah dari yang awalnya diperkirakan; risiko utama justru kalau reviewer manusia AdSense mengetik query di kotak pencarian saat review manual.
+- **P1-1 Quran/Hadis tafsir/sanad di balik toggle** — **diperbaiki sebagian di bagian 7** (tafsir Quran + sanad/takhrij/ayat-terkait Hadis). Mufrodat/munasabah/hadis-terkait di Quran tetap lazy-on-click, tidak diubah (lihat alasan di 7.1).
 
 ### 6.6 Verifikasi menyeluruh
 
@@ -183,3 +183,72 @@ Diverifikasi dengan `next build` bersih (exit code 0, semua route ter-generate) 
 - `npx prettier --write` dijalankan di semua file yang diubah/dibuat.
 - `rm -rf .next && next build` — build produksi bersih, exit code 0, seluruh route (termasuk `/forum`, `/library/[slug]`, `/perawi/[id]`, `/tafsir/[slug]`, dan semua mirror `/dashboard/*`) berhasil di-generate tanpa error.
 - Sample render HTML lewat dev server lokal (bukan container Docker produksi yang staged build lama) untuk memastikan hasil benar-benar mencerminkan kode saat ini.
+
+---
+
+## 7. Perbaikan lanjutan (2026-09-28) — Quran tafsir & Hadis sanad/takhrij ke SSR
+
+Pertanyaan lanjutan: apakah SSR-in tafsir Quran/sanad Hadis benar-benar seberat yang diperkirakan di bagian 6.5? Jawabannya berbeda untuk masing-masing:
+
+- **Hadis (sanad/takhrij/ayat-terkait)**: TIDAK berat. Satu halaman hadis cuma 1 hadis, jadi SSR nambah 3 fetch paralel per halaman — sama ringannya dengan fix blog/library/perawi sebelumnya.
+- **Quran (tafsir/mufrodat/munasabah/hadis-terkait)**: memang lebih berat KALAU naif — tiap ayat manggil 4 endpoint terpisah per-ayat, dan satu halaman surah nampilin ~10 ayat awal. SSR polos = ~40 request paralel per page load. Tapi tafsir spesifik sudah punya endpoint batch per-surah (`/api/v1/tafsir/surah/{number}`, sama yang dipakai `/tafsir/[slug]`), jadi tafsir bisa di-SSR murah (1 extra call, bukan 10-40).
+
+### 7.1 Yang dikerjakan
+
+- **Hadis** (`apps/web/src/app/hadith/[slug]/[number]/HadithNumberContent.js` + `hadith/[slug]/HadithPage.js`): sanad, takhrij, dan ayat-terkait di-fetch server-side (paralel, setelah `hadith.id` diketahui) lewat endpoint yang sama yang sudah dipakai client-side (`/api/v1/hadiths/{id}/sanad|takhrij|ayahs`), dikirim sebagai `initialSanad`/`initialTakhrij`/`initialRelatedAyat` ke `SanadPanel`/`TakhrijPanel`/`HadithAyahPanel`.
+- **Quran tafsir** (`apps/web/src/app/quran/[...slug]/page.js`): fetch `/api/v1/tafsir/surah/{number}` server-side (fungsi `getTafsirMap`, di-copy dari pola yang sama di `tafsir/[slug]/page.js`), hasilnya (map per-ayah) diteruskan lewat `InfiniteScrollAyahPage.js` → `AyahPage.js` sebagai `tafsirMap`, dipakai untuk seed `useAsyncResource` (hook lazy-load yang sudah ada, ditambah parameter `initialData` opsional). Mufrodat/munasabah/hadis-terkait TIDAK disentuh — tetap lazy-on-click seperti semula, karena tidak ada endpoint batch untuk itu dan biayanya 3x lebih besar dari tafsir untuk nilai SEO yang lebih kecil.
+- **Masalah nyata yang harus diselesaikan supaya fix ini benar-benar berguna buat crawler**: panel tafsir/sanad/takhrij ini didesain collapsed-by-default (klik untuk buka). Kalau cuma data-nya yang di-SSR tapi JSX-nya tetap `{show && <Panel/>}` (unmount saat tertutup), crawler yang tidak mengklik apa pun tetap tidak akan pernah melihat kontennya — SSR data doang tidak cukup. Diperbaiki dengan mengubah render dari unmount-based ke selalu-di-DOM + toggle visual lewat class CSS (`hidden` Tailwind = `display:none`), mengikuti cara Google secara eksplisit menangani accordion/tab content sejak 2021 (kontennya tetap di-index meski disembunyikan CSS, asal ada di DOM).
+
+### 7.2 Verifikasi
+
+- `next build` bersih (exit 0), semua route ter-generate.
+- Render HTML nyata di dev server lokal (API lokal): teks tafsir "Dengan nama Allah Yang Maha Pemurah..." (Surah Al-Fatihah ayat 1) dan nama perawi sanad ("Muhammad bin Ismail al-Bukhari") ditemukan di dalam `<div class="... hidden">` — dikonfirmasi ADA di HTML mentah, bukan cuma di payload JSON React.
+- Di-deploy ke production (`make thollabul-web`, commit `b885fdad`), diverifikasi ulang lewat `curl` ke `thollabulilmi.site` langsung — sama-sama ketemu di HTML.
+
+---
+
+## 8. Perbaikan lanjutan (2026-09-28) — audit metadata menyeluruh + isi Library
+
+### 8.1 Audit metadata 186 route
+
+Klaim "19/186 route punya metadata" di bagian 2 sudah dikoreksi di bagian 6.3 (banyak yang ternyata sudah tercakup lewat `layout.js`). Untuk memastikan tidak ada yang kelewat, dilakukan audit sistematis: 186 `page.js` dikurangi yang di-disallow `robots.js` (admin/dashboard/auth/dll) → 60 route publik tersisa → dicek satu-satu apakah punya `metadata`/`generateMetadata` sendiri ATAU lewat `layout.js` non-root di rantai direktorinya.
+
+**Hasil: 6 gap**, 5 di antaranya nyata (halaman fitur asli, bukan redirect):
+
+| Route                     | Fitur                           | Status                                              |
+| ------------------------- | ------------------------------- | --------------------------------------------------- |
+| `/faraidh`                | Kalkulator warisan Islam        | Diperbaiki                                          |
+| `/feed`                   | Feed sosial komunitas           | Diperbaiki                                          |
+| `/khatam`                 | Pelacak khatam Al-Quran         | Diperbaiki                                          |
+| `/peta`                   | Peta lokasi bersejarah Islam    | Diperbaiki                                          |
+| `/wirid-custom`           | Wirid/dzikir custom buatan user | Diperbaiki                                          |
+| `/hadits/[slug]/[number]` | —                               | Bukan gap — pure `redirect()`, tidak butuh metadata |
+
+Kelimanya sudah pakai pola `XContent`/`XPage` split yang sama seperti `forum` sebelumnya (dipakai juga oleh mirror `/dashboard/*`), jadi tinggal dipecah ke `<Nama>PageClient.js` + `page.js` tipis dengan `metadata` statis. Juga ditemukan `/komunitas` (disebut sebagai bug pre-existing di bagian 6.3) benar-benar punya title dobel " — Thullaabul 'Ilmi — Thullaabul 'Ilmi" — sekarang diperbaiki juga.
+
+Diverifikasi: `next build` bersih + title unik dikonfirmasi lewat `curl` ke dev server lokal untuk keenam route, lalu di-deploy (`make thollabul-web`, commit `dfe3032a`) dan dikonfirmasi ulang langsung ke `thollabulilmi.site`.
+
+### 8.2 Isi Library ditulis ulang (45 buku)
+
+Ternyata **production punya 45 buku**, bukan 4/19 seperti yang terlihat di analisis awal (DB dev lokal kurang ter-seed, dan file JSON seed cuma cover 19 — 26 sisanya ditambah manual lewat admin panel dan tidak pernah masuk balik ke file JSON).
+
+Semua 45 buku sudah punya deskripsi (tidak ada yang kosong), tapi tipis (31–197 karakter, 1 kalimat generik) — persis pola "thin blurb" yang di-flag di bagian P0-2.
+
+**Cara eksekusi**: seeder library (`services/api/app/db/migrations/seeder_library_books.go`) ternyata **upsert** berdasarkan `slug` (`ON CONFLICT DO UPDATE`), bukan insert-only. Supaya update ini tidak menimpa balik field lain (source_url, license_status, file_url, dst milik 45 buku — termasuk yang formatnya "uploaded" dengan link MinIO asli) ke nilai lama/tebakan, urutan kerjanya:
+
+1. Tarik record lengkap ke-45 buku dari API produksi (`GET /api/v1/library/books`).
+2. Tulis deskripsi baru 2–3 kalimat per buku (penulis, era, isi pokok) berdasarkan pengetahuan bibliografis umum atas kitab klasik/kontemporer ini — bukan klaim spesifik tingkat hadits/tafsir yang perlu rujukan shahih ketat.
+3. Susun ulang `services/api/data/static/library_book.json` dengan SEMUA field asli dipertahankan persis (diverifikasi via diff terprogram: 0 mismatch di luar `description`), cuma `description` yang berubah.
+4. Deploy API (`make thollabul-api`, commit `3175f8ea`) — proses ini men-sync `data/static` (bind-mounted di VPS, bukan di-bake ke image) lalu re-run seeder via `DEPLOY_MIGRATE_CMD`.
+
+**Gotcha yang ditemukan**: seeder ini punya cache berbasis (mtime, size) file per-nama (tabel `seed_file_state`) supaya tidak parse ulang file yang sama tiap deploy. Deploy otomatis pertama **gagal ke-detect sebagai "berubah"** — 8 dari 45 buku (yang kebetulan ada di daftar fallback hardcoded 8-item di kode Go) balik nampilin deskripsi fallback lama yang lebih pendek, bukan 45 deskripsi baru. Setelah investigasi (cek `seed_file_state` langsung di DB, re-run migrate manual via SSH, baca log JSON mentah), akar masalahnya adalah mtime file hasil sync `tar` tidak konsisten terdeteksi "berubah" oleh cache tsb. Diperbaiki dengan `touch` paksa file di VPS lalu re-run migrate manual — setelah itu ke-45 deskripsi baru berhasil ter-load (`"[seeder] seed library books from file: 45 entri"` di log).
+
+**Catatan untuk deploy `data/static/*.json` berikutnya**: kalau isi berubah tapi hasil migrate tetap pakai data lama, curiga cache `seed_file_state` — cek tabel itu, atau paksa `touch` file di VPS sebelum migrate ulang.
+
+Diverifikasi: diff terprogram 0 mismatch non-description sebelum deploy; setelah deploy, `curl` ke API produksi mengonfirmasi ke-45 deskripsi (151–217 karakter) dan isi sampel (Bulughul Maram, Riyadhus Shalihin, Zad Al-Ma'ad, Ar-Rahiq Al-Makhtum) sesuai fakta bibliografis yang benar.
+
+---
+
+## 9. Kajian transkrip — sengaja TIDAK disentuh, dan kenapa
+
+`docs/reviews/2026-09-08-audit-transkrip-kajian.md` mencatat **dua** insiden fabrikasi transkrip kajian sebelumnya di project ini (video dengan caption kosong sempat diisi teks karangan, dua kali). Auto-rewrite 7.366 transkrip mentah pakai LLM untuk "merapikan" tanda baca berisiko persis sama — model bisa salah menebak/mengarang kata yang diucapkan ustadz dari ASR yang tidak jelas, lalu itu tersimpan sebagai "transkrip resmi" di database dakwah. Ini bukan risiko teknis biasa (seperti bug kode), tapi risiko **misattribusi ucapan ke pengajar agama** — karena itu item ini sengaja dilewati di kedua sesi (2026-09-25 dan 2026-09-28) meski masuk kategori "P0" dari sisi AdSense, dan tidak akan dikerjakan otomatis tanpa keputusan eksplisit soal metodenya (mis. hanya microedit tanda baca tanpa ubah kata, atau proses editorial manual oleh manusia yang paham konten kajiannya).
