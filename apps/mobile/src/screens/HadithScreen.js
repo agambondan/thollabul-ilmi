@@ -8,6 +8,7 @@ import {
 } from "lucide-react-native";
 import {
     ActivityIndicator,
+    Image,
     Pressable,
     RefreshControl,
     ScrollView,
@@ -104,12 +105,17 @@ const WEB_APP_HADITH_TABS = [
 const WEB_APP_BOOK_COVER_STYLES = {
     bukhari: { backgroundColor: "#991b1b", borderColor: "#ef4444" },
     muslim: { backgroundColor: "#111827", borderColor: "#d97706" },
-    "abu-daud": { backgroundColor: "#166534", borderColor: "#d97706" },
+    abudaud: { backgroundColor: "#166534", borderColor: "#d97706" },
     tirmidzi: { backgroundColor: "#0f766e", borderColor: "#f59e0b" },
     nasai: { backgroundColor: "#1e40af", borderColor: "#94a3b8" },
-    "ibnu-majah": { backgroundColor: "#7c2d12", borderColor: "#f97316" },
+    ibnumajah: { backgroundColor: "#7c2d12", borderColor: "#f97316" },
     malik: { backgroundColor: "#3f3f46", borderColor: "#a3a3a3" },
+    ahmad: { backgroundColor: "#4c1d95", borderColor: "#a78bfa" },
+    darimi: { backgroundColor: "#155e75", borderColor: "#67e8f9" },
 };
+
+const HADITH_BOOK_COVER_BASE_URL =
+    "https://thollabulilmi.site/assets/images/kitab/hadith";
 
 const HADITH_DETAIL_TABS = [
     { key: "text", label: "Teks" },
@@ -249,6 +255,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const webAppScrollRef = useRef(null);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [books, setBooks] = useState([]);
+    const [failedBookCovers, setFailedBookCovers] = useState({});
     const [selectedBook, setSelectedBook] = useState(null);
     const [hadiths, setHadiths] = useState([]);
     const [selectedHadith, setSelectedHadith] = useState(null);
@@ -844,6 +851,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             book: book.name,
             bookSlug: book.slug,
         });
+        const coverSlug = cleanHadithText(book?.slug).toLowerCase();
+        const showCoverImage = coverSlug && !failedBookCovers[coverSlug];
 
         return (
             <View
@@ -856,13 +865,34 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     },
                 ]}
             >
-                <View style={[styles.webAppBookCover, getBookCoverStyle(book)]}>
-                    <Text numberOfLines={2} style={styles.webAppBookCoverTitle}>
-                        {shortLabel}
-                    </Text>
-                    <View style={styles.webAppBookCoverRule} />
-                    <Text style={styles.webAppBookCoverMeta}>Hadith</Text>
-                </View>
+                {showCoverImage ? (
+                    <Image
+                        onError={() =>
+                            setFailedBookCovers((current) => ({
+                                ...current,
+                                [coverSlug]: true,
+                            }))
+                        }
+                        resizeMode='cover'
+                        source={{
+                            uri: `${HADITH_BOOK_COVER_BASE_URL}/${coverSlug}.png`,
+                        }}
+                        style={styles.webAppBookCoverImage}
+                    />
+                ) : (
+                    <View
+                        style={[styles.webAppBookCover, getBookCoverStyle(book)]}
+                    >
+                        <Text
+                            numberOfLines={2}
+                            style={styles.webAppBookCoverTitle}
+                        >
+                            {shortLabel}
+                        </Text>
+                        <View style={styles.webAppBookCoverRule} />
+                        <Text style={styles.webAppBookCoverMeta}>Hadith</Text>
+                    </View>
+                )}
                 <View style={styles.webAppBookCopy}>
                     <Text
                         style={[
@@ -2165,6 +2195,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         padding: spacing.sm,
+        width: 116,
+    },
+    webAppBookCoverImage: {
+        alignSelf: "stretch",
+        backgroundColor: WEB_APP_HADITH_BG,
+        borderRadius: 4,
         width: 116,
     },
     webAppBookCoverTitle: {
