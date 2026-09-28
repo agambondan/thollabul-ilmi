@@ -7,7 +7,7 @@ export const revalidate = 3600;
 export const metadata = {
     alternates: { canonical: "/komunitas" },
     openGraph: openGraphFor("/komunitas"),
-    title: "Komunitas — Thullaabul 'Ilmi",
+    title: "Komunitas",
     description:
         "Bergabung dengan komunitas Thullaabul 'Ilmi. Diskusi, forum, dan obrolan realtime sesama penuntut ilmu.",
 };
