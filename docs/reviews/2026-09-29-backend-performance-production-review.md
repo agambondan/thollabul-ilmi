@@ -16,6 +16,10 @@ asli** dan kenapa.
 
 Trigger awal: laporan user "mobile app lama muncul." Root-cause pertama
 (instrumentasi produksi nol) membuka jalan ke temuan-temuan berikutnya.
+Bagian B0 berasal dari audit statis independen (subagent terpisah) yang
+diminta memverifikasi correctness — bukan performa — dari rewrite
+Preload→raw-SQL di dokumen benchmark; temuannya ternyata lebih genting
+daripada semua temuan performa di review ini.
 
 ---
 
@@ -73,6 +77,78 @@ Query pattern baru di `pg_stat_statements`: `SELECT "id" FROM "hadith" ...`
 ---
 
 ## Bagian B — Temuan Baru, Belum Diperbaiki (Prioritas)
+
+### B0. 🔴🔴 URGENT — Filter `deleted_at` hilang sistemik di rewrite raw-SQL, SUDAH LIVE di production
+
+Sumber: audit statis independen (subagent terpisah, 12 commit / 40 file
+di `app/repository`), dijalankan sebagai verifikasi correctness atas
+rewrite Preload→raw-SQL di
+[`native-query-optimization-benchmark.md`](./2026-09-29-native-query-optimization-benchmark.md).
+`go build`/`go vet`/`go test ./...` semua **PASS** — sinyal itu tidak
+menangkap bug ini sama sekali, karena tidak ada test yang sengaja bikin
+baris soft-deleted lalu assert baris itu tidak muncul.
+
+**#1 — Data hilang total, bukan soal performa.** `hadith.Media` (aset
+audio) hilang dari 11 method di `hadith_repository.go` — `.Preload("Media")`
+dihapus di commit `d5761228` dan `359e0560` tanpa diganti apa pun.
+**Belum live** (kedua commit ini termasuk 5 commit tertunda di B4) —
+tapi begitu B4 dieksekusi apa adanya, bug ini ikut naik ke production.
+
+**#2 — Filter `deleted_at IS NULL` hilang di ~35 dari 40 file yang
+di-rewrite,** di tabel utama maupun tabel yang di-`JOIN`. GORM otomatis
+menambahkan filter ini untuk tiap model soft-deletable; SQL mentah hasil
+rewrite hampir semua tidak mereproduksinya. Ironisnya `hadith_ayah_repository.go`
+— file yang dipakai sebagai acuan pola oleh commit-commit berikutnya —
+sama sekali tidak pernah memfilter `deleted_at`. Pola yang justru bersih
+ada di `sanad_repository.go`.
+
+**Confirmed SUDAH LIVE di production sekarang** (file-file ini adalah
+ancestor dari commit `6f202c91`, commit yang sedang jalan di container
+saat ini): `munasabah_repository.go`, `tafsir_repository.go`,
+`hadith_ayah_repository.go`, `mufrodat_repository.go`,
+`asbabun_nuzul_repository.go`, `jarh_tadil_repository.go`,
+`perawi_repository.go`, `fiqh_repository.go`, `takhrij_repository.go`,
+`siroh_repository.go`, `history_repository.go`,
+`tokoh_tarikh_repository.go` — plus `hafalan_repository.go` dan
+`manasik_repository.go` (bentuk lebih ringan: kolom `deleted_at` di-SELECT
+tapi tidak dipakai filter). File lain dengan gap yang sama
+(`dictionary_repository.go` — termasuk yang dipakai ulang
+`search_repository.go`, `asmaul_husna_repository.go`, `hijri_repository.go`,
+`sholat_repository.go`, `achievement_repository.go`, `amalan_repository.go`,
+`kajian_note_repository.go`, `kajian_bookmark_repository.go`,
+`murojaah_repository.go`, `content_report_repository.go`,
+`content_audit_log_repository.go`, `notification_repository.go`,
+`lesson_repository.go`/`blog_repository.go`/`quiz_repository.go`
+(sebagian — base table benar, tabel `translation` yang di-join tidak),
+`book_repository.go`/`chapter_repository.go`/`juz_repository.go`/`theme_repository.go`
+(query sekunder)) masih menunggu deploy commit `f27850bd`..`359e0560`.
+
+**Kenapa ini bukan sekadar gap teknis:** project ini punya riwayat
+panjang membersihkan data salah/fabrikasi secara manual lalu soft-delete
+— `2026-09-17-audit-ahmad-jilid-halaman-citations.md` (10 kutipan HR.
+Ahmad dikoreksi/dihapus), `2026-09-08-audit-transkrip-kajian.md` (5
+video transkrip fabrikasi dikosongkan), riwayat serupa di
+`project_kajian_transcript_fabrication` (memory). Kalau filter
+`deleted_at` hilang persis di repository yang menyajikan data itu, ada
+risiko nyata konten yang sudah sengaja disembunyikan **muncul kembali di
+API** — bukan skenario teoretis untuk project dengan riwayat insiden
+seperti ini.
+
+**Temuan tambahan (lebih ringan, dari audit yang sama):**
+`tokoh_tarikh_repository.go` — parameter `?size=` yang gagal di-parse atau
+`0` tidak ditolak (`app/controllers/tokoh_tarikh_controller.go:42-45`
+buang error `strconv.Atoi`), jadi klausa `LIMIT`/`OFFSET` tidak pernah
+ditambahkan → full unbounded scan bisa dipicu dari query param biasa.
+
+**Rekomendasi:** ini prioritas di atas SEMUA temuan performa lain di
+dokumen ini, termasuk B1. **Jangan deploy 5 commit tertunda (B4) sebelum
+ini ditangani** — akan menambah bug Media-hilang ke daftar yang sudah
+live. Audit ulang tiap file pakai `sanad_repository.go` sebagai pola
+acuan (bukan `hadith_ayah_repository.go`), tambahkan test yang sengaja
+membuat baris soft-deleted dan assert baris itu tidak ikut ter-scan.
+**Belum diimplementasikan** — di luar scope reaktif sesi ini, dan
+menyentuh pekerjaan yang sedang aktif dikerjakan sesi lain, jadi
+perlu dikoordinasikan, bukan langsung ditimpa.
 
 ### B1. 🔴 Seeder `kajian_transcript`: insert satu-baris-satu-transaksi
 
@@ -144,11 +220,10 @@ kalau mau ditindaklanjuti.
 `git log` menunjukkan `f27850bd` s.d. `359e0560` (5 commit batch 7-8 raw-SQL
 rewrite dari [`native-query-optimization-benchmark.md`](./2026-09-29-native-query-optimization-benchmark.md))
 sudah di-commit tapi belum di-deploy per waktu penulisan.
-**Catatan:** bukan bug, murni observasi status — perlu di-deploy (lewat
-`make thollabul-api` dari clean worktree, pola yang sudah dipakai
-berulang kali sesi ini) sebelum benchmark di dokumen itu benar-benar aktif
-di production dan sebelum sweep `pg_stat_statements` berikutnya dianggap
-mewakili kondisi terbaru.
+**Catatan:** bukan bug, murni observasi status. **Tapi lihat B0 dulu** —
+5 commit ini termasuk yang menghapus `.Preload("Media")` dari
+`hadith_repository.go` tanpa pengganti. Deploy apa adanya = bug Media-hilang
+ikut naik ke production. Urutan yang benar: tangani B0 dulu, baru deploy.
 
 ### B5. 🟢 Disk I/O Postgres: 58 GB baca / 75.7 GB tulis dalam ~2.5 jam
 
@@ -186,14 +261,15 @@ sekarang valid, tapi tidak ada yang memantau otomatis kalau
 
 ## Prioritas Tindak Lanjut
 
-| #   | Temuan                                                  | Dampak                                       | Effort         | Status    |
-| --- | ------------------------------------------------------- | -------------------------------------------- | -------------- | --------- |
-| B1  | Batch insert `kajian_transcript` seeder                 | 🔴 Tinggi (deploy time + shared DB load)     | 2-3j           | ⏳ Belum  |
-| B4  | Deploy 5 commit tertunda ke production                  | 🔴 Tinggi (fix belum aktif)                  | 15m            | ⏳ Belum  |
-| B2  | B-tree index `translation.en`                           | 🟠 Sedang (seeder-time)                      | 15m            | ⏳ Belum  |
-| B3  | Audit method `ayah_repository.go` full-scan             | 🟡 Rendah-Sedang (belum kritis, tabel kecil) | 1j investigasi | ⏳ Belum  |
-| B5  | Pantau disk I/O growth                                  | 🟢 Rendah (observasi)                        | -              | 👁️ Pantau |
-| —   | Alerting `api_slow_requests_total`/`pg_stat_statements` | 🟠 Sedang (mencegah insiden berulang)        | 2j             | ⏳ Belum  |
+| #   | Temuan                                                  | Dampak                                                | Effort         | Status     |
+| --- | ------------------------------------------------------- | ----------------------------------------------------- | -------------- | ---------- |
+| B0  | Filter `deleted_at` hilang sistemik (35/40 file)        | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j           | ⏳ Belum   |
+| B1  | Batch insert `kajian_transcript` seeder                 | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j           | ⏳ Belum   |
+| B4  | Deploy 5 commit tertunda ke production                  | 🔴 Tinggi (blocked oleh B0 — jangan deploy dulu)      | 15m            | ⏸️ Blocked |
+| B2  | B-tree index `translation.en`                           | 🟠 Sedang (seeder-time)                               | 15m            | ⏳ Belum   |
+| B3  | Audit method `ayah_repository.go` full-scan             | 🟡 Rendah-Sedang (belum kritis, tabel kecil)          | 1j investigasi | ⏳ Belum   |
+| B5  | Pantau disk I/O growth                                  | 🟢 Rendah (observasi)                                 | -              | 👁️ Pantau  |
+| —   | Alerting `api_slow_requests_total`/`pg_stat_statements` | 🟠 Sedang (mencegah insiden berulang)                 | 2j             | ⏳ Belum   |
 
 Semua di Bagian A sudah selesai + terverifikasi live. Bagian B murni
 temuan+rekomendasi (tidak diimplementasikan otomatis) — sesuai arahan sesi
