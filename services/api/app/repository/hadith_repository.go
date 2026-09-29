@@ -264,11 +264,18 @@ func (c *hadithRepo) Count() (*int64, error) {
 }
 
 func (c *hadithRepo) FindByOffset(offset int64) (*model.Hadith, error) {
-	var hadith model.Hadith
-	err := c.withRelations(c.db).
-		Order("id asc").Offset(int(offset)).Limit(1).First(&hadith).Error
+	var id int
+	err := c.db.Model(&model.Hadith{}).
+		Select("id").
+		Order("id asc").
+		Offset(int(offset)).
+		Limit(1).
+		Scan(&id).Error
 	if err != nil {
 		return nil, err
 	}
-	return &hadith, nil
+	if id == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return c.FindById(&id)
 }
