@@ -85,7 +85,7 @@ func BenchmarkTafsir_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findBySurahNumberPreload(db, 1, 20, 0)
 		if err != nil || len(list) != 20 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -99,7 +99,7 @@ func BenchmarkTafsir_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindBySurahNumber(1, 20, 0)
 		if err != nil || len(list) != 20 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

@@ -67,10 +67,10 @@ func findUserAchievementsPreload(db *gorm.DB, userID uuid.UUID) ([]model.UserAch
 
 func BenchmarkAchievement_GORM_Preload(b *testing.B) {
 	db, userID := setupAchievementBenchmarkDB(b)
-	b.ResetTimer()
+
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findUserAchievementsPreload(db, userID)
 		if err != nil || len(list) != 20 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -84,7 +84,7 @@ func BenchmarkAchievement_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindUserAchievements(userID)
 		if err != nil || len(list) != 20 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

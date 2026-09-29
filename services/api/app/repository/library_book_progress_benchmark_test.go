@@ -74,7 +74,7 @@ func BenchmarkLibraryProgress_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findLibraryProgressPreload(db, userID)
 		if err != nil || len(list) != 20 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -88,7 +88,7 @@ func BenchmarkLibraryProgress_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindByUserID(userID)
 		if err != nil || len(list) != 20 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

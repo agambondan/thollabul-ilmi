@@ -68,7 +68,7 @@ func BenchmarkAsma_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findAsmaPreload(db, 99, 0)
 		if err != nil || len(list) != 99 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -82,7 +82,7 @@ func BenchmarkAsma_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindAll(99, 0)
 		if err != nil || len(list) != 99 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

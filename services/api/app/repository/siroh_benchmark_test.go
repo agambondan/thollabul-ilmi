@@ -78,7 +78,7 @@ func BenchmarkSiroh_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		cat, err := findSirohCategoryBySlugPreload(db, "periode-mekkah")
 		if err != nil || len(cat.Contents) != 25 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(cat.Contents))
@@ -92,7 +92,7 @@ func BenchmarkSiroh_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		cat, err := repo.FindCategoryBySlug("periode-mekkah")
 		if err != nil || len(cat.Contents) != 25 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(cat.Contents))

@@ -35,12 +35,12 @@ func setupDictionaryBenchmarkDB(b *testing.B) *gorm.DB {
 		db.Create(tr)
 
 		term := &model.IslamicTerm{
-			Term:         fmt.Sprintf("Istilah %d", i),
-			Category:     model.TermCategoryFiqh,
-			Definition:   fmt.Sprintf("Definisi untuk istilah ke-%d", i),
-			Example:      "Contoh penggunaan",
-			Source:       "Kitab referensi",
-			Origin:       "Arab",
+			Term:          fmt.Sprintf("Istilah %d", i),
+			Category:      model.TermCategoryFiqh,
+			Definition:    fmt.Sprintf("Definisi untuk istilah ke-%d", i),
+			Example:       "Contoh penggunaan",
+			Source:        "Kitab referensi",
+			Origin:        "Arab",
 			TranslationID: tr.ID,
 		}
 		db.Create(term)
@@ -66,7 +66,7 @@ func BenchmarkDictionary_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findDictionaryPreload(db, "fiqh", "")
 		if err != nil || len(list) != 100 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -80,7 +80,7 @@ func BenchmarkDictionary_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindAll("fiqh", "")
 		if err != nil || len(list) != 100 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

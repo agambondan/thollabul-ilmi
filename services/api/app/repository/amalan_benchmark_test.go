@@ -71,7 +71,7 @@ func BenchmarkAmalan_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findAmalanHistoryPreload(db, userID, "2026-09-01", "2026-09-30")
 		if err != nil || len(list) != 30 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -85,7 +85,7 @@ func BenchmarkAmalan_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindHistory(userID, "2026-09-01", "2026-09-30")
 		if err != nil || len(list) != 30 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

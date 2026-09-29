@@ -71,7 +71,7 @@ func BenchmarkHafalan_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findHafalanByUserIDPreload(db, userID)
 		if err != nil || len(list) != 30 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -85,7 +85,7 @@ func BenchmarkHafalan_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindByUserID(userID)
 		if err != nil || len(list) != 30 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

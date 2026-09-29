@@ -79,7 +79,7 @@ func BenchmarkFiqh_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		cat, err := findCategoryBySlugPreload(db, "thaharah", 20, 0)
 		if err != nil || len(cat.Items) != 20 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(cat.Items))
@@ -93,7 +93,7 @@ func BenchmarkFiqh_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		cat, err := repo.FindCategoryBySlug("thaharah", 20, 0)
 		if err != nil || len(cat.Items) != 20 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(cat.Items))

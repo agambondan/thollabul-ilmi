@@ -79,7 +79,7 @@ func BenchmarkLesson_GORM_Preload(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findLessonAllPreload(db)
 		if err != nil || len(list) != 10 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -93,7 +93,7 @@ func BenchmarkLesson_Native_RawScan(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindAll()
 		if err != nil || len(list) != 10 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))

@@ -108,7 +108,7 @@ func BenchmarkPerawi_GORM_Preload(b *testing.B) {
 	b.ReportAllocs()
 
 	perawiID := 1
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		p, err := findPerawiByIDPreload(db, &perawiID)
 		if err != nil || p == nil || p.ID == nil || *p.ID != 1 {
 			b.Fatalf("preload failed: err=%v, id=%v", err, p)
@@ -123,7 +123,7 @@ func BenchmarkPerawi_Native_RawScan(b *testing.B) {
 	b.ReportAllocs()
 
 	perawiID := 1
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		p, err := repo.FindByID(&perawiID)
 		if err != nil || p == nil || p.ID == nil || *p.ID != 1 {
 			b.Fatalf("native raw scan failed: err=%v, id=%v", err, p)

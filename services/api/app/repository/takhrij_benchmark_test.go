@@ -31,10 +31,10 @@ func setupTakhrijBenchmarkDB(b *testing.B) *gorm.DB {
 	bookTr := &model.Translation{Idn: strptrOrNil("Shahih Bukhari"), En: strptrOrNil("Sahih Bukhari")}
 	db.Create(bookTr)
 	book := &model.Book{
-		BaseID:        model.BaseID{ID: &bookID},
-		Slug:          strptrOrNil("bukhari"),
+		BaseID:          model.BaseID{ID: &bookID},
+		Slug:            strptrOrNil("bukhari"),
 		DefaultLanguage: strptrOrNil("idn"),
-		TranslationID: bookTr.ID,
+		TranslationID:   bookTr.ID,
 	}
 	db.Create(book)
 
@@ -71,7 +71,7 @@ func BenchmarkTakhrij_GORM_Preload(b *testing.B) {
 	b.ReportAllocs()
 
 	hadithID := 1
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := findTakhrijByHadithIDPreload(db, &hadithID)
 		if err != nil || len(list) != 50 {
 			b.Fatalf("preload failed: err=%v, count=%d", err, len(list))
@@ -86,7 +86,7 @@ func BenchmarkTakhrij_Native_RawScan(b *testing.B) {
 	b.ReportAllocs()
 
 	hadithID := 1
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		list, err := repo.FindByHadithID(&hadithID)
 		if err != nil || len(list) != 50 {
 			b.Fatalf("native raw scan failed: err=%v, count=%d", err, len(list))
