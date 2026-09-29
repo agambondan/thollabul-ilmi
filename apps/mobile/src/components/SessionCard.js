@@ -18,6 +18,7 @@ import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import {
     forgotPassword,
     getWhatsappAvailability,
+    loginWithGoogleCode,
     register,
     resendVerification,
     verifyWhatsapp,
@@ -135,13 +136,18 @@ export function SessionCard() {
 
             if (result.type === "success" && result.url) {
                 const parsedUrl = new URL(result.url);
+                const code = parsedUrl.searchParams.get("code");
                 const token = parsedUrl.searchParams.get("token");
                 const refreshToken =
                     parsedUrl.searchParams.get("refresh_token");
                 const googleName = parsedUrl.searchParams.get("name");
                 const googleEmail = parsedUrl.searchParams.get("email");
 
-                if (token && signInWithSession) {
+                if (code && signInWithSession) {
+                    const sessionData = await loginWithGoogleCode(code);
+                    await signInWithSession(sessionData);
+                    showSuccess(t("session.signIn.success"));
+                } else if (token && signInWithSession) {
                     await signInWithSession({
                         token,
                         refreshToken: refreshToken || token,

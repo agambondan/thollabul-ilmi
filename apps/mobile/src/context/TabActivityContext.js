@@ -2,15 +2,9 @@ import {
     createContext,
     useCallback,
     useContext,
-    useMemo,
     useRef,
     useState,
 } from "react";
-
-const TabActivityContext = createContext({
-    activityTick: 0,
-    notifyTabActivity: () => {},
-});
 
 const TabActivityDispatchContext = createContext(() => {});
 const TabActivityStateContext = createContext(0);
@@ -26,23 +20,21 @@ export function TabActivityProvider({ children }) {
         setActivityTick(now);
     }, []);
 
-    const value = useMemo(
-        () => ({ activityTick, notifyTabActivity }),
-        [activityTick, notifyTabActivity],
-    );
-
     return (
         <TabActivityDispatchContext.Provider value={notifyTabActivity}>
             <TabActivityStateContext.Provider value={activityTick}>
-                <TabActivityContext.Provider value={value}>
-                    {children}
-                </TabActivityContext.Provider>
+                {children}
             </TabActivityStateContext.Provider>
         </TabActivityDispatchContext.Provider>
     );
 }
 
-export const useTabActivity = () => useContext(TabActivityContext);
 export const useNotifyTabActivity = () => useContext(TabActivityDispatchContext);
 export const useTabActivityTick = () => useContext(TabActivityStateContext);
+
+export const useTabActivity = () => {
+    const notifyTabActivity = useNotifyTabActivity();
+    const activityTick = useTabActivityTick();
+    return { activityTick, notifyTabActivity };
+};
 

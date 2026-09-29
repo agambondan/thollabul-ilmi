@@ -96,6 +96,7 @@ export const parseDeepLink = (url) => {
                 tab: "profile",
                 params: {
                     authCallback: true,
+                    code: queryParams.code,
                     token: queryParams.token,
                     refreshToken: queryParams.refresh_token,
                     name: queryParams.name,

@@ -19,6 +19,11 @@ export const loginWithGoogleToken = async ({ idToken, accessToken }) => {
     return normalizeSession(payload);
 };
 
+export const loginWithGoogleCode = async (code) => {
+    const payload = await postJson("/api/v1/auth/google/exchange", { code });
+    return normalizeSession(payload);
+};
+
 export const register = async ({
     name,
     email,

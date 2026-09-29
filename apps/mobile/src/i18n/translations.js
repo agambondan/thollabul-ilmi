@@ -1,5 +1,12 @@
-import { en } from "./locales/en.js";
 import { idn } from "./locales/idn.js";
+
+let en = null;
+const getEn = () => {
+    if (!en) {
+        en = require("./locales/en.js").en;
+    }
+    return en;
+};
 
 export const mobileLanguages = {
     en: "en",
@@ -15,11 +22,6 @@ export const mobileLanguages = {
 
 export const defaultMobileLanguage = mobileLanguages.idn;
 
-const dictionaries = {
-    idn,
-    en,
-};
-
 const interpolationPattern = /\{(\w+)\}/g;
 
 export const normalizeMobileLanguage = (language) => {
@@ -34,10 +36,8 @@ export const normalizeMobileLanguage = (language) => {
 
 export const translateMobile = (language, key, values) => {
     const normalizedLanguage = normalizeMobileLanguage(language);
-    const text =
-        dictionaries[normalizedLanguage]?.[key] ??
-        dictionaries[defaultMobileLanguage]?.[key] ??
-        key;
+    const dict = normalizedLanguage === "en" ? getEn() : idn;
+    const text = dict?.[key] ?? idn?.[key] ?? key;
 
     if (!values || typeof text !== "string") return text;
     return text.replace(
@@ -46,6 +46,4 @@ export const translateMobile = (language, key, values) => {
     );
 };
 
-export const mobileTranslationKeys = Object.freeze(
-    Object.keys(dictionaries[defaultMobileLanguage]),
-);
+export const mobileTranslationKeys = Object.freeze(Object.keys(idn));

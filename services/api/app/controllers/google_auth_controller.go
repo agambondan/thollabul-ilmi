@@ -12,8 +12,10 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
+	"github.com/agambondan/islamic-explorer/app/model"
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
@@ -21,12 +23,54 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
+type mobileExchangeEntry struct {
+	loginResp *model.LoginResponse
+	expiresAt time.Time
+}
+
 type googleAuthController struct {
-	user service.UserService
+	user            service.UserService
+	mobileExchanges sync.Map
 }
 
 func NewGoogleAuthController(user service.UserService) *googleAuthController {
 	return &googleAuthController{user: user}
+}
+
+func (c *googleAuthController) storeMobileExchange(resp *model.LoginResponse) string {
+	b := make([]byte, 32)
+	_, _ = io.ReadFull(rand.Reader, b)
+	code := fmt.Sprintf("%x", b)
+
+	now := time.Now()
+	// Clean up expired tokens lazily
+	c.mobileExchanges.Range(func(key, value any) bool {
+		if entry, ok := value.(mobileExchangeEntry); ok && now.After(entry.expiresAt) {
+			c.mobileExchanges.Delete(key)
+		}
+		return true
+	})
+
+	c.mobileExchanges.Store(code, mobileExchangeEntry{
+		loginResp: resp,
+		expiresAt: now.Add(2 * time.Minute),
+	})
+	return code
+}
+
+func (c *googleAuthController) consumeMobileExchange(code string) (*model.LoginResponse, bool) {
+	if code == "" {
+		return nil, false
+	}
+	val, loaded := c.mobileExchanges.LoadAndDelete(code)
+	if !loaded {
+		return nil, false
+	}
+	entry, ok := val.(mobileExchangeEntry)
+	if !ok || time.Now().After(entry.expiresAt) {
+		return nil, false
+	}
+	return entry.loginResp, true
 }
 
 func (c *googleAuthController) googleOAuthConfig() *oauth2.Config {
@@ -204,11 +248,11 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 	setAuthCookies(ctx, loginResp.Token, loginResp.RefreshToken)
 
 	if isMobile {
+		exchangeCode := c.storeMobileExchange(loginResp)
 		mobileRedirect := "thullaabulilmi://auth/google/callback"
 		u, _ := url.Parse(mobileRedirect)
 		q := u.Query()
-		q.Set("token", loginResp.Token)
-		q.Set("refresh_token", loginResp.RefreshToken)
+		q.Set("code", exchangeCode)
 		if loginResp.User != nil {
 			if loginResp.User.Name != nil {
 				q.Set("name", *loginResp.User.Name)
@@ -319,5 +363,33 @@ func (c *googleAuthController) VerifyToken(ctx *fiber.Ctx) error {
 		"token":         loginResp.Token,
 		"refresh_token": loginResp.RefreshToken,
 		"user":          loginResp.User,
+	})
+}
+
+// ExchangeCode exchanges a single-use authorization code for mobile OAuth tokens
+// POST /auth/google/exchange
+func (c *googleAuthController) ExchangeCode(ctx *fiber.Ctx) error {
+	var req struct {
+		Code string `json:"code"`
+	}
+	if err := ctx.BodyParser(&req); err != nil || req.Code == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "code is required",
+		})
+	}
+
+	resp, ok := c.consumeMobileExchange(req.Code)
+	if !ok {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "invalid or expired authorization code",
+		})
+	}
+
+	setAuthCookies(ctx, resp.Token, resp.RefreshToken)
+
+	return ctx.JSON(fiber.Map{
+		"token":         resp.Token,
+		"refresh_token": resp.RefreshToken,
+		"user":          resp.User,
 	})
 }

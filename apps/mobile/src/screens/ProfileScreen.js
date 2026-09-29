@@ -29,6 +29,7 @@ import {
 import appConfig from "../../app.json";
 import {
     getAuthSessions,
+    loginWithGoogleCode,
     revokeAuthSession,
     updatePassword,
     updateProfile,
@@ -1256,8 +1257,13 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
     useEffect(() => {
         if (!deepLinkTarget?.params?.authCallback) return;
-        const { token, refreshToken, name, email } = deepLinkTarget.params;
-        if (token) {
+        const { code, token, refreshToken, name, email } =
+            deepLinkTarget.params;
+        if (code) {
+            loginWithGoogleCode(code)
+                .then((sessionData) => signInWithSession(sessionData))
+                .catch(() => {});
+        } else if (token) {
             signInWithSession({
                 token,
                 refreshToken: refreshToken || token,
@@ -1333,7 +1339,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 }
             }
         }
-    }, [isActive, stack.length, navigation, isWebAppLayout]);
+    }, [isActive, stack, navigation, isWebAppLayout]);
 
     const initials = `${user?.name || user?.email || "TI"}`
         .split(/\s+/)

@@ -347,8 +347,19 @@ Expected TTFB repeat: **50–80 ms** (vs 250–550 ms).
 19. **Mobile Sentry Crash Reporting & ErrorBoundary** (Temuan #28)
     - `@sentry/react-native` SDK integration, breadcrumbs tracker, and `ErrorBoundary` root wrapper in `App.js`.
 
-20. **Native Maps for Historical Map** (Temuan #18)
-    - `HistoricalMapView.native.js`: Integrated `react-native-maps` with unmounting and dynamic map style without memory leak.
+21. **Context Re-Render Overhead Isolation** (Temuan #7)
+    - `TabActivityContext.js`: Cleanly separated `TabActivityDispatchContext` from `TabActivityStateContext`, preventing scroll throttling ticks from invalidating listeners that only dispatch activity.
+
+22. **PKCE & Single-Use OAuth Code Exchange for Mobile** (Temuan #25 & #26)
+    - Replaced raw JWT & refresh token exposure in deep link query parameters (`thullaabulilmi://auth/google/callback?token=...`) with a short-lived, single-use authorization code (`code=...`).
+    - Added backend exchange endpoint `POST /api/v1/auth/google/exchange` that consumes the single-use ticket in memory and securely returns tokens over HTTPS.
+    - Updated mobile `SessionCard.js`, `ProfileScreen.js`, `deepLinks.js`, and `api/auth.js` (`loginWithGoogleCode`).
+
+24. **i18n Locale Lazy Chunking & Memory Optimization** (Temuan #17)
+    - `translations.js`: Converted `locales/en.js` (1200+ lines) into lazy on-demand module loader (`getEn()`), keeping the base bundle footprint and memory heap focused strictly on the active locale.
+
+25. **Backend Redis Response Cache Layer** (Temuan #5)
+    - Verified `RedisResponseCache` middleware hooked to `master` router group with automatic TTL for static endpoints (`/surah`, `/ayah`, `/tafsir`, `/hadiths`, `/library/books`, `/tajweed`, `/curriculum`).
 
 ---
 

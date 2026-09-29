@@ -231,8 +231,27 @@ describe("parseDeepLink", () => {
                 tab: "profile",
                 params: {
                     authCallback: true,
+                    code: undefined,
                     token: "jwt123",
                     refreshToken: "rt456",
+                    name: "Ahmad",
+                    email: "ahmad@test.com",
+                    view: "settings-account",
+                },
+            });
+        });
+
+        test("parses google auth callback deep link with authorization code", () => {
+            const result = parseDeepLink(
+                "thullaabulilmi://auth/google/callback?code=sec-code-789&name=Ahmad&email=ahmad%40test.com",
+            );
+            expect(result).toEqual({
+                tab: "profile",
+                params: {
+                    authCallback: true,
+                    code: "sec-code-789",
+                    token: undefined,
+                    refreshToken: undefined,
                     name: "Ahmad",
                     email: "ahmad@test.com",
                     view: "settings-account",
