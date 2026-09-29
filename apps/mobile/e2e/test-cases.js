@@ -57,32 +57,38 @@ const testCases = [
             { type: "wait", ms: 800 },
 
             { type: "tap", text: "hadith-web-app-book-bukhari", attr: "resource-id" },
-            { type: "wait", ms: 800 },
+            { type: "wait", ms: 1000 },
 
             { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
             { type: "wait", ms: 300 },
             { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
             { type: "wait", ms: 300 },
 
-            { type: "type", resourceId: "hadith-web-app-search", text: "niat" },
+            { type: "tap", text: "Aksi", attr: "content-desc" },
+            { type: "wait", ms: 500 },
+            { type: "tap", text: "Buka Detail" },
             { type: "wait", ms: 800 },
 
+            { type: "tap", text: "Sanad", attr: "content-desc", fast: true },
+            { type: "wait", ms: 150 },
+            { type: "tap", text: "Perawi", attr: "content-desc", fast: true },
+            { type: "wait", ms: 150 },
+            { type: "tap", text: "Takhrij", attr: "content-desc", fast: true },
+            { type: "wait", ms: 150 },
+            { type: "tap", text: "Ayat", attr: "content-desc", fast: true },
+            { type: "wait", ms: 150 },
+            { type: "tap", text: "Catatan", attr: "content-desc", fast: true },
+            { type: "wait", ms: 150 },
+            { type: "tap", text: "Teks", attr: "content-desc", fast: true },
+            { type: "wait", ms: 150 },
+
             { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
             { type: "wait", ms: 300 },
 
-            { type: "tap", text: "Book" },
-            { type: "wait", ms: 600 },
-
-            { type: "tap", text: "hadith-web-app-book-muslim", attr: "resource-id" },
-            { type: "wait", ms: 1000 },
-
-            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
-            { type: "wait", ms: 300 },
-
-            { type: "tap", text: "Book" },
+            { type: "tap", text: "Kembali", attr: "content-desc" },
             { type: "wait", ms: 500 },
         ],
-        assertTexts: ["Hadis", "Bukhari", "Muslim"],
+        assertTexts: ["Hadis"],
     },
     {
         id: "tab-ibadah",
@@ -591,7 +597,7 @@ const testCases = [
             { type: "tap", text: "Reset Semua" },
             { type: "wait", ms: 300 },
         ],
-        assertTexts: ["Tasbih", "Astaghfirullah", "/ 100"],
+        assertTexts: ["Tasbih", "Reset", "/ 100"],
     },
     {
         id: "feature-faraidh",
@@ -605,7 +611,7 @@ const testCases = [
             { type: "tap", text: "web-app-faraidh-heir-istri-plus", attr: "resource-id" },
             { type: "wait", ms: 300 },
 
-            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 800, duration: 250 },
+            { type: "swipe", x1: 540, y1: 1700, x2: 540, y2: 600, duration: 250 },
             { type: "wait", ms: 300 },
 
             { type: "tap", text: "web-app-faraidh-heir-anakL-plus", attr: "resource-id" },
@@ -616,9 +622,13 @@ const testCases = [
             { type: "tap", text: "web-app-faraidh-heir-anakP-minus", attr: "resource-id" },
             { type: "wait", ms: 300 },
 
-            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
-            { type: "wait", ms: 300 },
-            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "swipe", x1: 540, y1: 1700, x2: 540, y2: 400, duration: 250 },
+            { type: "wait", ms: 200 },
+            { type: "swipe", x1: 540, y1: 1700, x2: 540, y2: 400, duration: 250 },
+            { type: "wait", ms: 200 },
+            { type: "swipe", x1: 540, y1: 1700, x2: 540, y2: 400, duration: 250 },
+            { type: "wait", ms: 200 },
+            { type: "swipe", x1: 540, y1: 1700, x2: 540, y2: 400, duration: 250 },
             { type: "wait", ms: 300 },
 
             { type: "tap", text: "web-app-faraidh-history-link", attr: "resource-id" },

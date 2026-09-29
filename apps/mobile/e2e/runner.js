@@ -3,8 +3,20 @@ const fs = require("fs");
 const path = require("path");
 const { testCases } = require("./test-cases");
 
+function getConnectedDevice() {
+    if (process.env.ANDROID_SERIAL) return process.env.ANDROID_SERIAL;
+    try {
+        const out = execSync("adb devices", { encoding: "utf8" });
+        const lines = out.split("\n").map(l => l.trim()).filter(l => l && !l.startsWith("List of devices"));
+        const devices = lines.filter(l => l.endsWith("\tdevice") || l.includes("device")).map(l => l.split(/\s+/)[0]);
+        if (devices.includes("z5yxpjrgvw8pdqzt")) return "z5yxpjrgvw8pdqzt";
+        if (devices.length > 0) return devices[0];
+    } catch {}
+    return "z5yxpjrgvw8pdqzt";
+}
+
 const PACKAGE = process.env.APP_PACKAGE || "com.thullaabulilmi.app";
-const DEVICE = process.env.ANDROID_SERIAL || "z5yxpjrgvw8pdqzt";
+const DEVICE = getConnectedDevice();
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 const APK_DEBUG = path.join(
     ROOT_DIR,
@@ -21,6 +33,10 @@ const shouldInstall = args.includes("--install");
 const isRelease = args.includes("--release");
 const filterArgIndex = args.indexOf("--filter");
 const filter = filterArgIndex !== -1 ? args[filterArgIndex + 1] : null;
+const startArgIndex = args.indexOf("--start");
+const startNum = startArgIndex !== -1 ? parseInt(args[startArgIndex + 1], 10) : 1;
+const countArgIndex = args.indexOf("--count");
+const countNum = countArgIndex !== -1 ? parseInt(args[countArgIndex + 1], 10) : null;
 
 function run(cmd, opts = {}) {
     return execSync(cmd, { encoding: "utf8", stdio: ["pipe", "pipe", "pipe"], ...opts });
@@ -73,8 +89,7 @@ function assertAppForeground() {
 function dumpHierarchy() {
     for (let i = 0; i < 3; i++) {
         try {
-            adb("shell uiautomator dump /sdcard/window.xml");
-            const xml = adb("shell cat /sdcard/window.xml");
+            const xml = adb('shell "uiautomator dump /sdcard/window.xml >/dev/null && cat /sdcard/window.xml"');
             if (xml.includes("<hierarchy")) return xml;
         } catch {
             wait(200);
@@ -213,14 +228,25 @@ function main() {
     console.log("[E2E] Verifying package install...");
     adb("shell input keyevent 224");
     adb("shell wm dismiss-keyguard");
+    try {
+        adb(`shell pm grant ${PACKAGE} android.permission.ACCESS_FINE_LOCATION`);
+        adb(`shell pm grant ${PACKAGE} android.permission.ACCESS_COARSE_LOCATION`);
+        adb(`shell pm grant ${PACKAGE} android.permission.POST_NOTIFICATIONS`);
+    } catch {}
     const packages = adb("shell pm list packages");
     if (!packages.includes(PACKAGE)) {
         throw new Error(`Package ${PACKAGE} is not installed on device ${DEVICE}`);
     }
 
-    const filteredCases = filter
+    let filteredCases = filter
         ? testCases.filter((tc) => tc.id.includes(filter) || tc.featureKey === filter || tc.tab === filter)
         : testCases;
+
+    if (startNum > 1 || countNum !== null) {
+        const startIdx = Math.max(0, startNum - 1);
+        const endIdx = countNum !== null ? startIdx + countNum : filteredCases.length;
+        filteredCases = filteredCases.slice(startIdx, endIdx);
+    }
 
     console.log(`[E2E] Executing ${filteredCases.length} test cases...`);
 
@@ -274,7 +300,6 @@ function main() {
                         currentXml = swipe(act.x1, act.y1, act.x2, act.y2, act.duration);
                     } else if (act.type === "wait") {
                         wait(act.ms || 500);
-                        currentXml = null;
                     }
                 }
             } else {
