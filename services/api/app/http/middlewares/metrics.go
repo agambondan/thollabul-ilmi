@@ -47,12 +47,12 @@ func MetricsMiddleware() fiber.Handler {
 		activeRequests.Inc()
 		defer activeRequests.Dec()
 
-		path := c.Path()
-		if path == "/metrics" || path == "/health" {
-			return c.Next()
-		}
-
 		err := c.Next()
+
+		path := c.Route().Path
+		if path == "/metrics" || path == "/health" {
+			return err
+		}
 
 		status := c.Response().StatusCode()
 		elapsed := time.Since(start)
