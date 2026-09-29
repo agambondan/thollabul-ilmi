@@ -1,9 +1,10 @@
 import { MoreVertical } from "lucide-react-native";
+import { memo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors, radius, spacing, touchTarget } from "../theme";
 import { hapticTap } from "../utils/haptics";
 
-export function MetaRail({ items = [], style, textStyle }) {
+export const MetaRail = memo(function MetaRail({ items = [], style, textStyle }) {
     const visibleItems = items.filter((item) => item?.label || item?.value);
     if (!visibleItems.length) return null;
 
@@ -35,9 +36,9 @@ export function MetaRail({ items = [], style, textStyle }) {
             ))}
         </View>
     );
-}
+});
 
-export function ContentCard({
+export const ContentCard = memo(function ContentCard({
     Icon,
     iconStyle,
     iconColor = colors.primary,
@@ -182,7 +183,7 @@ export function ContentCard({
             </View>
         </Container>
     );
-}
+});
 
 const styles = StyleSheet.create({
     card: {

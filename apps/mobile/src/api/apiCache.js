@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const cache = new Map();
 
 const DEFAULT_TTL_MS = 5 * 60 * 1000;
@@ -7,7 +9,7 @@ function getCacheKey(key, auth = false) {
 }
 
 export function fetchCached(key, fetcher, options = {}) {
-    const { ttl = DEFAULT_TTL_MS, auth = false } = options;
+    const { ttl = DEFAULT_TTL_MS, auth = false, persist = true } = options;
     const cacheKey = getCacheKey(key, auth);
     const hit = cache.get(cacheKey);
 
@@ -15,15 +17,44 @@ export function fetchCached(key, fetcher, options = {}) {
         return Promise.resolve(hit.data);
     }
 
-    return Promise.resolve(fetcher()).then((data) => {
-        cache.set(cacheKey, { data, expires: Date.now() + ttl });
-        return data;
-    });
+    return Promise.resolve(fetcher())
+        .then(async (data) => {
+            cache.set(cacheKey, { data, expires: Date.now() + ttl });
+            if (persist && !auth) {
+                try {
+                    await AsyncStorage.setItem(
+                        `tholabul:apicache:${cacheKey}`,
+                        JSON.stringify({ data, savedAt: Date.now() }),
+                    );
+                } catch {}
+            }
+            return data;
+        })
+        .catch(async (err) => {
+            if (hit && hit.data) {
+                return hit.data;
+            }
+            if (persist && !auth) {
+                try {
+                    const raw = await AsyncStorage.getItem(
+                        `tholabul:apicache:${cacheKey}`,
+                    );
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed?.data) return parsed.data;
+                    }
+                } catch {}
+            }
+            throw err;
+        });
 }
 
 export function invalidateCache(key, auth = false) {
     const cacheKey = getCacheKey(key, auth);
     cache.delete(cacheKey);
+    if (!auth) {
+        AsyncStorage.removeItem(`tholabul:apicache:${cacheKey}`).catch(() => {});
+    }
 }
 
 export function clearCache() {
@@ -40,4 +71,5 @@ export const cacheKeys = {
     doaList: () => "doa:all",
     libraryBooks: () => "library:books:all",
     blogPosts: () => "blog:posts:all",
+    exploreFeature: (featureKey, page = 0) => `explore:${featureKey}:page:${page}`,
 };

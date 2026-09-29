@@ -72,6 +72,21 @@ describe("apiCache", () => {
         Date.now.mockRestore();
     });
 
+    test("falls back to persisted disk cache when network fails", async () => {
+        const fetcherSuccess = jest.fn().mockResolvedValue({ offlineData: "available" });
+        await fetchCached("offline:test", fetcherSuccess, { persist: true });
+
+        // Clear in-memory cache to simulate app restart
+        clearCache();
+
+        // Network error on next fetch
+        const fetcherFail = jest.fn().mockRejectedValue(new Error("Network offline"));
+        const fallback = await fetchCached("offline:test", fetcherFail, { persist: true });
+
+        expect(fallback).toEqual({ offlineData: "available" });
+        expect(fetcherFail).toHaveBeenCalledTimes(1);
+    });
+
     test("generates standard cache keys", () => {
         expect(cacheKeys.surahs()).toBe("surahs:all");
         expect(cacheKeys.ayahsBySurah(2, 0)).toBe("ayahs:surah:2:page:0");

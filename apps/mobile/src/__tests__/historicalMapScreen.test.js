@@ -10,6 +10,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { HistoricalMapContent } from "../screens/HistoricalMapScreen";
+import { HistoricalMapView } from "../screens/HistoricalMapView";
 
 const client = require("../api/client");
 const { useLayoutModePreference } = require("../hooks/useLayoutModePreference");
@@ -190,5 +191,12 @@ describe("HistoricalMapContent", () => {
             expect(getByText("Universitas Al-Qarawiyyin")).toBeTruthy();
         });
         expect(queryByText("Makkah")).toBeNull();
+    });
+
+    test("renders NativeMapView when useNativeMap is enabled", () => {
+        const { getByTestId } = render(
+            <HistoricalMapView locations={locations} useNativeMap={true} />,
+        );
+        expect(getByTestId("mock-mapview")).toBeTruthy();
     });
 });

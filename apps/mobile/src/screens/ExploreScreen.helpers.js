@@ -889,7 +889,7 @@ export const getExploreItemKey = (item) =>
             item?.title ??
             item?.body,
     );
-export const mergeUniqueItems = (currentItems, nextItems) => {
+export const mergeUniqueItems = (currentItems, nextItems, maxItems = 200) => {
     const seen = new Set(currentItems.map(getExploreItemKey));
     const merged = [...currentItems];
 
@@ -899,6 +899,10 @@ export const mergeUniqueItems = (currentItems, nextItems) => {
         seen.add(key);
         merged.push(item);
     });
+
+    if (merged.length > maxItems) {
+        return merged.slice(-maxItems);
+    }
 
     return merged;
 };

@@ -62,13 +62,13 @@ function assertAppForeground() {
 }
 
 function dumpHierarchy() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
         try {
             adb("shell uiautomator dump /sdcard/window.xml");
             const xml = adb("shell cat /sdcard/window.xml");
             if (xml.includes("<hierarchy")) return xml;
         } catch {
-            wait(500);
+            wait(200);
         }
     }
     throw new Error("Could not read Android UI hierarchy");
@@ -114,20 +114,20 @@ function findNodeByResourceId(xml, resourceId) {
     return { bounds: boundsMatch ? parseBounds(boundsMatch[0].replace('bounds="', '').replace('"', '')) : null };
 }
 
-function tapElement(xml, text, attr = null) {
+function tapElement(xml, text, attr = null, fast = false) {
     const node = findNodeByText(xml, text, attr);
     if (!node?.bounds) throw new Error(`Element not found: "${text}"`);
+    console.log(`[ACTION] Tap: "${text}" at (${Math.round(node.bounds.cx)}, ${Math.round(node.bounds.cy)})`);
     adb(`shell input tap ${Math.round(node.bounds.cx)} ${Math.round(node.bounds.cy)}`);
-    wait(800);
+    if (fast) return xml;
+    wait(200);
     return dumpHierarchy();
 }
 
-function tapByResourceId(xml, resourceId) {
-    const node = findNodeByResourceId(xml, resourceId);
-    if (!node?.bounds) throw new Error(`Element not found: resource-id="${resourceId}"`);
-    adb(`shell input tap ${Math.round(node.bounds.cx)} ${Math.round(node.bounds.cy)}`);
-    wait(800);
-    return dumpHierarchy();
+function tapByCoordinates(x, y) {
+    console.log(`[ACTION] Tap coordinate: (${x}, ${y})`);
+    adb(`shell input tap ${x} ${y}`);
+    return null;
 }
 
 function inputText(xml, text, resourceId = null, placeholder = null) {
@@ -144,23 +144,26 @@ function inputText(xml, text, resourceId = null, placeholder = null) {
         }
     }
     if (!node?.bounds) throw new Error(`Input field not found`);
+    console.log(`[ACTION] Input text: "${text}" at (${Math.round(node.bounds.cx)}, ${Math.round(node.bounds.cy)})`);
     adb(`shell input tap ${Math.round(node.bounds.cx)} ${Math.round(node.bounds.cy)}`);
-    wait(500);
+    wait(300);
     const escaped = text.replace(/ /g, "%s").replace(/&/g, "\\&");
     adb(`shell input text "${escaped}"`);
-    wait(500);
+    wait(300);
     return dumpHierarchy();
 }
 
 function pressKey(keyCode) {
+    console.log(`[ACTION] Key event: ${keyCode}`);
     adb(`shell input keyevent ${keyCode}`);
-    wait(500);
+    wait(300);
     return dumpHierarchy();
 }
 
 function swipe(x1, y1, x2, y2, duration = 300) {
+    console.log(`[ACTION] Swipe: (${x1},${y1}) -> (${x2},${y2})`);
     adb(`shell input swipe ${x1} ${y1} ${x2} ${y2} ${duration}`);
-    wait(500);
+    wait(300);
     return dumpHierarchy();
 }
 
@@ -226,7 +229,7 @@ function main() {
                 wait(500);
                 adb(`shell am start -a android.intent.action.VIEW -d "${tc.deepLink}" ${PACKAGE}`);
             }
-            wait(2000);
+wait(1500);
 
             const pid = getAppPid();
             if (!pid) {
@@ -239,11 +242,15 @@ function main() {
             if (Array.isArray(tc.actions) && tc.actions.length > 0) {
                 for (const act of tc.actions) {
                     if (act.type === "tap") {
-                        currentXml = tapElement(currentXml, act.text, act.attr || "text");
+                        if (act.fast) {
+                            tapElement(currentXml, act.text, act.attr || null, true);
+                        } else {
+                            currentXml = tapElement(currentXml, act.text, act.attr || null);
+                        }
                     } else if (act.type === "type") {
                         currentXml = inputText(currentXml, act.text, act.resourceId, act.placeholder);
                     } else if (act.type === "key") {
-                        currentXml = pressKey(act.keyCode);
+                        currentXml = pressKey(act.keyCode || act.keycode);
                     } else if (act.type === "swipe") {
                         currentXml = swipe(act.x1, act.y1, act.x2, act.y2, act.duration);
                     } else if (act.type === "wait") {

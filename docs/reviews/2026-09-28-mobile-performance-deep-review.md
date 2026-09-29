@@ -314,8 +314,8 @@ Expected TTFB repeat: **50–80 ms** (vs 250–550 ms).
 
 ### Test Status
 - **Before:** 805 tests passing (57 suites)
-- **After:** **836/836 tests passing (62/62 suites)** ✅
-- **New test suites:** `apiCache.test.js`, `safeOpenURL.test.js`, `audioSession.test.js`, `mutationQueue.test.js`
+- **After:** **852/852 tests passing (66/66 suites)** ✅
+- **New test suites:** `apiCache.test.js`, `safeOpenURL.test.js`, `audioSession.test.js`, `mutationQueue.test.js`, `imagePrefetch.test.js`, `appImage.test.js`, `crashReporting.test.js`, `errorBoundary.test.js`
 - **Regressions:** None
 
 12. **Modal Unmount Cleanup** (Temuan #10)
@@ -335,8 +335,20 @@ Expected TTFB repeat: **50–80 ms** (vs 250–550 ms).
     - `audioSession.js`: Singleton coordinator enforcing one active audio source across Quran, Adzan, Radio, Kajian, and Lessons.
     - `PrayerScreen.js`, `QuranScreen.js`, and `RadioIslamicContent.js` integrated with lifecycle listeners to stop/unload audio on tab blur and unmount.
 
-17. **Offline Mutation Queue** (Temuan #14)
+17. **Offline Mutation Queue & Full Explore Offline Cache** (Temuan #14 & #30)
     - `mutationQueue.js`: Persistent queue for optimistic/offline mutations with exponential backoff retry and deduping.
+    - `apiCache.js`: SWR with persistent disk caching across all Explore queries, restoring cached data seamlessly when network fails.
+
+18. **Image Prefetch & Accessible Image Component** (Temuan #6 & #29)
+    - `imagePrefetch.js` / `useImagePrefetch.js`: Deduplicating prefetch for cover images in blog, kajian, hadith books, and tokoh lists.
+    - `AppImage.js`: Reusable image component with fallback placeholder, error handling, and accessibility labels (`accessibilityLabel`, `accessibilityRole="image"`).
+    - Integrated into `WebAppBlogRoute.js`, `WebAppKajianRoute.js`, `TokohTarikhContent.js`, and `HadithScreen.js`.
+
+19. **Mobile Sentry Crash Reporting & ErrorBoundary** (Temuan #28)
+    - `@sentry/react-native` SDK integration, breadcrumbs tracker, and `ErrorBoundary` root wrapper in `App.js`.
+
+20. **Native Maps for Historical Map** (Temuan #18)
+    - `HistoricalMapView.native.js`: Integrated `react-native-maps` with unmounting and dynamic map style without memory leak.
 
 ---
 

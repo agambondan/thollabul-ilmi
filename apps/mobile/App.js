@@ -2,6 +2,7 @@ import * as Linking from "expo-linking";
 import { useFonts } from "expo-font";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+    AppState,
     BackHandler,
     Keyboard,
     Platform,
@@ -11,6 +12,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AnalyticsTracker from "./src/components/AnalyticsTracker";
+import { ErrorBoundary } from "./src/components/ErrorBoundary";
 import { SwipeBackView } from "./src/components/SwipeBackView";
 import { FeedbackProvider } from "./src/context/FeedbackContext";
 import { SessionProvider } from "./src/context/SessionContext";
@@ -27,6 +29,9 @@ import { ProfileScreen } from "./src/screens/ProfileScreen";
 import { QuranScreen } from "./src/screens/QuranScreen";
 import { colors } from "./src/theme";
 import { parseDeepLink } from "./src/utils/deepLinks";
+import { initCrashReporting } from "./src/utils/crashReporting";
+import { flushMutationQueue } from "./src/storage/mutationQueue";
+import { requestJson } from "./src/api/client";
 import {
     closeInternalViewState,
     closeInternalViewThenOpenTabState,
@@ -38,6 +43,15 @@ import {
 } from "./src/navigation/appNavigation";
 
 export default function App() {
+    useEffect(() => {
+        initCrashReporting({ enableInDev: false });
+        const sub = AppState.addEventListener("change", (state) => {
+            if (state === "active") {
+                flushMutationQueue(requestJson).catch(() => {});
+            }
+        });
+        return () => sub?.remove?.();
+    }, []);
     const [quranFontsLoaded] = useFonts(quranFontAssets);
     const [activeTab, setActiveTab] = useState("home");
     const [deepLinkTarget, setDeepLinkTarget] = useState(null);
@@ -322,7 +336,8 @@ export default function App() {
 
     return (
         <GestureHandlerRootView style={styles.gestureRoot}>
-            <SafeAreaProvider>
+            <ErrorBoundary>
+                <SafeAreaProvider>
                 <SessionProvider>
                     <MobileLocaleProvider>
                         <FeedbackProvider>
@@ -457,6 +472,7 @@ export default function App() {
                     </MobileLocaleProvider>
                 </SessionProvider>
             </SafeAreaProvider>
+        </ErrorBoundary>
         </GestureHandlerRootView>
     );
 }

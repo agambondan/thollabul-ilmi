@@ -322,51 +322,26 @@ export const getZakatGoldPrice = async () => {
 };
 
 export const getFeatureItemPage = async (feature, pagination) => {
-    const isFirstPage = !pagination || Number(pagination.page ?? 0) === 0;
     const endpoint = pagination
         ? withPagination(feature.endpoint, pagination)
         : feature.endpoint;
-    const cacheKey = `tholabul:cache:feature:${feature.key || feature.endpoint}`;
+    const page = Number(pagination?.page ?? 0);
+    const auth = feature.type === "protected-list";
+    const cacheKey = cacheKeys.exploreFeature(
+        feature.key || feature.endpoint,
+        page,
+    );
 
-    try {
-        const payload = await requestJson(endpoint, {
-            auth: feature.type === "protected-list",
-        });
-        if (isFirstPage) {
-            AsyncStorage.setItem(cacheKey, JSON.stringify(payload)).catch(
-                () => {},
-            );
-        }
-        const items = pickItems(payload).map(normalizeExploreItem);
-        return {
-            items,
-            meta: pickPaginationMeta(payload, pagination, items.length),
-        };
-    } catch (error) {
-        if (isFirstPage) {
-            const cached = await AsyncStorage.getItem(cacheKey).catch(
-                () => null,
-            );
-            if (cached) {
-                try {
-                    const payload = JSON.parse(cached);
-                    const items = pickItems(payload).map(normalizeExploreItem);
-                    return {
-                        items,
-                        meta: pickPaginationMeta(
-                            payload,
-                            pagination,
-                            items.length,
-                        ),
-                        fromCache: true,
-                    };
-                } catch {
-                    /* fallback to throwing error */
-                }
-            }
-        }
-        throw error;
-    }
+    const payload = await fetchCached(
+        cacheKey,
+        () => requestJson(endpoint, { auth }),
+        { auth, persist: !auth, ttl: 30 * 60 * 1000 },
+    );
+    const items = pickItems(payload).map(normalizeExploreItem);
+    return {
+        items,
+        meta: pickPaginationMeta(payload, pagination, items.length),
+    };
 };
 
 export const getAllNotes = async () => {

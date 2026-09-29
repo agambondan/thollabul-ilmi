@@ -1,7 +1,15 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 import { radius } from "../theme";
+
+let NativeMapView = null;
+let NativeMarker = null;
+try {
+    const Maps = require("react-native-maps");
+    NativeMapView = Maps.default;
+    NativeMarker = Maps.Marker;
+} catch {}
 
 const hasValidCoordinate = (loc) =>
     Number.isFinite(Number(loc?.latitude)) &&
@@ -75,8 +83,12 @@ export function HistoricalMapView({
     locations = [],
     isWebAppLayout = false,
     webAppTheme = null,
+    useNativeMap = false,
 }) {
-    const visibleLocations = locations.filter(hasValidCoordinate);
+    const visibleLocations = useMemo(
+        () => locations.filter(hasValidCoordinate),
+        [locations],
+    );
     const isDark = Boolean(webAppTheme?.mapStyle);
     const html = useMemo(
         () => buildMapHtml(visibleLocations, isDark),
@@ -100,6 +112,47 @@ export function HistoricalMapView({
         );
     }
 
+    if (useNativeMap && NativeMapView) {
+        const initialRegion = {
+            latitude: 28,
+            longitude: 35,
+            latitudeDelta: 60,
+            longitudeDelta: 60,
+        };
+        return (
+            <View
+                style={[
+                    styles.mapContainer,
+                    isWebAppLayout && styles.webAppMapContainer,
+                    isWebAppLayout &&
+                        webAppTheme && {
+                            backgroundColor: webAppTheme.surface,
+                            borderColor: webAppTheme.border,
+                        },
+                ]}
+                testID='historical-map-native'
+            >
+                <NativeMapView
+                    initialRegion={initialRegion}
+                    style={styles.map}
+                    testID='mock-mapview'
+                >
+                    {visibleLocations.map((loc) => (
+                        <NativeMarker
+                            coordinate={{
+                                latitude: Number(loc.latitude),
+                                longitude: Number(loc.longitude),
+                            }}
+                            description={loc.description}
+                            key={loc.id}
+                            title={loc.name}
+                        />
+                    ))}
+                </NativeMapView>
+            </View>
+        );
+    }
+
     return (
         <View
             style={[
@@ -114,11 +167,11 @@ export function HistoricalMapView({
             testID='historical-map-native'
         >
             <WebView
+                domStorageEnabled
+                javaScriptEnabled
+                originWhitelist={["*"]}
                 source={{ html }}
                 style={styles.map}
-                originWhitelist={["*"]}
-                javaScriptEnabled
-                domStorageEnabled
             />
         </View>
     );

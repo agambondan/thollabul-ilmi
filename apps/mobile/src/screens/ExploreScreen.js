@@ -747,7 +747,8 @@ export function ExploreScreen({
                           size: EXPLORE_PAGE_SIZE,
                       });
             const nextItems = page.items;
-            const merged = mergeUniqueItems(items, nextItems);
+            const isFeed = activeFeature.type === "feed";
+            const merged = mergeUniqueItems(items, nextItems, isFeed ? 200 : 200);
             const addedCount = merged.length - items.length;
             setItems(merged);
             setPagination({
