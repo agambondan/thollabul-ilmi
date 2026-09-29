@@ -38,7 +38,7 @@ func (c *chapterRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var chapters []model.Chapter
 	mod := c.db.Model(&model.Chapter{}).
 		Joins("Theme").Joins("Theme.Translation").
-		Joins("Translation").Preload("Media").Order("id")
+		Joins("Translation").Order("id")
 	page := c.pg.With(mod).Request(ctx.Request()).Response(&chapters)
 
 	return &page
@@ -108,7 +108,7 @@ func (c *chapterRepo) FindByThemeId(ctx *fiber.Ctx, id *int) (*paginate.Page, er
 	var chapters []model.Chapter
 	mod := c.db.Model(&model.Chapter{}).
 		Joins("Theme").Joins("Theme.Translation").
-		Joins("Translation").Where("chapter.theme_id = ?", id).Preload("Media").Order(`"Translation".idn`)
+		Joins("Translation").Where("chapter.theme_id = ?", id).Order(`"Translation".idn`)
 	page := c.pg.With(mod).Request(ctx.Request()).Response(&chapters)
 
 	return &page, nil

@@ -280,7 +280,11 @@ func (r *sirohRepo) FindContentsByCategoryID(categoryID int) ([]model.SirohConte
 
 func (r *sirohRepo) FindAllContents(ctx *fiber.Ctx) *paginate.Page {
 	var list []model.SirohContent
-	mod := r.db.Model(&model.SirohContent{}).Preload("Translation").Preload("Category.Translation").Order("category_id, \"order\" asc")
+	mod := r.db.Model(&model.SirohContent{}).
+		Joins("Translation").
+		Joins("Category").
+		Joins("Category.Translation").
+		Order("category_id, \"order\" asc")
 	page := r.pg.With(mod).Request(ctx.Request()).Response(&list)
 	return &page
 }

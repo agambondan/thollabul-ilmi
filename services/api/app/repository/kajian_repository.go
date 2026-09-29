@@ -64,7 +64,7 @@ type searchTranscriptRow struct {
 
 func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker, category string) *paginate.Page {
 	var list []model.Kajian
-	q := r.db.Model(&model.Kajian{}).Preload("Translation").Order("published_at DESC, id DESC")
+	q := r.db.Model(&model.Kajian{}).Joins("Translation").Order("published_at DESC, id DESC")
 	likeOp := "ILIKE"
 	if r.db.Dialector.Name() == "sqlite" {
 		likeOp = "LIKE"

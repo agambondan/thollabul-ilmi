@@ -35,7 +35,7 @@ func (c *bookRepo) Save(Book *model.Book) (*model.Book, error) {
 
 func (c *bookRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var books []model.Book
-	mod := c.db.Model(&model.Book{}).Joins("Translation").Preload("Media").Order("id")
+	mod := c.db.Model(&model.Book{}).Joins("Translation").Order("id")
 	page := c.pg.With(mod).Request(ctx.Request()).Response(&books)
 
 	if len(books) == 0 {

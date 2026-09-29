@@ -35,7 +35,7 @@ func (c *themeRepo) Save(Theme *model.Theme) (*model.Theme, error) {
 
 func (c *themeRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var themes []*model.Theme
-	mod := c.db.Model(&model.Theme{}).Joins("Translation").Preload("Media").Order("id")
+	mod := c.db.Model(&model.Theme{}).Joins("Translation").Order("id")
 	page := c.pg.With(mod).Request(ctx.Request()).Response(&themes)
 
 	if len(themes) == 0 {
