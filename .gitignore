@@ -87,9 +87,12 @@ output/
 test-results/
 playwright-report/
 
-# Mobile build artifacts
+# Mobile build artifacts & secrets
 *.apk
 *.aab
+*.keystore
+*.jks
+**/android/keystore.properties
 
 # audit/debug artifacts (local only)
 screenshots/
