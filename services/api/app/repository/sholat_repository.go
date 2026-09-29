@@ -59,22 +59,137 @@ func (r *sholatRepository) FindByUserIDDateRange(userID uuid.UUID, from, to stri
 	return list, err
 }
 
+const sholatGuideSelectSQL = `
+SELECT
+    sg.id, sg.created_at, sg.updated_at, sg.step,
+    sg.title, sg.arabic, sg.transliteration, sg.translation as translation_text,
+    sg.description, sg.source, sg.notes, sg.translation_id,
+    t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
+FROM sholat_guide sg
+LEFT JOIN translation t ON t.id = sg.translation_id
+ORDER BY sg.step
+`
+
 func (r *sholatRepository) FindAllGuides() ([]model.SholatGuide, error) {
-	var list []model.SholatGuide
-	err := r.db.Preload("Translation").Order("step").Find(&list).Error
-	return list, err
+	var results []model.SholatGuide
+	rows, err := r.db.Raw(sholatGuideSelectSQL).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var g model.SholatGuide
+		var tID *int
+		var tIdn, tEn, tAr *string
+		if err := rows.Scan(
+			&g.ID, &g.CreatedAt, &g.UpdatedAt, &g.Step,
+			&g.Title, &g.Arabic, &g.Transliteration, &g.TranslationText,
+			&g.Description, &g.Source, &g.Notes, &g.TranslationID,
+			&tID, &tIdn, &tEn, &tAr,
+		); err != nil {
+			return nil, err
+		}
+		if tID != nil {
+			g.Translation = &model.Translation{
+				BaseID: model.BaseID{ID: tID},
+				Idn:    tIdn,
+				En:     tEn,
+				Ar:     tAr,
+			}
+		}
+		results = append(results, g)
+	}
+	return results, rows.Err()
 }
+
+const sholatGuideByStepSQL = `
+SELECT
+    sg.id, sg.created_at, sg.updated_at, sg.step,
+    sg.title, sg.arabic, sg.transliteration, sg.translation as translation_text,
+    sg.description, sg.source, sg.notes, sg.translation_id,
+    t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
+FROM sholat_guide sg
+LEFT JOIN translation t ON t.id = sg.translation_id
+WHERE sg.step = ?
+`
 
 func (r *sholatRepository) FindGuideByStep(step int) (*model.SholatGuide, error) {
+	rows, err := r.db.Raw(sholatGuideByStepSQL, step).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
 	var g model.SholatGuide
-	err := r.db.Preload("Translation").Where("step = ?", step).First(&g).Error
-	return &g, err
+	var tID *int
+	var tIdn, tEn, tAr *string
+	if err := rows.Scan(
+		&g.ID, &g.CreatedAt, &g.UpdatedAt, &g.Step,
+		&g.Title, &g.Arabic, &g.Transliteration, &g.TranslationText,
+		&g.Description, &g.Source, &g.Notes, &g.TranslationID,
+		&tID, &tIdn, &tEn, &tAr,
+	); err != nil {
+		return nil, err
+	}
+	if tID != nil {
+		g.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+	return &g, nil
 }
 
+const sholatGuideByIDSQL = `
+SELECT
+    sg.id, sg.created_at, sg.updated_at, sg.step,
+    sg.title, sg.arabic, sg.transliteration, sg.translation as translation_text,
+    sg.description, sg.source, sg.notes, sg.translation_id,
+    t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
+FROM sholat_guide sg
+LEFT JOIN translation t ON t.id = sg.translation_id
+WHERE sg.id = ?
+`
+
 func (r *sholatRepository) FindGuideByID(id int) (*model.SholatGuide, error) {
+	rows, err := r.db.Raw(sholatGuideByIDSQL, id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
 	var g model.SholatGuide
-	err := r.db.Preload("Translation").First(&g, id).Error
-	return &g, err
+	var tID *int
+	var tIdn, tEn, tAr *string
+	if err := rows.Scan(
+		&g.ID, &g.CreatedAt, &g.UpdatedAt, &g.Step,
+		&g.Title, &g.Arabic, &g.Transliteration, &g.TranslationText,
+		&g.Description, &g.Source, &g.Notes, &g.TranslationID,
+		&tID, &tIdn, &tEn, &tAr,
+	); err != nil {
+		return nil, err
+	}
+	if tID != nil {
+		g.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+	return &g, nil
 }
 
 func (r *sholatRepository) CreateGuide(guide *model.SholatGuide) (*model.SholatGuide, error) {

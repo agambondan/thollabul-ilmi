@@ -8,15 +8,9 @@ import (
 )
 
 type KajianBookmarkRepository interface {
-	// Add creates (or no-ops if already present) a bookmark for (user, chunk).
-	// Returns true when a new row was inserted, false on conflict.
 	Add(userID uuid.UUID, chunkID int, kajianID int, note string) (bool, error)
 	Remove(userID uuid.UUID, chunkID int) error
-	// ListByUser returns the user's bookmarks joined with chunk + kajian
-	// metadata, newest first. The optional limit caps the result set.
 	ListByUser(userID uuid.UUID, limit int) ([]model.KajianUserBookmark, error)
-	// ChunkIDsByUser returns a fast set of chunk IDs the user has bookmarked
-	// (used by clients to render a single icon without an N+1 fetch).
 	ChunkIDsByUser(userID uuid.UUID, kajianID int) ([]int, error)
 }
 
@@ -46,25 +40,138 @@ func (r *kajianBookmarkRepository) Remove(userID uuid.UUID, chunkID int) error {
 		Delete(&model.KajianUserBookmark{}).Error
 }
 
+type kajianBookmarkRow struct {
+	ID        *int
+	UserID    uuid.UUID
+	ChunkID   int
+	KajianID  int
+	Note      string
+	CreatedAt *int64
+
+	ChunkRowID          *int
+	ChunkKajianID       *int
+	ChunkVideoID        *string
+	ChunkStartSeconds   *int
+	ChunkEndSeconds     *int
+	ChunkText           *string
+	ChunkTimestampURL   *string
+
+	KajianRowID      *int
+	KajianTitle      *string
+	KajianSpeaker    *string
+	KajianTopic      *string
+	KajianThumbnail  *string
+	KajianURL        *string
+	KajianVideoID    *string
+}
+
 func (r *kajianBookmarkRepository) ListByUser(userID uuid.UUID, limit int) ([]model.KajianUserBookmark, error) {
 	if limit <= 0 || limit > 500 {
 		limit = 200
 	}
-	var out []model.KajianUserBookmark
-	q := r.db.
-		Preload("Chunk", func(db *gorm.DB) *gorm.DB {
-			return db.Order("start_seconds ASC")
-		}).
-		Preload("Chunk.Kajian").
-		Preload("Kajian", func(db *gorm.DB) *gorm.DB {
-			return db.Select("id, title, speaker, topic, thumbnail_url, url, video_id")
-		}).
-		Where("user_id = ?", userID).
-		Order("created_at DESC").
-		Limit(limit)
-	if err := q.Find(&out).Error; err != nil {
+
+	sql := `
+		SELECT
+			b.id, b.user_id, b.chunk_id, b.kajian_id, b.note, b.created_at,
+			kt.id AS chunk_row_id, kt.kajian_id AS chunk_kajian_id, kt.video_id AS chunk_video_id,
+			kt.start_seconds AS chunk_start_seconds, kt.end_seconds AS chunk_end_seconds,
+			kt.text AS chunk_text, kt.timestamp_url AS chunk_timestamp_url,
+			k.id AS kajian_row_id, k.title AS kajian_title, k.speaker AS kajian_speaker,
+			k.topic AS kajian_topic, k.thumbnail_url AS kajian_thumbnail, k.url AS kajian_url, k.video_id AS kajian_video_id
+		FROM kajian_user_bookmark b
+		LEFT JOIN kajian_transcript kt ON kt.id = b.chunk_id
+		LEFT JOIN kajian k ON k.id = b.kajian_id
+		WHERE b.user_id = ?
+		ORDER BY b.created_at DESC
+		LIMIT ?
+	`
+
+	var rows []kajianBookmarkRow
+	if err := r.db.Raw(sql, userID, limit).Scan(&rows).Error; err != nil {
 		return nil, err
 	}
+
+	out := make([]model.KajianUserBookmark, 0, len(rows))
+	for _, row := range rows {
+		b := model.KajianUserBookmark{
+			UserID:    row.UserID,
+			ChunkID:   row.ChunkID,
+			KajianID:  row.KajianID,
+			Note:      row.Note,
+			CreatedAt: row.CreatedAt,
+		}
+		b.ID = row.ID
+
+		var k *model.Kajian
+		if row.KajianRowID != nil {
+			var title, speaker, topic, thumb, url, vid string
+			if row.KajianTitle != nil {
+				title = *row.KajianTitle
+			}
+			if row.KajianSpeaker != nil {
+				speaker = *row.KajianSpeaker
+			}
+			if row.KajianTopic != nil {
+				topic = *row.KajianTopic
+			}
+			if row.KajianThumbnail != nil {
+				thumb = *row.KajianThumbnail
+			}
+			if row.KajianURL != nil {
+				url = *row.KajianURL
+			}
+			if row.KajianVideoID != nil {
+				vid = *row.KajianVideoID
+			}
+			k = &model.Kajian{
+				Title:        title,
+				Speaker:      speaker,
+				Topic:        topic,
+				ThumbnailURL: thumb,
+				URL:          url,
+				VideoID:      vid,
+			}
+			k.ID = row.KajianRowID
+			b.Kajian = k
+		}
+
+		if row.ChunkRowID != nil {
+			var vid, txt, tsURL string
+			var kID, startSec, endSec int
+			if row.ChunkKajianID != nil {
+				kID = *row.ChunkKajianID
+			}
+			if row.ChunkVideoID != nil {
+				vid = *row.ChunkVideoID
+			}
+			if row.ChunkStartSeconds != nil {
+				startSec = *row.ChunkStartSeconds
+			}
+			if row.ChunkEndSeconds != nil {
+				endSec = *row.ChunkEndSeconds
+			}
+			if row.ChunkText != nil {
+				txt = *row.ChunkText
+			}
+			if row.ChunkTimestampURL != nil {
+				tsURL = *row.ChunkTimestampURL
+			}
+			chunk := &model.KajianTranscript{
+				KajianID:     kID,
+				VideoID:      vid,
+				StartSeconds: startSec,
+				EndSeconds:   endSec,
+				Text:         txt,
+				TimestampURL: tsURL,
+				Kajian:       k,
+			}
+			chunk.ID = row.ChunkRowID
+			b.Chunk = chunk
+		}
+
+		out = append(out, b)
+	}
+
 	return out, nil
 }
 

@@ -26,19 +26,52 @@ func (r *murojaahRepository) Create(session *model.MurojaahSession) (*model.Muro
 	return session, err
 }
 
+const randomAyahSelectSQL = `
+SELECT
+    a.id, a.created_at, a.updated_at, a.number, a.default_language, a.surah_id, a.translation_id,
+    a.juz_number, a.manzil, a.page, a.ruku, a.hizb_quarter, a.sajda, a.juz_id,
+    t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
+FROM ayah a
+JOIN surah s ON s.id = a.surah_id
+LEFT JOIN translation t ON t.id = a.translation_id
+WHERE s.number IN ?
+ORDER BY RANDOM()
+LIMIT ?
+`
+
 func (r *murojaahRepository) FindRandomAyahFromSurah(surahIDs []int, count int) ([]model.Ayah, error) {
 	if len(surahIDs) == 0 {
 		return nil, nil
 	}
+	rows, err := r.db.Raw(randomAyahSelectSQL, surahIDs, count).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var ayahs []model.Ayah
-	err := r.db.
-		Joins("JOIN surah ON surah.id = ayah.surah_id").
-		Where("surah.number IN ?", surahIDs).
-		Order("RANDOM()").
-		Limit(count).
-		Preload("Translation").
-		Find(&ayahs).Error
-	return ayahs, err
+	for rows.Next() {
+		var a model.Ayah
+		var tID *int
+		var tIdn, tEn, tAr *string
+		if err := rows.Scan(
+			&a.ID, &a.CreatedAt, &a.UpdatedAt, &a.Number, &a.DefaultLanguage, &a.SurahID, &a.TranslationID,
+			&a.JuzNumber, &a.Manzil, &a.Page, &a.Ruku, &a.HizbQuarter, &a.Sajda, &a.JuzID,
+			&tID, &tIdn, &tEn, &tAr,
+		); err != nil {
+			return nil, err
+		}
+		if tID != nil {
+			a.Translation = &model.Translation{
+				BaseID: model.BaseID{ID: tID},
+				Idn:    tIdn,
+				En:     tEn,
+				Ar:     tAr,
+			}
+		}
+		ayahs = append(ayahs, a)
+	}
+	return ayahs, rows.Err()
 }
 
 func (r *murojaahRepository) FindByUserID(userID uuid.UUID, limit int) ([]model.MurojaahSession, error) {

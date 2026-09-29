@@ -38,6 +38,18 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 | | **Native RawScan** | **528,822 ns** | **42,448 B** | **1,425** | **2.0x lebih cepat (-53% RAM)** |
 | **Tokoh Tarikh** (`FindAll`) | GORM Preload | 1,133,108 ns | 102,705 B | 2,122 | Baseline |
 | | **Native RawScan** | **476,145 ns** | **54,520 B** | **1,704** | **2.4x lebih cepat (-47% RAM)** |
+| **Sholat** (`FindAllGuides`) | GORM Preload | 511,790 ns | 75,347 B | 1,487 | Baseline |
+| | **Native RawScan** | **247,386 ns** | **38,968 B** | **801** | **2.1x lebih cepat (-48% RAM)** |
+| **Dictionary** (`FindAll`) | GORM Preload | 1,626,339 ns | 301,480 B | 5,850 | Baseline |
+| | **Native RawScan** | **934,049 ns** | **189,232 B** | **3,484** | **1.7x lebih cepat (-37% RAM)** |
+| **Asmaul Husna** (`FindAll`) | GORM Preload | 2,007,843 ns | 278,989 B | 5,875 | Baseline |
+| | **Native RawScan** | **996,140 ns** | **183,064 B** | **3,641** | **2.0x lebih cepat (-34% RAM)** |
+| **Amalan** (`FindHistory`) | GORM Preload | 685,449 ns | 100,353 B | 2,149 | Baseline |
+| | **Native RawScan** | **326,971 ns** | **70,640 B** | **1,771** | **2.1x lebih cepat (-30% RAM)** |
+| **Achievement** (`FindUserAchievements`) | GORM Preload | 255,609 ns | 69,721 B | 1,372 | Baseline |
+| | **Native RawScan** | **192,766 ns** | **49,784 B** | **777** | **1.3x lebih cepat (-29% RAM)** |
+| **Library Progress** (`FindByUserID`) | GORM Preload | 532,810 ns | 85,582 B | 2,123 | Baseline |
+| | **Native RawScan** | **329,105 ns** | **46,687 B** | **1,126** | **1.6x lebih cepat (-45% RAM)** |
 
 ---
 
@@ -94,10 +106,46 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 17. **`content_report_repository.go`**:
     - Menghilangkan preload `User` pada `FindAll`, `FindByID`, `FindByUser`.
     - Single joined query `content_report + user`.
+18. **`sholat_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAllGuides`, `FindGuideByStep`, `FindGuideByID` (**2.1x lebih cepat**, -48% memory).
+    - Single joined query `sholat_guide + translation`.
+19. **`dictionary_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAll`, `FindByTerm`, `FindByCategory`, `FindByID` (**1.7x lebih cepat**, -37% memory).
+    - Single joined query `islamic_term + translation`.
+20. **`asmaul_husna_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAll`, `FindByNumber`, `FindByID` (**2.0x lebih cepat**, -34% memory).
+    - Single joined query `asma_ul_husna + translation`.
+21. **`amalan_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindItemByID` dan `AmalanItem` pada `FindHistory` (**2.1x lebih cepat**, -30% memory).
+    - Single joined query `amalan_log + amalan_item + translation`.
+22. **`hijri_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAll`, `FindByMonth`, `FindByID`.
+    - Single joined query `islamic_event + translation`.
+23. **`achievement_repository.go`**:
+    - Menghilangkan preload `Achievement` pada `FindUserAchievements` (**1.3x lebih cepat**, -29% memory).
+    - Single joined query `user_achievement + achievement`.
+24. **`library_book_progress_repository.go`**:
+    - Menghilangkan preload `Book` pada `FindByUserID`, `FindByUserIDAndBookID` (**1.6x lebih cepat**, -45% memory).
+    - Single joined query `library_book_progress + library_book`.
+25. **`content_audit_log_repository.go`**:
+    - Menghilangkan preload `Modifier` pada `FindAll`.
+    - Single joined query `content_audit_log + user`.
+26. **`kajian_note_repository.go`**:
+    - Menghilangkan preload `Kajian` pada `List`.
+    - Single joined query `kajian_user_note + kajian`.
+27. **`kajian_bookmark_repository.go`**:
+    - Menghilangkan 4 query preload bertingkat `Chunk + Chunk.Kajian + Kajian` pada `ListByUser`.
+    - Single joined query `kajian_user_bookmark + kajian_transcript + kajian`.
+28. **`murojaah_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindRandomAyahFromSurah`.
+    - Single joined query `ayah + surah + translation`.
+29. **`notification_repository.go`**:
+    - Menghilangkan preload `User` pada `FindAllActivePushTokens`, `FindAllPushTokens`, `FindDue`.
+    - Single joined query `push_token + user` dan `notification_setting + user`.
 
 ---
 
 ## Verifikasi Test
-- `go test ./app/repository/...` — PASS (All 16 benchmark tests + unit tests)
+- `go test ./app/repository/...` — PASS (All 22 benchmark tests + unit tests)
 - `go test ./app/services/...` — PASS
 - `go test ./app/controllers/...` — PASS

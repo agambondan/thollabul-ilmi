@@ -33,6 +33,27 @@ func NewNotificationRepository(db *gorm.DB) NotificationRepository {
 	return &notificationRepository{db}
 }
 
+func (r *notificationRepository) userTableName() string {
+	if r.db.Migrator().HasTable("user") {
+		return `"user"`
+	}
+	return "users"
+}
+
+func (r *notificationRepository) pushTokenTableName() string {
+	if r.db.Migrator().HasTable("push_token") {
+		return "push_token"
+	}
+	return "push_tokens"
+}
+
+func (r *notificationRepository) notifSettingTableName() string {
+	if r.db.Migrator().HasTable("notification_setting") {
+		return "notification_setting"
+	}
+	return "notification_settings"
+}
+
 func (r *notificationRepository) FindByUser(userID uuid.UUID) ([]model.NotificationSetting, error) {
 	var items []model.NotificationSetting
 	err := r.db.Where("user_id = ?", userID).Order("type ASC").Find(&items).Error
@@ -58,10 +79,6 @@ func (r *notificationRepository) UpsertPushToken(token model.PushToken) (model.P
 	token.LastSeenAt = now
 	token.IsActive = true
 	return token, r.db.Transaction(func(tx *gorm.DB) error {
-		// A physical device only ever holds one push token, so deactivate any
-		// other account still holding it before (re)claiming it for this user
-		// — otherwise a shared/family device switching accounts would leave
-		// both users subscribed to each other's push notifications.
 		if err := tx.Model(&model.PushToken{}).
 			Where("token = ? AND user_id <> ?", token.Token, token.UserID).
 			Update("is_active", false).Error; err != nil {
@@ -99,25 +116,138 @@ func (r *notificationRepository) FindActivePushTokens(userID uuid.UUID) ([]model
 	return items, err
 }
 
+type pushTokenRow struct {
+	ID              *int
+	CreatedAt       *time.Time
+	UpdatedAt       *time.Time
+	UserID          uuid.UUID
+	Token           string
+	Platform        string
+	Provider        string
+	DeviceID        string
+	KeyP256DH       string
+	KeyAuth         string
+	Latitude        *float64
+	Longitude       *float64
+	CityName        string
+	Timezone        string
+	TzOffsetMinutes *int
+	IsActive        bool
+	LastSeenAt      time.Time
+
+	UserID2                 *uuid.UUID
+	UserName                *string
+	UserEmail               *string
+	UserRole                *model.UserRole
+	UserAvatar              *string
+	UserPreferredLang       *string
+	UserPhone               *string
+	UserVerificationChannel *string
+	UserEmailVerifiedAt     *time.Time
+	UserPhoneVerifiedAt     *time.Time
+	UserNotifyViaEmail      bool
+	UserNotifyViaWhatsapp   bool
+	UserNotifyViaPush       bool
+	UserCreatedAt           time.Time
+	UserUpdatedAt           time.Time
+	UserDeletedAt           gorm.DeletedAt
+}
+
+func (r *pushTokenRow) toModel() model.PushToken {
+	pt := model.PushToken{
+		UserID:          r.UserID,
+		Token:           r.Token,
+		Platform:        r.Platform,
+		Provider:        r.Provider,
+		DeviceID:        r.DeviceID,
+		KeyP256DH:       r.KeyP256DH,
+		KeyAuth:         r.KeyAuth,
+		Latitude:        r.Latitude,
+		Longitude:       r.Longitude,
+		CityName:        r.CityName,
+		Timezone:        r.Timezone,
+		TzOffsetMinutes: r.TzOffsetMinutes,
+		IsActive:        r.IsActive,
+		LastSeenAt:      r.LastSeenAt,
+	}
+	pt.ID = r.ID
+	pt.CreatedAt = r.CreatedAt
+	pt.UpdatedAt = r.UpdatedAt
+
+	if r.UserID2 != nil {
+		u := model.User{
+			Name:                r.UserName,
+			Email:               r.UserEmail,
+			Avatar:              r.UserAvatar,
+			PreferredLang:       r.UserPreferredLang,
+			Phone:               r.UserPhone,
+			VerificationChannel: r.UserVerificationChannel,
+			EmailVerifiedAt:     r.UserEmailVerifiedAt,
+			PhoneVerifiedAt:     r.UserPhoneVerifiedAt,
+			NotifyViaEmail:      r.UserNotifyViaEmail,
+			NotifyViaWhatsapp:   r.UserNotifyViaWhatsapp,
+			NotifyViaPush:       r.UserNotifyViaPush,
+		}
+		if r.UserRole != nil {
+			u.Role = *r.UserRole
+		}
+		u.ID = *r.UserID2
+		u.CreatedAt = &r.UserCreatedAt
+		u.UpdatedAt = &r.UserUpdatedAt
+		u.DeletedAt = r.UserDeletedAt
+		pt.User = &u
+	}
+	return pt
+}
+
+func (r *notificationRepository) pushTokenSelectSQL() string {
+	pt := r.pushTokenTableName()
+	u := r.userTableName()
+	return `
+		SELECT
+			pt.id, pt.created_at, pt.updated_at,
+			pt.user_id, pt.token, pt.platform, pt.provider, pt.device_id,
+			pt.key_p256_dh, pt.key_auth, pt.latitude, pt.longitude,
+			pt.city_name, pt.timezone, pt.tz_offset_minutes, pt.is_active, pt.last_seen_at,
+			u.id AS user_id2, u.name AS user_name, u.email AS user_email,
+			u.role AS user_role, u.avatar AS user_avatar,
+			u.preferred_lang AS user_preferred_lang, u.phone AS user_phone,
+			u.verification_channel AS user_verification_channel,
+			u.email_verified_at AS user_email_verified_at,
+			u.phone_verified_at AS user_phone_verified_at,
+			u.notify_via_email AS user_notify_via_email,
+			u.notify_via_whatsapp AS user_notify_via_whatsapp,
+			u.notify_via_push AS user_notify_via_push,
+			u.created_at AS user_created_at, u.updated_at AS user_updated_at, u.deleted_at AS user_deleted_at
+		FROM ` + pt + ` pt
+		LEFT JOIN ` + u + ` u ON u.id = pt.user_id
+	`
+}
+
 func (r *notificationRepository) FindAllActivePushTokens() ([]model.PushToken, error) {
-	var items []model.PushToken
-	err := r.db.
-		Preload("User").
-		Where("is_active = true").
-		Order("last_seen_at DESC").
-		Limit(1000).
-		Find(&items).Error
-	return items, err
+	query := r.pushTokenSelectSQL() + " WHERE pt.is_active = true ORDER BY pt.last_seen_at DESC LIMIT 1000"
+	var rows []pushTokenRow
+	if err := r.db.Raw(query).Scan(&rows).Error; err != nil {
+		return nil, err
+	}
+	items := make([]model.PushToken, 0, len(rows))
+	for i := range rows {
+		items = append(items, rows[i].toModel())
+	}
+	return items, nil
 }
 
 func (r *notificationRepository) FindAllPushTokens() ([]model.PushToken, error) {
-	var items []model.PushToken
-	err := r.db.
-		Preload("User").
-		Order("last_seen_at DESC").
-		Limit(500).
-		Find(&items).Error
-	return items, err
+	query := r.pushTokenSelectSQL() + " ORDER BY pt.last_seen_at DESC LIMIT 500"
+	var rows []pushTokenRow
+	if err := r.db.Raw(query).Scan(&rows).Error; err != nil {
+		return nil, err
+	}
+	items := make([]model.PushToken, 0, len(rows))
+	for i := range rows {
+		items = append(items, rows[i].toModel())
+	}
+	return items, nil
 }
 
 func (r *notificationRepository) DeletePushToken(id int) error {
@@ -144,15 +274,105 @@ func (r *notificationRepository) DeactivatePushTokenByToken(userID uuid.UUID, to
 		Update("is_active", false).Error
 }
 
+type notifSettingRow struct {
+	ID         *int
+	CreatedAt  *time.Time
+	UpdatedAt  *time.Time
+	UserID     uuid.UUID
+	Type       model.NotificationType
+	Time       string
+	IsActive   bool
+	LastSentAt *time.Time
+
+	UserID2                 *uuid.UUID
+	UserName                *string
+	UserEmail               *string
+	UserRole                *model.UserRole
+	UserAvatar              *string
+	UserPreferredLang       *string
+	UserPhone               *string
+	UserVerificationChannel *string
+	UserEmailVerifiedAt     *time.Time
+	UserPhoneVerifiedAt     *time.Time
+	UserNotifyViaEmail      bool
+	UserNotifyViaWhatsapp   bool
+	UserNotifyViaPush       bool
+	UserCreatedAt           time.Time
+	UserUpdatedAt           time.Time
+	UserDeletedAt           gorm.DeletedAt
+}
+
+func (r *notifSettingRow) toModel() model.NotificationSetting {
+	ns := model.NotificationSetting{
+		UserID:     r.UserID,
+		Type:       r.Type,
+		Time:       r.Time,
+		IsActive:   r.IsActive,
+		LastSentAt: r.LastSentAt,
+	}
+	ns.ID = r.ID
+	ns.CreatedAt = r.CreatedAt
+	ns.UpdatedAt = r.UpdatedAt
+
+	if r.UserID2 != nil {
+		u := model.User{
+			Name:                r.UserName,
+			Email:               r.UserEmail,
+			Avatar:              r.UserAvatar,
+			PreferredLang:       r.UserPreferredLang,
+			Phone:               r.UserPhone,
+			VerificationChannel: r.UserVerificationChannel,
+			EmailVerifiedAt:     r.UserEmailVerifiedAt,
+			PhoneVerifiedAt:     r.UserPhoneVerifiedAt,
+			NotifyViaEmail:      r.UserNotifyViaEmail,
+			NotifyViaWhatsapp:   r.UserNotifyViaWhatsapp,
+			NotifyViaPush:       r.UserNotifyViaPush,
+		}
+		if r.UserRole != nil {
+			u.Role = *r.UserRole
+		}
+		u.ID = *r.UserID2
+		u.CreatedAt = &r.UserCreatedAt
+		u.UpdatedAt = &r.UserUpdatedAt
+		u.DeletedAt = r.UserDeletedAt
+		ns.User = &u
+	}
+	return ns
+}
+
 func (r *notificationRepository) FindDue(now time.Time) ([]model.NotificationSetting, error) {
-	var items []model.NotificationSetting
+	ns := r.notifSettingTableName()
+	u := r.userTableName()
 	startOfDay := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-	err := r.db.
-		Preload("User").
-		Where("is_active = true AND time = ? AND (last_sent_at IS NULL OR last_sent_at < ?)", now.Format("15:04"), startOfDay).
-		Order("type ASC").
-		Find(&items).Error
-	return items, err
+
+	query := `
+		SELECT
+			ns.id, ns.created_at, ns.updated_at,
+			ns.user_id, ns.type, ns.time, ns.is_active, ns.last_sent_at,
+			u.id AS user_id2, u.name AS user_name, u.email AS user_email,
+			u.role AS user_role, u.avatar AS user_avatar,
+			u.preferred_lang AS user_preferred_lang, u.phone AS user_phone,
+			u.verification_channel AS user_verification_channel,
+			u.email_verified_at AS user_email_verified_at,
+			u.phone_verified_at AS user_phone_verified_at,
+			u.notify_via_email AS user_notify_via_email,
+			u.notify_via_whatsapp AS user_notify_via_whatsapp,
+			u.notify_via_push AS user_notify_via_push,
+			u.created_at AS user_created_at, u.updated_at AS user_updated_at, u.deleted_at AS user_deleted_at
+		FROM ` + ns + ` ns
+		LEFT JOIN ` + u + ` u ON u.id = ns.user_id
+		WHERE ns.is_active = true AND ns.time = ? AND (ns.last_sent_at IS NULL OR ns.last_sent_at < ?)
+		ORDER BY ns.type ASC
+	`
+	var rows []notifSettingRow
+	if err := r.db.Raw(query, now.Format("15:04"), startOfDay).Scan(&rows).Error; err != nil {
+		return nil, err
+	}
+	items := make([]model.NotificationSetting, 0, len(rows))
+	for i := range rows {
+		items = append(items, rows[i].toModel())
+	}
+	return items, nil
 }
 
 func (r *notificationRepository) MarkSent(id int, sentAt time.Time) error {

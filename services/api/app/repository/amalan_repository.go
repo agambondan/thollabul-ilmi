@@ -32,10 +32,48 @@ func (r *amalanRepository) FindAllItems() ([]model.AmalanItem, error) {
 	return items, err
 }
 
+const amalanItemByIDSQL = `
+SELECT
+    ai.id, ai.created_at, ai.updated_at, ai.name, ai.description, ai.source,
+    ai.category, ai.is_active, ai.translation_id,
+    t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
+FROM amalan_item ai
+LEFT JOIN translation t ON t.id = ai.translation_id
+WHERE ai.id = ?
+`
+
 func (r *amalanRepository) FindItemByID(id int) (*model.AmalanItem, error) {
-	var item model.AmalanItem
-	if err := r.db.Preload("Translation").First(&item, id).Error; err != nil {
+	rows, err := r.db.Raw(amalanItemByIDSQL, id).Rows()
+	if err != nil {
 		return nil, err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+
+	var item model.AmalanItem
+	var tID *int
+	var tIdn, tEn, tAr *string
+	err = rows.Scan(
+		&item.ID, &item.CreatedAt, &item.UpdatedAt, &item.Name, &item.Description, &item.Source,
+		&item.Category, &item.IsActive, &item.TranslationID,
+		&tID, &tIdn, &tEn, &tAr,
+	)
+	if err != nil {
+		return nil, err
+	}
+	if tID != nil {
+		item.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
 	}
 	return &item, nil
 }
@@ -96,10 +134,54 @@ func (r *amalanRepository) ToggleLog(userID uuid.UUID, amalanItemID int, date st
 	}).Create(&log).Error
 }
 
+const amalanHistorySQL = `
+SELECT
+    al.id, al.created_at, al.updated_at, al.user_id, al.amalan_item_id, al.date, al.is_done,
+    ai.id as ai_id, ai.created_at as ai_created_at, ai.updated_at as ai_updated_at,
+    ai.name as ai_name, ai.description as ai_desc, ai.source as ai_source,
+    ai.category as ai_cat, ai.is_active as ai_active, ai.translation_id as ai_tr_id,
+    t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
+FROM amalan_log al
+LEFT JOIN amalan_item ai ON ai.id = al.amalan_item_id
+LEFT JOIN translation t ON t.id = ai.translation_id
+WHERE al.user_id = ? AND al.date BETWEEN ? AND ?
+ORDER BY al.date DESC
+`
+
 func (r *amalanRepository) FindHistory(userID uuid.UUID, from, to string) ([]model.AmalanLog, error) {
+	rows, err := r.db.Raw(amalanHistorySQL, userID, from, to).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var logs []model.AmalanLog
-	err := r.db.Preload("AmalanItem").
-		Where("user_id = ? AND date BETWEEN ? AND ?", userID, from, to).
-		Order("date DESC").Find(&logs).Error
-	return logs, err
+	for rows.Next() {
+		var l model.AmalanLog
+		var ai model.AmalanItem
+		var tID *int
+		var tIdn, tEn, tAr *string
+		if err := rows.Scan(
+			&l.ID, &l.CreatedAt, &l.UpdatedAt, &l.UserID, &l.AmalanItemID, &l.Date, &l.IsDone,
+			&ai.ID, &ai.CreatedAt, &ai.UpdatedAt,
+			&ai.Name, &ai.Description, &ai.Source,
+			&ai.Category, &ai.IsActive, &ai.TranslationID,
+			&tID, &tIdn, &tEn, &tAr,
+		); err != nil {
+			return nil, err
+		}
+		if ai.ID != nil {
+			if tID != nil {
+				ai.Translation = &model.Translation{
+					BaseID: model.BaseID{ID: tID},
+					Idn:    tIdn,
+					En:     tEn,
+					Ar:     tAr,
+				}
+			}
+			l.AmalanItem = &ai
+		}
+		logs = append(logs, l)
+	}
+	return logs, rows.Err()
 }

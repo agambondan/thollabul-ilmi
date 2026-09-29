@@ -72,13 +72,39 @@ func (r *achievementRepo) Delete(id int) error {
 	return r.db.Delete(&model.Achievement{}, id).Error
 }
 
+const userAchievementSelectSQL = `
+SELECT
+    ua.id, ua.created_at, ua.updated_at, ua.user_id, ua.achievement_id, ua.earned_at,
+    a.id as a_id, a.created_at as a_created_at, a.updated_at as a_updated_at,
+    a.code, a.name, a.name_en, a.description, a.desc_en, a.icon, a.category, a.threshold
+FROM user_achievement ua
+JOIN achievement a ON a.id = ua.achievement_id
+WHERE ua.user_id = ?
+ORDER BY ua.earned_at DESC
+`
+
 func (r *achievementRepo) FindUserAchievements(userID uuid.UUID) ([]model.UserAchievement, error) {
+	rows, err := r.db.Raw(userAchievementSelectSQL, userID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var list []model.UserAchievement
-	err := r.db.Preload("Achievement").
-		Where("user_id = ?", userID).
-		Order("earned_at desc").
-		Find(&list).Error
-	return list, err
+	for rows.Next() {
+		var ua model.UserAchievement
+		var a model.Achievement
+		if err := rows.Scan(
+			&ua.ID, &ua.CreatedAt, &ua.UpdatedAt, &ua.UserID, &ua.AchievementID, &ua.EarnedAt,
+			&a.ID, &a.CreatedAt, &a.UpdatedAt,
+			&a.Code, &a.Name, &a.NameEn, &a.Description, &a.DescEn, &a.Icon, &a.Category, &a.Threshold,
+		); err != nil {
+			return nil, err
+		}
+		ua.Achievement = a
+		list = append(list, ua)
+	}
+	return list, rows.Err()
 }
 
 func (r *achievementRepo) HasEarned(userID uuid.UUID, achievementID int) bool {
