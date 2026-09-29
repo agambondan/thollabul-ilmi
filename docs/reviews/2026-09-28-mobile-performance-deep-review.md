@@ -370,6 +370,12 @@ Expected TTFB repeat: **50–80 ms** (vs 250–550 ms).
 27. **Backend Repository N+1 Raw Scan Optimizations** (Temuan #20)
     - `siroh_repository.go`, `takhrij_repository.go`, `tafsir_repository.go`, `munasabah_repository.go`, `asbabun_nuzul_repository.go`, `mufrodat_repository.go`, `hadith_ayah_repository.go`, `perawi_repository.go`, `jarh_tadil_repository.go`, `fiqh_repository.go`, `history_repository.go`, `tokoh_tarikh_repository.go`, `hafalan_repository.go`, `lesson_repository.go`, `manasik_repository.go`, `book_repository.go`, `chapter_repository.go`, `theme_repository.go`, `amalan_repository.go`, `siroh_repository.go`, `dictionary_repository.go`, `hijri_repository.go`, `manasik_repository.go` refactored from GORM `Preload()` chains to native SQL `LEFT JOIN` scanning, achieving 1.8x–5.7x latency reduction and 30–53% memory allocation drop per request with automated benchmark suites.
 
+28. **AsyncStorage High-Frequency Migration to SQLite** (Temuan #8)
+    - Added `app_key_value` table in shared `tholabul_offline.db` (`expo-sqlite`) for O(1) indexed key-value lookups.
+    - Created native SQLite handlers for `preferences.native.js`, `recentSearches.native.js`, `recentFeatures.native.js` complementing existing `calculatorHistory.native.js`, `asmaulWirid.native.js`, `mutationQueue.native.js`, and `offlineContent.native.js`.
+    - Maintained full backward compatibility with AsyncStorage fallback and automatic migration on read.
+    - Test coverage: `nativeKeyValueStorage.test.js` (67/67 test suites passing).
+
 ---
 
 ## Audio Lifecycles, Background Audio & WebView Leakage (Fourth Pass Audit)
