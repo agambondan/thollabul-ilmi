@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/morkid/paginate"
@@ -30,8 +32,68 @@ func NewPerawiRepository(db *gorm.DB, pg *paginate.Pagination) PerawiRepository 
 	return &perawiRepo{db, pg}
 }
 
-func (r *perawiRepo) withRelations(db *gorm.DB) *gorm.DB {
-	return db.Preload("JarhTadil").Preload("JarhTadil.Penilai").Preload("Translation")
+const perawiSelectSQL = `
+	SELECT
+		p.id, p.nama_arab, p.nama_latin, p.nama_lengkap, p.kunyah, p.laqab, p.nisbah,
+		p.tahun_lahir, p.tahun_wafat, p.tahun_hijri, p.tempat_lahir, p.tempat_wafat,
+		p.tabaqah, p.status, p.biografis, p.translation_id,
+		t.id, t.idn, t.en, t.ar
+	FROM perawi p
+	LEFT JOIN translation t ON t.id = p.translation_id
+`
+
+func scanPerawiRow(rows *sql.Rows) (*model.Perawi, error) {
+	var (
+		p                                   model.Perawi
+		pID                                 *int
+		pNamaArab, pNamaLatin, pNamaLengkap *string
+		pKunyah, pLaqab, pNisbah            *string
+		pThnLahir, pThnWafat                *int
+		pThnHijri                           *bool
+		pTmpLahir, pTmpWafat                *string
+		pTabaqah, pStatus, pBio             *string
+		pTransID                            *int
+		tID                                 *int
+		tIdn, tEn, tAr                      *string
+	)
+
+	err := rows.Scan(
+		&pID, &pNamaArab, &pNamaLatin, &pNamaLengkap, &pKunyah, &pLaqab, &pNisbah,
+		&pThnLahir, &pThnWafat, &pThnHijri, &pTmpLahir, &pTmpWafat,
+		&pTabaqah, &pStatus, &pBio, &pTransID,
+		&tID, &tIdn, &tEn, &tAr,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	p.BaseID = model.BaseID{ID: pID}
+	p.NamaArab = pNamaArab
+	p.NamaLatin = pNamaLatin
+	p.NamaLengkap = pNamaLengkap
+	p.Kunyah = pKunyah
+	p.Laqab = pLaqab
+	p.Nisbah = pNisbah
+	p.TahunLahir = pThnLahir
+	p.TahunWafat = pThnWafat
+	p.TahunHijri = pThnHijri
+	p.TempatLahir = pTmpLahir
+	p.TempatWafat = pTmpWafat
+	p.Tabaqah = pTabaqah
+	p.Status = pStatus
+	p.Biografis = pBio
+	p.TranslationID = pTransID
+
+	if tID != nil {
+		p.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+
+	return &p, nil
 }
 
 func (r *perawiRepo) withListJoins(db *gorm.DB) *gorm.DB {
@@ -53,13 +115,46 @@ func (r *perawiRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 }
 
 func (r *perawiRepo) FindByID(id *int) (*model.Perawi, error) {
-	var p model.Perawi
-	if err := r.withRelations(r.db).
-		Preload("Guru").Preload("Murid").
-		First(&p, id).Error; err != nil {
+	rows, err := r.db.Raw(perawiSelectSQL+" WHERE p.id = ?", id).Rows()
+	if err != nil {
 		return nil, err
 	}
-	return &p, nil
+	defer rows.Close()
+
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	p, err := scanPerawiRow(rows)
+	if err != nil {
+		return nil, err
+	}
+	rows.Close()
+
+	guru, err := r.FindGuru(id)
+	if err == nil {
+		p.Guru = guru
+	}
+
+	murid, err := r.FindMurid(id)
+	if err == nil {
+		p.Murid = murid
+	}
+
+	jtRows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.perawi_id = ? ORDER BY jt.id ASC", id).Rows()
+	if err == nil {
+		defer jtRows.Close()
+		for jtRows.Next() {
+			jt, err := scanJarhTadilRow(jtRows)
+			if err == nil && jt != nil {
+				p.JarhTadil = append(p.JarhTadil, *jt)
+			}
+		}
+	}
+
+	return p, nil
 }
 
 func (r *perawiRepo) FindByTabaqah(ctx *fiber.Ctx, tabaqah string) *paginate.Page {
@@ -80,17 +175,49 @@ func (r *perawiRepo) Search(ctx *fiber.Ctx, q string) *paginate.Page {
 }
 
 func (r *perawiRepo) FindGuru(id *int) ([]model.Perawi, error) {
+	query := perawiSelectSQL + `
+		JOIN perawi_guru pg ON pg.guru_id = p.id
+		WHERE pg.murid_id = ?
+		ORDER BY p.id ASC
+	`
+	rows, err := r.db.Raw(query, id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var list []model.Perawi
-	err := r.db.Joins("JOIN perawi_guru ON perawi_guru.guru_id = perawi.id").
-		Where("perawi_guru.murid_id = ?", id).Find(&list).Error
-	return list, err
+	for rows.Next() {
+		p, err := scanPerawiRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, *p)
+	}
+	return list, rows.Err()
 }
 
 func (r *perawiRepo) FindMurid(id *int) ([]model.Perawi, error) {
+	query := perawiSelectSQL + `
+		JOIN perawi_guru pg ON pg.murid_id = p.id
+		WHERE pg.guru_id = ?
+		ORDER BY p.id ASC
+	`
+	rows, err := r.db.Raw(query, id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var list []model.Perawi
-	err := r.db.Joins("JOIN perawi_guru ON perawi_guru.murid_id = perawi.id").
-		Where("perawi_guru.guru_id = ?", id).Find(&list).Error
-	return list, err
+	for rows.Next() {
+		p, err := scanPerawiRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, *p)
+	}
+	return list, rows.Err()
 }
 
 func (r *perawiRepo) FindHadiths(ctx *fiber.Ctx, id *int) *paginate.Page {

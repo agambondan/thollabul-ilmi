@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
 )
@@ -24,6 +26,155 @@ func NewAsbabunNuzulRepository(db *gorm.DB) AsbabunNuzulRepository {
 	return &asbabunNuzulRepository{db}
 }
 
+const asbabunNuzulSelectSQL = `
+	SELECT
+		an.id, an.title, an.narrator, an.content, an.source, an.display_ref, an.translation_id,
+		ant.id, ant.idn, ant.en, ant.ar,
+		ay.id, ay.number, ay.page, ay.juz_number, ay.surah_id, ay.translation_id,
+		ayt.id, ayt.idn, ayt.en, ayt.ar,
+		s.id, s.number, s.slug, s.revelation_type, s.translation_id,
+		st.id, st.idn, st.en, st.ar
+	FROM asbabun_nuzul an
+	LEFT JOIN translation ant ON ant.id = an.translation_id
+	LEFT JOIN asbabun_nuzul_ayahs ana ON ana.asbabun_nuzul_id = an.id
+	LEFT JOIN ayah ay ON ay.id = ana.ayah_id
+	LEFT JOIN translation ayt ON ayt.id = ay.translation_id
+	LEFT JOIN surah s ON s.id = ay.surah_id
+	LEFT JOIN translation st ON st.id = s.translation_id
+`
+
+func scanAsbabunNuzulRows(rows *sql.Rows, preserveOrder []int) ([]model.AsbabunNuzul, error) {
+	var (
+		order     []int
+		itemsMap  = make(map[int]*model.AsbabunNuzul)
+		seenAyahs = make(map[int]map[int]bool)
+	)
+
+	for rows.Next() {
+		var (
+			anID                           *int
+			anTitle, anNarrator, anContent *string
+			anSource, anDisplayRef         *string
+			anTransID                      *int
+			antID                          *int
+			antIdn, antEn, antAr           *string
+			ayID, ayNumber, ayPage, ayJuz  *int
+			aySurahID, ayTransID           *int
+			aytID                          *int
+			aytIdn, aytEn, aytAr           *string
+			sID, sNumber, sTransID         *int
+			sSlug, sRev                    *string
+			stID                           *int
+			stIdn, stEn, stAr              *string
+		)
+
+		err := rows.Scan(
+			&anID, &anTitle, &anNarrator, &anContent, &anSource, &anDisplayRef, &anTransID,
+			&antID, &antIdn, &antEn, &antAr,
+			&ayID, &ayNumber, &ayPage, &ayJuz, &aySurahID, &ayTransID,
+			&aytID, &aytIdn, &aytEn, &aytAr,
+			&sID, &sNumber, &sSlug, &sRev, &sTransID,
+			&stID, &stIdn, &stEn, &stAr,
+		)
+		if err != nil {
+			return nil, err
+		}
+		if anID == nil {
+			continue
+		}
+
+		item, exists := itemsMap[*anID]
+		if !exists {
+			item = &model.AsbabunNuzul{
+				BaseID:        model.BaseID{ID: anID},
+				TranslationID: anTransID,
+				Ayahs:         []model.Ayah{},
+			}
+			if anTitle != nil {
+				item.Title = *anTitle
+			}
+			if anNarrator != nil {
+				item.Narrator = *anNarrator
+			}
+			if anContent != nil {
+				item.Content = *anContent
+			}
+			if anSource != nil {
+				item.Source = *anSource
+			}
+			if anDisplayRef != nil {
+				item.DisplayRef = *anDisplayRef
+			}
+			if antID != nil {
+				item.Translation = &model.Translation{
+					BaseID: model.BaseID{ID: antID},
+					Idn:    antIdn,
+					En:     antEn,
+					Ar:     antAr,
+				}
+			}
+			itemsMap[*anID] = item
+			order = append(order, *anID)
+			seenAyahs[*anID] = make(map[int]bool)
+		}
+
+		if ayID != nil && !seenAyahs[*anID][*ayID] {
+			seenAyahs[*anID][*ayID] = true
+			ayah := model.Ayah{
+				BaseID:        model.BaseID{ID: ayID},
+				Number:        ayNumber,
+				Page:          ayPage,
+				JuzNumber:     ayJuz,
+				SurahID:       aySurahID,
+				TranslationID: ayTransID,
+			}
+			if aytID != nil {
+				ayah.Translation = &model.Translation{
+					BaseID: model.BaseID{ID: aytID},
+					Idn:    aytIdn,
+					En:     aytEn,
+					Ar:     aytAr,
+				}
+			}
+			if sID != nil {
+				ayah.Surah = &model.Surah{
+					BaseID:         model.BaseID{ID: sID},
+					Number:         sNumber,
+					Slug:           sSlug,
+					RevelationType: sRev,
+					TranslationID:  sTransID,
+				}
+				if stID != nil {
+					ayah.Surah.Translation = &model.Translation{
+						BaseID: model.BaseID{ID: stID},
+						Idn:    stIdn,
+						En:     stEn,
+						Ar:     stAr,
+					}
+				}
+			}
+			item.Ayahs = append(item.Ayahs, ayah)
+		}
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	finalOrder := order
+	if len(preserveOrder) > 0 {
+		finalOrder = preserveOrder
+	}
+
+	result := make([]model.AsbabunNuzul, 0, len(finalOrder))
+	for _, id := range finalOrder {
+		if item, ok := itemsMap[id]; ok {
+			result = append(result, *item)
+		}
+	}
+	return result, nil
+}
+
 func (r *asbabunNuzulRepository) FindAll(page, size int) ([]model.AsbabunNuzul, error) {
 	if page < 0 {
 		page = 0
@@ -32,35 +183,41 @@ func (r *asbabunNuzulRepository) FindAll(page, size int) ([]model.AsbabunNuzul, 
 		size = 100
 	}
 
-	var items []model.AsbabunNuzul
-	err := r.db.
-		Preload("Translation").
-		Preload("Ayahs").
-		Preload("Ayahs.Surah").
-		Order("id ASC").
-		Offset(page * size).
-		Limit(size).
-		Find(&items).Error
-	return items, err
+	var ids []int
+	if err := r.db.Raw("SELECT id FROM asbabun_nuzul ORDER BY id ASC LIMIT ? OFFSET ?", size, page*size).Scan(&ids).Error; err != nil {
+		return nil, err
+	}
+	if len(ids) == 0 {
+		return []model.AsbabunNuzul{}, nil
+	}
+
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id IN (?) ORDER BY an.id ASC, ay.number ASC", ids).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return scanAsbabunNuzulRows(rows, ids)
 }
 
-// FindByAyahID returns all asbabun nuzul whose `Ayahs` set includes the given
-// ayah. With the m2m schema a single ayat can have multiple riwayat (e.g.
-// jalur Bukhari + jalur Muslim) so the result is always a slice.
 func (r *asbabunNuzulRepository) FindByAyahID(ayahID int) ([]model.AsbabunNuzul, error) {
-	var items []model.AsbabunNuzul
-	err := r.db.
-		Preload("Translation").
-		Preload("Ayahs").
-		Preload("Ayahs.Surah").
-		Joins("JOIN asbabun_nuzul_ayahs j ON j.asbabun_nuzul_id = asbabun_nuzul.id").
-		Where("j.ayah_id = ?", ayahID).
-		Find(&items).Error
-	return items, err
+	var ids []int
+	if err := r.db.Raw("SELECT DISTINCT asbabun_nuzul_id FROM asbabun_nuzul_ayahs WHERE ayah_id = ? ORDER BY asbabun_nuzul_id ASC", ayahID).Scan(&ids).Error; err != nil {
+		return nil, err
+	}
+	if len(ids) == 0 {
+		return []model.AsbabunNuzul{}, nil
+	}
+
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id IN (?) ORDER BY an.id ASC, ay.number ASC", ids).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return scanAsbabunNuzulRows(rows, ids)
 }
 
-// FindBySurahNumber returns all asbabun nuzul tied to any ayah of the given
-// surah, sorted by the smallest ayah number each riwayat references.
 func (r *asbabunNuzulRepository) FindBySurahNumber(surahNumber, limit, offset int) ([]model.AsbabunNuzul, error) {
 	if limit <= 0 {
 		limit = 20
@@ -69,26 +226,49 @@ func (r *asbabunNuzulRepository) FindBySurahNumber(surahNumber, limit, offset in
 		offset = 0
 	}
 
-	var items []model.AsbabunNuzul
-	err := r.db.
-		Preload("Translation").
-		Preload("Ayahs").
-		Preload("Ayahs.Surah").
-		Joins("JOIN asbabun_nuzul_ayahs j ON j.asbabun_nuzul_id = asbabun_nuzul.id").
-		Joins("JOIN ayah ON ayah.id = j.ayah_id").
-		Joins("JOIN surah ON surah.id = ayah.surah_id").
-		Where("surah.number = ?", surahNumber).
-		Group("asbabun_nuzul.id").
-		Order("MIN(ayah.number) ASC").
-		Limit(limit).
-		Offset(offset).
-		Find(&items).Error
-	return items, err
+	var ids []int
+	idQuery := `
+		SELECT an.id
+		FROM asbabun_nuzul an
+		JOIN asbabun_nuzul_ayahs j ON j.asbabun_nuzul_id = an.id
+		JOIN ayah ay ON ay.id = j.ayah_id
+		JOIN surah s ON s.id = ay.surah_id
+		WHERE s.number = ?
+		GROUP BY an.id
+		ORDER BY MIN(ay.number) ASC
+		LIMIT ? OFFSET ?
+	`
+	if err := r.db.Raw(idQuery, surahNumber, limit, offset).Scan(&ids).Error; err != nil {
+		return nil, err
+	}
+	if len(ids) == 0 {
+		return []model.AsbabunNuzul{}, nil
+	}
+
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id IN (?) ORDER BY ay.number ASC", ids).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return scanAsbabunNuzulRows(rows, ids)
 }
 
 func (r *asbabunNuzulRepository) FindByID(id int) (*model.AsbabunNuzul, error) {
-	var item model.AsbabunNuzul
-	return &item, r.db.Preload("Translation").Preload("Ayahs").Preload("Ayahs.Surah").First(&item, id).Error
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id = ? ORDER BY ay.number ASC", id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	items, err := scanAsbabunNuzulRows(rows, []int{id})
+	if err != nil {
+		return nil, err
+	}
+	if len(items) == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return &items[0], nil
 }
 
 func (r *asbabunNuzulRepository) FindAyahIDsByReferences(refs []model.AyahReference) ([]int, error) {
