@@ -79,10 +79,25 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 12. **`tokoh_tarikh_repository.go`**:
     - Menghilangkan query preload `Translation` pada listing dan search.
     - Single joined query pada `tokohTarikhSelectSQL`.
+13. **`hafalan_repository.go`**:
+    - Menghilangkan preload `Surah + Surah.Translation` pada `FindByUserID` (**2.0x lebih cepat**, -34% memory).
+    - Single joined query pada `hafalanSelectSQL`.
+14. **`manasik_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAll`, `FindByType`, `FindByTypeAndStep` (**1.7x lebih cepat**, -24% memory).
+    - Single joined query pada `manasikSelectSQL`.
+15. **`lesson_repository.go`**:
+    - Menghilangkan preload `Steps + RelatedBook` pada `FindAll`, `FindBySlug`, `FindByID`.
+    - Single joined query `lesson_module + lesson_step + library_book`.
+16. **`sanad_repository.go`**:
+    - Menghilangkan preload `MataSanad + MataSanad.Perawi` pada `FindAll`, `FindByID`, `FindByHadithID`.
+    - Single joined query `sanad + mata_sanad + perawi`.
+17. **`content_report_repository.go`**:
+    - Menghilangkan preload `User` pada `FindAll`, `FindByID`, `FindByUser`.
+    - Single joined query `content_report + user`.
 
 ---
 
 ## Verifikasi Test
-- `go test ./app/repository/...` — PASS (All 12 benchmark tests + unit tests)
+- `go test ./app/repository/...` — PASS (All 16 benchmark tests + unit tests)
 - `go test ./app/services/...` — PASS
 - `go test ./app/controllers/...` — PASS
