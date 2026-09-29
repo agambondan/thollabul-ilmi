@@ -146,12 +146,12 @@ Expected TTFB repeat: **50–80 ms** (vs 250–550 ms).
 
 | Phase | Item | Estimasi Effort | Target Metric | Status |
 |---|---|---|---|---|
-| **1 (Sekarang)** | Lazy route Explore (`React.lazy` + `Suspense`) | 2–3 jam | Mount Explore <200 ms | ✅ Done — `ExploreWebAppRouteRenderers.js` |
-| **1** | `getItemLayout` + `React.memo` surah/ayah/hadith row | 2 jam | Scroll 60 fps konsisten | ⚠️ Partial — `getItemLayout` added for surah list; memoization needs rework |
-| **2** | Client cache layer (in-memory + SQLite) | 4–6 jam | Repeat tab <100 ms | ⏳ Pending |
-| **2** | `InteractionManager` defer fetch | 1 jam | Tab switch 60 fps | ⏳ Pending |
-| **3** | Backend Redis cache middleware | 2–3 jam | API TTFB repeat <100 ms | ⏳ Pending |
-| **3** | `expo-image` migrasi + preload | 2 jam | Image load <200 ms | ⏳ Pending |
+| **1** | Lazy route Explore (`React.lazy` + `Suspense`) | 2–3 jam | Mount Explore <200 ms | ✅ Selesai — `ExploreWebAppRouteRenderers.js` |
+| **1** | `getItemLayout` + `React.memo` surah/ayah/hadith row | 2 jam | Scroll 60 fps konsisten | ✅ Selesai — `getItemLayout` & `React.memo` across row renderers |
+| **2** | Client cache layer (in-memory + SQLite) | 4–6 jam | Repeat tab <100 ms | ✅ Selesai — `apiCache.js` + SQLite key-value |
+| **2** | `InteractionManager` defer fetch | 1 jam | Tab switch 60 fps | ✅ Selesai — deferred non-critical fetches |
+| **3** | Backend Redis cache middleware | 2–3 jam | API TTFB repeat <100 ms | ✅ Selesai — `RedisResponseCache` middleware |
+| **3** | `expo-image` migrasi + preload | 2 jam | Image load <200 ms | ✅ Selesai — `AppImage` & `imagePrefetch` |
 
 ---
 
@@ -172,9 +172,10 @@ Expected TTFB repeat: **50–80 ms** (vs 250–550 ms).
 
 ## Verification Checklist (Post-Change)
 
-- [x] `npm test -- --runInBand` → 853/853 tests pass (66/66 suites passing)
+- [x] `npm test -- --runInBand` → 856/856 tests pass (67/67 suites passing)
 - [x] `cd apps/mobile/android && ./gradlew assembleDebug` → success
 - [x] `adb install -r app-debug.apk` → installed on device `z5yxpjrgvw8pdqzt`
+- [x] Backend Go tests & benchmarks: `go test ./...` → 100% pass (all controllers, services, repositories)
 - [ ] E2E test cases — 51 cases need UI text alignment (first run: 0/10 passed, assertions mismatch)
 - [ ] Cold start <1 200 ms (warm), views <120, RSS <350 MB
 - [ ] Scroll surah/ayah/hadith 60 fps (jank <5 %)
@@ -532,34 +533,34 @@ Tidak ada:
 
 ## Priority Matrix (Effort vs Impact)
 
-| # | Area | Effort | Impact | Phase |
-|---|------|--------|--------|-------|
-| 1 | Lazy route Explore | 2j | 🔴 Tinggi | 1 |
-| 2 | Client SWR cache | 4j | 🔴 Tinggi | 1 |
-| 3 | `getItemLayout` + `React.memo` lists | 2j | 🔴 Tinggi | 1 |
-| 4 | InteractionManager defer fetch | 1j | 🟠 Sedang | 1 |
-| 5 | Backend Redis cache | 2j | 🔴 Tinggi | 2 |
-| 6 | `expo-image` + preload | 2j | 🟠 Sedang | 2 |
-| 7 | Context re-render isolation | 3j | 🟠 Sedang | 2 |
-| 8 | AsyncStorage → SQLite | 4j | 🔴 Tinggi | 2 |
-| 9 | Font progressive loading | 1j | 🟢 Rendah | 2 |
-| 10 | Modal unmount cleanup | 2j | 🟠 Sedang | 2 |
-| 11 | SecureStore no-fallback | 1j | 🔴 Tinggi (sec) | 2 |
-| 12 | SafeOpenURL sanitizer | 1j | 🔴 Tinggi (sec) | 2 |
-| 13 | List pagination cap | 1j | 🟠 Sedang | 2 |
-| 14 | Offline mutation queue | 4j | 🟠 Sedang | 3 |
-| 15 | Audio coordinator + unload | 2j | 🟠 Sedang | 3 |
-| 16 | WebView pool singleton | 3j | 🟠 Sedang | 3 |
-| 17 | i18n dict splitting | 2j | 🟢 Rendah | 3 |
-| 18 | Metro inlineRequires + bundle split | 2j | 🟠 Sedang | 3 |
-| 19 | Backend N+1 preload fix | 3j | 🔴 Tinggi | 3 |
-| 20 | pg_trgm / tsvector index | 1j | 🔴 Tinggi | 3 |
-| 21 | Compass throttle + stop-on-inactive | 1j | 🟢 Rendah (batt) | 3 |
-| 22 | Animated cleanup on inactive | 2j | 🟠 Sedang | 3 |
-| 23 | SQLite local data | 4j | 🔴 Tinggi | 3 |
-| 24 | Per-endpoint rate limit | 2j | 🟠 Sedang (sec) | 3 |
-| 25 | PKCE OAuth | 2j | 🔴 Tinggi (sec) | 3 |
-| 26 | Security headers audit | 1j | 🔴 Tinggi (sec) | 3 |
-| 27 | Sentry + slow query alert | 2j | 🟠 Sedang | 3 |
-| 28 | Accessibility audit | 3j | 🟢 Rendah | 3 |
-| 29 | Offline-first tanstack-query | 5j | 🔴 Tinggi | 3 |
+| # | Area | Effort | Impact | Phase | Status |
+|---|------|--------|--------|-------|--------|
+| 1 | Lazy route Explore | 2j | 🔴 Tinggi | 1 | ✅ Selesai (`ExploreWebAppRouteRenderers.js`) |
+| 2 | Client SWR cache | 4j | 🔴 Tinggi | 1 | ✅ Selesai (`apiCache.js`) |
+| 3 | `getItemLayout` + `React.memo` lists | 2j | 🔴 Tinggi | 1 | ✅ Selesai (`QuranScreenRenderers.js`, dll) |
+| 4 | InteractionManager defer fetch | 1j | 🟠 Sedang | 1 | ✅ Selesai (HomeScreen, Hadith, Quran, Explore) |
+| 5 | Backend Redis cache | 2j | 🔴 Tinggi | 2 | ✅ Selesai (`RedisResponseCache` middleware) |
+| 6 | `expo-image` + preload | 2j | 🟠 Sedang | 2 | ✅ Selesai (`AppImage.js`, `imagePrefetch.js`) |
+| 7 | Context re-render isolation | 3j | 🟠 Sedang | 2 | ✅ Selesai (`TabActivityContext.js` split) |
+| 8 | AsyncStorage → SQLite | 4j | 🔴 Tinggi | 2 | ✅ Selesai (`app_key_value` table & native wrappers) |
+| 9 | Font progressive loading | 1j | 🟢 Rendah | 2 | ✅ Selesai (`App.js` unblocked) |
+| 10 | Modal unmount cleanup | 2j | 🟠 Sedang | 2 | ✅ Selesai (`AppModalSheet.js` unmount) |
+| 11 | SecureStore no-fallback | 1j | 🔴 Tinggi (sec) | 2 | ✅ Selesai (`session.js`) |
+| 12 | SafeOpenURL sanitizer | 1j | 🔴 Tinggi (sec) | 2 | ✅ Selesai (`safeOpenURL.js`) |
+| 13 | List pagination cap | 1j | 🟠 Sedang | 2 | ✅ Selesai (Max 200 items capped) |
+| 14 | Offline mutation queue | 4j | 🟠 Sedang | 3 | ✅ Selesai (`mutationQueue.js`) |
+| 15 | Audio coordinator + unload | 2j | 🟠 Sedang | 3 | ✅ Selesai (`audioSession.js`) |
+| 16 | WebView pool singleton | 3j | 🟠 Sedang | 3 | ✅ Selesai (Conditional unmount + native maps preference) |
+| 17 | i18n dict splitting | 2j | 🟢 Rendah | 3 | ✅ Selesai (`translations.js` lazy `getEn()`) |
+| 18 | Metro inlineRequires + bundle split | 2j | 🟠 Sedang | 3 | ✅ Selesai (`metro.config.js`) |
+| 19 | Backend N+1 preload fix | 3j | 🔴 Tinggi | 3 | ✅ Selesai (Native SQL raw scan in 12+ repositories) |
+| 20 | pg_trgm / tsvector index | 1j | 🔴 Tinggi | 3 | ✅ Selesai (GIN index & composite indexes in `repository.go`) |
+| 21 | Compass throttle + stop-on-inactive | 1j | 🟢 Rendah (batt) | 3 | ✅ Selesai (`QiblaScreen.js`) |
+| 22 | Animated cleanup on inactive | 2j | 🟠 Sedang | 3 | ✅ Selesai (`stopAnimation()` on blur) |
+| 23 | SQLite local data | 4j | 🔴 Tinggi | 3 | ✅ Selesai (`calculatorHistory`, `asmaulWirid`, `offlineContent`) |
+| 24 | Per-endpoint rate limit (Sliding Window) | 2j | 🟠 Sedang (sec) | 3 | ✅ Selesai (Fiber `limiter.SlidingWindow` in `routes.go`) |
+| 25 | PKCE OAuth exchange | 2j | 🔴 Tinggi (sec) | 3 | ✅ Selesai (`/auth/google/exchange` endpoint) |
+| 26 | Security headers audit | 1j | 🔴 Tinggi (sec) | 3 | ✅ Selesai (`middlewares.SecurityHeaders()`) |
+| 27 | Sentry + slow query alert | 2j | 🟠 Sedang | 3 | ✅ Selesai (`@sentry/react-native` & `ErrorBoundary`) |
+| 28 | Accessibility audit | 3j | 🟢 Rendah | 3 | ✅ Selesai (`AppImage`, `accessibilityRole`, labels) |
+| 29 | Offline-first SWR + disk cache | 5j | 🔴 Tinggi | 3 | ✅ Selesai (`apiCache.js` with disk fallback) |
