@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/morkid/paginate"
@@ -30,34 +32,250 @@ func NewSirohRepository(db *gorm.DB, pg *paginate.Pagination) SirohRepository {
 	return &sirohRepo{db, pg}
 }
 
+const sirohCategorySelectSQL = `
+	SELECT
+		sc.id, sc.title, sc.slug, sc."order", sc.translation_id,
+		t.id, t.idn, t.en, t.ar
+	FROM siroh_category sc
+	LEFT JOIN translation t ON t.id = sc.translation_id
+`
+
+const sirohContentSelectSQL = `
+	SELECT
+		sco.id, sco.category_id, sco.title, sco.slug, sco.content, sco.source, sco."order", sco.translation_id,
+		t.id, t.idn, t.en, t.ar
+	FROM siroh_content sco
+	LEFT JOIN translation t ON t.id = sco.translation_id
+`
+
+const sirohContentWithCategorySelectSQL = `
+	SELECT
+		sco.id, sco.category_id, sco.title, sco.slug, sco.content, sco.source, sco."order", sco.translation_id,
+		scot.id, scot.idn, scot.en, scot.ar,
+		sc.id, sc.title, sc.slug, sc."order", sc.translation_id,
+		sct.id, sct.idn, sct.en, sct.ar
+	FROM siroh_content sco
+	LEFT JOIN translation scot ON scot.id = sco.translation_id
+	LEFT JOIN siroh_category sc ON sc.id = sco.category_id
+	LEFT JOIN translation sct ON sct.id = sc.translation_id
+`
+
+func scanSirohCategoryRow(rows *sql.Rows) (*model.SirohCategory, error) {
+	var (
+		sc              model.SirohCategory
+		scID, scTransID *int
+		scTitle, scSlug *string
+		scOrder         *int
+		tID             *int
+		tIdn, tEn, tAr  *string
+	)
+
+	err := rows.Scan(
+		&scID, &scTitle, &scSlug, &scOrder, &scTransID,
+		&tID, &tIdn, &tEn, &tAr,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	sc.BaseID = model.BaseID{ID: scID}
+	if scTitle != nil {
+		sc.Title = *scTitle
+	}
+	if scSlug != nil {
+		sc.Slug = *scSlug
+	}
+	if scOrder != nil {
+		sc.Order = *scOrder
+	}
+	sc.TranslationID = scTransID
+
+	if tID != nil {
+		sc.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+
+	return &sc, nil
+}
+
+func scanSirohContentRow(rows *sql.Rows, includeCategory bool) (*model.SirohContent, error) {
+	var (
+		sco                                model.SirohContent
+		scoID, scoCatID, scoTransID        *int
+		scoTitle, scoSlug, scoText, scoSrc *string
+		scoOrder                           *int
+		scotID                             *int
+		scotIdn, scotEn, scotAr            *string
+		scID, scTransID                    *int
+		scTitle, scSlug                    *string
+		scOrder                            *int
+		sctID                              *int
+		sctIdn, sctEn, sctAr               *string
+	)
+
+	var targets []interface{}
+	targets = append(targets,
+		&scoID, &scoCatID, &scoTitle, &scoSlug, &scoText, &scoSrc, &scoOrder, &scoTransID,
+		&scotID, &scotIdn, &scotEn, &scotAr,
+	)
+	if includeCategory {
+		targets = append(targets,
+			&scID, &scTitle, &scSlug, &scOrder, &scTransID,
+			&sctID, &sctIdn, &sctEn, &sctAr,
+		)
+	}
+
+	err := rows.Scan(targets...)
+	if err != nil {
+		return nil, err
+	}
+
+	sco.BaseID = model.BaseID{ID: scoID}
+	sco.CategoryID = scoCatID
+	if scoTitle != nil {
+		sco.Title = *scoTitle
+	}
+	if scoSlug != nil {
+		sco.Slug = *scoSlug
+	}
+	if scoText != nil {
+		sco.Content = *scoText
+	}
+	if scoSrc != nil {
+		sco.Source = *scoSrc
+	}
+	if scoOrder != nil {
+		sco.Order = *scoOrder
+	}
+	sco.TranslationID = scoTransID
+
+	if scotID != nil {
+		sco.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: scotID},
+			Idn:    scotIdn,
+			En:     scotEn,
+			Ar:     scotAr,
+		}
+	}
+
+	if includeCategory && scID != nil {
+		sco.Category = &model.SirohCategory{
+			BaseID:        model.BaseID{ID: scID},
+			TranslationID: scTransID,
+		}
+		if scTitle != nil {
+			sco.Category.Title = *scTitle
+		}
+		if scSlug != nil {
+			sco.Category.Slug = *scSlug
+		}
+		if scOrder != nil {
+			sco.Category.Order = *scOrder
+		}
+		if sctID != nil {
+			sco.Category.Translation = &model.Translation{
+				BaseID: model.BaseID{ID: sctID},
+				Idn:    sctIdn,
+				En:     sctEn,
+				Ar:     sctAr,
+			}
+		}
+	}
+
+	return &sco, nil
+}
+
 func (r *sirohRepo) FindAllCategories() ([]model.SirohCategory, error) {
+	rows, err := r.db.Raw(sirohCategorySelectSQL + ` ORDER BY sc."order" ASC, sc.id ASC`).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var list []model.SirohCategory
-	err := r.db.Preload("Translation").Order("\"order\" asc, id asc").Find(&list).Error
-	return list, err
+	for rows.Next() {
+		cat, err := scanSirohCategoryRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, *cat)
+	}
+	return list, rows.Err()
 }
 
 func (r *sirohRepo) FindCategoryBySlug(slug string) (*model.SirohCategory, error) {
-	var c model.SirohCategory
-	err := r.db.Preload("Translation").Preload("Contents.Translation").Where("slug = ?", slug).First(&c).Error
+	rows, err := r.db.Raw(sirohCategorySelectSQL+" WHERE sc.slug = ?", slug).Rows()
 	if err != nil {
 		return nil, err
 	}
-	return &c, nil
+	defer rows.Close()
+
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+
+	cat, err := scanSirohCategoryRow(rows)
+	if err != nil {
+		return nil, err
+	}
+	rows.Close()
+
+	itemRows, err := r.db.Raw(sirohContentSelectSQL+` WHERE sco.category_id = ? ORDER BY sco."order" ASC, sco.id ASC`, cat.ID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer itemRows.Close()
+
+	for itemRows.Next() {
+		item, err := scanSirohContentRow(itemRows, false)
+		if err != nil {
+			return nil, err
+		}
+		cat.Contents = append(cat.Contents, *item)
+	}
+
+	return cat, itemRows.Err()
 }
 
 func (r *sirohRepo) FindContentBySlug(slug string) (*model.SirohContent, error) {
-	var c model.SirohContent
-	err := r.db.Preload("Translation").Preload("Category.Translation").Where("slug = ?", slug).First(&c).Error
+	rows, err := r.db.Raw(sirohContentWithCategorySelectSQL+" WHERE sco.slug = ?", slug).Rows()
 	if err != nil {
 		return nil, err
 	}
-	return &c, nil
+	defer rows.Close()
+
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	return scanSirohContentRow(rows, true)
 }
 
 func (r *sirohRepo) FindContentsByCategoryID(categoryID int) ([]model.SirohContent, error) {
+	rows, err := r.db.Raw(sirohContentSelectSQL+` WHERE sco.category_id = ? ORDER BY sco."order" ASC, sco.id ASC LIMIT 200`, categoryID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
 	var list []model.SirohContent
-	err := r.db.Preload("Translation").Where("category_id = ?", categoryID).Order("\"order\" asc, id asc").Limit(200).Find(&list).Error
-	return list, err
+	for rows.Next() {
+		item, err := scanSirohContentRow(rows, false)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, *item)
+	}
+	return list, rows.Err()
 }
 
 func (r *sirohRepo) FindAllContents(ctx *fiber.Ctx) *paginate.Page {

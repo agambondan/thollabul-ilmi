@@ -30,6 +30,14 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 | | **Native RawScan** | **644,759 ns** | **89,632 B** | **2,536** | **2.1x lebih cepat (-44% RAM)** |
 | **Fiqh** (`FindCategoryBySlug`) | GORM Preload | 724,899 ns | 77,387 B | 1,502 | Baseline |
 | | **Native RawScan** | **233,146 ns** | **38,728 B** | **1,032** | **3.1x lebih cepat (-50% RAM)** |
+| **Takhrij** (`FindByHadithID`) | GORM Preload | 627,600 ns | 95,220 B | 1,773 | Baseline |
+| | **Native RawScan** | **359,684 ns** | **67,304 B** | **2,477** | **1.8x lebih cepat (-30% RAM)** |
+| **Siroh** (`FindCategoryBySlug`) | GORM Preload | 1,753,056 ns | 89,150 B | 1,656 | Baseline |
+| | **Native RawScan** | **305,716 ns** | **41,576 B** | **1,245** | **5.7x lebih cepat (-53% RAM)** |
+| **History** (`FindAll`) | GORM Preload | 1,043,688 ns | 89,966 B | 1,871 | Baseline |
+| | **Native RawScan** | **528,822 ns** | **42,448 B** | **1,425** | **2.0x lebih cepat (-53% RAM)** |
+| **Tokoh Tarikh** (`FindAll`) | GORM Preload | 1,133,108 ns | 102,705 B | 2,122 | Baseline |
+| | **Native RawScan** | **476,145 ns** | **54,520 B** | **1,704** | **2.4x lebih cepat (-47% RAM)** |
 
 ---
 
@@ -59,10 +67,22 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 8. **`fiqh_repository.go`**:
    - Menghilangkan query berantai `Category.Translation + Items + Items.Translation + Items.Category`.
    - Single joined query pada `fiqhCategorySelectSQL`, `fiqhItemSelectSQL`, `fiqhItemWithCategorySelectSQL` dengan scan `scanFiqhCategoryRow` / `scanFiqhItemRow`.
+9. **`takhrij_repository.go`**:
+   - Menghilangkan query berantai `Book + Book.Translation`.
+   - Single joined query pada `takhrijSelectSQL` dengan scan `scanRow`.
+10. **`siroh_repository.go`**:
+    - Menghilangkan query berantai `Translation + Contents.Translation + Category.Translation`.
+    - Single joined query pada `sirohCategorySelectSQL`, `sirohContentSelectSQL`, `sirohContentWithCategorySelectSQL`.
+11. **`history_repository.go`**:
+    - Menghilangkan query preload `Translation` pada setiap listing / detail.
+    - Single joined query pada `historySelectSQL`.
+12. **`tokoh_tarikh_repository.go`**:
+    - Menghilangkan query preload `Translation` pada listing dan search.
+    - Single joined query pada `tokohTarikhSelectSQL`.
 
 ---
 
 ## Verifikasi Test
-- `go test ./app/repository/...` — PASS (All 8 benchmark tests + unit tests)
+- `go test ./app/repository/...` — PASS (All 12 benchmark tests + unit tests)
 - `go test ./app/services/...` — PASS
 - `go test ./app/controllers/...` — PASS
