@@ -35,9 +35,14 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	app.Use(middlewares.Cors())
 	app.Use(middlewares.SentryMiddleware())
 
+	globalMax := viper.GetInt("RATE_LIMIT_GLOBAL")
+	if globalMax <= 0 {
+		globalMax = 300
+	}
 	globalLimiter := limiter.New(limiter.Config{
-		Max:        viper.GetInt("RATE_LIMIT_GLOBAL"),
-		Expiration: 1 * time.Minute,
+		Max:               globalMax,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if uid := c.Locals("userId"); uid != nil {
 				return "auth:" + uid.(string)
@@ -59,11 +64,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	searchMax := viper.GetInt("RATE_LIMIT_SEARCH")
 	if searchMax <= 0 {
-		searchMax = 60
+		searchMax = 120
 	}
 	searchLimiter := limiter.New(limiter.Config{
-		Max:        searchMax,
-		Expiration: 1 * time.Minute,
+		Max:               searchMax,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if uid := c.Locals("userId"); uid != nil {
 				return "search:" + uid.(string)
@@ -243,14 +249,15 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 		master.Get("/swagger/*", swagger.HandlerDefault)
 	}
 
-	// Rate limiter for auth endpoints (15 req/min)
+	// Rate limiter for auth endpoints (30 req/min)
 	authMax := viper.GetInt("RATE_LIMIT_AUTH")
 	if authMax <= 0 {
-		authMax = 15
+		authMax = 30
 	}
 	authLimiter := limiter.New(limiter.Config{
-		Max:        authMax,
-		Expiration: 1 * time.Minute,
+		Max:               authMax,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 		LimitReached: func(c *fiber.Ctx) error {
 			return c.Status(429).JSON(fiber.Map{
 				"error":       "too many auth attempts, please try again in a minute",
@@ -259,9 +266,14 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 		},
 	})
 
+	loginLockoutMax := viper.GetInt("RATE_LIMIT_LOGIN_ACCOUNT")
+	if loginLockoutMax <= 0 {
+		loginLockoutMax = 10
+	}
 	loginLockout := limiter.New(limiter.Config{
-		Max:                    viper.GetInt("RATE_LIMIT_LOGIN_ACCOUNT"),
+		Max:                    loginLockoutMax,
 		Expiration:             15 * time.Minute,
+		LimiterMiddleware:      limiter.SlidingWindow{},
 		SkipSuccessfulRequests: true,
 		KeyGenerator: func(c *fiber.Ctx) string {
 			var req model.LoginRequest
@@ -313,11 +325,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Semantic Search & Ask (public) with rate limit
 	semanticMax := viper.GetInt("RATE_LIMIT_SEARCH")
 	if semanticMax <= 0 {
-		semanticMax = 60
+		semanticMax = 120
 	}
 	semanticLimiter := limiter.New(limiter.Config{
-		Max:        semanticMax,
-		Expiration: 1 * time.Minute,
+		Max:               semanticMax,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if uid := c.Locals("userId"); uid != nil {
 				return "semantic:" + uid.(string)
@@ -337,11 +350,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Personal write endpoints - higher limit for authenticated users
 	personalWriteMax := viper.GetInt("RATE_LIMIT_PERSONAL_WRITE")
 	if personalWriteMax <= 0 {
-		personalWriteMax = 120
+		personalWriteMax = 240
 	}
 	personalWriteLimiter := limiter.New(limiter.Config{
-		Max:        personalWriteMax,
-		Expiration: 1 * time.Minute,
+		Max:               personalWriteMax,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if uid := c.Locals("userId"); uid != nil {
 				return "personal:write:" + uid.(string)
@@ -849,9 +863,14 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 		}
 		return c.Next()
 	}
+	apiDevMax := viper.GetInt("RATE_LIMIT_DEV")
+	if apiDevMax <= 0 {
+		apiDevMax = 300
+	}
 	apiKeyLimiter := limiter.New(limiter.Config{
-		Max:        viper.GetInt("RATE_LIMIT_DEV"),
-		Expiration: 1 * time.Minute,
+		Max:               apiDevMax,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if key := c.Get("X-API-Key"); key != "" {
 				return key

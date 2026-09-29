@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
 )
@@ -20,6 +22,77 @@ func NewManasikRepository(db *gorm.DB) ManasikRepository {
 	return &manasikRepository{db}
 }
 
+type manasikRow struct {
+	ID                int
+	Type              model.ManasikType
+	StepOrder         int
+	Title             string
+	Description       string
+	Arabic            string
+	Transliteration   string
+	TranslationText   string
+	Notes             string
+	Source            string
+	IsWajib           bool
+	TranslationID     *int
+	CreatedAt         *time.Time
+	UpdatedAt         *time.Time
+	DeletedAt         gorm.DeletedAt
+
+	TrID        *int
+	TrAr        *string
+	TrEn        *string
+	TrIdn       *string
+	TrCreatedAt *time.Time
+	TrUpdatedAt *time.Time
+	TrDeletedAt gorm.DeletedAt
+}
+
+const manasikSelectSQL = `
+	SELECT
+		ms.id, ms.type, ms.step_order, ms.title, ms.description,
+		ms.arabic, ms.transliteration, ms.translation AS translation_text,
+		ms.notes, ms.source, ms.is_wajib, ms.translation_id,
+		ms.created_at, ms.updated_at, ms.deleted_at,
+		t.id AS tr_id, t.ar AS tr_ar, t.en AS tr_en, t.idn AS tr_idn,
+		t.created_at AS tr_created_at, t.updated_at AS tr_updated_at, t.deleted_at AS tr_deleted_at
+	FROM manasik_step ms
+	LEFT JOIN translation t ON t.id = ms.translation_id
+`
+
+func (r *manasikRow) toModel() model.ManasikStep {
+	m := model.ManasikStep{
+		Type:            r.Type,
+		StepOrder:       r.StepOrder,
+		Title:           r.Title,
+		Description:     r.Description,
+		Arabic:          r.Arabic,
+		Transliteration: r.Transliteration,
+		TranslationText: r.TranslationText,
+		Notes:           r.Notes,
+		Source:          r.Source,
+		IsWajib:         r.IsWajib,
+		TranslationID:   r.TranslationID,
+	}
+	m.ID = &r.ID
+	m.CreatedAt = r.CreatedAt
+	m.UpdatedAt = r.UpdatedAt
+	m.DeletedAt = r.DeletedAt
+
+	if r.TrID != nil {
+		m.Translation = &model.Translation{
+			Ar:  r.TrAr,
+			En:  r.TrEn,
+			Idn: r.TrIdn,
+		}
+		m.Translation.ID = r.TrID
+		m.Translation.CreatedAt = r.TrCreatedAt
+		m.Translation.UpdatedAt = r.TrUpdatedAt
+		m.Translation.DeletedAt = r.TrDeletedAt
+	}
+	return m
+}
+
 func (r *manasikRepository) FindAll(limit, offset int) ([]model.ManasikStep, error) {
 	if limit <= 0 {
 		limit = 20
@@ -27,8 +100,20 @@ func (r *manasikRepository) FindAll(limit, offset int) ([]model.ManasikStep, err
 	if offset < 0 {
 		offset = 0
 	}
-	var steps []model.ManasikStep
-	return steps, r.db.Preload("Translation").Order("type ASC, step_order ASC").Limit(limit).Offset(offset).Find(&steps).Error
+	var rows []manasikRow
+	err := r.db.Raw(manasikSelectSQL+`
+		ORDER BY ms.type ASC, ms.step_order ASC
+		LIMIT ? OFFSET ?
+	`, limit, offset).Scan(&rows).Error
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]model.ManasikStep, len(rows))
+	for i := range rows {
+		res[i] = rows[i].toModel()
+	}
+	return res, nil
 }
 
 func (r *manasikRepository) FindByType(t model.ManasikType, limit, offset int) ([]model.ManasikStep, error) {
@@ -38,13 +123,37 @@ func (r *manasikRepository) FindByType(t model.ManasikType, limit, offset int) (
 	if offset < 0 {
 		offset = 0
 	}
-	var steps []model.ManasikStep
-	return steps, r.db.Preload("Translation").Where("type = ?", t).Order("step_order ASC").Limit(limit).Offset(offset).Find(&steps).Error
+	var rows []manasikRow
+	err := r.db.Raw(manasikSelectSQL+`
+		WHERE ms.type = ?
+		ORDER BY ms.step_order ASC
+		LIMIT ? OFFSET ?
+	`, t, limit, offset).Scan(&rows).Error
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]model.ManasikStep, len(rows))
+	for i := range rows {
+		res[i] = rows[i].toModel()
+	}
+	return res, nil
 }
 
 func (r *manasikRepository) FindByTypeAndStep(t model.ManasikType, step int) (*model.ManasikStep, error) {
-	var s model.ManasikStep
-	return &s, r.db.Preload("Translation").Where("type = ? AND step_order = ?", t, step).First(&s).Error
+	var row manasikRow
+	err := r.db.Raw(manasikSelectSQL+`
+		WHERE ms.type = ? AND ms.step_order = ?
+		LIMIT 1
+	`, t, step).Scan(&row).Error
+	if err != nil {
+		return nil, err
+	}
+	if row.ID == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	m := row.toModel()
+	return &m, nil
 }
 
 func (r *manasikRepository) Create(step *model.ManasikStep) (*model.ManasikStep, error) {
@@ -92,6 +201,17 @@ func (r *manasikRepository) Delete(id int) error {
 }
 
 func (r *manasikRepository) findByID(id int) (*model.ManasikStep, error) {
-	var step model.ManasikStep
-	return &step, r.db.Preload("Translation").First(&step, id).Error
+	var row manasikRow
+	err := r.db.Raw(manasikSelectSQL+`
+		WHERE ms.id = ?
+		LIMIT 1
+	`, id).Scan(&row).Error
+	if err != nil {
+		return nil, err
+	}
+	if row.ID == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	m := row.toModel()
+	return &m, nil
 }
