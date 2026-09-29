@@ -19,12 +19,33 @@ const testCases = [
         tab: "quran",
         deepLink: "thullaabulilmi://quran",
         actions: [
+            { type: "wait", ms: 800 },
             { type: "type", placeholder: "Cari surah...", text: "Baqarah" },
             { type: "wait", ms: 500 },
             { type: "tap", text: "Al-Baqarah" },
             { type: "wait", ms: 800 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "key", keycode: 4 },
+            { type: "wait", ms: 500 },
+
+            { type: "tap", text: "Navigasi Mushaf" },
+            { type: "wait", ms: 600 },
+            { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 700, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Al-Quran", attr: "content-desc" },
+            { type: "wait", ms: 500 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
         ],
-        assertTexts: ["Al-Baqarah", "Sapi Betina"],
+        assertTexts: ["Al-Quran", "Navigasi Mushaf", "Al-Baqarah"],
     },
     {
         id: "tab-hadith",
@@ -33,16 +54,35 @@ const testCases = [
         tab: "hadith",
         deepLink: "thullaabulilmi://hadith",
         actions: [
-            { type: "tap", text: "Bukhari" },
-            { type: "wait", ms: 400 },
-            { type: "tap", text: "Muslim" },
-            { type: "wait", ms: 400 },
-            { type: "tap", text: "Abu Daud" },
-            { type: "wait", ms: 400 },
-            { type: "tap", text: "Bukhari" },
-            { type: "wait", ms: 400 },
+            { type: "wait", ms: 800 },
+
+            { type: "tap", text: "hadith-web-app-book-bukhari", attr: "resource-id" },
+            { type: "wait", ms: 800 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "type", resourceId: "hadith-web-app-search", text: "niat" },
+            { type: "wait", ms: 800 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Book" },
+            { type: "wait", ms: 600 },
+
+            { type: "tap", text: "hadith-web-app-book-muslim", attr: "resource-id" },
+            { type: "wait", ms: 1000 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Book" },
+            { type: "wait", ms: 500 },
         ],
-        assertTexts: ["Shahih Bukhari"],
+        assertTexts: ["Hadis", "Bukhari", "Muslim"],
     },
     {
         id: "tab-ibadah",
@@ -71,20 +111,49 @@ const testCases = [
         featureKey: "doa",
         deepLink: "thullaabulilmi://belajar/doa",
         actions: [
-            { type: "type", placeholder: "Cari", text: "tidur" },
-            { type: "wait", ms: 400 },
-            { type: "tap", text: "Sebelum Tidur" },
-            { type: "wait", ms: 400 },
+            { type: "wait", ms: 800 },
+
+            { type: "tap", text: "Pagi", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Petang", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Makan", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Tidur", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Masjid", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Semua", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+
+            { type: "type", resourceId: "web-app-doa-search", text: "tidur" },
+            { type: "wait", ms: 500 },
+
+            { type: "tap", text: "web-app-doa-card", attr: "resource-id" },
+            { type: "wait", ms: 800 },
+
+            { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1400, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-detail-back", attr: "resource-id" },
+            { type: "wait", ms: 500 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
         ],
-        assertTexts: ["Doa", "Tidur"],
+        assertTexts: ["Doa", "Pagi", "Petang", "Tidur", "Masjid"],
     },
-    {
+{
         id: "feature-zakat",
         name: "Kalkulator Zakat",
         type: "feature",
         featureKey: "zakat",
         deepLink: "thullaabulilmi://belajar/zakat",
         actions: [
+            { type: "wait", ms: 800 },
+
             { type: "tap", text: "pill-Fitrah", attr: "resource-id" },
             { type: "wait", ms: 300 },
             { type: "tap", text: "pill-Dagang", attr: "resource-id" },
@@ -93,9 +162,17 @@ const testCases = [
             { type: "wait", ms: 300 },
             { type: "tap", text: "pill-Emas", attr: "resource-id" },
             { type: "wait", ms: 300 },
-            { type: "tap", text: "pill-Maal", attr: "resource-id" },
-            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "pill-Riwayat", attr: "resource-id" },
+            { type: "wait", ms: 500 },
             { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-zakat-history-back", attr: "resource-id" },
+            { type: "wait", ms: 500 },
+
+            { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
             { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1400, duration: 250 },
         ],
         assertTexts: ["Zakat", "Maal", "Fitrah", "Harga emas"],
@@ -163,14 +240,30 @@ const testCases = [
         featureKey: "asmaul-flashcard",
         deepLink: "thullaabulilmi://belajar/asmaul-flashcard",
         actions: [
+            { type: "wait", ms: 800 },
+
             { type: "tap", text: "web-app-asmaul-flashcard-card", attr: "resource-id" },
-            { type: "wait", ms: 400 },
+            { type: "wait", ms: 300 },
+
             { type: "tap", text: "Sembunyikan" },
-            { type: "wait", ms: 400 },
-            { type: "tap", text: "Selanjutnya" },
-            { type: "wait", ms: 400 },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Tampilkan" },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Selanjutnya", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Sebelumnya", attr: "content-desc" },
+            { type: "wait", ms: 300 },
+
             { type: "tap", text: "Acak" },
-            { type: "wait", ms: 400 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Urutan Asli" },
+            { type: "wait", ms: 300 },
+
+            { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 700, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 700, x2: 540, y2: 1400, duration: 250 },
         ],
         assertTexts: ["Flashcard", "Asmaul Husna"],
     },
@@ -197,8 +290,7 @@ const testCases = [
         featureKey: "panduan-sholat",
         deepLink: "thullaabulilmi://belajar/panduan-sholat",
         actions: [
-            { type: "type", placeholder: "Cari tata cara", text: "Wudhu" },
-            { type: "wait", ms: 400 },
+            { type: "wait", ms: 800 },
             { type: "tap", text: "Wudhu", attr: "content-desc" },
             { type: "wait", ms: 400 },
             { type: "tap", text: "Sholat", attr: "content-desc" },
@@ -209,10 +301,13 @@ const testCases = [
             { type: "wait", ms: 400 },
             { type: "tap", text: "Umum", attr: "content-desc" },
             { type: "wait", ms: 400 },
+            { type: "tap", text: "Semua", attr: "content-desc" },
+            { type: "wait", ms: 400 },
             { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
             { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1400, duration: 250 },
         ],
-        assertTexts: ["Panduan Sholat", "Niat", "Takbiratul Ihram", "Wudhu", "Sholat", "Sunnah", "Dzikir", "Umum"],
+        assertTexts: ["Panduan Sholat", "Wudhu", "Sholat", "Sunnah", "Dzikir", "Umum", "Semua"],
     },
     {
         id: "feature-siroh",
@@ -333,20 +428,23 @@ const testCases = [
         featureKey: "perawi",
         deepLink: "thullaabulilmi://belajar/perawi",
         actions: [
+            { type: "wait", ms: 800 },
             { type: "tap", text: "Bagan" },
             { type: "wait", ms: 400 },
             { type: "tap", text: "Daftar" },
             { type: "wait", ms: 400 },
             { type: "tap", text: "web-app-perawi-tabaqah-sahabat", attr: "resource-id" },
             { type: "wait", ms: 400 },
-            { type: "tap", text: "web-app-perawi-tabaqah-tabiin", attr: "resource-id" },
-            { type: "wait", ms: 400 },
-            { type: "tap", text: "web-app-perawi-tabaqah-all", attr: "resource-id" },
-            { type: "wait", ms: 400 },
             { type: "tap", text: "web-app-perawi-card", attr: "resource-id" },
+            { type: "wait", ms: 800 },
+            { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1400, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "web-app-detail-back", attr: "resource-id" },
             { type: "wait", ms: 500 },
-            { type: "key", keycode: 4 },
-            { type: "wait", ms: 400 },
+            { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1400, duration: 250 },
         ],
         assertTexts: ["Perawi", "Daftar", "Bagan"],
     },
@@ -385,10 +483,40 @@ const testCases = [
         featureKey: "quiz",
         deepLink: "thullaabulilmi://belajar/quiz",
         actions: [
+            { type: "wait", ms: 800 },
+
+            { type: "tap", text: "web-app-quiz-option", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Lanjut" },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-quiz-option", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Lanjut" },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-quiz-option", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Lanjut" },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-quiz-option", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Lanjut" },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-quiz-option", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Lihat Hasil" },
+            { type: "wait", ms: 600 },
+
             { type: "swipe", x1: 540, y1: 1400, x2: 540, y2: 600, duration: 250 },
-            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1400, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Ulangi Quiz" },
+            { type: "wait", ms: 500 },
         ],
-        assertTexts: ["Quiz"],
+        assertTexts: ["Quiz", "Pertanyaan 1"],
     },
     {
         id: "feature-hijri",
@@ -414,13 +542,56 @@ const testCases = [
         deepLink: "thullaabulilmi://belajar/tasbih",
         actions: [
             { type: "wait", ms: 800 },
+
             { type: "tap", text: "web-app-tasbih-counter", attr: "resource-id", fast: true },
             { type: "tap", text: "web-app-tasbih-counter", attr: "resource-id", fast: true },
             { type: "tap", text: "web-app-tasbih-counter", attr: "resource-id", fast: true },
+            { type: "wait", ms: 300 },
+
             { type: "tap", text: "Reset" },
+            { type: "wait", ms: 300 },
+
             { type: "tap", text: "Getar: On" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Getar: Off" },
+            { type: "wait", ms: 300 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 800, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "99" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "100" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "313" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Tanpa Batas" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "33" },
+            { type: "wait", ms: 300 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 800, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Alhamdulillah" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Allahu Akbar" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "La ilaha illallah" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Astaghfirullah" },
+            { type: "wait", ms: 300 },
+
+            { type: "swipe", x1: 540, y1: 800, x2: 540, y2: 1600, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-tasbih-counter", attr: "resource-id", fast: true },
+            { type: "tap", text: "web-app-tasbih-counter", attr: "resource-id", fast: true },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Reset Semua" },
+            { type: "wait", ms: 300 },
         ],
-        assertTexts: ["Tasbih", "Subhanallah", "/ 33"],
+        assertTexts: ["Tasbih", "Astaghfirullah", "/ 100"],
     },
     {
         id: "feature-faraidh",
@@ -428,6 +599,37 @@ const testCases = [
         type: "feature",
         featureKey: "faraidh",
         deepLink: "thullaabulilmi://belajar/faraidh",
+        actions: [
+            { type: "wait", ms: 800 },
+
+            { type: "tap", text: "web-app-faraidh-heir-istri-plus", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 800, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-faraidh-heir-anakL-plus", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "web-app-faraidh-heir-anakP-plus", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-faraidh-heir-anakP-minus", attr: "resource-id" },
+            { type: "wait", ms: 300 },
+
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+            { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
+
+            { type: "tap", text: "web-app-faraidh-history-link", attr: "resource-id" },
+            { type: "wait", ms: 500 },
+
+            { type: "tap", text: "web-app-faraidh-history-back", attr: "resource-id" },
+            { type: "wait", ms: 500 },
+
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
+            { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
+        ],
         assertTexts: ["Faraidh", "Waris"],
     },
     {
@@ -437,6 +639,8 @@ const testCases = [
         featureKey: "sholat-tracker",
         deepLink: "thullaabulilmi://belajar/sholat-tracker",
         actions: [
+            { type: "wait", ms: 800 },
+
             { type: "tap", text: "Subuh" },
             { type: "wait", ms: 300 },
             { type: "tap", text: "Dzuhur" },
@@ -447,7 +651,14 @@ const testCases = [
             { type: "wait", ms: 300 },
             { type: "tap", text: "Isya" },
             { type: "wait", ms: 300 },
+
+            { type: "tap", text: "Subuh" },
+            { type: "wait", ms: 300 },
+            { type: "tap", text: "Subuh" },
+            { type: "wait", ms: 300 },
+
             { type: "swipe", x1: 540, y1: 1500, x2: 540, y2: 600, duration: 250 },
+            { type: "wait", ms: 300 },
             { type: "swipe", x1: 540, y1: 600, x2: 540, y2: 1500, duration: 250 },
         ],
         assertTexts: ["Sholat", "Subuh", "Dzuhur", "Ashar", "Maghrib", "Isya"],

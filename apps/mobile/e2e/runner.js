@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { testCases } = require("./test-cases");
 
-const PACKAGE = "com.anonymous.thullaabulilmimobile";
+const PACKAGE = process.env.APP_PACKAGE || "com.thullaabulilmi.app";
 const DEVICE = process.env.ANDROID_SERIAL || "z5yxpjrgvw8pdqzt";
 const ROOT_DIR = path.resolve(__dirname, "../../..");
 const APK_DEBUG = path.join(
@@ -45,15 +45,24 @@ function getAppPid() {
 
 function getFocusedPackage() {
     const output = adb("shell dumpsys window");
-    const match = output.match(/mCurrentFocus=Window\{[^}]+\s+([^/]+)\//);
-    return match?.[1] ?? null;
+    const focusMatch = output.match(/mCurrentFocus=Window\{[^}]+\s+([^/]+)\//);
+    const appMatch = output.match(/mFocusedApp=ActivityRecord\{[^}]+\s+([^/]+)\//);
+    if (focusMatch?.[1] && focusMatch[1].includes(PACKAGE)) return PACKAGE;
+    if (appMatch?.[1] && appMatch[1].includes(PACKAGE)) return PACKAGE;
+    return focusMatch?.[1] ?? appMatch?.[1] ?? null;
 }
 
 function assertAppForeground() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
         const focusedPackage = getFocusedPackage();
         if (focusedPackage === PACKAGE) return;
-        wait(400);
+        try {
+            adb("shell cmd statusbar collapse");
+        } catch {}
+        if (focusedPackage === "system" || focusedPackage?.includes("permissioncontroller") || focusedPackage?.includes("NotificationShade")) {
+            adb("shell input keyevent 4");
+        }
+        wait(500);
     }
     const finalPackage = getFocusedPackage();
     if (finalPackage !== PACKAGE) {
@@ -146,25 +155,29 @@ function inputText(xml, text, resourceId = null, placeholder = null) {
     if (!node?.bounds) throw new Error(`Input field not found`);
     console.log(`[ACTION] Input text: "${text}" at (${Math.round(node.bounds.cx)}, ${Math.round(node.bounds.cy)})`);
     adb(`shell input tap ${Math.round(node.bounds.cx)} ${Math.round(node.bounds.cy)}`);
-    wait(300);
+    wait(200);
     const escaped = text.replace(/ /g, "%s").replace(/&/g, "\\&");
     adb(`shell input text "${escaped}"`);
-    wait(300);
-    return dumpHierarchy();
+    wait(200);
+    try {
+        adb("shell input keyevent 111");
+    } catch {}
+    wait(200);
+    return null;
 }
 
 function pressKey(keyCode) {
     console.log(`[ACTION] Key event: ${keyCode}`);
     adb(`shell input keyevent ${keyCode}`);
-    wait(300);
-    return dumpHierarchy();
+    wait(200);
+    return null;
 }
 
 function swipe(x1, y1, x2, y2, duration = 300) {
     console.log(`[ACTION] Swipe: (${x1},${y1}) -> (${x2},${y2})`);
     adb(`shell input swipe ${x1} ${y1} ${x2} ${y2} ${duration}`);
-    wait(300);
-    return dumpHierarchy();
+    wait(200);
+    return null;
 }
 
 function assertRoute(tc, xml) {
@@ -198,6 +211,8 @@ function main() {
     }
 
     console.log("[E2E] Verifying package install...");
+    adb("shell input keyevent 224");
+    adb("shell wm dismiss-keyguard");
     const packages = adb("shell pm list packages");
     if (!packages.includes(PACKAGE)) {
         throw new Error(`Package ${PACKAGE} is not installed on device ${DEVICE}`);
@@ -216,9 +231,6 @@ function main() {
     let failed = 0;
     const failures = [];
 
-    adb(`shell am start -n ${PACKAGE}/.MainActivity`);
-    wait(2000);
-
     for (let i = 0; i < filteredCases.length; i++) {
         const tc = filteredCases[i];
         process.stdout.write(`[${i + 1}/${filteredCases.length}] ${tc.id} (${tc.name})... `);
@@ -227,9 +239,9 @@ function main() {
             if (tc.deepLink) {
                 adb(`shell am force-stop ${PACKAGE}`);
                 wait(500);
-                adb(`shell am start -a android.intent.action.VIEW -d "${tc.deepLink}" ${PACKAGE}`);
+                adb(`shell am start -a android.intent.action.VIEW -d "${tc.deepLink}" -p ${PACKAGE}`);
+                wait(2000);
             }
-wait(1500);
 
             const pid = getAppPid();
             if (!pid) {
@@ -241,30 +253,39 @@ wait(1500);
 
             if (Array.isArray(tc.actions) && tc.actions.length > 0) {
                 for (const act of tc.actions) {
+                    if (!currentXml) currentXml = dumpHierarchy();
                     if (act.type === "tap") {
-                        if (act.fast) {
-                            tapElement(currentXml, act.text, act.attr || null, true);
-                        } else {
-                            currentXml = tapElement(currentXml, act.text, act.attr || null);
+                        let node = findNodeByText(currentXml, act.text, act.attr || null);
+                        if (!node) {
+                            currentXml = dumpHierarchy();
+                            node = findNodeByText(currentXml, act.text, act.attr || null);
                         }
+                        if (!node?.bounds) throw new Error(`Element not found: "${act.text}"`);
+                        console.log(`[ACTION] Tap: "${act.text}" at (${Math.round(node.bounds.cx)}, ${Math.round(node.bounds.cy)})`);
+                        adb(`shell input tap ${Math.round(node.bounds.cx)} ${Math.round(node.bounds.cy)}`);
+                        wait(150);
+                        currentXml = act.fast ? currentXml : null;
                     } else if (act.type === "type") {
+                        if (!currentXml) currentXml = dumpHierarchy();
                         currentXml = inputText(currentXml, act.text, act.resourceId, act.placeholder);
                     } else if (act.type === "key") {
                         currentXml = pressKey(act.keyCode || act.keycode);
                     } else if (act.type === "swipe") {
                         currentXml = swipe(act.x1, act.y1, act.x2, act.y2, act.duration);
                     } else if (act.type === "wait") {
-                        wait(act.ms || 1000);
-                        currentXml = dumpHierarchy();
+                        wait(act.ms || 500);
+                        currentXml = null;
                     }
                 }
             } else {
                 adb(`shell input swipe 540 1500 540 600 250`);
-                wait(500);
+                wait(300);
                 adb(`shell input swipe 540 600 540 1500 250`);
-                wait(500);
-                currentXml = dumpHierarchy();
+                wait(300);
+                currentXml = null;
             }
+
+            if (!currentXml) currentXml = dumpHierarchy();
 
             const currentPid = getAppPid();
             if (!currentPid) {
