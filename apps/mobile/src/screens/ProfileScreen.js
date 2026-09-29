@@ -4,6 +4,7 @@ import {
     BookOpen,
     ChevronRight,
     HardDrive,
+    Info,
     Lock,
     LogOut,
     Palette,
@@ -25,6 +26,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import appConfig from "../../app.json";
 import {
     getAuthSessions,
     revokeAuthSession,
@@ -52,6 +54,8 @@ import { useLayoutMode } from "../layout/LayoutModeProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
 import { colors, getThemeColors } from "../theme";
 import { styles, WEB_APP_PROFILE_THEMES } from "./ProfileScreen.styles";
+
+const APP_VERSION = appConfig?.expo?.version ?? "";
 
 const DEFAULT_BADGES = [
     {
@@ -1274,6 +1278,12 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         if (routeView === "achievements") {
             setStack(["achievements"]);
         }
+        if (routeView === "help") {
+            setStack(["help"]);
+        }
+        if (routeView === "about") {
+            setStack(["about"]);
+        }
         if (
             typeof routeView === "string" &&
             routeView.startsWith("settings-")
@@ -1294,6 +1304,8 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 const titles = {
                     settings: "Pengaturan",
                     achievements: "Pencapaian",
+                    help: "Bantuan",
+                    about: "Tentang Aplikasi",
                     "settings-account": "Akun",
                     "settings-notifications": "Notifikasi",
                     "settings-storage": "Penyimpanan",
@@ -1557,6 +1569,59 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                     onSignOut={signOut}
                     user={user}
                 />
+            </SubScreen>
+        );
+    }
+
+    if (currentScreen === "help") {
+        return (
+            <SubScreen title={t("profile.help.title")} onBack={pop}>
+                {[1, 2, 3, 4, 5, 6].map((n) => (
+                    <Card key={n}>
+                        <Text style={styles.appearanceLabel}>
+                            {t(`profile.help.q${n}`)}
+                        </Text>
+                        <Text style={styles.appearanceMeta}>
+                            {t(`profile.help.a${n}`)}
+                        </Text>
+                    </Card>
+                ))}
+            </SubScreen>
+        );
+    }
+
+    if (currentScreen === "about") {
+        return (
+            <SubScreen title={t("profile.about.title")} onBack={pop}>
+                <Card>
+                    <View style={styles.sessionDeviceCard}>
+                        <View style={styles.sessionDeviceIcon}>
+                            <Info
+                                color={colors.primary}
+                                size={20}
+                                strokeWidth={2.4}
+                            />
+                        </View>
+                        <View style={styles.sessionDeviceBody}>
+                            <Text style={styles.sessionDeviceTitle}>
+                                {t("profile.about.appName")}
+                            </Text>
+                            <Text style={styles.sessionDeviceMeta}>
+                                {t("profile.about.version", {
+                                    version: APP_VERSION,
+                                })}
+                            </Text>
+                        </View>
+                    </View>
+                </Card>
+                <Card>
+                    <Text style={styles.appearanceLabel}>
+                        {t("profile.about.descriptionTitle")}
+                    </Text>
+                    <Text style={styles.appearanceMeta}>
+                        {t("profile.about.description")}
+                    </Text>
+                </Card>
             </SubScreen>
         );
     }

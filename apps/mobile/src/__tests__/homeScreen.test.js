@@ -38,6 +38,8 @@ jest.mock("../context/SessionContext", () => ({
 
 jest.mock("../context/TabActivityContext", () => ({
     useTabActivity: () => ({ notifyTabActivity: jest.fn() }),
+    useNotifyTabActivity: () => jest.fn(),
+    useTabActivityTick: () => 0,
 }));
 
 jest.mock("../hooks/useLayoutModePreference", () => ({

@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { StatusBar, Text } from "react-native";
-import { fireEvent, render, waitFor } from "@testing-library/react-native";
+import { Pressable, StatusBar, Text } from "react-native";
+import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 import { TabActivityProvider } from "../context/TabActivityContext";
 import { MobileLocaleProvider } from "../i18n/MobileLocaleProvider";
-import { LayoutModeProvider } from "../layout/LayoutModeProvider";
+import { LayoutModeProvider, layoutModes, useLayoutMode } from "../layout/LayoutModeProvider";
 import { MobileAppShell } from "../layout/MobileAppShell";
 import { getWebAppAccountLabel } from "../layout/WebAppShell";
 import { useSession } from "../context/SessionContext";
@@ -179,6 +179,43 @@ describe("MobileAppShell", () => {
         expect(getByText("B")).toBeTruthy();
     });
 
+    test("switches live to classic shell when layout mode changes via context", async () => {
+        function SwitchProbe() {
+            const { setLayoutMode } = useLayoutMode();
+            return (
+                <Pressable onPress={() => setLayoutMode(layoutModes.classic)}>
+                    <Text>Switch Classic</Text>
+                </Pressable>
+            );
+        }
+
+        AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+        const { getByText, getByTestId, queryByTestId } = render(
+            <TabActivityProvider>
+                <LayoutModeProvider>
+                    <MobileAppShell
+                        activeTab="home"
+                        keyboardVisible={false}
+                        onOpenProfile={jest.fn()}
+                        onTabChange={jest.fn()}
+                    >
+                        <SwitchProbe />
+                    </MobileAppShell>
+                </LayoutModeProvider>
+            </TabActivityProvider>,
+        );
+
+        await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());
+        expect(queryByTestId("classic-app-shell")).toBeNull();
+
+        await act(async () => {
+            fireEvent.press(getByText("Switch Classic"));
+        });
+
+        await waitFor(() => expect(getByTestId("classic-app-shell")).toBeTruthy());
+        expect(queryByTestId("web-app-shell")).toBeNull();
+    });
+
     test("opens and closes account menu from web app header account control", async () => {
         AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
         useSession.mockReturnValue({
@@ -334,9 +371,9 @@ describe("MobileAppShell", () => {
 
         fireEvent.press(getByLabelText("Menu"));
         expect(getByTestId("mobile-menu-sheet")).toBeTruthy();
-        expect(getByText("BACAAN UTAMA")).toBeTruthy();
-        expect(getByText("IBADAH & TRACKER")).toBeTruthy();
-        expect(getByTestId("mobile-menu-item-profile")).toBeTruthy();
+        expect(getByText("AKSES CEPAT")).toBeTruthy();
+        expect(getByText("LAINNYA")).toBeTruthy();
+        expect(getByTestId("mobile-menu-item-pengaturan")).toBeTruthy();
 
         fireEvent.press(getByTestId("mobile-menu-sheet-close"));
         expect(queryByTestId("mobile-menu-sheet")).toBeNull();
@@ -351,21 +388,23 @@ describe("MobileAppShell", () => {
 
         await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());
         fireEvent.press(getByLabelText("Menu"));
-        fireEvent.press(getByTestId("mobile-menu-item-sholat-tracker"));
+        fireEvent.press(getByTestId("mobile-menu-item-tokoh"));
 
-        expect(onTabChange).toHaveBeenCalledWith("ibadah", null);
+        expect(onTabChange).toHaveBeenCalledWith("belajar", {
+            featureKey: "tokoh",
+        });
         expect(queryByTestId("mobile-menu-sheet")).toBeNull();
 
         fireEvent.press(getByLabelText("Menu"));
-        fireEvent.press(getByTestId("mobile-menu-item-jadwal-sholat"));
-        expect(onTabChange).toHaveBeenCalledWith("ibadah", {
-            view: "prayer",
+        fireEvent.press(getByTestId("mobile-menu-item-peta"));
+        expect(onTabChange).toHaveBeenCalledWith("belajar", {
+            featureKey: "historical-map",
         });
 
         fireEvent.press(getByLabelText("Menu"));
-        fireEvent.press(getByTestId("mobile-menu-item-goals"));
+        fireEvent.press(getByTestId("mobile-menu-item-perawi"));
         expect(onTabChange).toHaveBeenCalledWith("belajar", {
-            featureKey: "goals",
+            featureKey: "perawi",
         });
     });
 
@@ -376,9 +415,10 @@ describe("MobileAppShell", () => {
 
         await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());
         fireEvent.press(getByLabelText("Menu"));
-        fireEvent.press(getByTestId("mobile-menu-item-profile"));
+        fireEvent.press(getByTestId("mobile-menu-item-pengaturan"));
 
         expect(onOpenProfile).toHaveBeenCalledTimes(1);
+        expect(onOpenProfile).toHaveBeenCalledWith({ view: "settings" });
     });
 
     test("routes web app bottom nav taps through existing tab handler", async () => {
@@ -410,11 +450,11 @@ describe("MobileAppShell", () => {
     test("uses active tab state for web app bottom nav and menu selection", async () => {
         AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
         const { getByLabelText, getByTestId } = renderShell({
-            activeTab: "quran",
+            activeTab: "belajar",
         });
 
         await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());
-        expect(getByLabelText("Al-Quran").props.accessibilityState).toEqual({
+        expect(getByLabelText("Belajar").props.accessibilityState).toEqual({
             selected: true,
         });
         expect(getByLabelText("Beranda").props.accessibilityState).toEqual({
@@ -424,10 +464,10 @@ describe("MobileAppShell", () => {
         fireEvent.press(getByLabelText("Menu"));
 
         expect(
-            getByTestId("mobile-menu-item-quran").props.accessibilityState,
+            getByTestId("mobile-menu-item-tokoh").props.accessibilityState,
         ).toEqual({ selected: true });
         expect(
-            getByTestId("mobile-menu-item-hadith").props.accessibilityState,
+            getByTestId("mobile-menu-item-pengaturan").props.accessibilityState,
         ).toEqual({ selected: false });
     });
 

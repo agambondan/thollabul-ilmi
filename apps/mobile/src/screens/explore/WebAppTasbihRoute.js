@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     headerArabic: {
         color: "#047857",
         fontSize: 30,
-        lineHeight: 52,
+        lineHeight: 54,
         marginBottom: 2,
         paddingVertical: 6,
         textAlign: "center",
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     activeArabic: {
         color: "#064e3b",
         fontSize: 29,
-        lineHeight: 52,
+        lineHeight: 54,
         paddingVertical: 6,
         textAlign: "center",
     },

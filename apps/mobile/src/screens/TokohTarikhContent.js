@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
-    Image,
     Modal,
     Pressable,
     ScrollView,
@@ -10,6 +9,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { AppImage } from "../components/AppImage";
 import { colors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
@@ -294,7 +294,8 @@ export function TokohTarikhContent() {
             >
                 <View style={avatarStyle}>
                     {tokoh.image_url ? (
-                        <Image
+                        <AppImage
+                            accessibilityLabel={tokoh.name || "Foto tokoh"}
                             source={{ uri: tokoh.image_url }}
                             style={styles.avatarImage}
                         />
@@ -436,7 +437,8 @@ export function TokohTarikhContent() {
 
                                 <View style={styles.modalAvatarWrap}>
                                     {selected.image_url ? (
-                                        <Image
+                                        <AppImage
+                                            accessibilityLabel={selected.name || "Foto tokoh"}
                                             source={{ uri: selected.image_url }}
                                             style={styles.modalAvatar}
                                         />

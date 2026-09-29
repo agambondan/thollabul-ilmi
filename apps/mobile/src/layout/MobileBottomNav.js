@@ -42,6 +42,7 @@ export function MobileBottomNav({
     const activeBg = theme.primaryBg;
     const inactiveColor = theme.muted;
     const borderColor = theme.border;
+    const rippleColor = theme.ripple;
 
     return (
         <View
@@ -59,13 +60,15 @@ export function MobileBottomNav({
 
                 return (
                     <Pressable
+                        accessibilityHint={selected ? "Tab aktif saat ini" : `Buka tab ${label}`}
                         accessibilityLabel={label}
                         accessibilityRole='tab'
                         accessibilityState={{ selected }}
                         android_ripple={{
-                            color: activeBg,
+                            color: rippleColor,
                             borderless: false,
                         }}
+                        hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
                         key={tab.key}
                         onPress={() => {
                             if (!selected) hapticSelection();

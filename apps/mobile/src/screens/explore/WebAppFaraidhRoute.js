@@ -21,8 +21,8 @@ import {
     getFaraidhHistory,
     saveFaraidh,
 } from "../../api/personal";
-import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
+import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { calculateFaraidh, HEIR_LABELS } from "../../lib/faraidh";
 import { FaraidhFamilyTreeMobile } from "./FaraidhFamilyTreeMobile";
 import {

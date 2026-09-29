@@ -18,7 +18,7 @@ import {
 } from "lucide-react-native";
 import {
     ActivityIndicator,
-    Linking,
+    InteractionManager,
     Pressable,
     ScrollView,
     Switch,
@@ -123,6 +123,7 @@ import {
 import { getAyahById, getSurahs } from "../api/client";
 import { calculateFaraidh, HEIR_LABELS } from "../lib/faraidh";
 import { hapticMedium, hapticTap } from "../utils/haptics";
+import { safeOpenURL } from "../utils/safeOpenURL";
 import { HistoricalMapContent } from "./HistoricalMapScreen";
 import { styles } from "./ExploreScreen.styles";
 import { TokohTarikhContent } from "./TokohTarikhContent";
@@ -1107,7 +1108,7 @@ export function ExploreScreen({
             const sourceUrl = raw.source_url || raw.url || raw.link;
             if (sourceUrl) {
                 try {
-                    await Linking.openURL(sourceUrl);
+                    await safeOpenURL(sourceUrl);
                 } catch (err) {
                     setError(err?.message ?? t("explore.sourceOpenError"));
                 }
@@ -1230,7 +1231,10 @@ export function ExploreScreen({
     );
 
     useEffect(() => {
-        loadBookmarks();
+        const task = InteractionManager.runAfterInteractions(() => {
+            loadBookmarks();
+        });
+        return () => task?.cancel?.();
     }, [loadBookmarks]);
 
     useEffect(() => {
@@ -1585,6 +1589,7 @@ export function ExploreScreen({
         handleLikeFeedItem,
         handleReportFeedItem,
         handleTogglePinnedFeature,
+        isDarkTheme,
         isWebAppLayout,
         items,
         itemActionSheet,
@@ -1807,7 +1812,7 @@ export function ExploreScreen({
             notesSearch,
             onToggleAmalan: handleToggleAmalan,
             onOpenKajianUrl: (url) => {
-                Linking.openURL(url).catch(() =>
+                safeOpenURL(url).catch(() =>
                     setError(t("explore.kajianLinkError")),
                 );
             },

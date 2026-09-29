@@ -1,5 +1,6 @@
 import { requestJson } from "./client";
 import { getBookmarks } from "./personal";
+import { fetchCached, cacheKeys } from "./apiCache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const pickItems = (payload) => {
@@ -418,22 +419,32 @@ export const getQuizQuestions = async (count = 5) => {
 };
 
 export const getAsmaulNames = async () => {
-    const cacheKey = "tholabul:cache:asmaul-husna";
-    try {
-        const payload = await requestJson("/api/v1/asmaul-husna");
-        AsyncStorage.setItem(cacheKey, JSON.stringify(payload)).catch(() => {});
-        return pickItems(payload);
-    } catch (error) {
-        const cached = await AsyncStorage.getItem(cacheKey).catch(() => null);
-        if (cached) {
+    return fetchCached(
+        cacheKeys.asmaulHusna(),
+        async () => {
+            const cacheKey = "tholabul:cache:asmaul-husna";
             try {
-                return pickItems(JSON.parse(cached));
-            } catch {
-                /* fallback */
+                const payload = await requestJson("/api/v1/asmaul-husna");
+                AsyncStorage.setItem(cacheKey, JSON.stringify(payload)).catch(
+                    () => {},
+                );
+                return pickItems(payload);
+            } catch (error) {
+                const cached = await AsyncStorage.getItem(cacheKey).catch(
+                    () => null,
+                );
+                if (cached) {
+                    try {
+                        return pickItems(JSON.parse(cached));
+                    } catch {
+                        /* fallback */
+                    }
+                }
+                throw error;
             }
-        }
-        throw error;
-    }
+        },
+        { ttl: 60 * 60 * 1000 },
+    );
 };
 
 export const fetchBookPages = async (slugOrId, page) => {

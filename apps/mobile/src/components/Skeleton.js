@@ -1,6 +1,5 @@
-import { StyleSheet, View } from "react-native";
+import { Animated, Easing, StyleSheet, View } from "react-native";
 import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
 import { colors, radius, spacing } from "../theme";
 
 const SHIMMER_DURATION = 1200;
@@ -9,17 +8,26 @@ export function Skeleton({ style, children }) {
     const animation = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        animation.setValue(0);
-        Animated.timing(animation, {
-            toValue: 1,
-            duration: SHIMMER_DURATION,
-            easing: Easing.linear,
-            useNativeDriver: true,
-        }).start(({ finished }) => {
-            if (finished) {
-                animation.setValue(0);
-            }
-        });
+        let anim;
+        const startLoop = () => {
+            animation.setValue(0);
+            anim = Animated.timing(animation, {
+                toValue: 1,
+                duration: SHIMMER_DURATION,
+                easing: Easing.linear,
+                useNativeDriver: true,
+            });
+            anim.start(({ finished }) => {
+                if (finished) {
+                    startLoop();
+                }
+            });
+        };
+        startLoop();
+
+        return () => {
+            animation.stopAnimation();
+        };
     }, [animation]);
 
     return (

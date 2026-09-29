@@ -28,29 +28,28 @@ const supportedFeatureTypes = new Set([
 ]);
 
 const expectedBelajarFeatureKeysByGroup = {
-    "Modul & Kelas": ["lessons"],
-    "Kajian & Artikel": [
-        "community-feed",
-        "komunitas",
-        "kajian",
-        "blog",
-        "radio-islamic",
-        "forum",
-    ],
+    "Kajian & Artikel": ["kajian", "blog", "lessons"],
     "Siroh & Sejarah": ["siroh", "sejarah", "manasik"],
-    "Fiqh & Panduan": ["fiqh", "panduan-sholat", "user-wird"],
+    "Fiqh & Panduan": ["fiqh", "panduan-sholat", "amalan"],
     Referensi: [
         "kamus",
         "tafsir",
         "asbabun-nuzul",
-        "perawi",
-        "jarh-tadil",
         "asmaul-husna",
-        "asmaul-flashcard",
         "library",
     ],
     Evaluasi: ["quiz"],
-    "Personal Ringkas": ["goals", "stats", "leaderboard", "bookmarks", "notes"],
+    "Personal Ringkas": [
+        "goals",
+        "stats",
+        "leaderboard",
+        "bookmarks",
+        "notes",
+        "hafalan",
+        "murojaah",
+        "tilawah",
+        "muhasabah",
+    ],
 };
 
 const localRendererTypes = new Set([
@@ -171,7 +170,6 @@ describe("belajarFeatureGroups", () => {
         const labels = belajarFeatureGroups.map((g) => g.label);
         expect(labels).toEqual(
             expect.arrayContaining([
-                "Modul & Kelas",
                 "Kajian & Artikel",
                 "Siroh & Sejarah",
                 "Fiqh & Panduan",

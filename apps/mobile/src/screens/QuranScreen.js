@@ -22,6 +22,8 @@ import {
     ActivityIndicator,
     BackHandler,
     FlatList,
+    InteractionManager,
+    Platform,
     Pressable,
     RefreshControl,
     ScrollView,
@@ -70,7 +72,7 @@ import { ActionPill, EmptyState, IconActionButton } from "../components/Paper";
 import { Screen } from "../components/Screen";
 import { useFeedback } from "../context/FeedbackContext";
 import { useSession } from "../context/SessionContext";
-import { useTabActivity } from "../context/TabActivityContext";
+import { useNotifyTabActivity } from "../context/TabActivityContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { useQuranReaderPreferences } from "../hooks/useQuranReaderPreferences";
@@ -82,6 +84,7 @@ import {
 } from "../storage/preferences";
 import { colors } from "../theme";
 import { playAudioUrl, stopAudio } from "../utils/audioPlayer";
+import { AudioSource, registerAudioSource, stopAllAudio } from "../utils/audioSession";
 import {
     MEMORIZATION_MODES,
     DISPLAY_MODES,
@@ -134,11 +137,16 @@ import {
 } from "./QuranScreen.webAppTheme";
 import { createQuranScreenRenderers } from "./quran/QuranScreenRenderers";
 
-export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
+export function QuranScreen({
+    deepLinkTarget,
+    fontsLoaded = true,
+    isActive,
+    navigation,
+}) {
     const { width: viewportWidth } = useWindowDimensions();
     const { user } = useSession();
     const { showError, showInfo, showSuccess } = useFeedback();
-    const { notifyTabActivity } = useTabActivity();
+    const notifyTabActivity = useNotifyTabActivity();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
     const webAppQuranTheme = isDarkTheme
@@ -1341,7 +1349,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         return sources;
     };
 
-    const stopRangeAudio = () => {
+    const stopPlayback = useCallback(() => {
         audioRangeSessionRef.current += 1;
         audioQueueRef.current = [];
         audioQueueIndexRef.current = 0;
@@ -1360,7 +1368,15 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             loadingAyahId: null,
             playingAyahId: null,
         }));
-    };
+    }, []);
+
+    const stopRangeAudio = stopPlayback;
+
+    useEffect(() => {
+        if (!isActive) {
+            stopPlayback();
+        }
+    }, [isActive, stopPlayback]);
 
     const playRangeQueueItem = async (index, sessionId) => {
         if (sessionId !== audioRangeSessionRef.current) return;
@@ -1400,6 +1416,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             loadingAyahId: ayah.id,
         }));
 
+        registerAudioSource(AudioSource.QURAN, stopPlayback);
         try {
             const sources = await getSourcesForAyah(ayah);
             const source = pickAudioSource(sources, audioQariRef.current);
@@ -1602,6 +1619,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             activeAyahId: ayah.id,
             loadingAyahId: ayah.id,
         }));
+        registerAudioSource(AudioSource.QURAN, stopPlayback);
         try {
             const sources = await getSourcesForAyah({ ...ayah, surahNumber });
             const source = pickAudioSource(sources, qariSlugOverride);
@@ -1695,7 +1713,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     };
 
     useEffect(() => {
-        refreshAll();
+        const task = InteractionManager.runAfterInteractions(() => {
+            refreshAll();
+        });
+        return () => task?.cancel?.();
     }, [refreshAll]);
 
     useEffect(() => {
@@ -2066,6 +2087,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         activeNoteAyah,
         arabicFont,
         audioPlayerOpen,
+        fontsLoaded,
         audioQariOptions,
         audioRange,
         audioRangeCollapsed,
@@ -2147,6 +2169,9 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         setTafsirMode,
         setTajweedVisible,
         settingsVisible,
+        showError,
+        showInfo,
+        showSuccess,
         startRangeAudio,
         stopRangeAudio,
         skipRangeAudio,
@@ -2312,6 +2337,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                         />
                     }
                     renderItem={renderAyahCard}
+                    initialNumToRender={8}
+                    maxToRenderPerBatch={6}
+                    windowSize={3}
+                    removeClippedSubviews={Platform.OS !== "web"}
                     onScrollToIndexFailed={(info) => {
                         readerListRef.current?.scrollToOffset?.({
                             animated: false,
@@ -2349,6 +2378,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         );
     }
 
+    const surahItemHeight = isWebAppLayout ? 80 : 66;
+
     return (
         <>
             {renderNavigatorModal()}
@@ -2363,6 +2394,15 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 data={quranTab === "surah" ? filteredSurahs : []}
                 keyExtractor={(surah) => `${surah.number}-${surah.name}`}
                 keyboardShouldPersistTaps='handled'
+                initialNumToRender={12}
+                maxToRenderPerBatch={10}
+                windowSize={5}
+                removeClippedSubviews={Platform.OS !== "web"}
+                getItemLayout={(data, index) => ({
+                    length: surahItemHeight,
+                    offset: surahItemHeight * index,
+                    index,
+                })}
                 ListEmptyComponent={
                     quranTab === "surah" ? (
                         loading && surahs.length === 0 ? (

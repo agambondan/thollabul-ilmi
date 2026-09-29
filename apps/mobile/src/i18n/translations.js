@@ -599,6 +599,7 @@ const dictionaries = {
             "Bahasa konten tersimpan ke akun dan perangkat ini.",
         "language.savedDevice": "Bahasa konten tersimpan di perangkat ini.",
         "language.saveError": "Bahasa konten belum bisa disimpan.",
+        "menu.about": "Tentang Aplikasi",
         "menu.account": "AKUN",
         "menu.achievements": "Pencapaian",
         "menu.amalan": "Amalan",
@@ -617,6 +618,7 @@ const dictionaries = {
         "menu.goals": "Target Belajar",
         "menu.hadithNarrators": "Perawi Hadith",
         "menu.hafalan": "Hafalan",
+        "menu.help": "Bantuan",
         "menu.hijri": "Kalender Hijriyah",
         "menu.imsakiyah": "Imsakiyah",
         "menu.interactiveMap": "Peta Interaktif",
@@ -628,6 +630,7 @@ const dictionaries = {
         "menu.library": "Library",
         "menu.main": "BACAAN UTAMA",
         "menu.manasik": "Manasik",
+        "menu.more": "LAINNYA",
         "menu.muhasabah": "Muhasabah",
         "menu.murojaah": "Muroja'ah",
         "menu.notes": "Catatan",
@@ -636,8 +639,10 @@ const dictionaries = {
         "menu.prayerSchedule": "Jadwal Sholat",
         "menu.profile": "Profile",
         "menu.qibla": "Kiblat",
+        "menu.quickAccess": "AKSES CEPAT",
         "menu.quiz": "Kuis",
         "menu.search": "Cari",
+        "menu.settings": "Pengaturan",
         "menu.siroh": "Siroh",
         "menu.sholatTracker": "Sholat Tracker",
         "menu.stats": "Statistik",
@@ -1197,6 +1202,34 @@ const dictionaries = {
             "Sesi login lain berhasil dikeluarkan.",
         "profile.security.sessions.title": "Sesi Aktif",
         "profile.security.signOutDevice": "Keluar dari perangkat ini",
+        "profile.about.appName": "Thullaabul Ilmi",
+        "profile.about.description":
+            "Thollabul Ilmi adalah aplikasi Islamic knowledge untuk penuntut ilmu, menghadirkan Al-Quran, Hadis, tracker ibadah, dan materi belajar Islam dalam satu aplikasi.",
+        "profile.about.descriptionTitle": "Tentang",
+        "profile.about.title": "Tentang Aplikasi",
+        "profile.about.version": "Versi {version}",
+        "profile.help.a1":
+            "Buka Profil, lalu masuk ke Pengaturan > Tampilan. Pada bagian Mode Layout, pilih Klasik atau Modern (Web App) sesuai preferensi Anda.",
+        "profile.help.a2":
+            "Anda dapat masuk memakai akun Google atau email dan kata sandi dari layar masuk. Setelah masuk, progres belajar dan ibadah Anda tersimpan ke akun.",
+        "profile.help.a3":
+            "Bookmark menyimpan ayat, hadis, atau konten favorit Anda, sedangkan Catatan menyimpan tulisan pribadi. Keduanya bisa dibuka dari tab Belajar bagian Personal Ringkas, dan memerlukan Anda sudah masuk akun.",
+        "profile.help.a4":
+            "Aplikasi mengirim pengingat menjelang dan saat masuk waktu sholat berdasarkan lokasi Anda. Atur dari tab Ibadah > Jadwal Sholat, dan pastikan izin notifikasi perangkat sudah diaktifkan.",
+        "profile.help.a5":
+            "Preferensi tampilan tersimpan di perangkat meski belum masuk akun, namun progres seperti hafalan, streak, dan bookmark hanya tersimpan permanen setelah Anda masuk akun.",
+        "profile.help.a6":
+            "Saat ini belum ada formulir laporan bug khusus di dalam aplikasi. Sampaikan kendala atau masukan melalui ulasan pada tempat Anda mengunduh aplikasi ini.",
+        "profile.help.q1":
+            "Bagaimana cara beralih antara tampilan Klasik dan Modern?",
+        "profile.help.q2": "Bagaimana cara masuk ke akun?",
+        "profile.help.q3": "Bagaimana cara kerja Bookmark dan Catatan?",
+        "profile.help.q4": "Bagaimana notifikasi waktu sholat bekerja?",
+        "profile.help.q5":
+            "Apakah data saya tetap tersimpan jika belum masuk akun?",
+        "profile.help.q6":
+            "Ke mana saya bisa melaporkan bug atau memberi masukan?",
+        "profile.help.title": "Bantuan",
         "profile.settings.account.label": "Akun",
         "profile.settings.account.meta": "Login, sandi, dan data akun",
         "profile.settings.appearance.label": "Tampilan",
@@ -1857,6 +1890,7 @@ const dictionaries = {
             "Content language saved to your account and this device.",
         "language.savedDevice": "Content language saved on this device.",
         "language.saveError": "Content language could not be saved.",
+        "menu.about": "About App",
         "menu.account": "ACCOUNT",
         "menu.achievements": "Achievements",
         "menu.amalan": "Practices",
@@ -1875,6 +1909,7 @@ const dictionaries = {
         "menu.goals": "Learning Goals",
         "menu.hadithNarrators": "Hadith Narrators",
         "menu.hafalan": "Memorization",
+        "menu.help": "Help",
         "menu.hijri": "Hijri Calendar",
         "menu.imsakiyah": "Imsakiyah",
         "menu.interactiveMap": "Interactive Map",
@@ -1886,6 +1921,7 @@ const dictionaries = {
         "menu.library": "Library",
         "menu.main": "MAIN READING",
         "menu.manasik": "Manasik",
+        "menu.more": "MORE",
         "menu.muhasabah": "Muhasabah",
         "menu.murojaah": "Muroja'ah",
         "menu.notes": "Notes",
@@ -1894,8 +1930,10 @@ const dictionaries = {
         "menu.prayerSchedule": "Prayer Times",
         "menu.profile": "Profile",
         "menu.qibla": "Qibla",
+        "menu.quickAccess": "QUICK ACCESS",
         "menu.quiz": "Quiz",
         "menu.search": "Search",
+        "menu.settings": "Settings",
         "menu.siroh": "Sirah",
         "menu.sholatTracker": "Prayer Tracker",
         "menu.stats": "Statistics",
@@ -2402,6 +2440,31 @@ const dictionaries = {
         "profile.security.session.revoked": "Other login session signed out.",
         "profile.security.sessions.title": "Active Sessions",
         "profile.security.signOutDevice": "Sign out from this device",
+        "profile.about.appName": "Thullaabul Ilmi",
+        "profile.about.description":
+            "Thollabul Ilmi is an Islamic knowledge app for seekers of knowledge, bringing the Quran, Hadith, worship trackers, and Islamic learning material together in one app.",
+        "profile.about.descriptionTitle": "About",
+        "profile.about.title": "About App",
+        "profile.about.version": "Version {version}",
+        "profile.help.a1":
+            "Open Profile, then go to Settings > Appearance. Under Layout Mode, choose Classic or Modern (Web App) based on your preference.",
+        "profile.help.a2":
+            "You can sign in with a Google account or with email and password from the sign-in screen. Once signed in, your learning and worship progress is saved to your account.",
+        "profile.help.a3":
+            "Bookmarks save your favorite verses, hadith, or content, while Notes save your personal writing. Both can be opened from the Belajar tab under Personal Summary, and require you to be signed in.",
+        "profile.help.a4":
+            "The app sends reminders before and at prayer times based on your location. Configure this from the Ibadah tab > Prayer Schedule, and make sure device notification permission is enabled.",
+        "profile.help.a5":
+            "Appearance preferences are saved on the device even without signing in, but progress like memorization, streaks, and bookmarks are only saved permanently once you sign in.",
+        "profile.help.a6":
+            "There isn't a dedicated in-app bug report form yet. Please share issues or feedback through a review where you downloaded this app.",
+        "profile.help.q1": "How do I switch between Classic and Modern layout?",
+        "profile.help.q2": "How does login work?",
+        "profile.help.q3": "How do Bookmarks and Notes work?",
+        "profile.help.q4": "How do prayer time notifications work?",
+        "profile.help.q5": "Is my data saved if I'm not signed in?",
+        "profile.help.q6": "Where can I report a bug or give feedback?",
+        "profile.help.title": "Help",
         "profile.settings.account.label": "Account",
         "profile.settings.account.meta": "Login, password, and account data",
         "profile.settings.appearance.label": "Appearance",

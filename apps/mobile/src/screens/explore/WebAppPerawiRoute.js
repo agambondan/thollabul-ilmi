@@ -1,17 +1,17 @@
 import { ListChecks, Users } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import {
     ActivityIndicator,
+    FlatList,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
     View,
 } from "react-native";
 
-import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
 import { PerawiSanadTreeMobile } from "./PerawiSanadTreeMobile";
@@ -76,10 +76,23 @@ const getStatusLabel = (value) => {
 const uniqueTabaqah = (items) =>
     Array.from(new Set(items.map(getTabaqah).filter(Boolean)));
 
-function TabaqahPill({ active, isDarkTheme, label, onPress, testID }) {
+const TabaqahPill = memo(function TabaqahPill({
+    active,
+    isDarkTheme,
+    label,
+    onPress,
+    testID,
+}) {
     return (
         <Pressable
+            accessibilityHint={
+                active
+                    ? "Filter tabaqah aktif, tekan untuk membatalkan"
+                    : `Aktifkan filter tabaqah ${label}`
+            }
             accessibilityRole='button'
+            accessibilityState={{ selected: active }}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             onPress={onPress}
             style={[
                 styles.tabaqahPill,
@@ -99,9 +112,9 @@ function TabaqahPill({ active, isDarkTheme, label, onPress, testID }) {
             </Text>
         </Pressable>
     );
-}
+});
 
-function StatusBadge({ status }) {
+const StatusBadge = memo(function StatusBadge({ status }) {
     if (!status) return null;
     const accent = STATUS_ACCENTS[status] ?? {
         backgroundColor: "#f3f4f6",
@@ -112,9 +125,9 @@ function StatusBadge({ status }) {
             {getStatusLabel(status)}
         </Text>
     );
-}
+});
 
-function PerawiCard({ isDarkTheme, item, onOpen, t }) {
+const PerawiCard = memo(function PerawiCard({ isDarkTheme, item, onOpen, t }) {
     const arabic = getPerawiArabic(item);
     const latin = getPerawiLatin(item, t("explore.perawi.fallbackTitle"));
     const tabaqah = getTabaqah(item);
@@ -123,38 +136,68 @@ function PerawiCard({ isDarkTheme, item, onOpen, t }) {
 
     return (
         <Pressable
+            accessibilityHint='Tekan untuk melihat rincian perawi'
             accessibilityRole='button'
+            hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
             onPress={() => onOpen(item)}
             style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-perawi-card'
         >
             <View style={[styles.icon, isDarkTheme && styles.iconDark]}>
-                <Users color={isDarkTheme ? "#34d399" : "#0f766e"} size={18} strokeWidth={2.1} />
+                <Users
+                    color={isDarkTheme ? "#34d399" : "#0f766e"}
+                    size={18}
+                    strokeWidth={2.1}
+                />
             </View>
             <View style={styles.cardBody}>
                 {arabic ? (
-                    <Text numberOfLines={1} style={[styles.arabic, isDarkTheme && styles.arabicDark]}>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.arabic,
+                            isDarkTheme && styles.arabicDark,
+                        ]}
+                    >
                         {arabic}
                     </Text>
                 ) : null}
-                <Text numberOfLines={1} style={[styles.latin, isDarkTheme && styles.latinDark]}>
+                <Text
+                    numberOfLines={1}
+                    style={[
+                        styles.latin,
+                        isDarkTheme && styles.latinDark,
+                    ]}
+                >
                     {latin}
                 </Text>
                 <View style={styles.metaRow}>
                     {tabaqah ? (
-                        <Text style={[styles.meta, isDarkTheme && styles.metaDark]}>
+                        <Text
+                            style={[
+                                styles.meta,
+                                isDarkTheme && styles.metaDark,
+                            ]}
+                        >
                             {getTabaqahLabel(tabaqah, t)}
                         </Text>
                     ) : null}
                     {deathYear ? (
-                        <Text style={[styles.meta, isDarkTheme && styles.metaDark]}>· {deathYear} H</Text>
+                        <Text
+                            style={[
+                                styles.meta,
+                                isDarkTheme && styles.metaDark,
+                            ]}
+                        >
+                            · {deathYear} H
+                        </Text>
                     ) : null}
                 </View>
                 <StatusBadge status={status} />
             </View>
         </Pressable>
     );
-}
+});
 
 export function WebAppPerawiRoute({
     error,
@@ -189,186 +232,338 @@ export function WebAppPerawiRoute({
         });
     }, [items, search, tabaqah, t]);
 
-    return (
-        <ScrollView
-            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
-            keyboardShouldPersistTaps='handled'
-            showsVerticalScrollIndicator={false}
-            style={[styles.root, isDarkTheme && styles.rootDark]}
-        >
-            <View testID='explore-web-app-perawi-surface' />
-            <View style={styles.header}>
-                <View style={styles.headerTitleWrap}>
-                    <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.perawi.title")}</Text>
-                    {items.length ? (
-                        <Text style={[styles.count, isDarkTheme && styles.countDark]}>
-                            {t("explore.perawi.count", { count: items.length })}
-                        </Text>
-                    ) : null}
-                </View>
+    const renderItem = useCallback(
+        ({ item }) => (
+            <PerawiCard
+                isDarkTheme={isDarkTheme}
+                item={item}
+                onOpen={onOpenItem}
+                t={t}
+            />
+        ),
+        [isDarkTheme, onOpenItem, t],
+    );
 
-                {/* View Switcher */}
-                <View style={[styles.viewSwitcher, isDarkTheme && styles.viewSwitcherDark]}>
-                    <Pressable
-                        onPress={() => setViewMode("list")}
-                        style={[
-                            styles.viewSwitchButton,
-                            isDarkTheme && styles.viewSwitchButtonDark,
-                            viewMode === "list" && styles.viewSwitchButtonActive,
-                        ]}
-                    >
-                        <ListChecks
-                            color={viewMode === "list" ? (isDarkTheme ? "#34d399" : "#0f766e") : (isDarkTheme ? "#6ee7b7" : "#64748b")}
-                            size={14}
-                        />
+    const keyExtractor = useCallback(
+        (item, index) => `${getPerawiId(item)}-${index}`,
+        [],
+    );
+
+    const ListHeader = useMemo(
+        () => (
+            <>
+                <View testID='explore-web-app-perawi-surface' />
+                <View style={styles.header}>
+                    <View style={styles.headerTitleWrap}>
                         <Text
                             style={[
-                                styles.viewSwitchText,
-                                isDarkTheme && styles.viewSwitchTextDark,
-                                viewMode === "list" && styles.viewSwitchTextActive,
+                                styles.title,
+                                isDarkTheme && styles.titleDark,
                             ]}
                         >
-                            Daftar
+                            {t("explore.perawi.title")}
                         </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={() => setViewMode("tree")}
-                        style={[
-                            styles.viewSwitchButton,
-                            isDarkTheme && styles.viewSwitchButtonDark,
-                            viewMode === "tree" && styles.viewSwitchButtonActive,
-                        ]}
-                    >
-                        <Users
-                            color={viewMode === "tree" ? (isDarkTheme ? "#34d399" : "#0f766e") : (isDarkTheme ? "#6ee7b7" : "#64748b")}
-                            size={14}
-                        />
-                        <Text
-                            style={[
-                                styles.viewSwitchText,
-                                isDarkTheme && styles.viewSwitchTextDark,
-                                viewMode === "tree" && styles.viewSwitchTextActive,
-                            ]}
-                        >
-                            Bagan
-                        </Text>
-                    </Pressable>
-                </View>
-            </View>
-
-            {viewMode === "tree" ? (
-                <PerawiSanadTreeMobile onOpenPerawi={onOpenItem} />
-            ) : (
-                <>
-                    <View style={[styles.search, isDarkTheme && styles.searchDark]}>
-                        <TextInput
-                            onChangeText={setSearch}
-                            placeholder={t("explore.perawi.searchPlaceholder")}
-                            placeholderTextColor='#9ca3af'
-                            style={[styles.input, isDarkTheme && styles.inputDark]}
-                            testID='web-app-perawi-search'
-                            value={search}
-                        />
-                    </View>
-
-                    <View style={styles.tabaqahRow}>
-                        <TabaqahPill
-                            active={!tabaqah}
-                            isDarkTheme={isDarkTheme}
-                            label={t("explore.common.all")}
-                            onPress={() => setTabaqah("")}
-                            testID='web-app-perawi-tabaqah-all'
-                        />
-                        {tabaqahOptions.map((item) => (
-                            <TabaqahPill
-                                active={tabaqah === item}
-                                isDarkTheme={isDarkTheme}
-                                key={item}
-                                label={getTabaqahLabel(item, t)}
-                                onPress={() => setTabaqah(tabaqah === item ? "" : item)}
-                                testID={`web-app-perawi-tabaqah-${item}`}
-                            />
-                        ))}
-                    </View>
-
-                    {error ? (
-                        <Text style={[styles.error, isDarkTheme && styles.errorDark]}>
-                            {t("explore.common.refreshError", {
-                                subject: t("explore.perawi.fallbackTitle"),
-                            })}
-                        </Text>
-                    ) : null}
-                    {loading ? (
-                        <View style={[styles.state, isDarkTheme && styles.stateDark]}>
-                            <ActivityIndicator color={isDarkTheme ? "#34d399" : "#0f766e"} size='small' />
-                            <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
-                                {t("explore.perawi.loading")}
+                        {items.length ? (
+                            <Text
+                                style={[
+                                    styles.count,
+                                    isDarkTheme && styles.countDark,
+                                ]}
+                            >
+                                {t("explore.perawi.count", {
+                                    count: items.length,
+                                })}
                             </Text>
-                        </View>
-                    ) : null}
+                        ) : null}
+                    </View>
 
-                    {!loading && !error && filteredItems.length ? (
-                        <View style={styles.grid}>
-                            {filteredItems.map((item, index) => (
-                                <PerawiCard
+                    {/* View Switcher */}
+                    <View
+                        style={[
+                            styles.viewSwitcher,
+                            isDarkTheme && styles.viewSwitcherDark,
+                        ]}
+                    >
+                        <Pressable
+                            accessibilityHint='Beralih ke tampilan daftar'
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                selected: viewMode === "list",
+                            }}
+                            hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+                            onPress={() => setViewMode("list")}
+                            style={[
+                                styles.viewSwitchButton,
+                                isDarkTheme && styles.viewSwitchButtonDark,
+                                viewMode === "list" &&
+                                    styles.viewSwitchButtonActive,
+                            ]}
+                        >
+                            <ListChecks
+                                color={
+                                    viewMode === "list"
+                                        ? isDarkTheme
+                                            ? "#34d399"
+                                            : "#0f766e"
+                                        : isDarkTheme
+                                          ? "#6ee7b7"
+                                          : "#64748b"
+                                }
+                                size={14}
+                            />
+                            <Text
+                                style={[
+                                    styles.viewSwitchText,
+                                    isDarkTheme && styles.viewSwitchTextDark,
+                                    viewMode === "list" &&
+                                        styles.viewSwitchTextActive,
+                                ]}
+                            >
+                                Daftar
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            accessibilityHint='Beralih ke tampilan bagan silsilah sanad'
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                selected: viewMode === "tree",
+                            }}
+                            hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+                            onPress={() => setViewMode("tree")}
+                            style={[
+                                styles.viewSwitchButton,
+                                isDarkTheme && styles.viewSwitchButtonDark,
+                                viewMode === "tree" &&
+                                    styles.viewSwitchButtonActive,
+                            ]}
+                        >
+                            <Users
+                                color={
+                                    viewMode === "tree"
+                                        ? isDarkTheme
+                                            ? "#34d399"
+                                            : "#0f766e"
+                                        : isDarkTheme
+                                          ? "#6ee7b7"
+                                          : "#64748b"
+                                }
+                                size={14}
+                            />
+                            <Text
+                                style={[
+                                    styles.viewSwitchText,
+                                    isDarkTheme && styles.viewSwitchTextDark,
+                                    viewMode === "tree" &&
+                                        styles.viewSwitchTextActive,
+                                ]}
+                            >
+                                Bagan
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
+
+                {viewMode === "tree" ? (
+                    <PerawiSanadTreeMobile onOpenPerawi={onOpenItem} />
+                ) : (
+                    <>
+                        <View
+                            style={[
+                                styles.search,
+                                isDarkTheme && styles.searchDark,
+                            ]}
+                        >
+                            <TextInput
+                                onChangeText={setSearch}
+                                placeholder={t(
+                                    "explore.perawi.searchPlaceholder",
+                                )}
+                                placeholderTextColor='#9ca3af'
+                                style={[
+                                    styles.input,
+                                    isDarkTheme && styles.inputDark,
+                                ]}
+                                testID='web-app-perawi-search'
+                                value={search}
+                            />
+                        </View>
+
+                        <View style={styles.tabaqahRow}>
+                            <TabaqahPill
+                                active={!tabaqah}
+                                isDarkTheme={isDarkTheme}
+                                label={t("explore.common.all")}
+                                onPress={() => setTabaqah("")}
+                                testID='web-app-perawi-tabaqah-all'
+                            />
+                            {tabaqahOptions.map((item) => (
+                                <TabaqahPill
+                                    active={tabaqah === item}
                                     isDarkTheme={isDarkTheme}
-                                    item={item}
-                                    key={`${getPerawiId(item)}-${index}`}
-                                    onOpen={onOpenItem}
-                                    t={t}
+                                    key={item}
+                                    label={getTabaqahLabel(item, t)}
+                                    onPress={() =>
+                                        setTabaqah(
+                                            tabaqah === item ? "" : item,
+                                        )
+                                    }
+                                    testID={`web-app-perawi-tabaqah-${item}`}
                                 />
                             ))}
                         </View>
-                    ) : null}
 
-                    {!loading && !error && !filteredItems.length ? (
-                        <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
-                            <Users color={isDarkTheme ? "#64748b" : "#9ca3af"} size={32} strokeWidth={1.8} />
-                            <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
-                                {items.length
-                                    ? t("explore.common.notFound", {
-                                          subject: t("explore.perawi.fallbackTitle"),
-                                      })
-                                    : t("explore.common.notAvailable", {
-                                          subject: t("explore.perawi.fallbackTitle"),
-                                      })}
-                            </Text>
-                            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
-                                {items.length
-                                    ? t("explore.common.changeSearchOrFilter")
-                                    : t("explore.common.retryLater")}
-                            </Text>
-                        </View>
-                    ) : null}
-
-                    {pagination?.hasMore && !loading && !error ? (
-                        <View style={styles.loadMoreWrap}>
-                            <Pressable
-                                accessibilityRole='button'
-                                accessibilityState={{
-                                    disabled: pagination.loadingMore,
-                                }}
-                                disabled={pagination.loadingMore}
-                                onPress={onLoadMore}
+                        {error ? (
+                            <Text
                                 style={[
-                                    styles.loadMoreButton,
-                                    pagination.loadingMore &&
-                                        styles.loadMoreButtonDisabled,
+                                    styles.error,
+                                    isDarkTheme && styles.errorDark,
                                 ]}
-                                testID='web-app-perawi-load-more'
                             >
-                                <Text style={styles.loadMoreText}>
-                                    {pagination.loadingMore
-                                        ? t("explore.common.loadingShort")
-                                        : t("explore.common.loadMore")}
+                                {t("explore.common.refreshError", {
+                                    subject: t(
+                                        "explore.perawi.fallbackTitle",
+                                    ),
+                                })}
+                            </Text>
+                        ) : null}
+                        {loading ? (
+                            <View
+                                style={[
+                                    styles.state,
+                                    isDarkTheme && styles.stateDark,
+                                ]}
+                            >
+                                <ActivityIndicator
+                                    color={
+                                        isDarkTheme ? "#34d399" : "#0f766e"
+                                    }
+                                    size='small'
+                                />
+                                <Text
+                                    style={[
+                                        styles.stateText,
+                                        isDarkTheme && styles.stateTextDark,
+                                    ]}
+                                >
+                                    {t("explore.perawi.loading")}
                                 </Text>
-                            </Pressable>
-                        </View>
-                    ) : null}
-                </>
-            )}
-        </ScrollView>
+                            </View>
+                        ) : null}
+                    </>
+                )}
+            </>
+        ),
+        [
+            error,
+            isDarkTheme,
+            items.length,
+            loading,
+            onOpenItem,
+            search,
+            t,
+            tabaqah,
+            tabaqahOptions,
+            viewMode,
+        ],
     );
+
+    const ListEmpty = useMemo(() => {
+        if (viewMode === "tree" || loading || error) return null;
+        return (
+            <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                <Users
+                    color={isDarkTheme ? "#64748b" : "#9ca3af"}
+                    size={32}
+                    strokeWidth={1.8}
+                />
+                <Text
+                    style={[
+                        styles.emptyTitle,
+                        isDarkTheme && styles.emptyTitleDark,
+                    ]}
+                >
+                    {items.length
+                        ? t("explore.common.notFound", {
+                              subject: t("explore.perawi.fallbackTitle"),
+                          })
+                        : t("explore.common.notAvailable", {
+                              subject: t("explore.perawi.fallbackTitle"),
+                          })}
+                </Text>
+                <Text
+                    style={[
+                        styles.emptyText,
+                        isDarkTheme && styles.emptyTextDark,
+                    ]}
+                >
+                    {items.length
+                        ? t("explore.common.changeSearchOrFilter")
+                        : t("explore.common.retryLater")}
+                </Text>
+            </View>
+        );
+    }, [error, isDarkTheme, items.length, loading, t, viewMode]);
+
+    const ListFooter = useMemo(() => {
+        if (
+            viewMode === "tree" ||
+            !pagination?.hasMore ||
+            loading ||
+            error
+        )
+            return null;
+        return (
+            <View style={styles.loadMoreWrap}>
+                <Pressable
+                    accessibilityHint='Muat lebih banyak data perawi'
+                    accessibilityRole='button'
+                    accessibilityState={{
+                        disabled: pagination.loadingMore,
+                    }}
+                    disabled={pagination.loadingMore}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    onPress={onLoadMore}
+                    style={[
+                        styles.loadMoreButton,
+                        pagination.loadingMore &&
+                            styles.loadMoreButtonDisabled,
+                    ]}
+                    testID='web-app-perawi-load-more'
+                >
+                    <Text style={styles.loadMoreText}>
+                        {pagination.loadingMore
+                            ? t("explore.common.loadingShort")
+                            : t("explore.common.loadMore")}
+                    </Text>
+                </Pressable>
+            </View>
+        );
+    }, [error, loading, onLoadMore, pagination, t, viewMode]);
+
+    return (
+        <FlatList
+            contentContainerStyle={[
+                styles.content,
+                isDarkTheme && styles.contentDark,
+            ]}
+            data={
+                viewMode === "tree" || loading || error ? [] : filteredItems
+            }
+            ItemSeparatorComponent={ItemSeparator}
+            keyExtractor={keyExtractor}
+            keyboardShouldPersistTaps='handled'
+            ListEmptyComponent={ListEmpty}
+            ListFooterComponent={ListFooter}
+            ListHeaderComponent={ListHeader}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
+        />
+    );
+}
+
+function ItemSeparator() {
+    return <View style={styles.separator} />;
 }
 
 const styles = StyleSheet.create({
@@ -514,6 +709,9 @@ const styles = StyleSheet.create({
     },
     grid: {
         gap: spacing.sm,
+    },
+    separator: {
+        height: spacing.sm,
     },
     card: {
         backgroundColor: "#ffffff",

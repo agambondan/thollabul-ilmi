@@ -34,6 +34,8 @@ export function AppModalSheet({
     titleStyle,
     subtitleStyle,
 }) {
+    if (!visible) return null;
+
     const shouldStickFooter = Boolean(footer) && stickyFooter;
     const Body = scroll ? ScrollView : View;
     const bodyProps = scroll

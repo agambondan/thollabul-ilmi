@@ -1,15 +1,16 @@
 import { MessageCircle, EyeOff, Flag } from "lucide-react-native";
+import { memo, useCallback, useMemo } from "react";
 import {
     ActivityIndicator,
+    FlatList,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     View,
 } from "react-native";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, getThemeColors, radius, spacing } from "../../theme";
+import { radius, spacing } from "../../theme";
 
 const getFeedReference = (item = {}, t) => {
     const raw = item?.raw ?? {};
@@ -24,7 +25,7 @@ const getFeedReference = (item = {}, t) => {
     };
 };
 
-function FeedCard({
+const FeedCard = memo(function FeedCard({
     formatDate,
     isDarkTheme,
     isLoggedIn,
@@ -49,67 +50,130 @@ function FeedCard({
     const isLiking = likingFeedId === item.id;
 
     return (
-        <View style={[styles.card, isDarkTheme && styles.cardDark]} testID='web-app-feed-card'>
+        <View
+            style={[styles.card, isDarkTheme && styles.cardDark]}
+            testID='web-app-feed-card'
+        >
             <View style={styles.cardHeader}>
-                <View style={[styles.avatar, isDarkTheme && styles.avatarDark]}>
-                    <Text style={[styles.avatarText, isDarkTheme && styles.avatarTextDark]}>
+                <View
+                    style={[styles.avatar, isDarkTheme && styles.avatarDark]}
+                >
+                    <Text
+                        style={[
+                            styles.avatarText,
+                            isDarkTheme && styles.avatarTextDark,
+                        ]}
+                    >
                         {author[0]?.toUpperCase() ?? "U"}
                     </Text>
                 </View>
                 <View style={styles.authorBlock}>
-                    <Text numberOfLines={1} style={[styles.author, isDarkTheme && styles.authorDark]}>
+                    <Text
+                        numberOfLines={1}
+                        style={[
+                            styles.author,
+                            isDarkTheme && styles.authorDark,
+                        ]}
+                    >
                         {author}
                     </Text>
                     {createdAt ? (
-                        <Text style={[styles.date, isDarkTheme && styles.dateDark]}>{createdAt}</Text>
+                        <Text
+                            style={[
+                                styles.date,
+                                isDarkTheme && styles.dateDark,
+                            ]}
+                        >
+                            {createdAt}
+                        </Text>
                     ) : null}
                 </View>
             </View>
-            {item.body ? <Text style={[styles.body, isDarkTheme && styles.bodyDark]}>{item.body}</Text> : null}
+            {item.body ? (
+                <Text style={[styles.body, isDarkTheme && styles.bodyDark]}>
+                    {item.body}
+                </Text>
+            ) : null}
             {feedRef ? (
                 <View style={[styles.ref, isDarkTheme && styles.refDark]}>
-                    <Text style={[styles.refText, isDarkTheme && styles.refTextDark]}>{feedRef.label}</Text>
+                    <Text
+                        style={[
+                            styles.refText,
+                            isDarkTheme && styles.refTextDark,
+                        ]}
+                    >
+                        {feedRef.label}
+                    </Text>
                     {feedRef.id ? (
-                        <Text style={[styles.refId, isDarkTheme && styles.refIdDark]}>#{feedRef.id}</Text>
+                        <Text
+                            style={[
+                                styles.refId,
+                                isDarkTheme && styles.refIdDark,
+                            ]}
+                        >
+                            #{feedRef.id}
+                        </Text>
                     ) : null}
                 </View>
             ) : null}
             <View style={styles.actions}>
                 <Pressable
-                    accessibilityRole='button'
+                    accessibilityHint='Sukai postingan ini'
                     accessibilityLabel={t("explore.feed.likeAccessibility")}
-                    android_ripple={{ color: isDarkTheme ? "#450a0a" : "#fee2e2", borderless: false }}
+                    accessibilityRole='button'
                     accessibilityState={{ disabled: isLiking }}
+                    android_ripple={{
+                        color: isDarkTheme ? "#450a0a" : "#fee2e2",
+                        borderless: false,
+                    }}
                     disabled={isLiking}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     onPress={() => onLike(item)}
                     style={[styles.action, isDarkTheme && styles.actionDark]}
                 >
-                    <Text style={[styles.actionText, isDarkTheme && styles.actionTextDark]}>
+                    <Text
+                        style={[
+                            styles.actionText,
+                            isDarkTheme && styles.actionTextDark,
+                        ]}
+                    >
                         {isLiking ? t("explore.feed.liking") : `♡ ${likes}`}
                     </Text>
                 </Pressable>
                 <Pressable
-                    accessibilityRole='button'
+                    accessibilityHint='Lihat dan tulis komentar'
                     accessibilityLabel={t("explore.feed.commentAccessibility")}
-                    android_ripple={{ color: isDarkTheme ? "#1e3a5f" : "#dbeafe", borderless: false }}
+                    accessibilityRole='button'
+                    android_ripple={{
+                        color: isDarkTheme ? "#1e3a5f" : "#dbeafe",
+                        borderless: false,
+                    }}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     onPress={() => onOpenComments(item)}
                     style={[styles.action, isDarkTheme && styles.actionDark]}
                 >
-                    <Text style={[styles.actionText, isDarkTheme && styles.actionTextDark]}>
+                    <Text
+                        style={[
+                            styles.actionText,
+                            isDarkTheme && styles.actionTextDark,
+                        ]}
+                    >
                         {t("explore.feed.comments")}
                     </Text>
                 </Pressable>
                 {isLoggedIn ? (
                     <>
                         <Pressable
-                            accessibilityRole='button'
+                            accessibilityHint='Sembunyikan postingan ini'
                             accessibilityLabel={t(
                                 "explore.feed.hideAccessibility",
                             )}
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "#fef3c7",
                                 borderless: false,
                             }}
+                            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                             onPress={() => onHide(item)}
                             style={styles.iconAction}
                         >
@@ -120,14 +184,16 @@ function FeedCard({
                             />
                         </Pressable>
                         <Pressable
-                            accessibilityRole='button'
+                            accessibilityHint='Laporkan konten tidak pantas'
                             accessibilityLabel={t(
                                 "explore.feed.reportAccessibility",
                             )}
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "#fee2e2",
                                 borderless: false,
                             }}
+                            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                             onPress={() => onReport(item)}
                             style={styles.iconAction}
                         >
@@ -138,7 +204,7 @@ function FeedCard({
             </View>
         </View>
     );
-}
+});
 
 export function WebAppFeedRoute({
     error,
@@ -157,96 +223,166 @@ export function WebAppFeedRoute({
     const { t } = useMobileLocale();
     const { isDarkTheme } = useLayoutModePreference();
 
+    const renderItem = useCallback(
+        ({ item }) => (
+            <FeedCard
+                formatDate={formatDate}
+                isDarkTheme={isDarkTheme}
+                isLoggedIn={isLoggedIn}
+                item={item}
+                likingFeedId={likingFeedId}
+                onHide={onHideFeedItem}
+                onLike={onLikeFeedItem}
+                onOpenComments={onOpenComments}
+                onReport={onReportFeedItem}
+                t={t}
+            />
+        ),
+        [
+            formatDate,
+            isDarkTheme,
+            isLoggedIn,
+            likingFeedId,
+            onHideFeedItem,
+            onLikeFeedItem,
+            onOpenComments,
+            onReportFeedItem,
+            t,
+        ],
+    );
+
+    const keyExtractor = useCallback((item) => String(item.id), []);
+
+    const ListHeader = useMemo(
+        () => (
+            <>
+                <View testID='explore-web-app-feed-route' />
+                <View testID='explore-web-app-community-feed-surface' />
+                <View style={styles.header}>
+                    <View
+                        style={[
+                            styles.headerIcon,
+                            isDarkTheme && styles.headerIconDark,
+                        ]}
+                    >
+                        <MessageCircle
+                            color={isDarkTheme ? "#34d399" : "#059669"}
+                            size={30}
+                            strokeWidth={2.3}
+                        />
+                    </View>
+                    <Text
+                        style={[styles.title, isDarkTheme && styles.titleDark]}
+                    >
+                        {t("explore.feed.title")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.subtitle,
+                            isDarkTheme && styles.subtitleDark,
+                        ]}
+                    >
+                        {t("explore.feed.subtitle")}
+                    </Text>
+                </View>
+
+                <View
+                    style={[
+                        styles.createBox,
+                        isDarkTheme && styles.createBoxDark,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.createText,
+                            isDarkTheme && styles.createTextDark,
+                        ]}
+                    >
+                        {isLoggedIn
+                            ? t("explore.feed.createPost")
+                            : t("explore.feed.loginToCreate")}
+                    </Text>
+                </View>
+
+                {error ? <Text style={styles.notice}>{error}</Text> : null}
+
+                {loading ? (
+                    <View style={styles.state}>
+                        <ActivityIndicator
+                            color={isDarkTheme ? "#34d399" : "#059669"}
+                        />
+                        <Text
+                            style={[
+                                styles.stateText,
+                                isDarkTheme && styles.stateTextDark,
+                            ]}
+                        >
+                            {t("explore.feed.loading")}
+                        </Text>
+                    </View>
+                ) : null}
+            </>
+        ),
+        [error, isDarkTheme, isLoggedIn, loading, t],
+    );
+
+    const ListEmpty = useMemo(() => {
+        if (loading || error) return null;
+        return (
+            <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                <MessageCircle
+                    color={isDarkTheme ? "#64748b" : "#d1d5db"}
+                    size={34}
+                    strokeWidth={2.2}
+                />
+                <Text
+                    style={[
+                        styles.emptyText,
+                        isDarkTheme && styles.emptyTextDark,
+                    ]}
+                >
+                    {t("explore.feed.empty")}
+                </Text>
+            </View>
+        );
+    }, [error, isDarkTheme, loading, t]);
+
+    const ListFooter = useMemo(() => {
+        if (!pagination?.loadingMore) return null;
+        return (
+            <View style={styles.state}>
+                <ActivityIndicator
+                    color={isDarkTheme ? "#34d399" : "#059669"}
+                    size='small'
+                />
+            </View>
+        );
+    }, [isDarkTheme, pagination?.loadingMore]);
+
     return (
-        <ScrollView
-            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
-            onScroll={({ nativeEvent }) => {
-                const { contentOffset, contentSize, layoutMeasurement } =
-                    nativeEvent;
-                const distanceFromEnd =
-                    contentSize.height -
-                    (contentOffset.y + layoutMeasurement.height);
-                if (distanceFromEnd < 280) onLoadMore();
-            }}
-            scrollEventThrottle={120}
+        <FlatList
+            contentContainerStyle={[
+                styles.content,
+                isDarkTheme && styles.contentDark,
+            ]}
+            data={loading ? [] : items}
+            ItemSeparatorComponent={ItemSeparator}
+            keyExtractor={keyExtractor}
+            keyboardShouldPersistTaps='handled'
+            ListEmptyComponent={ListEmpty}
+            ListFooterComponent={ListFooter}
+            ListHeaderComponent={ListHeader}
+            onEndReached={onLoadMore}
+            onEndReachedThreshold={0.5}
+            renderItem={renderItem}
             showsVerticalScrollIndicator={false}
             style={[styles.root, isDarkTheme && styles.rootDark]}
-        >
-            <View testID='explore-web-app-feed-route' />
-            <View testID='explore-web-app-community-feed-surface' />
-            <View style={styles.header}>
-                <View style={[styles.headerIcon, isDarkTheme && styles.headerIconDark]}>
-                    <MessageCircle
-                        color={isDarkTheme ? "#34d399" : "#059669"}
-                        size={30}
-                        strokeWidth={2.3}
-                    />
-                </View>
-                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.feed.title")}</Text>
-                <Text style={[styles.subtitle, isDarkTheme && styles.subtitleDark]}>
-                    {t("explore.feed.subtitle")}
-                </Text>
-            </View>
-
-            <View style={[styles.createBox, isDarkTheme && styles.createBoxDark]}>
-                <Text style={[styles.createText, isDarkTheme && styles.createTextDark]}>
-                    {isLoggedIn
-                        ? t("explore.feed.createPost")
-                        : t("explore.feed.loginToCreate")}
-                </Text>
-            </View>
-
-            {error ? <Text style={styles.notice}>{error}</Text> : null}
-
-            {loading ? (
-                <View style={styles.state}>
-                    <ActivityIndicator color={isDarkTheme ? "#34d399" : "#059669"} />
-                    <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
-                        {t("explore.feed.loading")}
-                    </Text>
-                </View>
-            ) : null}
-
-            {!loading && !items.length ? (
-                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
-                    <MessageCircle
-                        color={isDarkTheme ? "#64748b" : "#d1d5db"}
-                        size={34}
-                        strokeWidth={2.2}
-                    />
-                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
-                        {t("explore.feed.empty")}
-                    </Text>
-                </View>
-            ) : null}
-
-            {!loading && items.length ? (
-                <View style={styles.list}>
-                    {items.map((item) => (
-                        <FeedCard
-                            formatDate={formatDate}
-                            isDarkTheme={isDarkTheme}
-                            isLoggedIn={isLoggedIn}
-                            item={item}
-                            key={item.id}
-                            likingFeedId={likingFeedId}
-                            onHide={onHideFeedItem}
-                            onLike={onLikeFeedItem}
-                            onOpenComments={onOpenComments}
-                            onReport={onReportFeedItem}
-                            t={t}
-                        />
-                    ))}
-                </View>
-            ) : null}
-
-            {pagination.loadingMore ? (
-                <View style={styles.state}>
-                    <ActivityIndicator color={isDarkTheme ? "#34d399" : "#059669"} size='small' />
-                </View>
-            ) : null}
-        </ScrollView>
+        />
     );
+}
+
+function ItemSeparator() {
+    return <View style={styles.separator} />;
 }
 
 const styles = StyleSheet.create({
@@ -351,6 +487,9 @@ const styles = StyleSheet.create({
     },
     list: {
         gap: spacing.md,
+    },
+    separator: {
+        height: spacing.md,
     },
     card: {
         backgroundColor: "#ffffff",

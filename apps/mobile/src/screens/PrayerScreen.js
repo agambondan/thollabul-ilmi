@@ -23,6 +23,12 @@ import { Card, CardTitle } from "../components/Card";
 import { IconActionButton } from "../components/Paper";
 import { Screen } from "../components/Screen";
 import { useFeedback } from "../context/FeedbackContext";
+import {
+    AudioSource,
+    registerAudioSource,
+    stopAllAudio,
+    unregisterAudioSource,
+} from "../utils/audioSession";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import {
@@ -482,6 +488,7 @@ export function PrayerScreen({ isActive, navigation }) {
         async (prayerKey) => {
             if (!adzanAudioEnabled) return;
             try {
+                registerAudioSource(AudioSource.ADZAN, () => stopAdzan());
                 await setAudioModeAsync({
                     playsInSilentMode: true,
                     shouldPlayInBackground: true,
@@ -501,18 +508,33 @@ export function PrayerScreen({ isActive, navigation }) {
                 adzanTimerRef.current = setTimeout(() => stopAdzan(), 30000);
             } catch {}
         },
-        [adzanAudioEnabled, adzanSound],
+        [adzanAudioEnabled, adzanSound, stopAdzan],
     );
 
     const stopAdzan = useCallback(() => {
+        unregisterAudioSource(AudioSource.ADZAN);
         if (adzanTimerRef.current) clearTimeout(adzanTimerRef.current);
         if (playerRef.current) {
             try {
                 playerRef.current.stop();
+                playerRef.current.remove?.();
             } catch {}
+            playerRef.current = null;
         }
         setAdzanPlaying(false);
     }, []);
+
+    useEffect(() => {
+        return () => {
+            stopAdzan();
+        };
+    }, [stopAdzan]);
+
+    useEffect(() => {
+        if (isActive === false) {
+            stopAdzan();
+        }
+    }, [isActive, stopAdzan]);
 
     useEffect(() => {
         if (!prayers) return;

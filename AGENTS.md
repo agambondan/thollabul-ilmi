@@ -71,6 +71,13 @@ lihat [`docs/AGENT_KNOWLEDGE.md`](docs/AGENT_KNOWLEDGE.md).
 - **Detail UI:** JANGAN pakai inline expand/collapse. Pakai bottom-sheet modal atau page detail terpisah — acuan lengkap di `docs/MOBILE_DESIGN_PATTERNS.md`.
 - Back navigation Android wajib pakai `setBack`/`clearBack` di setiap sub-navigation.
 
+## Mobile APK Build Rule (Mengikat)
+
+- Jangan gunakan `expo run:android` atau `expo install` untuk memasang aplikasi ke device.
+- Build APK native terlebih dahulu: `cd apps/mobile/android && ./gradlew assembleDebug` atau `./gradlew assembleRelease`.
+- Install APK hasil build dengan `adb install -r apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk` atau path release yang sesuai.
+- E2E device wajib berjalan pada APK hasil build native, bukan Expo dev client.
+
 ## Deploy tooling in `ops/deploy-workspace/`
 
 That directory is a **mirrored backup**, not configuration for this repo. Deploys
@@ -100,3 +107,5 @@ Setiap agent **HANYA BOLEH** men-stage, me-commit, dan me-push file yang dikerja
 - **DILARANG** menjalankan `git add .`, `git add -A`, atau `git commit -a` secara global.
 - Selalu periksa `git status` dan pilih file yang relevan secara eksplisit (`git add <file1> <file2>`).
 - File modifikasi/untracked milik sesi agent lain yang sedang berjalan bersamaan tidak boleh disentuh, di-stage, di-stash, ataupun di-revert.
+
+

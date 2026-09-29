@@ -11,7 +11,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     ActivityIndicator,
-    Image,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -19,9 +18,11 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { AppImage } from "../../components/AppImage";
+import { prefetchImages } from "../../utils/imagePrefetch";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, radius, spacing, touchTarget } from "../../theme";
+import { colors, iconStroke, radius, spacing, touchTarget } from "../../theme";
 import { KajianPlayerModal } from "../../components/KajianPlayerModal";
 import { readSession } from "../../storage/session";
 import {
@@ -180,7 +181,8 @@ function KajianCard({
         >
             {videoId ? (
                 <View style={styles.thumbnailWrapper}>
-                    <Image
+                    <AppImage
+                        accessibilityLabel={getTitle(item, index) || "Thumbnail kajian"}
                         source={{
                             uri: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
                         }}
@@ -210,7 +212,7 @@ function KajianCard({
                     {topic ? <Text style={[styles.badge, isDarkTheme && styles.badgeDark]}>{topic}</Text> : null}
                 </View>
                 {url ? (
-                    <ExternalLink color={isDarkTheme ? "#9ca3af" : "#9ca3af"} size={16} strokeWidth={2.2} />
+                    <ExternalLink color={isDarkTheme ? "#9ca3af" : "#9ca3af"} size={16} strokeWidth={iconStroke.regular} />
                 ) : null}
             </View>
             <Text numberOfLines={2} style={[styles.cardTitle, isDarkTheme && styles.cardTitleDark]}>
@@ -251,7 +253,8 @@ function TranscriptCard({
             <View style={styles.transcriptContent}>
                 {videoId ? (
                     <View style={styles.transcriptThumbWrapper}>
-                        <Image
+                        <AppImage
+                            accessibilityLabel={item?.video_title || item?.title || "Thumbnail kajian"}
                             source={{
                                 uri: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
                             }}
@@ -613,7 +616,8 @@ export function WebAppKajianRoute({
                 const meta = data?.meta ?? data?.data?.meta ?? null;
                 setTranscriptResults((prev) => {
                     const seen = new Set(prev.map((r) => r.id));
-                    return [...prev, ...items.filter((r) => !seen.has(r.id))];
+                    const merged = [...prev, ...items.filter((r) => !seen.has(r.id))];
+                    return merged.length > 200 ? merged.slice(-200) : merged;
                 });
                 if (meta) {
                     setTranscriptMeta((prev) => ({ ...(prev || {}), ...meta }));
@@ -916,7 +920,7 @@ export function WebAppKajianRoute({
                             <Search
                                 color={isDarkTheme ? "#64748b" : "#9ca3af"}
                                 size={32}
-                                strokeWidth={1.8}
+                                strokeWidth={iconStroke.thin}
                             />
                             <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {transcriptQuery
@@ -983,7 +987,7 @@ export function WebAppKajianRoute({
                             <Bookmark
                                 color={isDarkTheme ? "#64748b" : "#9ca3af"}
                                 size={32}
-                                strokeWidth={1.8}
+                                strokeWidth={iconStroke.thin}
                             />
                             <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {savedQuery
@@ -1101,7 +1105,7 @@ export function WebAppKajianRoute({
                             <BookOpen
                                 color={isDarkTheme ? "#64748b" : "#9ca3af"}
                                 size={32}
-                                strokeWidth={1.8}
+                                strokeWidth={iconStroke.thin}
                             />
                             <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                                 {t("explore.kajian.emptyTitle")}

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
-    Linking,
     ScrollView,
     StyleSheet,
     Text,
@@ -19,6 +18,7 @@ import {
 } from "../components/Paper";
 import { colors, spacing } from "../theme";
 import { getMasjids, getNearbyMasjids } from "../api/client";
+import { safeOpenURL } from "../utils/safeOpenURL";
 
 const formatDistance = (value) => {
     if (typeof value !== "number") return null;
@@ -102,9 +102,8 @@ export function MasjidDirectoryContent() {
 
     const openMaps = (masjid) => {
         if (masjid?.latitude == null || masjid?.longitude == null) return;
-        Linking.openURL(
-            `https://www.google.com/maps/search/?api=1&query=${masjid.latitude},${masjid.longitude}`,
-        );
+        const url = `https://www.google.com/maps/search/?api=1&query=${masjid.latitude},${masjid.longitude}`;
+        safeOpenURL(url);
     };
 
     const facilitiesList = (facilities) =>

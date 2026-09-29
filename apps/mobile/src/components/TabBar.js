@@ -9,7 +9,7 @@ import {
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { radius, spacing, touchTarget, getThemeColors } from "../theme";
-import { useTabActivity } from "../context/TabActivityContext";
+import { useTabActivityTick } from "../context/TabActivityContext";
 import { hapticSelection } from "../utils/haptics";
 
 export const tabs = [
@@ -32,7 +32,7 @@ export function TabBar({ active, isDarkTheme = false, onChange }) {
         bg: theme.bg,
     };
     const insets = useSafeAreaInsets();
-    const { activityTick } = useTabActivity();
+    const activityTick = useTabActivityTick();
     const hideTimer = useRef(null);
     const [visible, setVisible] = useState(true);
 

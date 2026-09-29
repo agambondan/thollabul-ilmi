@@ -1,18 +1,20 @@
 import {
     ActivityIndicator,
-    Image,
+    FlatList,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
     View,
 } from "react-native";
+import { AppImage } from "../../components/AppImage";
+import { prefetchImages } from "../../utils/imagePrefetch";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { radius, spacing } from "../../theme";
 
-function BlogCard({
+const BlogCard = memo(function BlogCard({
     formatDate,
     getAuthor,
     getCategoryLabel,
@@ -39,14 +41,16 @@ function BlogCard({
 
     return (
         <Pressable
+            accessibilityHint='Tekan untuk membaca artikel blog'
             accessibilityRole='button'
+            hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
             onPress={() => onOpen(item)}
             style={[styles.card, isDark && styles.cardDark]}
             testID='web-app-blog-card'
         >
             {cover ? (
-                <Image
-                    accessibilityIgnoresInvertColors
+                <AppImage
+                    accessibilityLabel={getTitle(item) || "Cover blog"}
                     source={{ uri: cover }}
                     style={[styles.cover, isDark && styles.coverDark]}
                 />
@@ -97,7 +101,7 @@ function BlogCard({
             </View>
         </Pressable>
     );
-}
+});
 
 export function WebAppBlogRoute({
     blogCategory,
@@ -124,183 +128,278 @@ export function WebAppBlogRoute({
     const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
     const isDark = isDarkTheme || isDarkThemePref;
 
-    return (
-        <ScrollView
-            contentContainerStyle={[
-                styles.content,
-                isDark && styles.contentDark,
-            ]}
-            keyboardShouldPersistTaps='handled'
-            showsVerticalScrollIndicator={false}
-            style={[styles.root, isDark && styles.rootDark]}
-        >
-            <View testID='explore-web-app-blog-surface' />
-            <View style={styles.header}>
-                <Text style={[styles.heading, isDark && styles.headingDark]}>
-                    {t("explore.blog.title")}
-                </Text>
-                <Text style={[styles.subtitle, isDark && styles.subtitleDark]}>
-                    {t("explore.blog.subtitle")}
-                </Text>
-            </View>
+    useEffect(() => {
+        if (!Array.isArray(filteredItems) || filteredItems.length === 0) return;
+        const covers = filteredItems
+            .slice(0, 5)
+            .map((item) => {
+                const raw = getRaw(item);
+                return [
+                    raw?.cover_image,
+                    raw?.coverImage,
+                    raw?.image_url,
+                    raw?.image,
+                ].find((value) => typeof value === "string" && value.trim());
+            })
+            .filter(Boolean);
+        prefetchImages(covers);
+    }, [filteredItems, getRaw]);
 
-            <View style={[styles.search, isDark && styles.searchDark]}>
-                <TextInput
-                    onChangeText={onSearch}
-                    placeholder={t("explore.blog.searchPlaceholder")}
-                    placeholderTextColor={isDark ? "#64748b" : "#9ca3af"}
-                    style={[styles.input, isDark && styles.inputDark]}
-                    testID='web-app-blog-search'
-                    value={blogSearch}
-                />
-            </View>
+    const renderItem = useCallback(
+        ({ item, index }) => (
+            <BlogCard
+                formatDate={formatDate}
+                getAuthor={getAuthor}
+                getCategoryLabel={getCategoryLabel}
+                getExcerpt={getExcerpt}
+                getItemKey={getItemKey}
+                getRaw={getRaw}
+                getTitle={(entry) => getTitle(entry, index)}
+                isDark={isDark}
+                item={item}
+                onOpen={onOpenItem}
+            />
+        ),
+        [
+            formatDate,
+            getAuthor,
+            getCategoryLabel,
+            getExcerpt,
+            getItemKey,
+            getRaw,
+            getTitle,
+            isDark,
+            onOpenItem,
+        ],
+    );
 
-            {categories.length ? (
-                <View style={styles.categories}>
-                    <Pressable
-                        accessibilityRole='button'
-                        onPress={() => onSelectCategory("")}
-                        style={[
-                            styles.categoryPill,
-                            isDark && styles.categoryPillDark,
-                            !blogCategory && styles.categoryPillActive,
-                            !blogCategory &&
-                                isDark &&
-                                styles.categoryPillActiveDark,
-                        ]}
-                        testID='web-app-blog-category-all'
+    const keyExtractor = useCallback(
+        (item, index) => `${getItemKey(item)}-${index}`,
+        [getItemKey],
+    );
+
+    const ListHeader = useMemo(
+        () => (
+            <>
+                <View testID='explore-web-app-blog-surface' />
+                <View style={styles.header}>
+                    <Text
+                        style={[styles.heading, isDark && styles.headingDark]}
                     >
-                        <Text
-                            style={[
-                                styles.categoryPillText,
-                                isDark && styles.categoryPillTextDark,
-                                !blogCategory && styles.categoryPillTextActive,
-                            ]}
-                        >
-                            {t("explore.common.all")}
-                        </Text>
-                    </Pressable>
-                    {categories.map((category) => (
+                        {t("explore.blog.title")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.subtitle,
+                            isDark && styles.subtitleDark,
+                        ]}
+                    >
+                        {t("explore.blog.subtitle")}
+                    </Text>
+                </View>
+
+                <View style={[styles.search, isDark && styles.searchDark]}>
+                    <TextInput
+                        onChangeText={onSearch}
+                        placeholder={t("explore.blog.searchPlaceholder")}
+                        placeholderTextColor={isDark ? "#64748b" : "#9ca3af"}
+                        style={[styles.input, isDark && styles.inputDark]}
+                        testID='web-app-blog-search'
+                        value={blogSearch}
+                    />
+                </View>
+
+                {categories.length ? (
+                    <View style={styles.categories}>
                         <Pressable
+                            accessibilityHint='Tampilkan semua kategori blog'
                             accessibilityRole='button'
-                            key={category.value}
-                            onPress={() => onSelectCategory(category.value)}
+                            accessibilityState={{ selected: !blogCategory }}
+                            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                            onPress={() => onSelectCategory("")}
                             style={[
                                 styles.categoryPill,
                                 isDark && styles.categoryPillDark,
-                                blogCategory.toLowerCase() ===
-                                    category.value.toLowerCase() &&
-                                    styles.categoryPillActive,
-                                blogCategory.toLowerCase() ===
-                                    category.value.toLowerCase() &&
+                                !blogCategory && styles.categoryPillActive,
+                                !blogCategory &&
                                     isDark &&
                                     styles.categoryPillActiveDark,
                             ]}
-                            testID={`web-app-blog-category-${category.value}`}
+                            testID='web-app-blog-category-all'
                         >
                             <Text
                                 style={[
                                     styles.categoryPillText,
                                     isDark && styles.categoryPillTextDark,
-                                    blogCategory.toLowerCase() ===
-                                        category.value.toLowerCase() &&
-                                        styles.categoryPillTextActive,
+                                    !blogCategory && styles.categoryPillTextActive,
                                 ]}
                             >
-                                {category.label}
+                                {t("explore.common.all")}
                             </Text>
                         </Pressable>
-                    ))}
-                </View>
-            ) : null}
+                        {categories.map((category) => {
+                            const isCategoryActive =
+                                blogCategory.toLowerCase() ===
+                                category.value.toLowerCase();
+                            return (
+                                <Pressable
+                                    accessibilityHint={`Filter blog kategori ${category.label}`}
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        selected: isCategoryActive,
+                                    }}
+                                    hitSlop={{
+                                        top: 8,
+                                        bottom: 8,
+                                        left: 8,
+                                        right: 8,
+                                    }}
+                                    key={category.value}
+                                    onPress={() =>
+                                        onSelectCategory(category.value)
+                                    }
+                                    style={[
+                                        styles.categoryPill,
+                                        isDark && styles.categoryPillDark,
+                                        isCategoryActive &&
+                                            styles.categoryPillActive,
+                                        isCategoryActive &&
+                                            isDark &&
+                                            styles.categoryPillActiveDark,
+                                    ]}
+                                    testID={`web-app-blog-category-${category.value}`}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.categoryPillText,
+                                            isDark &&
+                                                styles.categoryPillTextDark,
+                                            isCategoryActive &&
+                                                styles.categoryPillTextActive,
+                                        ]}
+                                    >
+                                        {category.label}
+                                    </Text>
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                ) : null}
 
-            {error ? (
-                <View style={styles.errorBox}>
-                    <Text style={[styles.error, isDark && styles.errorDark]}>
-                        {error}
-                    </Text>
-                    {onRetry ? (
-                        <Pressable
-                            accessibilityRole='button'
-                            onPress={onRetry}
-                            style={styles.retryButton}
-                        >
-                            <Text style={styles.retryButtonText}>
-                                {t("explore.common.retryLater")}
-                            </Text>
-                        </Pressable>
-                    ) : null}
-                </View>
-            ) : null}
-            {loading ? (
-                <View style={[styles.state, isDark && styles.stateDark]}>
-                    <ActivityIndicator
-                        color={isDark ? "#34d399" : "#047857"}
-                        size='small'
-                    />
-                    <Text
-                        style={[
-                            styles.stateText,
-                            isDark && styles.stateTextDark,
-                        ]}
-                    >
-                        {t("explore.blog.loading")}
-                    </Text>
-                </View>
-            ) : null}
-            {!loading && !error && filteredItems.length ? (
-                <View style={styles.list}>
-                    {filteredItems.map((item, index) => (
-                        <BlogCard
-                            formatDate={formatDate}
-                            getAuthor={getAuthor}
-                            getCategoryLabel={getCategoryLabel}
-                            getExcerpt={getExcerpt}
-                            getItemKey={getItemKey}
-                            getRaw={getRaw}
-                            getTitle={(entry) => getTitle(entry, index)}
-                            isDark={isDark}
-                            item={item}
-                            key={`${getItemKey(item)}-${index}`}
-                            onOpen={onOpenItem}
+                {error ? (
+                    <View style={styles.errorBox}>
+                        <Text style={[styles.error, isDark && styles.errorDark]}>
+                            {error}
+                        </Text>
+                        {onRetry ? (
+                            <Pressable
+                                accessibilityHint='Coba muat ulang daftar blog'
+                                accessibilityRole='button'
+                                hitSlop={{
+                                    top: 4,
+                                    bottom: 4,
+                                    left: 4,
+                                    right: 4,
+                                }}
+                                onPress={onRetry}
+                                style={styles.retryButton}
+                            >
+                                <Text style={styles.retryButtonText}>
+                                    {t("explore.common.retryLater")}
+                                </Text>
+                            </Pressable>
+                        ) : null}
+                    </View>
+                ) : null}
+                {loading ? (
+                    <View style={[styles.state, isDark && styles.stateDark]}>
+                        <ActivityIndicator
+                            color={isDark ? "#34d399" : "#047857"}
+                            size='small'
                         />
-                    ))}
-                </View>
-            ) : null}
-            {!loading && !error && !filteredItems.length ? (
-                <View style={[styles.empty, isDark && styles.emptyDark]}>
-                    <Text
-                        style={[
-                            styles.emptyArabic,
-                            isDark && styles.emptyArabicDark,
-                        ]}
-                    >
-                        كِتَابَةً
-                    </Text>
-                    <Text
-                        style={[
-                            styles.emptyTitle,
-                            isDark && styles.emptyTitleDark,
-                        ]}
-                    >
-                        {hasItems
-                            ? t("explore.blog.emptyFilteredTitle")
-                            : t("explore.blog.emptyTitle")}
-                    </Text>
-                    <Text
-                        style={[
-                            styles.emptyText,
-                            isDark && styles.emptyTextDark,
-                        ]}
-                    >
-                        {hasItems
-                            ? t("explore.blog.emptyFilteredText")
-                            : t("explore.blog.emptyText")}
-                    </Text>
-                </View>
-            ) : null}
-        </ScrollView>
+                        <Text
+                            style={[
+                                styles.stateText,
+                                isDark && styles.stateTextDark,
+                            ]}
+                        >
+                            {t("explore.blog.loading")}
+                        </Text>
+                    </View>
+                ) : null}
+            </>
+        ),
+        [
+            blogCategory,
+            blogSearch,
+            categories,
+            error,
+            isDark,
+            loading,
+            onRetry,
+            onSearch,
+            onSelectCategory,
+            t,
+        ],
     );
+
+    const ListEmpty = useMemo(() => {
+        if (loading || error) return null;
+        return (
+            <View style={[styles.empty, isDark && styles.emptyDark]}>
+                <Text
+                    style={[
+                        styles.emptyArabic,
+                        isDark && styles.emptyArabicDark,
+                    ]}
+                >
+                    كِتَابَةً
+                </Text>
+                <Text
+                    style={[
+                        styles.emptyTitle,
+                        isDark && styles.emptyTitleDark,
+                    ]}
+                >
+                    {hasItems
+                        ? t("explore.blog.emptyFilteredTitle")
+                        : t("explore.blog.emptyTitle")}
+                </Text>
+                <Text
+                    style={[
+                        styles.emptyText,
+                        isDark && styles.emptyTextDark,
+                    ]}
+                >
+                    {hasItems
+                        ? t("explore.blog.emptyFilteredText")
+                        : t("explore.blog.emptyText")}
+                </Text>
+            </View>
+        );
+    }, [error, hasItems, isDark, loading, t]);
+
+    return (
+        <FlatList
+            contentContainerStyle={[
+                styles.content,
+                isDark && styles.contentDark,
+            ]}
+            data={loading || error ? [] : filteredItems}
+            ItemSeparatorComponent={ItemSeparator}
+            keyExtractor={keyExtractor}
+            keyboardShouldPersistTaps='handled'
+            ListEmptyComponent={ListEmpty}
+            ListHeaderComponent={ListHeader}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            style={[styles.root, isDark && styles.rootDark]}
+        />
+    );
+}
+
+function ItemSeparator() {
+    return <View style={styles.separator} />;
 }
 
 const styles = StyleSheet.create({
@@ -374,6 +473,9 @@ const styles = StyleSheet.create({
     },
     list: {
         gap: spacing.md,
+    },
+    separator: {
+        height: spacing.md,
     },
     card: {
         backgroundColor: "#ffffff",

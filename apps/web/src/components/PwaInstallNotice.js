@@ -68,6 +68,18 @@ export default function PwaInstallNotice() {
         // IntersectionObserver + delay pattern in NotificationPermissionPrompt.
         let cancelled = false;
         let timer = null;
+
+        if (typeof IntersectionObserver !== "function") {
+            timer = setTimeout(() => {
+                if (!cancelled) setHidden(false);
+            }, 0);
+            return () => {
+                cancelled = true;
+                window.removeEventListener("beforeinstallprompt", handler);
+                clearTimeout(timer);
+            };
+        }
+
         const sentinel = document.createElement("div");
         sentinel.style.cssText =
             "position:fixed;left:0;bottom:0;width:1px;height:1px;pointer-events:none;opacity:0;";

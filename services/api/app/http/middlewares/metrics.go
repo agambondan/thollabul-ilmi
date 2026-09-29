@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"log/slog"
 	"net/http/httptest"
 	"strconv"
 	"time"
@@ -21,6 +22,11 @@ var (
 		Name:    "api_request_duration_seconds",
 		Help:    "Duration of HTTP requests in seconds",
 		Buckets: prometheus.DefBuckets,
+	}, []string{"method", "path"})
+
+	slowRequestsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "api_slow_requests_total",
+		Help: "Total number of HTTP requests taking over 1 second",
 	}, []string{"method", "path"})
 
 	activeRequests = promauto.NewGauge(prometheus.GaugeOpts{
@@ -49,10 +55,21 @@ func MetricsMiddleware() fiber.Handler {
 		err := c.Next()
 
 		status := c.Response().StatusCode()
-		duration := time.Since(start).Seconds()
+		elapsed := time.Since(start)
+		duration := elapsed.Seconds()
 
 		requestsTotal.WithLabelValues(c.Method(), path, strconv.Itoa(status)).Inc()
 		requestDuration.WithLabelValues(c.Method(), path).Observe(duration)
+
+		if duration >= 1.0 {
+			slowRequestsTotal.WithLabelValues(c.Method(), path).Inc()
+			slog.Warn("slow request detected",
+				"method", c.Method(),
+				"path", path,
+				"duration_ms", elapsed.Milliseconds(),
+				"status", status,
+			)
+		}
 
 		return err
 	}

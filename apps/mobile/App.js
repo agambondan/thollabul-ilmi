@@ -2,7 +2,6 @@ import * as Linking from "expo-linking";
 import { useFonts } from "expo-font";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-    ActivityIndicator,
     BackHandler,
     Keyboard,
     Platform,
@@ -10,7 +9,7 @@ import {
     View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import AnalyticsTracker from "./src/components/AnalyticsTracker";
 import { SwipeBackView } from "./src/components/SwipeBackView";
 import { FeedbackProvider } from "./src/context/FeedbackContext";
@@ -39,13 +38,15 @@ import {
 } from "./src/navigation/appNavigation";
 
 export default function App() {
-    const [quranFontsLoaded, quranFontsError] = useFonts(quranFontAssets);
+    const [quranFontsLoaded] = useFonts(quranFontAssets);
     const [activeTab, setActiveTab] = useState("home");
     const [deepLinkTarget, setDeepLinkTarget] = useState(null);
     const [internalRoutes, setInternalRoutes] = useState({});
     const [returnRoutes, setReturnRoutes] = useState({});
     const [keyboardVisible, setKeyboardVisible] = useState(false);
     const [headerConfig, setHeaderConfigState] = useState(null);
+    const [mountedTabs, setMountedTabs] = useState(() => new Set(["home"]));
+
 
     // Refs so the single BackHandler registration never goes stale
     const activeTabRef = useRef("home");
@@ -57,6 +58,12 @@ export default function App() {
     useEffect(() => {
         activeTabRef.current = activeTab;
         setHeaderConfigState(null);
+        setMountedTabs((prev) => {
+            if (prev.has(activeTab)) return prev;
+            const next = new Set(prev);
+            next.add(activeTab);
+            return next;
+        });
     }, [activeTab]);
     useEffect(() => {
         deepLinkTargetRef.current = deepLinkTarget;
@@ -313,22 +320,6 @@ export default function App() {
         ],
     );
 
-    if (!quranFontsLoaded && !quranFontsError) {
-        return (
-            <SafeAreaProvider>
-                <SafeAreaView
-                    edges={["top", "left", "right"]}
-                    style={[styles.safeArea, styles.fontLoading]}
-                >
-                    <ActivityIndicator
-                        color={colors.primaryDark}
-                        size='small'
-                    />
-                </SafeAreaView>
-            </SafeAreaProvider>
-        );
-    }
-
     return (
         <GestureHandlerRootView style={styles.gestureRoot}>
             <SafeAreaProvider>
@@ -347,7 +338,9 @@ export default function App() {
                                         returnRoutes={returnRoutes}
                                         headerConfig={headerConfig}
                                         keyboardVisible={keyboardVisible}
-                                        onOpenProfile={() => openTab("profile")}
+                                        onOpenProfile={(params) =>
+                                            openTab("profile", params ?? null)
+                                        }
                                         onTabChange={openTab}
                                     >
                                         {[
@@ -357,8 +350,9 @@ export default function App() {
                                             "ibadah",
                                             "belajar",
                                             "profile",
-                                        ].map((tab) => {
-                                            const isActive = activeTab === tab;
+                                         ].map((tab) => {
+                                             const isActive = activeTab === tab;
+                                             if (!isActive && !mountedTabs.has(tab)) return null;
                                             const hasInternalView =
                                                 !!internalRoutes[tab];
                                             let screen = null;
@@ -378,6 +372,7 @@ export default function App() {
                                                                 ? currentTarget
                                                                 : null
                                                         }
+                                                        fontsLoaded={quranFontsLoaded}
                                                         isActive={isActive}
                                                         navigation={navigation}
                                                     />
@@ -482,9 +477,5 @@ const styles = StyleSheet.create({
     },
     screenPaneHidden: {
         display: "none",
-    },
-    fontLoading: {
-        alignItems: "center",
-        justifyContent: "center",
     },
 });

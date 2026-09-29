@@ -78,7 +78,7 @@ export function WebAppShell({
         (item) => {
             setMenuVisible(false);
             if (item?.tab === "profile") {
-                onOpenProfile?.();
+                onOpenProfile?.(item?.params ?? null);
                 return;
             }
             onTabChange?.(item?.tab ?? item?.key, item?.params ?? null);

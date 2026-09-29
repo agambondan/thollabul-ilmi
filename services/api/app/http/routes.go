@@ -57,14 +57,24 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	})
 	app.Use(globalLimiter)
 
+	searchMax := viper.GetInt("RATE_LIMIT_SEARCH")
+	if searchMax <= 0 {
+		searchMax = 60
+	}
 	searchLimiter := limiter.New(limiter.Config{
-		Max:        viper.GetInt("RATE_LIMIT_SEARCH"),
+		Max:        searchMax,
 		Expiration: 1 * time.Minute,
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if uid := c.Locals("userId"); uid != nil {
 				return "search:" + uid.(string)
 			}
 			return "search:ip:" + c.IP()
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"error":       "search rate limit reached, please slow down",
+				"retry_after": 60,
+			})
 		},
 	})
 
@@ -188,12 +198,20 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	cacheMw := middlewares.CacheByType(3600, 60)
 
+	var redisCacheMw fiber.Handler
+	if repo != nil && repo.GetRedis() != nil {
+		redisCacheMw = middlewares.RedisResponseCache(repo.GetRedis(), 5*time.Minute)
+	}
+
 	if repo != nil && repo.GetDB() != nil {
 		app.Use(middlewares.PoolProtection(repo.GetDB()))
 	}
 
 	master := app.Group(viper.GetString("ENDPOINT"))
 	master.Use(cacheMw)
+	if redisCacheMw != nil {
+		master.Use(redisCacheMw)
+	}
 	master.Use(timeout.NewWithContext(func(c *fiber.Ctx) error {
 		return c.Next()
 	}, 30*time.Second))
@@ -219,8 +237,21 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 		master.Get("/swagger/*", swagger.HandlerDefault)
 	}
 
-	// Rate limiter for auth endpoints (10 req/min)
-	authLimiter := limiter.New(limiter.Config{Max: viper.GetInt("RATE_LIMIT_AUTH"), Expiration: 1 * time.Minute})
+	// Rate limiter for auth endpoints (15 req/min)
+	authMax := viper.GetInt("RATE_LIMIT_AUTH")
+	if authMax <= 0 {
+		authMax = 15
+	}
+	authLimiter := limiter.New(limiter.Config{
+		Max:        authMax,
+		Expiration: 1 * time.Minute,
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"error":       "too many auth attempts, please try again in a minute",
+				"retry_after": 60,
+			})
+		},
+	})
 
 	loginLockout := limiter.New(limiter.Config{
 		Max:                    viper.GetInt("RATE_LIMIT_LOGIN_ACCOUNT"),
@@ -273,8 +304,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/search", searchLimiter, newSearchController.Search)
 
 	// Semantic Search & Ask (public) with rate limit
+	semanticMax := viper.GetInt("RATE_LIMIT_SEARCH")
+	if semanticMax <= 0 {
+		semanticMax = 60
+	}
 	semanticLimiter := limiter.New(limiter.Config{
-		Max:        viper.GetInt("RATE_LIMIT_SEARCH"),
+		Max:        semanticMax,
 		Expiration: 1 * time.Minute,
 		KeyGenerator: func(c *fiber.Ctx) string {
 			if uid := c.Locals("userId"); uid != nil {
@@ -282,9 +317,37 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 			}
 			return "semantic:ip:" + c.IP()
 		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"error":       "semantic search rate limit reached",
+				"retry_after": 60,
+			})
+		},
 	})
 	master.Get("/search/semantic", semanticLimiter, newSemanticSearchController.SemanticSearch)
 	master.Post("/ask", semanticLimiter, newSemanticSearchController.Ask)
+
+	// Personal write endpoints - higher limit for authenticated users
+	personalWriteMax := viper.GetInt("RATE_LIMIT_PERSONAL_WRITE")
+	if personalWriteMax <= 0 {
+		personalWriteMax = 120
+	}
+	personalWriteLimiter := limiter.New(limiter.Config{
+		Max:        personalWriteMax,
+		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			if uid := c.Locals("userId"); uid != nil {
+				return "personal:write:" + uid.(string)
+			}
+			return "personal:write:ip:" + c.IP()
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"error":       "personal write rate limit reached",
+				"retry_after": 60,
+			})
+		},
+	})
 
 	// Mobile Sync (public)
 	master.Get("/sync", newSyncController.InitialSync)
@@ -438,25 +501,25 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Put("/library/progress/:bookId", jwt, newLibraryBookProgressController.Update)
 
 	// Bookmark
-	master.Post("/bookmarks", jwt, newBookmarkController.Add)
+	master.Post("/bookmarks", jwt, personalWriteLimiter, newBookmarkController.Add)
 	master.Get("/bookmarks", jwt, newBookmarkController.FindAll)
-	master.Put("/bookmarks/:id", jwt, newBookmarkController.Update)
-	master.Delete("/bookmarks/:id", jwt, newBookmarkController.Delete)
+	master.Put("/bookmarks/:id", jwt, personalWriteLimiter, newBookmarkController.Update)
+	master.Delete("/bookmarks/:id", jwt, personalWriteLimiter, newBookmarkController.Delete)
 
 	// Reading Progress
-	master.Put("/progress/quran", jwt, newReadingProgressController.UpdateQuran)
+	master.Put("/progress/quran", jwt, personalWriteLimiter, newReadingProgressController.UpdateQuran)
 	master.Get("/progress/quran", jwt, newReadingProgressController.GetQuran)
-	master.Put("/progress/hadith", jwt, newReadingProgressController.UpdateHadith)
+	master.Put("/progress/hadith", jwt, personalWriteLimiter, newReadingProgressController.UpdateHadith)
 	master.Get("/progress/hadith", jwt, newReadingProgressController.GetHadith)
 	master.Get("/progress", jwt, newReadingProgressController.GetAll)
 
 	// Hafalan
-	master.Put("/hafalan/surah/:surahId", jwt, newHafalanController.Update)
+	master.Put("/hafalan/surah/:surahId", jwt, personalWriteLimiter, newHafalanController.Update)
 	master.Get("/hafalan", jwt, newHafalanController.FindAll)
 	master.Get("/hafalan/summary", jwt, newHafalanController.Summary)
 
 	// Streak & Activity
-	master.Post("/activity", jwt, newStreakController.Record)
+	master.Post("/activity", jwt, personalWriteLimiter, newStreakController.Record)
 	master.Get("/streak", jwt, newStreakController.GetStreak)
 	master.Get("/streak/weekly", jwt, newStreakController.GetWeekly)
 

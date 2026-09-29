@@ -16,7 +16,6 @@ import {
 } from "lucide-react-native";
 import {
     ActivityIndicator,
-    Linking,
     Pressable,
     ScrollView,
     Switch,
@@ -29,8 +28,10 @@ import {
     AppActionSheet,
     ActionSheetRow,
 } from "../../components/AppActionSheet";
+import { safeOpenURL } from "../../utils/safeOpenURL";
 import { Card, CardTitle } from "../../components/Card";
 import { ContentCard } from "../../components/ContentCard";
+import { MarkdownView } from "../../components/MarkdownView";
 import { NotesPanel } from "../../components/NotesPanel";
 import { NotificationCenter } from "../../components/NotificationCenter";
 import {
@@ -147,6 +148,7 @@ export function createExploreClassicRenderers(context) {
         handleLikeFeedItem,
         handleReportFeedItem,
         handleTogglePinnedFeature,
+        isDarkTheme,
         isWebAppLayout,
         items,
         itemActionSheet,
@@ -815,7 +817,45 @@ export function createExploreClassicRenderers(context) {
         if (!selectedItem) return null;
         const ref = getItemRef(activeFeature, selectedItem);
         const noteKey = refKey(ref.refType, ref.refId);
+        const canAddNote =
+            ["ayah", "hadith", "library", "library_book"].includes(ref.refType) &&
+            Number.isFinite(Number(ref.refId)) &&
+            Number(ref.refId) > 0;
         const isLibraryDetail = activeFeature?.key === "library";
+        const isBlogDetail = activeFeature?.key === "blog";
+        const blogContent = selectedItem?.raw?.content || selectedItem?.body || "";
+        const handleBlogLink = (url = "") => {
+            const cleanUrl = String(url).trim();
+            const quranMatch = cleanUrl.match(
+                /^\/quran\/(\d+)(?:[#/](\d+))?/i,
+            );
+            if (quranMatch && onOpenTab) {
+                onOpenTab("quran", {
+                    surahNumber: Number(quranMatch[1]),
+                    ayahNumber: quranMatch[2] ? Number(quranMatch[2]) : null,
+                });
+                return;
+            }
+            const hadithMatch = cleanUrl.match(
+                /^\/hadith\/([a-zA-Z0-9_-]+)\/(\d+)/i,
+            );
+            if (hadithMatch && onOpenTab) {
+                const hadithNumber = Number(hadithMatch[2]);
+                onOpenTab("hadith", {
+                    bookSlug: hadithMatch[1].toLowerCase(),
+                    hadithNumber,
+                    hadithId: hadithNumber,
+                });
+                return;
+            }
+            if (/^\/doa(?:\/|$)/i.test(cleanUrl) && onOpenTab) {
+                onOpenTab("belajar", { featureKey: "doa" });
+                return;
+            }
+            if (/^https?:\/\//i.test(cleanUrl)) {
+                safeOpenURL(cleanUrl);
+            }
+        };
 
         const renderTafsirPanel = (tafsirText, sourceLabel, isSecondary) => {
             if (!tafsirText) return null;
@@ -1216,7 +1256,7 @@ export function createExploreClassicRenderers(context) {
                             {selectedItem.arabic}
                         </Text>
                     ) : null}
-                    {selectedItem.body ? (
+                    {selectedItem.body || blogContent ? (
                         <View
                             style={
                                 isTafsirDetail
@@ -1224,15 +1264,24 @@ export function createExploreClassicRenderers(context) {
                                     : null
                             }
                         >
-                            <Text
-                                style={
-                                    isTafsirDetail
-                                        ? styles.detailTranslation
-                                        : styles.detailBody
-                                }
-                            >
-                                {selectedItem.body}
-                            </Text>
+                            {isBlogDetail ? (
+                                <MarkdownView
+                                    content={blogContent}
+                                    isDark={isDarkTheme}
+                                    onLinkPress={handleBlogLink}
+                                    testID='article-markdown-view'
+                                />
+                            ) : (
+                                <Text
+                                    style={
+                                        isTafsirDetail
+                                            ? styles.detailTranslation
+                                            : styles.detailBody
+                                    }
+                                >
+                                    {selectedItem.body}
+                                </Text>
+                            )}
                         </View>
                     ) : null}
                     {hasBothTafsir ? (
@@ -1275,7 +1324,7 @@ export function createExploreClassicRenderers(context) {
                 {renderLibraryProgressPanel()}
 
                 <View style={styles.detailActions}>
-                    {activeFeature?.type !== "feed" ? (
+                    {canAddNote && activeFeature?.type !== "feed" ? (
                         <ActionPill
                             Icon={StickyNote}
                             active={activeNoteRef === noteKey}
@@ -1293,7 +1342,7 @@ export function createExploreClassicRenderers(context) {
                         onPress={() => openSource(selectedItem)}
                     />
                 </View>
-                {activeNoteRef === noteKey ? (
+                {canAddNote && activeNoteRef === noteKey ? (
                     <NotesPanel refType={ref.refType} refId={ref.refId} />
                 ) : null}
             </>

@@ -9,7 +9,7 @@ import {
     Text,
     View,
 } from "react-native";
-import { useTabActivity } from "../context/TabActivityContext";
+import { useNotifyTabActivity } from "../context/TabActivityContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { getThemeColors, spacing } from "../theme";
 
@@ -34,7 +34,7 @@ export function Screen({
         isDark: isDarkTheme,
         isPaperLayout: !isWebAppLayout,
     });
-    const { notifyTabActivity } = useTabActivity();
+    const notifyTabActivity = useNotifyTabActivity();
     const handleScrollActivity = useCallback(
         (event) => {
             notifyTabActivity();
@@ -94,6 +94,10 @@ export function Screen({
                     keyExtractor={listKeyExtractor}
                     ListFooterComponent={listFooter}
                     ListHeaderComponent={renderHeader}
+                    initialNumToRender={10}
+                    maxToRenderPerBatch={10}
+                    windowSize={5}
+                    removeClippedSubviews={Platform.OS !== "web"}
                     onEndReached={onEndReached}
                     onEndReachedThreshold={0.65}
                     onScroll={notifyTabActivity}

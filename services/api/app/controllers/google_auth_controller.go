@@ -3,6 +3,8 @@ package controllers
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -50,7 +52,16 @@ func (c *googleAuthController) googleStateToken() string {
 	return fmt.Sprintf("%x", b)
 }
 
-// Login redirects the user to Google OAuth consent screen.
+func (c *googleAuthController) generatePKCE() (codeVerifier, codeChallenge string) {
+	b := make([]byte, 32)
+	_, _ = io.ReadFull(rand.Reader, b)
+	codeVerifier = base64.RawURLEncoding.EncodeToString(b)
+	hash := sha256.Sum256([]byte(codeVerifier))
+	codeChallenge = base64.RawURLEncoding.EncodeToString(hash[:])
+	return
+}
+
+// Login redirects the user to Google OAuth consent screen with PKCE.
 // GET /auth/google
 func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 	cfg := c.googleOAuthConfig()
@@ -60,6 +71,19 @@ func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 		})
 	}
 	state := c.googleStateToken()
+	codeVerifier, codeChallenge := c.generatePKCE()
+
+	// Store PKCE verifier in secure cookie (10 min expiry)
+	ctx.Cookie(&fiber.Cookie{
+		Name:     "google_oauth_code_verifier",
+		Value:    codeVerifier,
+		Path:     "/",
+		Expires:  time.Now().Add(10 * time.Minute),
+		HTTPOnly: true,
+		Secure:   viper.GetString("ENVIRONMENT") == "production",
+		SameSite: "Lax",
+	})
+
 	source := ctx.Query("source")
 	if source == "mobile" {
 		state = state + "|mobile"
@@ -73,7 +97,12 @@ func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 		Secure:   viper.GetString("ENVIRONMENT") == "production",
 		SameSite: "Lax",
 	})
-	authURL := cfg.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
+	authURL := cfg.AuthCodeURL(state,
+		oauth2.AccessTypeOffline,
+		oauth2.ApprovalForce,
+		oauth2.SetAuthURLParam("code_challenge", codeChallenge),
+		oauth2.SetAuthURLParam("code_challenge_method", "S256"),
+	)
 	return ctx.Redirect(authURL, fiber.StatusTemporaryRedirect)
 }
 
@@ -115,7 +144,21 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 		SameSite: "Lax",
 	})
 
-	tok, err := cfg.Exchange(context.Background(), code)
+	var opts []oauth2.AuthCodeOption
+	if verifier := ctx.Cookies("google_oauth_code_verifier"); verifier != "" {
+		opts = append(opts, oauth2.SetAuthURLParam("code_verifier", verifier))
+		ctx.Cookie(&fiber.Cookie{
+			Name:     "google_oauth_code_verifier",
+			Value:    "",
+			Path:     "/",
+			Expires:  time.Now().Add(-1 * time.Hour),
+			HTTPOnly: true,
+			Secure:   viper.GetString("ENVIRONMENT") == "production",
+			SameSite: "Lax",
+		})
+	}
+
+	tok, err := cfg.Exchange(context.Background(), code, opts...)
 	if err != nil {
 		return c.renderErrorPage(ctx, fmt.Sprintf("token exchange failed: %v", err))
 	}

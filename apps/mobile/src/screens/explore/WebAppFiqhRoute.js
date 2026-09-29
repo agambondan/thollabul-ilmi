@@ -1,9 +1,9 @@
 import { ChevronDown, Search, Scale } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import {
     ActivityIndicator,
+    FlatList,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -89,10 +89,23 @@ const getCategories = (items) => {
         });
 };
 
-function CategoryPill({ active, isDarkTheme, label, onPress, testID }) {
+const CategoryPill = memo(function CategoryPill({
+    active,
+    isDarkTheme,
+    label,
+    onPress,
+    testID,
+}) {
     return (
         <Pressable
+            accessibilityHint={
+                active
+                    ? "Filter aktif, tekan untuk membatalkan"
+                    : `Aktifkan filter kategori ${label}`
+            }
             accessibilityRole='button'
+            accessibilityState={{ selected: active }}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             onPress={onPress}
             style={[
                 styles.categoryPill,
@@ -112,14 +125,16 @@ function CategoryPill({ active, isDarkTheme, label, onPress, testID }) {
             </Text>
         </Pressable>
     );
-}
+});
 
-function FiqhCard({ isDarkTheme, item, onOpen, t }) {
+const FiqhCard = memo(function FiqhCard({ isDarkTheme, item, onOpen, t }) {
     const category = getFiqhDisplayCategory(item);
 
     return (
         <Pressable
+            accessibilityHint='Tekan untuk membaca materi fiqh'
             accessibilityRole='button'
+            hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
             onPress={() => onOpen(item)}
             style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-fiqh-card'
@@ -159,7 +174,7 @@ function FiqhCard({ isDarkTheme, item, onOpen, t }) {
             />
         </Pressable>
     );
-}
+});
 
 export function WebAppFiqhRoute({
     error,
@@ -195,170 +210,231 @@ export function WebAppFiqhRoute({
         });
     }, [category, items, search, t]);
 
+    const renderItem = useCallback(
+        ({ item, index }) => (
+            <FiqhCard
+                index={index}
+                isDarkTheme={isDarkTheme}
+                item={item}
+                onOpen={onOpenItem}
+                t={t}
+            />
+        ),
+        [isDarkTheme, onOpenItem, t],
+    );
+
+    const keyExtractor = useCallback(
+        (item, index) => `${getFiqhId(item)}-${index}`,
+        [],
+    );
+
+    const ListHeader = useMemo(
+        () => (
+            <>
+                <View testID='explore-web-app-fiqh-surface' />
+                <View style={styles.header}>
+                    <Text
+                        style={[
+                            styles.title,
+                            isDarkTheme && styles.titleDark,
+                        ]}
+                    >
+                        {t("explore.fiqh.title")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.count,
+                            isDarkTheme && styles.countDark,
+                        ]}
+                    >
+                        {t("explore.fiqh.count", { count: items.length })}
+                    </Text>
+                </View>
+
+                <View style={styles.filterWrap}>
+                    <View
+                        style={[
+                            styles.search,
+                            isDarkTheme && styles.searchDark,
+                        ]}
+                    >
+                        <Search
+                            color={isDarkTheme ? "#9ca3af" : "#6b7280"}
+                            size={16}
+                            strokeWidth={2}
+                        />
+                        <TextInput
+                            onChangeText={setSearch}
+                            placeholder={t("explore.fiqh.searchPlaceholder")}
+                            placeholderTextColor={
+                                isDarkTheme ? "#9ca3af" : "#9ca3af"
+                            }
+                            style={[
+                                styles.input,
+                                isDarkTheme && styles.inputDark,
+                            ]}
+                            testID='web-app-fiqh-search'
+                            value={search}
+                        />
+                    </View>
+                    <CategoryPill
+                        active={!category}
+                        isDarkTheme={isDarkTheme}
+                        label={t("explore.common.all")}
+                        onPress={() => setCategory("")}
+                        testID='web-app-fiqh-category-all'
+                    />
+                    {categories.map((item) => (
+                        <CategoryPill
+                            active={category === item}
+                            isDarkTheme={isDarkTheme}
+                            key={item}
+                            label={titleCase(item)}
+                            onPress={() =>
+                                setCategory(category === item ? "" : item)
+                            }
+                            testID={`web-app-fiqh-category-${item}`}
+                        />
+                    ))}
+                </View>
+
+                {error ? (
+                    <Text
+                        style={[
+                            styles.error,
+                            isDarkTheme && styles.errorDark,
+                        ]}
+                    >
+                        {t("explore.common.refreshError", {
+                            subject: t("explore.fiqh.fallbackTitle"),
+                        })}
+                    </Text>
+                ) : null}
+                {loading ? (
+                    <View style={styles.state}>
+                        <ActivityIndicator
+                            color={isDarkTheme ? "#34d399" : "#047857"}
+                            size='small'
+                        />
+                        <Text
+                            style={[
+                                styles.stateText,
+                                isDarkTheme && styles.stateTextDark,
+                            ]}
+                        >
+                            {t("explore.fiqh.loading")}
+                        </Text>
+                    </View>
+                ) : null}
+            </>
+        ),
+        [
+            categories,
+            category,
+            error,
+            isDarkTheme,
+            items.length,
+            loading,
+            search,
+            t,
+        ],
+    );
+
+    const ListEmpty = useMemo(() => {
+        if (loading || error) return null;
+        return (
+            <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+                <Scale
+                    color={isDarkTheme ? "#9ca3af" : "#6b7280"}
+                    size={32}
+                    strokeWidth={1.8}
+                />
+                <Text
+                    style={[
+                        styles.emptyTitle,
+                        isDarkTheme && styles.emptyTitleDark,
+                    ]}
+                >
+                    {items.length
+                        ? t("explore.common.notFound", {
+                              subject: t("explore.fiqh.fallbackTitle"),
+                          })
+                        : t("explore.common.notAvailable", {
+                              subject: t("explore.fiqh.fallbackTitle"),
+                          })}
+                </Text>
+                <Text
+                    style={[
+                        styles.emptyText,
+                        isDarkTheme && styles.emptyTextDark,
+                    ]}
+                >
+                    {items.length
+                        ? t("explore.common.changeSearchOrFilter")
+                        : t("explore.common.retryLater")}
+                </Text>
+            </View>
+        );
+    }, [error, isDarkTheme, items.length, loading, t]);
+
+    const ListFooter = useMemo(() => {
+        if (!pagination?.hasMore || loading || error) return null;
+        return (
+            <View style={styles.loadMoreWrap}>
+                <Pressable
+                    accessibilityHint='Muat lebih banyak data fiqh'
+                    accessibilityRole='button'
+                    accessibilityState={{
+                        disabled: pagination.loadingMore,
+                    }}
+                    disabled={pagination.loadingMore}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    onPress={onLoadMore}
+                    style={[
+                        styles.loadMoreButton,
+                        isDarkTheme && styles.loadMoreButtonDark,
+                        pagination.loadingMore &&
+                            styles.loadMoreButtonDisabled,
+                    ]}
+                    testID='web-app-fiqh-load-more'
+                >
+                    <Text
+                        style={[
+                            styles.loadMoreText,
+                            isDarkTheme && styles.loadMoreTextDark,
+                        ]}
+                    >
+                        {pagination.loadingMore
+                            ? t("explore.common.loadingShort")
+                            : t("explore.common.loadMore")}
+                    </Text>
+                </Pressable>
+            </View>
+        );
+    }, [error, isDarkTheme, loading, onLoadMore, pagination, t]);
+
     return (
-        <ScrollView
+        <FlatList
             contentContainerStyle={[
                 styles.content,
                 isDarkTheme && styles.contentDark,
             ]}
+            data={loading || error ? [] : filteredItems}
+            ItemSeparatorComponent={ItemSeparator}
+            keyExtractor={keyExtractor}
             keyboardShouldPersistTaps='handled'
+            ListEmptyComponent={ListEmpty}
+            ListFooterComponent={ListFooter}
+            ListHeaderComponent={ListHeader}
+            renderItem={renderItem}
             showsVerticalScrollIndicator={false}
             style={[styles.root, isDarkTheme && styles.rootDark]}
-        >
-            <View testID='explore-web-app-fiqh-surface' />
-            <View style={styles.header}>
-                <Text style={[styles.title, isDarkTheme && styles.titleDark]}>
-                    {t("explore.fiqh.title")}
-                </Text>
-                <Text style={[styles.count, isDarkTheme && styles.countDark]}>
-                    {t("explore.fiqh.count", { count: items.length })}
-                </Text>
-            </View>
-
-            <View style={styles.filterWrap}>
-                <View style={[styles.search, isDarkTheme && styles.searchDark]}>
-                    <Search
-                        color={isDarkTheme ? "#9ca3af" : "#6b7280"}
-                        size={16}
-                        strokeWidth={2}
-                    />
-                    <TextInput
-                        onChangeText={setSearch}
-                        placeholder={t("explore.fiqh.searchPlaceholder")}
-                        placeholderTextColor={
-                            isDarkTheme ? "#9ca3af" : "#9ca3af"
-                        }
-                        style={[styles.input, isDarkTheme && styles.inputDark]}
-                        testID='web-app-fiqh-search'
-                        value={search}
-                    />
-                </View>
-                <CategoryPill
-                    active={!category}
-                    isDarkTheme={isDarkTheme}
-                    label={t("explore.common.all")}
-                    onPress={() => setCategory("")}
-                    testID='web-app-fiqh-category-all'
-                />
-                {categories.map((item) => (
-                    <CategoryPill
-                        active={category === item}
-                        isDarkTheme={isDarkTheme}
-                        key={item}
-                        label={titleCase(item)}
-                        onPress={() =>
-                            setCategory(category === item ? "" : item)
-                        }
-                        testID={`web-app-fiqh-category-${item}`}
-                    />
-                ))}
-            </View>
-
-            {error ? (
-                <Text style={[styles.error, isDarkTheme && styles.errorDark]}>
-                    {t("explore.common.refreshError", {
-                        subject: t("explore.fiqh.fallbackTitle"),
-                    })}
-                </Text>
-            ) : null}
-            {loading ? (
-                <View style={styles.state}>
-                    <ActivityIndicator
-                        color={isDarkTheme ? "#34d399" : "#047857"}
-                        size='small'
-                    />
-                    <Text
-                        style={[
-                            styles.stateText,
-                            isDarkTheme && styles.stateTextDark,
-                        ]}
-                    >
-                        {t("explore.fiqh.loading")}
-                    </Text>
-                </View>
-            ) : null}
-
-            {!loading && !error && filteredItems.length ? (
-                <View style={styles.list}>
-                    {filteredItems.map((item, index) => (
-                        <FiqhCard
-                            index={index}
-                            isDarkTheme={isDarkTheme}
-                            item={item}
-                            key={`${getFiqhId(item)}-${index}`}
-                            onOpen={onOpenItem}
-                            t={t}
-                        />
-                    ))}
-                </View>
-            ) : null}
-
-            {!loading && !error && !filteredItems.length ? (
-                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
-                    <Scale
-                        color={isDarkTheme ? "#9ca3af" : "#6b7280"}
-                        size={32}
-                        strokeWidth={1.8}
-                    />
-                    <Text
-                        style={[
-                            styles.emptyTitle,
-                            isDarkTheme && styles.emptyTitleDark,
-                        ]}
-                    >
-                        {items.length
-                            ? t("explore.common.notFound", {
-                                  subject: t("explore.fiqh.fallbackTitle"),
-                              })
-                            : t("explore.common.notAvailable", {
-                                  subject: t("explore.fiqh.fallbackTitle"),
-                              })}
-                    </Text>
-                    <Text
-                        style={[
-                            styles.emptyText,
-                            isDarkTheme && styles.emptyTextDark,
-                        ]}
-                    >
-                        {items.length
-                            ? t("explore.common.changeSearchOrFilter")
-                            : t("explore.common.retryLater")}
-                    </Text>
-                </View>
-            ) : null}
-
-            {pagination?.hasMore && !loading && !error ? (
-                <View style={styles.loadMoreWrap}>
-                    <Pressable
-                        accessibilityRole='button'
-                        accessibilityState={{
-                            disabled: pagination.loadingMore,
-                        }}
-                        disabled={pagination.loadingMore}
-                        onPress={onLoadMore}
-                        style={[
-                            styles.loadMoreButton,
-                            isDarkTheme && styles.loadMoreButtonDark,
-                            pagination.loadingMore &&
-                                styles.loadMoreButtonDisabled,
-                        ]}
-                        testID='web-app-fiqh-load-more'
-                    >
-                        <Text
-                            style={[
-                                styles.loadMoreText,
-                                isDarkTheme && styles.loadMoreTextDark,
-                            ]}
-                        >
-                            {pagination.loadingMore
-                                ? t("explore.common.loadingShort")
-                                : t("explore.common.loadMore")}
-                        </Text>
-                    </Pressable>
-                </View>
-            ) : null}
-        </ScrollView>
+        />
     );
+}
+
+function ItemSeparator() {
+    return <View style={styles.separator} />;
 }
 
 const styles = StyleSheet.create({
@@ -462,6 +538,9 @@ const styles = StyleSheet.create({
     },
     list: {
         gap: spacing.md,
+    },
+    separator: {
+        height: spacing.md,
     },
     card: {
         alignItems: "center",

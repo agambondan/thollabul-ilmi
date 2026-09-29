@@ -1,5 +1,24 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { enqueueMutation } from "../storage/mutationQueue";
 import { deleteJson, postJson, putJson, requestJson } from "./client";
+
+const isNetworkError = (error) =>
+    error?.name === "TypeError" ||
+    error?.message?.toLowerCase().includes("network") ||
+    error?.message?.toLowerCase().includes("failed to fetch") ||
+    error?.message?.toLowerCase().includes("timeout");
+
+const withOfflineQueue = async (fn, mutationMeta) => {
+    try {
+        return await fn();
+    } catch (error) {
+        if (isNetworkError(error)) {
+            await enqueueMutation(mutationMeta);
+            return { offlineQueued: true, ...mutationMeta.payload };
+        }
+        throw error;
+    }
+};
 
 const pickItems = (payload) => {
     if (Array.isArray(payload)) return payload;
@@ -18,30 +37,60 @@ export const getBookmarks = async () => {
 };
 
 export const addBookmark = async ({ refType, refId }) =>
-    postJson(
-        "/api/v1/bookmarks",
+    withOfflineQueue(
+        () =>
+            postJson(
+                "/api/v1/bookmarks",
+                {
+                    ref_type: refType,
+                    ref_id: refId,
+                },
+                { auth: true },
+            ),
         {
-            ref_type: refType,
-            ref_id: refId,
+            type: "bookmark_add",
+            endpoint: "/api/v1/bookmarks",
+            method: "POST",
+            payload: { ref_type: refType, ref_id: refId },
         },
-        { auth: true },
     );
 
 export const deleteBookmark = async (id) =>
-    deleteJson(`/api/v1/bookmarks/${id}`, { auth: true });
+    withOfflineQueue(
+        () => deleteJson(`/api/v1/bookmarks/${id}`, { auth: true }),
+        {
+            type: "bookmark_delete",
+            endpoint: `/api/v1/bookmarks/${id}`,
+            method: "DELETE",
+            payload: { id },
+        },
+    );
 
 export const getQuranProgress = async () =>
     requestJson("/api/v1/progress/quran", { auth: true });
 
 export const saveQuranProgress = async ({ surahNumber, ayahNumber, ayahId }) =>
-    putJson(
-        "/api/v1/progress/quran",
+    withOfflineQueue(
+        () =>
+            putJson(
+                "/api/v1/progress/quran",
+                {
+                    surah_number: surahNumber,
+                    ayah_number: ayahNumber,
+                    ayah_id: ayahId,
+                },
+                { auth: true },
+            ),
         {
-            surah_number: surahNumber,
-            ayah_number: ayahNumber,
-            ayah_id: ayahId,
+            type: "quran_progress",
+            endpoint: "/api/v1/progress/quran",
+            method: "PUT",
+            payload: {
+                surah_number: surahNumber,
+                ayah_number: ayahNumber,
+                ayah_id: ayahId,
+            },
         },
-        { auth: true },
     );
 
 export const getLibraryProgress = async (bookId) =>
@@ -60,14 +109,27 @@ export const saveLibraryProgress = async ({
     note = "",
     status = "reading",
 }) =>
-    putJson(
-        `/api/v1/library/progress/${bookId}`,
+    withOfflineQueue(
+        () =>
+            putJson(
+                `/api/v1/library/progress/${bookId}`,
+                {
+                    current_page: Number(currentPage) || 0,
+                    note,
+                    status,
+                },
+                { auth: true },
+            ),
         {
-            current_page: Number(currentPage) || 0,
-            note,
-            status,
+            type: "library_progress",
+            endpoint: `/api/v1/library/progress/${bookId}`,
+            method: "PUT",
+            payload: {
+                current_page: Number(currentPage) || 0,
+                note,
+                status,
+            },
         },
-        { auth: true },
     );
 
 export const getTodayPrayerLog = async () => {
@@ -89,30 +151,39 @@ export const getTodayPrayerLog = async () => {
     }
 };
 
-export const savePrayerLog = async ({ date, prayer, status }) => {
-    const res = await putJson(
-        "/api/v1/sholat/today",
-        {
-            date,
-            prayer,
-            status,
+export const savePrayerLog = async ({ date, prayer, status }) =>
+    withOfflineQueue(
+        async () => {
+            const res = await putJson(
+                "/api/v1/sholat/today",
+                {
+                    date,
+                    prayer,
+                    status,
+                },
+                { auth: true },
+            );
+            const cacheKey = "tholabul:cache:sholat-today";
+            AsyncStorage.getItem(cacheKey)
+                .then((raw) => {
+                    const current = raw ? JSON.parse(raw) : {};
+                    const updated = {
+                        ...current,
+                        [prayer]: status,
+                        ...(current.log ? { log: { ...current.log, [prayer]: status } } : {}),
+                    };
+                    return AsyncStorage.setItem(cacheKey, JSON.stringify(updated));
+                })
+                .catch(() => {});
+            return res;
         },
-        { auth: true },
+        {
+            type: "prayer_log",
+            endpoint: "/api/v1/sholat/today",
+            method: "PUT",
+            payload: { date, prayer, status },
+        },
     );
-    const cacheKey = "tholabul:cache:sholat-today";
-    AsyncStorage.getItem(cacheKey)
-        .then((raw) => {
-            const current = raw ? JSON.parse(raw) : {};
-            const updated = {
-                ...current,
-                [prayer]: status,
-                ...(current.log ? { log: { ...current.log, [prayer]: status } } : {}),
-            };
-            return AsyncStorage.setItem(cacheKey, JSON.stringify(updated));
-        })
-        .catch(() => {});
-    return res;
-};
 
 export const getPrayerStats = async () =>
     requestJson("/api/v1/sholat/stats", { auth: true });
@@ -275,7 +346,20 @@ export const getHafalanSummary = async () =>
     requestJson("/api/v1/hafalan/summary", { auth: true });
 
 export const updateHafalanStatus = async (surahId, status) =>
-    putJson(`/api/v1/hafalan/surah/${surahId}`, { status }, { auth: true });
+    withOfflineQueue(
+        () =>
+            putJson(
+                `/api/v1/hafalan/surah/${surahId}`,
+                { status },
+                { auth: true },
+            ),
+        {
+            type: "hafalan_status",
+            endpoint: `/api/v1/hafalan/surah/${surahId}`,
+            method: "PUT",
+            payload: { surahId, status },
+        },
+    );
 
 export const getMurojaahSession = async () => {
     const payload = await requestJson("/api/v1/murojaah/session", {

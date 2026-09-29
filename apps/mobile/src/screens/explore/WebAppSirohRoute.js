@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import { BookOpen, ChevronDown, Search } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
+    FlatList,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -13,7 +12,7 @@ import {
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
-import { radius, spacing } from "../../theme";
+import { iconStroke, radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
 
 const getRaw = (item) => item?.raw ?? {};
@@ -53,13 +52,15 @@ const getSirohExcerpt = (item) =>
 const getSirohCategory = (item) =>
     toStr(getRaw(item).category ?? getRaw(item).type ?? item?.meta);
 
-function SirohCard({ index, isDarkTheme, item, onOpen, t }) {
+const SirohCard = memo(function SirohCard({ index, isDarkTheme, item, onOpen, t }) {
     const category = getSirohCategory(item);
     const excerpt = getSirohExcerpt(item);
 
     return (
         <Pressable
+            accessibilityHint='Buka detail siroh'
             accessibilityRole='button'
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             onPress={() => onOpen(item)}
             style={[styles.card, isDarkTheme && styles.cardDark]}
             testID='web-app-siroh-card'
@@ -87,11 +88,11 @@ function SirohCard({ index, isDarkTheme, item, onOpen, t }) {
                         </Text>
                     ) : null}
                 </View>
-                <ChevronDown color={isDarkTheme ? '#64748b' : '#9ca3af'} size={22} strokeWidth={2.1} />
+                <ChevronDown color={isDarkTheme ? '#64748b' : '#9ca3af'} size={22} strokeWidth={iconStroke.regular} />
             </View>
         </Pressable>
     );
-}
+});
 
 export function WebAppSirohRoute({
     clearFeature,
@@ -106,7 +107,7 @@ export function WebAppSirohRoute({
 }) {
     const { t } = useMobileLocale();
     const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
-    const isDarkTheme = isDarkThemeProp || isDarkThemePref;
+    const isDarkTheme = isDarkThemeProp ?? isDarkThemePref;
     const [search, setSearch] = useState("");
 
     useEffect(() => {
@@ -142,13 +143,19 @@ export function WebAppSirohRoute({
         );
     }, [items, search, t]);
 
-    return (
-        <ScrollView
-            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
-            keyboardShouldPersistTaps='handled'
-            showsVerticalScrollIndicator={false}
-            style={[styles.root, isDarkTheme && styles.rootDark]}
-        >
+    const keyExtractor = (item, index) => `${getSirohId(item, index)}-${index}`;
+    const renderItem = ({ item, index }) => (
+        <SirohCard
+            index={index}
+            isDarkTheme={isDarkTheme}
+            item={item}
+            onOpen={onOpenItem}
+            t={t}
+        />
+    );
+
+    const listHeader = (
+        <>
             <View testID='explore-web-app-siroh-surface' />
             <View style={styles.header}>
                 <Text style={[styles.title, isDarkTheme && styles.titleDark]}>{t("explore.siroh.title")}</Text>
@@ -156,9 +163,8 @@ export function WebAppSirohRoute({
                     {t("explore.siroh.subtitle")}
                 </Text>
             </View>
-
             <View style={[styles.search, isDarkTheme && styles.searchDark]}>
-                <Search color={isDarkTheme ? '#64748b' : '#9ca3af'} size={16} strokeWidth={2} />
+                <Search color={isDarkTheme ? '#64748b' : '#9ca3af'} size={16} strokeWidth={iconStroke.regular} />
                 <TextInput
                     onChangeText={setSearch}
                     placeholder={t("explore.siroh.searchPlaceholder")}
@@ -168,12 +174,9 @@ export function WebAppSirohRoute({
                     value={search}
                 />
             </View>
-
             {error ? (
                 <Text style={[styles.error, isDarkTheme && styles.errorDark]}>
-                    {t("explore.common.refreshError", {
-                        subject: t("explore.siroh.title"),
-                    })}
+                    {t("explore.common.refreshError", { subject: t("explore.siroh.title") })}
                 </Text>
             ) : null}
             {loading ? (
@@ -184,67 +187,54 @@ export function WebAppSirohRoute({
                     </Text>
                 </View>
             ) : null}
+        </>
+    );
 
-            {!loading && !error && filteredItems.length ? (
-                <View style={styles.list}>
-                    {filteredItems.map((item, index) => (
-                        <SirohCard
-                            index={index}
-                            isDarkTheme={isDarkTheme}
-                            item={item}
-                            key={`${getSirohId(item, index)}-${index}`}
-                            onOpen={onOpenItem}
-                            t={t}
-                        />
-                    ))}
-                </View>
-            ) : null}
+    const listEmpty = !loading && !error ? (
+        <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
+            <BookOpen color={isDarkTheme ? '#64748b' : '#9ca3af'} size={32} strokeWidth={iconStroke.thin} />
+            <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
+                {items.length
+                    ? t("explore.common.notFound", { subject: t("explore.siroh.title") })
+                    : t("explore.common.notAvailable", { subject: t("explore.siroh.title") })}
+            </Text>
+            <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
+                {items.length ? t("explore.common.changeSearchOrFilter") : t("explore.common.retryLater")}
+            </Text>
+        </View>
+    ) : null;
 
-            {!loading && !error && !filteredItems.length ? (
-                <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
-                    <BookOpen color={isDarkTheme ? '#64748b' : '#9ca3af'} size={32} strokeWidth={1.8} />
-                    <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
-                        {items.length
-                            ? t("explore.common.notFound", {
-                                  subject: t("explore.siroh.title"),
-                              })
-                            : t("explore.common.notAvailable", {
-                                  subject: t("explore.siroh.title"),
-                              })}
-                    </Text>
-                    <Text style={[styles.emptyText, isDarkTheme && styles.emptyTextDark]}>
-                        {items.length
-                            ? t("explore.common.changeSearchOrFilter")
-                            : t("explore.common.retryLater")}
-                    </Text>
-                </View>
-            ) : null}
+    const listFooter = pagination?.hasMore && !loading && !error ? (
+        <View style={styles.loadMoreWrap}>
+            <Pressable
+                accessibilityRole='button'
+                accessibilityState={{ disabled: pagination.loadingMore }}
+                disabled={pagination.loadingMore}
+                onPress={onLoadMore}
+                style={[styles.loadMoreButton, pagination.loadingMore && styles.loadMoreButtonDisabled]}
+                testID='web-app-siroh-load-more'
+            >
+                <Text style={styles.loadMoreText}>
+                    {pagination.loadingMore ? t("explore.common.loadingShort") : t("explore.common.loadMore")}
+                </Text>
+            </Pressable>
+        </View>
+    ) : null;
 
-            {pagination?.hasMore && !loading && !error ? (
-                <View style={styles.loadMoreWrap}>
-                    <Pressable
-                        accessibilityRole='button'
-                        accessibilityState={{
-                            disabled: pagination.loadingMore,
-                        }}
-                        disabled={pagination.loadingMore}
-                        onPress={onLoadMore}
-                        style={[
-                            styles.loadMoreButton,
-                            pagination.loadingMore &&
-                                styles.loadMoreButtonDisabled,
-                        ]}
-                        testID='web-app-siroh-load-more'
-                    >
-                        <Text style={styles.loadMoreText}>
-                            {pagination.loadingMore
-                                ? t("explore.common.loadingShort")
-                                : t("explore.common.loadMore")}
-                        </Text>
-                    </Pressable>
-                </View>
-            ) : null}
-        </ScrollView>
+    return (
+        <FlatList
+            contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
+            data={loading || error ? [] : filteredItems}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            keyExtractor={keyExtractor}
+            keyboardShouldPersistTaps='handled'
+            ListEmptyComponent={listEmpty}
+            ListFooterComponent={listFooter}
+            ListHeaderComponent={listHeader}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            style={[styles.root, isDarkTheme && styles.rootDark]}
+        />
     );
 }
 
@@ -367,6 +357,9 @@ const styles = StyleSheet.create({
         borderRadius: radius.lg,
         borderWidth: 1,
         padding: spacing.xl,
+    },
+    separator: {
+        height: spacing.md,
     },
     emptyTitle: {
         color: "#111827",

@@ -5,6 +5,7 @@ import {
     ThumbsDown,
     ThumbsUp,
 } from "lucide-react-native";
+import { memo } from "react";
 import {
     Pressable,
     ScrollView,
@@ -24,7 +25,7 @@ import {
 } from "../../api/forum";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, getThemeColors, radius, spacing } from "../../theme";
+import { colors, getThemeColors, iconStroke, radius, spacing } from "../../theme";
 
 const formatCount = (value) => Number(value ?? 0).toLocaleString("id-ID");
 
@@ -37,7 +38,7 @@ function ForumStat({ label, value }) {
     );
 }
 
-function QuestionCard({ isDarkTheme, item, onOpen, t }) {
+const QuestionCard = memo(function QuestionCard({ isDarkTheme, item, onOpen, t }) {
     return (
         <Pressable
             accessibilityRole='button'
@@ -125,7 +126,7 @@ function QuestionCard({ isDarkTheme, item, onOpen, t }) {
             </View>
         </Pressable>
     );
-}
+});
 
 export function WebAppForumRoute({
     forumAnswerDraft,
@@ -214,7 +215,10 @@ export function WebAppForumRoute({
                 size: 10,
                 q: forumSearch.trim(),
             });
-            setForumQuestions((prev) => [...prev, ...result.items]);
+            setForumQuestions((prev) => {
+                const merged = [...prev, ...result.items];
+                return merged.length > 200 ? merged.slice(-200) : merged;
+            });
             setForumTotal(result.total);
             setForumPage(nextPage);
             setForumHasMore(result.hasMore);
@@ -350,7 +354,7 @@ export function WebAppForumRoute({
                         isDarkTheme && styles.searchBoxDark,
                     ]}
                 >
-                    <Search color='#94a3b8' size={16} strokeWidth={2} />
+                    <Search color='#94a3b8' size={16} strokeWidth={iconStroke.regular} />
                     <TextInput
                         onChangeText={setForumSearch}
                         onSubmitEditing={runSearch}
@@ -374,7 +378,7 @@ export function WebAppForumRoute({
                     style={styles.askButton}
                     testID='web-app-forum-ask'
                 >
-                    <Plus color='#ffffff' size={15} strokeWidth={2.4} />
+                    <Plus color='#ffffff' size={15} strokeWidth={iconStroke.bold} />
                     <Text style={styles.askButtonText}>
                         {t("explore.forum.askShort")}
                     </Text>
@@ -398,7 +402,7 @@ export function WebAppForumRoute({
                     <MessageCircle
                         color='#94a3b8'
                         size={34}
-                        strokeWidth={1.8}
+                        strokeWidth={iconStroke.thin}
                     />
                     <Text
                         style={[
@@ -622,7 +626,7 @@ export function WebAppForumRoute({
                             <ThumbsUp
                                 color='#2563eb'
                                 size={15}
-                                strokeWidth={2.2}
+                                strokeWidth={iconStroke.regular}
                             />
                             <Text
                                 style={[
@@ -649,7 +653,7 @@ export function WebAppForumRoute({
                             <ThumbsDown
                                 color='#64748b'
                                 size={15}
-                                strokeWidth={2.2}
+                                strokeWidth={iconStroke.regular}
                             />
                             <Text
                                 style={[
@@ -861,7 +865,7 @@ export function WebAppForumRoute({
                     <MessageCircle
                         color={isDarkTheme ? "#60a5fa" : "#2563eb"}
                         size={30}
-                        strokeWidth={2}
+                        strokeWidth={iconStroke.regular}
                     />
                 </View>
                 <Text style={[styles.title, isDarkTheme && styles.titleDark]}>

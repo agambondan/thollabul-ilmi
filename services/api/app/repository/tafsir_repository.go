@@ -26,6 +26,7 @@ func NewTafsirRepository(db *gorm.DB, pg *paginate.Pagination) TafsirRepository 
 func (r *tafsirRepo) FindByAyahID(ayahID int) (*model.Tafsir, error) {
 	var t model.Tafsir
 	err := r.db.
+		Select("tafsir.*").
 		Preload("KemenagTranslation").
 		Preload("IbnuKatsirTranslation").
 		Preload("IbnuKatsirEnTranslation").
@@ -47,6 +48,7 @@ func (r *tafsirRepo) FindBySurahNumber(surahNumber, limit, offset int) ([]model.
 
 	var list []model.Tafsir
 	err := r.db.
+		Select("tafsir.*").
 		Preload("KemenagTranslation").
 		Preload("IbnuKatsirTranslation").
 		Preload("IbnuKatsirEnTranslation").
@@ -84,6 +86,7 @@ func (r *tafsirRepo) Search(query string, limit, offset int) ([]model.Tafsir, er
 	}
 	var list []model.Tafsir
 	err := r.db.
+		Select("tafsir.*").
 		Preload("KemenagTranslation").
 		Preload("IbnuKatsirTranslation").
 		Preload("IbnuKatsirEnTranslation").

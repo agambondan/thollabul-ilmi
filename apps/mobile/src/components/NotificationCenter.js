@@ -781,12 +781,14 @@ export function NotificationCenter({ variant = "classic" }) {
             >
                 {visibleTabs.map((tab) => (
                     <Pressable
+                        accessibilityHint={activeTab === tab.key ? "Tab aktif saat ini" : `Buka tab ${tab.label}`}
                         accessibilityRole='tab'
                         accessibilityState={{ selected: activeTab === tab.key }}
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.12)",
                             borderless: false,
                         }}
+                        hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
                         key={tab.key}
                         onPress={() => {
                             setActiveTab(tab.key);
@@ -1660,16 +1662,20 @@ export function NotificationCenter({ variant = "classic" }) {
                                                         color: "rgba(91, 110, 91, 0.12)",
                                                         borderless: false,
                                                     }}
-                                                    onPress={() =>
-                                                        markRead(item.id)
-                                                    }
-                                                    style={[
-                                                        styles.inboxActionButton,
-                                                        isWebApp
-                                                            ? webAppStyles.webAppSecondaryButton
-                                                            : null,
-                                                    ]}
-                                                >
+                                                        onPress={() =>
+                                                            markRead(item.id)
+                                                        }
+                                                        style={[
+                                                            styles.inboxActionButton,
+                                                            isWebApp
+                                                                ? webAppStyles.webAppSecondaryButton
+                                                                : null,
+                                                        ]}
+                                                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                                                        accessibilityHint='Tandai notifikasi ini sebagai sudah dibaca'
+                                                        accessibilityLabel='Tandai terbaca'
+                                                        accessibilityRole='button'
+                                                    >
                                                     <Text
                                                         style={[
                                                             styles.inboxActionText,
@@ -1683,6 +1689,8 @@ export function NotificationCenter({ variant = "classic" }) {
                                                 </Pressable>
                                             ) : null}
                                             <Pressable
+                                                accessibilityHint='Hapus notifikasi ini dari kotak masuk'
+                                                accessibilityLabel='Hapus notifikasi'
                                                 accessibilityRole='button'
                                                 android_ripple={{
                                                     color: "rgba(190, 18, 60, 0.12)",
@@ -1691,6 +1699,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                                 disabled={
                                                     deletingId === item.id
                                                 }
+                                                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                                                 onPress={() =>
                                                     deleteInboxItem(item)
                                                 }

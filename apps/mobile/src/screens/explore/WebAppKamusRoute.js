@@ -12,7 +12,7 @@ import {
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { arabicTypography } from "../../styles/arabicTypography";
-import { radius, spacing } from "../../theme";
+import { iconStroke, radius, spacing } from "../../theme";
 
 const toStr = (value) => {
     if (!value) return "";
@@ -129,7 +129,7 @@ export function WebAppKamusRoute({
 
             <View style={styles.searchWrap}>
                 <View style={[styles.searchBox, isDarkTheme && styles.searchBoxDark]}>
-                    <Search color={isDarkTheme ? '#64748b' : '#9ca3af'} size={17} strokeWidth={2} />
+                    <Search color={isDarkTheme ? '#64748b' : '#9ca3af'} size={17} strokeWidth={iconStroke.regular} />
                     <TextInput
                         ref={dictionaryInputRef}
                         autoCapitalize='none'
@@ -168,7 +168,7 @@ export function WebAppKamusRoute({
 
             {!loading && query.length < 2 ? (
                 <View style={styles.empty}>
-                    <Search color={isDarkTheme ? '#475569' : '#cbd5e1'} size={40} strokeWidth={1.7} />
+                    <Search color={isDarkTheme ? '#475569' : '#cbd5e1'} size={40} strokeWidth={iconStroke.thin} />
                     <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
                         {t("explore.kamus.minCharsTitle")}
                     </Text>

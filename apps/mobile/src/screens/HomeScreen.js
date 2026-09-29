@@ -23,7 +23,7 @@ import {
 } from "lucide-react-native";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { InteractionManager, ScrollView, StyleSheet, Text, View } from "react-native";
 import {
     getDailyAyah,
     getDailyHadith,
@@ -34,7 +34,7 @@ import {
 import { ContentCard } from "../components/ContentCard";
 import { DetailHeader } from "../components/DetailHeader";
 import { useSession } from "../context/SessionContext";
-import { useTabActivity } from "../context/TabActivityContext";
+import { useNotifyTabActivity } from "../context/TabActivityContext";
 import { GlobalSearchScreen } from "./GlobalSearchScreen";
 import {
     HomeDashboardContent,
@@ -354,7 +354,7 @@ const resolvePrayerState = (prayers, now = new Date()) => {
 
 export function HomeScreen({ isActive, navigation, onOpenTab }) {
     const { user } = useSession();
-    const { notifyTabActivity } = useTabActivity();
+    const notifyTabActivity = useNotifyTabActivity();
     const { t } = useMobileLocale();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const mountedRef = useRef(true);
@@ -895,9 +895,12 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
 
     useEffect(() => {
         mountedRef.current = true;
-        loadHomeData();
+        const task = InteractionManager.runAfterInteractions(() => {
+            loadHomeData();
+        });
 
         return () => {
+            task?.cancel?.();
             clearPrayerRetryTimer();
             clearLocationRetryTimer();
             mountedRef.current = false;

@@ -57,6 +57,7 @@ jest.mock("../api/explore", () => ({
     getQuizQuestions: jest.fn(),
     getZakatGoldPrice: jest.fn(),
     searchDictionary: jest.fn(),
+    fetchBookPages: jest.fn().mockResolvedValue({ pages: [] }),
 }));
 
 jest.mock("../api/social", () => ({
@@ -2785,6 +2786,107 @@ describe("ExploreScreen", () => {
 
         await waitFor(() => {
             expect(togglePinnedFeature).toHaveBeenCalled();
+        });
+    });
+
+    test("opens Blog detail without exposing unsupported Catatan action in classic layout", async () => {
+        useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+        useSession.mockReturnValue({
+            ...mockUseSession(),
+            session: { token: "abc" },
+            user: { id: "1", name: "Test", email: "test@test.com" },
+        });
+        exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+            items: [
+                {
+                    id: "blog-1",
+                    title: "Adab Menuntut Ilmu",
+                    body: "Ringkasan adab bagi penuntut ilmu.",
+                    raw: {
+                        author: { name: "Tim Thullaabul" },
+                        category: { name: "Tazkiyah", slug: "tazkiyah" },
+                        excerpt: "Ringkasan adab bagi penuntut ilmu.",
+                        published_at: "2026-05-20",
+                        slug: "adab-menuntut-ilmu",
+                        title: "Adab Menuntut Ilmu",
+                    },
+                },
+            ],
+            meta: { hasMore: false },
+        });
+        personalApi.getBookmarks.mockResolvedValue([]);
+
+        const { getByTestId, getByText, queryByTestId } =
+            await renderExploreScreen({
+                deepLinkTarget: {
+                    id: "blog-route",
+                    params: { featureKey: "blog" },
+                },
+            });
+
+        await waitFor(() => {
+            expect(getByTestId("explore-classic-surface")).toBeTruthy();
+            expect(getByText("Adab Menuntut Ilmu")).toBeTruthy();
+        });
+
+        fireEvent.press(getByText("Adab Menuntut Ilmu"));
+
+        await waitFor(() => {
+            expect(getByText("Adab Menuntut Ilmu")).toBeTruthy();
+            expect(getByText("Ringkasan adab bagi penuntut ilmu.")).toBeTruthy();
+            expect(getByTestId("pill-Buka sumber")).toBeTruthy();
+            expect(queryByTestId("pill-Catatan")).toBeNull();
+        });
+    });
+
+    test("opens Library detail and shows NotesPanel with valid refId in classic layout", async () => {
+        useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+        useSession.mockReturnValue({
+            ...mockUseSession(),
+            session: { token: "abc" },
+            user: { id: "1", name: "Test", email: "test@test.com" },
+        });
+        exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+            items: [
+                {
+                    id: 15,
+                    title: "Kitab Tauhid",
+                    body: "Matan Kitab at-Tauhid",
+                    raw: {
+                        id: 15,
+                        title: "Kitab Tauhid",
+                    },
+                },
+            ],
+            meta: { hasMore: false },
+        });
+        personalApi.getBookmarks.mockResolvedValue([]);
+        personalApi.getLibraryProgress.mockResolvedValue(null);
+        personalApi.getLibraryProgressList.mockResolvedValue([]);
+
+        const { getByTestId, getByText } = await renderExploreScreen({
+            deepLinkTarget: {
+                id: "library-route",
+                params: { featureKey: "library" },
+            },
+        });
+
+        await waitFor(() => {
+            expect(getByTestId("explore-classic-surface")).toBeTruthy();
+            expect(getByText("Kitab Tauhid")).toBeTruthy();
+        });
+
+        fireEvent.press(getByText("Kitab Tauhid"));
+
+        await waitFor(() => {
+            expect(getByText("Kitab Tauhid")).toBeTruthy();
+            expect(getByTestId("pill-Catatan")).toBeTruthy();
+        });
+
+        fireEvent.press(getByTestId("pill-Catatan"));
+
+        await waitFor(() => {
+            expect(getByTestId("notes-panel")).toBeTruthy();
         });
     });
 });

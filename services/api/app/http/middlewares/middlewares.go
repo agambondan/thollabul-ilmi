@@ -12,13 +12,16 @@ import (
 
 func SecurityHeaders() fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		// Set some security headers:
+		// Set security headers:
 		c.Set("X-XSS-Protection", "1; mode=block")
 		c.Set("X-Content-Type-Options", "nosniff")
 		c.Set("X-Download-Options", "noopen")
-		c.Set("Strict-Transport-Security", "max-age=5184000")
-		c.Set("X-Frame-Options", "SAMEORIGIN")
+		c.Set("Strict-Transport-Security", "max-age=5184000; includeSubDomains; preload")
+		c.Set("X-Frame-Options", "DENY")
 		c.Set("X-DNS-Prefetch-Control", "off")
+		c.Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		c.Set("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()")
+		c.Set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'")
 
 		// Go to next middlewares:
 		return c.Next()

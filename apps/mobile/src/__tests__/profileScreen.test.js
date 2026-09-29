@@ -29,6 +29,7 @@ jest.mock("lucide-react-native", () => {
         "BookOpen",
         "ChevronRight",
         "HardDrive",
+        "Info",
         "Lock",
         "LogOut",
         "Palette",

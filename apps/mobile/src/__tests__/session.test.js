@@ -34,13 +34,10 @@ describe("saveSession", () => {
         expect(AsyncStorage.setItem).not.toHaveBeenCalled();
     });
 
-    test("falls back to AsyncStorage when SecureStore unavailable", async () => {
+    test("throws when SecureStore unavailable instead of falling back to plaintext", async () => {
         SecureStore.isAvailableAsync.mockResolvedValue(false);
-        await saveSession({ token: "abc" });
-        expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-            "tholabul:local-session",
-            '{"token":"abc"}',
-        );
+        await expect(saveSession({ token: "abc" })).rejects.toThrow("SecureStore tidak tersedia");
+        expect(AsyncStorage.setItem).not.toHaveBeenCalled();
         expect(SecureStore.setItemAsync).not.toHaveBeenCalled();
     });
 });
@@ -53,18 +50,16 @@ describe("readSession", () => {
         expect(result).toEqual({ token: "xyz" });
     });
 
-    test("reads from AsyncStorage fallback", async () => {
+    test("returns null when SecureStore unavailable", async () => {
         SecureStore.isAvailableAsync.mockResolvedValue(false);
-        AsyncStorage.getItem.mockResolvedValue('{"token":"xyz"}');
         const result = await readSession();
-        expect(result).toEqual({ token: "xyz" });
+        expect(result).toBeNull();
     });
 
-    test("falls back to AsyncStorage on error", async () => {
+    test("returns null on SecureStore error", async () => {
         SecureStore.isAvailableAsync.mockRejectedValue(new Error("fail"));
-        AsyncStorage.getItem.mockResolvedValue('{"fallback":true}');
         const result = await readSession();
-        expect(result).toEqual({ fallback: true });
+        expect(result).toBeNull();
     });
 });
 

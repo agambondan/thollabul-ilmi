@@ -28,9 +28,15 @@ export const stopAudio = () => {
     if (!player) return;
 
     try {
-        player.pause?.();
-        player.seekTo?.(0);
-        player.remove?.();
+        if (Platform.OS === "web") {
+            player.pause?.();
+            player.src = "";
+            player.load?.();
+        } else {
+            player.pause?.();
+            player.seekTo?.(0);
+            player.remove?.();
+        }
     } catch {
         // Playback cleanup should never block reader UI.
     }

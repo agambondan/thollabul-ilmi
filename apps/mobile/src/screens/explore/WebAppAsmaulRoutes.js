@@ -16,8 +16,8 @@ import {
     View,
 } from "react-native";
 
-import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
+import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { setAsmaulWiridCount } from "../../storage/asmaulWirid";
 import { radius, spacing } from "../../theme";
 import { hapticMedium, hapticTap } from "../../utils/haptics";

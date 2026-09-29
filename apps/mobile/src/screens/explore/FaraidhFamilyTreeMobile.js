@@ -83,8 +83,8 @@ function HeirCardMobile({ activeDark, heirKey, count, resultRow }) {
 }
 
 export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
-    const { isDarkTheme: isDarkThemePref } = useLayoutModePreference();
-    const activeDark = isDarkThemePref ?? false;
+    const { isDarkTheme } = useLayoutModePreference();
+    const activeDark = isDarkTheme ?? false;
 
     if (!calculation?.rows?.length) return null;
 

@@ -688,6 +688,19 @@ describe("AppModalSheet", () => {
         );
         expect(getByText("Footer content")).toBeTruthy();
     });
+
+    test("unmounts and returns null when not visible", () => {
+        const { queryByText } = render(
+            <AppModalSheet
+                visible={false}
+                title='Hidden Modal'
+            >
+                <Text>Hidden Content</Text>
+            </AppModalSheet>,
+        );
+        expect(queryByText("Hidden Modal")).toBeNull();
+        expect(queryByText("Hidden Content")).toBeNull();
+    });
 });
 
 // ---------------------------------------------------------------------------

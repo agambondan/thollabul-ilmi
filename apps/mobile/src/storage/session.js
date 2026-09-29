@@ -26,16 +26,17 @@ export const saveSession = async (session) => {
         return;
     }
 
-    await AsyncStorage.setItem(LOCAL_SESSION_KEY, value);
+    throw new Error("SecureStore tidak tersedia. Token auth tidak boleh disimpan di plaintext. Minta user login ulang.");
 };
 
 export const readSession = async () => {
     try {
-        const value = (await canUseSecureStore())
-            ? await SecureStore.getItemAsync(SESSION_KEY)
-            : await AsyncStorage.getItem(LOCAL_SESSION_KEY);
+        if (await canUseSecureStore()) {
+            const value = await SecureStore.getItemAsync(SESSION_KEY);
+            return value ? JSON.parse(value) : null;
+        }
 
-        return value ? JSON.parse(value) : null;
+        throw new Error("SecureStore tidak tersedia. Sesi tidak bisa dibaca tanpa enkripsi.");
     } catch {
         return null;
     }

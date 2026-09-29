@@ -35,7 +35,7 @@ import {
     translateMobile,
 } from "../../i18n/translations";
 import { arabicTypography } from "../../styles/arabicTypography";
-import { colors, getClassicThemeColors, getThemeColors, radius, shadows, spacing } from "../../theme";
+import { colors, getClassicThemeColors, getThemeColors, iconStroke, radius, shadows, spacing } from "../../theme";
 
 export const homeDashboardLayouts = {
     paper: "paper",
@@ -296,7 +296,7 @@ function PaperHomeHeader({
                         }
                     }}
                 >
-                    <Search color={theme.muted} size={18} strokeWidth={2.2} />
+                    <Search color={theme.muted} size={18} strokeWidth={iconStroke.regular} />
                 </Pressable>
                 <Pressable
                     accessibilityLabel={t("a11y.openNotifications")}
@@ -309,7 +309,7 @@ function PaperHomeHeader({
                         onOpenTab("belajar", { featureKey: "notifications" })
                     }
                 >
-                    <Bell color={theme.muted} size={18} strokeWidth={2.2} />
+                    <Bell color={theme.muted} size={18} strokeWidth={iconStroke.regular} />
                 </Pressable>
             </View>
         </View>
@@ -413,7 +413,7 @@ function DashboardContent({
                                 webStyles.iconTile,
                             ]}
                         >
-                            <Icon color={primary} size={18} strokeWidth={2.1} />
+                            <Icon color={primary} size={18} strokeWidth={iconStroke.regular} />
                         </View>
                         <Text
                             style={[
@@ -475,7 +475,7 @@ function DashboardContent({
                             webStyles.pill,
                         ]}
                     >
-                        <Clock3 color={primary} size={13} strokeWidth={2.4} />
+                        <Clock3 color={primary} size={13} strokeWidth={iconStroke.bold} />
                         <Text
                             style={[
                                 styles.prayerStatusText,
@@ -497,7 +497,7 @@ function DashboardContent({
                             {gregorianDate}
                         </Text>
                         <View style={styles.hijriRow}>
-                            <Moon color={accent} size={13} strokeWidth={2.3} />
+                            <Moon color={accent} size={13} strokeWidth={iconStroke.regular} />
                             <Text
                                 style={[
                                     styles.hijriDate,
@@ -548,7 +548,7 @@ function DashboardContent({
                             webStyles.pill,
                         ]}
                     >
-                        <Clock3 color={primary} size={13} strokeWidth={2.4} />
+                        <Clock3 color={primary} size={13} strokeWidth={iconStroke.bold} />
                         <Text
                             style={[
                                 styles.countdownText,
@@ -594,7 +594,7 @@ function DashboardContent({
                                 <Icon
                                     color={isNext ? accent : primary}
                                     size={16}
-                                    strokeWidth={2.2}
+                                    strokeWidth={iconStroke.regular}
                                 />
                                 <Text
                                     style={[
@@ -790,7 +790,7 @@ function DashboardContent({
                     <ChevronRightIcon
                         color={muted}
                         size={18}
-                        strokeWidth={2.4}
+                        strokeWidth={iconStroke.bold}
                     />
                 }
             />
@@ -874,7 +874,7 @@ function WebAppDailyReminderCard({
                     <Icon
                         color={active.accentColor}
                         size={17}
-                        strokeWidth={2.2}
+                        strokeWidth={iconStroke.regular}
                     />
                     <Text
                         style={[
@@ -906,7 +906,7 @@ function WebAppDailyReminderCard({
                         <ChevronLeft
                             color={active.accentColor}
                             size={18}
-                            strokeWidth={2.2}
+                            strokeWidth={iconStroke.regular}
                         />
                     </Pressable>
                     <Pressable
@@ -929,7 +929,7 @@ function WebAppDailyReminderCard({
                         <ChevronRightIcon
                             color={active.accentColor}
                             size={18}
-                            strokeWidth={2.2}
+                            strokeWidth={iconStroke.regular}
                         />
                     </Pressable>
                 </View>
@@ -1054,7 +1054,7 @@ function ContextShortcutsCard({
                                 webStyles.iconTile,
                             ]}
                         >
-                            <Icon color={primary} size={16} strokeWidth={2.2} />
+                            <Icon color={primary} size={16} strokeWidth={iconStroke.regular} />
                         </View>
                         <Text
                             style={[
@@ -1122,7 +1122,7 @@ function FeatureListCard({
                         {meta}
                     </Text>
                 </View>
-                <Icon color={primary} size={18} strokeWidth={2.2} />
+                <Icon color={primary} size={18} strokeWidth={iconStroke.regular} />
             </View>
             {features.map((feature) => (
                 <ContentCard
@@ -1161,7 +1161,7 @@ function FeatureListCard({
                         <ChevronRightIcon
                             color={muted}
                             size={18}
-                            strokeWidth={2.4}
+                            strokeWidth={iconStroke.bold}
                         />
                     }
                 />

@@ -873,11 +873,12 @@ export const getItemRef = (feature, item) => {
             refType: item?.raw?.ref_type ?? "feed",
         };
     }
+    const rawId =
+        item?.id ?? item?.raw?.id ?? item?.raw?.slug ?? item?.title ?? "";
+    const numericId = Number(rawId);
     return {
         refType: feature?.refType ?? feature?.key ?? "explore",
-        refId: Number(
-            item?.id ?? item?.raw?.id ?? item?.raw?.slug ?? item?.title,
-        ),
+        refId: Number.isFinite(numericId) ? numericId : rawId,
     };
 };
 export const getExploreItemKey = (item) =>

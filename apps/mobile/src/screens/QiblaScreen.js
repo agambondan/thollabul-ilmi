@@ -89,7 +89,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
     );
 }
 
-export function QiblaScreen({ navigation, onOpenTab }) {
+export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
     const webAppTheme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: false });
@@ -298,6 +298,7 @@ export function QiblaScreen({ navigation, onOpenTab }) {
     }, [load]);
 
     useEffect(() => {
+        if (!isActive) return;
         let mounted = true;
         let subscription;
         watchCompassHeading(
@@ -309,6 +310,7 @@ export function QiblaScreen({ navigation, onOpenTab }) {
             (nextMessage) => {
                 if (mounted) setCompassMessage(nextMessage);
             },
+            { interval: 500, distanceFilter: 1 },
         ).then((nextSubscription) => {
             subscription = nextSubscription;
         });
@@ -316,10 +318,14 @@ export function QiblaScreen({ navigation, onOpenTab }) {
             mounted = false;
             subscription?.remove?.();
         };
-    }, [smoothHeading]);
+    }, [isActive, smoothHeading]);
 
     // Ring rotates by -heading: when device points East (heading=90), ring rotates -90deg so N stays at North
     useEffect(() => {
+        if (!isActive) {
+            ringRotation.stopAnimation();
+            return undefined;
+        }
         const targetVisual = heading === null ? 0 : norm(-heading);
         const delta = shortestDelta(norm(ringDegrees.current), targetVisual);
         const next = ringDegrees.current + delta;
@@ -334,6 +340,10 @@ export function QiblaScreen({ navigation, onOpenTab }) {
 
     // The marker is part of the compass ring, so the ring rotation turns it into a relative bearing.
     useEffect(() => {
+        if (!isActive) {
+            pointerRotation.stopAnimation();
+            return undefined;
+        }
         if (!hasDirection) return;
         const targetVisual = norm(direction);
         const delta = shortestDelta(norm(pointerDegrees.current), targetVisual);

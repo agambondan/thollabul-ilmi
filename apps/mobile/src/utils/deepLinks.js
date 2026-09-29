@@ -223,8 +223,10 @@ export const parseDeepLink = (url) => {
 
     if (tab === "profile") {
         const profileViews = {
+            about: "about",
             account: "settings-account",
             appearance: "settings-appearance",
+            help: "help",
             notifications: "settings-notifications",
             settings: "settings",
             storage: "settings-storage",

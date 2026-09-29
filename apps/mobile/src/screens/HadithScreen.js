@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InteractionManager } from "react-native";
 import {
     ArrowLeft,
     BookOpen,
@@ -8,7 +9,6 @@ import {
 } from "lucide-react-native";
 import {
     ActivityIndicator,
-    Image,
     Pressable,
     RefreshControl,
     ScrollView,
@@ -17,6 +17,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { AppImage } from "../components/AppImage";
 import {
     getAyahsForHadith,
     getHadithBooks,
@@ -866,7 +867,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                 ]}
             >
                 {showCoverImage ? (
-                    <Image
+                    <AppImage
+                        accessibilityLabel={`Cover kitab ${book.name}`}
                         onError={() =>
                             setFailedBookCovers((current) => ({
                                 ...current,
@@ -1111,7 +1113,10 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     );
 
     useEffect(() => {
-        refreshAll();
+        const task = InteractionManager.runAfterInteractions(() => {
+            refreshAll();
+        });
+        return () => task?.cancel?.();
     }, [refreshAll]);
 
     useEffect(() => {

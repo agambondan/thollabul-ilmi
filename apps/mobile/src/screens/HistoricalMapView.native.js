@@ -83,6 +83,23 @@ export function HistoricalMapView({
         [visibleLocations, isDark],
     );
 
+    if (visibleLocations.length === 0) {
+        return (
+            <View
+                style={[
+                    styles.mapContainer,
+                    isWebAppLayout && styles.webAppMapContainer,
+                    isWebAppLayout &&
+                        webAppTheme && {
+                            backgroundColor: webAppTheme.surface,
+                            borderColor: webAppTheme.border,
+                        },
+                ]}
+                testID='historical-map-native'
+            />
+        );
+    }
+
     return (
         <View
             style={[

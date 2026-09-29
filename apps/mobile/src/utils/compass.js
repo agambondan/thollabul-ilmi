@@ -16,7 +16,8 @@ export const signedOffset = (offset) => {
     return ((offset + 540) % 360) - 180;
 };
 
-export const watchCompassHeading = async (onHeading, onUnavailable) => {
+export const watchCompassHeading = async (onHeading, onUnavailable, options = {}) => {
+    const { interval = 500, distanceFilter = 1, enableHighAccuracy = false } = options;
     if (!compassSupported()) {
         onUnavailable?.("Kompas tersedia di aplikasi mobile.");
         return null;
@@ -30,17 +31,24 @@ export const watchCompassHeading = async (onHeading, onUnavailable) => {
             );
             return null;
         }
-        const subscription = await Location.watchHeadingAsync((event) => {
-            // trueHeading returns -1 on Android when GPS fix is unavailable
-            const raw =
-                event.trueHeading >= 0
-                    ? event.trueHeading
-                    : event.magHeading >= 0
-                      ? event.magHeading
-                      : null;
-            if (raw === null) return;
-            onHeading(normalizeDegrees(raw));
-        });
+        const subscription = await Location.watchHeadingAsync(
+            {
+                interval,
+                distanceFilter,
+                enableHighAccuracy,
+            },
+            (event) => {
+                // trueHeading returns -1 on Android when GPS fix is unavailable
+                const raw =
+                    event.trueHeading >= 0
+                        ? event.trueHeading
+                        : event.magHeading >= 0
+                          ? event.magHeading
+                          : null;
+                if (raw === null) return;
+                onHeading(normalizeDegrees(raw));
+            },
+        );
         return subscription;
     } catch {
         onUnavailable?.("Kompas tidak tersedia di perangkat ini.");

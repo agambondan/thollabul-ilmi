@@ -17,6 +17,11 @@ import {
 import { colors, spacing } from "../theme";
 import { getRadioIslamicStations } from "../api/client";
 import { playAudioUrl, stopAudio } from "../utils/audioPlayer";
+import {
+    AudioSource,
+    registerAudioSource,
+    unregisterAudioSource,
+} from "../utils/audioSession";
 
 export function RadioIslamicContent() {
     const [items, setItems] = useState([]);
@@ -58,6 +63,7 @@ export function RadioIslamicContent() {
         const id = station.id ?? station.name;
         if (playingId === id) {
             stopAudio();
+            unregisterAudioSource(AudioSource.RADIO);
             setPlayingId(null);
             return;
         }
@@ -65,9 +71,16 @@ export function RadioIslamicContent() {
 
         setLoadingAudioId(id);
         try {
+            registerAudioSource(AudioSource.RADIO, () => {
+                stopAudio();
+                unregisterAudioSource(AudioSource.RADIO);
+            });
             await playAudioUrl(station.stream_url, {
                 onEnded: () => {
-                    if (isMounted.current) setPlayingId(null);
+                    if (isMounted.current) {
+                        setPlayingId(null);
+                        unregisterAudioSource(AudioSource.RADIO);
+                    }
                 },
             });
             if (isMounted.current) setPlayingId(id);

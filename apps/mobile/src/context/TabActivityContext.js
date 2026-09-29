@@ -12,6 +12,9 @@ const TabActivityContext = createContext({
     notifyTabActivity: () => {},
 });
 
+const TabActivityDispatchContext = createContext(() => {});
+const TabActivityStateContext = createContext(0);
+
 export function TabActivityProvider({ children }) {
     const [activityTick, setActivityTick] = useState(0);
     const lastNotifyRef = useRef(0);
@@ -29,10 +32,17 @@ export function TabActivityProvider({ children }) {
     );
 
     return (
-        <TabActivityContext.Provider value={value}>
-            {children}
-        </TabActivityContext.Provider>
+        <TabActivityDispatchContext.Provider value={notifyTabActivity}>
+            <TabActivityStateContext.Provider value={activityTick}>
+                <TabActivityContext.Provider value={value}>
+                    {children}
+                </TabActivityContext.Provider>
+            </TabActivityStateContext.Provider>
+        </TabActivityDispatchContext.Provider>
     );
 }
 
 export const useTabActivity = () => useContext(TabActivityContext);
+export const useNotifyTabActivity = () => useContext(TabActivityDispatchContext);
+export const useTabActivityTick = () => useContext(TabActivityStateContext);
+

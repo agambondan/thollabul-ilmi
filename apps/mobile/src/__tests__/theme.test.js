@@ -41,9 +41,11 @@ describe("iconStroke", () => {
 describe("elevation", () => {
     test("has expected keys", () => {
         expect(elevation.none).toBe(0);
+        expect(elevation.flat).toBe(0);
         expect(elevation.low).toBe(1);
         expect(elevation.medium).toBe(4);
         expect(elevation.high).toBe(8);
+        expect(elevation.raised).toBe(8);
         expect(elevation.modal).toBe(16);
     });
 });

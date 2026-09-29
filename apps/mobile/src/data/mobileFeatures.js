@@ -357,23 +357,10 @@ const pickFeatures = (keys) =>
 
 export const belajarFeatureGroups = [
     {
-        key: "kelas-modul",
-        label: "Modul & Kelas",
-        meta: "Belajar terstruktur",
-        features: pickFeatures(["lessons"]),
-    },
-    {
         key: "kajian-artikel",
         label: "Kajian & Artikel",
         meta: "Belajar rutin",
-        features: pickFeatures([
-            "community-feed",
-            "komunitas",
-            "kajian",
-            "blog",
-            "radio-islamic",
-            "forum",
-        ]),
+        features: pickFeatures(["kajian", "blog", "lessons"]),
     },
     {
         key: "siroh-sejarah",
@@ -385,7 +372,7 @@ export const belajarFeatureGroups = [
         key: "fiqh-panduan",
         label: "Fiqh & Panduan",
         meta: "Amaliah praktis",
-        features: pickFeatures(["fiqh", "panduan-sholat", "user-wird"]),
+        features: pickFeatures(["fiqh", "panduan-sholat", "amalan"]),
     },
     {
         key: "referensi",
@@ -395,10 +382,7 @@ export const belajarFeatureGroups = [
             "kamus",
             "tafsir",
             "asbabun-nuzul",
-            "perawi",
-            "jarh-tadil",
             "asmaul-husna",
-            "asmaul-flashcard",
             "library",
         ]),
     },
@@ -418,6 +402,10 @@ export const belajarFeatureGroups = [
             "leaderboard",
             "bookmarks",
             "notes",
+            "hafalan",
+            "murojaah",
+            "tilawah",
+            "muhasabah",
         ]),
     },
 ];

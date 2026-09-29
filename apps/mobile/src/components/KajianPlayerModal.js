@@ -405,7 +405,7 @@ export function KajianPlayerModal({
         return transcripts.filter((t) => t.text?.toLowerCase().includes(q));
     }, [transcripts, filter]);
 
-    if (!item) return null;
+    if (!visible || !item) return null;
     if (!videoId) {
         return (
             <AppModalSheet

@@ -13,7 +13,9 @@
     "start:tunnel": "expo start --tunnel",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "e2e": "node e2e/runner.js",
+    "e2e:release": "node e2e/runner.js --build --install --release"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
