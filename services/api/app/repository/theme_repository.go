@@ -113,13 +113,58 @@ func (c *themeRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	return &page
 }
 
+func (c *themeRepo) loadChaptersForTheme(themeID int) ([]model.Chapter, error) {
+	rows, err := c.db.Raw(`
+		SELECT ch.id, ch.theme_id, ch.default_language, ch.translation_id,
+		       t.id, t.idn, t.en, t.ar
+		FROM chapter ch
+		LEFT JOIN translation t ON t.id = ch.translation_id
+		WHERE ch.theme_id = ?
+		ORDER BY ch.id ASC
+	`, themeID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var chapters []model.Chapter
+	for rows.Next() {
+		var ch model.Chapter
+		var tID *int
+		var tIdn, tEn, tAr *string
+		if err := rows.Scan(
+			&ch.ID, &ch.ThemeID, &ch.DefaultLanguage, &ch.TranslationID,
+			&tID, &tIdn, &tEn, &tAr,
+		); err != nil {
+			return nil, err
+		}
+		if tID != nil {
+			ch.Translation = &model.Translation{
+				BaseID: model.BaseID{ID: tID},
+				Idn:    tIdn,
+				En:     tEn,
+				Ar:     tAr,
+			}
+		}
+		chapters = append(chapters, ch)
+	}
+	return chapters, rows.Err()
+}
+
 func (c *themeRepo) FindById(id *int) (*model.Theme, error) {
-	var theme *model.Theme
-	if err := c.db.Joins("Translation").Preload("Chapters.Translation").Preload("Media").
+	var theme model.Theme
+	if err := c.db.Joins("Translation").
 		First(&theme, `theme.id = ?`, id).Error; err != nil {
 		return nil, err
 	}
-	return theme, nil
+	if theme.ID != nil {
+		chapters, err := c.loadChaptersForTheme(*theme.ID)
+		if err != nil {
+			return nil, err
+		}
+		theme.Chapters = chapters
+	}
+	return &theme, nil
 }
 
 func (c *themeRepo) FindByBookSlug(ctx *fiber.Ctx, slug *string) (*[]model.BookThemes, error) {

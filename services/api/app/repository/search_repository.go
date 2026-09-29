@@ -109,7 +109,6 @@ func (r *searchRepo) SearchHadith(query string, bookID *int, limit, offset int) 
 }
 
 func (r *searchRepo) SearchDictionary(query string, limit, offset int) ([]model.IslamicTerm, int64, error) {
-	var terms []model.IslamicTerm
 	var total int64
 
 	filter := "term ILIKE ? OR definition ILIKE ? OR example ILIKE ? OR source ILIKE ?"
@@ -117,11 +116,15 @@ func (r *searchRepo) SearchDictionary(query string, limit, offset int) ([]model.
 
 	r.db.Model(&model.IslamicTerm{}).Where(filter, args...).Count(&total)
 
-	err := r.db.Model(&model.IslamicTerm{}).Preload("Translation").
-		Where(filter, args...).
-		Order("term ASC").
-		Limit(limit).Offset(offset).
-		Find(&terms).Error
+	rawSQL := islamicTermSelectCols + " WHERE it.term ILIKE ? OR it.definition ILIKE ? OR it.example ILIKE ? OR it.source ILIKE ? ORDER BY it.term ASC LIMIT ? OFFSET ?"
+	scanArgs := append(args, limit, offset)
+	rows, err := r.db.Raw(rawSQL, scanArgs...).Rows()
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+
+	terms, err := scanIslamicTermRows(rows)
 	return terms, total, err
 }
 

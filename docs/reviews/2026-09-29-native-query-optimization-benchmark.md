@@ -50,6 +50,10 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 | | **Native RawScan** | **192,766 ns** | **49,784 B** | **777** | **1.3x lebih cepat (-29% RAM)** |
 | **Library Progress** (`FindByUserID`) | GORM Preload | 532,810 ns | 85,582 B | 2,123 | Baseline |
 | | **Native RawScan** | **329,105 ns** | **46,687 B** | **1,126** | **1.6x lebih cepat (-45% RAM)** |
+| **Quiz** (`FindAll`) | GORM Preload | 1,010,706 ns | 91,993 B | 1,902 | Baseline |
+| | **Native RawScan** | **499,257 ns** | **60,128 B** | **1,262** | **2.0x lebih cepat (-35% RAM)** |
+| **Blog** (`FindAllCategories`) | GORM Preload | 732,250 ns | 52,155 B | 1,072 | Baseline |
+| | **Native RawScan** | **298,751 ns** | **33,608 B** | **724** | **2.5x lebih cepat (-36% RAM)** |
 
 ---
 
@@ -142,6 +146,36 @@ Environment: `linux/amd64`, CPU: `13th Gen Intel(R) Core(TM) i5-1335U`
 29. **`notification_repository.go`**:
     - Menghilangkan preload `User` pada `FindAllActivePushTokens`, `FindAllPushTokens`, `FindDue`.
     - Single joined query `push_token + user` dan `notification_setting + user`.
+30. **`feed_repository.go`**:
+    - Menghilangkan preload `Author` pada `FindByID`.
+    - Single joined query `feed_post + user` dengan struct scanning `feedPostRow`.
+31. **`quiz_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAll`, `FindSession`, `FindByID`, `Update` (**2.0x lebih cepat**, -35% memory).
+    - Single joined query `quiz + translation`.
+32. **`blog_repository.go`**:
+    - Menghilangkan preload `Translation` pada `FindAllCategories`, `FindCategoryBySlug`, `FindAllTags`, `FindTagBySlug` (**2.5x lebih cepat**, -36% memory).
+    - Single joined query `blog_category/tag + translation`.
+33. **`search_repository.go`**:
+    - Menggunakan raw scan `scanIslamicTermRows` pada `SearchDictionary`.
+34. **`juz_repository.go`**:
+    - Menghilangkan preload `Ayahs + Ayahs.Translation` pada `FindById` dan `FindBySurahName`.
+    - Direct joined raw query `ayah + translation` by `juz_id`.
+35. **`theme_repository.go`**:
+    - Menghilangkan preload `Chapters.Translation + Media` pada `FindById`.
+    - Direct joined raw query `chapter + translation` by `theme_id`.
+36. **`chapter_repository.go`**:
+    - Menghilangkan preload `Media` pada `FindById`.
+37. **`book_repository.go`**:
+    - Menghilangkan preload `Media + Themes.Translation` pada `FindById` dan `FindBySlug`.
+    - Direct joined raw query `book_themes + theme + translation`.
+38. **`hadith_repository.go`**:
+    - Menghilangkan preload `Media` pada `FindById` dan `FindByBookSlugNumber`.
+39. **`kajian_repository.go`**:
+    - Menghilangkan preload `Translation` dan `Transcripts` pada `FindByID`.
+    - Direct `Joins("Translation")` + direct `Find(&transcripts)`.
+40. **`comment_repository.go`**:
+    - Menghilangkan preload `Replies` pada `FindByRef`.
+    - Single query in-memory O(N) tree stitching untuk top-level comments dan replies.
 
 ---
 

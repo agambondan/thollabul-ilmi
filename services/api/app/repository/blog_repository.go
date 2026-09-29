@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"database/sql"
 	"strings"
+	"time"
 
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/gofiber/fiber/v2"
@@ -196,19 +198,144 @@ func (r *blogRepo) FindPostsByTagSlug(ctx *fiber.Ctx, slug string) *paginate.Pag
 	return &page
 }
 
-func (r *blogRepo) FindAllCategories() ([]model.BlogCategory, error) {
-	var list []model.BlogCategory
-	err := r.db.Preload("Translation").Order("name asc").Find(&list).Error
-	return list, err
+func (r *blogRepo) categoryTableName() string {
+	if r.db != nil && r.db.Migrator().HasTable("blog_category") {
+		return "blog_category"
+	}
+	return "blog_categories"
 }
 
-func (r *blogRepo) FindCategoryBySlug(slug string) (*model.BlogCategory, error) {
-	var c model.BlogCategory
-	err := r.db.Preload("Translation").Where("slug = ?", slug).First(&c).Error
+func (r *blogRepo) tagTableName() string {
+	if r.db != nil && r.db.Migrator().HasTable("blog_tag") {
+		return "blog_tag"
+	}
+	return "blog_tags"
+}
+
+func scanBlogCategoryRow(scanner interface{ Scan(...interface{}) error }) (model.BlogCategory, error) {
+	var item model.BlogCategory
+	var tID *int
+	var tIdn, tEn, tAr *string
+	var createdAt, updatedAt *time.Time
+	var desc sql.NullString
+
+	err := scanner.Scan(
+		&item.ID, &createdAt, &updatedAt, &item.DeletedAt,
+		&item.Name, &item.Slug, &desc, &item.TranslationID,
+		&tID, &tIdn, &tEn, &tAr,
+	)
+	if err != nil {
+		return item, err
+	}
+	item.CreatedAt = createdAt
+	item.UpdatedAt = updatedAt
+	if desc.Valid {
+		item.Description = desc.String
+	}
+	if tID != nil {
+		item.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+	return item, nil
+}
+
+func scanBlogCategoryRows(rows *sql.Rows) ([]model.BlogCategory, error) {
+	var list []model.BlogCategory
+	for rows.Next() {
+		item, err := scanBlogCategoryRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, item)
+	}
+	return list, rows.Err()
+}
+
+func scanBlogTagRow(scanner interface{ Scan(...interface{}) error }) (model.BlogTag, error) {
+	var item model.BlogTag
+	var tID *int
+	var tIdn, tEn, tAr *string
+	var createdAt, updatedAt *time.Time
+
+	err := scanner.Scan(
+		&item.ID, &createdAt, &updatedAt, &item.DeletedAt,
+		&item.Name, &item.Slug, &item.TranslationID,
+		&tID, &tIdn, &tEn, &tAr,
+	)
+	if err != nil {
+		return item, err
+	}
+	item.CreatedAt = createdAt
+	item.UpdatedAt = updatedAt
+	if tID != nil {
+		item.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+	return item, nil
+}
+
+func scanBlogTagRows(rows *sql.Rows) ([]model.BlogTag, error) {
+	var list []model.BlogTag
+	for rows.Next() {
+		item, err := scanBlogTagRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, item)
+	}
+	return list, rows.Err()
+}
+
+func (r *blogRepo) FindAllCategories() ([]model.BlogCategory, error) {
+	tbl := r.categoryTableName()
+	rows, err := r.db.Raw(`
+		SELECT bc.id, bc.created_at, bc.updated_at, bc.deleted_at, bc.name, bc.slug, bc.description, bc.translation_id,
+		       t.id, t.idn, t.en, t.ar
+		FROM ` + tbl + ` bc
+		LEFT JOIN translation t ON t.id = bc.translation_id
+		WHERE bc.deleted_at IS NULL
+		ORDER BY bc.name ASC
+	`).Rows()
 	if err != nil {
 		return nil, err
 	}
-	return &c, nil
+	defer rows.Close()
+	return scanBlogCategoryRows(rows)
+}
+
+func (r *blogRepo) FindCategoryBySlug(slug string) (*model.BlogCategory, error) {
+	tbl := r.categoryTableName()
+	rows, err := r.db.Raw(`
+		SELECT bc.id, bc.created_at, bc.updated_at, bc.deleted_at, bc.name, bc.slug, bc.description, bc.translation_id,
+		       t.id, t.idn, t.en, t.ar
+		FROM ` + tbl + ` bc
+		LEFT JOIN translation t ON t.id = bc.translation_id
+		WHERE bc.slug = ? AND bc.deleted_at IS NULL
+		LIMIT 1
+	`, slug).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	item, err := scanBlogCategoryRow(rows)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
 }
 
 func (r *blogRepo) SaveCategory(c *model.BlogCategory) (*model.BlogCategory, error) {
@@ -232,18 +359,47 @@ func (r *blogRepo) DeleteCategory(id int) error {
 }
 
 func (r *blogRepo) FindAllTags() ([]model.BlogTag, error) {
-	var list []model.BlogTag
-	err := r.db.Preload("Translation").Order("name asc").Find(&list).Error
-	return list, err
-}
-
-func (r *blogRepo) FindTagBySlug(slug string) (*model.BlogTag, error) {
-	var t model.BlogTag
-	err := r.db.Preload("Translation").Where("slug = ?", slug).First(&t).Error
+	tbl := r.tagTableName()
+	rows, err := r.db.Raw(`
+		SELECT bt.id, bt.created_at, bt.updated_at, bt.deleted_at, bt.name, bt.slug, bt.translation_id,
+		       t.id, t.idn, t.en, t.ar
+		FROM ` + tbl + ` bt
+		LEFT JOIN translation t ON t.id = bt.translation_id
+		WHERE bt.deleted_at IS NULL
+		ORDER BY bt.name ASC
+	`).Rows()
 	if err != nil {
 		return nil, err
 	}
-	return &t, nil
+	defer rows.Close()
+	return scanBlogTagRows(rows)
+}
+
+func (r *blogRepo) FindTagBySlug(slug string) (*model.BlogTag, error) {
+	tbl := r.tagTableName()
+	rows, err := r.db.Raw(`
+		SELECT bt.id, bt.created_at, bt.updated_at, bt.deleted_at, bt.name, bt.slug, bt.translation_id,
+		       t.id, t.idn, t.en, t.ar
+		FROM ` + tbl + ` bt
+		LEFT JOIN translation t ON t.id = bt.translation_id
+		WHERE bt.slug = ? AND bt.deleted_at IS NULL
+		LIMIT 1
+	`, slug).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	item, err := scanBlogTagRow(rows)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
 }
 
 func (r *blogRepo) SaveTag(t *model.BlogTag) (*model.BlogTag, error) {

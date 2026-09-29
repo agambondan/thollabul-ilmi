@@ -110,46 +110,93 @@ func (c *bookRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	return &page
 }
 
+func (c *bookRepo) loadThemesForBook(bookID int) ([]model.Theme, error) {
+	rows, err := c.db.Raw(`
+		SELECT t.id, t.default_language, t.translation_id,
+		       tr.id, tr.idn, tr.en, tr.ar
+		FROM book_themes bt
+		JOIN theme t ON t.id = bt.theme_id
+		LEFT JOIN translation tr ON tr.id = t.translation_id
+		WHERE bt.book_id = ?
+		ORDER BY t.id ASC
+	`, bookID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var themes []model.Theme
+	for rows.Next() {
+		var t model.Theme
+		var trID *int
+		var trIdn, trEn, trAr *string
+		if err := rows.Scan(
+			&t.ID, &t.DefaultLanguage, &t.TranslationID,
+			&trID, &trIdn, &trEn, &trAr,
+		); err != nil {
+			return nil, err
+		}
+		if trID != nil {
+			t.Translation = &model.Translation{
+				BaseID: model.BaseID{ID: trID},
+				Idn:    trIdn,
+				En:     trEn,
+				Ar:     trAr,
+			}
+		}
+		themes = append(themes, t)
+	}
+	return themes, rows.Err()
+}
+
 func (c *bookRepo) FindById(id *int) (*model.Book, error) {
-	var book *model.Book
-	if err := c.db.Joins("Translation").Preload("Media").
-		Preload("Themes.Translation").
+	var book model.Book
+	if err := c.db.Joins("Translation").
 		First(&book, `book.id = ?`, id).Error; err != nil {
 		return nil, err
 	}
-	book.Theme = book.Themes
-	return book, nil
+	if book.ID != nil {
+		themes, err := c.loadThemesForBook(*book.ID)
+		if err != nil {
+			return nil, err
+		}
+		book.Themes = themes
+		book.Theme = themes
+	}
+	return &book, nil
 }
 
 func (c *bookRepo) FindBySlug(ctx *fiber.Ctx, slug *string) (*model.Book, error) {
-	var book *model.Book
-	if err := c.db.Joins("Translation").Preload("Media").
+	var book model.Book
+	if err := c.db.Joins("Translation").
 		First(&book, `book.slug = ?`, slug).Error; err != nil {
 		return nil, err
 	}
-	// var themeIds []int
-	// c.db.Table("(?) as subquery", c.db.Model(&model.Hadith{}).Where("book_id = ?", book.ID).Order("number")).
-	// 	Distinct().Pluck("theme_id", &themeIds)
-	type themeIDRow struct {
-		ThemeID *int `gorm:"column:theme_id"`
-	}
-	var rows []themeIDRow
-	c.db.Raw(`
-		SELECT DISTINCT ON (theme_id) theme_id
-		FROM hadith
-		WHERE book_id = ? AND theme_id IS NOT NULL
-		ORDER BY theme_id, number
-	`, book.ID).Scan(&rows)
-
-	for _, v := range rows {
-		if v.ThemeID == nil {
-			continue
+	if book.ID != nil {
+		type themeIDRow struct {
+			ThemeID *int `gorm:"column:theme_id"`
 		}
-		var theme model.Theme
-		c.db.Joins("Translation").Where(`"theme".id = ?`, v.ThemeID).First(&theme)
-		book.Theme = append(book.Theme, theme)
+		var rows []themeIDRow
+		c.db.Raw(`
+			SELECT DISTINCT ON (theme_id) theme_id
+			FROM hadith
+			WHERE book_id = ? AND theme_id IS NOT NULL
+			ORDER BY theme_id, number
+		`, book.ID).Scan(&rows)
+
+		var themeIDs []int
+		for _, v := range rows {
+			if v.ThemeID != nil {
+				themeIDs = append(themeIDs, *v.ThemeID)
+			}
+		}
+		if len(themeIDs) > 0 {
+			var themes []model.Theme
+			c.db.Joins("Translation").Where(`"theme".id IN ?`, themeIDs).Order(`"theme".id ASC`).Find(&themes)
+			book.Theme = themes
+		}
 	}
-	return book, nil
+	return &book, nil
 }
 
 func (c *bookRepo) UpdateById(id *int, Book *model.Book) (*model.Book, error) {

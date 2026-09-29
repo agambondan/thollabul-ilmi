@@ -45,14 +45,14 @@ func (c *chapterRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 }
 
 func (c *chapterRepo) FindById(id *int) (*model.Chapter, error) {
-	var chapter *model.Chapter
+	var chapter model.Chapter
 	if err := c.db.
 		Joins("Theme").Joins("Theme.Translation").
-		Joins("Translation").Preload("Media").
+		Joins("Translation").
 		First(&chapter, `chapter.id = ?`, id).Error; err != nil {
 		return nil, err
 	}
-	return chapter, nil
+	return &chapter, nil
 }
 
 func (c *chapterRepo) FindByBookSlugThemeId(ctx *fiber.Ctx, bookSlug *string, themeId *int) (*paginate.Page, error) {

@@ -303,18 +303,36 @@ func (r *sirohRepo) UpdateCategory(id int, c *model.SirohCategory) (*model.Siroh
 	if err := r.db.Model(&model.SirohCategory{}).Where("id = ?", id).Updates(c).Error; err != nil {
 		return nil, err
 	}
-	var updated model.SirohCategory
-	r.db.First(&updated, id)
-	return &updated, nil
+	rows, err := r.db.Raw(sirohCategorySelectSQL+" WHERE sc.id = ?", id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	return scanSirohCategoryRow(rows)
 }
 
 func (r *sirohRepo) UpdateContent(id int, c *model.SirohContent) (*model.SirohContent, error) {
 	if err := r.db.Model(&model.SirohContent{}).Where("id = ?", id).Updates(c).Error; err != nil {
 		return nil, err
 	}
-	var updated model.SirohContent
-	r.db.Preload("Category").First(&updated, id)
-	return &updated, nil
+	rows, err := r.db.Raw(sirohContentWithCategorySelectSQL+" WHERE sco.id = ?", id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	return scanSirohContentRow(rows, true)
 }
 
 func (r *sirohRepo) DeleteCategory(id int) error {

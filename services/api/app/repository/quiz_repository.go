@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"database/sql"
+	"time"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -23,6 +26,79 @@ func NewQuizRepository(db *gorm.DB) QuizRepository {
 	return &quizRepository{db}
 }
 
+func (r *quizRepository) quizTableName() string {
+	if r.db != nil && r.db.Migrator().HasTable("quiz") {
+		return "quiz"
+	}
+	return "quizzes"
+}
+
+func (r *quizRepository) baseSelectSQL() string {
+	tbl := r.quizTableName()
+	return `
+		SELECT
+			q.id, q.type, q.question_text, q.correct_answer, q.options, q.explanation,
+			q.difficulty, q.ref_id, q.translation_id, q.source, q.created_at, q.updated_at, q.deleted_at,
+			t.id, t.idn, t.en, t.ar
+		FROM ` + tbl + ` q
+		LEFT JOIN translation t ON t.id = q.translation_id
+	`
+}
+
+func scanQuizRow(scanner interface{ Scan(...interface{}) error }) (model.Quiz, error) {
+	var item model.Quiz
+	var tID *int
+	var tIdn, tEn, tAr *string
+	var createdAt, updatedAt *time.Time
+
+	err := scanner.Scan(
+		&item.ID,
+		&item.Type,
+		&item.QuestionText,
+		&item.CorrectAnswer,
+		&item.Options,
+		&item.Explanation,
+		&item.Difficulty,
+		&item.RefID,
+		&item.TranslationID,
+		&item.Source,
+		&createdAt,
+		&updatedAt,
+		&item.DeletedAt,
+		&tID,
+		&tIdn,
+		&tEn,
+		&tAr,
+	)
+	if err != nil {
+		return item, err
+	}
+	item.CreatedAt = createdAt
+	item.UpdatedAt = updatedAt
+
+	if tID != nil {
+		item.Translation = &model.Translation{
+			BaseID: model.BaseID{ID: tID},
+			Idn:    tIdn,
+			En:     tEn,
+			Ar:     tAr,
+		}
+	}
+	return item, nil
+}
+
+func scanQuizRows(rows *sql.Rows) ([]model.Quiz, error) {
+	var list []model.Quiz
+	for rows.Next() {
+		item, err := scanQuizRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, item)
+	}
+	return list, rows.Err()
+}
+
 func (r *quizRepository) FindAll(page, size int) ([]model.Quiz, error) {
 	if page < 0 {
 		page = 0
@@ -30,30 +106,52 @@ func (r *quizRepository) FindAll(page, size int) ([]model.Quiz, error) {
 	if size <= 0 {
 		size = 100
 	}
-	var items []model.Quiz
-	err := r.db.Preload("Translation").
-		Order("id ASC").
-		Offset(page * size).
-		Limit(size).
-		Find(&items).Error
-	return items, err
+	rows, err := r.db.Raw(r.baseSelectSQL()+` WHERE q.deleted_at IS NULL ORDER BY q.id ASC LIMIT ? OFFSET ?`, size, page*size).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	return scanQuizRows(rows)
 }
 
 func (r *quizRepository) FindSession(quizType model.QuizType, count int) ([]model.Quiz, error) {
-	var items []model.Quiz
-	q := r.db.Preload("Translation").Order("RANDOM()")
-	if quizType != "" {
-		q = q.Where("type = ?", quizType)
-	}
 	if count <= 0 || count > 20 {
 		count = 10
 	}
-	return items, q.Limit(count).Find(&items).Error
+	query := r.baseSelectSQL() + ` WHERE q.deleted_at IS NULL`
+	var args []interface{}
+	if quizType != "" {
+		query += " AND q.type = ?"
+		args = append(args, quizType)
+	}
+	query += " ORDER BY RANDOM() LIMIT ?"
+	args = append(args, count)
+
+	rows, err := r.db.Raw(query, args...).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	return scanQuizRows(rows)
 }
 
 func (r *quizRepository) FindByID(id int) (*model.Quiz, error) {
-	var item model.Quiz
-	return &item, r.db.Preload("Translation").First(&item, id).Error
+	rows, err := r.db.Raw(r.baseSelectSQL()+` WHERE q.id = ? AND q.deleted_at IS NULL LIMIT 1`, id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	item, err := scanQuizRow(rows)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
 }
 
 func (r *quizRepository) SaveResult(res *model.UserQuizResult) error {

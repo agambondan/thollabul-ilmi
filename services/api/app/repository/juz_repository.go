@@ -44,11 +44,48 @@ func (c *juzRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	return &page
 }
 
+func (c *juzRepo) loadAyahsForJuz(juzID int) ([]*model.Ayah, error) {
+	rows, err := c.db.Raw(`
+		SELECT
+			a.id, a.number, a.surah_id, a.juz_id, a.manzil, a.page, a.ruku, a.hizb_quarter, a.sajda, a.translation_id,
+			t.id, t.idn, t.en, t.ar
+		FROM ayah a
+		LEFT JOIN translation t ON t.id = a.translation_id
+		WHERE a.juz_id = ?
+		ORDER BY a.id ASC
+	`, juzID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ayahs []*model.Ayah
+	for rows.Next() {
+		var a model.Ayah
+		var tID *int
+		var tIdn, tEn, tAr *string
+		if err := rows.Scan(
+			&a.ID, &a.Number, &a.SurahID, &a.JuzID, &a.Manzil, &a.Page, &a.Ruku, &a.HizbQuarter, &a.Sajda, &a.TranslationID,
+			&tID, &tIdn, &tEn, &tAr,
+		); err != nil {
+			return nil, err
+		}
+		if tID != nil {
+			a.Translation = &model.Translation{
+				BaseID: model.BaseID{ID: tID},
+				Idn:    tIdn,
+				En:     tEn,
+				Ar:     tAr,
+			}
+		}
+		ayahs = append(ayahs, &a)
+	}
+	return ayahs, rows.Err()
+}
+
 func (c *juzRepo) FindById(id *int) (*model.Juz, error) {
-	var juz *model.Juz
-	if err := c.db.Preload("Ayahs", func(db *gorm.DB) *gorm.DB {
-		return db.Order("ayah.id ")
-	}).Preload("Ayahs.Translation").
+	var juz model.Juz
+	if err := c.db.
 		Joins("StartSurah").Joins("StartSurah.Translation").
 		Joins("EndSurah").Joins("EndSurah.Translation").
 		Joins("StartAyah").Joins("StartAyah.Translation").
@@ -56,15 +93,19 @@ func (c *juzRepo) FindById(id *int) (*model.Juz, error) {
 		First(&juz, `juz.id = ?`, id).Error; err != nil {
 		return nil, err
 	}
-
-	return juz, nil
+	if juz.ID != nil {
+		ayahs, err := c.loadAyahsForJuz(*juz.ID)
+		if err != nil {
+			return nil, err
+		}
+		juz.Ayahs = ayahs
+	}
+	return &juz, nil
 }
 
 func (c *juzRepo) FindBySurahName(ctx *fiber.Ctx, name *string) (*model.Juz, error) {
-	var juz *model.Juz
-	if err := c.db.Preload("Ayahs", func(db *gorm.DB) *gorm.DB {
-		return db.Order("ayah.id ")
-	}).Preload("Ayahs.Translation").
+	var juz model.Juz
+	if err := c.db.
 		Joins("StartSurah").Joins("StartSurah.Translation").
 		Joins("EndSurah").Joins("EndSurah.Translation").
 		Joins("StartAyah").Joins("StartAyah.Translation").
@@ -72,7 +113,14 @@ func (c *juzRepo) FindBySurahName(ctx *fiber.Ctx, name *string) (*model.Juz, err
 		First(&juz).Error; err != nil {
 		return nil, err
 	}
-	return juz, nil
+	if juz.ID != nil {
+		ayahs, err := c.loadAyahsForJuz(*juz.ID)
+		if err != nil {
+			return nil, err
+		}
+		juz.Ayahs = ayahs
+	}
+	return &juz, nil
 }
 
 func (c *juzRepo) UpdateById(id *int, Juz *model.Juz) (*model.Juz, error) {

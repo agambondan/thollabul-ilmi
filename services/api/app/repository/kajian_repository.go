@@ -99,10 +99,18 @@ func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker, c
 
 func (r *kajianRepository) FindByID(id int) (*model.Kajian, error) {
 	var k model.Kajian
-	err := r.db.Preload("Translation").Preload("Transcripts", func(db *gorm.DB) *gorm.DB {
-		return db.Order("start_seconds ASC")
-	}).First(&k, id).Error
-	return &k, err
+	err := r.db.Joins("Translation").Where("kajian.id = ?", id).First(&k).Error
+	if err != nil {
+		return nil, err
+	}
+	if k.ID != nil {
+		var transcripts []model.KajianTranscript
+		if err := r.db.Where("kajian_id = ?", *k.ID).Order("start_seconds ASC").Find(&transcripts).Error; err != nil {
+			return nil, err
+		}
+		k.Transcripts = transcripts
+	}
+	return &k, nil
 }
 
 func (r *kajianRepository) Create(k *model.Kajian) (*model.Kajian, error) {

@@ -115,12 +115,12 @@ func (c *hadithRepo) FindAllKeyset(ctx *fiber.Ctx) (*lib.KeysetPage, error) {
 }
 
 func (c *hadithRepo) FindById(id *int) (*model.Hadith, error) {
-	var hadith *model.Hadith
-	if err := c.withRelations(c.db).Preload("Media").
+	var hadith model.Hadith
+	if err := c.withRelations(c.db).
 		First(&hadith, `hadith.id = ?`, id).Error; err != nil {
 		return nil, err
 	}
-	return hadith, nil
+	return &hadith, nil
 }
 
 func (c *hadithRepo) FindManyByIds(ids []int) ([]model.Hadith, error) {
@@ -160,7 +160,7 @@ func (c *hadithRepo) FindByBookSlugSlim(ctx *fiber.Ctx, bookSlug *string) (*pagi
 
 func (c *hadithRepo) FindByBookSlugNumber(bookSlug *string, number *int) (*model.Hadith, error) {
 	var hadith model.Hadith
-	if err := c.withRelations(c.db).Preload("Media").
+	if err := c.withRelations(c.db).
 		Where(`"Book".slug = ? AND hadith.number = ?`, *bookSlug, *number).
 		First(&hadith).Error; err != nil {
 		return nil, err
