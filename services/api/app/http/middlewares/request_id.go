@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"log/slog"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -32,6 +33,7 @@ func GetRequestID(c *fiber.Ctx) string {
 
 func StructuredLog() fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		start := time.Now()
 		err := c.Next()
 		status := c.Response().StatusCode()
 		reqID := GetRequestID(c)
@@ -39,7 +41,7 @@ func StructuredLog() fiber.Handler {
 			"method", c.Method(),
 			"path", c.Path(),
 			"status", status,
-			"latency", c.Response().Header.Peek(fiber.HeaderContentLength),
+			"latency_ms", time.Since(start).Milliseconds(),
 			"request_id", reqID,
 		)
 		return err

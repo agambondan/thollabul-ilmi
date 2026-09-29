@@ -3,9 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/config"
+	"github.com/agambondan/islamic-explorer/app/http/middlewares"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -83,6 +85,10 @@ func NewPostgresql(env *config.Environment) *gorm.DB {
 	}
 	if err != nil {
 		panic(err)
+	}
+
+	if err := middlewares.RegisterDBMetrics(db); err != nil {
+		slog.Error("failed to register db metrics callbacks", "error", err)
 	}
 
 	return db
