@@ -195,6 +195,9 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 		return c.Status(statusCode).JSON(health)
 	})
 	app.Get("/metrics", middlewares.MetricsHandler())
+	app.Get("/privacy", controllers.PrivacyPolicyHTMLHandler)
+	app.Get("/privacy-policy", controllers.PrivacyPolicyHTMLHandler)
+	app.Get("/terms", controllers.TermsOfServiceHTMLHandler)
 
 	cacheMw := middlewares.CacheByType(3600, 60)
 
@@ -217,6 +220,9 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	}, 30*time.Second))
 	master.Get("/", controllers.GetAPIIndex)
 	master.Get("/info", controllers.GetAPIInfo)
+	master.Get("/legal/privacy", controllers.GetPrivacyPolicy)
+	master.Get("/legal/terms", controllers.GetTermsOfService)
+	master.Get("/legal/data-deletion", controllers.GetDataDeletion)
 	if viper.GetString("ENVIRONMENT") != "production" {
 		master.Get("/swagger.json", func(c *fiber.Ctx) error {
 			swaggerPath := viper.GetString("SWAGGER_JSON_PATH")
@@ -287,6 +293,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/auth/google", authLimiter, newGoogleAuthController.Login)
 	master.Get("/auth/google/callback", authLimiter, newGoogleAuthController.Callback)
 	master.Post("/auth/google/token", authLimiter, newGoogleAuthController.VerifyToken)
+	master.Post("/auth/google/exchange", authLimiter, newGoogleAuthController.ExchangeCode)
 
 	// WhatsApp (public availability check — used by the register form)
 	master.Get("/whatsapp/availability", newWhatsappController.Availability)
