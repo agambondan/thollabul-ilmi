@@ -49,6 +49,9 @@ export const ARABIC_FONTS = [
 
 export const QURAN_TABS = [
     { key: "surah", label: "Surah" },
+    { key: "page", label: "Halaman" },
+    { key: "juz", label: "Juz" },
+    { key: "hizb", label: "Hizb" },
     { key: "hafalan", label: "Hafalan" },
     { key: "murojaah", label: "Murojaah" },
 ];
@@ -69,6 +72,7 @@ export const AUDIO_SPEED_OPTIONS = [0.75, 1, 1.25, 1.5, 2];
 
 export const SWIPE_TRIGGER_DISTANCE = 34;
 export const SWIPE_EDGE_GUARD = 48;
+export const ISLAMIC_STAR_BADGE_STROKE = "#C49E63";
 export const WEB_APP_QURAN_BG = colors.dark.bg;
 export const WEB_APP_QURAN_SURFACE = colors.dark.surfaceMuted;
 export const WEB_APP_QURAN_BORDER = colors.dark.border;

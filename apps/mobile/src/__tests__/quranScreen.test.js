@@ -82,6 +82,8 @@ jest.mock("../context/FeedbackContext", () => ({
 
 jest.mock("../context/TabActivityContext", () => ({
     useTabActivity: jest.fn(),
+    useNotifyTabActivity: jest.fn(() => jest.fn()),
+    useTabActivityTick: jest.fn(() => 0),
 }));
 
 jest.mock("../utils/audioPlayer", () => ({
@@ -241,6 +243,10 @@ jest.mock("../components/AppActionSheet", () => ({
             </Pressable>
         );
     },
+    ActionSheetSection: ({ title }) => {
+        const { View, Text } = require("react-native");
+        return <Text testID={`action-sheet-section-${title}`}>{title}</Text>;
+    },
 }));
 
 jest.mock("../components/AppModalSheet", () => ({
@@ -309,7 +315,7 @@ beforeEach(() => {
         showInfo: jest.fn(),
         showSuccess: jest.fn(),
     });
-    useTabActivity.mockReturnValue({ notifyTabActivity: jest.fn() });
+    useTabActivity.mockImplementation(() => ({ notifyTabActivity: jest.fn() }));
     useLayoutModePreference.mockReturnValue({
         isDarkTheme: false,
         isWebAppLayout: false,
@@ -896,5 +902,192 @@ describe("QuranScreen", () => {
                 hadithId: 10,
             },
         );
+    });
+
+    it("renders Asbabun Nuzul from ayah detail pill", async () => {
+        client.getAsbabForAyah.mockResolvedValue([
+            {
+                id: "asbab-1",
+                title: "Riwayat Ibnu Abbas",
+                body: "Diturunkan mengenai orang-orang beriman.",
+            },
+        ]);
+
+        const { findByText, getAllByText, getByText, getByTestId } =
+            await renderQuranScreen();
+
+        fireEvent.press(await findByText("Surah 1"));
+        fireEvent.press(
+            (
+                await waitFor(() => getAllByText("Ketuk untuk membaca lengkap"))
+            )[0],
+        );
+        fireEvent.press(getByTestId("pill-Asbabun"));
+
+        await waitFor(() => {
+            expect(client.getAsbabForAyah).toHaveBeenCalledWith(1);
+            expect(getByText("Riwayat Ibnu Abbas")).toBeTruthy();
+            expect(
+                getByText("Diturunkan mengenai orang-orang beriman."),
+            ).toBeTruthy();
+        });
+    });
+
+    it("renders Asbabun Nuzul from ayah action sheet row", async () => {
+        client.getAsbabForAyah.mockResolvedValue([
+            {
+                id: "asbab-2",
+                title: "Riwayat Mujahid",
+                body: "Sebab turunnya ayat kedua.",
+            },
+        ]);
+
+        const { findByText, getAllByLabelText, getByText, getByTestId } =
+            await renderQuranScreen();
+
+        fireEvent.press(await findByText("Surah 1"));
+        await waitFor(() => {
+            expect(client.getAyahsForSurahPage).toHaveBeenCalled();
+        });
+
+        const menuButtons = getAllByLabelText(/Aksi ayat 1/);
+        fireEvent.press(menuButtons[0]);
+
+        await waitFor(() => {
+            expect(getByTestId("action-sheet")).toBeTruthy();
+            expect(getByTestId("sheet-row-Asbabun Nuzul")).toBeTruthy();
+        });
+
+        fireEvent.press(getByTestId("sheet-row-Asbabun Nuzul"));
+
+        await waitFor(() => {
+            expect(client.getAsbabForAyah).toHaveBeenCalledWith(1);
+            expect(getByText("Riwayat Mujahid")).toBeTruthy();
+            expect(getByText("Sebab turunnya ayat kedua.")).toBeTruthy();
+        });
+    });
+
+    it("opens reader via navigator modal page and hizb modes", async () => {
+        client.getAyahsForPage.mockResolvedValue([mockAyah(1, 1)]);
+        client.getAyahsForHizb.mockResolvedValue([mockAyah(1, 1)]);
+
+        const { getByText, getAllByText, getByPlaceholderText, getByTestId } =
+            await renderQuranScreen();
+
+        await waitFor(() => {
+            expect(getByText("Surah 1")).toBeTruthy();
+        });
+
+        fireEvent.changeText(getByPlaceholderText("1-604"), "5");
+        fireEvent.press(getByText("Buka Halaman"));
+
+        await waitFor(() => {
+            expect(client.getAyahsForPage).toHaveBeenCalledWith(5);
+            expect(getByText("Halaman 5")).toBeTruthy();
+        });
+
+        fireEvent.press(getByTestId("action-Kembali ke daftar surah"));
+
+        await waitFor(() => {
+            expect(getByText("Surah 1")).toBeTruthy();
+        });
+
+        // Switch to Hizb tab in navigator
+        const hizbTabs = getAllByText("Hizb");
+        fireEvent.press(hizbTabs[1] ?? hizbTabs[0]);
+        fireEvent.changeText(getByPlaceholderText("1-240"), "2");
+        fireEvent.press(getByText("Buka Hizb"));
+
+        await waitFor(() => {
+            expect(client.getAyahsForHizb).toHaveBeenCalledWith(2);
+            expect(getByText("Hizb 2")).toBeTruthy();
+        });
+    });
+
+    it("handles pageNumber and hizbNumber deep links", async () => {
+        client.getAyahsForPage.mockResolvedValue([mockAyah(10, 2)]);
+        client.getAyahsForHizb.mockResolvedValue([mockAyah(20, 2)]);
+
+        const { getByText, rerender } = await renderQuranScreen({
+            deepLinkTarget: {
+                id: "dl-page-12",
+                params: { pageNumber: 12 },
+            },
+        });
+
+        await waitFor(() => {
+            expect(client.getAyahsForPage).toHaveBeenCalledWith(12);
+            expect(getByText("Halaman 12")).toBeTruthy();
+        });
+
+        rerender(
+            <QuranScreen
+                isActive
+                navigation={mockNavigation}
+                deepLinkTarget={{
+                    id: "dl-hizb-4",
+                    params: { hizbNumber: 4 },
+                }}
+            />,
+        );
+
+        await waitFor(() => {
+            expect(client.getAyahsForHizb).toHaveBeenCalledWith(4);
+            expect(getByText("Hizb 4")).toBeTruthy();
+        });
+    });
+
+    it("renders and filters visual list cards for Juz, Hizb, and Halaman tabs", async () => {
+        client.getAyahsForPage.mockResolvedValue([mockAyah(1, 1)]);
+        client.getAyahsForHizb.mockResolvedValue([mockAyah(1, 1)]);
+
+        const { getByText, getAllByText, getByPlaceholderText, queryByText } =
+            await renderQuranScreen();
+
+        await waitFor(() => {
+            expect(getByText("Surah 1")).toBeTruthy();
+        });
+
+        // Test Juz Tab
+        const juzTab = getByText("Juz");
+        fireEvent.press(juzTab);
+
+        await waitFor(() => {
+            expect(getByText("Juz 1")).toBeTruthy();
+            expect(getByText("Juz 30")).toBeTruthy();
+        });
+
+        // Test Hizb Tab
+        const hizbTabs = getAllByText("Hizb");
+        fireEvent.press(hizbTabs[0]);
+
+        await waitFor(() => {
+            expect(getByText("Hizb 1")).toBeTruthy();
+            expect(getByText("Hizb 60")).toBeTruthy();
+        });
+
+        // Test Halaman (Page) Tab
+        const pageTabs = getAllByText("Halaman");
+        fireEvent.press(pageTabs[0]);
+
+        await waitFor(() => {
+            expect(getByText("Halaman 1")).toBeTruthy();
+            expect(getByText("Halaman 2")).toBeTruthy();
+        });
+
+        // Filter Page Tab
+        fireEvent.changeText(getByPlaceholderText("Cari..."), "Halaman 5");
+
+        await waitFor(() => {
+            expect(getByText("Halaman 5")).toBeTruthy();
+            expect(queryByText("Halaman 1")).toBeNull();
+        });
+
+        // Press Page Card to open reader
+        fireEvent.press(getByText("Halaman 5"));
+
+        await waitFor(() => {
+            expect(client.getAyahsForPage).toHaveBeenCalledWith(5);
+        });
     });
 });

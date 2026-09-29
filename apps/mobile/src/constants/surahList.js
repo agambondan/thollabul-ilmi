@@ -6,6 +6,11 @@ export const SURAH_LIST = [
         meaning: "Pembukaan",
         meaning_en: "The Opening",
         ayat: 7,
+        name_ar: "سُورَةُ ٱلْفَاتِحَةِ",
+        arabic: "ٱلْفَاتِحَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 2,
@@ -14,6 +19,11 @@ export const SURAH_LIST = [
         meaning: "Sapi Betina",
         meaning_en: "The Cow",
         ayat: 286,
+        name_ar: "سُورَةُ البَقَرَةِ",
+        arabic: "البَقَرَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 3,
@@ -22,6 +32,11 @@ export const SURAH_LIST = [
         meaning: "Keluarga Imran",
         meaning_en: "The Family of Imraan",
         ayat: 200,
+        name_ar: "سُورَةُ آلِ عِمۡرَانَ",
+        arabic: "آلِ عِمۡرَانَ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 4,
@@ -30,6 +45,11 @@ export const SURAH_LIST = [
         meaning: "Wanita",
         meaning_en: "The Women",
         ayat: 176,
+        name_ar: "سُورَةُ النِّسَاءِ",
+        arabic: "النِّسَاءِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 5,
@@ -38,6 +58,11 @@ export const SURAH_LIST = [
         meaning: "Hidangan",
         meaning_en: "The Table",
         ayat: 120,
+        name_ar: "سُورَةُ المَائـِدَةِ",
+        arabic: "المَائـِدَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 6,
@@ -46,6 +71,11 @@ export const SURAH_LIST = [
         meaning: "Binatang Ternak",
         meaning_en: "The Cattle",
         ayat: 165,
+        name_ar: "سُورَةُ الأَنۡعَامِ",
+        arabic: "الأَنۡعَامِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 7,
@@ -54,6 +84,11 @@ export const SURAH_LIST = [
         meaning: "Tempat Tertinggi",
         meaning_en: "The Heights",
         ayat: 206,
+        name_ar: "سُورَةُ الأَعۡرَافِ",
+        arabic: "الأَعۡرَافِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 8,
@@ -62,6 +97,11 @@ export const SURAH_LIST = [
         meaning: "Rampasan Perang",
         meaning_en: "The Spoils of War",
         ayat: 75,
+        name_ar: "سُورَةُ الأَنفَالِ",
+        arabic: "الأَنفَالِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 9,
@@ -70,6 +110,11 @@ export const SURAH_LIST = [
         meaning: "Pengampunan",
         meaning_en: "The Repentance",
         ayat: 129,
+        name_ar: "سُورَةُ التَّوۡبَةِ",
+        arabic: "التَّوۡبَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 10,
@@ -78,6 +123,11 @@ export const SURAH_LIST = [
         meaning: "Nabi Yunus",
         meaning_en: "Jonah",
         ayat: 109,
+        name_ar: "سُورَةُ يُونُسَ",
+        arabic: "يُونُسَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 11,
@@ -86,6 +136,11 @@ export const SURAH_LIST = [
         meaning: "Nabi Hud",
         meaning_en: "Hud",
         ayat: 123,
+        name_ar: "سُورَةُ هُودٍ",
+        arabic: "هُودٍ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 12,
@@ -94,6 +149,11 @@ export const SURAH_LIST = [
         meaning: "Nabi Yusuf",
         meaning_en: "Joseph",
         ayat: 111,
+        name_ar: "سُورَةُ يُوسُفَ",
+        arabic: "يُوسُفَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 13,
@@ -102,6 +162,11 @@ export const SURAH_LIST = [
         meaning: "Guruh",
         meaning_en: "The Thunder",
         ayat: 43,
+        name_ar: "سُورَةُ الرَّعۡدِ",
+        arabic: "الرَّعۡدِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 14,
@@ -110,6 +175,11 @@ export const SURAH_LIST = [
         meaning: "Nabi Ibrahim",
         meaning_en: "Abraham",
         ayat: 52,
+        name_ar: "سُورَةُ إِبۡرَاهِيمَ",
+        arabic: "إِبۡرَاهِيمَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 15,
@@ -118,6 +188,11 @@ export const SURAH_LIST = [
         meaning: "Gunung Al-Hijr",
         meaning_en: "The Rock",
         ayat: 99,
+        name_ar: "سُورَةُ الحِجۡرِ",
+        arabic: "الحِجۡرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 16,
@@ -126,6 +201,11 @@ export const SURAH_LIST = [
         meaning: "Lebah",
         meaning_en: "The Bee",
         ayat: 128,
+        name_ar: "سُورَةُ النَّحۡلِ",
+        arabic: "النَّحۡلِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 17,
@@ -134,6 +214,11 @@ export const SURAH_LIST = [
         meaning: "Memperjalankan Malam Hari",
         meaning_en: "The Night Journey",
         ayat: 111,
+        name_ar: "سُورَةُ الإِسۡرَاءِ",
+        arabic: "الإِسۡرَاءِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 18,
@@ -142,6 +227,11 @@ export const SURAH_LIST = [
         meaning: "Gua",
         meaning_en: "The Cave",
         ayat: 110,
+        name_ar: "سُورَةُ الكَهۡفِ",
+        arabic: "الكَهۡفِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 19,
@@ -150,6 +240,11 @@ export const SURAH_LIST = [
         meaning: "Maryam",
         meaning_en: "Mary",
         ayat: 98,
+        name_ar: "سُورَةُ مَرۡيَمَ",
+        arabic: "مَرۡيَمَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 20,
@@ -158,6 +253,11 @@ export const SURAH_LIST = [
         meaning: "Taha",
         meaning_en: "Taa-Haa",
         ayat: 135,
+        name_ar: "سُورَةُ طه",
+        arabic: "طه",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 21,
@@ -166,6 +266,11 @@ export const SURAH_LIST = [
         meaning: "Para Nabi",
         meaning_en: "The Prophets",
         ayat: 112,
+        name_ar: "سُورَةُ الأَنبِيَاءِ",
+        arabic: "الأَنبِيَاءِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 22,
@@ -174,6 +279,11 @@ export const SURAH_LIST = [
         meaning: "Haji",
         meaning_en: "The Pilgrimage",
         ayat: 78,
+        name_ar: "سُورَةُ الحَجِّ",
+        arabic: "الحَجِّ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 23,
@@ -182,6 +292,11 @@ export const SURAH_LIST = [
         meaning: "Orang-Orang Mukmin",
         meaning_en: "The Believers",
         ayat: 118,
+        name_ar: "سُورَةُ المُؤۡمِنُونَ",
+        arabic: "المُؤۡمِنُونَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 24,
@@ -190,6 +305,11 @@ export const SURAH_LIST = [
         meaning: "Cahaya",
         meaning_en: "The Light",
         ayat: 64,
+        name_ar: "سُورَةُ النُّورِ",
+        arabic: "النُّورِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 25,
@@ -198,6 +318,11 @@ export const SURAH_LIST = [
         meaning: "Pembeda",
         meaning_en: "The Criterion",
         ayat: 77,
+        name_ar: "سُورَةُ الفُرۡقَانِ",
+        arabic: "الفُرۡقَانِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 26,
@@ -206,6 +331,11 @@ export const SURAH_LIST = [
         meaning: "Para Penyair",
         meaning_en: "The Poets",
         ayat: 227,
+        name_ar: "سُورَةُ الشُّعَرَاءِ",
+        arabic: "الشُّعَرَاءِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 27,
@@ -214,6 +344,11 @@ export const SURAH_LIST = [
         meaning: "Semut",
         meaning_en: "The Ant",
         ayat: 93,
+        name_ar: "سُورَةُ النَّمۡلِ",
+        arabic: "النَّمۡلِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 28,
@@ -222,6 +357,11 @@ export const SURAH_LIST = [
         meaning: "Kisah-Kisah",
         meaning_en: "The Stories",
         ayat: 88,
+        name_ar: "سُورَةُ القَصَصِ",
+        arabic: "القَصَصِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 29,
@@ -230,6 +370,11 @@ export const SURAH_LIST = [
         meaning: "Laba-Laba",
         meaning_en: "The Spider",
         ayat: 69,
+        name_ar: "سُورَةُ العَنكَبُوتِ",
+        arabic: "العَنكَبُوتِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 30,
@@ -238,6 +383,11 @@ export const SURAH_LIST = [
         meaning: "Bangsa Romawi",
         meaning_en: "The Romans",
         ayat: 60,
+        name_ar: "سُورَةُ الرُّومِ",
+        arabic: "الرُّومِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 31,
@@ -246,6 +396,11 @@ export const SURAH_LIST = [
         meaning: "Luqman",
         meaning_en: "Luqman",
         ayat: 34,
+        name_ar: "سُورَةُ لُقۡمَانَ",
+        arabic: "لُقۡمَانَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 32,
@@ -254,6 +409,11 @@ export const SURAH_LIST = [
         meaning: "Sujud",
         meaning_en: "The Prostration",
         ayat: 30,
+        name_ar: "سُورَةُ السَّجۡدَةِ",
+        arabic: "السَّجۡدَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 33,
@@ -262,6 +422,11 @@ export const SURAH_LIST = [
         meaning: "Golongan yang Bersekutu",
         meaning_en: "The Clans",
         ayat: 73,
+        name_ar: "سُورَةُ الأَحۡزَابِ",
+        arabic: "الأَحۡزَابِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 34,
@@ -270,6 +435,11 @@ export const SURAH_LIST = [
         meaning: "Kaum Saba'",
         meaning_en: "Sheba",
         ayat: 54,
+        name_ar: "سُورَةُ سَبَإٍ",
+        arabic: "سَبَإٍ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 35,
@@ -278,6 +448,11 @@ export const SURAH_LIST = [
         meaning: "Pencipta",
         meaning_en: "The Originator",
         ayat: 45,
+        name_ar: "سُورَةُ فَاطِرٍ",
+        arabic: "فَاطِرٍ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 36,
@@ -286,6 +461,11 @@ export const SURAH_LIST = [
         meaning: "Yasin",
         meaning_en: "Yaseen",
         ayat: 83,
+        name_ar: "سُورَةُ يسٓ",
+        arabic: "يسٓ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 37,
@@ -294,6 +474,11 @@ export const SURAH_LIST = [
         meaning: "Barisan-Barisan",
         meaning_en: "Those drawn up in Ranks",
         ayat: 182,
+        name_ar: "سُورَةُ الصَّافَّاتِ",
+        arabic: "الصَّافَّاتِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 38,
@@ -302,6 +487,11 @@ export const SURAH_LIST = [
         meaning: "Sad",
         meaning_en: "The letter Saad",
         ayat: 88,
+        name_ar: "سُورَةُ صٓ",
+        arabic: "صٓ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 39,
@@ -310,6 +500,11 @@ export const SURAH_LIST = [
         meaning: "Rombongan",
         meaning_en: "The Groups",
         ayat: 75,
+        name_ar: "سُورَةُ الزُّمَرِ",
+        arabic: "الزُّمَرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 40,
@@ -318,6 +513,11 @@ export const SURAH_LIST = [
         meaning: "Maha Pengampun",
         meaning_en: "The Forgiver",
         ayat: 85,
+        name_ar: "سُورَةُ غَافِرٍ",
+        arabic: "غَافِرٍ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 41,
@@ -326,6 +526,11 @@ export const SURAH_LIST = [
         meaning: "Yang Dijelaskan",
         meaning_en: "Explained in detail",
         ayat: 54,
+        name_ar: "سُورَةُ فُصِّلَتۡ",
+        arabic: "فُصِّلَتۡ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 42,
@@ -334,6 +539,11 @@ export const SURAH_LIST = [
         meaning: "Musyawarah",
         meaning_en: "Consultation",
         ayat: 53,
+        name_ar: "سُورَةُ الشُّورَىٰ",
+        arabic: "الشُّورَىٰ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 43,
@@ -342,6 +552,11 @@ export const SURAH_LIST = [
         meaning: "Perhiasan",
         meaning_en: "Ornaments of gold",
         ayat: 89,
+        name_ar: "سُورَةُ الزُّخۡرُفِ",
+        arabic: "الزُّخۡرُفِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 44,
@@ -350,6 +565,11 @@ export const SURAH_LIST = [
         meaning: "Kabut",
         meaning_en: "The Smoke",
         ayat: 59,
+        name_ar: "سُورَةُ الدُّخَانِ",
+        arabic: "الدُّخَانِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 45,
@@ -358,6 +578,11 @@ export const SURAH_LIST = [
         meaning: "Yang Berlutut",
         meaning_en: "Crouching",
         ayat: 37,
+        name_ar: "سُورَةُ الجَاثِيَةِ",
+        arabic: "الجَاثِيَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 46,
@@ -366,6 +591,11 @@ export const SURAH_LIST = [
         meaning: "Bukit-Bukit Pasir",
         meaning_en: "The Dunes",
         ayat: 35,
+        name_ar: "سُورَةُ الأَحۡقَافِ",
+        arabic: "الأَحۡقَافِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 47,
@@ -374,6 +604,11 @@ export const SURAH_LIST = [
         meaning: "Nabi Muhammad",
         meaning_en: "Muhammad",
         ayat: 38,
+        name_ar: "سُورَةُ مُحَمَّدٍ",
+        arabic: "مُحَمَّدٍ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 48,
@@ -382,6 +617,11 @@ export const SURAH_LIST = [
         meaning: "Kemenangan",
         meaning_en: "The Victory",
         ayat: 29,
+        name_ar: "سُورَةُ الفَتۡحِ",
+        arabic: "الفَتۡحِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 49,
@@ -390,6 +630,11 @@ export const SURAH_LIST = [
         meaning: "Kamar-Kamar",
         meaning_en: "The Rooms",
         ayat: 18,
+        name_ar: "سُورَةُ الحُجُرَاتِ",
+        arabic: "الحُجُرَاتِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 50,
@@ -398,6 +643,11 @@ export const SURAH_LIST = [
         meaning: "Qaf",
         meaning_en: "The letter Qaaf",
         ayat: 45,
+        name_ar: "سُورَةُ قٓ",
+        arabic: "قٓ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 51,
@@ -406,6 +656,11 @@ export const SURAH_LIST = [
         meaning: "Angin yang Menerbangkan",
         meaning_en: "The Winnowing Winds",
         ayat: 60,
+        name_ar: "سُورَةُ الذَّارِيَاتِ",
+        arabic: "الذَّارِيَاتِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 52,
@@ -414,6 +669,11 @@ export const SURAH_LIST = [
         meaning: "Bukit Tursina",
         meaning_en: "The Mount",
         ayat: 49,
+        name_ar: "سُورَةُ الطُّورِ",
+        arabic: "الطُّورِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 53,
@@ -422,6 +682,11 @@ export const SURAH_LIST = [
         meaning: "Bintang",
         meaning_en: "The Star",
         ayat: 62,
+        name_ar: "سُورَةُ النَّجۡمِ",
+        arabic: "النَّجۡمِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 54,
@@ -430,6 +695,11 @@ export const SURAH_LIST = [
         meaning: "Bulan",
         meaning_en: "The Moon",
         ayat: 55,
+        name_ar: "سُورَةُ القَمَرِ",
+        arabic: "القَمَرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 55,
@@ -438,6 +708,11 @@ export const SURAH_LIST = [
         meaning: "Maha Pengasih",
         meaning_en: "The Beneficent",
         ayat: 78,
+        name_ar: "سُورَةُ الرَّحۡمَٰن",
+        arabic: "الرَّحۡمَٰن",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 56,
@@ -446,6 +721,11 @@ export const SURAH_LIST = [
         meaning: "Hari Kiamat",
         meaning_en: "The Inevitable",
         ayat: 96,
+        name_ar: "سُورَةُ الوَاقِعَةِ",
+        arabic: "الوَاقِعَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 57,
@@ -454,6 +734,11 @@ export const SURAH_LIST = [
         meaning: "Besi",
         meaning_en: "The Iron",
         ayat: 29,
+        name_ar: "سُورَةُ الحَدِيدِ",
+        arabic: "الحَدِيدِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 58,
@@ -462,6 +747,11 @@ export const SURAH_LIST = [
         meaning: "Gugatan",
         meaning_en: "The Pleading Woman",
         ayat: 22,
+        name_ar: "سُورَةُ المُجَادلَةِ",
+        arabic: "المُجَادلَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 59,
@@ -470,6 +760,11 @@ export const SURAH_LIST = [
         meaning: "Pengusiran",
         meaning_en: "The Exile",
         ayat: 24,
+        name_ar: "سُورَةُ الحَشۡرِ",
+        arabic: "الحَشۡرِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 60,
@@ -478,6 +773,11 @@ export const SURAH_LIST = [
         meaning: "Wanita yang Diuji",
         meaning_en: "She that is to be examined",
         ayat: 13,
+        name_ar: "سُورَةُ المُمۡتَحنَةِ",
+        arabic: "المُمۡتَحنَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 61,
@@ -486,6 +786,11 @@ export const SURAH_LIST = [
         meaning: "Barisan",
         meaning_en: "The Ranks",
         ayat: 14,
+        name_ar: "سُورَةُ الصَّفِّ",
+        arabic: "الصَّفِّ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 62,
@@ -494,6 +799,11 @@ export const SURAH_LIST = [
         meaning: "Hari Jumat",
         meaning_en: "Friday",
         ayat: 11,
+        name_ar: "سُورَةُ الجُمُعَةِ",
+        arabic: "الجُمُعَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 63,
@@ -502,6 +812,11 @@ export const SURAH_LIST = [
         meaning: "Orang-Orang Munafik",
         meaning_en: "The Hypocrites",
         ayat: 11,
+        name_ar: "سُورَةُ المُنَافِقُونَ",
+        arabic: "المُنَافِقُونَ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 64,
@@ -510,6 +825,11 @@ export const SURAH_LIST = [
         meaning: "Pengungkapan Kesalahan",
         meaning_en: "Mutual Disillusion",
         ayat: 18,
+        name_ar: "سُورَةُ التَّغَابُنِ",
+        arabic: "التَّغَابُنِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 65,
@@ -518,6 +838,11 @@ export const SURAH_LIST = [
         meaning: "Talak",
         meaning_en: "Divorce",
         ayat: 12,
+        name_ar: "سُورَةُ الطَّلَاقِ",
+        arabic: "الطَّلَاقِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 66,
@@ -526,6 +851,11 @@ export const SURAH_LIST = [
         meaning: "Pengharaman",
         meaning_en: "The Prohibition",
         ayat: 12,
+        name_ar: "سُورَةُ التَّحۡرِيمِ",
+        arabic: "التَّحۡرِيمِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 67,
@@ -534,6 +864,11 @@ export const SURAH_LIST = [
         meaning: "Kerajaan",
         meaning_en: "The Sovereignty",
         ayat: 30,
+        name_ar: "سُورَةُ المُلۡكِ",
+        arabic: "المُلۡكِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 68,
@@ -542,6 +877,11 @@ export const SURAH_LIST = [
         meaning: "Pena",
         meaning_en: "The Pen",
         ayat: 52,
+        name_ar: "سُورَةُ القَلَمِ",
+        arabic: "القَلَمِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 69,
@@ -550,6 +890,11 @@ export const SURAH_LIST = [
         meaning: "Hari Kiamat yang Pasti",
         meaning_en: "The Reality",
         ayat: 52,
+        name_ar: "سُورَةُ الحَاقَّةِ",
+        arabic: "الحَاقَّةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 70,
@@ -558,6 +903,11 @@ export const SURAH_LIST = [
         meaning: "Tempat Naik",
         meaning_en: "The Ascending Stairways",
         ayat: 44,
+        name_ar: "سُورَةُ المَعَارِجِ",
+        arabic: "المَعَارِجِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 71,
@@ -566,6 +916,11 @@ export const SURAH_LIST = [
         meaning: "Nabi Nuh",
         meaning_en: "Noah",
         ayat: 28,
+        name_ar: "سُورَةُ نُوحٍ",
+        arabic: "نُوحٍ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 72,
@@ -574,6 +929,11 @@ export const SURAH_LIST = [
         meaning: "Jin",
         meaning_en: "The Jinn",
         ayat: 28,
+        name_ar: "سُورَةُ الجِنِّ",
+        arabic: "الجِنِّ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 73,
@@ -582,6 +942,11 @@ export const SURAH_LIST = [
         meaning: "Orang yang Berselimut",
         meaning_en: "The Enshrouded One",
         ayat: 20,
+        name_ar: "سُورَةُ المُزَّمِّلِ",
+        arabic: "المُزَّمِّلِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 74,
@@ -590,6 +955,11 @@ export const SURAH_LIST = [
         meaning: "Orang yang Berkemul",
         meaning_en: "The Cloaked One",
         ayat: 56,
+        name_ar: "سُورَةُ المُدَّثِّرِ",
+        arabic: "المُدَّثِّرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 75,
@@ -598,6 +968,11 @@ export const SURAH_LIST = [
         meaning: "Hari Kiamat",
         meaning_en: "The Resurrection",
         ayat: 40,
+        name_ar: "سُورَةُ القِيَامَةِ",
+        arabic: "القِيَامَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 76,
@@ -606,6 +981,11 @@ export const SURAH_LIST = [
         meaning: "Manusia",
         meaning_en: "Man",
         ayat: 31,
+        name_ar: "سُورَةُ الإِنسَانِ",
+        arabic: "الإِنسَانِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 77,
@@ -614,6 +994,11 @@ export const SURAH_LIST = [
         meaning: "Malaikat yang Diutus",
         meaning_en: "The Emissaries",
         ayat: 50,
+        name_ar: "سُورَةُ المُرۡسَلَاتِ",
+        arabic: "المُرۡسَلَاتِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 78,
@@ -622,6 +1007,11 @@ export const SURAH_LIST = [
         meaning: "Berita Besar",
         meaning_en: "The Tidings",
         ayat: 40,
+        name_ar: "سُورَةُ النَّبَإِ",
+        arabic: "النَّبَإِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 79,
@@ -630,6 +1020,11 @@ export const SURAH_LIST = [
         meaning: "Malaikat yang Mencabut",
         meaning_en: "Those who drag forth",
         ayat: 46,
+        name_ar: "سُورَةُ النَّازِعَاتِ",
+        arabic: "النَّازِعَاتِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 80,
@@ -638,6 +1033,11 @@ export const SURAH_LIST = [
         meaning: "Bermuka Masam",
         meaning_en: "He frowned",
         ayat: 42,
+        name_ar: "سُورَةُ عَبَسَ",
+        arabic: "عَبَسَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 81,
@@ -646,6 +1046,11 @@ export const SURAH_LIST = [
         meaning: "Menggulung",
         meaning_en: "The Overthrowing",
         ayat: 29,
+        name_ar: "سُورَةُ التَّكۡوِيرِ",
+        arabic: "التَّكۡوِيرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 82,
@@ -654,6 +1059,11 @@ export const SURAH_LIST = [
         meaning: "Terbelah",
         meaning_en: "The Cleaving",
         ayat: 19,
+        name_ar: "سُورَةُ الانفِطَارِ",
+        arabic: "الانفِطَارِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 83,
@@ -662,6 +1072,11 @@ export const SURAH_LIST = [
         meaning: "Orang-Orang yang Curang",
         meaning_en: "Defrauding",
         ayat: 36,
+        name_ar: "سُورَةُ المُطَفِّفِينَ",
+        arabic: "المُطَفِّفِينَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 84,
@@ -670,6 +1085,11 @@ export const SURAH_LIST = [
         meaning: "Terbelah",
         meaning_en: "The Splitting Open",
         ayat: 25,
+        name_ar: "سُورَةُ الانشِقَاقِ",
+        arabic: "الانشِقَاقِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 85,
@@ -678,6 +1098,11 @@ export const SURAH_LIST = [
         meaning: "Gugusan Bintang",
         meaning_en: "The Mansions of the Stars",
         ayat: 22,
+        name_ar: "سُورَةُ البُرُوجِ",
+        arabic: "البُرُوجِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 86,
@@ -686,6 +1111,11 @@ export const SURAH_LIST = [
         meaning: "Yang Datang di Malam Hari",
         meaning_en: "The Morning Star",
         ayat: 17,
+        name_ar: "سُورَةُ الطَّارِقِ",
+        arabic: "الطَّارِقِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 87,
@@ -694,6 +1124,11 @@ export const SURAH_LIST = [
         meaning: "Maha Tinggi",
         meaning_en: "The Most High",
         ayat: 19,
+        name_ar: "سُورَةُ الأَعۡلَىٰ",
+        arabic: "الأَعۡلَىٰ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 88,
@@ -702,6 +1137,11 @@ export const SURAH_LIST = [
         meaning: "Hari Pembalasan",
         meaning_en: "The Overwhelming",
         ayat: 26,
+        name_ar: "سُورَةُ الغَاشِيَةِ",
+        arabic: "الغَاشِيَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 89,
@@ -710,6 +1150,11 @@ export const SURAH_LIST = [
         meaning: "Fajar",
         meaning_en: "The Dawn",
         ayat: 30,
+        name_ar: "سُورَةُ الفَجۡرِ",
+        arabic: "الفَجۡرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 90,
@@ -718,6 +1163,11 @@ export const SURAH_LIST = [
         meaning: "Negeri",
         meaning_en: "The City",
         ayat: 20,
+        name_ar: "سُورَةُ البَلَدِ",
+        arabic: "البَلَدِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 91,
@@ -726,6 +1176,11 @@ export const SURAH_LIST = [
         meaning: "Matahari",
         meaning_en: "The Sun",
         ayat: 15,
+        name_ar: "سُورَةُ الشَّمۡسِ",
+        arabic: "الشَّمۡسِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 92,
@@ -734,6 +1189,11 @@ export const SURAH_LIST = [
         meaning: "Malam",
         meaning_en: "The Night",
         ayat: 21,
+        name_ar: "سُورَةُ اللَّيۡلِ",
+        arabic: "اللَّيۡلِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 93,
@@ -742,6 +1202,11 @@ export const SURAH_LIST = [
         meaning: "Waktu Duha",
         meaning_en: "The Morning Hours",
         ayat: 11,
+        name_ar: "سُورَةُ الضُّحَىٰ",
+        arabic: "الضُّحَىٰ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 94,
@@ -750,6 +1215,11 @@ export const SURAH_LIST = [
         meaning: "Kelapangan",
         meaning_en: "The Relief",
         ayat: 8,
+        name_ar: "سُورَةُ الشَّرۡحِ",
+        arabic: "الشَّرۡحِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 95,
@@ -758,6 +1228,11 @@ export const SURAH_LIST = [
         meaning: "Buah Tin",
         meaning_en: "The Fig",
         ayat: 8,
+        name_ar: "سُورَةُ التِّينِ",
+        arabic: "التِّينِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 96,
@@ -766,6 +1241,11 @@ export const SURAH_LIST = [
         meaning: "Segumpal Darah",
         meaning_en: "The Clot",
         ayat: 19,
+        name_ar: "سُورَةُ العَلَقِ",
+        arabic: "العَلَقِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 97,
@@ -774,6 +1254,11 @@ export const SURAH_LIST = [
         meaning: "Kemuliaan",
         meaning_en: "The Power",
         ayat: 5,
+        name_ar: "سُورَةُ القَدۡرِ",
+        arabic: "القَدۡرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 98,
@@ -782,6 +1267,11 @@ export const SURAH_LIST = [
         meaning: "Bukti Nyata",
         meaning_en: "The Clear Proof",
         ayat: 8,
+        name_ar: "سُورَةُ البَيِّنَةِ",
+        arabic: "البَيِّنَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 99,
@@ -790,6 +1280,11 @@ export const SURAH_LIST = [
         meaning: "Keguncangan",
         meaning_en: "The Earthquake",
         ayat: 8,
+        name_ar: "سُورَةُ الزَّلۡزَلَةِ",
+        arabic: "الزَّلۡزَلَةِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 100,
@@ -798,6 +1293,11 @@ export const SURAH_LIST = [
         meaning: "Kuda yang Berlari Kencang",
         meaning_en: "The Courser",
         ayat: 11,
+        name_ar: "سُورَةُ العَادِيَاتِ",
+        arabic: "العَادِيَاتِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 101,
@@ -806,6 +1306,11 @@ export const SURAH_LIST = [
         meaning: "Hari Kiamat yang Menggemparkan",
         meaning_en: "The Calamity",
         ayat: 11,
+        name_ar: "سُورَةُ القَارِعَةِ",
+        arabic: "القَارِعَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 102,
@@ -814,6 +1319,11 @@ export const SURAH_LIST = [
         meaning: "Bermegah-megahan",
         meaning_en: "The Rivalry in World Increase",
         ayat: 8,
+        name_ar: "سُورَةُ التَّكَاثُرِ",
+        arabic: "التَّكَاثُرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 103,
@@ -822,6 +1332,11 @@ export const SURAH_LIST = [
         meaning: "Masa",
         meaning_en: "The Declining Day",
         ayat: 3,
+        name_ar: "سُورَةُ العَصۡرِ",
+        arabic: "العَصۡرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 104,
@@ -830,6 +1345,11 @@ export const SURAH_LIST = [
         meaning: "Pengumpat",
         meaning_en: "The Traducer",
         ayat: 9,
+        name_ar: "سُورَةُ الهُمَزَةِ",
+        arabic: "الهُمَزَةِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 105,
@@ -838,6 +1358,11 @@ export const SURAH_LIST = [
         meaning: "Gajah",
         meaning_en: "The Elephant",
         ayat: 5,
+        name_ar: "سُورَةُ الفِيلِ",
+        arabic: "الفِيلِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 106,
@@ -846,6 +1371,11 @@ export const SURAH_LIST = [
         meaning: "Suku Quraisy",
         meaning_en: "Quraysh",
         ayat: 4,
+        name_ar: "سُورَةُ قُرَيۡشٍ",
+        arabic: "قُرَيۡشٍ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 107,
@@ -854,6 +1384,11 @@ export const SURAH_LIST = [
         meaning: "Barang yang Berguna",
         meaning_en: "Small Kindness",
         ayat: 7,
+        name_ar: "سُورَةُ المَاعُونِ",
+        arabic: "المَاعُونِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 108,
@@ -862,6 +1397,11 @@ export const SURAH_LIST = [
         meaning: "Nikmat yang Banyak",
         meaning_en: "Abundance",
         ayat: 3,
+        name_ar: "سُورَةُ الكَوۡثَرِ",
+        arabic: "الكَوۡثَرِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 109,
@@ -870,6 +1410,11 @@ export const SURAH_LIST = [
         meaning: "Orang-Orang Kafir",
         meaning_en: "The Disbelievers",
         ayat: 6,
+        name_ar: "سُورَةُ الكَافِرُونَ",
+        arabic: "الكَافِرُونَ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 110,
@@ -878,6 +1423,11 @@ export const SURAH_LIST = [
         meaning: "Pertolongan",
         meaning_en: "The Divine Support",
         ayat: 3,
+        name_ar: "سُورَةُ النَّصۡرِ",
+        arabic: "النَّصۡرِ",
+        revelation: "Madani",
+        revelation_id: "Madaniyah",
+        revelation_city: "Madinah",
     },
     {
         number: 111,
@@ -886,6 +1436,11 @@ export const SURAH_LIST = [
         meaning: "Gejolak Api",
         meaning_en: "The Palm Fibre",
         ayat: 5,
+        name_ar: "سُورَةُ المَسَدِ",
+        arabic: "المَسَدِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 112,
@@ -894,6 +1449,11 @@ export const SURAH_LIST = [
         meaning: "Ikhlas",
         meaning_en: "Sincerity",
         ayat: 4,
+        name_ar: "سُورَةُ الإِخۡلَاصِ",
+        arabic: "الإِخۡلَاصِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 113,
@@ -902,6 +1462,11 @@ export const SURAH_LIST = [
         meaning: "Waktu Subuh",
         meaning_en: "The Daybreak",
         ayat: 5,
+        name_ar: "سُورَةُ الفَلَقِ",
+        arabic: "الفَلَقِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
     {
         number: 114,
@@ -910,6 +1475,11 @@ export const SURAH_LIST = [
         meaning: "Manusia",
         meaning_en: "Mankind",
         ayat: 6,
+        name_ar: "سُورَةُ النَّاسِ",
+        arabic: "النَّاسِ",
+        revelation: "Makki",
+        revelation_id: "Makkiyah",
+        revelation_city: "Makkah",
     },
 ];
 
@@ -974,4 +1544,70 @@ export const getSurahMeaning = (surah, lang = "ID") => {
         surah?.arti ||
         ""
     );
+};
+
+export const getSurahRevelation = (surah, lang = "EN") => {
+    const num = Number(
+        surah?.number ||
+            surah?.surah_number ||
+            surah?.surah_id ||
+            surah?.surahNumber,
+    );
+    const item = num ? findSurahByNumber(num) : null;
+    const isId = String(lang ?? "").toUpperCase() === "ID";
+    if (isId) {
+        return (
+            surah?.revelation_id ||
+            item?.revelation_id ||
+            (surah?.revelation_type === "Medinan" ? "Madaniyah" : "Makkiyah")
+        );
+    }
+    return (
+        surah?.revelation ||
+        item?.revelation ||
+        (surah?.revelation_type === "Medinan" ? "Madani" : "Makki")
+    );
+};
+
+export const getSurahCity = (surah) => {
+    const num = Number(
+        surah?.number ||
+            surah?.surah_number ||
+            surah?.surah_id ||
+            surah?.surahNumber,
+    );
+    const item = num ? findSurahByNumber(num) : null;
+    return (
+        surah?.revelation_city ||
+        item?.revelation_city ||
+        (surah?.revelation_type === "Medinan" ? "Madinah" : "Makkah")
+    );
+};
+
+export const getSurahArabic = (surah) => {
+    const num = Number(
+        surah?.number ||
+            surah?.surah_number ||
+            surah?.surah_id ||
+            surah?.surahNumber,
+    );
+    const item = num ? findSurahByNumber(num) : null;
+    return (
+        surah?.arabic ||
+        item?.arabic ||
+        surah?.name_ar ||
+        item?.name_ar ||
+        ""
+    );
+};
+
+export const getSurahFullNameAr = (surah) => {
+    const num = Number(
+        surah?.number ||
+            surah?.surah_number ||
+            surah?.surah_id ||
+            surah?.surahNumber,
+    );
+    const item = num ? findSurahByNumber(num) : null;
+    return surah?.name_ar || item?.name_ar || surah?.arabic || item?.arabic || "";
 };

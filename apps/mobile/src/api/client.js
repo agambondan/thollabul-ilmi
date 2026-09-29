@@ -1,6 +1,7 @@
 import { readSession } from "../storage/session";
-import { getSurahMeaning, getSurahName } from "../constants/surahList";
+import { getSurahMeaning, getSurahName, getSurahRevelation, getSurahCity, getSurahArabic, getSurahFullNameAr } from "../constants/surahList";
 import { NativeModules, Platform } from "react-native";
+import { fetchCached, cacheKeys } from "./apiCache";
 
 const resolveApiUrl = () => {
     if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
@@ -160,37 +161,70 @@ const dedupeAyahs = (items, fallbackSurahNumber = null) => {
     });
 };
 
-export const normalizeSurah = (item) => ({
-    id: item.id ?? item.number,
-    number: item.number ?? item.nomor_surah ?? item.id,
-    name:
-        item.translation?.latin_idn ||
-        getSurahName(item, "ID") ||
-        item.translation?.latin_en ||
-        item.nama_latin ||
-        item.name ||
-        `Surah ${item.number ?? item.id}`,
-    arabic:
-        item.translation?.arab ||
-        item.translation?.ar ||
-        item.nama_arab ||
-        item.arabic ||
-        "",
-    meaning:
-        item.translation?.name_en ||
-        item.translation?.name_idn ||
-        getSurahMeaning(item, "ID") ||
-        item.translation?.en ||
-        item.translation?.idn ||
-        item.arti ||
-        "",
-    ayahs:
-        item.count_ayah ??
-        item.number_of_ayahs ??
-        item.jumlah_ayat ??
-        item.ayah_count ??
-        "-",
-});
+export const normalizeSurah = (item) => {
+    const num = item.number ?? item.nomor_surah ?? item.id;
+    return {
+        id: item.id ?? item.number,
+        number: num,
+        name:
+            item.translation?.latin_idn ||
+            getSurahName(item, "ID") ||
+            item.translation?.latin_en ||
+            item.nama_latin ||
+            item.name ||
+            `Surah ${num}`,
+        name_en:
+            item.translation?.latin_en ||
+            getSurahName(item, "EN") ||
+            item.name_en ||
+            item.name,
+        arabic:
+            item.translation?.arab ||
+            item.translation?.ar ||
+            item.nama_arab ||
+            getSurahArabic(item) ||
+            item.arabic ||
+            "",
+        name_ar:
+            item.name_ar ||
+            getSurahFullNameAr(item) ||
+            item.translation?.arab ||
+            "",
+        meaning:
+            item.translation?.name_en ||
+            item.translation?.name_idn ||
+            getSurahMeaning(item, "ID") ||
+            item.translation?.en ||
+            item.translation?.idn ||
+            item.arti ||
+            "",
+        meaning_en:
+            getSurahMeaning(item, "EN") ||
+            item.translation?.name_en ||
+            item.translation?.en ||
+            "",
+        revelation:
+            getSurahRevelation(item, "EN") ||
+            item.revelation ||
+            item.revelation_type ||
+            "Makki",
+        revelation_id:
+            getSurahRevelation(item, "ID") ||
+            item.revelation_id ||
+            "Makkiyah",
+        revelation_city:
+            getSurahCity(item) ||
+            item.revelation_city ||
+            "Makkah",
+        ayahs:
+            item.count_ayah ??
+            item.number_of_ayahs ??
+            item.jumlah_ayat ??
+            item.ayah_count ??
+            item.ayat ??
+            "-",
+    };
+};
 
 const normalizeAudio = (item, index = 0) => ({
     id: item?.id ?? item?.qari_slug ?? `audio-${index}`,
@@ -202,10 +236,19 @@ const normalizeAudio = (item, index = 0) => ({
 });
 
 export const getAyahsForSurah = async (surahNumber) => {
-    const payload = await requestJson(
-        `/api/v1/ayah/surah/number/${surahNumber}?size=300&page=0`,
+    return fetchCached(
+        cacheKeys.ayahsBySurah(surahNumber, 0),
+        async () => {
+            const payload = await requestJson(
+                `/api/v1/ayah/surah/number/${surahNumber}?size=300&page=0`,
+            );
+            return dedupeAyahs(
+                pickItems(payload).map(normalizeAyah),
+                surahNumber,
+            );
+        },
+        { ttl: 30 * 60 * 1000 },
     );
-    return dedupeAyahs(pickItems(payload).map(normalizeAyah), surahNumber);
 };
 
 export const getAyahsForSurahPage = async (
@@ -238,13 +281,25 @@ export const getAyahsForSurahPage = async (
 };
 
 export const getAyahsForPage = async (page) => {
-    const payload = await requestJson(`/api/v1/ayah/page/${page}`);
-    return dedupeAyahs(pickItems(payload).map(normalizeAyah));
+    return fetchCached(
+        cacheKeys.ayahsByPage(page),
+        async () => {
+            const payload = await requestJson(`/api/v1/ayah/page/${page}`);
+            return dedupeAyahs(pickItems(payload).map(normalizeAyah));
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const getAyahsForHizb = async (hizb) => {
-    const payload = await requestJson(`/api/v1/ayah/hizb/${hizb}`);
-    return dedupeAyahs(pickItems(payload).map(normalizeAyah));
+    return fetchCached(
+        `ayahs:hizb:${hizb}`,
+        async () => {
+            const payload = await requestJson(`/api/v1/ayah/hizb/${hizb}`);
+            return dedupeAyahs(pickItems(payload).map(normalizeAyah));
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const normalizeMufrodat = (item) => ({
@@ -534,96 +589,144 @@ const normalizeReference = (item, index = 0, defaultTitle = "Rujukan") => ({
 });
 
 export const getTafsirForAyah = async (ayahId) => {
-    try {
-        const payload = await requestJson(`/api/v1/tafsir/ayah/${ayahId}`);
-        const data = payload?.data ?? payload;
-        const items = [];
-        if (data?.kemenag) {
-            items.push(
-                normalizeReference(
-                    { ...data.kemenag, title: "Kemenag" },
-                    0,
-                    "Tafsir",
-                ),
-            );
-        }
-        if (data?.ibnu_katsir) {
-            items.push(
-                normalizeReference(
-                    { ...data.ibnu_katsir, title: "Ibnu Katsir" },
-                    1,
-                    "Tafsir",
-                ),
-            );
-        }
-        if (!items.length && data) {
-            items.push(normalizeReference(data, 0, "Tafsir"));
-        }
-        return items.filter((item) => item.body);
-    } catch {
-        return [];
-    }
+    return fetchCached(
+        `tafsir:ayah:${ayahId}`,
+        async () => {
+            try {
+                const payload = await requestJson(
+                    `/api/v1/tafsir/ayah/${ayahId}`,
+                );
+                const data = payload?.data ?? payload;
+                const items = [];
+                if (data?.kemenag) {
+                    items.push(
+                        normalizeReference(
+                            { ...data.kemenag, title: "Kemenag" },
+                            0,
+                            "Tafsir",
+                        ),
+                    );
+                }
+                if (data?.ibnu_katsir) {
+                    items.push(
+                        normalizeReference(
+                            { ...data.ibnu_katsir, title: "Ibnu Katsir" },
+                            1,
+                            "Tafsir",
+                        ),
+                    );
+                }
+                if (!items.length && data) {
+                    items.push(normalizeReference(data, 0, "Tafsir"));
+                }
+                return items.filter((item) => item.body);
+            } catch {
+                return [];
+            }
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const getAsbabForAyah = async (ayahId) => {
-    try {
-        const payload = await requestJson(
-            `/api/v1/asbabun-nuzul/ayah/${ayahId}`,
-        );
-        return pickItems(payload)
-            .map((item, index) =>
-                normalizeReference(item, index, "Asbabun Nuzul"),
-            )
-            .filter((item) => item.body);
-    } catch {
-        return [];
-    }
+    return fetchCached(
+        `asbab:ayah:${ayahId}`,
+        async () => {
+            try {
+                const payload = await requestJson(
+                    `/api/v1/asbabun-nuzul/ayah/${ayahId}`,
+                );
+                return pickItems(payload)
+                    .map((item, index) =>
+                        normalizeReference(item, index, "Asbabun Nuzul"),
+                    )
+                    .filter((item) => item.body);
+            } catch {
+                return [];
+            }
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const getMunasabahForAyah = async (ayahId) => {
-    try {
-        const payload = await requestJson(`/api/v1/munasabah/ayah/${ayahId}`);
-        return pickItems(payload).map((item) => ({
-            id: item.id,
-            ayahFrom: item.ayah_from ? normalizeAyah(item.ayah_from) : null,
-            ayahTo: item.ayah_to ? normalizeAyah(item.ayah_to) : null,
-            description: item.description,
-        }));
-    } catch {
-        return [];
-    }
+    return fetchCached(
+        `munasabah:ayah:${ayahId}`,
+        async () => {
+            try {
+                const payload = await requestJson(
+                    `/api/v1/munasabah/ayah/${ayahId}`,
+                );
+                return pickItems(payload).map((item) => ({
+                    id: item.id,
+                    ayahFrom: item.ayah_from
+                        ? normalizeAyah(item.ayah_from)
+                        : null,
+                    ayahTo: item.ayah_to ? normalizeAyah(item.ayah_to) : null,
+                    description: item.description,
+                }));
+            } catch {
+                return [];
+            }
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const getAyahsForHadith = async (hadithId) => {
-    try {
-        const payload = await requestJson(`/api/v1/hadiths/${hadithId}/ayahs`);
-        return pickItems(payload).map((item) => ({
-            id: item.id,
-            catatan: item.catatan,
-            ayah: item.ayah ? normalizeAyah(item.ayah) : null,
-        }));
-    } catch {
-        return [];
-    }
+    return fetchCached(
+        `ayahs:hadith:${hadithId}`,
+        async () => {
+            try {
+                const payload = await requestJson(
+                    `/api/v1/hadiths/${hadithId}/ayahs`,
+                );
+                return pickItems(payload).map((item) => ({
+                    id: item.id,
+                    catatan: item.catatan,
+                    ayah: item.ayah ? normalizeAyah(item.ayah) : null,
+                }));
+            } catch {
+                return [];
+            }
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const getHadithsForAyah = async (ayahId) => {
-    try {
-        const payload = await requestJson(`/api/v1/ayahs/${ayahId}/hadiths`);
-        return pickItems(payload).map((item) => ({
-            id: item.id,
-            catatan: item.catatan,
-            hadith: item.hadith ? normalizeHadith(item.hadith) : null,
-        }));
-    } catch {
-        return [];
-    }
+    return fetchCached(
+        `hadiths:ayah:${ayahId}`,
+        async () => {
+            try {
+                const payload = await requestJson(
+                    `/api/v1/ayahs/${ayahId}/hadiths`,
+                );
+                return pickItems(payload).map((item) => ({
+                    id: item.id,
+                    catatan: item.catatan,
+                    hadith: item.hadith ? normalizeHadith(item.hadith) : null,
+                }));
+            } catch {
+                return [];
+            }
+        },
+        { ttl: 30 * 60 * 1000 },
+    );
 };
 
 export const getSurahs = async () => {
-    const payload = await requestJson("/api/v1/surah?size=114&sort=number");
-    const items = pickItems(payload);
-    return items.map(normalizeSurah);
+    return fetchCached(
+        cacheKeys.surahs(),
+        async () => {
+            const payload = await requestJson(
+                "/api/v1/surah?size=114&sort=number",
+            );
+            const items = pickItems(payload);
+            return items.map(normalizeSurah);
+        },
+        { ttl: 60 * 60 * 1000 },
+    );
 };
 
 const pagedResult = (payload, page, size) => {
@@ -880,23 +983,32 @@ export const getDailyHadith = async () => {
 };
 
 export const getHadithBooks = async () => {
-    const payload = await requestJson("/api/v1/books?size=50");
-    const items = pickItems(payload);
-    return items
-        .map((item) => ({
-            id: item.id,
-            name:
-                item.name ??
-                item.translation?.idn ??
-                item.translation?.en ??
-                `Book ${item.id}`,
-            slug: item.slug ?? "",
-            count:
-                Number(
-                    item.count ?? item.hadith_count ?? item.total_hadith ?? 0,
-                ) || 0,
-        }))
-        .filter((book) => book.slug);
+    return fetchCached(
+        cacheKeys.hadithBooks(),
+        async () => {
+            const payload = await requestJson("/api/v1/books?size=50");
+            const items = pickItems(payload);
+            return items
+                .map((item) => ({
+                    id: item.id,
+                    name:
+                        item.name ??
+                        item.translation?.idn ??
+                        item.translation?.en ??
+                        `Book ${item.id}`,
+                    slug: item.slug ?? "",
+                    count:
+                        Number(
+                            item.count ??
+                                item.hadith_count ??
+                                item.total_hadith ??
+                                0,
+                        ) || 0,
+                }))
+                .filter((book) => book.slug);
+        },
+        { ttl: 60 * 60 * 1000 },
+    );
 };
 
 export const getHadithsByBook = async (bookSlug, options = {}) => {

@@ -1,3 +1,4 @@
+import React from "react";
 import {
     ArrowLeft,
     ArrowRight,
@@ -5,6 +6,9 @@ import {
     Bookmark,
     BookmarkCheck,
     CheckCircle2,
+    ChevronDown,
+    Clipboard,
+    Copy,
     Info,
     Link,
     Minus,
@@ -13,15 +17,18 @@ import {
     Plus,
     Save,
     Search,
+    Share2,
     SlidersHorizontal,
     StickyNote,
     Volume2,
+    X,
 } from "lucide-react-native";
 import {
     ActivityIndicator,
     FlatList,
     Pressable,
     ScrollView,
+    Share,
     StyleSheet,
     Text,
     TextInput,
@@ -42,7 +49,11 @@ import {
     IconActionButton,
 } from "../../components/Paper";
 import { Screen } from "../../components/Screen";
-import { colors } from "../../theme";
+import { IslamicStarBadge } from "../../components/IslamicStarBadge";
+import { findSurahByNumber } from "../../constants/surahList";
+import { JUZ_BOUNDARIES } from "../../utils/khatam";
+import { PAGE_BOUNDARIES, HIZB_BOUNDARIES } from "../../constants/quranBoundaries";
+import { colors, spacing } from "../../theme";
 import {
     MEMORIZATION_MODES,
     DISPLAY_MODES,
@@ -61,12 +72,132 @@ import {
     buildMushafLineGroups,
     getCompactArabicSurahName,
     TAJWEED_GROUPS,
+    ISLAMIC_STAR_BADGE_STROKE,
 } from "../QuranScreen.helpers";
 import { styles } from "../QuranScreen.styles";
 import { WEB_APP_QURAN_THEMES } from "../QuranScreen.webAppTheme";
 import { renderQuranAudioRangePanel } from "./QuranAudioRangePanel";
 
-export function createQuranScreenRenderers(context) {
+const SurahRowItem = React.memo(
+    ({
+        isProgressSurah,
+        isWebAppLayout,
+        onOpenSurah,
+        surah,
+        webAppQuranTheme,
+        webAppQuranThemeStyles,
+    }) => {
+        const surahMeaning = surah.meaning ?? surah.meaning_en ?? "";
+        const surahRevelation = surah.revelation ?? surah.revelation_id ?? "";
+        const surahAyahs = surah.ayahs ?? surah.ayat ?? 0;
+        const metaText = `${surahRevelation} · ${surahAyahs} ayat`;
+        const arabicName = getCompactArabicSurahName(surah.arabic) ?? surah.arabic ?? surah.name_ar ?? "";
+
+        if (isWebAppLayout) {
+            return (
+                <Pressable
+                    accessibilityRole='button'
+                    onPress={() => onOpenSurah(surah)}
+                    style={[
+                        styles.webAppSurahRow,
+                        webAppQuranThemeStyles?.surahRow,
+                    ]}
+                >
+                    <View style={styles.webAppSurahLeft}>
+                        <IslamicStarBadge
+                            number={surah.number}
+                            size={44}
+                            stroke={webAppQuranTheme?.accent || ISLAMIC_STAR_BADGE_STROKE}
+                            textColor={webAppQuranTheme?.accent || ISLAMIC_STAR_BADGE_STROKE}
+                        />
+                        <View style={styles.webAppSurahInfo}>
+                            <View style={styles.surahNameRow}>
+                                <Text
+                                    style={[
+                                        styles.webAppSurahName,
+                                        webAppQuranThemeStyles?.surahName,
+                                    ]}
+                                >
+                                    {surah.name}
+                                </Text>
+                                {isProgressSurah ? (
+                                    <CheckCircle2
+                                        color={webAppQuranTheme?.accent}
+                                        size={13}
+                                        strokeWidth={2.2}
+                                    />
+                                ) : null}
+                            </View>
+                            <Text
+                                style={[
+                                    styles.surahMeaningText,
+                                    webAppQuranThemeStyles?.surahMeaningText,
+                                ]}
+                            >
+                                {surahMeaning}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.webAppSurahMeta,
+                                    webAppQuranThemeStyles?.surahMeta,
+                                ]}
+                            >
+                                {metaText}
+                            </Text>
+                        </View>
+                    </View>
+                    <Text
+                        numberOfLines={2}
+                        style={[
+                            styles.webAppSurahArabic,
+                            webAppQuranThemeStyles?.surahArabic,
+                        ]}
+                    >
+                        {arabicName}
+                    </Text>
+                </Pressable>
+            );
+        }
+
+        return (
+            <Pressable
+                accessibilityRole='button'
+                onPress={() => onOpenSurah(surah)}
+                style={styles.surahRow}
+            >
+                <View style={styles.surahLeft}>
+                    <IslamicStarBadge
+                        number={surah.number}
+                        size={42}
+                        stroke={ISLAMIC_STAR_BADGE_STROKE}
+                    />
+                    <View style={styles.surahInfo}>
+                        <View style={styles.surahNameRow}>
+                            <Text style={styles.surahName}>{surah.name}</Text>
+                            {isProgressSurah ? (
+                                <CheckCircle2
+                                    color={colors.primary}
+                                    size={13}
+                                    strokeWidth={2.2}
+                                />
+                            ) : null}
+                        </View>
+                        <Text style={styles.surahMeaningText}>
+                            {surahMeaning}
+                        </Text>
+                        <Text style={styles.surahMeta}>
+                            {metaText}
+                        </Text>
+                    </View>
+                </View>
+                <Text style={styles.surahArabic}>{arabicName}</Text>
+            </Pressable>
+        );
+    },
+);
+
+export function createQuranScreenRenderers(input) {
+    const context = input.context ?? input;
     const {
         activeNoteAyah,
         arabicFont,
@@ -83,6 +214,7 @@ export function createQuranScreenRenderers(context) {
         cycleHafalanStatus,
         displayMode,
         fontSize,
+        fontsLoaded = true,
         fullscreen,
         hadithAyahModal,
         hafalanList,
@@ -194,7 +326,7 @@ export function createQuranScreenRenderers(context) {
             fontSize: size,
             fontWeight: "400",
             lineHeight: Math.round(size * effectiveRatio),
-            ...(font?.fontFamily ? { fontFamily: font.fontFamily } : {}),
+            ...(fontsLoaded && font?.fontFamily ? { fontFamily: font.fontFamily } : {}),
         };
     };
 
@@ -482,18 +614,131 @@ export function createQuranScreenRenderers(context) {
             );
         }
 
+        const isAudioLoading = audioState.loadingAyahId === ayah.id;
+        const isAudioPlaying = audioState.playingAyahId === ayah.id;
+        const isBookmarked = Boolean(bookmarks[ayah.id]);
+
         return (
-            <Card
+            <View
                 style={[
-                    displayMode === "focus" ? styles.focusAyahCard : null,
+                    styles.modernAyahCard,
                     isTargetAyah ? styles.targetAyahCard : null,
                 ]}
             >
-                {renderInlineArabicRow(ayah)}
+                <View style={styles.modernAyahHeader}>
+                    <Text style={styles.modernAyahNumber}>{ayah.number}</Text>
+                    <Pressable
+                        accessibilityLabel={`Aksi ayat ${ayah.number}`}
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(91, 110, 91, 0.12)",
+                            borderless: true,
+                        }}
+                        onPress={() => setAyahActionSheet({ visible: true, ayah })}
+                        style={styles.modernAyahMoreBtn}
+                    >
+                        <MoreVertical
+                            color={colors.muted}
+                            size={18}
+                            strokeWidth={2.4}
+                        />
+                    </Pressable>
+                </View>
+
+                <Pressable
+                    accessibilityLabel={`Buka detail ayat ${ayah.number}`}
+                    accessibilityRole='button'
+                    android_ripple={{
+                        color: "rgba(91, 110, 91, 0.08)",
+                        borderless: false,
+                    }}
+                    onPress={() => openAyahDetail(ayah)}
+                >
+                    {renderAyahText(ayah)}
+                </Pressable>
+
                 {audioState.activeAyahId === ayah.id
                     ? renderAudioSources(ayah)
                     : null}
-            </Card>
+
+                <View style={styles.modernAyahActionBar}>
+                    <Pressable
+                        accessibilityLabel={`Salin ayat ${ayah.number}`}
+                        accessibilityRole='button'
+                        onPress={() => {
+                            const cleanArabic = stripHtmlTags(
+                                ayah.arabicHtml || ayah.arabic || "",
+                            );
+                            const text = `${cleanArabic}\n\n${ayah.translation || ""}\n(QS. ${selectedSurah?.name || "Al-Qur'an"}: ${ayah.number})`;
+                            Share.share({ message: text });
+                            showSuccess?.("Ayat disalin/dibagikan");
+                        }}
+                        style={styles.modernAyahActionBtn}
+                    >
+                        <Copy color={colors.muted} size={18} />
+                    </Pressable>
+
+                    <Pressable
+                        accessibilityLabel={`Bookmark ayat ${ayah.number}`}
+                        accessibilityRole='button'
+                        onPress={() => toggleAyahBookmark(ayah)}
+                        style={styles.modernAyahActionBtn}
+                    >
+                        {isBookmarked ? (
+                            <BookmarkCheck color='#059669' size={18} />
+                        ) : (
+                            <Bookmark color={colors.muted} size={18} />
+                        )}
+                    </Pressable>
+
+                    <Pressable
+                        accessibilityLabel={`Audio ayat ${ayah.number}`}
+                        accessibilityRole='button'
+                        disabled={isAudioLoading}
+                        onPress={() => playAyahAudio(ayah)}
+                        style={styles.modernAyahActionBtn}
+                    >
+                        {isAudioPlaying ? (
+                            <Pause color='#059669' size={18} />
+                        ) : isAudioLoading ? (
+                            <ActivityIndicator color={colors.primary} size='small' />
+                        ) : (
+                            <Volume2
+                                color={
+                                    audioState.activeAyahId === ayah.id
+                                        ? "#059669"
+                                        : colors.muted
+                                }
+                                size={18}
+                            />
+                        )}
+                    </Pressable>
+
+                    <Pressable
+                        accessibilityLabel={`Bagikan ayat ${ayah.number}`}
+                        accessibilityRole='button'
+                        onPress={() => {
+                            const cleanArabic = stripHtmlTags(
+                                ayah.arabicHtml || ayah.arabic || "",
+                            );
+                            const message = `${selectedSurah?.name || "Al-Qur'an"} : ${ayah.number}\n\n${cleanArabic}\n\n${ayah.translation || ""}`;
+                            Share.share({ message });
+                        }}
+                        style={styles.modernAyahActionBtn}
+                    >
+                        <Share2 color={colors.muted} size={18} />
+                    </Pressable>
+
+                    <Pressable
+                        accessibilityLabel={`Tafsir ayat ${ayah.number}`}
+                        accessibilityRole='button'
+                        onPress={() => openReferenceModal(ayah, "tafsir")}
+                        style={styles.modernAyahActionBtn}
+                    >
+                        <Info color={colors.muted} size={18} />
+                    </Pressable>
+                </View>
+            </View>
         );
     };
 
@@ -881,11 +1126,23 @@ export function createQuranScreenRenderers(context) {
             selectedSurah.arabic ||
             "";
         const showReaderBismillah =
-            isWebAppLayout &&
             selectedSurah.type === "surah" &&
             Number(selectedSurah.number) !== 1 &&
-            Number(selectedSurah.number) !== 9;
+            Number(selectedSurah.number) !== 9 &&
+            displayMode !== "mushaf";
         const isReaderInWebApp = isWebAppLayout;
+        const heroMeaning =
+            selectedSurah?.meaning_en || selectedSurah?.meaning || "-";
+        const heroVerses =
+            selectedSurah?.ayahs || selectedSurah?.ayat || ayahs.length || "-";
+        const heroCity =
+            selectedSurah?.revelation_city ||
+            (selectedSurah?.revelation === "Madani" ||
+            selectedSurah?.revelation_type === "Medinan"
+                ? "Madinah"
+                : "Makkah");
+        const fullArabicSurah =
+            selectedSurah?.name_ar || selectedSurah?.arabic || arabicSurahName;
 
         return (
             <>
@@ -937,26 +1194,6 @@ export function createQuranScreenRenderers(context) {
                             >
                                 {readerSubtitle}
                             </Text>
-                            {isWebAppLayout && arabicSurahName ? (
-                                <Text
-                                    style={[
-                                        styles.webAppReaderArabicTitle,
-                                        webAppQuranThemeStyles.readerArabicTitle,
-                                    ]}
-                                >
-                                    {arabicSurahName}
-                                </Text>
-                            ) : null}
-                            {showReaderBismillah ? (
-                                <Text
-                                    style={[
-                                        styles.webAppReaderBismillah,
-                                        webAppQuranThemeStyles.readerBismillah,
-                                    ]}
-                                >
-                                    {BISMILLAH}
-                                </Text>
-                            ) : null}
                         </View>
                         <View style={styles.readerHeaderActions}>
                             {!isReaderInWebApp && (
@@ -967,9 +1204,20 @@ export function createQuranScreenRenderers(context) {
                                 />
                             )}
                             <IconActionButton
-                                Icon={MoreVertical}
-                                label='Menu baca'
-                                onPress={() => setReaderMenuVisible(true)}
+                                Icon={BookOpen}
+                                label='Mode mushaf'
+                                onPress={() =>
+                                    updateDisplayMode(
+                                        displayMode === "mushaf"
+                                            ? "card"
+                                            : "mushaf",
+                                    )
+                                }
+                            />
+                            <IconActionButton
+                                Icon={SlidersHorizontal}
+                                label='Pengaturan'
+                                onPress={() => setSettingsVisible(true)}
                             />
                             <IconActionButton
                                 Icon={Volume2}
@@ -979,9 +1227,44 @@ export function createQuranScreenRenderers(context) {
                                     setAudioRangeCollapsed(false);
                                 }}
                             />
+                            <IconActionButton
+                                Icon={MoreVertical}
+                                label='Menu baca'
+                                onPress={() => setReaderMenuVisible(true)}
+                            />
                         </View>
                     </View>
                 </View>
+                {selectedSurah.type === "surah" && displayMode !== "mushaf" ? (
+                    <View style={styles.surahHeroBanner}>
+                        <View style={styles.heroBannerLeft}>
+                            <Text style={styles.heroBannerSurahTitle}>
+                                Surah: {selectedSurah.name}
+                            </Text>
+                            <Text style={styles.heroBannerMetaText}>
+                                English: {heroMeaning}
+                            </Text>
+                            <Text style={styles.heroBannerMetaText}>
+                                Verses: {heroVerses}
+                            </Text>
+                            <Text style={styles.heroBannerMetaText}>
+                                Revealed in: {heroCity}
+                            </Text>
+                        </View>
+                        <View style={styles.heroBannerRight}>
+                            <Text style={styles.heroBannerArabicTitle}>
+                                {fullArabicSurah}
+                            </Text>
+                        </View>
+                    </View>
+                ) : null}
+                {showReaderBismillah ? (
+                    <View style={styles.bismillahBannerWrap}>
+                        <Text style={styles.bismillahBannerText}>
+                            {BISMILLAH}
+                        </Text>
+                    </View>
+                ) : null}
                 {selectedSurah.type === "surah" && displayMode !== "mushaf" ? (
                     <View
                         style={[
@@ -2060,109 +2343,16 @@ return (
         </AppModalSheet>
     );
 
-    const renderSurahRow = ({ item: surah }) => {
-        const isProgressSurah = progressSurahNumber === Number(surah.number);
-        if (isWebAppLayout) {
-            return (
-                <Pressable
-                    accessibilityRole='button'
-                    onPress={() => openSurah(surah)}
-                    style={[
-                        styles.webAppSurahRow,
-                        webAppQuranThemeStyles.surahRow,
-                    ]}
-                >
-                    <View style={styles.webAppSurahLeft}>
-                        <View
-                            style={[
-                                styles.webAppSurahNumberBadge,
-                                webAppQuranThemeStyles.surahNumberBadge,
-                            ]}
-                        >
-                            <Text
-                                style={[
-                                    styles.webAppSurahNumberText,
-                                    webAppQuranThemeStyles.surahNumberText,
-                                ]}
-                            >
-                                {surah.number}
-                            </Text>
-                        </View>
-                        <View style={styles.webAppSurahInfo}>
-                            <View style={styles.surahNameRow}>
-                                <Text
-                                    style={[
-                                        styles.webAppSurahName,
-                                        webAppQuranThemeStyles.surahName,
-                                    ]}
-                                >
-                                    {surah.name}
-                                </Text>
-                                {isProgressSurah ? (
-                                    <CheckCircle2
-                                        color={webAppQuranTheme.accent}
-                                        size={13}
-                                        strokeWidth={2.2}
-                                    />
-                                ) : null}
-                            </View>
-                            <Text
-                                style={[
-                                    styles.webAppSurahMeta,
-                                    webAppQuranThemeStyles.surahMeta,
-                                ]}
-                            >
-                                · {surah.meaning} · {surah.ayahs} ayat
-                            </Text>
-                        </View>
-                    </View>
-                    <Text
-                        numberOfLines={2}
-                        style={[
-                            styles.webAppSurahArabic,
-                            webAppQuranThemeStyles.surahArabic,
-                        ]}
-                    >
-                        {getCompactArabicSurahName(surah.arabic)}
-                    </Text>
-                </Pressable>
-            );
-        }
-
-        return (
-            <Pressable
-                accessibilityRole='button'
-                onPress={() => openSurah(surah)}
-                style={styles.surahRow}
-            >
-                <View style={styles.surahLeft}>
-                    <View style={styles.surahNumberWrap}>
-                        <View style={styles.surahNumberDiamond}>
-                            <Text style={styles.surahNumberText}>
-                                {surah.number}
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.surahInfo}>
-                        <View style={styles.surahNameRow}>
-                            <Text style={styles.surahName}>{surah.name}</Text>
-                            {isProgressSurah ? (
-                                <CheckCircle2
-                                    color={colors.primary}
-                                    size={13}
-                                    strokeWidth={2.2}
-                                />
-                            ) : null}
-                        </View>
-                        <Text style={styles.surahMeta}>
-                            {surah.meaning} · {surah.ayahs} ayah
-                        </Text>
-                    </View>
-                </View>
-                <Text style={styles.surahArabic}>{surah.arabic}</Text>
-            </Pressable>
-        );
-    };
+    const renderSurahRow = ({ item: surah }) => (
+        <SurahRowItem
+            isProgressSurah={progressSurahNumber === Number(surah.number)}
+            isWebAppLayout={isWebAppLayout}
+            onOpenSurah={openSurah}
+            surah={surah}
+            webAppQuranTheme={webAppQuranTheme}
+            webAppQuranThemeStyles={webAppQuranThemeStyles}
+        />
+    );
 
     const renderWebAppQuranListHeader = () => (
         <View style={styles.webAppQuranHeader}>
@@ -2272,7 +2462,7 @@ return (
                         value={surahQuery}
                     />
                 </View>
-                <View style={styles.quranTabs}>
+                <View style={styles.quranUnderlineTabs}>
                     {QURAN_TABS.map((tab) => (
                         <Pressable
                             accessibilityRole='tab'
@@ -2282,17 +2472,17 @@ return (
                             key={tab.key}
                             onPress={() => setQuranTab(tab.key)}
                             style={[
-                                styles.quranTabButton,
+                                styles.quranUnderlineTabButton,
                                 quranTab === tab.key
-                                    ? styles.quranTabButtonActive
+                                    ? styles.quranUnderlineTabButtonActive
                                     : null,
                             ]}
                         >
                             <Text
                                 style={[
-                                    styles.quranTabText,
+                                    styles.quranUnderlineTabText,
                                     quranTab === tab.key
-                                        ? styles.quranTabTextActive
+                                        ? styles.quranUnderlineTabTextActive
                                         : null,
                                 ]}
                             >
@@ -2382,17 +2572,183 @@ return (
         </Card>
     );
 
-    const renderNavigatorModal = () => (
-        <AppModalSheet
-            onClose={() => setNavigatorModalVisible(false)}
-            title='Navigasi Mushaf'
-            visible={navigatorModalVisible}
-        >
-            {renderNavigatorPanel()}
-        </AppModalSheet>
-    );
+    const renderNavigatorModal = () => {
+        if (!isWebAppLayout) return null;
+        return (
+            <AppModalSheet
+                onClose={() => setNavigatorModalVisible(false)}
+                title='Navigasi Mushaf'
+                visible={navigatorModalVisible}
+            >
+                {renderNavigatorPanel()}
+            </AppModalSheet>
+        );
+    };
 
     const renderQuranListFooter = () => {
+        if (quranTab === "juz") {
+            const query = (surahQuery || "").trim().toLowerCase();
+            const filteredJuz = JUZ_BOUNDARIES.filter((juz) => {
+                if (!query) return true;
+                const startSurah = findSurahByNumber(juz.startSurah);
+                const endSurah = findSurahByNumber(juz.endSurah);
+                return (
+                    `juz ${juz.juz}`.includes(query) ||
+                    juz.juz.toString().includes(query) ||
+                    (startSurah?.name || "").toLowerCase().includes(query) ||
+                    (endSurah?.name || "").toLowerCase().includes(query)
+                );
+            });
+
+            return (
+                <View style={{ gap: 4, marginBottom: spacing.lg }}>
+                    {filteredJuz.map((juz) => {
+                        const startSurah = findSurahByNumber(juz.startSurah);
+                        const endSurah = findSurahByNumber(juz.endSurah);
+                        const meta = `${startSurah?.name || `Surah ${juz.startSurah}`} : ${juz.startAyah} — ${endSurah?.name || `Surah ${juz.endSurah}`} : ${juz.endAyah}`;
+                        return (
+                            <Pressable
+                                accessibilityRole='button'
+                                key={`juz-${juz.juz}`}
+                                onPress={() =>
+                                    openSurah({
+                                        number: juz.startSurah,
+                                        name:
+                                            startSurah?.name ||
+                                            `Surah ${juz.startSurah}`,
+                                        targetAyah: { number: juz.startAyah },
+                                    })
+                                }
+                                style={styles.juzListCard}
+                            >
+                                <View style={styles.juzCardLeft}>
+                                    <IslamicStarBadge
+                                        number={juz.juz}
+                                        size={40}
+                                        stroke={ISLAMIC_STAR_BADGE_STROKE}
+                                        style={{ marginRight: 12 }}
+                                    />
+                                    <View style={styles.juzCardInfo}>
+                                        <Text style={styles.juzCardTitle}>
+                                            Juz {juz.juz}
+                                        </Text>
+                                        <Text style={styles.juzCardMeta}>
+                                            {meta}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <ArrowRight color={colors.muted} size={16} />
+                            </Pressable>
+                        );
+                    })}
+                </View>
+            );
+        }
+
+        if (quranTab === "hizb") {
+            const query = (surahQuery || "").trim().toLowerCase();
+            const filteredHizb = HIZB_BOUNDARIES.filter((h) => {
+                if (!query) return true;
+                const startSurah = findSurahByNumber(h.startSurah);
+                return (
+                    `hizb ${h.hizb}`.includes(query) ||
+                    h.hizb.toString().includes(query) ||
+                    (startSurah?.name || "").toLowerCase().includes(query)
+                );
+            });
+
+            return (
+                <View style={{ gap: 4, marginBottom: spacing.lg }}>
+                    {renderNavigatorPanel()}
+                    {filteredHizb.map((hizb) => {
+                        const startSurah = findSurahByNumber(hizb.startSurah);
+                        const meta = `${startSurah?.name || `Surah ${hizb.startSurah}`} : ${hizb.startAyah} · Juz ${hizb.juz} · Hal. ${hizb.page}`;
+                        return (
+                            <Pressable
+                                accessibilityRole='button'
+                                key={`hizb-${hizb.hizb}`}
+                                onPress={() => openHizb(hizb.quarter)}
+                                style={styles.juzListCard}
+                            >
+                                <View style={styles.juzCardLeft}>
+                                    <IslamicStarBadge
+                                        number={hizb.hizb}
+                                        size={40}
+                                        stroke={ISLAMIC_STAR_BADGE_STROKE}
+                                        style={{ marginRight: 12 }}
+                                    />
+                                    <View style={styles.juzCardInfo}>
+                                        <Text style={styles.juzCardTitle}>
+                                            Hizb {hizb.hizb}
+                                        </Text>
+                                        <Text style={styles.juzCardMeta}>
+                                            {meta}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <ArrowRight color={colors.muted} size={16} />
+                            </Pressable>
+                        );
+                    })}
+                    {message ? (
+                        <Text style={styles.message}>{message}</Text>
+                    ) : null}
+                </View>
+            );
+        }
+
+        if (quranTab === "page") {
+            const query = (surahQuery || "").trim().toLowerCase();
+            const filteredPages = PAGE_BOUNDARIES.filter((p) => {
+                if (!query) return true;
+                const startSurah = findSurahByNumber(p.startSurah);
+                return (
+                    `halaman ${p.page}`.includes(query) ||
+                    p.page.toString().includes(query) ||
+                    (startSurah?.name || "").toLowerCase().includes(query)
+                );
+            });
+
+            return (
+                <View style={{ gap: 4, marginBottom: spacing.lg }}>
+                    {renderNavigatorPanel()}
+                    {filteredPages.map((page) => {
+                        const startSurah = findSurahByNumber(page.startSurah);
+                        const meta = `${startSurah?.name || `Surah ${page.startSurah}`} : ${page.startAyah} · Juz ${page.juz}`;
+                        return (
+                            <Pressable
+                                accessibilityRole='button'
+                                key={`page-${page.page}`}
+                                onPress={() => openPage(page.page)}
+                                style={styles.juzListCard}
+                            >
+                                <View style={styles.juzCardLeft}>
+                                    <IslamicStarBadge
+                                        number={page.page}
+                                        size={40}
+                                        stroke={ISLAMIC_STAR_BADGE_STROKE}
+                                        style={{ marginRight: 12 }}
+                                    />
+                                    <View style={styles.juzCardInfo}>
+                                        <Text style={styles.juzCardTitle}>
+                                            Halaman {page.page}
+                                        </Text>
+                                        <Text style={styles.juzCardMeta}>
+                                            {meta}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <ArrowRight color={colors.muted} size={16} />
+                            </Pressable>
+                        );
+                    })}
+                    {message ? (
+                        <Text style={styles.message}>{message}</Text>
+                    ) : null}
+                </View>
+            );
+        }
+
         if (quranTab === "surah") {
             if (isWebAppLayout) {
                 return message ? (
