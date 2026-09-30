@@ -6,7 +6,7 @@ import AdzanQuickControl from "@/components/AdzanQuickControl";
 import PrayerCountdownWidget from "@/components/PrayerCountdownWidget";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
-import { muhasabahApi, progressApi, sholatTrackerApi } from "@/lib/api";
+import { amalanApi, muhasabahApi, progressApi, sholatTrackerApi } from "@/lib/api";
 import {
     normalizeMuhasabah,
     normalizePrayerLog,
@@ -44,6 +44,23 @@ import {
 } from "react-icons/md";
 
 const PRAYERS = ["Shubuh", "Dzuhur", "Ashar", "Maghrib", "Isya"];
+
+const AMALAN_KEYS = [
+    "amalan.item.subuh_jamaah",
+    "amalan.item.dhuha",
+    "amalan.item.tahajud",
+    "amalan.item.quran",
+    "amalan.item.dzikir_pagi",
+    "amalan.item.dzikir_petang",
+    "amalan.item.puasa_sunnah",
+];
+
+const todayStr = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
+const amalanLocalKey = () => `tholabul_amalan_${todayStr()}`;
 
 const DashboardPage = () => {
     const { isAuthenticated, isLoading: authLoading } = useRequireAuth();
@@ -114,6 +131,8 @@ const DashboardPage = () => {
     const [quranProgress, setQuranProgress] = useState(null);
     const [hadithProgress, setHadithProgress] = useState(null);
     const [syncError, setSyncError] = useState("");
+    const [amalanItems, setAmalanItems] = useState([]);
+    const [amalanLoaded, setAmalanLoaded] = useState(false);
 
     useEffect(() => {
         if (authLoading || !isAuthenticated) return;
@@ -127,9 +146,10 @@ const DashboardPage = () => {
             );
 
             try {
-                const [prayerPayload, muhasabahPayload] = await Promise.all([
+                const [prayerPayload, muhasabahPayload, amalanPayload] = await Promise.all([
                     sholatTrackerApi.today().then(parseApiJson),
                     muhasabahApi.list().then(parseApiJson),
+                    amalanApi.today().then(parseApiJson),
                 ]);
                 const serverPrayer = normalizePrayerLog(prayerPayload);
                 const mergedPrayer = { ...localPrayer, ...serverPrayer };
@@ -139,6 +159,30 @@ const DashboardPage = () => {
                 setMuhasabahList(serverMuhasabah);
                 writeLocalPrayerLog(today, mergedPrayer);
                 writeLocalArray("tholabul_muhasabah", serverMuhasabah);
+
+                // amalan
+                const serverAmalan = pickItems(amalanPayload).map((a) => ({
+                    id: String(a.id),
+                    label: a.label,
+                    done: a.done ?? a.completed ?? false,
+                    serverId: a.id,
+                    isKey: false,
+                }));
+                const localAmalan = JSON.parse(localStorage.getItem(amalanLocalKey()) ?? "{}");
+                const mergedAmalan = AMALAN_KEYS.map((k) => {
+                    const serverItem = serverAmalan.find((a) => a.label === k);
+                    if (serverItem) return { ...serverItem, done: serverItem.done };
+                    return {
+                        id: k,
+                        label: k,
+                        done: !!localAmalan[k],
+                        serverId: null,
+                        isKey: true,
+                    };
+                });
+                setAmalanItems(mergedAmalan);
+                setAmalanLoaded(true);
+
                 setSyncError("");
             } catch {
                 setSyncError(
@@ -350,6 +394,98 @@ const DashboardPage = () => {
             <div className='mb-6'>
                 <AdzanQuickControl />
             </div>
+
+            {/* Daily Routine Hub */}
+            <section className='mb-6' aria-labelledby='daily-hub-heading'>
+                <h2 id='daily-hub-heading' className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                    {t("dash.daily_hub")}
+                </h2>
+                <div className='grid gap-4 sm:grid-cols-3'>
+                    {/* Sholat Tracker Card */}
+                    <Link
+                        href='/dashboard/sholat-tracker'
+                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors group'
+                    >
+                        <div className='flex items-center justify-between mb-3'>
+                            <div className='w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center'>
+                                <MdMosque className='text-blue-700 dark:text-blue-400' />
+                            </div>
+                            <span className='text-xs text-emerald-600 dark:text-emerald-400 font-medium group-hover:underline'>
+                                {t("dash.log_prayers")}
+                            </span>
+                        </div>
+                        <div className='flex items-center gap-2 text-sm'>
+                            <span className='text-2xl font-bold text-gray-900 dark:text-white'>
+                                {donePrayerCount}/5
+                            </span>
+                            <span className='text-gray-500 dark:text-gray-400'>{t("dash.prayers_today")}</span>
+                        </div>
+                        <div className='mt-2 h-2 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden'>
+                            <div
+                                className='h-full bg-blue-600 transition-all duration-300'
+                                style={{ width: `${(donePrayerCount / 5) * 100}%` }}
+                            />
+                        </div>
+                    </Link>
+
+                    {/* Amalan Card */}
+                    <Link
+                        href='/dashboard/amalan'
+                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors group'
+                    >
+                        <div className='flex items-center justify-between mb-3'>
+                            <div className='w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center'>
+                                <MdFormatListBulleted className='text-amber-700 dark:text-amber-400' />
+                            </div>
+                            <span className='text-xs text-emerald-600 dark:text-emerald-400 font-medium group-hover:underline'>
+                                {t("amalan.title")}
+                            </span>
+                        </div>
+                        <div className='flex items-center gap-2 text-sm'>
+                            <span className='text-2xl font-bold text-gray-900 dark:text-white'>
+                                {amalanDoneCount}/{AMALAN_KEYS.length}
+                            </span>
+                            <span className='text-gray-500 dark:text-gray-400'>{t("amalan.completed_today")}</span>
+                        </div>
+                        <div className='mt-2 h-2 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden'>
+                            <div
+                                className='h-full bg-amber-600 transition-all duration-300'
+                                style={{ width: `${(amalanDoneCount / AMALAN_KEYS.length) * 100}%` }}
+                            />
+                        </div>
+                    </Link>
+
+                    {/* Muhasabah Card */}
+                    <Link
+                        href='/dashboard/muhasabah'
+                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors group'
+                    >
+                        <div className='flex items-center justify-between mb-3'>
+                            <div className='w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center'>
+                                <MdSelfImprovement className='text-purple-700 dark:text-purple-400' />
+                            </div>
+                            <span className='text-xs text-emerald-600 dark:text-emerald-400 font-medium group-hover:underline'>
+                                {t("dash.write_muhasabah")}
+                            </span>
+                        </div>
+                        <div className='text-sm'>
+                            {lastMuhasabah !== null ? (
+                                <>
+                                    <p className='text-[10px] text-gray-400 mb-1'>
+                                        {lastMuhasabah.date
+                                            ? new Date(lastMuhasabah.date + "T00:00:00").toLocaleDateString("id-ID", { weekday: "short", day: "numeric", month: "short" })
+                                            : ""}
+                                    </p>
+                                    <p className='text-sm text-gray-700 dark:text-gray-300 line-clamp-2'>{lastMuhasabah.content}</p>
+                                </>
+                            ) : (
+                                <p className='text-xs text-gray-400'>{t("dash.no_muhasabah_today")}</p>
+                            )}
+                        </div>
+                    </Link>
+                </div>
+            </section>
+
             {/* Quick access */}
             <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
                 {t("dash.quick_access")}

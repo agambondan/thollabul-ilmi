@@ -4,6 +4,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { hafalanApi } from "@/lib/api";
+import { isHafalanMemorized } from "@/lib/personalSync";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsCheck2Circle, BsChevronDown, BsClockHistory } from "react-icons/bs";
@@ -67,7 +68,7 @@ const MurojaahPage = () => {
                     const res = await hafalanApi.list();
                     const data = await res.json();
                     const memorized = (data?.items ?? data ?? []).filter(
-                        (s) => s.status === "hafal",
+                        (s) => isHafalanMemorized(s),
                     );
                     if (memorized.length > 0) {
                         setHafalan(memorized);
@@ -80,7 +81,7 @@ const MurojaahPage = () => {
                 const local = JSON.parse(
                     localStorage.getItem("tholabul_hafalan") ?? "[]",
                 );
-                setHafalan(local.filter((s) => s.status === "hafal"));
+                setHafalan(local.filter((s) => isHafalanMemorized(s)));
             } catch {}
             setLoading(false);
         };
