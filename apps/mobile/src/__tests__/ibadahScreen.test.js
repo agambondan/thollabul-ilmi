@@ -325,7 +325,7 @@ describe("IbadahScreen", () => {
         expect(getByText("Khatam")).toBeTruthy();
     });
 
-    test("section items call onOpenTab with featureKey", () => {
+    test("section items call onOpenTab with featureKey and an Ibadah return route", () => {
         const onOpenTab = jest.fn();
         const { getByText } = render(
             <IbadahScreen
@@ -338,7 +338,31 @@ describe("IbadahScreen", () => {
         fireEvent.press(getByText("Doa"));
         expect(onOpenTab).toHaveBeenCalledWith("belajar", {
             featureKey: "doa",
+            returnTo: { tab: "ibadah" },
         });
+    });
+
+    test("every hub row that opens a Belajar feature returns to the Ibadah hub", () => {
+        const onOpenTab = jest.fn();
+        const { getAllByTestId } = render(
+            <IbadahScreen
+                isActive
+                navigation={defaultNavigation}
+                onOpenTab={onOpenTab}
+            />,
+        );
+
+        getAllByTestId("compact-row").forEach((row) => fireEvent.press(row));
+
+        const featureCalls = onOpenTab.mock.calls.filter(
+            ([tab]) => tab === "belajar",
+        );
+        expect(featureCalls).toHaveLength(13);
+        featureCalls.forEach(([, params]) => {
+            expect(params.featureKey).toEqual(expect.any(String));
+            expect(params.returnTo).toEqual({ tab: "ibadah" });
+        });
+        expect(defaultNavigation.open).toHaveBeenCalledTimes(3);
     });
 
     test("section items with view property call navigation.open", () => {

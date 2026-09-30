@@ -1485,7 +1485,7 @@ describe("ExploreScreen", () => {
         expect(getByText("Menampilkan 1 dari 2 doa")).toBeTruthy();
         expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
             expect.objectContaining({ key: "doa", endpoint: "/api/v1/doa" }),
-            { page: 0, size: 20 },
+            { page: 0, size: 100 },
         );
     });
 

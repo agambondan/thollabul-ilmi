@@ -17,6 +17,7 @@ const {
     saveLibraryProgress,
     getTodayPrayerLog,
     savePrayerLog,
+    getPrayerHistory,
     getPrayerStats,
     getNotes,
     getNotesByType,
@@ -194,6 +195,36 @@ describe("personal api", () => {
             expect(requestJson).toHaveBeenCalledWith("/api/v1/sholat/stats", {
                 auth: true,
             });
+        });
+
+        test("getPrayerHistory sends the local date range and picks the logs", async () => {
+            const logs = [
+                {
+                    date: "2026-10-01",
+                    id: 1,
+                    prayer: "subuh",
+                    status: "munfarid",
+                },
+            ];
+            requestJson.mockResolvedValueOnce(logs);
+            const result = await getPrayerHistory({
+                from: "2026-09-25",
+                to: "2026-10-01",
+            });
+            expect(requestJson).toHaveBeenCalledWith(
+                "/api/v1/sholat/history?from=2026-09-25&to=2026-10-01",
+                { auth: true },
+            );
+            expect(result).toEqual(logs);
+        });
+
+        test("getPrayerHistory works without a range and with wrapped payloads", async () => {
+            requestJson.mockResolvedValueOnce({ data: [{ id: 2 }] });
+            const result = await getPrayerHistory();
+            expect(requestJson).toHaveBeenCalledWith("/api/v1/sholat/history", {
+                auth: true,
+            });
+            expect(result).toEqual([{ id: 2 }]);
         });
     });
 

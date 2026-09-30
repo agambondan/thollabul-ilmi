@@ -348,10 +348,13 @@ export const getFeatureItemPage = async (feature, pagination) => {
         ? withPagination(feature.endpoint, pagination)
         : feature.endpoint;
     const page = Number(pagination?.page ?? 0);
+    const pageSize = Number(pagination?.size ?? 0);
+    const cachePage =
+        pageSize > 0 && pageSize !== 20 ? `${page}:size:${pageSize}` : page;
     const auth = feature.type === "protected-list";
     const cacheKey = cacheKeys.exploreFeature(
         feature.key || feature.endpoint,
-        page,
+        cachePage,
     );
 
     const payload = await fetchCached(

@@ -11,6 +11,11 @@ import {
 
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import {
+    MAX_TASBIH_TARGET_DIGITS,
+    clampTasbihCount,
+    clampTasbihTarget,
+} from "../../storage/tasbih";
 import { colors, radius, spacing, touchTarget } from "../../theme";
 import { hapticTap } from "../../utils/haptics";
 
@@ -67,8 +72,6 @@ const PRESETS = [
 
 const TARGET_PRESETS = [33, 99, 100, 313, 1000];
 
-const normalizeTarget = (value) => Math.max(0, Number(value) || 0);
-
 function StatTile({ color, isDarkTheme, label, value }) {
     return (
         <View style={[styles.statTile, isDarkTheme && styles.statTileDark]}>
@@ -124,18 +127,20 @@ function PresetCard({ active, isDarkTheme, onPress, preset, t }) {
 }
 
 export function WebAppTasbihRoute({
+    onResetTodayTotal = () => {},
     setTasbih = () => {},
     tasbih = { count: 0, target: 33 },
+    todayTotal = 0,
 }) {
     const { t } = useMobileLocale();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const [activeIndex, setActiveIndex] = useState(0);
-    const [totalToday, setTotalToday] = useState(tasbih.count ?? 0);
+    const [targetDraft, setTargetDraft] = useState(null);
     const [vibrate, setVibrate] = useState(true);
 
     const active = PRESETS[activeIndex] ?? PRESETS[0];
-    const count = Number(tasbih.count ?? 0);
-    const target = normalizeTarget(tasbih.target ?? active.target);
+    const count = clampTasbihCount(tasbih.count);
+    const target = clampTasbihTarget(tasbih.target ?? active.target);
     const reachedTarget = target > 0 && count >= target;
     const progressPct =
         target > 0 ? Math.min(100, Math.round((count / target) * 100)) : 0;
@@ -147,8 +152,8 @@ export function WebAppTasbihRoute({
                     ? updater(current ?? tasbih)
                     : updater;
             return {
-                count: normalizeTarget(next.count),
-                target: normalizeTarget(next.target),
+                count: clampTasbihCount(next.count),
+                target: clampTasbihTarget(next.target),
             };
         });
     };
@@ -157,18 +162,29 @@ export function WebAppTasbihRoute({
         if (vibrate) hapticTap();
         updateTasbih((current) => ({
             ...current,
-            count: normalizeTarget(current.count) + 1,
+            count: clampTasbihCount(current.count) + 1,
         }));
-        setTotalToday((current) => current + 1);
     };
 
     const reset = () => updateTasbih((current) => ({ ...current, count: 0 }));
     const resetAll = () => {
         updateTasbih((current) => ({ ...current, count: 0 }));
-        setTotalToday(0);
+        onResetTodayTotal();
     };
-    const setTarget = (nextTarget) =>
-        updateTasbih({ count: 0, target: normalizeTarget(nextTarget) });
+    const setTarget = (nextTarget) => {
+        setTargetDraft(null);
+        updateTasbih({ count: 0, target: clampTasbihTarget(nextTarget) });
+    };
+    const handleTargetInput = (text) => {
+        const digits = `${text}`
+            .replace(/[^\d]/g, "")
+            .slice(0, MAX_TASBIH_TARGET_DIGITS);
+        setTargetDraft(digits);
+        updateTasbih((current) => ({
+            ...current,
+            target: clampTasbihTarget(digits),
+        }));
+    };
     const choosePreset = (index) => {
         const preset = PRESETS[index] ?? PRESETS[0];
         setActiveIndex(index);
@@ -321,7 +337,7 @@ export function WebAppTasbihRoute({
                     color='#2563eb'
                     isDarkTheme={isDarkTheme}
                     label={t("explore.tasbih.todayTotalLabel")}
-                    value={totalToday}
+                    value={todayTotal}
                 />
             </View>
 
@@ -331,11 +347,16 @@ export function WebAppTasbihRoute({
                         {t("explore.tasbih.targetTitle")}
                     </Text>
                     <TextInput
+                        accessibilityLabel={t("explore.tasbih.targetTitle")}
                         keyboardType='number-pad'
-                        onChangeText={setTarget}
+                        maxLength={MAX_TASBIH_TARGET_DIGITS}
+                        onBlur={() => setTargetDraft(null)}
+                        onChangeText={handleTargetInput}
+                        placeholder='∞'
                         placeholderTextColor={isDarkTheme ? "#64748b" : "#94a3b8"}
                         style={[styles.targetInput, isDarkTheme && styles.targetInputDark]}
-                        value={`${target}`}
+                        testID='web-app-tasbih-target-input'
+                        value={targetDraft ?? (target > 0 ? `${target}` : "")}
                     />
                 </View>
                 <View style={styles.targetChips}>

@@ -4,14 +4,12 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
-import { PRAYER_ITEMS } from "../ExploreScreen.helpers";
+import {
+    PRAYER_ITEMS,
+    getLocalDateKey,
+    shiftLocalDateKey,
+} from "../ExploreScreen.helpers";
 
-const todayIso = () => new Date().toISOString().slice(0, 10);
-const dateOffsetIso = (offset) => {
-    const date = new Date();
-    date.setDate(date.getDate() + offset);
-    return date.toISOString().slice(0, 10);
-};
 const formatShortDate = (iso, language) => {
     const date = new Date(`${iso}T00:00:00`);
     return date.toLocaleDateString(language === "en" ? "en-US" : "id-ID", {
@@ -20,16 +18,16 @@ const formatShortDate = (iso, language) => {
         weekday: "short",
     });
 };
-const buildLastSeven = (doneCount) =>
+export const buildLastSeven = (doneCount, days = {}, now = new Date()) =>
     Array.from({ length: 7 }, (_, index) => {
         const offset = index - 6;
+        const date = shiftLocalDateKey(offset, now);
         return {
-            count: offset === 0 ? doneCount : 0,
-            date: dateOffsetIso(offset),
+            count: offset === 0 ? doneCount : (days[date] ?? 0),
+            date,
         };
     });
-const buildMonthDays = (doneCount) => {
-    const now = new Date();
+export const buildMonthDays = (doneCount, days = {}, now = new Date()) => {
     const year = now.getFullYear();
     const month = now.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -38,13 +36,17 @@ const buildMonthDays = (doneCount) => {
     return Array.from({ length: daysInMonth }, (_, index) => {
         const day = index + 1;
         return {
-            count: day === today ? doneCount : 0,
+            count:
+                day === today
+                    ? doneCount
+                    : (days[getLocalDateKey(new Date(year, month, day))] ?? 0),
             day,
             future: day > today,
             today: day === today,
         };
     });
 };
+const EMPTY_HISTORY = { days: {}, loaded: false, stats: null };
 const getHeatStyle = (entry) => {
     if (entry.future) return styles.monthDayFuture;
     if (entry.count === 5) return styles.monthDayFull;
@@ -131,7 +133,26 @@ function LastSevenRow({ activeDark, language, row, today }) {
     );
 }
 
+function StatTile({ activeDark, label, value }) {
+    return (
+        <View style={[styles.statTile, activeDark && styles.statTileDark]}>
+            <Text
+                style={[styles.statValue, activeDark && styles.statValueDark]}
+            >
+                {value}
+            </Text>
+            <Text
+                style={[styles.statLabel, activeDark && styles.statLabelDark]}
+            >
+                {label}
+            </Text>
+        </View>
+    );
+}
+
 export function WebAppSholatTrackerRoute({
+    isGuest = false,
+    sholatHistory = EMPTY_HISTORY,
     sholatLog = {},
     togglePrayer = () => {},
 }) {
@@ -140,10 +161,17 @@ export function WebAppSholatTrackerRoute({
     const activeDark = isDarkThemePref ?? false;
     const doneCount = PRAYER_ITEMS.filter((item) => sholatLog[item.key]).length;
     const pct = Math.round((doneCount / PRAYER_ITEMS.length) * 100);
-    const today = todayIso();
-    const lastSeven = buildLastSeven(doneCount);
-    const monthDays = buildMonthDays(doneCount);
+    const now = new Date();
+    const today = getLocalDateKey(now);
+    const historyDays = sholatHistory?.days ?? {};
+    const stats = sholatHistory?.stats ?? null;
+    const lastSeven = buildLastSeven(doneCount, historyDays, now);
+    const monthDays = buildMonthDays(doneCount, historyDays, now);
     const perfectDays = monthDays.filter((entry) => entry.count === 5).length;
+    const showEmptyHistory =
+        !isGuest &&
+        Boolean(sholatHistory?.loaded) &&
+        !Object.keys(historyDays).length;
 
     return (
         <ScrollView
@@ -181,6 +209,25 @@ export function WebAppSholatTrackerRoute({
                     </Text>
                 </View>
             </View>
+
+            {isGuest ? (
+                <View
+                    style={[
+                        styles.noticeCard,
+                        activeDark && styles.noticeCardDark,
+                    ]}
+                    testID='web-app-sholat-login-notice'
+                >
+                    <Text
+                        style={[
+                            styles.noticeText,
+                            activeDark && styles.noticeTextDark,
+                        ]}
+                    >
+                        {t("explore.loginPrayerTracker")}
+                    </Text>
+                </View>
+            ) : null}
 
             <View style={[
                 styles.progressCard,
@@ -229,6 +276,28 @@ export function WebAppSholatTrackerRoute({
                 ))}
             </View>
 
+            {stats ? (
+                <View style={styles.statsRow} testID='web-app-sholat-stats'>
+                    <StatTile
+                        activeDark={activeDark}
+                        label={t("explore.sholatTracker.statsTotalDays")}
+                        value={stats.totalDays}
+                    />
+                    <StatTile
+                        activeDark={activeDark}
+                        label={t("explore.sholatTracker.statsBerjamaah")}
+                        value={`${stats.berjamaahPct}%`}
+                    />
+                    {stats.currentStreak > 0 || stats.bestStreak > 0 ? (
+                        <StatTile
+                            activeDark={activeDark}
+                            label={t("explore.sholatTracker.statsStreak")}
+                            value={`${stats.currentStreak}/${stats.bestStreak}`}
+                        />
+                    ) : null}
+                </View>
+            ) : null}
+
             <View style={[
                 styles.weekCard,
                 activeDark && {
@@ -258,6 +327,17 @@ export function WebAppSholatTrackerRoute({
                         />
                     ))}
                 </View>
+                {showEmptyHistory ? (
+                    <Text
+                        style={[
+                            styles.historyEmptyText,
+                            activeDark && styles.historyEmptyTextDark,
+                        ]}
+                        testID='web-app-sholat-history-empty'
+                    >
+                        {t("explore.sholatTracker.historyEmpty")}
+                    </Text>
+                ) : null}
             </View>
 
             <View style={[
@@ -554,5 +634,74 @@ const styles = StyleSheet.create({
         color: "#94a3b8",
         fontSize: 11,
         fontWeight: "800",
+    },
+    noticeCard: {
+        backgroundColor: "#fffbeb",
+        borderColor: "#fde68a",
+        borderRadius: radius.md,
+        borderWidth: 1,
+        marginBottom: spacing.lg,
+        padding: spacing.md,
+    },
+    noticeCardDark: {
+        backgroundColor: "#422006",
+        borderColor: "#854d0e",
+    },
+    noticeText: {
+        color: "#92400e",
+        fontSize: 13,
+        fontWeight: "800",
+        lineHeight: 19,
+    },
+    noticeTextDark: {
+        color: "#fde68a",
+    },
+    statsRow: {
+        flexDirection: "row",
+        gap: spacing.sm,
+        marginBottom: spacing.lg,
+    },
+    statTile: {
+        alignItems: "center",
+        backgroundColor: "#ffffff",
+        borderColor: "#e5e7eb",
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flex: 1,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.md,
+    },
+    statTileDark: {
+        backgroundColor: "#111827",
+        borderColor: "#374151",
+    },
+    statValue: {
+        color: "#047857",
+        fontSize: 18,
+        fontWeight: "900",
+        textAlign: "center",
+    },
+    statValueDark: {
+        color: "#34d399",
+    },
+    statLabel: {
+        color: "#94a3b8",
+        fontSize: 11,
+        fontWeight: "800",
+        marginTop: 2,
+        textAlign: "center",
+    },
+    statLabelDark: {
+        color: "#9ca3af",
+    },
+    historyEmptyText: {
+        color: "#94a3b8",
+        fontSize: 12,
+        fontWeight: "700",
+        paddingBottom: spacing.md,
+        paddingHorizontal: spacing.lg,
+    },
+    historyEmptyTextDark: {
+        color: "#9ca3af",
     },
 });

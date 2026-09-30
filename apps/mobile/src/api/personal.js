@@ -188,6 +188,18 @@ export const savePrayerLog = async ({ date, prayer, status }) =>
 export const getPrayerStats = async () =>
     requestJson("/api/v1/sholat/stats", { auth: true });
 
+export const getPrayerHistory = async ({ from, to } = {}) => {
+    const params = new URLSearchParams();
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+    const query = params.toString();
+    const payload = await requestJson(
+        `/api/v1/sholat/history${query ? `?${query}` : ""}`,
+        { auth: true },
+    );
+    return pickItems(payload);
+};
+
 export const getNotes = async ({ refType, refId }) => {
     const payload = await requestJson(
         `/api/v1/notes?ref_type=${refType}&ref_id=${refId}`,

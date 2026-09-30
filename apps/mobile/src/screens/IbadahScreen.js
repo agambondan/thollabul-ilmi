@@ -162,6 +162,8 @@ const sectionDefinitions = [
     },
 ];
 
+const IBADAH_RETURN_ROUTE = { tab: "ibadah" };
+
 const buildSections = (t) =>
     sectionDefinitions.map((section) => ({
         ...section,
@@ -233,7 +235,10 @@ function IbadahHub({ navigation, onOpenTab }) {
         }
 
         if (row.featureKey) {
-            onOpenTab?.("belajar", { featureKey: row.featureKey });
+            onOpenTab?.("belajar", {
+                featureKey: row.featureKey,
+                returnTo: IBADAH_RETURN_ROUTE,
+            });
         }
     };
 

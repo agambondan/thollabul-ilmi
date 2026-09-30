@@ -27,6 +27,7 @@ export const exploreIdn = {
         "explore.asmaul.vibrateStatus": "Getar: {state}",
         "explore.asmaul.wirid.subtitle": "Hitung wirid dengan 99 nama Allah",
         "explore.asmaul.wirid.title": "Wirid Asmaul Husna",
+        "explore.backToTab": "Kembali ke {tab}",
         "explore.blog.emptyFilteredText":
             "Ubah kata kunci atau reset filter kategori.",
         "explore.blog.emptyFilteredTitle": "Tidak ada artikel yang cocok",
@@ -207,9 +208,14 @@ export const exploreIdn = {
         "explore.reference.yearBeforeCommon": "SM",
         "explore.reference.yearCommon": "M",
         "explore.reference.yearHijri": "H",
+        "explore.sholatTracker.historyEmpty":
+            "Belum ada riwayat sholat yang tercatat.",
         "explore.sholatTracker.lastSevenDays": "7 Hari Terakhir",
         "explore.sholatTracker.perfectDays": "{count} hari sempurna",
         "explore.sholatTracker.recordedPercent": "{percent}% sholat tercatat",
+        "explore.sholatTracker.statsBerjamaah": "Berjamaah",
+        "explore.sholatTracker.statsStreak": "Streak/terbaik (hari)",
+        "explore.sholatTracker.statsTotalDays": "Hari tercatat",
         "explore.sholatTracker.subtitle":
             "Catat sholat hari ini dalam ringkasan dashboard.",
         "explore.sholatTracker.thisMonth": "Bulan Ini",

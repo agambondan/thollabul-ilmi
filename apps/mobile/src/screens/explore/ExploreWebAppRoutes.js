@@ -247,6 +247,7 @@ export function renderExploreWebAppRoute(context) {
         setZakatTradeHaul,
         setZakatTradeReceivable,
         setZakatTradeStock,
+        sholatHistory,
         sholatLog,
         showError,
         showInfo,
@@ -254,6 +255,8 @@ export function renderExploreWebAppRoute(context) {
         surahSearch,
         surahs,
         tasbih,
+        tasbihTodayTotal,
+        resetTasbihTodayTotal,
         togglePrayer,
         userWirdForm,
         visibleItems,
@@ -3374,8 +3377,10 @@ export function renderExploreWebAppRoute(context) {
         return (
             <WebAppTasbihRoute
                 navigation={navigation}
+                onResetTodayTotal={resetTasbihTodayTotal}
                 setTasbih={setTasbih}
                 tasbih={tasbih}
+                todayTotal={tasbihTodayTotal}
             />
         );
     }
@@ -3400,7 +3405,9 @@ export function renderExploreWebAppRoute(context) {
     if (activeFeature?.key === "sholat-tracker") {
         return (
             <WebAppSholatTrackerRoute
+                isGuest={!session?.token}
                 navigation={navigation}
+                sholatHistory={sholatHistory}
                 sholatLog={sholatLog}
                 togglePrayer={togglePrayer}
             />

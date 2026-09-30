@@ -10,10 +10,14 @@ import {
     View,
 } from "react-native";
 
+import { useAutoLoadMore } from "../../hooks/useAutoLoadMore";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
-import { normalizeSearchText } from "../ExploreScreen.helpers";
+import {
+    normalizeSearchText,
+    stripMarkdownText,
+} from "../ExploreScreen.helpers";
 
 const pickText = (...values) =>
     values.find((value) => typeof value === "string" && value.trim())?.trim() ??
@@ -30,6 +34,8 @@ const titleCase = (value) =>
               .replace(/[-_]/g, " ")
               .replace(/\b\w/g, (char) => char.toUpperCase())
         : "";
+const CATEGORY_ALIASES = { dzikir_umum: "umum" };
+const canonicalCategory = (value) => CATEGORY_ALIASES[value] ?? value;
 
 const formatYear = (raw, t) => {
     if (raw.year_hijri)
@@ -49,7 +55,7 @@ export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
             "setelah_sholat",
             "tidur",
             "safar",
-            "dzikir_umum",
+            "umum",
         ],
         emptyTextKey: "explore.reference.dzikir.empty",
         loadingTextKey: "explore.reference.dzikir.loading",
@@ -111,6 +117,7 @@ export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
         categories: ["haji", "umrah"],
         emptyTextKey: "explore.reference.manasik.empty",
         leading: "step",
+        markdownBody: true,
         loadingTextKey: "explore.reference.manasik.loading",
         searchPlaceholderKey: "explore.reference.manasik.searchPlaceholder",
         subtitleKey: "explore.reference.manasik.subtitle",
@@ -254,15 +261,17 @@ const getItemSearchText = (item, index, leading, t) => {
     ].join(" ");
 };
 const getFilterCategory = (item) =>
-    toStr(
-        getRaw(item).category ??
-            getRaw(item).jenis_nilai ??
-            getRaw(item).type ??
-            getRaw(item).occasion,
-    )
-        .toLowerCase()
-        .replace(/\s+/g, "_")
-        .trim();
+    canonicalCategory(
+        toStr(
+            getRaw(item).category ??
+                getRaw(item).jenis_nilai ??
+                getRaw(item).type ??
+                getRaw(item).occasion,
+        )
+            .toLowerCase()
+            .replace(/\s+/g, "_")
+            .trim(),
+    );
 const getLeadingLabel = (item, index, leading, t) => {
     const raw = getRaw(item);
     if (leading === "step") return raw.step ? `${raw.step}` : `${index + 1}`;
@@ -301,7 +310,8 @@ function CategoryPill({ active, isDark, label, onPress, testID }) {
 function ReferenceCard({ config, index, isDark, item, onOpen, t }) {
     const leading = getLeadingLabel(item, index, config.leading, t);
     const meta = getItemMeta(item);
-    const body = getItemBody(item);
+    const rawBody = getItemBody(item);
+    const body = config.markdownBody ? stripMarkdownText(rawBody) : rawBody;
     const arabic = getItemArabic(item);
 
     return (
@@ -338,7 +348,7 @@ function ReferenceCard({ config, index, isDark, item, onOpen, t }) {
                                 isDark && styles.metaBadgeDark,
                             ]}
                         >
-                            {titleCase(meta)}
+                            {titleCase(canonicalCategory(meta))}
                         </Text>
                     ) : null}
                     <Text
@@ -425,6 +435,15 @@ export function WebAppReferenceListRoute({
             );
         });
     }, [category, config.leading, items, search, t]);
+    const { autoLoading } = useAutoLoadMore({
+        active: Boolean(category || normalizeSearchText(search)),
+        busy: Boolean(loading || pagination?.loadingMore),
+        error: Boolean(error),
+        hasMore: Boolean(pagination?.hasMore),
+        onLoadMore,
+        resetKey: `${category}|${search}`,
+    });
+    const showLoading = loading || (autoLoading && !filteredItems.length);
 
     return (
         <ScrollView
@@ -541,7 +560,7 @@ export function WebAppReferenceListRoute({
                     {t("explore.reference.error")}
                 </Text>
             ) : null}
-            {loading ? (
+            {showLoading ? (
                 <View style={[styles.state, isDark && styles.stateDark]}>
                     <ActivityIndicator
                         color={isDark ? "#34d399" : "#059669"}
@@ -574,7 +593,7 @@ export function WebAppReferenceListRoute({
                 </View>
             ) : null}
 
-            {!loading && !error && !filteredItems.length ? (
+            {!loading && !error && !filteredItems.length && !autoLoading ? (
                 <View style={[styles.empty, isDark && styles.emptyDark]}>
                     <BookOpen
                         color={isDark ? "#64748b" : "#9ca3af"}
@@ -604,7 +623,7 @@ export function WebAppReferenceListRoute({
                 </View>
             ) : null}
 
-            {pagination?.hasMore && !loading && !error ? (
+            {pagination?.hasMore && !loading && !error && !autoLoading ? (
                 <View style={styles.loadMoreWrap}>
                     <Pressable
                         accessibilityRole='button'

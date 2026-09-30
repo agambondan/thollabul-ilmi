@@ -1,5 +1,5 @@
 import { BookOpen, Search } from "lucide-react-native";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { useAutoLoadMore } from "../../hooks/useAutoLoadMore";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import { normalizeSearchText } from "../ExploreScreen.helpers";
@@ -213,6 +214,9 @@ export function WebAppDoaRoute({
     const activeDark = isDarkThemePref ?? false;
     const [query, setQuery] = useState("");
     const [category, setCategory] = useState("");
+    const clearFeatureRef = useRef(clearFeature);
+    clearFeatureRef.current = clearFeature;
+    const canClearFeature = Boolean(clearFeature);
 
     useEffect(() => {
         if (!navigation?.setHeader) return;
@@ -225,19 +229,19 @@ export function WebAppDoaRoute({
                     return true;
                 },
             });
-        } else if (clearFeature) {
+        } else if (canClearFeature) {
             navigation.setHeader({
                 showBack: true,
                 title: t("explore.doa.title"),
                 onBack: () => {
-                    clearFeature();
+                    clearFeatureRef.current?.();
                     return true;
                 },
             });
         } else {
             navigation.setHeader(null);
         }
-    }, [category, clearFeature, navigation, t]);
+    }, [canClearFeature, category, navigation, t]);
     const categories = useMemo(
         () =>
             DOA_CATEGORIES.map((item) => ({
@@ -250,6 +254,15 @@ export function WebAppDoaRoute({
         () => filterDoas(items, query, category, t),
         [category, items, query, t],
     );
+    const { autoLoading } = useAutoLoadMore({
+        active: Boolean(category || normalizeSearchText(query)),
+        busy: Boolean(loading || pagination?.loadingMore),
+        error: Boolean(error),
+        hasMore: Boolean(pagination?.hasMore),
+        onLoadMore,
+        resetKey: `${category}|${query}`,
+    });
+    const showLoading = loading || (autoLoading && filteredItems.length === 0);
     const countText =
         query || category
             ? t("explore.doa.filteredCount", {
@@ -382,7 +395,7 @@ export function WebAppDoaRoute({
                 styles.error,
                 activeDark && { color: "#f87171" },
             ]}>{error}</Text> : null}
-            {loading ? (
+            {showLoading ? (
                 <View style={[
                     styles.state,
                     activeDark && { backgroundColor: "#0f172a" },
@@ -396,7 +409,7 @@ export function WebAppDoaRoute({
                     </Text>
                 </View>
             ) : null}
-            {!loading && filteredItems.length === 0 ? (
+            {!loading && filteredItems.length === 0 && !autoLoading ? (
                 <View style={[
                     styles.empty,
                     activeDark && {
@@ -438,7 +451,7 @@ export function WebAppDoaRoute({
                     : null}
             </View>
 
-            {!loading && pagination?.hasMore ? (
+            {!loading && pagination?.hasMore && !autoLoading ? (
                 <Pressable
                     accessibilityRole='button'
                     accessibilityState={{ disabled: pagination.loadingMore }}

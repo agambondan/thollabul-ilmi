@@ -10,6 +10,7 @@ import {
     View,
 } from "react-native";
 import { useNotifyTabActivity } from "../context/TabActivityContext";
+import { useKeyboardInset } from "../hooks/useKeyboardInset";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { getThemeColors, spacing } from "../theme";
 
@@ -35,6 +36,9 @@ export function Screen({
         isPaperLayout: !isWebAppLayout,
     });
     const notifyTabActivity = useNotifyTabActivity();
+    const keyboardInset = useKeyboardInset();
+    const keyboardStyle =
+        keyboardInset > 0 ? { paddingBottom: keyboardInset } : null;
     const handleScrollActivity = useCallback(
         (event) => {
             notifyTabActivity();
@@ -82,7 +86,8 @@ export function Screen({
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : undefined}
                 keyboardVerticalOffset={Platform.OS === "ios" ? 16 : 0}
-                style={styles.flex}
+                style={[styles.flex, keyboardStyle]}
+                testID='screen-root'
             >
                 <FlatList
                     contentContainerStyle={[
@@ -93,7 +98,7 @@ export function Screen({
                     keyboardShouldPersistTaps='handled'
                     keyExtractor={listKeyExtractor}
                     ListFooterComponent={listFooter}
-                    ListHeaderComponent={renderHeader}
+                    ListHeaderComponent={renderHeader()}
                     initialNumToRender={10}
                     maxToRenderPerBatch={10}
                     windowSize={5}
@@ -121,7 +126,8 @@ export function Screen({
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             keyboardVerticalOffset={Platform.OS === "ios" ? 16 : 0}
-            style={styles.flex}
+            style={[styles.flex, keyboardStyle]}
+            testID='screen-root'
         >
             <ScrollView
                 contentContainerStyle={[

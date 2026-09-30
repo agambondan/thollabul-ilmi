@@ -1,6 +1,31 @@
 export const quizOptions = ["A", "B", "C", "D"];
 
 export const EXPLORE_PAGE_SIZE = 20;
+export const EXPLORE_REFERENCE_PAGE_SIZE = 100;
+export const EXPLORE_REFERENCE_FEATURE_KEYS = [
+    "asmaul-husna",
+    "doa",
+    "dzikir",
+    "manasik",
+    "wirid",
+];
+export const getFeaturePageSize = (feature) =>
+    EXPLORE_REFERENCE_FEATURE_KEYS.includes(feature?.key)
+        ? EXPLORE_REFERENCE_PAGE_SIZE
+        : EXPLORE_PAGE_SIZE;
+const FEATURE_RETURN_TAB_LABEL_KEYS = {
+    belajar: "nav.belajar",
+    hadith: "nav.hadith",
+    home: "nav.dashboard",
+    ibadah: "nav.ibadah",
+    quran: "nav.quran",
+};
+export const getFeatureBackLabel = (returnRoute, t) =>
+    t("explore.backToTab", {
+        tab: t(
+            FEATURE_RETURN_TAB_LABEL_KEYS[returnRoute?.tab] ?? "nav.belajar",
+        ),
+    });
 export const TAFSIR_SOURCE_LABELS = {
     kemenag: "Tafsir Kemenag",
     secondary: "Tafsir Al-Mishbah",
@@ -168,6 +193,28 @@ export const stripHtmlText = (value = "") =>
     `${value}`
         .replace(/<[^>]*>/g, "")
         .replace(/\s+/g, " ")
+        .trim();
+export const stripMarkdownText = (value = "") =>
+    `${value}`
+        .replace(/```[\s\S]*?```/g, " ")
+        .replace(/^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/gm, (_, heading) =>
+            /[.!?:;]$/.test(heading) ? heading : `${heading}.`,
+        )
+        .replace(/^\s*>\s?/gm, "")
+        .replace(/^\s*[-*+]\s+/gm, "• ")
+        .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+        .replace(/\*\*\*([^*\n]+)\*\*\*/g, "$1")
+        .replace(/\*\*([^*\n]+)\*\*/g, "$1")
+        .replace(/\*([^*\n]+)\*/g, "$1")
+        .replace(/(^|[\s(])_{1,3}([^_\n]+)_{1,3}(?=$|[\s).,;:!?])/g, "$1$2")
+        .replace(/`([^`\n]+)`/g, "$1")
+        .replace(/\s+/g, " ")
+        .trim();
+export const titleCaseLabel = (value = "") =>
+    `${value}`
+        .replace(/[-_]/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase())
         .trim();
 export const isRateLimitError = (error) =>
     Number(error?.status) === 429 ||
@@ -403,6 +450,10 @@ export const getLocalDateKey = (date = new Date()) => {
     const day = `${date.getDate()}`.padStart(2, "0");
     return `${year}-${month}-${day}`;
 };
+export const shiftLocalDateKey = (offsetDays = 0, now = new Date()) =>
+    getLocalDateKey(
+        new Date(now.getFullYear(), now.getMonth(), now.getDate() + offsetDays),
+    );
 export const parseTilawahDate = (value = "") => {
     if (!value) return null;
     const parsed = new Date(
@@ -898,6 +949,37 @@ export const normalizePrayerLog = (payload = {}) => {
         }
         return acc;
     }, {});
+};
+export const normalizePrayerHistory = (logs = []) => {
+    const prayerKeys = new Set(PRAYER_ITEMS.map((item) => item.key));
+    const donePerDay = {};
+    (Array.isArray(logs) ? logs : []).forEach((log) => {
+        const date = `${log?.date ?? ""}`.slice(0, 10);
+        if (!date || !prayerKeys.has(log?.prayer)) return;
+        if (!log.status || log.status === "missed") return;
+        donePerDay[date] = donePerDay[date] ?? new Set();
+        donePerDay[date].add(log.prayer);
+    });
+    return Object.keys(donePerDay).reduce((acc, date) => {
+        acc[date] = donePerDay[date].size;
+        return acc;
+    }, {});
+};
+export const normalizePrayerStats = (payload) => {
+    const stats = payload?.data ?? payload;
+    if (!stats || typeof stats !== "object") return null;
+    const totalDays = Number(stats.total_days ?? stats.totalDays ?? 0);
+    if (!Number.isFinite(totalDays) || totalDays <= 0) return null;
+    const pick = (...values) => {
+        const found = Number(values.find((value) => value != null));
+        return Number.isFinite(found) ? found : 0;
+    };
+    return {
+        berjamaahPct: Math.round(pick(stats.berjamaah_pct, stats.berjamaahPct)),
+        bestStreak: pick(stats.best_streak_days, stats.bestStreak),
+        currentStreak: pick(stats.current_streak_days, stats.currentStreak),
+        totalDays,
+    };
 };
 
 export const getItemRef = (feature, item) => {

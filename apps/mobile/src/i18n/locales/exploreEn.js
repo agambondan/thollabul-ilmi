@@ -29,6 +29,7 @@ export const exploreEn = {
         "explore.asmaul.wirid.subtitle":
             "Count dhikr with the 99 names of Allah",
         "explore.asmaul.wirid.title": "Asmaul Husna Dhikr",
+        "explore.backToTab": "Back to {tab}",
         "explore.blog.emptyFilteredText":
             "Change the keyword or reset the category filter.",
         "explore.blog.emptyFilteredTitle": "No matching articles",
@@ -211,9 +212,13 @@ export const exploreEn = {
             "Practice Islamic knowledge with randomized dashboard sessions.",
         "explore.quiz.title": "Islamic Quiz",
         "explore.quiz.viewResult": "View Result",
+        "explore.sholatTracker.historyEmpty": "No prayer history recorded yet.",
         "explore.sholatTracker.lastSevenDays": "Last 7 Days",
         "explore.sholatTracker.perfectDays": "{count} perfect days",
         "explore.sholatTracker.recordedPercent": "{percent}% prayers recorded",
+        "explore.sholatTracker.statsBerjamaah": "In congregation",
+        "explore.sholatTracker.statsStreak": "Streak/best (days)",
+        "explore.sholatTracker.statsTotalDays": "Days logged",
         "explore.sholatTracker.subtitle":
             "Record today prayers in the dashboard summary.",
         "explore.sholatTracker.thisMonth": "This Month",

@@ -68,6 +68,7 @@ import { Screen } from "../components/Screen";
 import { useFeedback } from "../context/FeedbackContext";
 import { useSession } from "../context/SessionContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { useTasbihPersistence } from "../hooks/useTasbihPersistence";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import {
     FeatureCatalog,
@@ -111,6 +112,8 @@ import {
     getKalkulasiZakat,
     getLibraryProgress,
     getLibraryProgressList,
+    getPrayerHistory,
+    getPrayerStats,
     getTodayPrayerLog,
     getUserWirds,
     logActivity,
@@ -130,6 +133,8 @@ import { TokohTarikhContent } from "./TokohTarikhContent";
 import {
     quizOptions,
     EXPLORE_PAGE_SIZE,
+    getFeatureBackLabel,
+    getFeaturePageSize,
     TAFSIR_SOURCE_LABELS,
     TAFSIR_MODES,
     KAJIAN_CATEGORIES,
@@ -227,12 +232,42 @@ import {
     getFilteredBlogItems,
     getFeedReference,
     normalizeAsmaulName,
+    normalizePrayerHistory,
     normalizePrayerLog,
+    normalizePrayerStats,
+    shiftLocalDateKey,
     getItemRef,
     getExploreItemKey,
     mergeUniqueItems,
     normalizeUserWirdItem,
 } from "./ExploreScreen.helpers";
+
+const EMPTY_SHOLAT_HISTORY = { days: {}, loaded: false, stats: null };
+
+const loadSholatHistory = async (now = new Date()) => {
+    const monthStart = getLocalDateKey(
+        new Date(now.getFullYear(), now.getMonth(), 1),
+    );
+    const weekStart = shiftLocalDateKey(-6, now);
+    const [historyResult, statsResult] = await Promise.allSettled([
+        getPrayerHistory({
+            from: monthStart < weekStart ? monthStart : weekStart,
+            to: getLocalDateKey(now),
+        }),
+        getPrayerStats(),
+    ]);
+    return {
+        days:
+            historyResult.status === "fulfilled"
+                ? normalizePrayerHistory(historyResult.value)
+                : {},
+        loaded: historyResult.status === "fulfilled",
+        stats:
+            statsResult.status === "fulfilled"
+                ? normalizePrayerStats(statsResult.value)
+                : null,
+    };
+};
 
 export function ExploreScreen({
     deepLinkTarget,
@@ -252,6 +287,7 @@ export function ExploreScreen({
         [webAppExploreTheme],
     );
     const handledDeepLinkId = useRef(null);
+    const clearFeatureRef = useRef(null);
     const dictionaryInputRef = useRef(null);
     const zakatTimerRef = useRef(null);
     const [featureSearch, setFeatureSearch] = useState("");
@@ -267,7 +303,12 @@ export function ExploreScreen({
     });
     const [focusDictionaryInput, setFocusDictionaryInput] = useState(false);
     const [dictionaryQuery, setDictionaryQuery] = useState("");
-    const [tasbih, setTasbih] = useState({ count: 0, target: 33 });
+    const {
+        resetTodayTotal: resetTasbihTodayTotal,
+        setTasbih,
+        tasbih,
+        todayTotal: tasbihTodayTotal,
+    } = useTasbihPersistence();
     const [asmaulNames, setAsmaulNames] = useState([]);
     const [asmaulIndex, setAsmaulIndex] = useState(0);
     const [asmaulCounts, setAsmaulCounts] = useState({});
@@ -382,6 +423,7 @@ export function ExploreScreen({
     const [forumVotingId, setForumVotingId] = useState("");
     const [forumError, setForumError] = useState("");
     const [sholatLog, setSholatLog] = useState({});
+    const [sholatHistory, setSholatHistory] = useState(EMPTY_SHOLAT_HISTORY);
     const [pagination, setPagination] = useState({
         page: 0,
         hasMore: false,
@@ -491,6 +533,7 @@ export function ExploreScreen({
             setLeaderboardTab("streak");
             setEditingUserWirdId("");
             setUserWirdForm(emptyUserWirdForm);
+            setShowFaraidhHistory(false);
             setError("");
             setAsmaulFlashcardRevealed(false);
             setTafsirMode("all");
@@ -519,6 +562,7 @@ export function ExploreScreen({
                 }
 
                 if (feature.type === "sholat-tracker") {
+                    setSholatHistory(EMPTY_SHOLAT_HISTORY);
                     if (!session?.token) {
                         setError(t("explore.loginPrayerTracker"));
                         return;
@@ -531,6 +575,11 @@ export function ExploreScreen({
                         setSholatLog({});
                     } finally {
                         setLoading(false);
+                    }
+                    try {
+                        setSholatHistory(await loadSholatHistory());
+                    } catch {
+                        setSholatHistory(EMPTY_SHOLAT_HISTORY);
                     }
                 }
 
@@ -697,7 +746,7 @@ export function ExploreScreen({
                     const page = await getFeatureItemPage(
                         feature,
                         paginated
-                            ? { page: 0, size: EXPLORE_PAGE_SIZE }
+                            ? { page: 0, size: getFeaturePageSize(feature) }
                             : undefined,
                     );
                     nextItems = page.items;
@@ -746,7 +795,7 @@ export function ExploreScreen({
                       })
                     : await getFeatureItemPage(activeFeature, {
                           page: nextPage,
-                          size: EXPLORE_PAGE_SIZE,
+                          size: getFeaturePageSize(activeFeature),
                       });
             const nextItems = page.items;
             const isFeed = activeFeature.type === "feed";
@@ -1206,12 +1255,16 @@ export function ExploreScreen({
 
     const togglePrayer = useCallback(
         async (prayerKey) => {
+            if (!session?.token) {
+                showInfo(t("explore.loginPrayerTracker"));
+                return;
+            }
             const nowDone = !sholatLog[prayerKey];
             if (nowDone) hapticMedium();
             setSholatLog((current) => ({ ...current, [prayerKey]: nowDone }));
             try {
                 await savePrayerLog({
-                    date: new Date().toISOString().split("T")[0],
+                    date: getLocalDateKey(),
                     prayer: prayerKey,
                     status: nowDone ? "munfarid" : "missed",
                 });
@@ -1231,7 +1284,7 @@ export function ExploreScreen({
                 showError(t("explore.prayerLogError"));
             }
         },
-        [sholatLog, showError, showSuccess, t],
+        [session?.token, sholatLog, showError, showInfo, showSuccess, t],
     );
 
     useEffect(() => {
@@ -1265,6 +1318,10 @@ export function ExploreScreen({
             returnTo: deepLinkTarget?.params?.returnTo ?? null,
         });
     }, [deepLinkTarget?.id, loadFeature]);
+
+    useEffect(() => {
+        if (!isActive) setFeatureReturnRoute(null);
+    }, [isActive]);
 
     useEffect(() => {
         return () => {
@@ -1403,7 +1460,7 @@ export function ExploreScreen({
                 setSelectedItem(null);
                 return true;
             };
-        } else if (showFaraidhHistory) {
+        } else if (showFaraidhHistory && activeFeature?.type === "faraidh") {
             title = t("explore.faraidh.historyTitle");
             onBack = () => {
                 setShowFaraidhHistory(false);
@@ -1444,7 +1501,7 @@ export function ExploreScreen({
         } else if (activeFeature) {
             title = activeFeature.title;
             onBack = () => {
-                clearFeature();
+                clearFeatureRef.current?.();
                 return true;
             };
         }
@@ -1735,6 +1792,10 @@ export function ExploreScreen({
         zakatTradeStock,
         zakatTimerRef,
     });
+    clearFeatureRef.current = clearFeature;
+    const stableClearFeature = useCallback(() => {
+        clearFeatureRef.current?.();
+    }, []);
 
     const listFooter = (
         <>
@@ -1766,7 +1827,7 @@ export function ExploreScreen({
             blogCategory,
             blogCategoryOptions,
             blogSearch,
-            clearFeature,
+            clearFeature: stableClearFeature,
             dictionaryInputRef,
             dictionaryQuery,
             editingUserWirdId,
@@ -1888,6 +1949,7 @@ export function ExploreScreen({
             setZakatTradeHaul,
             setZakatTradeReceivable,
             setZakatTradeStock,
+            sholatHistory,
             sholatLog,
             showError,
             showInfo,
@@ -1895,6 +1957,8 @@ export function ExploreScreen({
             surahSearch,
             surahs,
             tasbih,
+            tasbihTodayTotal,
+            resetTasbihTodayTotal,
             togglePrayer,
             userWirdForm,
             visibleItems,
@@ -1953,7 +2017,7 @@ export function ExploreScreen({
                 activeFeature ? (
                     <IconActionButton
                         Icon={ArrowLeft}
-                        label='Kembali ke Belajar'
+                        label={getFeatureBackLabel(featureReturnRoute, t)}
                         onPress={clearFeature}
                     />
                 ) : (

@@ -95,6 +95,8 @@ import {
     sanitizeCurrencyInput,
     sanitizeDecimalInput,
     stripHtmlText,
+    stripMarkdownText,
+    titleCaseLabel,
 } from "../ExploreScreen.helpers";
 import {
     ClassicZakatHistoryItem,
@@ -552,10 +554,16 @@ export function createExploreClassicRenderers(context) {
             );
         }
 
+        const isManasikItem = activeFeature?.key === "manasik";
+        const cardMeta = isManasikItem ? titleCaseLabel(item.meta) : item.meta;
+        const cardBody = isManasikItem
+            ? stripMarkdownText(item.body)
+            : item.body;
+
         return (
             <ContentCard
                 key={`${item.id}-${index}`}
-                meta={item.meta || activeFeature?.title}
+                meta={cardMeta || activeFeature?.title}
                 onPress={
                     activeFeature?.type === "quiz"
                         ? undefined
@@ -571,9 +579,9 @@ export function createExploreClassicRenderers(context) {
                         {item.arabic}
                     </Text>
                 ) : null}
-                {item.body ? (
+                {cardBody ? (
                     <Text numberOfLines={4} style={styles.body}>
-                        {item.body}
+                        {cardBody}
                     </Text>
                 ) : null}
                 {libraryProgressEntry ? (
@@ -846,6 +854,10 @@ export function createExploreClassicRenderers(context) {
             Number(ref.refId) > 0;
         const isLibraryDetail = activeFeature?.key === "library";
         const isBlogDetail = activeFeature?.key === "blog";
+        const isManasikDetail = activeFeature?.key === "manasik";
+        const detailMeta = isManasikDetail
+            ? titleCaseLabel(selectedItem.meta)
+            : selectedItem.meta;
         const blogContent = selectedItem?.raw?.content || selectedItem?.body || "";
         const handleBlogLink = (url = "") => {
             const cleanUrl = String(url).trim();
@@ -1294,6 +1306,12 @@ export function createExploreClassicRenderers(context) {
                                     onLinkPress={handleBlogLink}
                                     testID='article-markdown-view'
                                 />
+                            ) : isManasikDetail ? (
+                                <MarkdownView
+                                    content={selectedItem.body}
+                                    isDark={isDarkTheme}
+                                    testID='manasik-markdown-view'
+                                />
                             ) : (
                                 <Text
                                     style={
@@ -1331,7 +1349,7 @@ export function createExploreClassicRenderers(context) {
                     <View style={styles.detailMetaPanel}>
                         <Text style={styles.detailTitle}>Info</Text>
                         <Text style={styles.detailLine}>
-                            {selectedItem.meta || activeFeature?.title}
+                            {detailMeta || activeFeature?.title}
                         </Text>
                         {ref.refId ? (
                             <Text style={styles.detailLine}>
@@ -1403,9 +1421,9 @@ export function createExploreClassicRenderers(context) {
                         <Text style={styles.webAppDetailTitle}>
                             {selectedItem.title}
                         </Text>
-                        {selectedItem.meta || activeFeature?.title ? (
+                        {detailMeta || activeFeature?.title ? (
                             <Text style={styles.webAppDetailSubtitle}>
-                                {selectedItem.meta || activeFeature?.title}
+                                {detailMeta || activeFeature?.title}
                             </Text>
                         ) : null}
                     </View>
@@ -1423,7 +1441,7 @@ export function createExploreClassicRenderers(context) {
                         onPress={closeDetailView}
                     />
                 }
-                subtitle={selectedItem.meta || activeFeature?.title}
+                subtitle={detailMeta || activeFeature?.title}
                 title={selectedItem.title}
             >
                 <View testID='explore-classic-detail' />
@@ -1612,10 +1630,13 @@ export function createExploreClassicRenderers(context) {
         }
 
         if (activeFeature.type === "tasbih") {
-            const progress = Math.min(
-                100,
-                Math.round((tasbih.count / tasbih.target) * 100),
-            );
+            const progress =
+                tasbih.target > 0
+                    ? Math.min(
+                          100,
+                          Math.round((tasbih.count / tasbih.target) * 100),
+                      )
+                    : 0;
             return (
                 <Card>
                     <CardTitle meta={`${progress}%`}>
@@ -1634,7 +1655,9 @@ export function createExploreClassicRenderers(context) {
                     >
                         <Text style={styles.counterNumber}>{tasbih.count}</Text>
                         <Text style={styles.counterLabel}>
-                            Target {tasbih.target}
+                            {tasbih.target > 0
+                                ? `Target ${tasbih.target}`
+                                : "Tanpa batas"}
                         </Text>
                     </Pressable>
                     <View style={styles.answerRow}>
@@ -4125,10 +4148,13 @@ export function createExploreClassicRenderers(context) {
         setLibraryProgressFilter("");
         setNotesSearch("");
         setBlogCategoryOptions([]);
+        setShowFaraidhHistory?.(false);
         if (returnRoute?.tab && returnRoute?.view) {
             navigation?.open?.(returnRoute.tab, returnRoute.view, {
                 returnTab: null,
             });
+        } else if (returnRoute?.tab) {
+            onOpenTab?.(returnRoute.tab, returnRoute.params ?? null);
         }
     };
 
