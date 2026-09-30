@@ -98,6 +98,8 @@ const openTabState = (
             : null,
     });
 
+    if (returnTab) delete next.returnRoutes[returnTab];
+
     if (params?.returnTo && !params?.view) {
         next.returnRoutes[tab] = params.returnTo;
     } else {
@@ -216,9 +218,22 @@ const hardwareBackState = (state, makeId = defaultRouteId) => {
     return { handled: false, state: current };
 };
 
+const getShellActiveTab = ({
+    activeTab,
+    internalRoutes = {},
+    returnRoutes = {},
+} = {}) => {
+    if (internalRoutes.home?.view === "global-search") return "search";
+    if (activeTab === "belajar" && returnRoutes.belajar?.tab === "ibadah") {
+        return "ibadah";
+    }
+    return activeTab;
+};
+
 module.exports = {
     closeInternalViewState,
     closeInternalViewThenOpenTabState,
+    getShellActiveTab,
     hardwareBackState,
     normalizeTabRequest,
     openInternalViewState,

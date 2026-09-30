@@ -284,3 +284,131 @@ describe("closeInternalViewThenOpenTabState", () => {
         expect(backResult.state.internalRoutes.home).toBeUndefined();
     });
 });
+
+describe("Ibadah hub feature rows", () => {
+    const ibadahRoute = { tab: "ibadah" };
+    const ibadahState = () => ({ ...initialState(), activeTab: "ibadah" });
+
+    test("a feature opened from the Ibadah hub goes back to the Ibadah hub", () => {
+        let state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        expect(state.activeTab).toBe("belajar");
+        expect(state.returnRoutes.belajar).toEqual(ibadahRoute);
+        expect(state.deepLinkTarget.params.returnTo).toEqual(ibadahRoute);
+
+        const backResult = hardwareBackState(state, makeId);
+
+        expect(backResult.handled).toBe(true);
+        expect(backResult.state.activeTab).toBe("ibadah");
+        expect(backResult.state.internalRoutes.ibadah).toBeUndefined();
+        expect(backResult.state.returnRoutes.belajar).toBeUndefined();
+    });
+
+    test("the same feature opened from the Belajar hub still goes back to Home", () => {
+        const state = openTabState(
+            { ...initialState(), activeTab: "belajar" },
+            "belajar",
+            { featureKey: "doa" },
+            makeId,
+        ).state;
+
+        expect(state.returnRoutes.belajar).toBeUndefined();
+
+        const backResult = hardwareBackState(state, makeId);
+
+        expect(backResult.handled).toBe(true);
+        expect(backResult.state.activeTab).toBe("home");
+    });
+
+    test("opening the feature from the bottom nav drops the stale Ibadah return route", () => {
+        let state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        state = openTabState(state, "belajar", null, makeId).state;
+
+        expect(state.returnRoutes.belajar).toBeUndefined();
+        expect(hardwareBackState(state, makeId).state.activeTab).toBe("home");
+    });
+
+    test("leaving the Belajar tab discards its pending return route", () => {
+        let state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        state = openTabState(state, "quran", null, makeId).state;
+
+        expect(state.activeTab).toBe("quran");
+        expect(state.returnRoutes.belajar).toBeUndefined();
+    });
+
+    test("returning to Ibadah through openTab leaves the hub without a view", () => {
+        let state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        state = openTabState(state, "ibadah", null, makeId).state;
+
+        expect(state.activeTab).toBe("ibadah");
+        expect(state.internalRoutes.ibadah).toBeUndefined();
+        expect(state.returnRoutes.belajar).toBeUndefined();
+    });
+});
+
+describe("getShellActiveTab", () => {
+    const { getShellActiveTab } = require("./appNavigation");
+
+    test("keeps the real active tab by default", () => {
+        expect(getShellActiveTab({ activeTab: "quran" })).toBe("quran");
+        expect(
+            getShellActiveTab({
+                activeTab: "belajar",
+                internalRoutes: {},
+                returnRoutes: {},
+            }),
+        ).toBe("belajar");
+    });
+
+    test("highlights Ibadah while a feature opened from the Ibadah hub is active", () => {
+        expect(
+            getShellActiveTab({
+                activeTab: "belajar",
+                returnRoutes: { belajar: { tab: "ibadah" } },
+            }),
+        ).toBe("ibadah");
+    });
+
+    test("keeps Belajar highlighted for features opened from the Home directory", () => {
+        expect(
+            getShellActiveTab({
+                activeTab: "belajar",
+                returnRoutes: {
+                    belajar: { tab: "home", view: "feature-directory" },
+                },
+            }),
+        ).toBe("belajar");
+    });
+
+    test("keeps global search highlighted as search", () => {
+        expect(
+            getShellActiveTab({
+                activeTab: "home",
+                internalRoutes: { home: { view: "global-search" } },
+            }),
+        ).toBe("search");
+    });
+});

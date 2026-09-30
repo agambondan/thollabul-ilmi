@@ -209,6 +209,12 @@ export default function App() {
         const target = { ...rawTarget, ...normalized };
         if (!target) return;
 
+        setReturnRoutes((current) => {
+            const next = { ...current };
+            delete next[target.tab];
+            delete next[activeTabRef.current];
+            return next;
+        });
         setActiveTab(target.tab);
         if (target.params?.view) {
             setInternalRoutes((current) => ({
