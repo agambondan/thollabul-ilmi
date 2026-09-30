@@ -204,10 +204,14 @@ Detail: [`reviews/2026-09-29-backend-performance-production-review.md`](./review
   `TRUSTED_PROXIES` ke alamat proxy saja.
 - **Load test.** Satu IP dibatasi 180 per menit global dan 10 per menit di
   endpoint auth. Dari VPS, kirim `CF-Connecting-IP` berbeda per klien simulasi
-  ke `http://127.0.0.1:29900`. Dari luar, header itu ditimpa Cloudflare.
+  ke `http://127.0.0.1:29900`. Dari luar, header itu ditimpa Cloudflare. Tanpa
+  header dari VPS, panggilan dianggap internal dan memakai bucket longgar
+  (`RATE_LIMIT_INTERNAL`, default 3000 per menit) yang bukan cerminan batas
+  pengguna nyata.
 - Proxy Next.js `/api/v1/*` menyalin semua header masuk, jadi IP pengunjung
-  ikut terbawa. Render server components tidak, dan berbagi bucket container
-  web.
+  ikut terbawa. Render server components tidak membawa IP pengunjung; panggilan
+  itu jatuh ke bucket internal (peer tepercaya tanpa header), bukan bucket
+  publik, dan peer yang tidak tepercaya tidak pernah mendapat tingkat itu.
 - **`MetricsMiddleware` harus di depan semua limiter.** Kalau tidak, 429 tidak
   tercatat dan masalah seperti ini tidak terlihat.
 - **String dari `c.Method()`, `c.Path()`, `c.Query()`, `c.Params()`, `c.Get()`
@@ -215,3 +219,40 @@ Detail: [`reviews/2026-09-29-backend-performance-production-review.md`](./review
   handler. Jangan disimpan (label Prometheus, map, goroutine, cache in-memory)
   tanpa disalin dengan `strings.Clone` atau dipetakan ke konstanta. Insiden:
   label `method` menjadi "GETT" dan `/metrics` mengembalikan error.
+
+---
+
+## Tes repository: penamaan tabel dan soft delete
+
+- **Fixture SQLite harus memakai `SingularTable: true`**, persis seperti
+  `app/db/postgresql.go` dan `db_sqlite.go`. Dengan penamaan plural bawaan GORM,
+  SQL mentah yang salah (`hadiths`, `content_reports`, `doas`) tampak benar di tes
+  dan baru meledak di produksi. Gunakan `softdelete/testdb.Open`.
+- **Tes soft delete ada di `app/repository/softdelete/<domain>`.** Repository
+  baru yang memakai SQL mentah, `Joins("JOIN ...")`, `.Table()` atau `Scan` ke
+  struct non-model wajib punya tes di sana: GORM tidak menambahkan
+  `deleted_at IS NULL` di jalur itu. Filter tabel yang di-join ditaruh di `ON`,
+  bukan `WHERE`, supaya `LEFT JOIN` tidak berubah jadi `INNER JOIN`.
+- **`paginate.With(...)` menjalankan query `Unscoped()`**, dan `Preload` di
+  dalamnya mewarisinya. Beri setiap `Preload` kondisi `deleted_at IS NULL`
+  (`blogLive`, `hadithLiveMedia`).
+- **`CreatedAt *int64` dengan `autoCreateTime` tidak bisa diisi GORM saat
+  insert.** Isi manual (`unixNow()` di `repository/unix_time.go`) atau pakai
+  `int64` biasa.
+- **Indeks unik non-parsial + soft delete + `DO NOTHING` = tidak bisa membuat
+  ulang baris yang pernah dihapus.** Pakai `DO UPDATE ... WHERE deleted_at IS NOT
+NULL` untuk menghidupkan kembali (lihat `KajianBookmarkRepository.Add`).
+- Paginator menelan galat SQL: endpoint ber-paginate yang salah nama tabel
+  menjawab 200 dengan daftar kosong, bukan 500. Cek `RawError` di tes.
+
+---
+
+## Deploy gagal "cannot reach sumopod over SSH"
+
+Pesan itu tidak selalu berarti jaringan BBG. Kalau `ssh sumopod true` berhasil
+sebagian dan sebagian gagal dengan `kex_exchange_identification: Connection
+closed by remote host`, sshd di VPS sedang throttling (`MaxStartups`) karena
+banjir percobaan login dari internet (lihat D11 di review performa). Coba ulang
+tidak cukup karena satu deploy butuh belasan koneksi. Buka satu koneksi master
+dengan retry dan jalankan deploy dengan `ssh` yang memakai `ControlMaster` (satu
+koneksi dipakai semua langkah), lalu tutup dengan `ssh -O exit`.

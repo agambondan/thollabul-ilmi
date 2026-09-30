@@ -316,6 +316,8 @@ kalau `api_slow_requests_total` naik).
 | D6  | `/metrics` error: label `method` beralias buffer request    | 🟠 Sedang (observability)                             | 1j     | ✅ Fixed (Bagian D6)    |
 | D7  | Seeder kajian: id chunk berganti + upsert tulis ulang semua | 🟠 Sedang (data pengguna + I/O)                       | 2j     | ✅ Fixed (Bagian D7)    |
 | D8  | Tombstone yatim + endpoint transkrip bocorkan soft-delete   | 🟡 Sedang (chunk ganda ke app + disk)                 | 1j     | ✅ Fixed (Bagian D8)    |
+| D9  | Tes regresi soft delete belum ada (B0 tidak terjaga)        | 🟠 Sedang (regresi lolos diam-diam)                   | 4j     | ✅ Fixed, 185 tes (D9)  |
+| D10 | Bookmark dan catatan kajian tidak pernah bisa disimpan      | 🔴 Tinggi (fitur mati di produksi)                    | 2j     | ✅ Fixed (Bagian D10)   |
 
 Bagian A dan B0-B3 semua sudah diperbaiki + di-build/vet/test hijau, dan B4
 (deploy) sudah live. B5 murni item pantau, bukan sesuatu untuk "difix".
@@ -454,8 +456,17 @@ klien ke `http://127.0.0.1:29900` (peer lokal tepercaya). Dari luar header itu
 tidak berpengaruh karena Cloudflare menimpanya.
 
 **Sisa risiko.** Pengunjung di balik NAT bersama (mis. CGNAT operator seluler)
-tetap berbagi bucket. Render server Next.js (server components) tidak membawa
-header pengunjung, jadi berbagi satu bucket container web.
+tetap berbagi bucket, sifat bawaan limit per IP.
+
+**Panggilan SSR.** Render server Next.js memanggil API dari container web tanpa
+IP pengunjung, sehingga semuanya berbagi satu bucket. Crawler yang menelusuri
+ribuan halaman belum ter-cache bisa menghabiskan bucket publik, dan 429 membuat
+halaman dirender kosong lalu tertahan di cache ISR hingga sehari (web belum
+pernah mencatat 429, jadi ini pencegahan). Kini peer tepercaya tanpa
+`CF-Connecting-IP` dihitung di bucket internal terpisah (`RATE_LIMIT_INTERNAL`,
+default 3000 per menit, `app/http/global_limiters.go`); peer yang tidak tepercaya
+tidak pernah mendapat tingkat ini. Di produksi: 400 request tanpa header semuanya
+200, sedangkan klien nyata tetap 180 lalu 429.
 
 ### D6. `/metrics` mengembalikan error karena label `method` beralias buffer request
 
@@ -508,14 +519,85 @@ UPDATE ... WHERE`). Sebelumnya ±294 rb baris ditulis ulang di tiap re-seed
 - Masih ada `.Table("...").Count` (ayah, book, chapter, hadith, theme, surah, juz)
   yang ikut menghitung baris soft-delete. Hanya statistik, dampaknya kecil.
 
-### D9. Belum dikerjakan
+### D9. Tes regresi soft delete, dan bug yang ditemukannya
 
-- **Tes regresi `deleted_at`.** B0 berstatus fixed tetapi belum dijaga tes:
-  `go test ./...` hijau tidak menangkap regresi soft delete karena tidak ada
-  tes yang menegaskan baris `deleted_at IS NOT NULL` tidak muncul di
-  repository raw-SQL.
+B0 sudah di-fix tetapi tidak ada tes yang menegaskan baris `deleted_at IS NOT
+NULL` tidak muncul. Kini ada 185 tes perilaku di
+`app/repository/softdelete/{quran,collections,rijal,reference,userdata}` yang
+mencakup sekitar 45 repository. Tiap tes menanam baris hidup di samping kembar
+soft-delete-nya (plus induk dan asosiasi soft-delete di tempat SQL melakukan
+join), dan tiap filter dicabut satu per satu untuk memastikan ada tes yang
+gagal. Helper DB bersama ada di `softdelete/testdb`.
+
+Tes ini menemukan bug nyata, sebagian sama sekali bukan soal soft delete:
+
+| Temuan                                                                   | Dampak di produksi                                                        |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `perawi` `FindHadiths` memakai `hadiths`/`sanads`/`mata_sanads`          | Daftar hadis per perawi kosong untuk semua perawi (perawi 9 kini 5 hadis) |
+| Leaderboard mushahhih memakai `content_reports`                          | `GET /leaderboard/mushahhih` menjawab 500                                 |
+| `content_report_service` memakai `doas`, `dzikirs`, `translations`, dst. | "Terapkan koreksi" tidak pernah jalan; doa/dzikir membuang errornya       |
+| `library_book_progress` menaruh `AND ... LIMIT 1` setelah `ORDER BY`     | Sintaks error: progres baca per buku dan `Upsert` selalu gagal            |
+| `amalan` `FindHistory` memindai NULL ke field non-nullable               | Gagal total bila satu item amalan di-soft-delete                          |
+| Daftar hadis dan blog ter-paginate mem-preload dari query `Unscoped`     | Audio, author, kategori, tag, terjemahan yang dihapus ikut tampil         |
+| `Count()` ayah, surah, hadith, book, chapter, juz, theme                 | Total ikut menghitung baris soft-delete                                   |
+| `perawi` `FindByID`/`FindGuru`/`FindMurid` tanpa filter                  | Perawi soft-delete tetap tampil, `Update`/`Delete` lolos lewat jalur itu  |
+| `sholat_guide` tanpa filter `deleted_at`                                 | Panduan sholat yang dihapus tetap tampil                                  |
+| Query slug kategori/tag blog menyebut `blog_categories`/`blog_tags`      | Error di skema singular                                                   |
+
+Pemindaian sistematis nama tabel di SQL mentah terhadap skema produksi (109
+tabel) tidak menemukan referensi plural lain. Akar yang sama di beberapa
+tempat: fixture tes membuka SQLite dengan penamaan plural bawaan GORM, sedangkan
+produksi `SingularTable: true`, sehingga kode yang salah tampak benar di tes.
+Tes lifecycle laporan konten kini memakai penamaan yang sama dengan produksi.
+
+### D10. Bookmark dan catatan kajian tidak pernah bisa disimpan
+
+Model `KajianUserBookmark` dan `KajianUserNote` mendeklarasikan `CreatedAt`
+sendiri sebagai `*int64` dengan `autoCreateTime`. GORM tidak bisa mengisi integer
+pointer dari `time.Now`, sehingga insert gagal dengan "failed to set value ... to
+field CreatedAt" sebelum menyentuh database. Produksi memang 0 baris di kedua
+tabel. Kini cap waktu unix diisi eksplisit. Masalah kedua yang tersembunyi di
+baliknya: menambahkan lagi bookmark yang pernah dihapus diam-diam tidak berbuat
+apa-apa, karena penghapusan adalah soft delete, indeks unik `(user_id,
+chunk_id)` tidak parsial, dan `Add` memakai `DO NOTHING`. Bookmark yang dihapus
+kini dihidupkan kembali, sedangkan yang masih hidup tetap dilaporkan sudah ada.
+Dites di SQLite dan Postgres 17 (`USER_CONTENT_PG_DSN`); belum diuji end-to-end
+lewat HTTP karena butuh akun.
+
+### D11. SSH VPS terbuka dan dibanjiri, deploy gagal secara acak
+
+Deploy sempat gagal dua kali dengan pesan "cannot reach sumopod over SSH — the
+BBG office network blocks it". Pesan itu menyesatkan: penyebabnya sshd di VPS
+menjatuhkan koneksi sah secara acak (`MaxStartups 10:30:100`) karena dibanjiri
+koneksi dari internet. Diukur 1 Okt: 62 kali throttling dalam sejam terakhir,
+dan puluhan ribu percobaan login per hari dari beberapa IP (satu IP saja 11.769
+kali dalam 24 jam). `sshd -T` di VPS menunjukkan: port 22 dan 2222 terbuka ke
+seluruh internet (ufw mengizinkan keduanya), `PermitRootLogin yes`,
+`PasswordAuthentication yes`, `LoginGraceTime 120`, dan tidak ada fail2ban.
+
+Workaround deploy (tanpa menyentuh server): satu koneksi SSH dipakai semua
+langkah lewat multiplexing, dengan pembungkus `ssh` sementara di `PATH` yang
+menambahkan `-o ControlMaster=auto -o ControlPath=/tmp/deploy-ssh-%C -o
+ControlPersist=300`, setelah master dibuka dengan retry.
+
+Belum diubah karena menyangkut akses semua orang ke server bersama: matikan
+`PasswordAuthentication` dan login root dengan password, pasang fail2ban,
+turunkan `LoginGraceTime` (mis. 20) dan naikkan `MaxStartups`, lalu tutup port
+yang tidak dipakai. Pastikan dulu siapa saja (vps-mcp, agent lain, proyek lain)
+yang masuk dengan password sebelum mematikannya.
+
+### D12. Belum dikerjakan
+
 - `search_repository_test.go` (build tag postgres) belum pernah dijalankan;
   butuh Postgres sekali pakai yang terisolasi.
-- Render server Next.js berbagi bucket container web (lihat sisa risiko D5).
-  Solusi: teruskan `cf-connecting-ip` di fetch server-side, atau kecualikan
-  panggilan internal dari limiter.
+- Query leaderboard `TopStreak`, `TopHafalan`, `TopMushahhih`, `MyStreakRank`
+  memakai cast `::` Postgres sehingga tidak tercakup tes SQLite. Cabang `ILIKE`
+  perawi dan query mushahhih hanya diverifikasi dengan menjalankan SQL-nya
+  terhadap skema produksi, bukan dengan tes Go.
+- Kasus tepi yang dicatat agent dan sengaja tidak diubah: asbabun nuzul
+  `FindByAyahID` pada ayat soft-delete tetap mengembalikan asbab dengan `Ayahs`
+  kosong; `FindMataSanadByID` dan `FindByHadithID` tidak melihat induk yang
+  soft-delete; tema `FindByBookSlug` mengembalikan baris penghubung dengan
+  `theme: null`; daftar blog yang difilter tag atau kategori soft-delete tetap
+  menampilkan postingan hidupnya; `GetPoints` gagal unik bila baris poin
+  pengguna soft-delete.
