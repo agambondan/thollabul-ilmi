@@ -1,10 +1,11 @@
-import { BookOpen, Calculator, History, Save } from "lucide-react-native";
+import { BookOpen, Calculator, History, Save, Share2 } from "lucide-react-native";
 import {
     Pressable,
     ScrollView,
     StyleSheet,
     Switch,
     Text,
+    Share,
     TextInput,
     View,
 } from "react-native";
@@ -156,13 +157,28 @@ function ResultCard({ amount, color = "emerald", isDarkTheme, label, note }) {
             : color === "blue"
               ? (isDarkTheme ? styles.resultAmountBlueDark : styles.resultAmountBlue)
               : (isDarkTheme ? styles.resultAmountEmeraldDark : styles.resultAmountEmerald);
+    const handleShare = () => {
+        const msg = `${label}: ${formatCurrency(amount)}` + (note ? ` (${note})` : "") + "\n\nDihitung via Thollabul Ilmi";
+        Share.share({ message: msg }).catch(() => {});
+    };
     return (
         <View style={[styles.resultCard, isDarkTheme && styles.resultCardDark]}>
-            <Text style={[styles.resultLabel, isDarkTheme && styles.textMutedDark]}>{label}</Text>
-            <Text style={[styles.resultAmount, valueStyle]}>
-                {formatCurrency(amount)}
-            </Text>
-            {note ? <Text style={[styles.resultNote, isDarkTheme && styles.textMutedDark]}>{note}</Text> : null}
+            <View style={styles.resultCardBody}>
+                <Text style={[styles.resultLabel, isDarkTheme && styles.textMutedDark]}>{label}</Text>
+                <Text style={[styles.resultAmount, valueStyle]}>
+                    {formatCurrency(amount)}
+                </Text>
+                {note ? <Text style={[styles.resultNote, isDarkTheme && styles.textMutedDark]}>{note}</Text> : null}
+            </View>
+            <Pressable
+                accessibilityLabel="Bagikan hasil zakat"
+                accessibilityRole="button"
+                hitSlop={8}
+                onPress={handleShare}
+                style={styles.resultShareBtn}
+            >
+                <Share2 color={isDarkTheme ? "#94a3b8" : "#64748b"} size={18} />
+            </Pressable>
         </View>
     );
 }
@@ -1106,7 +1122,18 @@ const styles = StyleSheet.create({
         borderColor: "#e5e7eb",
         borderRadius: radius.lg,
         borderWidth: 1,
+        flexDirection: "row",
         padding: spacing.lg,
+    },
+    resultCardBody: {
+        alignItems: "center",
+        flex: 1,
+    },
+    resultShareBtn: {
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: 36,
+        minWidth: 36,
     },
     resultCardDark: {
         backgroundColor: "#1e293b",

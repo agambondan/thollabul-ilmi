@@ -16,8 +16,9 @@ export function SwipeBackView({
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => false,
-            onMoveShouldSetPanResponder: (_, gesture) => {
+            onMoveShouldSetPanResponder: (event, gesture) => {
                 if (!enabled) return false;
+                if (event.nativeEvent.pageX > EDGE_WIDTH) return false;
                 return (
                     gesture.dx > 10 && gesture.dx > Math.abs(gesture.dy) * 1.5
                 );

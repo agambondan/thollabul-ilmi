@@ -6,6 +6,7 @@ import {
     Bookmark,
     BookmarkCheck,
     Search,
+    WifiOff,
 } from "lucide-react-native";
 import {
     ActivityIndicator,
@@ -967,6 +968,28 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
 
     const renderWebAppHadithResults = () => (
         <>
+            {hadithSource === "offline" ? (
+                <View
+                    testID="hadith-offline-banner"
+                    style={[
+                        styles.offlineBanner,
+                        {
+                            backgroundColor: webAppTheme.surface,
+                            borderColor: webAppTheme.border,
+                        },
+                    ]}
+                >
+                    <WifiOff color={webAppTheme.muted} size={14} />
+                    <Text
+                        style={[
+                            styles.offlineBannerText,
+                            { color: webAppTheme.muted },
+                        ]}
+                    >
+                        Mode Offline: Menampilkan hadis dari penyimpanan lokal
+                    </Text>
+                </View>
+            ) : null}
             <View
                 style={[
                     styles.webAppListSummary,
@@ -2068,6 +2091,17 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                 </Card>
             ) : null}
 
+            {hadithSource === "offline" ? (
+                <View
+                    testID="hadith-offline-banner"
+                    style={styles.offlineBanner}
+                >
+                    <WifiOff color={colors.textMuted} size={14} />
+                    <Text style={styles.offlineBannerText}>
+                        Mode Offline: Menampilkan hadis dari penyimpanan lokal
+                    </Text>
+                </View>
+            ) : null}
             <View style={styles.listSummary}>
                 <View style={styles.listSummaryCopy}>
                     <Text style={styles.listSummaryTitle}>
@@ -2829,5 +2863,22 @@ const styles = StyleSheet.create({
     },
     activeButtonText: {
         color: colors.primaryDark,
+    },
+    offlineBanner: {
+        alignItems: "center",
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: "row",
+        gap: spacing.xs,
+        marginBottom: spacing.sm,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.xs,
+    },
+    offlineBannerText: {
+        color: colors.textMuted,
+        fontSize: 12,
+        fontWeight: "700",
     },
 });
