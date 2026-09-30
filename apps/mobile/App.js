@@ -1,6 +1,13 @@
 import * as Linking from "expo-linking";
 import { useFonts } from "expo-font";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import {
     AppState,
     BackHandler,
@@ -35,12 +42,16 @@ import { requestJson } from "./src/api/client";
 import {
     closeInternalViewState,
     closeInternalViewThenOpenTabState,
+    getShellActiveTab,
     hardwareBackState,
     normalizeTabRequest,
     openInternalViewState,
     openReturnRouteState,
     openTabState,
 } from "./src/navigation/appNavigation";
+import { createScopedNavigation } from "./src/navigation/scopedNavigation";
+
+const TAB_KEYS = ["home", "quran", "hadith", "ibadah", "belajar", "profile"];
 
 export default function App() {
     useEffect(() => {
@@ -69,9 +80,12 @@ export default function App() {
     const returnRoutesRef = useRef({});
     const screenBackRef = useRef(null); // set by active screen when it has sub-navigation
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         activeTabRef.current = activeTab;
+        screenBackRef.current = null;
         setHeaderConfigState(null);
+    }, [activeTab]);
+    useEffect(() => {
         setMountedTabs((prev) => {
             if (prev.has(activeTab)) return prev;
             const next = new Set(prev);
@@ -296,8 +310,11 @@ export default function App() {
         () => (deepLinkTarget?.tab === activeTab ? deepLinkTarget : null),
         [activeTab, deepLinkTarget],
     );
-    const shellActiveTab =
-        internalRoutes.home?.view === "global-search" ? "search" : activeTab;
+    const shellActiveTab = getShellActiveTab({
+        activeTab,
+        internalRoutes,
+        returnRoutes,
+    });
     const setBack = useCallback((fn) => {
         screenBackRef.current = fn;
     }, []);
@@ -334,6 +351,21 @@ export default function App() {
         ],
     );
 
+    const tabNavigation = useMemo(
+        () =>
+            Object.fromEntries(
+                TAB_KEYS.map((tab) => [
+                    tab,
+                    createScopedNavigation(
+                        navigation,
+                        tab,
+                        () => activeTabRef.current,
+                    ),
+                ]),
+            ),
+        [navigation],
+    );
+
     return (
         <GestureHandlerRootView style={styles.gestureRoot}>
             <ErrorBoundary>
@@ -358,14 +390,7 @@ export default function App() {
                                         }
                                         onTabChange={openTab}
                                     >
-                                        {[
-                                            "home",
-                                            "quran",
-                                            "hadith",
-                                            "ibadah",
-                                            "belajar",
-                                            "profile",
-                                         ].map((tab) => {
+                                        {TAB_KEYS.map((tab) => {
                                              const isActive = activeTab === tab;
                                              if (!isActive && !mountedTabs.has(tab)) return null;
                                             const hasInternalView =
@@ -375,7 +400,7 @@ export default function App() {
                                                 screen = (
                                                     <HomeScreen
                                                         isActive={isActive}
-                                                        navigation={navigation}
+                                                        navigation={tabNavigation[tab]}
                                                         onOpenTab={openTab}
                                                     />
                                                 );
@@ -389,7 +414,7 @@ export default function App() {
                                                         }
                                                         fontsLoaded={quranFontsLoaded}
                                                         isActive={isActive}
-                                                        navigation={navigation}
+                                                        navigation={tabNavigation[tab]}
                                                     />
                                                 );
                                             if (tab === "hadith")
@@ -401,14 +426,14 @@ export default function App() {
                                                                 : null
                                                         }
                                                         isActive={isActive}
-                                                        navigation={navigation}
+                                                        navigation={tabNavigation[tab]}
                                                     />
                                                 );
                                             if (tab === "ibadah")
                                                 screen = (
                                                     <IbadahScreen
                                                         isActive={isActive}
-                                                        navigation={navigation}
+                                                        navigation={tabNavigation[tab]}
                                                         onOpenTab={openTab}
                                                     />
                                                 );
@@ -421,7 +446,7 @@ export default function App() {
                                                                 : null
                                                         }
                                                         isActive={isActive}
-                                                        navigation={navigation}
+                                                        navigation={tabNavigation[tab]}
                                                         onOpenTab={openTab}
                                                     />
                                                 );
@@ -434,7 +459,7 @@ export default function App() {
                                                                 : null
                                                         }
                                                         isActive={isActive}
-                                                        navigation={navigation}
+                                                        navigation={tabNavigation[tab]}
                                                         onOpenTab={openTab}
                                                     />
                                                 );
