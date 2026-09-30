@@ -663,6 +663,29 @@ export function QuranScreen({
         await loadBookmarks();
     }, [load, loadBookmarks, loadProgress]);
 
+    const stopPlayback = useCallback(() => {
+        audioRangeSessionRef.current += 1;
+        audioQueueRef.current = [];
+        audioQueueIndexRef.current = 0;
+        setAudioQueueInfo({ index: 0, length: 0 });
+        setAudioRangeCollapsed(false);
+        setAudioPlayerOpen(false);
+        stopAudio();
+        setAudioRange((current) => ({
+            ...current,
+            currentLabel: "",
+            loading: false,
+            playing: false,
+        }));
+        setAudioState((current) => ({
+            ...current,
+            loadingAyahId: null,
+            playingAyahId: null,
+        }));
+    }, []);
+
+    const stopRangeAudio = stopPlayback;
+
     const resetReaderState = () => {
         stopRangeAudio();
         targetScrollKeyRef.current = null;
@@ -1348,29 +1371,6 @@ export function QuranScreen({
         }));
         return sources;
     };
-
-    const stopPlayback = useCallback(() => {
-        audioRangeSessionRef.current += 1;
-        audioQueueRef.current = [];
-        audioQueueIndexRef.current = 0;
-        setAudioQueueInfo({ index: 0, length: 0 });
-        setAudioRangeCollapsed(false);
-        setAudioPlayerOpen(false);
-        stopAudio();
-        setAudioRange((current) => ({
-            ...current,
-            currentLabel: "",
-            loading: false,
-            playing: false,
-        }));
-        setAudioState((current) => ({
-            ...current,
-            loadingAyahId: null,
-            playingAyahId: null,
-        }));
-    }, []);
-
-    const stopRangeAudio = stopPlayback;
 
     useEffect(() => {
         if (!isActive) {

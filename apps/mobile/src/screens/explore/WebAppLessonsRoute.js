@@ -156,6 +156,15 @@ export function WebAppLessonsRoute({
             .catch(() => {});
     }, [modules]);
 
+    const activeModule = modules.find(
+        (m) => (m.slug || m.id) === activeModuleId,
+    );
+    const moduleSteps = activeModule?.steps?.length
+        ? activeModule.steps
+        : activeModule?.raw?.steps || [];
+    const totalSteps = moduleSteps.length;
+    const step = moduleSteps[activeStepIdx];
+
     useEffect(() => {
         if (!navigation?.setHeader) return;
         if (activeStepIdx > 0) {
@@ -180,15 +189,6 @@ export function WebAppLessonsRoute({
             navigation.setHeader(null);
         }
     }, [activeStepIdx, navigation, clearFeature, step, activeModule]);
-
-    const activeModule = modules.find(
-        (m) => (m.slug || m.id) === activeModuleId,
-    );
-    const moduleSteps = activeModule?.steps?.length
-        ? activeModule.steps
-        : activeModule?.raw?.steps || [];
-    const totalSteps = moduleSteps.length;
-    const step = moduleSteps[activeStepIdx];
 
     const saveProgress = async (stepNum, done) => {
         if (!activeModule?.id) return;

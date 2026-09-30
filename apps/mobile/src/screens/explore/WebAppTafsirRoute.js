@@ -268,6 +268,9 @@ export function WebAppTafsirRoute({
         typedSurahNumber >= 1 &&
         typedSurahNumber <= 114;
     const Icon = isAsbabun ? FileText : BookOpen;
+    const title = isAsbabun
+        ? t("explore.tafsir.asbabunTitle")
+        : t("explore.tafsir.title");
 
     useEffect(() => {
         if (!navigation?.setHeader) return;
@@ -305,9 +308,6 @@ export function WebAppTafsirRoute({
     const resultCardTestID = isAsbabun
         ? "web-app-asbabun-result-card"
         : "web-app-tafsir-result-card";
-    const title = isAsbabun
-        ? t("explore.tafsir.asbabunTitle")
-        : t("explore.tafsir.title");
     const subtitle = isAsbabun
         ? t("explore.tafsir.asbabunSubtitle")
         : t("explore.tafsir.subtitle");
