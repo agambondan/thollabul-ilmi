@@ -48,14 +48,18 @@ func NewBlogRepository(db *gorm.DB, pg *paginate.Pagination) BlogRepository {
 	return &blogRepo{db, pg}
 }
 
+func blogLive(tx *gorm.DB) *gorm.DB {
+	return tx.Where("deleted_at IS NULL")
+}
+
 func (r *blogRepo) postBase() *gorm.DB {
 	return r.db.Model(&model.BlogPost{}).
-		Preload("Author").
-		Preload("Category").
-		Preload("Category.Translation").
-		Preload("Tags").
-		Preload("Tags.Translation").
-		Preload("Translation")
+		Preload("Author", blogLive).
+		Preload("Category", blogLive).
+		Preload("Category.Translation", blogLive).
+		Preload("Tags", blogLive).
+		Preload("Tags.Translation", blogLive).
+		Preload("Translation", blogLive)
 }
 
 func (r *blogRepo) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search, status string) *paginate.Page {
@@ -179,9 +183,10 @@ func (r *blogRepo) IncrementViewCount(id string) error {
 
 func (r *blogRepo) FindPostsByCategorySlug(ctx *fiber.Ctx, slug string) *paginate.Page {
 	var posts []model.BlogPost
+	catTbl := r.categoryTableName()
 	mod := r.postBase().
-		Joins("JOIN blog_categories ON blog_categories.id = blog_post.category_id").
-		Where("blog_categories.slug = ? AND blog_post.status = ?", slug, model.BlogStatusPublished).
+		Joins("JOIN "+catTbl+" ON "+catTbl+".id = blog_post.category_id AND "+catTbl+".deleted_at IS NULL").
+		Where(catTbl+".slug = ? AND blog_post.status = ?", slug, model.BlogStatusPublished).
 		Order("blog_post.published_at desc")
 	page := r.pg.With(mod).Request(ctx.Request()).Response(&posts)
 	return &page
@@ -189,10 +194,11 @@ func (r *blogRepo) FindPostsByCategorySlug(ctx *fiber.Ctx, slug string) *paginat
 
 func (r *blogRepo) FindPostsByTagSlug(ctx *fiber.Ctx, slug string) *paginate.Page {
 	var posts []model.BlogPost
+	tagTbl := r.tagTableName()
 	mod := r.postBase().
 		Joins("JOIN blog_post_tags ON blog_post_tags.blog_post_id = blog_post.id").
-		Joins("JOIN blog_tags ON blog_tags.id = blog_post_tags.blog_tag_id").
-		Where("blog_tags.slug = ? AND blog_post.status = ?", slug, model.BlogStatusPublished).
+		Joins("JOIN "+tagTbl+" ON "+tagTbl+".id = blog_post_tags.blog_tag_id AND "+tagTbl+".deleted_at IS NULL").
+		Where(tagTbl+".slug = ? AND blog_post.status = ?", slug, model.BlogStatusPublished).
 		Order("blog_post.published_at desc")
 	page := r.pg.With(mod).Request(ctx.Request()).Response(&posts)
 	return &page

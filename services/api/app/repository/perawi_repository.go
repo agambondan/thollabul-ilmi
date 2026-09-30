@@ -39,7 +39,7 @@ const perawiSelectSQL = `
 		p.tabaqah, p.status, p.biografis, p.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM perawi p
-	LEFT JOIN translation t ON t.id = p.translation_id
+	LEFT JOIN translation t ON t.id = p.translation_id AND t.deleted_at IS NULL
 `
 
 func scanPerawiRow(rows *sql.Rows) (*model.Perawi, error) {
@@ -115,7 +115,7 @@ func (r *perawiRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 }
 
 func (r *perawiRepo) FindByID(id *int) (*model.Perawi, error) {
-	rows, err := r.db.Raw(perawiSelectSQL+" WHERE p.id = ?", id).Rows()
+	rows, err := r.db.Raw(perawiSelectSQL+" WHERE p.id = ? AND p.deleted_at IS NULL", id).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (r *perawiRepo) FindByID(id *int) (*model.Perawi, error) {
 		p.Murid = murid
 	}
 
-	jtRows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.perawi_id = ? ORDER BY jt.id ASC", id).Rows()
+	jtRows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.perawi_id = ? AND jt.deleted_at IS NULL ORDER BY jt.id ASC", id).Rows()
 	if err == nil {
 		defer jtRows.Close()
 		for jtRows.Next() {
@@ -177,7 +177,7 @@ func (r *perawiRepo) Search(ctx *fiber.Ctx, q string) *paginate.Page {
 func (r *perawiRepo) FindGuru(id *int) ([]model.Perawi, error) {
 	query := perawiSelectSQL + `
 		JOIN perawi_guru pg ON pg.guru_id = p.id
-		WHERE pg.murid_id = ?
+		WHERE pg.murid_id = ? AND p.deleted_at IS NULL
 		ORDER BY p.id ASC
 	`
 	rows, err := r.db.Raw(query, id).Rows()
@@ -200,7 +200,7 @@ func (r *perawiRepo) FindGuru(id *int) ([]model.Perawi, error) {
 func (r *perawiRepo) FindMurid(id *int) ([]model.Perawi, error) {
 	query := perawiSelectSQL + `
 		JOIN perawi_guru pg ON pg.murid_id = p.id
-		WHERE pg.guru_id = ?
+		WHERE pg.guru_id = ? AND p.deleted_at IS NULL
 		ORDER BY p.id ASC
 	`
 	rows, err := r.db.Raw(query, id).Rows()
@@ -228,11 +228,11 @@ func (r *perawiRepo) FindHadiths(ctx *fiber.Ctx, id *int) *paginate.Page {
 		Joins("Translation")
 	if err == nil && p != nil && p.NamaLatin != nil && *p.NamaLatin != "" {
 		like := "%" + *p.NamaLatin + "%"
-		query = query.Where("hadiths.id IN (SELECT DISTINCT sanads.hadith_id FROM sanads JOIN mata_sanads ON mata_sanads.sanad_id = sanads.id WHERE mata_sanads.perawi_id = ?) OR hadiths.sanad ILIKE ?", *id, like)
+		query = query.Where("(hadith.id IN (SELECT DISTINCT sanad.hadith_id FROM sanad JOIN mata_sanad ON mata_sanad.sanad_id = sanad.id AND mata_sanad.deleted_at IS NULL WHERE mata_sanad.perawi_id = ? AND sanad.deleted_at IS NULL) OR hadith.sanad ILIKE ?)", *id, like)
 	} else {
-		query = query.Where("hadiths.id IN (SELECT DISTINCT sanads.hadith_id FROM sanads JOIN mata_sanads ON mata_sanads.sanad_id = sanads.id WHERE mata_sanads.perawi_id = ?)", *id)
+		query = query.Where("hadith.id IN (SELECT DISTINCT sanad.hadith_id FROM sanad JOIN mata_sanad ON mata_sanad.sanad_id = sanad.id AND mata_sanad.deleted_at IS NULL WHERE mata_sanad.perawi_id = ? AND sanad.deleted_at IS NULL)", *id)
 	}
-	query = query.Order("hadiths.id ASC")
+	query = query.Order("hadith.id ASC")
 	page := r.pg.With(query).Request(ctx.Request()).Response(&hadiths)
 	return &page
 }

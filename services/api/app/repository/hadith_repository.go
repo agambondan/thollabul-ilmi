@@ -76,13 +76,17 @@ func (c *hadithRepo) Save(Hadith *model.Hadith) (*model.Hadith, error) {
 	return Hadith, nil
 }
 
+func hadithLiveMedia(tx *gorm.DB) *gorm.DB {
+	return tx.Where("deleted_at IS NULL")
+}
+
 func (c *hadithRepo) withRelations(db *gorm.DB, selectArgs ...string) *gorm.DB {
 	q := db.
 		Joins("Book").Joins("Book.Translation").
 		Joins("Theme").Joins("Theme.Translation").
 		Joins("Chapter").Joins("Chapter.Translation").
 		Joins("Translation").
-		Preload("Media")
+		Preload("Media", hadithLiveMedia)
 	if len(selectArgs) > 0 {
 		q = q.Select(selectArgs[0])
 	}
@@ -165,7 +169,7 @@ func (c *hadithRepo) FindByBookSlugSlim(ctx *fiber.Ctx, bookSlug *string) (*pagi
 	mod := c.db.Model(&model.Hadith{}).
 		Joins("Book").
 		Joins("Translation").
-		Preload("Media").
+		Preload("Media", hadithLiveMedia).
 		Where(`"Book".slug = ?`, bookSlug).
 		Order("hadith.number ASC, hadith.id ASC")
 	if updatedAfter := parseUpdatedAfter(ctx); updatedAfter != nil {
@@ -277,7 +281,7 @@ func (c *hadithRepo) DeleteById(id *int, scoped *string) error {
 
 func (c *hadithRepo) Count() (*int64, error) {
 	var count int64
-	c.db.Table("hadith").Count(&count)
+	c.db.Table("hadith").Where("deleted_at IS NULL").Count(&count)
 	return &count, nil
 }
 

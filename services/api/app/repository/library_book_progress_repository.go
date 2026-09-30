@@ -50,13 +50,14 @@ SELECT
     lb.license_status, lb.source_note, lb.is_source_verified, lb.pages,
     lb.tags, lb.status as lb_status, lb.extraction_status, lb.extraction_error
 FROM library_book_progress lbp
-JOIN library_book lb ON lb.id = lbp.library_book_id
-WHERE lbp.user_id = ?
-ORDER BY lbp.updated_at DESC
+JOIN library_book lb ON lb.id = lbp.library_book_id AND lb.deleted_at IS NULL
+WHERE lbp.user_id = ? AND lbp.deleted_at IS NULL
 `
 
+const libraryProgressByUserSQL = libraryProgressSelectSQL + "ORDER BY lbp.updated_at DESC"
+
 func (r *libraryBookProgressRepo) FindByUserID(userID uuid.UUID) ([]model.LibraryBookProgress, error) {
-	rows, err := r.db.Raw(libraryProgressSelectSQL, userID).Rows()
+	rows, err := r.db.Raw(libraryProgressByUserSQL, userID).Rows()
 	if err != nil {
 		return nil, err
 	}

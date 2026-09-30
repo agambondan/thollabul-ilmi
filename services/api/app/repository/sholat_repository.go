@@ -66,7 +66,8 @@ SELECT
     sg.description, sg.source, sg.notes, sg.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM sholat_guide sg
-LEFT JOIN translation t ON t.id = sg.translation_id
+LEFT JOIN translation t ON t.id = sg.translation_id AND t.deleted_at IS NULL
+WHERE sg.deleted_at IS NULL
 ORDER BY sg.step
 `
 
@@ -109,8 +110,8 @@ SELECT
     sg.description, sg.source, sg.notes, sg.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM sholat_guide sg
-LEFT JOIN translation t ON t.id = sg.translation_id
-WHERE sg.step = ?
+LEFT JOIN translation t ON t.id = sg.translation_id AND t.deleted_at IS NULL
+WHERE sg.step = ? AND sg.deleted_at IS NULL
 `
 
 func (r *sholatRepository) FindGuideByStep(step int) (*model.SholatGuide, error) {
@@ -154,8 +155,8 @@ SELECT
     sg.description, sg.source, sg.notes, sg.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM sholat_guide sg
-LEFT JOIN translation t ON t.id = sg.translation_id
-WHERE sg.id = ?
+LEFT JOIN translation t ON t.id = sg.translation_id AND t.deleted_at IS NULL
+WHERE sg.id = ? AND sg.deleted_at IS NULL
 `
 
 func (r *sholatRepository) FindGuideByID(id int) (*model.SholatGuide, error) {

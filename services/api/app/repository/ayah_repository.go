@@ -184,6 +184,6 @@ func (c *ayahRepo) DeleteById(id *int, scoped *string) error {
 
 func (c *ayahRepo) Count() (*int64, error) {
 	var count int64
-	c.db.Table("ayah").Count(&count)
+	c.db.Table("ayah").Where("deleted_at IS NULL").Count(&count)
 	return &count, nil
 }

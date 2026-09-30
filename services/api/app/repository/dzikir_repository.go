@@ -31,7 +31,7 @@ func (r *dzikirRepository) FindAll(limit, offset int) ([]model.Dzikir, error) {
 		offset = 0
 	}
 	var list []model.Dzikir
-	err := r.db.Joins("Translation").Order("category, id").Limit(limit).Offset(offset).Find(&list).Error
+	err := r.db.Joins("Translation").Order("dzikir.category, dzikir.id").Limit(limit).Offset(offset).Find(&list).Error
 	return list, err
 }
 
@@ -49,7 +49,7 @@ func (r *dzikirRepository) FindByCategory(category model.DzikirCategory, limit, 
 		offset = 0
 	}
 	var list []model.Dzikir
-	err := r.db.Joins("Translation").Where("category = ?", category).Order("id").Limit(limit).Offset(offset).Find(&list).Error
+	err := r.db.Joins("Translation").Where("category = ?", category).Order("dzikir.id").Limit(limit).Offset(offset).Find(&list).Error
 	return list, err
 }
 

@@ -130,7 +130,7 @@ func (r *leaderboardRepository) TopMushahhih(limit int) ([]model.LeaderboardEntr
 	err := r.db.Raw(`
 		SELECT ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rank,
 			cr.user_id::text, COUNT(*) AS score
-		FROM content_reports cr
+		FROM content_report cr
 		JOIN "user" u ON u.id = cr.user_id::text
 		WHERE cr.status = 'resolved' AND cr.deleted_at IS NULL AND u.deleted_at IS NULL
 		GROUP BY cr.user_id
@@ -146,7 +146,7 @@ func (r *leaderboardRepository) MyMushahhihRank(userID uuid.UUID) (*model.Leader
 	var rank model.LeaderboardMyRank
 	err := r.db.Raw(`
 		WITH report_counts AS (
-			SELECT user_id, COUNT(*) AS score FROM content_reports
+			SELECT user_id, COUNT(*) AS score FROM content_report
 			WHERE status = 'resolved' AND deleted_at IS NULL
 			GROUP BY user_id
 		),

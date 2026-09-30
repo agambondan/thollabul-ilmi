@@ -30,7 +30,7 @@ func (r *doaRepo) FindAll(limit, offset int) ([]model.Doa, error) {
 		offset = 0
 	}
 	var list []model.Doa
-	err := r.db.Joins("Translation").Order("category, id").Limit(limit).Offset(offset).Find(&list).Error
+	err := r.db.Joins("Translation").Order("doa.category, doa.id").Limit(limit).Offset(offset).Find(&list).Error
 	return list, err
 }
 
@@ -50,7 +50,7 @@ func (r *doaRepo) FindByCategory(category model.DoaCategory, limit, offset int) 
 		offset = 0
 	}
 	var list []model.Doa
-	err := r.db.Joins("Translation").Where("category = ?", category).Order("id").Limit(limit).Offset(offset).Find(&list).Error
+	err := r.db.Joins("Translation").Where("category = ?", category).Order("doa.id").Limit(limit).Offset(offset).Find(&list).Error
 	return list, err
 }
 

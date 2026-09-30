@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -159,18 +161,25 @@ func (r *amalanRepository) FindHistory(userID uuid.UUID, from, to string) ([]mod
 	for rows.Next() {
 		var l model.AmalanLog
 		var ai model.AmalanItem
+		var aiName, aiDesc, aiSource, aiCat sql.NullString
+		var aiActive sql.NullBool
 		var tID *int
 		var tIdn, tEn, tAr *string
 		if err := rows.Scan(
 			&l.ID, &l.CreatedAt, &l.UpdatedAt, &l.UserID, &l.AmalanItemID, &l.Date, &l.IsDone,
 			&ai.ID, &ai.CreatedAt, &ai.UpdatedAt,
-			&ai.Name, &ai.Description, &ai.Source,
-			&ai.Category, &ai.IsActive, &ai.TranslationID,
+			&aiName, &aiDesc, &aiSource,
+			&aiCat, &aiActive, &ai.TranslationID,
 			&tID, &tIdn, &tEn, &tAr,
 		); err != nil {
 			return nil, err
 		}
 		if ai.ID != nil {
+			ai.Name = aiName.String
+			ai.Description = aiDesc.String
+			ai.Source = aiSource.String
+			ai.Category = model.AmalanCategory(aiCat.String)
+			ai.IsActive = aiActive.Bool
 			if tID != nil {
 				ai.Translation = &model.Translation{
 					BaseID: model.BaseID{ID: tID},
