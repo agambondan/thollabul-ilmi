@@ -246,6 +246,7 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_ar  ON translation USING GIN (ar gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_idn ON translation USING GIN (idn gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_en  ON translation USING GIN (en gin_trgm_ops)`,
+		`CREATE INDEX IF NOT EXISTS idx_translation_en_btree ON translation (en)`,
 		`CREATE INDEX IF NOT EXISTS idx_fts_translation_idn_en ON translation USING GIN (to_tsvector('simple', coalesce(idn,'') || ' ' || coalesce(en,'')))`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_islamic_term    ON islamic_term USING GIN (term gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_islamic_def     ON islamic_term USING GIN (definition gin_trgm_ops)`,

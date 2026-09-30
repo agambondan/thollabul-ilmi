@@ -689,33 +689,37 @@ func seedKajianFromFile(db *gorm.DB) {
 		// (a re-chunk after improved captions moved the boundaries) get
 		// removed, further down.
 		keepWindows := make(map[[2]int]struct{}, len(r.Transcripts))
+		chunkRows := make([]model.KajianTranscript, 0, len(r.Transcripts))
 		for _, chunk := range r.Transcripts {
 			keepWindows[[2]int{chunk.StartSeconds, chunk.EndSeconds}] = struct{}{}
 			tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
 			if r.VideoID == "" {
 				tsURL = r.URL
 			}
-			// Omit the embedding: the zero pgvector.Vector serialises as '[]'
-			// which Postgres rejects, silently dropping every chunk.
-			err := db.Omit("Embedding").Clauses(clause.OnConflict{
-				Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
-				DoUpdates: clause.AssignmentColumns([]string{"video_id", "text", "timestamp_url", "deleted_at"}),
-			}).Create(&model.KajianTranscript{
+			chunkRows = append(chunkRows, model.KajianTranscript{
 				KajianID:     *existing.ID,
 				VideoID:      r.VideoID,
 				StartSeconds: chunk.StartSeconds,
 				EndSeconds:   chunk.EndSeconds,
 				Text:         chunk.Text,
 				TimestampURL: tsURL,
-			}).Error
+			})
+		}
+		if len(chunkRows) > 0 {
+			// Omit the embedding: the zero pgvector.Vector serialises as '[]'
+			// which Postgres rejects, silently dropping every chunk.
+			err := db.Omit("Embedding").Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
+				DoUpdates: clause.AssignmentColumns([]string{"video_id", "text", "timestamp_url", "deleted_at"}),
+			}).CreateInBatches(&chunkRows, 200).Error
 			if err != nil {
-				transcriptErrors++
+				transcriptErrors += len(chunkRows)
 				if firstTranscriptErr == nil {
 					firstTranscriptErr = err
 				}
-				continue
+			} else {
+				transcriptRows += len(chunkRows)
 			}
-			transcriptRows++
 		}
 
 		type chunkWindow struct {

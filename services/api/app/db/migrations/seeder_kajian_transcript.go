@@ -95,33 +95,33 @@ func SeedKajianTranscriptsFromFile(db *gorm.DB) {
 			}
 
 			// Seed transcript chunks
+			if dbKajian.ID == nil {
+				continue
+			}
+			kajianID := *dbKajian.ID
+
+			transcripts := make([]model.KajianTranscript, 0, len(item.Transcripts))
 			for _, chunk := range item.Transcripts {
 				tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", item.VideoID, chunk.StartSeconds)
 				if item.VideoID == "" {
 					tsURL = k.URL
 				}
 
-				if dbKajian.ID == nil {
-					continue
-				}
-				kajianID := *dbKajian.ID
-
-				t := model.KajianTranscript{
+				transcripts = append(transcripts, model.KajianTranscript{
 					KajianID:     kajianID,
 					VideoID:      item.VideoID,
 					StartSeconds: chunk.StartSeconds,
 					EndSeconds:   chunk.EndSeconds,
 					Text:         chunk.Text,
 					TimestampURL: tsURL,
-				}
+				})
+			}
 
-				var count int64
-				db.Model(&model.KajianTranscript{}).
-					Where("kajian_id = ? AND start_seconds = ?", kajianID, chunk.StartSeconds).
-					Count(&count)
-				if count == 0 {
-					_ = db.Omit("Embedding").Create(&t).Error
-				}
+			if len(transcripts) > 0 {
+				_ = db.Clauses(clause.OnConflict{
+					Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
+					DoNothing: true,
+				}).Omit("Embedding").CreateInBatches(&transcripts, 200).Error
 			}
 		}
 	}

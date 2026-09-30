@@ -105,16 +105,20 @@ func (c *ayahRepo) FindDaily(number int) (*model.Ayah, error) {
 		number = 1
 	}
 
-	var ayah model.Ayah
+	var id int
 	err := c.db.Model(&model.Ayah{}).
-		Joins("Translation").
-		Joins("Surah").
-		Joins("Surah.Translation").
+		Select("id").
 		Order(`"ayah".id`).
 		Offset(number - 1).
 		Limit(1).
-		First(&ayah).Error
-	return &ayah, err
+		Scan(&id).Error
+	if err != nil {
+		return nil, err
+	}
+	if id == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return c.FindById(&id)
 }
 
 func (c *ayahRepo) FindByNumber(ctx *fiber.Ctx, number *int) (*paginate.Page, error) {
