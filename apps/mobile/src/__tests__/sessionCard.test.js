@@ -44,8 +44,9 @@ beforeEach(() => {
 });
 
 describe("SessionCard", () => {
-    test("renders email and password inputs when no user", () => {
+    test("renders email and password inputs when no user", async () => {
         const { getByPlaceholderText } = render(<SessionCard />);
+        await flushAsyncWork();
         expect(getByPlaceholderText("Email")).toBeTruthy();
         expect(getByPlaceholderText("Kata sandi")).toBeTruthy();
     });
@@ -67,13 +68,15 @@ describe("SessionCard", () => {
         });
     });
 
-    test("toggles password visibility", () => {
+    test("toggles password visibility", async () => {
         const { getByLabelText } = render(<SessionCard />);
+        await flushAsyncWork();
         fireEvent.press(getByLabelText("Lihat kata sandi"));
     });
 
-    test("switches to register mode", () => {
+    test("switches to register mode", async () => {
         const { getByText, getByPlaceholderText } = render(<SessionCard />);
+        await flushAsyncWork();
         fireEvent.press(getByText("Daftar"));
         expect(getByText("Daftar Akun")).toBeTruthy();
         expect(getByPlaceholderText("Nama")).toBeTruthy();
@@ -82,10 +85,11 @@ describe("SessionCard", () => {
         ).toBeTruthy();
     });
 
-    test("switches to forgot mode", () => {
+    test("switches to forgot mode", async () => {
         const { getByText, queryByPlaceholderText, getAllByText } = render(
             <SessionCard />,
         );
+        await flushAsyncWork();
         fireEvent.press(getByText("Lupa Sandi"));
         expect(getAllByText("Lupa Sandi").length).toBeGreaterThanOrEqual(1);
         expect(queryByPlaceholderText("Kata sandi")).toBeNull();
@@ -156,18 +160,19 @@ describe("SessionCard", () => {
         expect(forgotPassword).toHaveBeenCalledWith("test@test.com");
     });
 
-    test("renders user info when logged in", () => {
+    test("renders user info when logged in", async () => {
         useSession.mockReturnValue({
             ...defaultSession,
             user: { name: "Test User", email: "test@test.com" },
         });
         const { getByText } = render(<SessionCard />);
+        await flushAsyncWork();
         expect(getByText("Sudah Masuk")).toBeTruthy();
         expect(getByText("Test User")).toBeTruthy();
         expect(getByText("test@test.com")).toBeTruthy();
     });
 
-    test("calls signOut on keluar button", () => {
+    test("calls signOut on keluar button", async () => {
         const signOut = jest.fn();
         useSession.mockReturnValue({
             ...defaultSession,
@@ -175,6 +180,7 @@ describe("SessionCard", () => {
             signOut,
         });
         const { getByText } = render(<SessionCard />);
+        await flushAsyncWork();
         fireEvent.press(getByText("Keluar"));
         expect(signOut).toHaveBeenCalledTimes(1);
     });

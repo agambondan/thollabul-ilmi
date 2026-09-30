@@ -263,6 +263,26 @@ describe("normalizeDoa", () => {
         expect(result.body).toBe("terjemahan");
     });
 
+    test("reads the legacy translation_text when the relation is absent", () => {
+        const result = normalizeDoa({
+            id: 14,
+            title: "Doa Sebelum Belajar",
+            arabic: "رَبِّ زِدْنِي عِلْمًا",
+            translation_text: "Ya Tuhanku, tambahkanlah ilmu kepadaku",
+        });
+        expect(result.body).toBe("Ya Tuhanku, tambahkanlah ilmu kepadaku");
+    });
+
+    test("prefers the translation relation over the legacy translation_text", () => {
+        const result = normalizeDoa({
+            id: 14,
+            title: "Doa Sebelum Belajar",
+            translation: { description_idn: "dari relasi" },
+            translation_text: "dari kolom legacy",
+        });
+        expect(result.body).toBe("dari relasi");
+    });
+
     test("falls back to defaults for empty input", () => {
         const result = normalizeDoa({});
         expect(result.title).toBe("Doa");

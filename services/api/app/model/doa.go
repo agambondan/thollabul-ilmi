@@ -38,7 +38,7 @@ type Doa struct {
 	Title           string       `json:"title,omitempty" gorm:"type:varchar(256);not null;uniqueIndex:idx_doa_category_title"`
 	Arabic          string       `json:"arabic,omitempty" gorm:"type:text;not null"`
 	Transliteration string       `json:"transliteration,omitempty" gorm:"type:text"`
-	TranslationText string       `json:"translation,omitempty" gorm:"column:translation;type:text;not null"`
+	TranslationText string       `json:"translation_text,omitempty" gorm:"column:translation;type:text;not null"`
 	Source          string       `json:"source" gorm:"type:varchar(256)"`
 	AudioURL        string       `json:"audio_url,omitempty" gorm:"type:varchar(500)"`
 	TranslationID   *int         `json:"translation_id,omitempty" gorm:"index"`

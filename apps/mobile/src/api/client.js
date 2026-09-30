@@ -882,6 +882,7 @@ export const normalizeDoa = (item) => ({
         item.translation?.idn,
         item.translation?.text_idn,
         item.translation?.text,
+        item.translation_text,
         item.translation,
         item.content,
         item.description,
