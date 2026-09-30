@@ -565,11 +565,11 @@ func (r *kajianRepository) GetTranscriptsByKajianID(kajianID int) ([]model.Kajia
 
 	for _, tbl := range tables {
 		var items []model.KajianTranscript
-		q := r.db.Table(tbl).Order("start_seconds ASC")
+		q := r.db.Table(tbl).Order("start_seconds ASC, id ASC")
 		if videoID != "" {
-			q = q.Where("kajian_id = ? OR video_id = ?", kajianID, videoID)
+			q = q.Where("deleted_at IS NULL AND (kajian_id = ? OR video_id = ?)", kajianID, videoID)
 		} else {
-			q = q.Where("kajian_id = ?", kajianID)
+			q = q.Where("deleted_at IS NULL AND kajian_id = ?", kajianID)
 		}
 
 		if err := q.Scan(&items).Error; err == nil && len(items) > 0 {
