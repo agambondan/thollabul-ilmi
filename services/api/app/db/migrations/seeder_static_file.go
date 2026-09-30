@@ -538,6 +538,23 @@ func seedBlogTagsFromFile(db *gorm.DB) {
 
 // ── Kajian ────────────────────────────────────────────────────────────────────
 
+func kajianChunkChanged() clause.Where {
+	column := func(name string) clause.Column {
+		return clause.Column{Table: clause.CurrentTable, Name: name}
+	}
+	return clause.Where{Exprs: []clause.Expression{
+		clause.Expr{
+			SQL: "COALESCE(?, '') <> COALESCE(EXCLUDED.video_id, '') OR ? <> EXCLUDED.text OR COALESCE(?, '') <> COALESCE(EXCLUDED.timestamp_url, '') OR ? IS NOT NULL",
+			Vars: []interface{}{
+				column("video_id"),
+				column("text"),
+				column("timestamp_url"),
+				column("deleted_at"),
+			},
+		},
+	}}
+}
+
 func seedKajianFromFile(db *gorm.DB) {
 	type transcriptChunk struct {
 		StartSeconds int    `json:"start_seconds"`
@@ -623,7 +640,17 @@ func seedKajianFromFile(db *gorm.DB) {
 		}
 	}
 
-	for _, r := range rows {
+	lastEntryForVideo := make(map[string]int, len(rows))
+	for i, r := range rows {
+		if r.VideoID != "" {
+			lastEntryForVideo[r.VideoID] = i
+		}
+	}
+
+	for rowIndex, r := range rows {
+		if r.VideoID != "" && lastEntryForVideo[r.VideoID] != rowIndex {
+			continue
+		}
 		published := r.PublishedAt
 		if published == "" {
 			published = "2024-01-01"
@@ -709,6 +736,7 @@ func seedKajianFromFile(db *gorm.DB) {
 			err := db.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
 				DoUpdates: clause.AssignmentColumns([]string{"video_id", "text", "timestamp_url", "deleted_at"}),
+				Where:     kajianChunkChanged(),
 			}).CreateInBatches(&chunkRows, 200).Error
 			if err != nil {
 				transcriptErrors += len(chunkRows)
