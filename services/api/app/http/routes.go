@@ -34,6 +34,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	app.Use(middlewares.SecurityHeaders())
 	app.Use(middlewares.Cors())
 	app.Use(middlewares.SentryMiddleware())
+	app.Use(middlewares.MetricsMiddleware())
 
 	globalMax := viper.GetInt("RATE_LIMIT_GLOBAL")
 	if globalMax <= 0 {
@@ -164,7 +165,6 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newAdController := controllers.NewAdController(newServices)
 
 	app.Static("/uploads", "./uploads")
-	app.Use(middlewares.MetricsMiddleware())
 	app.Get("/health", func(c *fiber.Ctx) error {
 		health := fiber.Map{
 			"status":    "ok",

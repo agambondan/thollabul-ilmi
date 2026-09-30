@@ -99,10 +99,10 @@ func main() {
 	if bodyLimit <= 0 {
 		bodyLimit = 25 * 1024 * 1024
 	}
-	app := fiber.New(fiber.Config{
+	app := fiber.New(http.WithClientIP(fiber.Config{
 		Prefork:   viper.GetString("PREFORK") == "true",
 		BodyLimit: bodyLimit,
-	})
+	}))
 
 	http.Handle(app, newRepositories)
 
