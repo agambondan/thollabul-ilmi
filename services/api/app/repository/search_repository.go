@@ -116,7 +116,7 @@ func (r *searchRepo) SearchDictionary(query string, limit, offset int) ([]model.
 
 	r.db.Model(&model.IslamicTerm{}).Where(filter, args...).Count(&total)
 
-	rawSQL := islamicTermSelectCols + " WHERE it.term ILIKE ? OR it.definition ILIKE ? OR it.example ILIKE ? OR it.source ILIKE ? ORDER BY it.term ASC LIMIT ? OFFSET ?"
+	rawSQL := islamicTermSelectCols + " WHERE (it.term ILIKE ? OR it.definition ILIKE ? OR it.example ILIKE ? OR it.source ILIKE ?) AND it.deleted_at IS NULL ORDER BY it.term ASC LIMIT ? OFFSET ?"
 	scanArgs := append(args, limit, offset)
 	rows, err := r.db.Raw(rawSQL, scanArgs...).Rows()
 	if err != nil {

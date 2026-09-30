@@ -29,7 +29,7 @@ SELECT
     a.meaning, a.source, a.audio_url, a.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM asma_ul_husna a
-LEFT JOIN translation t ON t.id = a.translation_id
+LEFT JOIN translation t ON t.id = a.translation_id AND t.deleted_at IS NULL
 `
 
 func scanAsmaUlHusnaRow(scanner interface{ Scan(...interface{}) error }) (model.AsmaUlHusna, error) {
@@ -63,7 +63,7 @@ func (r *asmaUlHusnaRepo) FindAll(limit, offset int) ([]model.AsmaUlHusna, error
 	if offset < 0 {
 		offset = 0
 	}
-	query := asmaUlHusnaSelectCols + " ORDER BY a.number ASC LIMIT ? OFFSET ?"
+	query := asmaUlHusnaSelectCols + " WHERE a.deleted_at IS NULL ORDER BY a.number ASC LIMIT ? OFFSET ?"
 	rows, err := r.db.Raw(query, limit, offset).Rows()
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (r *asmaUlHusnaRepo) FindAll(limit, offset int) ([]model.AsmaUlHusna, error
 }
 
 func (r *asmaUlHusnaRepo) FindByNumber(number int) (*model.AsmaUlHusna, error) {
-	query := asmaUlHusnaSelectCols + " WHERE a.number = ? LIMIT 1"
+	query := asmaUlHusnaSelectCols + " WHERE a.number = ? AND a.deleted_at IS NULL LIMIT 1"
 	rows, err := r.db.Raw(query, number).Rows()
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (r *asmaUlHusnaRepo) FindByNumber(number int) (*model.AsmaUlHusna, error) {
 }
 
 func (r *asmaUlHusnaRepo) FindByID(id int) (*model.AsmaUlHusna, error) {
-	query := asmaUlHusnaSelectCols + " WHERE a.id = ? LIMIT 1"
+	query := asmaUlHusnaSelectCols + " WHERE a.id = ? AND a.deleted_at IS NULL LIMIT 1"
 	rows, err := r.db.Raw(query, id).Rows()
 	if err != nil {
 		return nil, err

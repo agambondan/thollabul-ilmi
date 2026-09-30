@@ -78,8 +78,8 @@ SELECT
     a.id as a_id, a.created_at as a_created_at, a.updated_at as a_updated_at,
     a.code, a.name, a.name_en, a.description, a.desc_en, a.icon, a.category, a.threshold
 FROM user_achievement ua
-JOIN achievement a ON a.id = ua.achievement_id
-WHERE ua.user_id = ?
+JOIN achievement a ON a.id = ua.achievement_id AND a.deleted_at IS NULL
+WHERE ua.user_id = ? AND ua.deleted_at IS NULL
 ORDER BY ua.earned_at DESC
 `
 

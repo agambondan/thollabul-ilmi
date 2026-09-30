@@ -79,9 +79,9 @@ func (r *kajianBookmarkRepository) ListByUser(userID uuid.UUID, limit int) ([]mo
 			k.id AS kajian_row_id, k.title AS kajian_title, k.speaker AS kajian_speaker,
 			k.topic AS kajian_topic, k.thumbnail_url AS kajian_thumbnail, k.url AS kajian_url, k.video_id AS kajian_video_id
 		FROM kajian_user_bookmark b
-		LEFT JOIN kajian_transcript kt ON kt.id = b.chunk_id
-		LEFT JOIN kajian k ON k.id = b.kajian_id
-		WHERE b.user_id = ?
+		LEFT JOIN kajian_transcript kt ON kt.id = b.chunk_id AND kt.deleted_at IS NULL
+		LEFT JOIN kajian k ON k.id = b.kajian_id AND k.deleted_at IS NULL
+		WHERE b.user_id = ? AND b.deleted_at IS NULL
 		ORDER BY b.created_at DESC
 		LIMIT ?
 	`

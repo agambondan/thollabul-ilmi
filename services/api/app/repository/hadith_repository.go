@@ -64,7 +64,8 @@ func (c *hadithRepo) withRelations(db *gorm.DB, selectArgs ...string) *gorm.DB {
 		Joins("Book").Joins("Book.Translation").
 		Joins("Theme").Joins("Theme.Translation").
 		Joins("Chapter").Joins("Chapter.Translation").
-		Joins("Translation")
+		Joins("Translation").
+		Preload("Media")
 	if len(selectArgs) > 0 {
 		q = q.Select(selectArgs[0])
 	}
@@ -146,6 +147,7 @@ func (c *hadithRepo) FindByBookSlugSlim(ctx *fiber.Ctx, bookSlug *string) (*pagi
 	mod := c.db.Model(&model.Hadith{}).
 		Joins("Book").
 		Joins("Translation").
+		Preload("Media").
 		Where(`"Book".slug = ?`, bookSlug).
 		Order("hadith.number ASC, hadith.id ASC")
 	if updatedAfter := parseUpdatedAfter(ctx); updatedAfter != nil {

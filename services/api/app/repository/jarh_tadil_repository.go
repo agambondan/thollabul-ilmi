@@ -35,9 +35,9 @@ const jarhTadilSelectSQL = `
 		pen.tabaqah, pen.status, pen.biografis, pen.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM jarh_tadil jt
-	LEFT JOIN perawi p ON p.id = jt.perawi_id
-	LEFT JOIN perawi pen ON pen.id = jt.penilai_id
-	LEFT JOIN translation t ON t.id = jt.translation_id
+	LEFT JOIN perawi p ON p.id = jt.perawi_id AND p.deleted_at IS NULL
+	LEFT JOIN perawi pen ON pen.id = jt.penilai_id AND pen.deleted_at IS NULL
+	LEFT JOIN translation t ON t.id = jt.translation_id AND t.deleted_at IS NULL
 `
 
 func scanJarhTadilRow(rows *sql.Rows) (*model.JarhTadil, error) {
@@ -149,7 +149,7 @@ func (r *jarhTadilRepo) FindAll(limit, offset int) ([]model.JarhTadil, error) {
 		offset = 0
 	}
 
-	rows, err := r.db.Raw(jarhTadilSelectSQL+" ORDER BY jt.id ASC LIMIT ? OFFSET ?", limit, offset).Rows()
+	rows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.deleted_at IS NULL ORDER BY jt.id ASC LIMIT ? OFFSET ?", limit, offset).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (r *jarhTadilRepo) FindAll(limit, offset int) ([]model.JarhTadil, error) {
 }
 
 func (r *jarhTadilRepo) FindByID(id *int) (*model.JarhTadil, error) {
-	rows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.id = ?", id).Rows()
+	rows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.deleted_at IS NULL AND jt.id = ?", id).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -183,7 +183,7 @@ func (r *jarhTadilRepo) FindByID(id *int) (*model.JarhTadil, error) {
 }
 
 func (r *jarhTadilRepo) FindByPerawiID(perawiID *int) ([]model.JarhTadil, error) {
-	rows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.perawi_id = ? ORDER BY jt.id ASC", perawiID).Rows()
+	rows, err := r.db.Raw(jarhTadilSelectSQL+" WHERE jt.deleted_at IS NULL AND jt.perawi_id = ? ORDER BY jt.id ASC", perawiID).Rows()
 	if err != nil {
 		return nil, err
 	}

@@ -57,7 +57,7 @@ const manasikSelectSQL = `
 		t.id AS tr_id, t.ar AS tr_ar, t.en AS tr_en, t.idn AS tr_idn,
 		t.created_at AS tr_created_at, t.updated_at AS tr_updated_at, t.deleted_at AS tr_deleted_at
 	FROM manasik_step ms
-	LEFT JOIN translation t ON t.id = ms.translation_id
+	LEFT JOIN translation t ON t.id = ms.translation_id AND t.deleted_at IS NULL
 `
 
 func (r *manasikRow) toModel() model.ManasikStep {
@@ -102,6 +102,7 @@ func (r *manasikRepository) FindAll(limit, offset int) ([]model.ManasikStep, err
 	}
 	var rows []manasikRow
 	err := r.db.Raw(manasikSelectSQL+`
+		WHERE ms.deleted_at IS NULL
 		ORDER BY ms.type ASC, ms.step_order ASC
 		LIMIT ? OFFSET ?
 	`, limit, offset).Scan(&rows).Error
@@ -125,7 +126,7 @@ func (r *manasikRepository) FindByType(t model.ManasikType, limit, offset int) (
 	}
 	var rows []manasikRow
 	err := r.db.Raw(manasikSelectSQL+`
-		WHERE ms.type = ?
+		WHERE ms.type = ? AND ms.deleted_at IS NULL
 		ORDER BY ms.step_order ASC
 		LIMIT ? OFFSET ?
 	`, t, limit, offset).Scan(&rows).Error
@@ -143,7 +144,7 @@ func (r *manasikRepository) FindByType(t model.ManasikType, limit, offset int) (
 func (r *manasikRepository) FindByTypeAndStep(t model.ManasikType, step int) (*model.ManasikStep, error) {
 	var row manasikRow
 	err := r.db.Raw(manasikSelectSQL+`
-		WHERE ms.type = ? AND ms.step_order = ?
+		WHERE ms.type = ? AND ms.step_order = ? AND ms.deleted_at IS NULL
 		LIMIT 1
 	`, t, step).Scan(&row).Error
 	if err != nil {
@@ -203,7 +204,7 @@ func (r *manasikRepository) Delete(id int) error {
 func (r *manasikRepository) findByID(id int) (*model.ManasikStep, error) {
 	var row manasikRow
 	err := r.db.Raw(manasikSelectSQL+`
-		WHERE ms.id = ?
+		WHERE ms.id = ? AND ms.deleted_at IS NULL
 		LIMIT 1
 	`, id).Scan(&row).Error
 	if err != nil {

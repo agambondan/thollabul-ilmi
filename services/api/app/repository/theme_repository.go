@@ -57,7 +57,7 @@ func (c *themeRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var counts []themeCount
 	c.db.Table("hadith").
 		Select("theme_id, COUNT(*) as total").
-		Where("theme_id IN ?", themeIDs).
+		Where("theme_id IN ? AND deleted_at IS NULL", themeIDs).
 		Group("theme_id").Scan(&counts)
 	countMap := make(map[int]int64, len(counts))
 	for _, ct := range counts {
@@ -72,7 +72,7 @@ func (c *themeRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var themeBooks []themeBook
 	c.db.Table("hadith").
 		Select("DISTINCT theme_id, book_id").
-		Where("theme_id IN ? AND book_id IS NOT NULL", themeIDs).
+		Where("theme_id IN ? AND book_id IS NOT NULL AND deleted_at IS NULL", themeIDs).
 		Scan(&themeBooks)
 
 	bookIDSet := make(map[int]struct{})
@@ -118,8 +118,8 @@ func (c *themeRepo) loadChaptersForTheme(themeID int) ([]model.Chapter, error) {
 		SELECT ch.id, ch.theme_id, ch.default_language, ch.translation_id,
 		       t.id, t.idn, t.en, t.ar
 		FROM chapter ch
-		LEFT JOIN translation t ON t.id = ch.translation_id
-		WHERE ch.theme_id = ?
+		LEFT JOIN translation t ON t.id = ch.translation_id AND t.deleted_at IS NULL
+		WHERE ch.theme_id = ? AND ch.deleted_at IS NULL
 		ORDER BY ch.id ASC
 	`, themeID).Rows()
 	if err != nil {

@@ -236,6 +236,7 @@ func foldLessonModules(rows []lessonJoinRow) []model.LessonModule {
 func (r *lessonRepository) FindAll() ([]model.LessonModule, error) {
 	var rows []lessonJoinRow
 	err := r.db.Raw(lessonJoinSelectSQL + `
+		WHERE lm.deleted_at IS NULL
 		ORDER BY lm."order" ASC, lm.id ASC, ls.step_order ASC
 	`).Scan(&rows).Error
 	if err != nil {
@@ -247,7 +248,7 @@ func (r *lessonRepository) FindAll() ([]model.LessonModule, error) {
 func (r *lessonRepository) FindBySlug(slug string) (*model.LessonModule, error) {
 	var rows []lessonJoinRow
 	err := r.db.Raw(lessonJoinSelectSQL+`
-		WHERE lm.slug = ?
+		WHERE lm.slug = ? AND lm.deleted_at IS NULL
 		ORDER BY ls.step_order ASC
 	`, slug).Scan(&rows).Error
 	if err != nil {
@@ -323,7 +324,7 @@ func (r *lessonRepository) DeleteModule(id int) error {
 func (r *lessonRepository) FindByID(id int) (*model.LessonModule, error) {
 	var rows []lessonJoinRow
 	err := r.db.Raw(lessonJoinSelectSQL+`
-		WHERE lm.id = ?
+		WHERE lm.id = ? AND lm.deleted_at IS NULL
 		ORDER BY ls.step_order ASC
 	`, id).Scan(&rows).Error
 	if err != nil {

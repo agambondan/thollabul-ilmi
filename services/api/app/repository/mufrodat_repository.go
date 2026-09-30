@@ -31,9 +31,9 @@ const mufrodatSelectSQL = `
 		at.id, at.idn, at.en, at.ar,
 		s.id, s.number, s.slug, s.revelation_type, s.translation_id
 	FROM mufrodat m
-	LEFT JOIN ayah a ON a.id = m.ayah_id
-	LEFT JOIN translation at ON at.id = a.translation_id
-	LEFT JOIN surah s ON s.id = a.surah_id
+	LEFT JOIN ayah a ON a.id = m.ayah_id AND a.deleted_at IS NULL
+	LEFT JOIN translation at ON at.id = a.translation_id AND at.deleted_at IS NULL
+	LEFT JOIN surah s ON s.id = a.surah_id AND s.deleted_at IS NULL
 `
 
 func (r *mufrodatRepo) scanRow(rows *sql.Rows) (*model.Mufrodat, error) {
@@ -107,26 +107,26 @@ func (r *mufrodatRepo) execute(sqlStr string, args ...interface{}) ([]model.Mufr
 }
 
 func (r *mufrodatRepo) FindByAyahID(ayahID int) ([]model.Mufrodat, error) {
-	sqlStr := fmt.Sprintf("%s WHERE m.ayah_id = ? ORDER BY m.word_index ASC", mufrodatSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL AND m.ayah_id = ? ORDER BY m.word_index ASC", mufrodatSelectSQL)
 	return r.execute(sqlStr, ayahID)
 }
 
 func (r *mufrodatRepo) FindBySurahNumber(surahNumber int) ([]model.Mufrodat, error) {
-	sqlStr := fmt.Sprintf("%s WHERE s.number = ? ORDER BY a.number ASC, m.word_index ASC", mufrodatSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL AND s.number = ? ORDER BY a.number ASC, m.word_index ASC", mufrodatSelectSQL)
 	return r.execute(sqlStr, surahNumber)
 }
 
 func (r *mufrodatRepo) FindBySurahAndAyahNumber(surahNumber, ayahNumber int) ([]model.Mufrodat, error) {
-	sqlStr := fmt.Sprintf("%s WHERE s.number = ? AND a.number = ? ORDER BY m.word_index ASC", mufrodatSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL AND s.number = ? AND a.number = ? ORDER BY m.word_index ASC", mufrodatSelectSQL)
 	return r.execute(sqlStr, surahNumber, ayahNumber)
 }
 
 func (r *mufrodatRepo) FindByPage(pageNumber int) ([]model.Mufrodat, error) {
-	sqlStr := fmt.Sprintf("%s WHERE a.page = ? ORDER BY a.surah_id ASC, a.number ASC, m.word_index ASC", mufrodatSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL AND a.page = ? ORDER BY a.surah_id ASC, a.number ASC, m.word_index ASC", mufrodatSelectSQL)
 	return r.execute(sqlStr, pageNumber)
 }
 
 func (r *mufrodatRepo) FindByRootWord(rootWord string) ([]model.Mufrodat, error) {
-	sqlStr := fmt.Sprintf("%s WHERE m.root_word ILIKE ? ORDER BY m.ayah_id ASC, m.word_index ASC", mufrodatSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL AND m.root_word ILIKE ? ORDER BY m.ayah_id ASC, m.word_index ASC", mufrodatSelectSQL)
 	return r.execute(sqlStr, "%"+rootWord+"%")
 }

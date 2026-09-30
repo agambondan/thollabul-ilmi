@@ -28,7 +28,7 @@ SELECT
     ie.description, ie.category, ie.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM islamic_event ie
-LEFT JOIN translation t ON t.id = ie.translation_id
+LEFT JOIN translation t ON t.id = ie.translation_id AND t.deleted_at IS NULL
 `
 
 func scanIslamicEventRow(scanner interface{ Scan(...interface{}) error }) (model.IslamicEvent, error) {
@@ -67,10 +67,10 @@ func scanIslamicEventRows(rows *sql.Rows) ([]model.IslamicEvent, error) {
 }
 
 func (r *islamicEventRepository) FindAll(category string) ([]model.IslamicEvent, error) {
-	query := islamicEventSelectCols
+	query := islamicEventSelectCols + " WHERE ie.deleted_at IS NULL"
 	var args []interface{}
 	if category != "" {
-		query += " WHERE ie.category = ?"
+		query += " AND ie.category = ?"
 		args = append(args, category)
 	}
 	query += " ORDER BY ie.hijri_month ASC, ie.hijri_day ASC"
@@ -84,7 +84,7 @@ func (r *islamicEventRepository) FindAll(category string) ([]model.IslamicEvent,
 }
 
 func (r *islamicEventRepository) FindByMonth(month int) ([]model.IslamicEvent, error) {
-	query := islamicEventSelectCols + " WHERE ie.hijri_month = ? ORDER BY ie.hijri_day ASC"
+	query := islamicEventSelectCols + " WHERE ie.hijri_month = ? AND ie.deleted_at IS NULL ORDER BY ie.hijri_day ASC"
 	rows, err := r.db.Raw(query, month).Rows()
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func (r *islamicEventRepository) FindByMonth(month int) ([]model.IslamicEvent, e
 }
 
 func (r *islamicEventRepository) FindByID(id int) (*model.IslamicEvent, error) {
-	query := islamicEventSelectCols + " WHERE ie.id = ? LIMIT 1"
+	query := islamicEventSelectCols + " WHERE ie.id = ? AND ie.deleted_at IS NULL LIMIT 1"
 	rows, err := r.db.Raw(query, id).Rows()
 	if err != nil {
 		return nil, err

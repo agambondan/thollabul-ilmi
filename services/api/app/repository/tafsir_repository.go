@@ -37,13 +37,13 @@ const tafsirSelectSQL = `
 		s.id, s.number, s.slug, s.revelation_type, s.translation_id,
 		st.id, st.idn, st.en, st.ar
 	FROM tafsir t
-	LEFT JOIN translation kt ON kt.id = t.kemenag_translation_id
-	LEFT JOIN translation ikt ON ikt.id = t.ibnu_katsir_translation_id
-	LEFT JOIN translation iket ON iket.id = t.ibnu_katsir_en_translation_id
-	LEFT JOIN ayah a ON a.id = t.ayah_id
-	LEFT JOIN translation at ON at.id = a.translation_id
-	LEFT JOIN surah s ON s.id = a.surah_id
-	LEFT JOIN translation st ON st.id = s.translation_id
+	LEFT JOIN translation kt ON kt.id = t.kemenag_translation_id AND kt.deleted_at IS NULL
+	LEFT JOIN translation ikt ON ikt.id = t.ibnu_katsir_translation_id AND ikt.deleted_at IS NULL
+	LEFT JOIN translation iket ON iket.id = t.ibnu_katsir_en_translation_id AND iket.deleted_at IS NULL
+	LEFT JOIN ayah a ON a.id = t.ayah_id AND a.deleted_at IS NULL
+	LEFT JOIN translation at ON at.id = a.translation_id AND at.deleted_at IS NULL
+	LEFT JOIN surah s ON s.id = a.surah_id AND s.deleted_at IS NULL
+	LEFT JOIN translation st ON st.id = s.translation_id AND st.deleted_at IS NULL
 `
 
 func (r *tafsirRepo) scanRow(rows *sql.Rows) (*model.Tafsir, error) {
@@ -116,7 +116,7 @@ func (r *tafsirRepo) scanRow(rows *sql.Rows) (*model.Tafsir, error) {
 }
 
 func (r *tafsirRepo) FindByAyahID(ayahID int) (*model.Tafsir, error) {
-	sqlStr := tafsirSelectSQL + " WHERE t.ayah_id = ? LIMIT 1"
+	sqlStr := tafsirSelectSQL + " WHERE t.deleted_at IS NULL AND t.ayah_id = ? LIMIT 1"
 	rows, err := r.db.Raw(sqlStr, ayahID).Rows()
 	if err != nil {
 		return nil, err
@@ -139,7 +139,7 @@ func (r *tafsirRepo) FindBySurahNumber(surahNumber, limit, offset int) ([]model.
 
 	sqlStr := fmt.Sprintf(`
 		%s
-		WHERE s.number = ?
+		WHERE t.deleted_at IS NULL AND s.number = ?
 		ORDER BY a.number ASC
 		LIMIT ? OFFSET ?
 	`, tafsirSelectSQL)
@@ -186,9 +186,11 @@ func (r *tafsirRepo) Search(query string, limit, offset int) ([]model.Tafsir, er
 
 	sqlStr := fmt.Sprintf(`
 		%s
-		WHERE kt.idn ILIKE ? OR kt.en ILIKE ?
+		WHERE t.deleted_at IS NULL AND (
+		   kt.idn ILIKE ? OR kt.en ILIKE ?
 		   OR ikt.idn ILIKE ? OR ikt.en ILIKE ?
 		   OR iket.idn ILIKE ? OR iket.en ILIKE ?
+		)
 		LIMIT ? OFFSET ?
 	`, tafsirSelectSQL)
 

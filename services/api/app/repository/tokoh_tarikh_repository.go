@@ -25,7 +25,7 @@ const tokohTarikhSelectSQL = `
 		tt.id, tt.nama, tt.era, tt.tahun_lahir, tt.tahun_wafat, tt.biografi, tt.kontribusi, tt.kategori, tt.image_url, tt.source, tt.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM tokoh_tarikh tt
-	LEFT JOIN translation t ON t.id = tt.translation_id
+	LEFT JOIN translation t ON t.id = tt.translation_id AND t.deleted_at IS NULL
 `
 
 func scanTokohTarikhRow(rows *sql.Rows) (*model.TokohTarikh, error) {
@@ -120,7 +120,7 @@ func (r *tokohTarikhRepo) FindAll(search, era, kategori string, limit, offset in
 	}
 
 	query := tokohTarikhSelectSQL
-	var conditions []string
+	conditions := []string{"tt.deleted_at IS NULL"}
 	var args []interface{}
 
 	if search != "" {
@@ -164,7 +164,7 @@ func (r *tokohTarikhRepo) FindAll(search, era, kategori string, limit, offset in
 }
 
 func (r *tokohTarikhRepo) FindByID(id int) (*model.TokohTarikh, error) {
-	rows, err := r.db.Raw(tokohTarikhSelectSQL+" WHERE tt.id = ?", id).Rows()
+	rows, err := r.db.Raw(tokohTarikhSelectSQL+" WHERE tt.id = ? AND tt.deleted_at IS NULL", id).Rows()
 	if err != nil {
 		return nil, err
 	}

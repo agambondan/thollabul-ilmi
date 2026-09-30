@@ -127,10 +127,10 @@ func (r *contentAuditLogRepository) FindAll(targetType string, page, limit int) 
 
 	cal, u := r.tableNames()
 
-	countQuery := "SELECT COUNT(*) FROM " + cal
+	countQuery := "SELECT COUNT(*) FROM " + cal + " WHERE deleted_at IS NULL"
 	var countArgs []interface{}
 	if targetType != "" {
-		countQuery += " WHERE target_type = ?"
+		countQuery += " AND target_type = ?"
 		countArgs = append(countArgs, targetType)
 	}
 
@@ -156,11 +156,12 @@ func (r *contentAuditLogRepository) FindAll(targetType string, page, limit int) 
 			u.notify_via_push AS user_notify_via_push,
 			u.created_at AS user_created_at, u.updated_at AS user_updated_at, u.deleted_at AS user_deleted_at
 		FROM ` + cal + ` cal
-		LEFT JOIN ` + u + ` u ON u.id = cal.modified_by
+		LEFT JOIN ` + u + ` u ON u.id = cal.modified_by AND u.deleted_at IS NULL
+		WHERE cal.deleted_at IS NULL
 	`
 	var selectArgs []interface{}
 	if targetType != "" {
-		selectSQL += " WHERE cal.target_type = ?"
+		selectSQL += " AND cal.target_type = ?"
 		selectArgs = append(selectArgs, targetType)
 	}
 	selectSQL += " ORDER BY cal.created_at DESC LIMIT ? OFFSET ?"

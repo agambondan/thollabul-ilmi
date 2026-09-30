@@ -38,8 +38,8 @@ SELECT
     ai.category, ai.is_active, ai.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM amalan_item ai
-LEFT JOIN translation t ON t.id = ai.translation_id
-WHERE ai.id = ?
+LEFT JOIN translation t ON t.id = ai.translation_id AND t.deleted_at IS NULL
+WHERE ai.id = ? AND ai.deleted_at IS NULL
 `
 
 func (r *amalanRepository) FindItemByID(id int) (*model.AmalanItem, error) {
@@ -142,9 +142,9 @@ SELECT
     ai.category as ai_cat, ai.is_active as ai_active, ai.translation_id as ai_tr_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM amalan_log al
-LEFT JOIN amalan_item ai ON ai.id = al.amalan_item_id
-LEFT JOIN translation t ON t.id = ai.translation_id
-WHERE al.user_id = ? AND al.date BETWEEN ? AND ?
+LEFT JOIN amalan_item ai ON ai.id = al.amalan_item_id AND ai.deleted_at IS NULL
+LEFT JOIN translation t ON t.id = ai.translation_id AND t.deleted_at IS NULL
+WHERE al.user_id = ? AND al.date BETWEEN ? AND ? AND al.deleted_at IS NULL
 ORDER BY al.date DESC
 `
 

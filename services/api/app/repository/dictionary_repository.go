@@ -31,7 +31,7 @@ SELECT
     it.arabic, it.latin, it.root, it.translation_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM islamic_term it
-LEFT JOIN translation t ON t.id = it.translation_id
+LEFT JOIN translation t ON t.id = it.translation_id AND t.deleted_at IS NULL
 `
 
 func scanIslamicTermRow(scanner interface{ Scan(...interface{}) error }) (model.IslamicTerm, error) {
@@ -71,7 +71,7 @@ func scanIslamicTermRows(rows *sql.Rows) ([]model.IslamicTerm, error) {
 }
 
 func (r *dictionaryRepository) FindAll(category string, search string) ([]model.IslamicTerm, error) {
-	query := islamicTermSelectCols + " WHERE 1=1"
+	query := islamicTermSelectCols + " WHERE it.deleted_at IS NULL"
 	var args []interface{}
 
 	if category != "" {
@@ -94,7 +94,7 @@ func (r *dictionaryRepository) FindAll(category string, search string) ([]model.
 }
 
 func (r *dictionaryRepository) FindByTerm(term string) (*model.IslamicTerm, error) {
-	query := islamicTermSelectCols + " WHERE it.term LIKE ? ORDER BY it.id ASC LIMIT 1"
+	query := islamicTermSelectCols + " WHERE it.term LIKE ? AND it.deleted_at IS NULL ORDER BY it.id ASC LIMIT 1"
 	rows, err := r.db.Raw(query, term).Rows()
 	if err != nil {
 		return nil, err
@@ -115,7 +115,7 @@ func (r *dictionaryRepository) FindByTerm(term string) (*model.IslamicTerm, erro
 }
 
 func (r *dictionaryRepository) FindByCategory(category model.TermCategory) ([]model.IslamicTerm, error) {
-	query := islamicTermSelectCols + " WHERE it.category = ? ORDER BY it.term ASC LIMIT 200"
+	query := islamicTermSelectCols + " WHERE it.category = ? AND it.deleted_at IS NULL ORDER BY it.term ASC LIMIT 200"
 	rows, err := r.db.Raw(query, category).Rows()
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (r *dictionaryRepository) FindByCategory(category model.TermCategory) ([]mo
 }
 
 func (r *dictionaryRepository) FindByID(id int) (*model.IslamicTerm, error) {
-	query := islamicTermSelectCols + " WHERE it.id = ?"
+	query := islamicTermSelectCols + " WHERE it.id = ? AND it.deleted_at IS NULL"
 	rows, err := r.db.Raw(query, id).Rows()
 	if err != nil {
 		return nil, err

@@ -34,7 +34,7 @@ const fiqhCategorySelectSQL = `
 		fc.id, fc.name, fc.slug, fc.description, fc.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM fiqh_category fc
-	LEFT JOIN translation t ON t.id = fc.translation_id
+	LEFT JOIN translation t ON t.id = fc.translation_id AND t.deleted_at IS NULL
 `
 
 const fiqhItemWithCategorySelectSQL = `
@@ -43,8 +43,8 @@ const fiqhItemWithCategorySelectSQL = `
 		fit.id, fit.idn, fit.en, fit.ar,
 		fc.id, fc.name, fc.slug, fc.description, fc.translation_id
 	FROM fiqh_item fi
-	LEFT JOIN translation fit ON fit.id = fi.translation_id
-	LEFT JOIN fiqh_category fc ON fc.id = fi.category_id
+	LEFT JOIN translation fit ON fit.id = fi.translation_id AND fit.deleted_at IS NULL
+	LEFT JOIN fiqh_category fc ON fc.id = fi.category_id AND fc.deleted_at IS NULL
 `
 
 const fiqhItemSelectSQL = `
@@ -52,7 +52,7 @@ const fiqhItemSelectSQL = `
 		fi.id, fi.category_id, fi.title, fi.slug, fi.content, fi.source, fi.dalil, fi.sort_order, fi.translation_id,
 		fit.id, fit.idn, fit.en, fit.ar
 	FROM fiqh_item fi
-	LEFT JOIN translation fit ON fit.id = fi.translation_id
+	LEFT JOIN translation fit ON fit.id = fi.translation_id AND fit.deleted_at IS NULL
 `
 
 func scanFiqhCategoryRow(rows *sql.Rows) (*model.FiqhCategory, error) {
@@ -187,7 +187,7 @@ func (r *fiqhRepository) FindAllCategories(limit, offset int) ([]model.FiqhCateg
 		offset = 0
 	}
 
-	rows, err := r.db.Raw(fiqhCategorySelectSQL+" ORDER BY fc.id ASC LIMIT ? OFFSET ?", limit, offset).Rows()
+	rows, err := r.db.Raw(fiqhCategorySelectSQL+" WHERE fc.deleted_at IS NULL ORDER BY fc.id ASC LIMIT ? OFFSET ?", limit, offset).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +212,7 @@ func (r *fiqhRepository) FindAllItems(limit, offset int) ([]model.FiqhItem, erro
 		offset = 0
 	}
 
-	rows, err := r.db.Raw(fiqhItemWithCategorySelectSQL+" ORDER BY fi.category_id ASC, fi.sort_order ASC, fi.id ASC LIMIT ? OFFSET ?", limit, offset).Rows()
+	rows, err := r.db.Raw(fiqhItemWithCategorySelectSQL+" WHERE fi.deleted_at IS NULL ORDER BY fi.category_id ASC, fi.sort_order ASC, fi.id ASC LIMIT ? OFFSET ?", limit, offset).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -237,7 +237,7 @@ func (r *fiqhRepository) FindCategoryBySlug(slug string, limit, offset int) (*mo
 		offset = 0
 	}
 
-	rows, err := r.db.Raw(fiqhCategorySelectSQL+" WHERE fc.slug = ?", slug).Rows()
+	rows, err := r.db.Raw(fiqhCategorySelectSQL+" WHERE fc.deleted_at IS NULL AND fc.slug = ?", slug).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func (r *fiqhRepository) FindCategoryBySlug(slug string, limit, offset int) (*mo
 	}
 	rows.Close()
 
-	itemRows, err := r.db.Raw(fiqhItemSelectSQL+" WHERE fi.category_id = ? ORDER BY fi.sort_order ASC, fi.id ASC LIMIT ? OFFSET ?", cat.ID, limit, offset).Rows()
+	itemRows, err := r.db.Raw(fiqhItemSelectSQL+" WHERE fi.deleted_at IS NULL AND fi.category_id = ? ORDER BY fi.sort_order ASC, fi.id ASC LIMIT ? OFFSET ?", cat.ID, limit, offset).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -274,7 +274,7 @@ func (r *fiqhRepository) FindCategoryBySlug(slug string, limit, offset int) (*mo
 }
 
 func (r *fiqhRepository) FindItemBySlug(slug string) (*model.FiqhItem, error) {
-	rows, err := r.db.Raw(fiqhItemWithCategorySelectSQL+" WHERE fi.slug = ?", slug).Rows()
+	rows, err := r.db.Raw(fiqhItemWithCategorySelectSQL+" WHERE fi.deleted_at IS NULL AND fi.slug = ?", slug).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +290,7 @@ func (r *fiqhRepository) FindItemBySlug(slug string) (*model.FiqhItem, error) {
 }
 
 func (r *fiqhRepository) FindItemByCategoryAndID(slug string, id int) (*model.FiqhItem, error) {
-	query := fiqhItemWithCategorySelectSQL + " WHERE fc.slug = ? AND fi.id = ?"
+	query := fiqhItemWithCategorySelectSQL + " WHERE fi.deleted_at IS NULL AND fc.slug = ? AND fi.id = ?"
 	rows, err := r.db.Raw(query, slug, id).Rows()
 	if err != nil {
 		return nil, err

@@ -66,8 +66,8 @@ func (c *chapterRepo) FindByBookSlugThemeId(ctx *fiber.Ctx, bookSlug *string, th
 	c.db.Raw(`
 		SELECT DISTINCT ON (hadith.chapter_id) hadith.chapter_id
 		FROM hadith
-		LEFT JOIN book b ON b.id = hadith.book_id
-		WHERE hadith.theme_id = ? AND b.slug = ? AND hadith.chapter_id IS NOT NULL
+		LEFT JOIN book b ON b.id = hadith.book_id AND b.deleted_at IS NULL
+		WHERE hadith.theme_id = ? AND b.slug = ? AND hadith.chapter_id IS NOT NULL AND hadith.deleted_at IS NULL
 		ORDER BY hadith.chapter_id, hadith.number
 	`, themeId, bookSlug).Scan(&rows)
 

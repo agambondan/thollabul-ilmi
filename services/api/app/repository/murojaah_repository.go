@@ -32,9 +32,9 @@ SELECT
     a.juz_number, a.manzil, a.page, a.ruku, a.hizb_quarter, a.sajda, a.juz_id,
     t.id as t_id, t.idn as t_idn, t.en as t_en, t.ar as t_ar
 FROM ayah a
-JOIN surah s ON s.id = a.surah_id
-LEFT JOIN translation t ON t.id = a.translation_id
-WHERE s.number IN ?
+JOIN surah s ON s.id = a.surah_id AND s.deleted_at IS NULL
+LEFT JOIN translation t ON t.id = a.translation_id AND t.deleted_at IS NULL
+WHERE a.deleted_at IS NULL AND s.number IN ?
 ORDER BY RANDOM()
 LIMIT ?
 `

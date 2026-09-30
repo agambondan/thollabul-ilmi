@@ -35,12 +35,12 @@ const asbabunNuzulSelectSQL = `
 		s.id, s.number, s.slug, s.revelation_type, s.translation_id,
 		st.id, st.idn, st.en, st.ar
 	FROM asbabun_nuzul an
-	LEFT JOIN translation ant ON ant.id = an.translation_id
+	LEFT JOIN translation ant ON ant.id = an.translation_id AND ant.deleted_at IS NULL
 	LEFT JOIN asbabun_nuzul_ayahs ana ON ana.asbabun_nuzul_id = an.id
-	LEFT JOIN ayah ay ON ay.id = ana.ayah_id
-	LEFT JOIN translation ayt ON ayt.id = ay.translation_id
-	LEFT JOIN surah s ON s.id = ay.surah_id
-	LEFT JOIN translation st ON st.id = s.translation_id
+	LEFT JOIN ayah ay ON ay.id = ana.ayah_id AND ay.deleted_at IS NULL
+	LEFT JOIN translation ayt ON ayt.id = ay.translation_id AND ayt.deleted_at IS NULL
+	LEFT JOIN surah s ON s.id = ay.surah_id AND s.deleted_at IS NULL
+	LEFT JOIN translation st ON st.id = s.translation_id AND st.deleted_at IS NULL
 `
 
 func scanAsbabunNuzulRows(rows *sql.Rows, preserveOrder []int) ([]model.AsbabunNuzul, error) {
@@ -184,14 +184,14 @@ func (r *asbabunNuzulRepository) FindAll(page, size int) ([]model.AsbabunNuzul, 
 	}
 
 	var ids []int
-	if err := r.db.Raw("SELECT id FROM asbabun_nuzul ORDER BY id ASC LIMIT ? OFFSET ?", size, page*size).Scan(&ids).Error; err != nil {
+	if err := r.db.Raw("SELECT id FROM asbabun_nuzul WHERE deleted_at IS NULL ORDER BY id ASC LIMIT ? OFFSET ?", size, page*size).Scan(&ids).Error; err != nil {
 		return nil, err
 	}
 	if len(ids) == 0 {
 		return []model.AsbabunNuzul{}, nil
 	}
 
-	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id IN (?) ORDER BY an.id ASC, ay.number ASC", ids).Rows()
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.deleted_at IS NULL AND an.id IN (?) ORDER BY an.id ASC, ay.number ASC", ids).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -209,7 +209,7 @@ func (r *asbabunNuzulRepository) FindByAyahID(ayahID int) ([]model.AsbabunNuzul,
 		return []model.AsbabunNuzul{}, nil
 	}
 
-	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id IN (?) ORDER BY an.id ASC, ay.number ASC", ids).Rows()
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.deleted_at IS NULL AND an.id IN (?) ORDER BY an.id ASC, ay.number ASC", ids).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -231,9 +231,9 @@ func (r *asbabunNuzulRepository) FindBySurahNumber(surahNumber, limit, offset in
 		SELECT an.id
 		FROM asbabun_nuzul an
 		JOIN asbabun_nuzul_ayahs j ON j.asbabun_nuzul_id = an.id
-		JOIN ayah ay ON ay.id = j.ayah_id
-		JOIN surah s ON s.id = ay.surah_id
-		WHERE s.number = ?
+		JOIN ayah ay ON ay.id = j.ayah_id AND ay.deleted_at IS NULL
+		JOIN surah s ON s.id = ay.surah_id AND s.deleted_at IS NULL
+		WHERE an.deleted_at IS NULL AND s.number = ?
 		GROUP BY an.id
 		ORDER BY MIN(ay.number) ASC
 		LIMIT ? OFFSET ?
@@ -245,7 +245,7 @@ func (r *asbabunNuzulRepository) FindBySurahNumber(surahNumber, limit, offset in
 		return []model.AsbabunNuzul{}, nil
 	}
 
-	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id IN (?) ORDER BY ay.number ASC", ids).Rows()
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.deleted_at IS NULL AND an.id IN (?) ORDER BY ay.number ASC", ids).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -255,7 +255,7 @@ func (r *asbabunNuzulRepository) FindBySurahNumber(surahNumber, limit, offset in
 }
 
 func (r *asbabunNuzulRepository) FindByID(id int) (*model.AsbabunNuzul, error) {
-	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.id = ? ORDER BY ay.number ASC", id).Rows()
+	rows, err := r.db.Raw(asbabunNuzulSelectSQL+" WHERE an.deleted_at IS NULL AND an.id = ? ORDER BY ay.number ASC", id).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -287,7 +287,7 @@ func (r *asbabunNuzulRepository) FindAyahIDsByReferences(refs []model.AyahRefere
 		var ayah model.Ayah
 		if err := r.db.
 			Select("ayah.id").
-			Joins("JOIN surah ON surah.id = ayah.surah_id").
+			Joins("JOIN surah ON surah.id = ayah.surah_id AND surah.deleted_at IS NULL").
 			Where("surah.number = ? AND ayah.number = ?", ref.SurahNumber, ref.AyahNumber).
 			First(&ayah).Error; err != nil {
 			return nil, err

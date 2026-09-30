@@ -56,7 +56,7 @@ func (c *bookRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	}
 	var countRows []countRow
 	c.db.Table("hadith").Select("book_id, COUNT(*) as count").
-		Where("book_id IN ?", bookIDs).Group("book_id").Scan(&countRows)
+		Where("book_id IN ? AND deleted_at IS NULL", bookIDs).Group("book_id").Scan(&countRows)
 	countMap := make(map[int]int64, len(countRows))
 	for _, r := range countRows {
 		countMap[r.BookID] = r.Count
@@ -68,7 +68,7 @@ func (c *bookRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	}
 	var btRows []bookThemeRow
 	c.db.Table("book_themes").Select("book_id, theme_id").
-		Where("book_id IN ?", bookIDs).Scan(&btRows)
+		Where("book_id IN ? AND deleted_at IS NULL", bookIDs).Scan(&btRows)
 
 	themeIDSet := make(map[int]struct{})
 	for _, bt := range btRows {
@@ -115,9 +115,9 @@ func (c *bookRepo) loadThemesForBook(bookID int) ([]model.Theme, error) {
 		SELECT t.id, t.default_language, t.translation_id,
 		       tr.id, tr.idn, tr.en, tr.ar
 		FROM book_themes bt
-		JOIN theme t ON t.id = bt.theme_id
-		LEFT JOIN translation tr ON tr.id = t.translation_id
-		WHERE bt.book_id = ?
+		JOIN theme t ON t.id = bt.theme_id AND t.deleted_at IS NULL
+		LEFT JOIN translation tr ON tr.id = t.translation_id AND tr.deleted_at IS NULL
+		WHERE bt.book_id = ? AND bt.deleted_at IS NULL
 		ORDER BY t.id ASC
 	`, bookID).Rows()
 	if err != nil {
@@ -180,7 +180,7 @@ func (c *bookRepo) FindBySlug(ctx *fiber.Ctx, slug *string) (*model.Book, error)
 		c.db.Raw(`
 			SELECT DISTINCT ON (theme_id) theme_id
 			FROM hadith
-			WHERE book_id = ? AND theme_id IS NOT NULL
+			WHERE book_id = ? AND theme_id IS NOT NULL AND deleted_at IS NULL
 			ORDER BY theme_id, number
 		`, book.ID).Scan(&rows)
 

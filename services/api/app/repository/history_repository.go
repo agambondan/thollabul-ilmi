@@ -29,7 +29,7 @@ const historySelectSQL = `
 		h.id, h.year_hijri, h.year_miladi, h.title, h.slug, h.description, h.category, h.is_significant, h.source, h.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM history_event h
-	LEFT JOIN translation t ON t.id = h.translation_id
+	LEFT JOIN translation t ON t.id = h.translation_id AND t.deleted_at IS NULL
 `
 
 func scanHistoryEventRow(rows *sql.Rows) (*model.HistoryEvent, error) {
@@ -100,7 +100,7 @@ func (r *historyRepository) FindAll(category string, yearFrom, yearTo, limit, of
 	}
 
 	query := historySelectSQL
-	var conditions []string
+	conditions := []string{"h.deleted_at IS NULL"}
 	var args []interface{}
 
 	if category != "" {
@@ -140,7 +140,7 @@ func (r *historyRepository) FindAll(category string, yearFrom, yearTo, limit, of
 }
 
 func (r *historyRepository) FindByID(id int) (*model.HistoryEvent, error) {
-	rows, err := r.db.Raw(historySelectSQL+" WHERE h.id = ?", id).Rows()
+	rows, err := r.db.Raw(historySelectSQL+" WHERE h.deleted_at IS NULL AND h.id = ?", id).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func (r *historyRepository) FindByID(id int) (*model.HistoryEvent, error) {
 }
 
 func (r *historyRepository) FindBySlug(slug string) (*model.HistoryEvent, error) {
-	rows, err := r.db.Raw(historySelectSQL+" WHERE h.slug = ?", slug).Rows()
+	rows, err := r.db.Raw(historySelectSQL+" WHERE h.deleted_at IS NULL AND h.slug = ?", slug).Rows()
 	if err != nil {
 		return nil, err
 	}

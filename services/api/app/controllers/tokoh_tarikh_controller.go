@@ -39,8 +39,14 @@ func (c *tokohTarikhController) FindAll(ctx *fiber.Ctx) error {
 	search := ctx.Query("q", "")
 	era := ctx.Query("era", "")
 	kategori := ctx.Query("kategori", "")
-	page, _ := strconv.Atoi(ctx.Query("page", "1"))
-	size, _ := strconv.Atoi(ctx.Query("size", "20"))
+	page, err := strconv.Atoi(ctx.Query("page", "1"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+	size, err := strconv.Atoi(ctx.Query("size", "20"))
+	if err != nil || size <= 0 {
+		size = 20
+	}
 	offset := (page - 1) * size
 	items, total, err := c.svc.FindAll(search, era, kategori, size, offset)
 	if err != nil {

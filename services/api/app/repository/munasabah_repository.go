@@ -30,14 +30,14 @@ const munasabahSelectSQL = `
 		st.id, st.number, st.slug, st.revelation_type, st.translation_id,
 		stt.id, stt.idn, stt.en, stt.ar
 	FROM munasabah m
-	LEFT JOIN ayah af ON af.id = m.ayah_from_id
-	LEFT JOIN translation aft ON aft.id = af.translation_id
-	LEFT JOIN surah sf ON sf.id = af.surah_id
-	LEFT JOIN translation sft ON sft.id = sf.translation_id
-	LEFT JOIN ayah at ON at.id = m.ayah_to_id
-	LEFT JOIN translation att ON att.id = at.translation_id
-	LEFT JOIN surah st ON st.id = at.surah_id
-	LEFT JOIN translation stt ON stt.id = st.translation_id
+	LEFT JOIN ayah af ON af.id = m.ayah_from_id AND af.deleted_at IS NULL
+	LEFT JOIN translation aft ON aft.id = af.translation_id AND aft.deleted_at IS NULL
+	LEFT JOIN surah sf ON sf.id = af.surah_id AND sf.deleted_at IS NULL
+	LEFT JOIN translation sft ON sft.id = sf.translation_id AND sft.deleted_at IS NULL
+	LEFT JOIN ayah at ON at.id = m.ayah_to_id AND at.deleted_at IS NULL
+	LEFT JOIN translation att ON att.id = at.translation_id AND att.deleted_at IS NULL
+	LEFT JOIN surah st ON st.id = at.surah_id AND st.deleted_at IS NULL
+	LEFT JOIN translation stt ON stt.id = st.translation_id AND stt.deleted_at IS NULL
 `
 
 func (r *munasabahRepo) scanRow(rows *sql.Rows) (*model.Munasabah, error) {
@@ -137,7 +137,7 @@ func (r *munasabahRepo) Save(m *model.Munasabah) (*model.Munasabah, error) {
 }
 
 func (r *munasabahRepo) FindByAyahID(ayahID int) ([]model.Munasabah, error) {
-	sqlStr := fmt.Sprintf("%s WHERE m.ayah_from_id = ? OR m.ayah_to_id = ? ORDER BY m.id ASC", munasabahSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL AND (m.ayah_from_id = ? OR m.ayah_to_id = ?) ORDER BY m.id ASC", munasabahSelectSQL)
 	rows, err := r.db.Raw(sqlStr, ayahID, ayahID).Rows()
 	if err != nil {
 		return nil, err

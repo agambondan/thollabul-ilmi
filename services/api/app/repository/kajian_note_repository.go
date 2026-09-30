@@ -61,8 +61,8 @@ func (r *kajianNoteRepository) List(userID uuid.UUID, query model.KajianNoteList
 			k.id AS kajian_row_id, k.title AS kajian_title, k.speaker AS kajian_speaker,
 			k.topic AS kajian_topic, k.thumbnail_url AS kajian_thumbnail, k.url AS kajian_url
 		FROM kajian_user_note kn
-		LEFT JOIN kajian k ON k.id = kn.kajian_id
-		WHERE kn.user_id = ?
+		LEFT JOIN kajian k ON k.id = kn.kajian_id AND k.deleted_at IS NULL
+		WHERE kn.user_id = ? AND kn.deleted_at IS NULL
 	`
 	var args []interface{}
 	args = append(args, userID)

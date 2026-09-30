@@ -41,7 +41,7 @@ func (r *quizRepository) baseSelectSQL() string {
 			q.difficulty, q.ref_id, q.translation_id, q.source, q.created_at, q.updated_at, q.deleted_at,
 			t.id, t.idn, t.en, t.ar
 		FROM ` + tbl + ` q
-		LEFT JOIN translation t ON t.id = q.translation_id
+		LEFT JOIN translation t ON t.id = q.translation_id AND t.deleted_at IS NULL
 	`
 }
 

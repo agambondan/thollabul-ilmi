@@ -50,8 +50,8 @@ func (c *juzRepo) loadAyahsForJuz(juzID int) ([]*model.Ayah, error) {
 			a.id, a.number, a.surah_id, a.juz_id, a.manzil, a.page, a.ruku, a.hizb_quarter, a.sajda, a.translation_id,
 			t.id, t.idn, t.en, t.ar
 		FROM ayah a
-		LEFT JOIN translation t ON t.id = a.translation_id
-		WHERE a.juz_id = ?
+		LEFT JOIN translation t ON t.id = a.translation_id AND t.deleted_at IS NULL
+		WHERE a.juz_id = ? AND a.deleted_at IS NULL
 		ORDER BY a.id ASC
 	`, juzID).Rows()
 	if err != nil {

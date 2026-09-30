@@ -30,8 +30,8 @@ const takhrijSelectSQL = `
 		b.id, b.slug, b.default_language, b.translation_id,
 		bt.id, bt.idn, bt.en, bt.ar
 	FROM takhrij t
-	LEFT JOIN book b ON b.id = t.book_id
-	LEFT JOIN translation bt ON bt.id = b.translation_id
+	LEFT JOIN book b ON b.id = t.book_id AND b.deleted_at IS NULL
+	LEFT JOIN translation bt ON bt.id = b.translation_id AND bt.deleted_at IS NULL
 `
 
 func (r *takhrijRepo) scanRow(rows *sql.Rows) (*model.Takhrij, error) {
@@ -90,7 +90,7 @@ func (r *takhrijRepo) Save(t *model.Takhrij) (*model.Takhrij, error) {
 }
 
 func (r *takhrijRepo) FindAll() ([]model.Takhrij, error) {
-	rows, err := r.db.Raw(takhrijSelectSQL + " ORDER BY t.hadith_id ASC, t.id ASC LIMIT 500").Rows()
+	rows, err := r.db.Raw(takhrijSelectSQL + " WHERE t.deleted_at IS NULL ORDER BY t.hadith_id ASC, t.id ASC LIMIT 500").Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (r *takhrijRepo) FindAll() ([]model.Takhrij, error) {
 }
 
 func (r *takhrijRepo) FindByID(id *int) (*model.Takhrij, error) {
-	rows, err := r.db.Raw(takhrijSelectSQL+" WHERE t.id = ?", id).Rows()
+	rows, err := r.db.Raw(takhrijSelectSQL+" WHERE t.id = ? AND t.deleted_at IS NULL", id).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func (r *takhrijRepo) FindByID(id *int) (*model.Takhrij, error) {
 }
 
 func (r *takhrijRepo) FindByHadithID(hadithID *int) ([]model.Takhrij, error) {
-	rows, err := r.db.Raw(takhrijSelectSQL+" WHERE t.hadith_id = ? ORDER BY t.id ASC", hadithID).Rows()
+	rows, err := r.db.Raw(takhrijSelectSQL+" WHERE t.hadith_id = ? AND t.deleted_at IS NULL ORDER BY t.id ASC", hadithID).Rows()
 	if err != nil {
 		return nil, err
 	}

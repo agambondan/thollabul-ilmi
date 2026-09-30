@@ -123,7 +123,7 @@ func (r *feedRepository) baseSelect() string {
 			u.notify_via_whatsapp AS author_notify_via_whatsapp, u.notify_via_push AS author_notify_via_push,
 			u.created_at AS author_created_at, u.updated_at AS author_updated_at, u.deleted_at AS author_deleted_at
 		FROM ` + fp + ` fp
-		LEFT JOIN ` + u + ` u ON u.id = fp.user_id
+		LEFT JOIN ` + u + ` u ON u.id = fp.user_id AND u.deleted_at IS NULL
 	`
 }
 
@@ -146,7 +146,7 @@ func (r *feedRepository) FindAll(ctx *fiber.Ctx, refType model.FeedRefType, hidd
 
 func (r *feedRepository) FindByID(id string) (*model.FeedPost, error) {
 	var row feedPostRow
-	err := r.db.Raw(r.baseSelect()+" WHERE fp.id = ? LIMIT 1", id).Scan(&row).Error
+	err := r.db.Raw(r.baseSelect()+" WHERE fp.id = ? AND fp.deleted_at IS NULL LIMIT 1", id).Scan(&row).Error
 	if err != nil {
 		return nil, err
 	}

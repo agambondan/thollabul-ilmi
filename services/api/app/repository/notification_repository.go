@@ -120,6 +120,7 @@ type pushTokenRow struct {
 	ID              *int
 	CreatedAt       *time.Time
 	UpdatedAt       *time.Time
+	DeletedAt       gorm.DeletedAt
 	UserID          uuid.UUID
 	Token           string
 	Platform        string
@@ -173,6 +174,7 @@ func (r *pushTokenRow) toModel() model.PushToken {
 	pt.ID = r.ID
 	pt.CreatedAt = r.CreatedAt
 	pt.UpdatedAt = r.UpdatedAt
+	pt.DeletedAt = r.DeletedAt
 
 	if r.UserID2 != nil {
 		u := model.User{
@@ -205,7 +207,7 @@ func (r *notificationRepository) pushTokenSelectSQL() string {
 	u := r.userTableName()
 	return `
 		SELECT
-			pt.id, pt.created_at, pt.updated_at,
+			pt.id, pt.created_at, pt.updated_at, pt.deleted_at,
 			pt.user_id, pt.token, pt.platform, pt.provider, pt.device_id,
 			pt.key_p256_dh, pt.key_auth, pt.latitude, pt.longitude,
 			pt.city_name, pt.timezone, pt.tz_offset_minutes, pt.is_active, pt.last_seen_at,
@@ -220,12 +222,12 @@ func (r *notificationRepository) pushTokenSelectSQL() string {
 			u.notify_via_push AS user_notify_via_push,
 			u.created_at AS user_created_at, u.updated_at AS user_updated_at, u.deleted_at AS user_deleted_at
 		FROM ` + pt + ` pt
-		LEFT JOIN ` + u + ` u ON u.id = pt.user_id
+		LEFT JOIN ` + u + ` u ON u.id = pt.user_id AND u.deleted_at IS NULL
 	`
 }
 
 func (r *notificationRepository) FindAllActivePushTokens() ([]model.PushToken, error) {
-	query := r.pushTokenSelectSQL() + " WHERE pt.is_active = true ORDER BY pt.last_seen_at DESC LIMIT 1000"
+	query := r.pushTokenSelectSQL() + " WHERE pt.is_active = true AND pt.deleted_at IS NULL ORDER BY pt.last_seen_at DESC LIMIT 1000"
 	var rows []pushTokenRow
 	if err := r.db.Raw(query).Scan(&rows).Error; err != nil {
 		return nil, err
@@ -238,7 +240,7 @@ func (r *notificationRepository) FindAllActivePushTokens() ([]model.PushToken, e
 }
 
 func (r *notificationRepository) FindAllPushTokens() ([]model.PushToken, error) {
-	query := r.pushTokenSelectSQL() + " ORDER BY pt.last_seen_at DESC LIMIT 500"
+	query := r.pushTokenSelectSQL() + " WHERE pt.deleted_at IS NULL ORDER BY pt.last_seen_at DESC LIMIT 500"
 	var rows []pushTokenRow
 	if err := r.db.Raw(query).Scan(&rows).Error; err != nil {
 		return nil, err
@@ -278,6 +280,7 @@ type notifSettingRow struct {
 	ID         *int
 	CreatedAt  *time.Time
 	UpdatedAt  *time.Time
+	DeletedAt  gorm.DeletedAt
 	UserID     uuid.UUID
 	Type       model.NotificationType
 	Time       string
@@ -313,6 +316,7 @@ func (r *notifSettingRow) toModel() model.NotificationSetting {
 	ns.ID = r.ID
 	ns.CreatedAt = r.CreatedAt
 	ns.UpdatedAt = r.UpdatedAt
+	ns.DeletedAt = r.DeletedAt
 
 	if r.UserID2 != nil {
 		u := model.User{
@@ -347,7 +351,7 @@ func (r *notificationRepository) FindDue(now time.Time) ([]model.NotificationSet
 
 	query := `
 		SELECT
-			ns.id, ns.created_at, ns.updated_at,
+			ns.id, ns.created_at, ns.updated_at, ns.deleted_at,
 			ns.user_id, ns.type, ns.time, ns.is_active, ns.last_sent_at,
 			u.id AS user_id2, u.name AS user_name, u.email AS user_email,
 			u.role AS user_role, u.avatar AS user_avatar,
@@ -360,8 +364,8 @@ func (r *notificationRepository) FindDue(now time.Time) ([]model.NotificationSet
 			u.notify_via_push AS user_notify_via_push,
 			u.created_at AS user_created_at, u.updated_at AS user_updated_at, u.deleted_at AS user_deleted_at
 		FROM ` + ns + ` ns
-		LEFT JOIN ` + u + ` u ON u.id = ns.user_id
-		WHERE ns.is_active = true AND ns.time = ? AND (ns.last_sent_at IS NULL OR ns.last_sent_at < ?)
+		LEFT JOIN ` + u + ` u ON u.id = ns.user_id AND u.deleted_at IS NULL
+		WHERE ns.is_active = true AND ns.time = ? AND (ns.last_sent_at IS NULL OR ns.last_sent_at < ?) AND ns.deleted_at IS NULL
 		ORDER BY ns.type ASC
 	`
 	var rows []notifSettingRow

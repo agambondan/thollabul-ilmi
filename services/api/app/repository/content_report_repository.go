@@ -90,7 +90,7 @@ func (r *contentReportRepository) selectSQL() string {
 			u.notify_via_push AS user_notify_via_push,
 			u.created_at AS user_created_at, u.updated_at AS user_updated_at, u.deleted_at AS user_deleted_at
 		FROM ` + cr + ` cr
-		LEFT JOIN ` + u + ` u ON u.id = cr.user_id
+		LEFT JOIN ` + u + ` u ON u.id = cr.user_id AND u.deleted_at IS NULL
 	`
 }
 
@@ -152,7 +152,7 @@ func (r *contentReportRepository) Create(report *model.ContentReport) (*model.Co
 func (r *contentReportRepository) FindByID(id string) (*model.ContentReport, error) {
 	var row contentReportRow
 	err := r.db.Raw(r.selectSQL()+`
-		WHERE cr.id = ?
+		WHERE cr.id = ? AND cr.deleted_at IS NULL
 		LIMIT 1
 	`, id).Scan(&row).Error
 	if err != nil {
@@ -175,7 +175,7 @@ func (r *contentReportRepository) FindAll(status model.ContentReportStatus, targ
 	offset := (page - 1) * limit
 
 	crTable, _ := r.tableNames()
-	query := "WHERE 1=1"
+	query := "WHERE 1=1 AND cr.deleted_at IS NULL"
 	var args []interface{}
 	if status != "" {
 		query += " AND cr.status = ?"
@@ -234,14 +234,14 @@ func (r *contentReportRepository) FindByUser(userID uuid.UUID, page, limit int) 
 
 	crTable, _ := r.tableNames()
 	var total int64
-	err := r.db.Raw("SELECT count(*) FROM "+crTable+" WHERE user_id = ?", userID).Scan(&total).Error
+	err := r.db.Raw("SELECT count(*) FROM "+crTable+" WHERE user_id = ? AND deleted_at IS NULL", userID).Scan(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
 	var rows []contentReportRow
 	err = r.db.Raw(r.selectSQL()+`
-		WHERE cr.user_id = ?
+		WHERE cr.user_id = ? AND cr.deleted_at IS NULL
 		ORDER BY cr.created_at DESC
 		LIMIT ? OFFSET ?
 	`, userID, limit, offset).Scan(&rows).Error

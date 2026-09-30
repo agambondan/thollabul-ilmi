@@ -38,14 +38,14 @@ const hadithAyahSelectSQL = `
 		s.id, s.number, s.slug, s.revelation_type, s.translation_id,
 		st.id, st.idn, st.en, st.ar
 	FROM hadith_ayah ha
-	LEFT JOIN hadith h ON h.id = ha.hadith_id
-	LEFT JOIN translation ht ON ht.id = h.translation_id
-	LEFT JOIN book b ON b.id = h.book_id
-	LEFT JOIN translation bt ON bt.id = b.translation_id
-	LEFT JOIN ayah a ON a.id = ha.ayah_id
-	LEFT JOIN translation at ON at.id = a.translation_id
-	LEFT JOIN surah s ON s.id = a.surah_id
-	LEFT JOIN translation st ON st.id = s.translation_id
+	LEFT JOIN hadith h ON h.id = ha.hadith_id AND h.deleted_at IS NULL
+	LEFT JOIN translation ht ON ht.id = h.translation_id AND ht.deleted_at IS NULL
+	LEFT JOIN book b ON b.id = h.book_id AND b.deleted_at IS NULL
+	LEFT JOIN translation bt ON bt.id = b.translation_id AND bt.deleted_at IS NULL
+	LEFT JOIN ayah a ON a.id = ha.ayah_id AND a.deleted_at IS NULL
+	LEFT JOIN translation at ON at.id = a.translation_id AND at.deleted_at IS NULL
+	LEFT JOIN surah s ON s.id = a.surah_id AND s.deleted_at IS NULL
+	LEFT JOIN translation st ON st.id = s.translation_id AND st.deleted_at IS NULL
 `
 
 func (r *hadithAyahRepo) scanRow(rows *sql.Rows) (*model.HadithAyah, error) {
@@ -171,7 +171,7 @@ func (r *hadithAyahRepo) Update(id int, ha *model.HadithAyah) (*model.HadithAyah
 }
 
 func (r *hadithAyahRepo) FindByHadithID(hadithID int) ([]model.HadithAyah, error) {
-	sqlStr := fmt.Sprintf("%s WHERE ha.hadith_id = ? ORDER BY ha.ayah_id ASC", hadithAyahSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE ha.deleted_at IS NULL AND ha.hadith_id = ? ORDER BY ha.ayah_id ASC", hadithAyahSelectSQL)
 	rows, err := r.db.Raw(sqlStr, hadithID).Rows()
 	if err != nil {
 		return nil, err
@@ -190,7 +190,7 @@ func (r *hadithAyahRepo) FindByHadithID(hadithID int) ([]model.HadithAyah, error
 }
 
 func (r *hadithAyahRepo) FindByAyahID(ayahID int) ([]model.HadithAyah, error) {
-	sqlStr := fmt.Sprintf("%s WHERE ha.ayah_id = ? ORDER BY ha.hadith_id ASC", hadithAyahSelectSQL)
+	sqlStr := fmt.Sprintf("%s WHERE ha.deleted_at IS NULL AND ha.ayah_id = ? ORDER BY ha.hadith_id ASC", hadithAyahSelectSQL)
 	rows, err := r.db.Raw(sqlStr, ayahID).Rows()
 	if err != nil {
 		return nil, err

@@ -37,7 +37,7 @@ const sirohCategorySelectSQL = `
 		sc.id, sc.title, sc.slug, sc."order", sc.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM siroh_category sc
-	LEFT JOIN translation t ON t.id = sc.translation_id
+	LEFT JOIN translation t ON t.id = sc.translation_id AND t.deleted_at IS NULL
 `
 
 const sirohContentSelectSQL = `
@@ -45,7 +45,7 @@ const sirohContentSelectSQL = `
 		sco.id, sco.category_id, sco.title, sco.slug, sco.content, sco.source, sco."order", sco.translation_id,
 		t.id, t.idn, t.en, t.ar
 	FROM siroh_content sco
-	LEFT JOIN translation t ON t.id = sco.translation_id
+	LEFT JOIN translation t ON t.id = sco.translation_id AND t.deleted_at IS NULL
 `
 
 const sirohContentWithCategorySelectSQL = `
@@ -55,9 +55,9 @@ const sirohContentWithCategorySelectSQL = `
 		sc.id, sc.title, sc.slug, sc."order", sc.translation_id,
 		sct.id, sct.idn, sct.en, sct.ar
 	FROM siroh_content sco
-	LEFT JOIN translation scot ON scot.id = sco.translation_id
-	LEFT JOIN siroh_category sc ON sc.id = sco.category_id
-	LEFT JOIN translation sct ON sct.id = sc.translation_id
+	LEFT JOIN translation scot ON scot.id = sco.translation_id AND scot.deleted_at IS NULL
+	LEFT JOIN siroh_category sc ON sc.id = sco.category_id AND sc.deleted_at IS NULL
+	LEFT JOIN translation sct ON sct.id = sc.translation_id AND sct.deleted_at IS NULL
 `
 
 func scanSirohCategoryRow(rows *sql.Rows) (*model.SirohCategory, error) {
@@ -190,7 +190,7 @@ func scanSirohContentRow(rows *sql.Rows, includeCategory bool) (*model.SirohCont
 }
 
 func (r *sirohRepo) FindAllCategories() ([]model.SirohCategory, error) {
-	rows, err := r.db.Raw(sirohCategorySelectSQL + ` ORDER BY sc."order" ASC, sc.id ASC`).Rows()
+	rows, err := r.db.Raw(sirohCategorySelectSQL + ` WHERE sc.deleted_at IS NULL ORDER BY sc."order" ASC, sc.id ASC`).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -208,7 +208,7 @@ func (r *sirohRepo) FindAllCategories() ([]model.SirohCategory, error) {
 }
 
 func (r *sirohRepo) FindCategoryBySlug(slug string) (*model.SirohCategory, error) {
-	rows, err := r.db.Raw(sirohCategorySelectSQL+" WHERE sc.slug = ?", slug).Rows()
+	rows, err := r.db.Raw(sirohCategorySelectSQL+" WHERE sc.slug = ? AND sc.deleted_at IS NULL", slug).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ func (r *sirohRepo) FindCategoryBySlug(slug string) (*model.SirohCategory, error
 	}
 	rows.Close()
 
-	itemRows, err := r.db.Raw(sirohContentSelectSQL+` WHERE sco.category_id = ? ORDER BY sco."order" ASC, sco.id ASC`, cat.ID).Rows()
+	itemRows, err := r.db.Raw(sirohContentSelectSQL+` WHERE sco.category_id = ? AND sco.deleted_at IS NULL ORDER BY sco."order" ASC, sco.id ASC`, cat.ID).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +245,7 @@ func (r *sirohRepo) FindCategoryBySlug(slug string) (*model.SirohCategory, error
 }
 
 func (r *sirohRepo) FindContentBySlug(slug string) (*model.SirohContent, error) {
-	rows, err := r.db.Raw(sirohContentWithCategorySelectSQL+" WHERE sco.slug = ?", slug).Rows()
+	rows, err := r.db.Raw(sirohContentWithCategorySelectSQL+" WHERE sco.slug = ? AND sco.deleted_at IS NULL", slug).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -261,7 +261,7 @@ func (r *sirohRepo) FindContentBySlug(slug string) (*model.SirohContent, error) 
 }
 
 func (r *sirohRepo) FindContentsByCategoryID(categoryID int) ([]model.SirohContent, error) {
-	rows, err := r.db.Raw(sirohContentSelectSQL+` WHERE sco.category_id = ? ORDER BY sco."order" ASC, sco.id ASC LIMIT 200`, categoryID).Rows()
+	rows, err := r.db.Raw(sirohContentSelectSQL+` WHERE sco.category_id = ? AND sco.deleted_at IS NULL ORDER BY sco."order" ASC, sco.id ASC LIMIT 200`, categoryID).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -307,7 +307,7 @@ func (r *sirohRepo) UpdateCategory(id int, c *model.SirohCategory) (*model.Siroh
 	if err := r.db.Model(&model.SirohCategory{}).Where("id = ?", id).Updates(c).Error; err != nil {
 		return nil, err
 	}
-	rows, err := r.db.Raw(sirohCategorySelectSQL+" WHERE sc.id = ?", id).Rows()
+	rows, err := r.db.Raw(sirohCategorySelectSQL+" WHERE sc.id = ? AND sc.deleted_at IS NULL", id).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -325,7 +325,7 @@ func (r *sirohRepo) UpdateContent(id int, c *model.SirohContent) (*model.SirohCo
 	if err := r.db.Model(&model.SirohContent{}).Where("id = ?", id).Updates(c).Error; err != nil {
 		return nil, err
 	}
-	rows, err := r.db.Raw(sirohContentWithCategorySelectSQL+" WHERE sco.id = ?", id).Rows()
+	rows, err := r.db.Raw(sirohContentWithCategorySelectSQL+" WHERE sco.id = ? AND sco.deleted_at IS NULL", id).Rows()
 	if err != nil {
 		return nil, err
 	}

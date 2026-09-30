@@ -69,8 +69,8 @@ const hafalanSelectSQL = `
 		t.id AS tr_id, t.ar AS tr_ar, t.en AS tr_en, t.idn AS tr_idn,
 		t.created_at AS tr_created_at, t.updated_at AS tr_updated_at, t.deleted_at AS tr_deleted_at
 	FROM hafalan_progress hp
-	LEFT JOIN surah s ON s.id = hp.surah_id
-	LEFT JOIN translation t ON t.id = s.translation_id
+	LEFT JOIN surah s ON s.id = hp.surah_id AND s.deleted_at IS NULL
+	LEFT JOIN translation t ON t.id = s.translation_id AND t.deleted_at IS NULL
 `
 
 func (r *hafalanRow) toModel() model.HafalanProgress {
@@ -128,7 +128,7 @@ func (r *hafalanRepo) Upsert(h *model.HafalanProgress) (*model.HafalanProgress, 
 func (r *hafalanRepo) FindByUserID(userID uuid.UUID) ([]model.HafalanProgress, error) {
 	var rows []hafalanRow
 	err := r.db.Raw(hafalanSelectSQL+`
-		WHERE hp.user_id = ?
+		WHERE hp.user_id = ? AND hp.deleted_at IS NULL
 		ORDER BY hp.surah_id ASC
 	`, userID).Scan(&rows).Error
 	if err != nil {
@@ -153,7 +153,7 @@ func (r *hafalanRepo) FindMemorizedSurahIDs(userID uuid.UUID) ([]int, error) {
 func (r *hafalanRepo) FindByUserIDAndSurahID(userID uuid.UUID, surahID int) (*model.HafalanProgress, error) {
 	var row hafalanRow
 	err := r.db.Raw(hafalanSelectSQL+`
-		WHERE hp.user_id = ? AND hp.surah_id = ?
+		WHERE hp.user_id = ? AND hp.surah_id = ? AND hp.deleted_at IS NULL
 		LIMIT 1
 	`, userID, surahID).Scan(&row).Error
 	if err != nil {

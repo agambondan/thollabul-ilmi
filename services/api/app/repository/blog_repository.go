@@ -300,7 +300,7 @@ func (r *blogRepo) FindAllCategories() ([]model.BlogCategory, error) {
 		SELECT bc.id, bc.created_at, bc.updated_at, bc.deleted_at, bc.name, bc.slug, bc.description, bc.translation_id,
 		       t.id, t.idn, t.en, t.ar
 		FROM ` + tbl + ` bc
-		LEFT JOIN translation t ON t.id = bc.translation_id
+		LEFT JOIN translation t ON t.id = bc.translation_id AND t.deleted_at IS NULL
 		WHERE bc.deleted_at IS NULL
 		ORDER BY bc.name ASC
 	`).Rows()
@@ -317,7 +317,7 @@ func (r *blogRepo) FindCategoryBySlug(slug string) (*model.BlogCategory, error) 
 		SELECT bc.id, bc.created_at, bc.updated_at, bc.deleted_at, bc.name, bc.slug, bc.description, bc.translation_id,
 		       t.id, t.idn, t.en, t.ar
 		FROM ` + tbl + ` bc
-		LEFT JOIN translation t ON t.id = bc.translation_id
+		LEFT JOIN translation t ON t.id = bc.translation_id AND t.deleted_at IS NULL
 		WHERE bc.slug = ? AND bc.deleted_at IS NULL
 		LIMIT 1
 	`, slug).Rows()
@@ -364,7 +364,7 @@ func (r *blogRepo) FindAllTags() ([]model.BlogTag, error) {
 		SELECT bt.id, bt.created_at, bt.updated_at, bt.deleted_at, bt.name, bt.slug, bt.translation_id,
 		       t.id, t.idn, t.en, t.ar
 		FROM ` + tbl + ` bt
-		LEFT JOIN translation t ON t.id = bt.translation_id
+		LEFT JOIN translation t ON t.id = bt.translation_id AND t.deleted_at IS NULL
 		WHERE bt.deleted_at IS NULL
 		ORDER BY bt.name ASC
 	`).Rows()
@@ -381,7 +381,7 @@ func (r *blogRepo) FindTagBySlug(slug string) (*model.BlogTag, error) {
 		SELECT bt.id, bt.created_at, bt.updated_at, bt.deleted_at, bt.name, bt.slug, bt.translation_id,
 		       t.id, t.idn, t.en, t.ar
 		FROM ` + tbl + ` bt
-		LEFT JOIN translation t ON t.id = bt.translation_id
+		LEFT JOIN translation t ON t.id = bt.translation_id AND t.deleted_at IS NULL
 		WHERE bt.slug = ? AND bt.deleted_at IS NULL
 		LIMIT 1
 	`, slug).Rows()
