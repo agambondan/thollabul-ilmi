@@ -7,15 +7,21 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { colors, radius, shadows, spacing, touchTarget } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { colors, getThemeColors, radius, shadows, spacing, touchTarget } from "../theme";
 import { hapticSelection, hapticTap } from "../utils/haptics";
 
 export function SectionHeader({ title, meta, action }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
         <View style={styles.sectionHeader}>
             <View style={styles.sectionCopy}>
-                <Text style={styles.sectionTitle}>{title}</Text>
-                {meta ? <Text style={styles.sectionMeta}>{meta}</Text> : null}
+                <Text style={[styles.sectionTitle, { color: theme.ink }]}>{title}</Text>
+                {meta ? <Text style={[styles.sectionMeta, { color: theme.primary }]}>{meta}</Text> : null}
             </View>
             {action ? <View style={styles.sectionAction}>{action}</View> : null}
         </View>
@@ -23,8 +29,13 @@ export function SectionHeader({ title, meta, action }) {
 }
 
 export function SegmentedTabs({ options, value, onChange, style }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
-        <View style={[styles.segmentedTabs, style]}>
+        <View style={[styles.segmentedTabs, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }, style]}>
             {options.map((option) => {
                 const active = option.key === value;
                 const OptionIcon = option.Icon;
@@ -36,7 +47,7 @@ export function SegmentedTabs({ options, value, onChange, style }) {
                         accessibilityRole='tab'
                         accessibilityState={{ selected: active }}
                         android_ripple={{
-                            color: colors.primaryBg,
+                            color: theme.ripple,
                             borderless: false,
                         }}
                         key={option.key}
@@ -46,13 +57,13 @@ export function SegmentedTabs({ options, value, onChange, style }) {
                         }}
                         style={[
                             styles.segmentButton,
-                            active && styles.segmentButtonActive,
+                            active && [styles.segmentButtonActive, { backgroundColor: theme.primary }],
                         ]}
                     >
                         {OptionIcon ? (
                             <OptionIcon
                                 color={
-                                    active ? colors.onPrimary : colors.primary
+                                    active ? theme.onPrimary : theme.primary
                                 }
                                 size={16}
                                 strokeWidth={2.2}
@@ -61,6 +72,7 @@ export function SegmentedTabs({ options, value, onChange, style }) {
                         <Text
                             style={[
                                 styles.segmentLabel,
+                                { color: active ? theme.onPrimary : theme.primary },
                                 active && styles.segmentLabelActive,
                             ]}
                         >
@@ -79,16 +91,21 @@ export function PaperSearchInput({
     placeholder = "Cari...",
     autoFocus = false,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
-        <View style={styles.searchWrap}>
-            <Search color={colors.muted} size={17} strokeWidth={2} />
+        <View style={[styles.searchWrap, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+            <Search color={theme.muted} size={17} strokeWidth={2} />
             <TextInput
                 accessibilityLabel={placeholder}
                 autoFocus={autoFocus}
                 onChangeText={onChangeText}
                 placeholder={placeholder}
-                placeholderTextColor={colors.muted}
-                style={styles.searchInput}
+                placeholderTextColor={theme.muted}
+                style={[styles.searchInput, { color: theme.ink }]}
                 value={value}
             />
         </View>
@@ -102,13 +119,18 @@ export function IconActionButton({
     disabled = false,
     active = false,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
         <Pressable
             accessibilityLabel={label}
             accessibilityRole='button'
             accessibilityState={{ disabled, selected: active }}
             android_ripple={{
-                color: colors.primaryBg,
+                color: theme.ripple,
                 borderless: true,
             }}
             disabled={disabled}
@@ -118,12 +140,13 @@ export function IconActionButton({
             }}
             style={[
                 styles.iconButton,
-                active && styles.iconButtonActive,
+                { backgroundColor: theme.surface, borderColor: theme.border },
+                active && [styles.iconButtonActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                 disabled && styles.disabled,
             ]}
         >
             <Icon
-                color={active ? colors.onPrimary : colors.primary}
+                color={active ? theme.onPrimary : theme.primary}
                 size={18}
                 strokeWidth={2.2}
             />
@@ -138,13 +161,18 @@ export function ActionPill({
     disabled = false,
     active = false,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
         <Pressable
             accessibilityLabel={label}
             accessibilityRole='button'
             accessibilityState={{ disabled, selected: active }}
             android_ripple={{
-                color: colors.primaryBg,
+                color: theme.ripple,
                 borderless: false,
             }}
             disabled={disabled}
@@ -154,13 +182,14 @@ export function ActionPill({
             }}
             style={[
                 styles.actionPill,
-                active && styles.actionPillActive,
+                { backgroundColor: theme.surface, borderColor: theme.border },
+                active && [styles.actionPillActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                 disabled && styles.disabled,
             ]}
         >
             {Icon ? (
                 <Icon
-                    color={active ? colors.onPrimary : colors.primary}
+                    color={active ? theme.onPrimary : theme.primary}
                     size={16}
                     strokeWidth={2.2}
                 />
@@ -168,6 +197,7 @@ export function ActionPill({
             <Text
                 style={[
                     styles.actionPillLabel,
+                    { color: active ? theme.onPrimary : theme.primary },
                     active && styles.actionPillLabelActive,
                 ]}
             >
@@ -187,20 +217,25 @@ export function CompactRow({
     right,
     badges = [],
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const accessibilityLabel = [title, subtitle, meta, ...badges]
         .filter(Boolean)
         .join(", ");
     const content = (
         <>
             {Icon ? (
-                <View style={styles.rowIcon}>
-                    <Icon color={colors.primary} size={18} strokeWidth={2.2} />
+                <View style={[styles.rowIcon, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+                    <Icon color={theme.primary} size={18} strokeWidth={2.2} />
                 </View>
             ) : null}
             <View style={styles.rowCopy}>
-                <Text style={styles.rowTitle}>{title}</Text>
+                <Text style={[styles.rowTitle, { color: theme.ink }]}>{title}</Text>
                 {subtitle ? (
-                    <Text style={styles.rowSubtitle}>{subtitle}</Text>
+                    <Text style={[styles.rowSubtitle, { color: theme.muted }]}>{subtitle}</Text>
                 ) : null}
                 {badges.length ? (
                     <View style={styles.rowBadges}>
@@ -209,18 +244,20 @@ export function CompactRow({
                                 key={`${title}-${badge}`}
                                 style={[
                                     styles.rowBadge,
-                                    badge === "Baru" && styles.rowBadgeActive,
+                                    { backgroundColor: theme.bg, borderColor: theme.border },
+                                    badge === "Baru" && [styles.rowBadgeActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                                     badge === "Terakhir" &&
-                                        styles.rowBadgeRecent,
+                                        [styles.rowBadgeRecent, { backgroundColor: theme.surfaceMuted, borderColor: theme.primary }],
                                 ]}
                             >
                                 <Text
                                     style={[
                                         styles.rowBadgeText,
+                                        { color: theme.muted },
                                         badge === "Baru" &&
-                                            styles.rowBadgeTextActive,
+                                            [styles.rowBadgeTextActive, { color: theme.onPrimary }],
                                         badge === "Terakhir" &&
-                                            styles.rowBadgeTextRecent,
+                                            [styles.rowBadgeTextRecent, { color: theme.primary }],
                                     ]}
                                 >
                                     {badge}
@@ -230,28 +267,33 @@ export function CompactRow({
                     </View>
                 ) : null}
             </View>
-            {meta ? <Text style={styles.rowMeta}>{meta}</Text> : null}
+            {meta ? <Text style={[styles.rowMeta, { color: theme.primary }]}>{meta}</Text> : null}
         </>
     );
 
+    const rowWrapperStyle = [
+        styles.compactRow,
+        { backgroundColor: theme.surface, borderColor: theme.border },
+        isWebAppLayout && { shadowOpacity: 0, elevation: 0 },
+        selected && [styles.compactRowSelected, { backgroundColor: theme.surfaceMuted, borderColor: theme.primary }],
+    ];
+
     if (right) {
         return (
-            <View
-                style={[
-                    styles.compactRow,
-                    selected && styles.compactRowSelected,
-                ]}
-            >
+            <View style={rowWrapperStyle}>
                 {onPress ? (
                     <Pressable
                         accessibilityLabel={accessibilityLabel}
                         accessibilityRole='button'
                         accessibilityState={{ selected }}
                         android_ripple={{
-                            color: "rgba(91, 110, 91, 0.12)",
+                            color: theme.ripple,
                             borderless: false,
                         }}
-                        onPress={onPress}
+                        onPress={(event) => {
+                            hapticTap();
+                            onPress?.(event);
+                        }}
                         style={styles.rowMain}
                     >
                         {content}
@@ -259,39 +301,57 @@ export function CompactRow({
                 ) : (
                     <View style={styles.rowMain}>{content}</View>
                 )}
-                {right}
+                <View style={styles.rowRight}>{right}</View>
             </View>
         );
     }
 
-    const Container = onPress ? Pressable : View;
-    return (
-        <Container
-            accessibilityLabel={accessibilityLabel}
-            accessibilityRole={onPress ? "button" : undefined}
-            accessibilityState={onPress ? { selected } : undefined}
-            android_ripple={
-                onPress
-                    ? { color: "rgba(91, 110, 91, 0.12)", borderless: false }
-                    : undefined
-            }
-            onPress={onPress}
-            style={[styles.compactRow, selected && styles.compactRowSelected]}
-        >
-            {content}
-        </Container>
-    );
+    if (onPress) {
+        return (
+            <Pressable
+                accessibilityLabel={accessibilityLabel}
+                accessibilityRole='button'
+                accessibilityState={{ selected }}
+                android_ripple={{
+                    color: theme.ripple,
+                    borderless: false,
+                }}
+                onPress={(event) => {
+                    hapticTap();
+                    onPress?.(event);
+                }}
+                style={rowWrapperStyle}
+            >
+                {content}
+            </Pressable>
+        );
+    }
+
+    return <View style={rowWrapperStyle}>{content}</View>;
 }
 
-export function EmptyState({ title, description, Icon = AlertCircle, action }) {
+export function EmptyState({
+    title = "Belum Ada Data",
+    description = "Konten akan muncul di sini setelah tersedia.",
+    action,
+}) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
-        <View style={styles.stateBox}>
-            <View style={styles.stateIcon}>
-                <Icon color={colors.primary} size={20} strokeWidth={2.1} />
+        <View style={[
+            styles.stateBox,
+            { backgroundColor: theme.surface, borderColor: theme.border },
+            isWebAppLayout && { shadowOpacity: 0, elevation: 0 },
+        ]}>
+            <View style={[styles.stateIcon, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+                <Search color={theme.muted} size={20} strokeWidth={2.2} />
             </View>
-            <Text style={styles.stateTitle}>{title}</Text>
+            <Text style={[styles.stateTitle, { color: theme.ink }]}>{title}</Text>
             {description ? (
-                <Text style={styles.stateDescription}>{description}</Text>
+                <Text style={[styles.stateDescription, { color: theme.muted }]}>{description}</Text>
             ) : null}
             {action ? <View style={styles.stateAction}>{action}</View> : null}
         </View>
@@ -300,19 +360,38 @@ export function EmptyState({ title, description, Icon = AlertCircle, action }) {
 
 export function ErrorState({
     title = "Data belum bisa dimuat",
-    description,
+    description = "Periksa koneksi atau coba muat ulang beberapa saat lagi.",
     action,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
-        <EmptyState
-            title={title}
-            description={
-                description ||
-                "Periksa koneksi atau coba muat ulang beberapa saat lagi."
-            }
-            action={action}
-            Icon={AlertCircle}
-        />
+        <View
+            style={[
+                styles.stateBox,
+                {
+                    backgroundColor: isDarkTheme ? "#3f1d1d" : "#fff1f2",
+                    borderColor: theme.danger,
+                },
+                isWebAppLayout && { shadowOpacity: 0, elevation: 0 },
+            ]}
+        >
+            <View style={[styles.stateIcon, { backgroundColor: theme.bg, borderColor: theme.danger }]}>
+                <AlertCircle
+                    color={theme.danger}
+                    size={20}
+                    strokeWidth={2.2}
+                />
+            </View>
+            <Text style={[styles.stateTitle, { color: theme.ink }]}>{title}</Text>
+            {description ? (
+                <Text style={[styles.stateDescription, { color: theme.muted }]}>{description}</Text>
+            ) : null}
+            {action ? <View style={styles.stateAction}>{action}</View> : null}
+        </View>
     );
 }
 
@@ -320,37 +399,31 @@ const styles = StyleSheet.create({
     sectionHeader: {
         alignItems: "center",
         flexDirection: "row",
-        gap: spacing.md,
         justifyContent: "space-between",
         marginBottom: spacing.sm,
-        marginTop: spacing.sm,
     },
     sectionCopy: {
         flex: 1,
     },
     sectionTitle: {
-        color: colors.ink,
-        fontSize: 18,
-        fontWeight: "800",
+        fontSize: 16,
+        fontWeight: "700",
     },
     sectionMeta: {
-        color: colors.muted,
         fontSize: 12,
-        lineHeight: 17,
-        marginTop: spacing.xs,
+        fontWeight: "600",
+        marginTop: 2,
     },
     sectionAction: {
-        alignItems: "center",
-        justifyContent: "center",
+        marginLeft: spacing.md,
     },
     segmentedTabs: {
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
-        gap: spacing.sm,
-        padding: spacing.xs,
+        gap: 4,
+        marginBottom: spacing.md,
+        padding: 4,
     },
     segmentButton: {
         alignItems: "center",
@@ -360,23 +433,17 @@ const styles = StyleSheet.create({
         gap: spacing.xs,
         justifyContent: "center",
         minHeight: touchTarget,
-        paddingHorizontal: spacing.xs,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.xs,
     },
-    segmentButtonActive: {
-        backgroundColor: colors.primary,
-    },
+    segmentButtonActive: {},
     segmentLabel: {
-        color: colors.primary,
         fontSize: 11,
         fontWeight: "700",
     },
-    segmentLabelActive: {
-        color: colors.onPrimary,
-    },
+    segmentLabelActive: {},
     searchWrap: {
         alignItems: "center",
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -385,7 +452,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.md,
     },
     searchInput: {
-        color: colors.ink,
         flex: 1,
         fontSize: 14,
         minHeight: touchTarget,
@@ -394,25 +460,18 @@ const styles = StyleSheet.create({
     },
     iconButton: {
         alignItems: "center",
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: touchTarget,
         justifyContent: "center",
         width: touchTarget,
     },
-    iconButtonActive: {
-        backgroundColor: colors.primary,
-        borderColor: colors.primary,
-    },
+    iconButtonActive: {},
     disabled: {
         opacity: 0.5,
     },
     actionPill: {
         alignItems: "center",
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
         flexDirection: "row",
@@ -422,22 +481,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.sm,
         paddingVertical: spacing.xs,
     },
-    actionPillActive: {
-        backgroundColor: colors.primary,
-        borderColor: colors.primary,
-    },
+    actionPillActive: {},
     actionPillLabel: {
-        color: colors.primary,
         fontSize: 11,
         fontWeight: "700",
     },
-    actionPillLabelActive: {
-        color: colors.onPrimary,
-    },
+    actionPillLabelActive: {},
     compactRow: {
         alignItems: "center",
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -455,10 +506,7 @@ const styles = StyleSheet.create({
         }),
         ...shadows.paper,
     },
-    compactRowSelected: {
-        backgroundColor: colors.surfaceMuted,
-        borderColor: colors.primary,
-    },
+    compactRowSelected: {},
     rowMain: {
         alignItems: "center",
         flex: 1,
@@ -468,8 +516,6 @@ const styles = StyleSheet.create({
     },
     rowIcon: {
         alignItems: "center",
-        backgroundColor: colors.bg,
-        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         height: 36,
@@ -481,12 +527,10 @@ const styles = StyleSheet.create({
         minWidth: 0,
     },
     rowTitle: {
-        color: colors.ink,
         fontSize: 14,
         fontWeight: "700",
     },
     rowSubtitle: {
-        color: colors.muted,
         fontSize: 12,
         lineHeight: 17,
         marginTop: spacing.xs,
@@ -498,43 +542,27 @@ const styles = StyleSheet.create({
         marginTop: 6,
     },
     rowBadge: {
-        backgroundColor: colors.bg,
-        borderColor: colors.border,
         borderRadius: radius.sm,
         borderWidth: 1,
         paddingHorizontal: 6,
         paddingVertical: 2,
     },
-    rowBadgeActive: {
-        backgroundColor: colors.primary,
-        borderColor: colors.primary,
-    },
-    rowBadgeRecent: {
-        backgroundColor: colors.surfaceMuted,
-        borderColor: colors.primary,
-    },
+    rowBadgeActive: {},
+    rowBadgeRecent: {},
     rowBadgeText: {
-        color: colors.muted,
         fontSize: 9,
         fontWeight: "700",
         lineHeight: 11,
     },
-    rowBadgeTextActive: {
-        color: colors.onPrimary,
-    },
-    rowBadgeTextRecent: {
-        color: colors.primary,
-    },
+    rowBadgeTextActive: {},
+    rowBadgeTextRecent: {},
     rowMeta: {
-        color: colors.primary,
         flexShrink: 1,
         fontSize: 12,
         fontWeight: "700",
     },
     stateBox: {
         alignItems: "center",
-        backgroundColor: colors.surface,
-        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
@@ -543,8 +571,6 @@ const styles = StyleSheet.create({
     },
     stateIcon: {
         alignItems: "center",
-        backgroundColor: colors.bg,
-        borderColor: colors.border,
         borderRadius: radius.lg,
         borderWidth: 1,
         height: touchTarget,
@@ -553,13 +579,11 @@ const styles = StyleSheet.create({
         width: touchTarget,
     },
     stateTitle: {
-        color: colors.ink,
         fontSize: 17,
         fontWeight: "800",
         textAlign: "center",
     },
     stateDescription: {
-        color: colors.muted,
         fontSize: 13,
         lineHeight: 19,
         marginTop: spacing.xs,

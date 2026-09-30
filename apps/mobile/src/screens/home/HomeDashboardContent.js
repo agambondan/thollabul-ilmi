@@ -369,18 +369,24 @@ function DashboardContent({
     t = defaultT,
 }) {
     const isWebApp = layout === homeDashboardLayouts.webApp;
-    const dashboardColors = isWebApp
-        ? getThemeColors({ isDark: isDarkTheme, isPaperLayout: false })
-        : null;
+    const dashboardColors = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebApp,
+    });
     const webStyles = isWebApp ? createWebDashboardStyles(dashboardColors) : {};
-    const primary = isWebApp ? dashboardColors.primary : colors.primary;
-    const accent = isWebApp ? dashboardColors.accent : colors.accent;
-    const muted = isWebApp ? dashboardColors.muted : colors.muted;
+    const primary = dashboardColors.primary;
+    const accent = dashboardColors.accent;
+    const muted = dashboardColors.muted;
     const menuGrid = (
         <View
             style={[
                 styles.menuGrid,
+                {
+                    backgroundColor: dashboardColors.surface,
+                    borderColor: dashboardColors.border,
+                },
                 isWebApp && styles.webAppMenuGrid,
+                isWebApp && { elevation: 0, shadowOpacity: 0 },
                 webStyles.menuGrid,
             ]}
             testID='home-menu-grid'
@@ -434,6 +440,7 @@ function DashboardContent({
         <ScrollView
             contentContainerStyle={[
                 styles.screen,
+                { backgroundColor: dashboardColors.bg },
                 isWebApp && styles.webAppScreen,
                 webStyles.screen,
             ]}
@@ -452,6 +459,7 @@ function DashboardContent({
             showsVerticalScrollIndicator={false}
             style={[
                 styles.scroll,
+                { backgroundColor: dashboardColors.bg },
                 isWebApp && styles.webAppScroll,
                 webStyles.scroll,
             ]}
@@ -462,7 +470,12 @@ function DashboardContent({
             <View
                 style={[
                     styles.prayerCard,
+                    {
+                        backgroundColor: dashboardColors.surface,
+                        borderColor: isWebApp ? dashboardColors.borderSoft : dashboardColors.border,
+                    },
                     isWebApp && styles.webAppPrayerCard,
+                    isWebApp && { elevation: 0, shadowOpacity: 0 },
                     webStyles.prayerCard,
                 ]}
                 testID='home-prayer-card'
@@ -631,10 +644,19 @@ function DashboardContent({
                     t={t}
                 />
             ) : (
-                <View style={styles.dailyCard} testID='home-daily-card'>
+                <View
+                    style={[
+                        styles.dailyCard,
+                        {
+                            backgroundColor: dashboardColors.surface,
+                            borderColor: dashboardColors.border,
+                        },
+                    ]}
+                    testID='home-daily-card'
+                >
                     <View style={styles.dailyHeader}>
-                        <Text style={styles.dailyTitle}>Bacaan Hari Ini</Text>
-                        <Text style={styles.dailyMeta}>Quran & Hadis</Text>
+                        <Text style={[styles.dailyTitle, { color: dashboardColors.ink }]}>Bacaan Hari Ini</Text>
+                        <Text style={[styles.dailyMeta, { color: dashboardColors.primary }]}>Quran & Hadis</Text>
                     </View>
                     <Pressable
                         accessibilityRole='button'
@@ -706,6 +728,7 @@ function DashboardContent({
 
             {contextualShortcuts.length ? (
                 <ContextShortcutsCard
+                    dashboardColors={dashboardColors}
                     isWebApp={isWebApp}
                     items={contextualShortcuts}
                     onOpenTab={onOpenTab}
@@ -717,6 +740,7 @@ function DashboardContent({
 
             {pinnedFeatures.length ? (
                 <FeatureListCard
+                    dashboardColors={dashboardColors}
                     Icon={Star}
                     features={pinnedFeatures}
                     isWebApp={isWebApp}
@@ -732,6 +756,7 @@ function DashboardContent({
 
             {recentFeatures.length ? (
                 <FeatureListCard
+                    dashboardColors={dashboardColors}
                     Icon={Clock3}
                     features={recentFeatures}
                     isWebApp={isWebApp}
@@ -771,7 +796,12 @@ function DashboardContent({
                 }
                 style={[
                     styles.journalCard,
+                    dashboardColors && {
+                        backgroundColor: dashboardColors.surface,
+                        borderColor: dashboardColors.border,
+                    },
                     isWebApp && styles.webAppCard,
+                    isWebApp && { elevation: 0, shadowOpacity: 0 },
                     webStyles.card,
                 ]}
                 subtitle={t("home.journal.subtitle")}
@@ -1082,6 +1112,7 @@ function ContextShortcutsCard({
 }
 
 function FeatureListCard({
+    dashboardColors,
     Icon,
     features,
     isWebApp,
@@ -1097,7 +1128,12 @@ function FeatureListCard({
         <View
             style={[
                 styles.recentCard,
+                dashboardColors && {
+                    backgroundColor: dashboardColors.surface,
+                    borderColor: dashboardColors.border,
+                },
                 isWebApp && styles.webAppCard,
+                isWebApp && { elevation: 0, shadowOpacity: 0 },
                 webStyles.card,
             ]}
         >

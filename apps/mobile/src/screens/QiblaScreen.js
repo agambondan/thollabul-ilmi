@@ -62,16 +62,22 @@ function KaabaIcon({ aligned = false }) {
 }
 
 function StatusChip({ Icon, label, tone = "neutral" }) {
+    const { isDarkTheme, isPaperLayout } = useLayoutModePreference();
+    const theme = getThemeColors({ isDark: isDarkTheme, isPaperLayout });
     return (
         <View
             style={[
                 styles.statusChip,
+                {
+                    backgroundColor: theme.surface,
+                    borderColor: theme.border,
+                },
                 tone === "alert" ? styles.statusChipAlert : null,
             ]}
         >
             {Icon ? (
                 <Icon
-                    color={tone === "alert" ? colors.danger : colors.primary}
+                    color={tone === "alert" ? theme.danger : theme.primary}
                     size={14}
                     strokeWidth={2.2}
                 />
@@ -79,6 +85,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
             <Text
                 style={[
                     styles.statusChipText,
+                    { color: theme.primary },
                     tone === "alert" ? styles.statusChipTextAlert : null,
                 ]}
                 numberOfLines={1}

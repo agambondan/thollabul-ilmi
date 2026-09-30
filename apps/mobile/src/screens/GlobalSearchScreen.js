@@ -34,7 +34,7 @@ import {
     readRecentSearches,
     rememberRecentSearch,
 } from "../storage/recentSearches";
-import { colors, radius, shadows, spacing, touchTarget } from "../theme";
+import { colors, getThemeColors, radius, shadows, spacing, touchTarget } from "../theme";
 
 const MIN_QUERY_LENGTH = 2;
 const PAGE_SIZE = 20;
@@ -266,27 +266,27 @@ const findFeatureResults = (query) => {
     );
 };
 
-const ResultSection = ({ children, count, title }) => {
+const ResultSection = ({ children, count, theme, title }) => {
     if (!count) return null;
     return (
         <View style={styles.section}>
             <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>{title}</Text>
-                <Text style={styles.sectionCount}>{count}</Text>
+                <Text style={[styles.sectionTitle, theme && { color: theme.ink }]}>{title}</Text>
+                <Text style={[styles.sectionCount, theme && { color: theme.primary }]}>{count}</Text>
             </View>
             {children}
         </View>
     );
 };
 
-const SeeAllButton = ({ count, filter, label, onPress }) => (
+const SeeAllButton = ({ count, filter, label, onPress, theme }) => (
     <Pressable
         accessibilityRole='button'
-        android_ripple={{ color: "rgba(91, 110, 91, 0.12)", borderless: false }}
+        android_ripple={{ color: theme?.ripple ?? "rgba(91, 110, 91, 0.12)", borderless: false }}
         onPress={() => onPress(filter)}
-        style={styles.seeAllButton}
+        style={[styles.seeAllButton, theme && { backgroundColor: theme.surface, borderColor: theme.border }]}
     >
-        <Text style={styles.seeAllText}>
+        <Text style={[styles.seeAllText, theme && { color: theme.primary }]}>
             {label}
             {count ? ` (${count})` : ""}
         </Text>
@@ -307,20 +307,20 @@ const ResultRow = ({ Icon, meta, onPress, subtitle, title }) => (
     />
 );
 
-const LoadingSearchState = ({ label }) => (
-    <View style={styles.loadingCard}>
+const LoadingSearchState = ({ label, theme }) => (
+    <View style={[styles.loadingCard, theme && { backgroundColor: theme.surface, borderColor: theme.border }]}>
         <View style={styles.loadingHeader}>
-            <ActivityIndicator color={colors.primary} size='small' />
-            <Text style={styles.loadingText}>
+            <ActivityIndicator color={theme?.primary ?? colors.primary} size='small' />
+            <Text style={[styles.loadingText, theme && { color: theme.muted }]}>
                 Mencari {label.toLowerCase()}...
             </Text>
         </View>
         {[0, 1, 2].map((item) => (
-            <View key={`search-loading-${item}`} style={styles.loadingSkeleton}>
-                <View style={styles.loadingSkeletonIcon} />
+            <View key={`search-loading-${item}`} style={[styles.loadingSkeleton, theme && { borderTopColor: theme.border }]}>
+                <View style={[styles.loadingSkeletonIcon, theme && { backgroundColor: theme.surfaceMuted }]} />
                 <View style={styles.loadingSkeletonCopy}>
-                    <View style={styles.loadingSkeletonTitle} />
-                    <View style={styles.loadingSkeletonLine} />
+                    <View style={[styles.loadingSkeletonTitle, theme && { backgroundColor: theme.surfaceMuted }]} />
+                    <View style={[styles.loadingSkeletonLine, theme && { backgroundColor: theme.surfaceMuted }]} />
                 </View>
             </View>
         ))}
@@ -334,6 +334,10 @@ export function GlobalSearchScreen({
     onOpenTab,
 }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const { t } = useMobileLocale();
     const [query, setQuery] = useState(initialQuery);
     const [activeFilter, setActiveFilter] = useState("all");
@@ -754,51 +758,51 @@ export function GlobalSearchScreen({
                 }
             />
             {!hasQuery && !isWebAppLayout ? (
-                <View style={styles.hintCard}>
-                    <View style={styles.hintIcon}>
+                <View style={[styles.hintCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                    <View style={[styles.hintIcon, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}>
                         <Search
-                            color={colors.primary}
+                            color={theme.primary}
                             size={22}
                             strokeWidth={2.2}
                         />
                     </View>
-                    <Text style={styles.hintTitle}>
+                    <Text style={[styles.hintTitle, { color: theme.ink }]}>
                         {t("search.hint.title")}
                     </Text>
-                    <Text style={styles.hintText}>{t("search.hint.text")}</Text>
+                    <Text style={[styles.hintText, { color: theme.muted }]}>{t("search.hint.text")}</Text>
                 </View>
             ) : null}
 
             {loading ? (
-                <LoadingSearchState label={selectedFilterLabel} />
+                <LoadingSearchState theme={theme} label={selectedFilterLabel} />
             ) : null}
 
             {message ? <Text style={styles.message}>{message}</Text> : null}
 
             {hasQuery && !loading && totalResults ? (
-                <View style={styles.resultSummary}>
+                <View style={[styles.resultSummary, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}>
                     <Search
-                        color={colors.primary}
+                        color={theme.primary}
                         size={15}
                         strokeWidth={2.2}
                     />
-                    <Text style={styles.resultSummaryText}>
+                    <Text style={[styles.resultSummaryText, { color: theme.ink }]}>
                         {resultSummary}
                     </Text>
                 </View>
             ) : null}
 
             {hasQuery && !loading && !totalResults ? (
-                <View style={styles.hintCard}>
-                    <Text style={styles.hintTitle}>
+                <View style={[styles.hintCard, { backgroundColor: theme.surface, borderColor: theme.border }, isWebAppLayout && { elevation: 0, shadowOpacity: 0 }]}>
+                    <Text style={[styles.hintTitle, { color: theme.ink }]}>
                         {t(emptyState.titleKey)}
                     </Text>
-                    <Text style={styles.hintText}>{t(emptyState.textKey)}</Text>
+                    <Text style={[styles.hintText, { color: theme.muted }]}>{t(emptyState.textKey)}</Text>
                 </View>
             ) : null}
 
             {showAyahs ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={
                         remoteResults.ayahTotal || remoteResults.ayahs.length
                     }
@@ -848,7 +852,7 @@ export function GlobalSearchScreen({
                     })}
                     {activeFilter === "all" &&
                     filterCounts.quran > remoteResults.ayahs.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={filterCounts.quran}
                             filter='quran'
                             label={t("search.seeAll")}
@@ -859,7 +863,7 @@ export function GlobalSearchScreen({
             ) : null}
 
             {showHadiths ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={
                         remoteResults.hadithTotal ||
                         remoteResults.hadiths.length
@@ -886,7 +890,7 @@ export function GlobalSearchScreen({
                     ))}
                     {activeFilter === "all" &&
                     filterCounts.hadith > remoteResults.hadiths.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={filterCounts.hadith}
                             filter='hadith'
                             label={t("search.seeAll")}
@@ -897,7 +901,7 @@ export function GlobalSearchScreen({
             ) : null}
 
             {showDoas ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={remoteResults.doaTotal || remoteResults.doas.length}
                     title={t("search.filter.doa")}
                 >
@@ -915,7 +919,7 @@ export function GlobalSearchScreen({
                     ))}
                     {activeFilter === "all" &&
                     filterCounts.doa > remoteResults.doas.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={filterCounts.doa}
                             filter='doa'
                             label={t("search.seeAll")}
@@ -926,7 +930,7 @@ export function GlobalSearchScreen({
             ) : null}
 
             {showKajians ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={
                         remoteResults.kajianTotal ||
                         remoteResults.kajians.length
@@ -950,7 +954,7 @@ export function GlobalSearchScreen({
                     ))}
                     {activeFilter === "all" &&
                     filterCounts.kajian > remoteResults.kajians.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={filterCounts.kajian}
                             filter='kajian'
                             label={t("search.seeAll")}
@@ -961,7 +965,7 @@ export function GlobalSearchScreen({
             ) : null}
 
             {showFeatures ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={featureResults.length}
                     title={t("search.filter.feature")}
                 >
@@ -985,7 +989,7 @@ export function GlobalSearchScreen({
                     ))}
                     {activeFilter === "all" &&
                     featureResults.length > displayedFeatureResults.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={featureResults.length}
                             filter='feature'
                             label={t("search.seeAll")}
@@ -996,7 +1000,7 @@ export function GlobalSearchScreen({
             ) : null}
 
             {showDictionaries ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={
                         remoteResults.dictionaryTotal ||
                         remoteResults.dictionaries.length
@@ -1024,7 +1028,7 @@ export function GlobalSearchScreen({
                     {activeFilter === "all" &&
                     filterCounts.dictionary >
                         remoteResults.dictionaries.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={filterCounts.dictionary}
                             filter='dictionary'
                             label={t("search.seeAll")}
@@ -1035,7 +1039,7 @@ export function GlobalSearchScreen({
             ) : null}
 
             {showPerawis ? (
-                <ResultSection
+                <ResultSection theme={theme} theme={theme}
                     count={
                         remoteResults.perawiTotal ||
                         remoteResults.perawis.length
@@ -1059,7 +1063,7 @@ export function GlobalSearchScreen({
                     ))}
                     {activeFilter === "all" &&
                     filterCounts.perawi > remoteResults.perawis.length ? (
-                        <SeeAllButton
+                        <SeeAllButton theme={theme}
                             count={filterCounts.perawi}
                             filter='perawi'
                             label={t("search.seeAll")}
@@ -1087,19 +1091,19 @@ export function GlobalSearchScreen({
                                   <Pressable
                                       accessibilityRole='button'
                                       android_ripple={{
-                                          color: "rgba(91, 110, 91, 0.12)",
+                                          color: theme.ripple,
                                           borderless: false,
                                       }}
                                       onPress={handleLoadMore}
-                                      style={styles.loadMoreButton}
+                                      style={[styles.loadMoreButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
                                   >
                                       {loadingMore ? (
                                           <ActivityIndicator
-                                              color={colors.primary}
+                                              color={theme.primary}
                                               size='small'
                                           />
                                       ) : (
-                                          <Text style={styles.loadMoreText}>
+                                          <Text style={[styles.loadMoreText, { color: theme.primary }]}>
                                               {t("search.loadMore")}
                                           </Text>
                                       )}
@@ -1124,32 +1128,32 @@ export function GlobalSearchScreen({
             />
 
             {!hasQuery ? (
-                <View style={styles.hintCard}>
-                    <View style={styles.hintIcon}>
+                <View style={[styles.hintCard, { backgroundColor: theme.surface, borderColor: theme.border }, isWebAppLayout && { elevation: 0, shadowOpacity: 0 }]}>
+                    <View style={[styles.hintIcon, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}>
                         <Search
-                            color={colors.primary}
+                            color={theme.primary}
                             size={22}
                             strokeWidth={2.2}
                         />
                     </View>
-                    <Text style={styles.hintTitle}>Cari berdasarkan makna</Text>
-                    <Text style={styles.hintText}>
+                    <Text style={[styles.hintTitle, { color: theme.ink }]}>Cari berdasarkan makna</Text>
+                    <Text style={[styles.hintText, { color: theme.muted }]}>
                         Ketik pertanyaan atau topik, sistem mencari berdasarkan
                         makna, bukan hanya kata yang persis sama.
                     </Text>
                 </View>
             ) : null}
 
-            {semanticLoading ? <LoadingSearchState label='makna' /> : null}
+            {semanticLoading ? <LoadingSearchState theme={theme} label='makna' /> : null}
 
             {semanticMessage ? (
                 <Text style={styles.message}>{semanticMessage}</Text>
             ) : null}
 
             {!semanticLoading && semanticAnswer?.answer ? (
-                <View style={styles.answerCard}>
-                    <Text style={styles.answerLabel}>Jawaban</Text>
-                    <Text style={styles.answerText}>
+                <View style={[styles.answerCard, { backgroundColor: theme.surfaceMuted, borderColor: theme.primary }, isWebAppLayout && { elevation: 0, shadowOpacity: 0 }]}>
+                    <Text style={[styles.answerLabel, { color: theme.primary }]}>Jawaban</Text>
+                    <Text style={[styles.answerText, { color: theme.ink }]}>
                         {semanticAnswer.answer}
                     </Text>
                 </View>
@@ -1395,7 +1399,7 @@ export function GlobalSearchScreen({
             }
             headerExtra={
                 <>
-                    <View style={styles.modeToggleWrap}>
+                    <View style={[styles.modeToggleWrap, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                         {searchModeOptions.map((option) => {
                             const active = option.key === searchMode;
                             return (
@@ -1403,7 +1407,7 @@ export function GlobalSearchScreen({
                                     accessibilityRole='button'
                                     accessibilityState={{ selected: active }}
                                     android_ripple={{
-                                        color: "rgba(91, 110, 91, 0.12)",
+                                        color: theme.ripple,
                                         borderless: false,
                                     }}
                                     key={option.key}
@@ -1412,14 +1416,14 @@ export function GlobalSearchScreen({
                                     }
                                     style={[
                                         styles.modeToggleChip,
-                                        active && styles.modeToggleChipActive,
+                                        active && [styles.modeToggleChipActive, { backgroundColor: theme.primary }],
                                     ]}
                                 >
                                     <Text
                                         style={[
                                             styles.modeToggleText,
-                                            active &&
-                                                styles.modeToggleTextActive,
+                                            { color: active ? theme.onPrimary : theme.primary },
+                                            active && styles.modeToggleTextActive,
                                         ]}
                                     >
                                         {option.label}

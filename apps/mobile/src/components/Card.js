@@ -16,6 +16,7 @@ export function Card({ children, style }) {
                     backgroundColor: theme.surface,
                     borderColor: theme.border,
                 },
+                isWebAppLayout && { shadowOpacity: 0, elevation: 0 },
                 style,
             ]}
         >

@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
-import { colors, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { getThemeColors, spacing } from "../theme";
 
 export function SectionHeader({
     title,
@@ -11,6 +12,12 @@ export function SectionHeader({
     metaStyle,
     subtitleStyle,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
+
     return (
         <View style={[styles.header, style]}>
             <View style={styles.copy}>
@@ -18,7 +25,7 @@ export function SectionHeader({
                     {title ? (
                         <Text
                             numberOfLines={2}
-                            style={[styles.title, titleStyle]}
+                            style={[styles.title, { color: theme.ink }, titleStyle]}
                         >
                             {title}
                         </Text>
@@ -26,7 +33,7 @@ export function SectionHeader({
                     {meta ? (
                         <Text
                             numberOfLines={1}
-                            style={[styles.meta, metaStyle]}
+                            style={[styles.meta, { color: theme.primary }, metaStyle]}
                         >
                             {meta}
                         </Text>
@@ -35,7 +42,7 @@ export function SectionHeader({
                 {subtitle ? (
                     <Text
                         numberOfLines={2}
-                        style={[styles.subtitle, subtitleStyle]}
+                        style={[styles.subtitle, { color: theme.muted }, subtitleStyle]}
                     >
                         {subtitle}
                     </Text>
@@ -65,14 +72,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     title: {
-        color: colors.ink,
         flex: 1,
         fontSize: 14,
         fontWeight: "900",
         minWidth: 0,
     },
     meta: {
-        color: colors.primary,
         flexShrink: 0,
         fontSize: 12,
         fontWeight: "800",
@@ -81,7 +86,6 @@ const styles = StyleSheet.create({
         textTransform: "capitalize",
     },
     subtitle: {
-        color: colors.muted,
         fontSize: 12,
         lineHeight: 18,
         marginTop: spacing.xs,

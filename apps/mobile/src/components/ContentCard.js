@@ -1,22 +1,28 @@
 import { MoreVertical } from "lucide-react-native";
 import { memo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors, radius, spacing, touchTarget } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import { hapticTap } from "../utils/haptics";
 
 export const MetaRail = memo(function MetaRail({ items = [], style, textStyle }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const visibleItems = items.filter((item) => item?.label || item?.value);
     if (!visibleItems.length) return null;
 
     return (
-        <View style={[styles.metaRail, style]}>
+        <View style={[styles.metaRail, { backgroundColor: theme.bg, borderColor: theme.border }, style]}>
             {visibleItems.map((item, index) => (
                 <View
                     key={`${item.label ?? item.value}-${index}`}
                     style={[
                         styles.railItem,
-                        item.variant === "badge" && styles.railBadge,
-                        item.active && styles.railBadgeActive,
+                        item.variant === "badge" && [styles.railBadge, { backgroundColor: theme.surfaceMuted }],
+                        item.active && [styles.railBadgeActive, { backgroundColor: theme.primary }],
                         item.style,
                     ]}
                 >
@@ -24,8 +30,9 @@ export const MetaRail = memo(function MetaRail({ items = [], style, textStyle })
                         numberOfLines={item.numberOfLines ?? 1}
                         style={[
                             styles.railText,
+                            { color: theme.muted },
                             item.variant === "badge" && styles.railBadgeText,
-                            item.active && styles.railBadgeTextActive,
+                            item.active && [styles.railBadgeTextActive, { color: theme.onPrimary }],
                             textStyle,
                             item.textStyle,
                         ]}
@@ -41,7 +48,7 @@ export const MetaRail = memo(function MetaRail({ items = [], style, textStyle })
 export const ContentCard = memo(function ContentCard({
     Icon,
     iconStyle,
-    iconColor = colors.primary,
+    iconColor,
     iconSize = 18,
     iconStrokeWidth = 2.2,
     leading,
@@ -69,6 +76,12 @@ export const ContentCard = memo(function ContentCard({
     eyebrowStyle,
     footerStyle,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
+    const resolvedIconColor = iconColor ?? theme.primary;
     const Container = onPress ? Pressable : View;
     const accessibilityLabel = [title, subtitle, meta]
         .filter(Boolean)
@@ -81,7 +94,7 @@ export const ContentCard = memo(function ContentCard({
             accessibilityState={onPress ? { disabled, selected } : undefined}
             android_ripple={
                 onPress
-                    ? { color: "rgba(91, 110, 91, 0.12)", borderless: false }
+                    ? { color: theme.ripple, borderless: false }
                     : undefined
             }
             disabled={disabled}
@@ -91,7 +104,12 @@ export const ContentCard = memo(function ContentCard({
             }}
             style={[
                 styles.card,
-                selected && styles.cardSelected,
+                {
+                    backgroundColor: theme.surface,
+                    borderColor: theme.border,
+                },
+                isWebAppLayout && { shadowOpacity: 0, elevation: 0 },
+                selected && [styles.cardSelected, { borderColor: theme.primary }],
                 disabled && styles.cardDisabled,
                 style,
             ]}
@@ -99,9 +117,9 @@ export const ContentCard = memo(function ContentCard({
             {leading ? <View style={styles.leading}>{leading}</View> : null}
             {metaRail ? <MetaRail items={metaRail} /> : null}
             {Icon ? (
-                <View style={[styles.icon, iconStyle]}>
+                <View style={[styles.icon, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }, iconStyle]}>
                     <Icon
-                        color={iconColor}
+                        color={resolvedIconColor}
                         size={iconSize}
                         strokeWidth={iconStrokeWidth}
                     />
@@ -113,7 +131,7 @@ export const ContentCard = memo(function ContentCard({
                     {eyebrow ? (
                         <Text
                             numberOfLines={1}
-                            style={[styles.eyebrow, eyebrowStyle]}
+                            style={[styles.eyebrow, { color: theme.primary }, eyebrowStyle]}
                         >
                             {eyebrow}
                         </Text>
@@ -123,7 +141,7 @@ export const ContentCard = memo(function ContentCard({
                             {title ? (
                                 <Text
                                     numberOfLines={numberOfTitleLines}
-                                    style={[styles.title, titleStyle]}
+                                    style={[styles.title, { color: theme.ink }, titleStyle]}
                                 >
                                     {title}
                                 </Text>
@@ -131,7 +149,7 @@ export const ContentCard = memo(function ContentCard({
                             {subtitle ? (
                                 <Text
                                     numberOfLines={numberOfSubtitleLines}
-                                    style={[styles.subtitle, subtitleStyle]}
+                                    style={[styles.subtitle, { color: theme.muted }, subtitleStyle]}
                                 >
                                     {subtitle}
                                 </Text>
@@ -140,7 +158,7 @@ export const ContentCard = memo(function ContentCard({
                         {meta ? (
                             <Text
                                 numberOfLines={2}
-                                style={[styles.meta, metaStyle]}
+                                style={[styles.meta, { color: theme.primary }, metaStyle]}
                             >
                                 {meta}
                             </Text>
@@ -153,7 +171,6 @@ export const ContentCard = memo(function ContentCard({
                         </View>
                     ) : null}
                 </View>
-
                 {trailing ? (
                     <View style={styles.trailing}>{trailing}</View>
                 ) : null}
@@ -162,7 +179,7 @@ export const ContentCard = memo(function ContentCard({
                         accessibilityLabel={menuLabel}
                         accessibilityRole='button'
                         android_ripple={{
-                            color: "rgba(91, 110, 91, 0.12)",
+                            color: theme.ripple,
                             borderless: true,
                         }}
                         hitSlop={8}
@@ -174,7 +191,7 @@ export const ContentCard = memo(function ContentCard({
                         style={styles.menuButton}
                     >
                         <MoreVertical
-                            color={colors.primary}
+                            color={theme.primary}
                             size={18}
                             strokeWidth={2.4}
                         />
@@ -188,8 +205,6 @@ export const ContentCard = memo(function ContentCard({
 const styles = StyleSheet.create({
     card: {
         alignItems: "stretch",
-        backgroundColor: colors.surface,
-        borderColor: colors.faint,
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
@@ -197,9 +212,7 @@ const styles = StyleSheet.create({
         minHeight: 66,
         padding: spacing.sm,
     },
-    cardSelected: {
-        borderColor: colors.primary,
-    },
+    cardSelected: {},
     cardDisabled: {
         opacity: 0.56,
     },
@@ -208,8 +221,6 @@ const styles = StyleSheet.create({
     },
     icon: {
         alignItems: "center",
-        backgroundColor: colors.surfaceMuted,
-        borderColor: colors.faint,
         borderRadius: radius.sm,
         borderWidth: 1,
         height: touchTarget,
@@ -218,8 +229,6 @@ const styles = StyleSheet.create({
     },
     metaRail: {
         alignItems: "stretch",
-        backgroundColor: colors.bg,
-        borderColor: colors.faint,
         borderRadius: radius.md,
         borderWidth: 1,
         justifyContent: "center",
@@ -231,30 +240,23 @@ const styles = StyleSheet.create({
         marginTop: spacing.sm,
     },
     railText: {
-        color: colors.muted,
         fontSize: 10,
         fontWeight: "900",
         textAlign: "center",
         textTransform: "uppercase",
     },
     railBadge: {
-        backgroundColor: colors.surfaceMuted,
         borderRadius: radius.sm,
         marginTop: spacing.sm,
         overflow: "hidden",
         paddingHorizontal: spacing.xs,
         paddingVertical: spacing.xs,
     },
-    railBadgeActive: {
-        backgroundColor: colors.primary,
-    },
+    railBadgeActive: {},
     railBadgeText: {
-        color: colors.muted,
         fontSize: 9,
     },
-    railBadgeTextActive: {
-        color: colors.onPrimary,
-    },
+    railBadgeTextActive: {},
     body: {
         flex: 1,
         flexDirection: "row",
@@ -265,7 +267,6 @@ const styles = StyleSheet.create({
         minWidth: 0,
     },
     eyebrow: {
-        color: colors.primary,
         fontSize: 11,
         fontWeight: "900",
         marginBottom: 2,
@@ -282,19 +283,16 @@ const styles = StyleSheet.create({
         minWidth: 0,
     },
     title: {
-        color: colors.ink,
         fontSize: 13,
         fontWeight: "900",
         lineHeight: 18,
     },
     subtitle: {
-        color: colors.muted,
         fontSize: 12,
         lineHeight: 17,
         marginTop: 2,
     },
     meta: {
-        color: colors.primary,
         fontSize: 11,
         fontWeight: "900",
         marginLeft: spacing.xs,
