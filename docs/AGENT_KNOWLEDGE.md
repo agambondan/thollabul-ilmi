@@ -195,6 +195,10 @@ Detail: [`reviews/2026-09-29-backend-performance-production-review.md`](./review
 - **Jangan hapus `EnableIPValidation`.** Tanpa itu `c.IP()` mengembalikan isi
   header apa adanya, kosong untuk pemanggil tanpa header (curl di VPS, panggilan
   internal), dan semuanya berbagi satu kunci kosong.
+- **IP klien yang kini nyata harus disimpan berkunci.** `hashIP` di
+  `page_view_service.go` memakai HMAC-SHA256 (`IP_HASH_SECRET`, cadangan
+  diturunkan dari `ACCESS_SECRET`). Jangan mengganti dengan hash polos: SHA-256
+  tanpa kunci atas alamat IPv4 bisa dibalik dengan brute force.
 - Port API hanya terikat ke `127.0.0.1:29900`, jadi header tidak bisa
   dipalsukan dari luar. Kalau port pernah dibuka ke publik, persempit
   `TRUSTED_PROXIES` ke alamat proxy saja.

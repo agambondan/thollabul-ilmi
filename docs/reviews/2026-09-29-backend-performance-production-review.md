@@ -409,8 +409,9 @@ punya satu bucket untuk seluruh pengguna:
   per menit untuk seluruh basis pengguna.
 - Limiter global (180 per menit) dan search (60 per menit) dibagi semua
   pengguna anonim.
-- `page_view` mengelompokkan semua pengunjung tanpa `visitor_id` menjadi satu
-  hash IP.
+- Kolom `page_view.ip_hash` tidak berguna: 8.116 dari 8.194 baris (99%) berisi
+  satu nilai, hash gateway. Hitungan pengunjung unik tidak terpengaruh karena
+  klien selalu mengirim `visitor_id`.
 
 Kenapa tidak terlihat: `MetricsMiddleware` terpasang setelah limiter global,
 jadi 429 tidak pernah masuk `api_requests_total`.
@@ -437,6 +438,15 @@ limiter.
 - Satu percobaan awal menyimpang (request sesudah burst lolos) dan tidak muncul
   pada dua pengulangan terkontrol.
 - `api_requests_total{status="429"}` kini tercatat.
+
+**Efek samping privasi yang ikut kuperbaiki.** Setelah IP asli terbaca,
+`page_view.ip_hash` mulai berisi hash alamat tiap pengunjung, dan hash SHA-256
+tanpa kunci atas alamat IPv4 bisa dibalik dengan brute force. Kini hash memakai
+HMAC-SHA256 dengan kunci dari `IP_HASH_SECRET`, atau diturunkan dari
+`ACCESS_SECRET` bila tidak diset (`hashIP` di `page_view_service.go`). Selama
+jendela paparan (12:49 sampai 16:11 UTC, 30 Sep) 37 baris dengan 4 hash unik
+tersimpan; kolom `ip_hash` mereka dikosongkan. Kolom itu tidak dibaca query
+mana pun dan tidak ada `visitor_id` yang bergantung padanya.
 
 **Load test.** Satu IP tetap dibatasi 180 per menit (auth 10 per menit). Untuk
 mensimulasikan banyak klien dari VPS, kirim `CF-Connecting-IP` berbeda per
@@ -478,6 +488,10 @@ UPDATE ... WHERE`). Sebelumnya ±294 rb baris ditulis ulang di tiap re-seed
   walau tidak berubah (dead tuple dan WAL). Diverifikasi di Postgres 17: `xmin`
   baris yang tidak berubah tetap, dan setelah satu chunk diedit tepat satu baris
   yang berubah.
+  Di produksi: reseed penuh atas 7.346 video (state seed diperbarui 16:09 UTC)
+  tidak menambah `n_tup_ins`, `n_tup_upd`, maupun `n_tup_del`. Sebelumnya counter
+  update tabel ini 1,62 juta untuk 220 ribu baris, sekitar enam kali tulis
+  ulang penuh.
 
 ### D8. Tombstone yatim dan endpoint transkrip yang membocorkan soft-delete
 
