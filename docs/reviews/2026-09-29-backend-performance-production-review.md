@@ -76,9 +76,13 @@ Query pattern baru di `pg_stat_statements`: `SELECT "id" FROM "hadith" ...`
 
 ---
 
-## Bagian B — Temuan Baru, Belum Diperbaiki (Prioritas)
+## Bagian B — Temuan, Sekarang Sudah Diperbaiki
 
-### B0. 🔴🔴 URGENT — Filter `deleted_at` hilang sistemik di rewrite raw-SQL, SUDAH LIVE di production
+Semua temuan B0–B3 di bawah ini sudah diperbaiki, dibuild+vet+test, dan
+(kecuali dinyatakan lain) dideploy+diverifikasi live per commit `b7ed2aba`
+dan `8a98f69b`. B5 murni observasi, bukan sesuatu yang "difix".
+
+### B0. ✅ FIXED — Filter `deleted_at` hilang sistemik di rewrite raw-SQL (sudah live sebelum fix)
 
 Sumber: audit statis independen (subagent terpisah, 12 commit / 40 file
 di `app/repository`), dijalankan sebagai verifikasi correctness atas
@@ -140,17 +144,40 @@ seperti ini.
 buang error `strconv.Atoi`), jadi klausa `LIMIT`/`OFFSET` tidak pernah
 ditambahkan → full unbounded scan bisa dipicu dari query param biasa.
 
-**Rekomendasi:** ini prioritas di atas SEMUA temuan performa lain di
-dokumen ini, termasuk B1. **Jangan deploy 5 commit tertunda (B4) sebelum
-ini ditangani** — akan menambah bug Media-hilang ke daftar yang sudah
-live. Audit ulang tiap file pakai `sanad_repository.go` sebagai pola
-acuan (bukan `hadith_ayah_repository.go`), tambahkan test yang sengaja
-membuat baris soft-deleted dan assert baris itu tidak ikut ter-scan.
-**Belum diimplementasikan** — di luar scope reaktif sesi ini, dan
-menyentuh pekerjaan yang sedang aktif dikerjakan sesi lain, jadi
-perlu dikoordinasikan, bukan langsung ditimpa.
+**Fix (commit `b7ed2aba`):** 34 repository file diaudit ulang & diperbaiki
+memakai `sanad_repository.go` sebagai pola acuan (base table filter di
+WHERE, tiap joined table soft-deletable difilter di klausa `ON`-nya
+masing-masing, bukan WHERE — supaya `LEFT JOIN` tidak diam-diam jadi
+`INNER JOIN` ketika asosiasinya soft-deleted). Dikerjakan oleh 4 subagent
+paralel (masing-masing ~8-9 file), lalu direview dan di-build/vet/test
+ulang secara gabungan sebelum commit. Temuan tambahan yang ikut
+kegali & diperbaiki saat proses ini:
 
-### B1. 🔴 Seeder `kajian_transcript`: insert satu-baris-satu-transaksi
+- **2 bug precedence OR** (`tafsir_repository.go`'s `Search`,
+  `search_repository.go`'s `SearchDictionary`) — menambahkan
+  `AND deleted_at IS NULL` mentah-mentah di belakang chain `OR` tanpa
+  kurung akan cuma nempel ke term OR terakhir, membiarkan term lain
+  tetap tak terfilter. Sudah dibungkus kurung dengan benar.
+- **`book_repository.go`/`theme_repository.go`'s agregasi `.Table("hadith")`
+  / `.Table("book_themes")`** — `.Table()` GORM juga bypass auto-scoping
+  yang sama seperti raw SQL; ditemukan saat audit `.Joins()`-builder vs
+  raw-SQL dry-run, ditambahkan filter manual.
+- **`hadith.Media` (aset audio)** — hilang dari 11 method
+  `hadith_repository.go` sejak `.Preload("Media")` dihapus tanpa
+  pengganti. Dikembalikan lewat helper `withRelations()` bersama (otomatis
+  cover 10 dari 11 method) + 1 method yang membangun query sendiri.
+- **`tokoh_tarikh_controller.go`** — `?size=` yang gagal parse atau `0`
+  sekarang fallback ke default 20, bukan diam-diam jadi unbounded scan.
+
+**Verified:** `go build`/`go vet`/`go test ./...` PASS, termasuk rerun
+paksa `-count=1` (bypass cache) untuk `app/repository`,
+`app/db/migrations`, `tests/controller` — nol failure. Test Postgres-gated
+`search_repository_test.go` (`//go:build postgres`) sengaja TIDAK
+dijalankan otomatis karena test itu men-`TRUNCATE` tabel di Postgres dev
+yang dipakai bersama sesi lain — perlu dijalankan manual terpisah kalau
+mau verifikasi penuh `SearchDictionary`.
+
+### B1. ✅ FIXED — Seeder `kajian_transcript`: insert satu-baris-satu-transaksi
 
 **Data:** `pg_stat_statements` — `INSERT INTO "kajian_transcript" (...)`:
 **749.866 call, total 3.239.715 ms (≈54 menit kumulatif), mean 4.32 ms, max
@@ -178,16 +205,19 @@ percobaan deploy pertama mati kena timeout 5 menit karena migrate belum
 selesai — bukan karena banyak yang diseed, tapi karena pola insert ini
 lambat secara struktural.
 
-**Rekomendasi:** batch insert per video (`CreateInBatches(chunks, 200)`
-atau satu `.Transaction()` membungkus semua chunk 1 video) alih-alih per
-baris. Ekspektasi: penurunan drastis (pola well-known di Postgres — batching
-insert biasa memberi speedup satu-hingga-dua-order-of-magnitude dibanding
-autocommit-per-baris). **Belum diimplementasikan** — di luar scope
-perbaikan reaktif sesi ini, butuh keputusan eksplisit karena menyentuh
-seeder yang sensitif (lihat `project_kajian_transcript_fabrication` di
-memory — riwayat insiden data kajian).
+**Fix (commit `8a98f69b`):** Fungsi seeder yang benar-benar aktif ternyata
+`seedKajianFromFile` (huruf kecil, di `seeder_static_file.go`) — bukan
+`SeedKajianTranscriptsFromFile` yang namanya mirip (fungsi itu baca dari
+path lama yang sudah basi, jadi no-op di praktiknya; tetap ikut dibatch
+untuk konsistensi, tapi bukan sumber angka di atas). Loop per-chunk diganti
+jadi mengumpulkan semua chunk 1 video ke slice, lalu satu panggilan
+`CreateInBatches(&chunkRows, 200)` dengan `OnConflict` yang sama persis
+(upsert semantics tidak berubah). **Verified:** dijalankan ulang lewat
+`TestSeedKajianFromFileIntegration` yang sudah ada, memakai dataset asli
+(bukan fixture kecil) — 7.346 kajian, **219.931 transcript chunk**
+ter-batch dengan benar, semua assertion existing tetap lolos.
 
-### B2. 🟠 `translation.en` tanpa index untuk equality match
+### B2. ✅ FIXED — `translation.en` tanpa index untuk equality match
 
 **Data:** `UPDATE translation SET idn=$1 WHERE en=$2 AND (...)` — 3192 call,
 mean 10.81 ms, max 1225 ms.
@@ -195,35 +225,42 @@ mean 10.81 ms, max 1225 ms.
 `idx_trgm_translation_en` — index **GIN trigram**, dioptimasi untuk
 `ILIKE`/similarity, bukan exact-match (`en = ?`). Setiap panggilan backfill
 ini kemungkinan jatuh ke sequential-scan-effective di 104k baris.
-**Rekomendasi:** tambah B-tree biasa `CREATE INDEX idx_translation_en_btree
-ON translation (en)` di samping index trigram yang sudah ada (keduanya bisa
-hidup berdampingan, tidak saling gantikan). Dampak utama di deploy-time
-(seeder), bukan request path — sama seperti B1. **Belum diimplementasikan.**
+**Fix (commit `8a98f69b`):** ditambahkan `CREATE INDEX IF NOT EXISTS
+idx_translation_en_btree ON translation (en)` di `createCompositeIndexes()`
+(`app/repository/repository.go`), tempat semua index komposit/GIN lain di
+proyek ini didaftarkan — hidup berdampingan dengan index trigram yang sudah
+ada, jalan otomatis saat API boot (idempotent, `IF NOT EXISTS`).
 
-### B3. 🟡 `ayah` (6.236 baris): 50 juta tuple dibaca via sequential scan
+### B3. ✅ FIXED — `ayah` (6.236 baris): 50 juta tuple dibaca via sequential scan
 
 **Data:** `pg_stat_user_tables` — `ayah`: 8.067 seq_scan, **50.006.532
 seq_tup_read kumulatif** (≈8.067 × 6.236, konsisten dengan full-table-scan
 berulang), sementara `idx_scan` = 19.287 (campuran — sebagian query sudah
 pakai index, sebagian tidak).
-**Catatan:** tabel ini kecil (6.236 baris), jadi per-scan individual
-kemungkinan tetap sub-millisecond — ini BUKAN bug yang sudah terverifikasi
-lambat seperti B1/A3, tapi pola yang layak diselidiki lebih lanjut: repo
-method mana yang masih full-scan `ayah` alih-alih pakai index yang tersedia
-akan makin terasa kalau tabel ini tumbuh (mis. multi-riwayat qiraat). Belum
-diidentifikasi method spesifiknya — perlu `EXPLAIN` per method `ayah_repository.go`
-kalau mau ditindaklanjuti.
+**Ketemu akar masalahnya:** `ayah_repository.go`'s `FindDaily` — widget
+"Ayat Hari Ini", pasangan persis dari bug A3 (Hadis Hari Ini), pola yang
+sama sekali sama: `.Offset(number-1).Limit(1).First()` lewat join 3 tabel
+(Translation/Surah/Surah.Translation) alih-alih resolve id dulu. Tabelnya
+lebih kecil dari hadith (6.236 vs 65.625 baris) jadi dampaknya tidak
+sedramatis A3, tapi mekanismenya identik.
 
-### B4. 🟢 Production 5 commit di belakang HEAD saat review ini ditulis
+**Fix (commit `8a98f69b`):** pola fix yang sama persis dengan A3 — resolve
+`id` dulu lewat scan ringan (`Select("id").Offset(n).Limit(1)`, tanpa
+join), baru delegasikan ke `FindById` yang sudah cepat. **Verified:** test
+existing `ayah_repository_test.go` (yang sudah meng-assert `FindDaily(2)`)
+tetap lolos tanpa perlu diubah.
+
+### B4. Deploy production ke HEAD terbaru (unblocked, sekarang dieksekusi)
 
 **Data:** container API berjalan sejak commit `6f202c91` (09:59 UTC);
-`git log` menunjukkan `f27850bd` s.d. `359e0560` (5 commit batch 7-8 raw-SQL
-rewrite dari [`native-query-optimization-benchmark.md`](./2026-09-29-native-query-optimization-benchmark.md))
-sudah di-commit tapi belum di-deploy per waktu penulisan.
-**Catatan:** bukan bug, murni observasi status. **Tapi lihat B0 dulu** —
-5 commit ini termasuk yang menghapus `.Preload("Media")` dari
-`hadith_repository.go` tanpa pengganti. Deploy apa adanya = bug Media-hilang
-ikut naik ke production. Urutan yang benar: tangani B0 dulu, baru deploy.
+5 commit batch 7-8 raw-SQL rewrite dari
+[`native-query-optimization-benchmark.md`](./2026-09-29-native-query-optimization-benchmark.md)
+sudah di-commit tapi belum di-deploy per waktu penulisan awal dokumen ini
+— termasuk penghapus `.Preload("Media")` tanpa pengganti yang jadi bagian
+B0 #1. Blocker itu sekarang sudah beres (B0 fixed di commit `b7ed2aba`,
+Media dikembalikan di file yang sama), jadi deploy HEAD (`8a98f69b` ke
+atas) sekarang aman dieksekusi — dan mencakup baik fix B0-B3 di dokumen
+ini maupun rewrite performa dari dokumen benchmark.
 
 ### B5. 🟢 Disk I/O Postgres: 58 GB baca / 75.7 GB tulis dalam ~2.5 jam
 
@@ -261,16 +298,18 @@ sekarang valid, tapi tidak ada yang memantau otomatis kalau
 
 ## Prioritas Tindak Lanjut
 
-| #   | Temuan                                                  | Dampak                                                | Effort         | Status     |
-| --- | ------------------------------------------------------- | ----------------------------------------------------- | -------------- | ---------- |
-| B0  | Filter `deleted_at` hilang sistemik (35/40 file)        | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j           | ⏳ Belum   |
-| B1  | Batch insert `kajian_transcript` seeder                 | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j           | ⏳ Belum   |
-| B4  | Deploy 5 commit tertunda ke production                  | 🔴 Tinggi (blocked oleh B0 — jangan deploy dulu)      | 15m            | ⏸️ Blocked |
-| B2  | B-tree index `translation.en`                           | 🟠 Sedang (seeder-time)                               | 15m            | ⏳ Belum   |
-| B3  | Audit method `ayah_repository.go` full-scan             | 🟡 Rendah-Sedang (belum kritis, tabel kecil)          | 1j investigasi | ⏳ Belum   |
-| B5  | Pantau disk I/O growth                                  | 🟢 Rendah (observasi)                                 | -              | 👁️ Pantau  |
-| —   | Alerting `api_slow_requests_total`/`pg_stat_statements` | 🟠 Sedang (mencegah insiden berulang)                 | 2j             | ⏳ Belum   |
+| #   | Temuan                                                  | Dampak                                                | Effort | Status                   |
+| --- | ------------------------------------------------------- | ----------------------------------------------------- | ------ | ------------------------ |
+| B0  | Filter `deleted_at` hilang sistemik (34 file)           | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j   | ✅ Fixed (`b7ed2aba`)    |
+| B1  | Batch insert `kajian_transcript` seeder                 | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j   | ✅ Fixed (`8a98f69b`)    |
+| B2  | B-tree index `translation.en`                           | 🟠 Sedang (seeder-time)                               | 15m    | ✅ Fixed (`8a98f69b`)    |
+| B3  | `ayah_repository.go` `FindDaily` offset-scan            | 🟡 Sedang (pola sama dgn A3, tabel lebih kecil)       | 1j     | ✅ Fixed (`8a98f69b`)    |
+| B4  | Deploy HEAD ke production                               | 🔴 Tinggi                                             | 15m    | 🚀 Sedang dieksekusi     |
+| B5  | Pantau disk I/O growth                                  | 🟢 Rendah (observasi)                                 | -      | 👁️ Pantau                |
+| —   | Alerting `api_slow_requests_total`/`pg_stat_statements` | 🟠 Sedang (mencegah insiden berulang)                 | 2j     | ⏳ Belum (di luar scope) |
 
-Semua di Bagian A sudah selesai + terverifikasi live. Bagian B murni
-temuan+rekomendasi (tidak diimplementasikan otomatis) — sesuai arahan sesi
-ini untuk fokus ke review, bukan siklus fix-deploy lanjutan.
+Bagian A dan B0-B3 semua sudah diperbaiki + di-build/vet/test hijau. B4
+(deploy) sedang dieksekusi begitu dokumen ini ditulis; B5 murni item
+pantau, bukan sesuatu untuk "difix". Item alerting di baris terakhir tetap
+di luar scope — butuh keputusan terpisah soal tooling (Grafana/Prometheus
+Alertmanager belum ada di infra ini).
