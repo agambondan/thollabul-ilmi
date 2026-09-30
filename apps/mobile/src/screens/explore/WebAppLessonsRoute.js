@@ -166,28 +166,36 @@ export function WebAppLessonsRoute({
     const step = moduleSteps[activeStepIdx];
 
     useEffect(() => {
-        if (!navigation?.setHeader) return;
+        if (!navigation?.setHeader && !navigation?.setBack) return;
         if (activeStepIdx > 0) {
-            navigation.setHeader({
+            const onBack = () => {
+                setActiveStepIdx((prev) => prev - 1);
+                return true;
+            };
+            navigation.setBack?.(onBack);
+            navigation.setHeader?.({
                 showBack: true,
                 title: step?.title || activeModule?.title || "Pelajaran",
-                onBack: () => {
-                    setActiveStepIdx((prev) => prev - 1);
-                    return true;
-                },
+                onBack,
             });
         } else if (clearFeature) {
-            navigation.setHeader({
+            const onBack = () => {
+                clearFeature();
+                return true;
+            };
+            navigation.setBack?.(onBack);
+            navigation.setHeader?.({
                 showBack: true,
                 title: activeModule?.title || "Pelajaran",
-                onBack: () => {
-                    clearFeature();
-                    return true;
-                },
+                onBack,
             });
         } else {
-            navigation.setHeader(null);
+            navigation.clearBack?.();
+            navigation.setHeader?.(null);
         }
+        return () => {
+            navigation?.clearBack?.();
+        };
     }, [activeStepIdx, navigation, clearFeature, step, activeModule]);
 
     const saveProgress = async (stepNum, done) => {

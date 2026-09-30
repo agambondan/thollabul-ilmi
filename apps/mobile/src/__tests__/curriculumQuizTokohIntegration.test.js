@@ -130,4 +130,38 @@ describe("Curriculum, Quiz, and Tokoh Tarikh Mobile Integration", () => {
         expect(getByText("20 tokoh")).toBeTruthy();
         expect(getAllByTestId("tokoh-web-app-card").length).toBe(20);
     });
+    test("WebAppLessonsRoute and WebAppQuizRoute register hardware back handler via setBack", async () => {
+        const mockNavigation = {
+            setBack: jest.fn(),
+            setHeader: jest.fn(),
+            clearBack: jest.fn(),
+        };
+        const clearFeature = jest.fn();
+
+        const { unmount: unmountLessons } = render(
+            <WebAppLessonsRoute
+                clearFeature={clearFeature}
+                feature={{ key: "lessons" }}
+                navigation={mockNavigation}
+            />,
+        );
+
+        expect(mockNavigation.setBack).toHaveBeenCalled();
+        unmountLessons();
+        expect(mockNavigation.clearBack).toHaveBeenCalled();
+
+        jest.clearAllMocks();
+
+        const { unmount: unmountQuiz } = render(
+            <WebAppQuizRoute
+                activeFeature={{ key: "quiz" }}
+                clearFeature={clearFeature}
+                navigation={mockNavigation}
+            />,
+        );
+
+        expect(mockNavigation.setBack).toHaveBeenCalled();
+        unmountQuiz();
+        expect(mockNavigation.clearBack).toHaveBeenCalled();
+    });
 });

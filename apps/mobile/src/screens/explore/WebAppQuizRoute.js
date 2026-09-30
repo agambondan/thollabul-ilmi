@@ -263,28 +263,36 @@ export function WebAppQuizRoute({
     }, [total]);
 
     useEffect(() => {
-        if (!navigation?.setHeader) return;
+        if (!navigation?.setHeader && !navigation?.setBack) return;
         if (currentIndex > 0) {
-            navigation.setHeader({
+            const onBack = () => {
+                setCurrentIndex((prev) => prev - 1);
+                return true;
+            };
+            navigation.setBack?.(onBack);
+            navigation.setHeader?.({
                 showBack: true,
                 title: t("explore.quiz.questionProgress", { current: currentIndex + 1, total }),
-                onBack: () => {
-                    setCurrentIndex((prev) => prev - 1);
-                    return true;
-                },
+                onBack,
             });
         } else if (clearFeature) {
-            navigation.setHeader({
+            const onBack = () => {
+                clearFeature();
+                return true;
+            };
+            navigation.setBack?.(onBack);
+            navigation.setHeader?.({
                 showBack: true,
                 title: t("explore.quiz.title"),
-                onBack: () => {
-                    clearFeature();
-                    return true;
-                },
+                onBack,
             });
         } else {
-            navigation.setHeader(null);
+            navigation.clearBack?.();
+            navigation.setHeader?.(null);
         }
+        return () => {
+            navigation?.clearBack?.();
+        };
     }, [currentIndex, navigation, clearFeature, t, total]);
 
     const answerCurrent = (option) => {
