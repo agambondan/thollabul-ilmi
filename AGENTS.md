@@ -78,6 +78,35 @@ lihat [`docs/AGENT_KNOWLEDGE.md`](docs/AGENT_KNOWLEDGE.md).
 - Install APK hasil build dengan `adb install -r apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk` atau path release yang sesuai.
 - E2E device wajib berjalan pada APK hasil build native, bukan Expo dev client.
 
+## Bukti Visual UI/UX — Before/After (Mengikat)
+
+Setiap perbaikan atau perubahan UI/UX di `apps/mobile` maupun `apps/web`
+**wajib disertai screenshot _before_ dan _after_**: layout, teks/label yang
+tampil, warna, ikon, navigasi yang terlihat (header, tombol kembali), state
+kosong/loading/error, dan data yang salah tampil. Tidak berlaku untuk
+perubahan tanpa efek visual (API murni, refactor, test, dokumen). Kalau ragu,
+anggap berlaku.
+
+- Ambil _before_ dari kode lama **sebelum mengedit** (atau dari ekspor revisi
+  lama lewat `git archive`, jangan `git stash`), ambil _after_ dengan langkah,
+  data, viewport, dan tema yang sama. Satu pasang per layar/state yang berubah.
+- Simpan di `docs/media/before-after/YYYY-MM-DD-<topik>/` sebagai
+  `NN-<slug>-before.png` dan `NN-<slug>-after.png`, plus `README.md` (tabel,
+  commit sebelum/sesudah, lingkungan), lalu daftarkan di `docs/INDEX.md`.
+  Jangan di `screenshots/` atau `output/`, keduanya di-gitignore.
+- Sebut folder bukti di commit message dan di laporan akhir ke user. Kalau
+  tidak bisa diambil, tulis alasannya; jangan dilewati diam-diam.
+- **Jalankan terlihat, bukan di background.** User ingin ikut melihat Expo,
+  emulator, dan browser: browser dibuka dengan jendela, server dev hidup hanya
+  di dalam satu perintah foreground yang berhenti sendiri
+  (`scripts/before-after/run-with-expo.sh`), tanpa `nohup`/`&`/background
+  task, dan tidak ada yang tertinggal berjalan saat selesai. Emulator atau
+  server milik sesi lain jangan disentuh.
+
+Aturan lengkap, resep, dan template:
+[`docs/VISUAL_EVIDENCE.md`](docs/VISUAL_EVIDENCE.md). Contoh:
+[`docs/media/before-after/2026-09-30-mobile-ui-fixes/`](docs/media/before-after/2026-09-30-mobile-ui-fixes/README.md).
+
 ## Deploy tooling in `ops/deploy-workspace/`
 
 That directory is a **mirrored backup**, not configuration for this repo. Deploys

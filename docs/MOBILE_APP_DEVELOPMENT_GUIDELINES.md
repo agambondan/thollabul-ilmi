@@ -382,6 +382,8 @@ Sebelum perubahan `web_app` dianggap selesai:
 - full mobile Jest pass untuk perubahan shell/shared;
 - `git diff --check` clean;
 - browser mobile viewport compare dilakukan untuk visual change;
+- screenshot before/after untuk tiap layar yang berubah sudah ada di
+  `docs/media/before-after/` (lihat [`VISUAL_EVIDENCE.md`](./VISUAL_EVIDENCE.md));
 - real-device smoke dilakukan jika menyentuh native-only behavior atau device
   tersedia;
 - commit hanya berisi perubahan agent-owned untuk slice tersebut.

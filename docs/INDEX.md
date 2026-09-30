@@ -18,6 +18,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [features/README.md](./features/README.md)                                     | Status feature per slice: todo, progress, done, onhold                                                             | ✅ Aktif   |
 | [reviews/README.md](./reviews/README.md)                                       | Review lintas mobile, web, API, sync, dan UX                                                                       | ✅ Aktif   |
 | [AGENT_KNOWLEDGE.md](./AGENT_KNOWLEDGE.md)                                     | **Pengetahuan non-obvious untuk agent** — insiden data, gotcha teknis, wajib dibaca sebelum menyentuh area terkait | ✅ Aktif   |
+| [VISUAL_EVIDENCE.md](./VISUAL_EVIDENCE.md)                                     | **Bukti visual UI/UX mengikat** — screenshot before/after untuk setiap perubahan tampilan mobile/web               | ✅ Aktif   |
 
 ---
 
@@ -73,6 +74,15 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [reviews/2026-05-13-mobile-ui-ux-review.md](./reviews/2026-05-13-mobile-ui-ux-review.md)                                   | Risiko bug dan polish UI/UX mobile                                                                                                 |
 | [reviews/2026-05-13-web-dashboard-review.md](./reviews/2026-05-13-web-dashboard-review.md)                                 | Risiko web dashboard/admin dan sync data personal                                                                                  |
 | [reviews/2026-05-13-verification-log.md](./reviews/2026-05-13-verification-log.md)                                         | Evidence command review                                                                                                            |
+
+---
+
+## Bukti Visual (Before/After)
+
+| Dokumen                                                                                                     | Isi                                                                                                                     |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **[VISUAL_EVIDENCE.md](./VISUAL_EVIDENCE.md)**                                                              | **← Aturan mengikat, resep pengambilan, template README folder bukti.**                                                 |
+| [media/before-after/2026-09-30-mobile-ui-fixes/](./media/before-after/2026-09-30-mobile-ui-fixes/README.md) | 7 pasang: header bocor antar-tab, daftar Hadis tidak dimuat, total Kajian, judul Bookmark/Catatan, daftar Kajian kosong |
 
 ---
 
@@ -135,3 +145,8 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 - Screen utama mengurus data/state/navigation.
 - Renderer layout (`classic`/internal `paper` dan `web_app`) dipisah saat struktur UI mulai berbeda.
 - API, storage, feature registry, navigation key, dan action handler tetap shared.
+
+**Bukti visual UI/UX → [`VISUAL_EVIDENCE.md`](./VISUAL_EVIDENCE.md)**
+
+- Perubahan tampilan mobile/web wajib punya screenshot before/after di `docs/media/before-after/`.
+- Expo/emulator/browser dijalankan terlihat (jendela dibuka, server foreground), tidak disembunyikan di background.

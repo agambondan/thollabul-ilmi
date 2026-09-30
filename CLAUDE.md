@@ -118,6 +118,22 @@ Back navigation: `setBack`/`clearBack` wajib di semua sub-navigation.
 
 **Detail UI rule:** JANGAN pakai inline expand/collapse untuk detail item. Pakai bottom-sheet modal atau page detail terpisah. Acuan lengkap: [`docs/MOBILE_DESIGN_PATTERNS.md`](docs/MOBILE_DESIGN_PATTERNS.md).
 
+## Bukti Visual UI/UX — Before/After (Mengikat)
+
+Setiap fix atau perubahan UI/UX di mobile maupun web wajib punya screenshot
+_before_ dan _after_, sepasang per layar/state yang berubah, di
+`docs/media/before-after/YYYY-MM-DD-<topik>/` plus `README.md`. _Before_
+diambil sebelum mengedit atau dari ekspor revisi lama (`git archive`, bukan
+`git stash`). Sebut folder bukti di commit message dan laporan akhir; kalau
+tidak bisa diambil, tulis alasannya.
+
+**Jalankan terlihat, bukan di background.** User ingin ikut melihat
+Expo/emulator/web: browser dibuka dengan jendela, server dev lewat
+`scripts/before-after/run-with-expo.sh` (satu perintah foreground yang mati
+sendiri), tanpa proses background yang tertinggal.
+
+Aturan lengkap, resep, template: [`docs/VISUAL_EVIDENCE.md`](docs/VISUAL_EVIDENCE.md).
+
 ## Feature Roadmap
 
 Dokumen lengkap di [docs/api/FEATURE_ROADMAP.md](docs/api/FEATURE_ROADMAP.md).
