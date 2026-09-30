@@ -17,7 +17,8 @@ import {
 } from "../storage/offlineContent";
 import { useFeedback } from "../context/FeedbackContext";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { Card, CardTitle } from "./Card";
 
 const QURAN_ESTIMATE = {
@@ -105,6 +106,11 @@ const QURAN_TOTAL_SURAHS = 114;
 export function OfflinePackCard() {
     const { showError, showSuccess } = useFeedback();
     const { t } = useMobileLocale();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const [overview, setOverview] = useState(null);
     const [books, setBooks] = useState([]);
     const [booksLoading, setBooksLoading] = useState(false);
@@ -369,7 +375,8 @@ export function OfflinePackCard() {
                     onPress={() => setIncludeQuran((value) => !value)}
                     style={({ pressed }) => [
                         styles.packageRow,
-                        includeQuran && styles.packageRowActive,
+                        { backgroundColor: theme.surface, borderColor: theme.border },
+                        includeQuran && [styles.packageRowActive, { borderColor: theme.primary }],
                         (busy || !isSupported) && styles.disabled,
                         pressed && styles.pressed,
                     ]}
@@ -377,7 +384,8 @@ export function OfflinePackCard() {
                     <View
                         style={[
                             styles.packageIcon,
-                            includeQuran && styles.packageIconActive,
+                            { backgroundColor: theme.surfaceMuted, borderColor: theme.border },
+                            includeQuran && [styles.packageIconActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                         ]}
                     >
                         <BookOpen
@@ -389,10 +397,10 @@ export function OfflinePackCard() {
                         />
                     </View>
                     <View style={styles.packageText}>
-                        <Text style={styles.packageTitle}>
+                        <Text style={[styles.packageTitle, { color: theme.ink }]}>
                             {t("offlinePack.quran.title")}
                         </Text>
-                        <Text style={styles.packageMeta}>
+                        <Text style={[styles.packageMeta, { color: theme.muted }]}>
                             {t("offlinePack.quran.meta", {
                                 surahs: QURAN_ESTIMATE.surahs,
                                 ayahs: formatNumber(QURAN_ESTIMATE.ayahs),
@@ -400,7 +408,7 @@ export function OfflinePackCard() {
                         </Text>
                     </View>
                     <CheckCircle2
-                        color={includeQuran ? colors.primary : colors.muted}
+                        color={includeQuran ? theme.primary : theme.muted}
                         size={20}
                         strokeWidth={includeQuran ? 2.8 : 1.8}
                     />
@@ -408,10 +416,10 @@ export function OfflinePackCard() {
 
                 <View style={styles.sectionHeader}>
                     <View>
-                        <Text style={styles.sectionTitle}>
+                        <Text style={[styles.sectionTitle, { color: theme.ink }]}>
                             {t("offlinePack.hadith.title")}
                         </Text>
-                        <Text style={styles.sectionMeta}>
+                        <Text style={[styles.sectionMeta, { color: theme.muted }]}>
                             {t("offlinePack.hadith.selectionMeta", {
                                 selected: selectedBooks.length,
                                 total: books.length,
@@ -431,6 +439,7 @@ export function OfflinePackCard() {
                             <Text
                                 style={[
                                     styles.linkText,
+                                    { color: theme.primary },
                                     (busy || !books.length) &&
                                         styles.disabledText,
                                 ]}
@@ -448,6 +457,7 @@ export function OfflinePackCard() {
                             <Text
                                 style={[
                                     styles.linkText,
+                                    { color: theme.primary },
                                     busy && styles.disabledText,
                                 ]}
                             >
@@ -460,10 +470,10 @@ export function OfflinePackCard() {
                 {booksLoading ? (
                     <View style={styles.loadingRow}>
                         <ActivityIndicator
-                            color={colors.primary}
+                            color={theme.primary}
                             size='small'
                         />
-                        <Text style={styles.meta}>
+                        <Text style={[styles.meta, { color: theme.muted }]}>
                             {t("offlinePack.loadingBooks")}
                         </Text>
                     </View>
@@ -486,7 +496,8 @@ export function OfflinePackCard() {
                                     onPress={() => toggleBook(book.slug)}
                                     style={({ pressed }) => [
                                         styles.bookChip,
-                                        selected && styles.bookChipActive,
+                                        { backgroundColor: theme.surface, borderColor: theme.border },
+                                        selected && [styles.bookChipActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                                         (busy || !isSupported) &&
                                             styles.disabled,
                                         pressed && styles.pressed,
@@ -495,8 +506,8 @@ export function OfflinePackCard() {
                                     <Text
                                         style={[
                                             styles.bookChipText,
-                                            selected &&
-                                                styles.bookChipTextActive,
+                                            { color: theme.muted },
+                                            selected && [styles.bookChipTextActive, { color: theme.onPrimary }],
                                         ]}
                                         numberOfLines={2}
                                     >
@@ -548,14 +559,14 @@ export function OfflinePackCard() {
                 )}
             </View>
 
-            <View style={styles.estimateBox}>
+            <View style={[styles.estimateBox, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                 <View style={styles.estimateTitleRow}>
                     <Database
-                        color={colors.primary}
+                        color={theme.primary}
                         size={16}
                         strokeWidth={2.4}
                     />
-                    <Text style={styles.estimateTitle}>
+                    <Text style={[styles.estimateTitle, { color: theme.ink }]}>
                         {everythingComplete
                             ? t("offlinePack.estimate.completeTitle")
                             : t("offlinePack.estimate.pendingTitle")}
@@ -571,7 +582,7 @@ export function OfflinePackCard() {
                         </Text>
                     ) : null}
                 </View>
-                <Text style={styles.estimateText}>
+                <Text style={[styles.estimateText, { color: theme.muted }]}>
                     {everythingComplete
                         ? t("offlinePack.estimate.completeDescription")
                         : t("offlinePack.estimate.pendingDescription", {
@@ -599,17 +610,17 @@ export function OfflinePackCard() {
             <View style={styles.stats}>
                 {stats.map((item) => (
                     <View key={item.key} style={styles.stat}>
-                        <Text style={styles.statValue}>{item.value ?? 0}</Text>
-                        <Text style={styles.statLabel}>{item.label}</Text>
+                        <Text style={[styles.statValue, { color: theme.ink }]}>{item.value ?? 0}</Text>
+                        <Text style={[styles.statLabel, { color: theme.muted }]}>{item.label}</Text>
                     </View>
                 ))}
             </View>
 
-            <View style={styles.progressTrack}>
+            <View style={[styles.progressTrack, { backgroundColor: theme.surfaceMuted }]}>
                 <View
                     style={[
                         styles.progressFill,
-                        { width: `${Math.min(progress, 100)}%` },
+                        { backgroundColor: theme.primary, width: `${Math.min(progress, 100)}%` },
                     ]}
                 />
             </View>

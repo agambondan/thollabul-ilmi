@@ -23,7 +23,7 @@ import {
 } from "../api/personal";
 import { useFeedback } from "../context/FeedbackContext";
 import { useSession } from "../context/SessionContext";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import {
     getPushNotificationAvailability,
@@ -266,7 +266,11 @@ export function NotificationCenter({ variant = "classic" }) {
     const { session } = useSession();
     const { showError, showSuccess } = useFeedback();
     const isWebApp = variant === "webApp";
-    const { isDarkTheme } = useLayoutModePreference();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebApp,
+    });
     const webAppStyles = isWebApp ? createWebAppNotifStyles(isDarkTheme) : null;
     const webAppAccent = isDarkTheme ? "#34d399" : "#047857";
     const hasSession = Boolean(session?.token);
@@ -884,7 +888,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             ]}
                         >
                             <BellRing
-                                color={isWebApp ? webAppAccent : colors.primary}
+                                color={isWebApp ? webAppAccent : theme.primary}
                                 size={18}
                                 strokeWidth={2.2}
                             />
@@ -939,7 +943,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         >
                             {pushState.loading ? (
                                 <ActivityIndicator
-                                    color={colors.primary}
+                                    color={theme.primary}
                                     size='small'
                                 />
                             ) : (
@@ -987,7 +991,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         >
                             {pushState.testLoading ? (
                                 <ActivityIndicator
-                                    color={colors.primary}
+                                    color={theme.primary}
                                     size='small'
                                 />
                             ) : (
@@ -1091,7 +1095,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                             updateWebTime("quiet_start", time)
                                         }
                                         placeholder='22:00'
-                                        placeholderTextColor={colors.muted}
+                                        placeholderTextColor={theme.muted}
                                         style={styles.timeInput}
                                         value={quietHours.start}
                                     />
@@ -1106,7 +1110,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                             updateWebTime("quiet_end", time)
                                         }
                                         placeholder='05:00'
-                                        placeholderTextColor={colors.muted}
+                                        placeholderTextColor={theme.muted}
                                         style={styles.timeInput}
                                         value={quietHours.end}
                                     />
@@ -1197,7 +1201,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                         updateWebTime(item.type, time)
                                     }
                                     placeholder='HH:MM'
-                                    placeholderTextColor={colors.muted}
+                                    placeholderTextColor={theme.muted}
                                     style={[
                                         styles.timeInput,
                                         isWebApp
@@ -1449,7 +1453,7 @@ export function NotificationCenter({ variant = "classic" }) {
                         Kotak Masuk
                     </CardTitle>
                     {loading ? (
-                        <ActivityIndicator color={colors.primary} />
+                        <ActivityIndicator color={theme.primary} />
                     ) : null}
                     {inbox.length > 0 ? (
                         <View style={styles.inboxFilterRow}>

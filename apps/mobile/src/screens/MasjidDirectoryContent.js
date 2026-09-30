@@ -16,7 +16,8 @@ import {
     ErrorState,
     PaperSearchInput,
 } from "../components/Paper";
-import { colors, spacing } from "../theme";
+import { colors, getThemeColors, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { getMasjids, getNearbyMasjids } from "../api/client";
 import { safeOpenURL } from "../utils/safeOpenURL";
 import { filterMasjids, withTimeout } from "./MasjidDirectoryContent.helpers";
@@ -55,6 +56,11 @@ const locateUser = async () => {
 };
 
 export function MasjidDirectoryContent() {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -182,12 +188,12 @@ export function MasjidDirectoryContent() {
                 />
             </View>
             {locationMessage ? (
-                <Text style={styles.notice}>{locationMessage}</Text>
+                <Text style={[styles.notice, { color: theme.muted }]}>{locationMessage}</Text>
             ) : null}
 
             {loading ? (
                 <View style={styles.loading}>
-                    <ActivityIndicator color={colors.primary} size='large' />
+                    <ActivityIndicator color={theme.primary} size='large' />
                 </View>
             ) : error ? (
                 <ErrorState
@@ -233,28 +239,28 @@ export function MasjidDirectoryContent() {
                 {selected ? (
                     <View style={styles.detail}>
                         {selected.description ? (
-                            <Text style={styles.detailBody}>
+                            <Text style={[styles.detailBody, { color: theme.text }]}>
                                 {selected.description}
                             </Text>
                         ) : null}
                         <View style={styles.detailRow}>
                             <MapPin
-                                color={colors.primary}
+                                color={theme.primary}
                                 size={16}
                                 strokeWidth={2.2}
                             />
-                            <Text style={styles.detailText}>
+                            <Text style={[styles.detailText, { color: theme.ink }]}>
                                 {selected.address}
                             </Text>
                         </View>
                         {selected.phone ? (
                             <View style={styles.detailRow}>
                                 <Phone
-                                    color={colors.primary}
+                                    color={theme.primary}
                                     size={16}
                                     strokeWidth={2.2}
                                 />
-                                <Text style={styles.detailText}>
+                                <Text style={[styles.detailText, { color: theme.ink }]}>
                                     {selected.phone}
                                 </Text>
                             </View>

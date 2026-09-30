@@ -10,7 +10,7 @@ import {
     View,
 } from "react-native";
 import { AppImage } from "../components/AppImage";
-import { colors, radius, spacing, touchTarget } from "../theme";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { staticTokohTarikh } from "../data/staticTokohTarikh";
@@ -83,6 +83,10 @@ const WEB_APP_TOKOH_THEMES = {
 
 export function TokohTarikhContent() {
     const { isDarkTheme = false, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const webAppTheme = isDarkTheme
         ? WEB_APP_TOKOH_THEMES.dark
         : WEB_APP_TOKOH_THEMES.light;
@@ -150,11 +154,16 @@ export function TokohTarikhContent() {
             onChangeText={setSearch}
             placeholder='Cari tokoh...'
             placeholderTextColor={
-                isWebAppLayout ? webAppTheme.muted : colors.muted
+                isWebAppLayout ? webAppTheme.muted : theme.muted
             }
             returnKeyType='search'
             style={[
                 styles.searchInput,
+                !isWebAppLayout && {
+                    backgroundColor: theme.bg,
+                    borderColor: theme.border,
+                    color: theme.ink,
+                },
                 isWebAppLayout && styles.webAppSearchInput,
                 isWebAppLayout && {
                     backgroundColor: webAppTheme.surface,
@@ -180,12 +189,16 @@ export function TokohTarikhContent() {
                     onPress={() => setEra(f.value === era ? "" : f.value)}
                     style={[
                         styles.chip,
+                        !isWebAppLayout && {
+                            backgroundColor: theme.surface,
+                            borderColor: theme.border,
+                        },
                         isWebAppLayout && styles.webAppChip,
                         isWebAppLayout && {
                             backgroundColor: webAppTheme.surface,
                             borderColor: webAppTheme.border,
                         },
-                        era === f.value && styles.chipActive,
+                        era === f.value && !isWebAppLayout && [styles.chipActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                         isWebAppLayout &&
                             era === f.value &&
                             styles.webAppChipActive,
@@ -199,8 +212,9 @@ export function TokohTarikhContent() {
                     <Text
                         style={[
                             styles.chipText,
+                            !isWebAppLayout && { color: theme.muted },
                             isWebAppLayout && { color: webAppTheme.chipText },
-                            era === f.value && styles.chipTextActive,
+                            era === f.value && !isWebAppLayout && [styles.chipTextActive, { color: theme.onPrimary }],
                         ]}
                     >
                         {f.label}
@@ -223,7 +237,7 @@ export function TokohTarikhContent() {
         >
             <ActivityIndicator
                 size='large'
-                color={isWebAppLayout ? webAppTheme.accent : colors.primary}
+                color={isWebAppLayout ? webAppTheme.accent : theme.primary}
             />
             {isWebAppLayout ? (
                 <Text
@@ -272,7 +286,7 @@ export function TokohTarikhContent() {
                       borderColor: webAppTheme.border,
                   },
               ]
-            : styles.card;
+            : [styles.card, { backgroundColor: theme.surface, borderColor: theme.border }];
         const avatarStyle = isWebAppLayout
             ? [
                   styles.webAppCardAvatar,
@@ -318,6 +332,7 @@ export function TokohTarikhContent() {
                     <Text
                         style={[
                             styles.cardName,
+                            !isWebAppLayout && { color: theme.ink },
                             isWebAppLayout && styles.webAppCardName,
                             isWebAppLayout && { color: webAppTheme.text },
                         ]}
@@ -330,6 +345,7 @@ export function TokohTarikhContent() {
                             <Text
                                 style={[
                                     styles.cardEra,
+                                    !isWebAppLayout && { backgroundColor: theme.surfaceMuted, color: theme.primary },
                                     isWebAppLayout && styles.webAppCardEra,
                                     isWebAppLayout && {
                                         backgroundColor: webAppTheme.accentSoft,
@@ -344,6 +360,7 @@ export function TokohTarikhContent() {
                             <Text
                                 style={[
                                     styles.cardTahun,
+                                    !isWebAppLayout && { color: theme.muted },
                                     isWebAppLayout && styles.webAppCardTahun,
                                     isWebAppLayout && {
                                         color: webAppTheme.muted,
