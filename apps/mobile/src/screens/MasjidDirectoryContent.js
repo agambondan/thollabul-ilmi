@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
     ActivityIndicator,
     ScrollView,
@@ -19,10 +19,39 @@ import {
 import { colors, spacing } from "../theme";
 import { getMasjids, getNearbyMasjids } from "../api/client";
 import { safeOpenURL } from "../utils/safeOpenURL";
+import { filterMasjids, withTimeout } from "./MasjidDirectoryContent.helpers";
+
+const SEARCH_DEBOUNCE_MS = 300;
+const LOCATION_TIMEOUT_MS = 15000;
 
 const formatDistance = (value) => {
     if (typeof value !== "number") return null;
     return `${value.toFixed(value < 10 ? 1 : 0)} km`;
+};
+
+const locateUser = async () => {
+    try {
+        const permission = await Location.requestForegroundPermissionsAsync();
+        if (permission.status !== "granted") {
+            return {
+                message: "Izin lokasi ditolak. Menampilkan daftar biasa.",
+            };
+        }
+        const position = await withTimeout(
+            Location.getCurrentPositionAsync({}),
+            LOCATION_TIMEOUT_MS,
+        );
+        return {
+            coords: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            },
+        };
+    } catch {
+        return {
+            message: "Lokasi belum bisa diakses. Menampilkan daftar biasa.",
+        };
+    }
 };
 
 export function MasjidDirectoryContent() {
@@ -30,73 +59,97 @@ export function MasjidDirectoryContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [search, setSearch] = useState("");
+    const [query, setQuery] = useState("");
     const [nearMe, setNearMe] = useState(false);
     const [locating, setLocating] = useState(false);
     const [locationMessage, setLocationMessage] = useState("");
     const [selected, setSelected] = useState(null);
+    const requestIdRef = useRef(0);
+    const coordsRef = useRef(null);
+
+    useEffect(() => {
+        const timer = setTimeout(
+            () => setQuery(search.trim()),
+            SEARCH_DEBOUNCE_MS,
+        );
+        return () => clearTimeout(timer);
+    }, [search]);
+
+    useEffect(
+        () => () => {
+            requestIdRef.current += 1;
+        },
+        [],
+    );
 
     const loadList = useCallback(async () => {
+        requestIdRef.current += 1;
+        const requestId = requestIdRef.current;
+        const isCurrent = () => requestId === requestIdRef.current;
+        setLocating(false);
         setLoading(true);
         setError(false);
         try {
             const params = { page: "1", size: "50" };
-            if (search) params.q = search;
+            if (query) params.q = query;
             const list = await getMasjids(params);
-            setItems(list);
+            if (isCurrent()) setItems(list);
         } catch {
-            setError(true);
+            if (isCurrent()) setError(true);
         } finally {
-            setLoading(false);
+            if (isCurrent()) setLoading(false);
         }
-    }, [search]);
+    }, [query]);
 
     const loadNearby = useCallback(async () => {
-        setLocating(true);
+        requestIdRef.current += 1;
+        const requestId = requestIdRef.current;
+        const isCurrent = () => requestId === requestIdRef.current;
         setLoading(true);
         setError(false);
         setLocationMessage("");
         try {
-            const permission =
-                await Location.requestForegroundPermissionsAsync();
-            if (permission.status !== "granted") {
-                setLocationMessage(
-                    "Izin lokasi ditolak. Menampilkan daftar biasa.",
-                );
-                setNearMe(false);
-                await loadList();
-                return;
+            if (!coordsRef.current) {
+                setLocating(true);
+                const located = await locateUser();
+                if (!isCurrent()) return;
+                setLocating(false);
+                if (!located.coords) {
+                    setLocationMessage(located.message);
+                    setNearMe(false);
+                    return;
+                }
+                coordsRef.current = located.coords;
             }
-            const position = await Location.getCurrentPositionAsync({});
             const list = await getNearbyMasjids({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
+                lat: coordsRef.current.lat,
+                lng: coordsRef.current.lng,
                 radius: 25,
                 limit: 50,
             });
-            setItems(list);
+            if (isCurrent()) setItems(list);
         } catch {
-            setLocationMessage(
-                "Lokasi belum bisa diakses. Menampilkan daftar biasa.",
-            );
-            setNearMe(false);
-            await loadList();
+            if (isCurrent()) setError(true);
         } finally {
-            setLocating(false);
-            setLoading(false);
+            if (isCurrent()) {
+                setLocating(false);
+                setLoading(false);
+            }
         }
-    }, [loadList]);
+    }, []);
 
     useEffect(() => {
-        if (nearMe) {
-            loadNearby();
-        } else {
-            loadList();
-        }
-        // Re-run only when the search text or the near-me toggle changes —
-        // loadList/loadNearby are recreated each render but that shouldn't
-        // trigger a refetch on its own.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search, nearMe]);
+        if (!nearMe) loadList();
+    }, [nearMe, loadList]);
+
+    useEffect(() => {
+        if (nearMe) loadNearby();
+    }, [nearMe, loadNearby]);
+
+    const visibleItems = useMemo(
+        () => (nearMe ? filterMasjids(items, search) : items),
+        [items, nearMe, search],
+    );
 
     const toggleNearMe = () => setNearMe((v) => !v);
 
@@ -145,7 +198,7 @@ export function MasjidDirectoryContent() {
                         />
                     }
                 />
-            ) : items.length === 0 ? (
+            ) : visibleItems.length === 0 ? (
                 <EmptyState
                     Icon={MapPin}
                     title='Masjid tidak ditemukan'
@@ -153,7 +206,7 @@ export function MasjidDirectoryContent() {
                 />
             ) : (
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {items.map((masjid) => (
+                    {visibleItems.map((masjid) => (
                         <CompactRow
                             Icon={MapPin}
                             key={masjid.id ?? masjid.name}

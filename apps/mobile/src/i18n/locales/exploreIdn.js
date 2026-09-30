@@ -49,6 +49,16 @@ export const exploreIdn = {
         "explore.catalog.pinAccessibility": "Sematkan {title} ke Beranda",
         "explore.catalog.unpinAccessibility": "Lepas {title} dari Beranda",
         "explore.hijri.convert": "Konversi",
+        "explore.hijri.converterErrorDate":
+            "Tanggal tidak valid. Periksa bulan (1-12) dan jumlah hari pada bulan tersebut.",
+        "explore.hijri.converterErrorFormat":
+            "Format tanggal belum sesuai. Tulis seperti 2026-09-30 (tahun-bulan-tanggal).",
+        "explore.hijri.converterErrorRange":
+            "Tanggal harus 19 Juli 622 M atau sesudahnya (awal kalender Hijriah).",
+        "explore.hijri.converterInputLabel":
+            "Tanggal Masehi (tahun-bulan-tanggal)",
+        "explore.hijri.converterNote":
+            "Hasil berupa estimasi kalender Hijriah aritmetika. Penetapan resmi mengikuti rukyat hilal dan bisa berbeda 1-2 hari.",
         "explore.hijri.converterTitle": "Konversi Tanggal",
         "explore.hijri.daysLeftUnit": " hari lagi",
         "explore.hijri.emptyText": "Coba muat ulang setelah beberapa saat.",
@@ -82,6 +92,9 @@ export const exploreIdn = {
         "explore.imsakiyah.error":
             "Gagal memuat data. Periksa koneksi internet.",
         "explore.imsakiyah.loading": "Memuat imsakiyah...",
+        "explore.imsakiyah.nextMonth": "Bulan berikutnya",
+        "explore.imsakiyah.prevMonth": "Bulan sebelumnya",
+        "explore.imsakiyah.retry": "Coba lagi",
         "explore.imsakiyah.scheduleColumn": "Jadwal",
         "explore.imsakiyah.subtitle":
             "Jadwal imsak & sholat bulanan · {location}",

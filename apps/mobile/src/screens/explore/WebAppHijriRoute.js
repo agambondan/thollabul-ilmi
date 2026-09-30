@@ -1,31 +1,38 @@
 import { CalendarDays } from "lucide-react-native";
+import { useState } from "react";
 import {
     ActivityIndicator,
+    Keyboard,
+    Platform,
+    Pressable,
     ScrollView,
     StyleSheet,
     Text,
+    TextInput,
     View,
 } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
+import {
+    HIJRI_MONTH_NAMES,
+    formatGregorianInput,
+    formatHijriDate,
+    formatHijriDateArabic,
+    gregorianToHijri,
+    parseGregorianInput,
+    toLocalDateInput,
+} from "../../utils/hijriDate";
 
-const HIJRI_MONTHS = [
-    "",
-    "Muharram",
-    "Safar",
-    "Rabiul Awal",
-    "Rabiul Akhir",
-    "Jumadal Ula",
-    "Jumadal Akhirah",
-    "Rajab",
-    "Sya'ban",
-    "Ramadan",
-    "Syawal",
-    "Dzulqa'dah",
-    "Dzulhijjah",
-];
+const CONVERTER_ERROR_KEYS = {
+    date: "explore.hijri.converterErrorDate",
+    format: "explore.hijri.converterErrorFormat",
+    range: "explore.hijri.converterErrorRange",
+};
+
+const CONVERTER_KEYBOARD_TYPE =
+    Platform.OS === "ios" ? "numbers-and-punctuation" : "numeric";
 
 const PUASA_SUNNAH = [
     {
@@ -100,7 +107,7 @@ const getToday = (items) =>
 const getEvents = (items, today) => items.filter((item) => item !== today);
 const getHijriMonth = (raw) => {
     if (raw.month) return Number(raw.month);
-    const monthIndex = HIJRI_MONTHS.findIndex(
+    const monthIndex = HIJRI_MONTH_NAMES.findIndex(
         (month) =>
             month.toLowerCase() === String(raw.month_name ?? "").toLowerCase(),
     );
@@ -120,11 +127,15 @@ const formatTodayArabic = (item, t) => {
     }
     return formatTodayHijri(item, t);
 };
-const formatGregorian = (raw) => {
+const getDefaultConverterDate = (raw) => {
     if (raw.gregorian_year && raw.gregorian_month && raw.gregorian_day) {
-        return `${raw.gregorian_year}-${String(raw.gregorian_month).padStart(2, "0")}-${String(raw.gregorian_day).padStart(2, "0")}`;
+        return formatGregorianInput({
+            day: Number(raw.gregorian_day),
+            month: Number(raw.gregorian_month),
+            year: Number(raw.gregorian_year),
+        });
     }
-    return new Date().toISOString().slice(0, 10);
+    return toLocalDateInput();
 };
 const daysUntilRamadan = (raw) => {
     const day = Number(raw.day ?? 1);
@@ -170,7 +181,7 @@ const getUpcomingFasts = (raw) => {
             return {
                 ...item,
                 days: days < 0 ? days + 360 : days,
-                date: `${targetDay} ${HIJRI_MONTHS[targetMonth] ?? "Hijri"}`,
+                date: `${targetDay} ${HIJRI_MONTH_NAMES[targetMonth] ?? "Hijri"}`,
             };
         })
         .sort((a, b) => a.days - b.days)
@@ -212,10 +223,33 @@ export function WebAppHijriRoute({ error, isDarkTheme: isDarkThemeProp = false, 
     const isRamadan = getHijriMonth(todayRaw) === 9;
     const todayFasts = getTodayFasts(todayRaw);
     const upcomingFasts = getUpcomingFasts(todayRaw);
+    const [dateInput, setDateInput] = useState(null);
+    const [converted, setConverted] = useState(null);
+    const [converterError, setConverterError] = useState("");
+    const dateValue = dateInput ?? getDefaultConverterDate(todayRaw);
+
+    const onChangeDate = (value) => {
+        setDateInput(value);
+        setConverterError("");
+    };
+
+    const convert = () => {
+        Keyboard.dismiss();
+        const parsed = parseGregorianInput(dateValue);
+        if (!parsed.ok) {
+            setConverted(null);
+            setConverterError(CONVERTER_ERROR_KEYS[parsed.reason]);
+            return;
+        }
+        setConverterError("");
+        setConverted(gregorianToHijri(parsed.date));
+    };
 
     return (
         <ScrollView
+            automaticallyAdjustKeyboardInsets
             contentContainerStyle={[styles.content, isDarkTheme && styles.contentDark]}
+            keyboardShouldPersistTaps='handled'
             showsVerticalScrollIndicator={false}
             style={[styles.root, isDarkTheme && styles.rootDark]}
         >
@@ -341,20 +375,57 @@ export function WebAppHijriRoute({ error, isDarkTheme: isDarkThemeProp = false, 
                     {t("explore.hijri.converterTitle")}
                 </Text>
                 <View style={styles.converterRow}>
-                    <Text style={[styles.converterInput, isDarkTheme && styles.converterInputDark]}>
-                        {formatGregorian(todayRaw)}
-                    </Text>
-                    <Text style={[styles.converterButton, isDarkTheme && styles.converterButtonDark]}>
-                        {t("explore.hijri.convert")}
-                    </Text>
+                    <TextInput
+                        accessibilityLabel={t("explore.hijri.converterInputLabel")}
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        keyboardType={CONVERTER_KEYBOARD_TYPE}
+                        maxLength={10}
+                        onChangeText={onChangeDate}
+                        onSubmitEditing={convert}
+                        placeholder='YYYY-MM-DD'
+                        placeholderTextColor={isDarkTheme ? '#64748b' : '#9ca3af'}
+                        returnKeyType='done'
+                        style={[styles.converterInput, isDarkTheme && styles.converterInputDark]}
+                        testID='web-app-hijri-converter-input'
+                        value={dateValue}
+                    />
+                    <Pressable
+                        accessibilityRole='button'
+                        onPress={convert}
+                        style={[styles.converterButton, isDarkTheme && styles.converterButtonDark]}
+                        testID='web-app-hijri-converter-button'
+                    >
+                        <Text style={styles.converterButtonText}>
+                            {t("explore.hijri.convert")}
+                        </Text>
+                    </Pressable>
                 </View>
-                {today ? (
-                    <View style={[styles.converterResult, isDarkTheme && styles.converterResultDark]}>
+                {converterError ? (
+                    <Text
+                        style={[styles.converterError, isDarkTheme && styles.converterErrorDark]}
+                        testID='web-app-hijri-converter-error'
+                    >
+                        {t(converterError)}
+                    </Text>
+                ) : null}
+                {!converterError && (converted || today) ? (
+                    <View
+                        style={[styles.converterResult, isDarkTheme && styles.converterResultDark]}
+                        testID='web-app-hijri-converter-result'
+                    >
                         <Text style={[styles.converterResultArabic, isDarkTheme && styles.converterResultArabicDark]}>
-                            {formatTodayArabic(today, t)}
+                            {converted
+                                ? formatHijriDateArabic(converted)
+                                : formatTodayArabic(today, t)}
                         </Text>
                         <Text style={[styles.converterResultText, isDarkTheme && styles.converterResultTextDark]}>
-                            {formatTodayHijri(today, t)}
+                            {converted
+                                ? formatHijriDate(converted)
+                                : formatTodayHijri(today, t)}
+                        </Text>
+                        <Text style={[styles.converterNote, isDarkTheme && styles.converterNoteDark]}>
+                            {t("explore.hijri.converterNote")}
                         </Text>
                     </View>
                 ) : null}
@@ -627,18 +698,37 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 13,
         fontWeight: "800",
+        minHeight: 44,
         paddingHorizontal: spacing.md,
         paddingVertical: 10,
     },
     converterButton: {
+        alignItems: "center",
         backgroundColor: "#047857",
         borderRadius: radius.sm,
+        justifyContent: "center",
+        minHeight: 44,
+        paddingHorizontal: spacing.md,
+    },
+    converterButtonText: {
         color: "#ffffff",
         fontSize: 13,
         fontWeight: "900",
-        overflow: "hidden",
-        paddingHorizontal: spacing.md,
-        paddingVertical: 10,
+    },
+    converterError: {
+        color: "#ef4444",
+        fontSize: 12,
+        fontWeight: "800",
+        lineHeight: 18,
+        marginTop: spacing.sm,
+    },
+    converterNote: {
+        color: "#64748b",
+        fontSize: 11,
+        fontWeight: "700",
+        lineHeight: 16,
+        marginTop: spacing.sm,
+        textAlign: "center",
     },
     converterResult: {
         alignItems: "center",
@@ -830,6 +920,12 @@ const styles = StyleSheet.create({
     },
     converterButtonDark: {
         backgroundColor: "#059669",
+    },
+    converterErrorDark: {
+        color: "#f87171",
+    },
+    converterNoteDark: {
+        color: "#94a3b8",
     },
     converterResultDark: {
         backgroundColor: "#1e293b",

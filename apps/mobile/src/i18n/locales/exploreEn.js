@@ -52,6 +52,16 @@ export const exploreEn = {
         "explore.catalog.pinAccessibility": "Pin {title} to Home",
         "explore.catalog.unpinAccessibility": "Unpin {title} from Home",
         "explore.hijri.convert": "Convert",
+        "explore.hijri.converterErrorDate":
+            "Invalid date. Check the month (1-12) and the number of days in that month.",
+        "explore.hijri.converterErrorFormat":
+            "Date format not recognised. Write it like 2026-09-30 (year-month-day).",
+        "explore.hijri.converterErrorRange":
+            "The date must be 19 July 622 CE or later (the start of the Hijri calendar).",
+        "explore.hijri.converterInputLabel":
+            "Gregorian date (year-month-day)",
+        "explore.hijri.converterNote":
+            "Result is an estimate from the arithmetic Hijri calendar. Official dates follow moon sighting and may differ by 1-2 days.",
         "explore.hijri.converterTitle": "Date Conversion",
         "explore.hijri.daysLeftUnit": " days left",
         "explore.hijri.emptyText": "Try refreshing again in a moment.",
@@ -85,6 +95,9 @@ export const exploreEn = {
         "explore.imsakiyah.error":
             "Data could not be loaded. Check your internet connection.",
         "explore.imsakiyah.loading": "Loading imsakiyah...",
+        "explore.imsakiyah.nextMonth": "Next month",
+        "explore.imsakiyah.prevMonth": "Previous month",
+        "explore.imsakiyah.retry": "Try again",
         "explore.imsakiyah.scheduleColumn": "Schedule",
         "explore.imsakiyah.subtitle":
             "Monthly imsak and prayer schedule · {location}",

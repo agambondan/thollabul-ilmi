@@ -1,15 +1,26 @@
 import { CalendarDays } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Pressable,
     ScrollView,
     StyleSheet,
     Text,
     View,
 } from "react-native";
 
+import { getImsakiyahMonth } from "../../api/imsakiyah";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
+import {
+    IMSAKIYAH_MONTH_WINDOW,
+    currentImsakiyahMonth,
+    imsakiyahMonthDistance,
+    imsakiyahMonthKey,
+    parseImsakiyahMonth,
+    shiftImsakiyahMonth,
+} from "../../utils/imsakiyah";
 
 const PRAYERS = [
     { key: "imsak", fallbackKey: "Imsak" },
@@ -20,6 +31,11 @@ const PRAYERS = [
     { key: "maghrib", fallbackKey: "Maghrib" },
     { key: "isha", fallbackKey: "Isha" },
 ];
+
+const DAY_COLUMN_WIDTH = 34;
+const TIME_COLUMN_MIN_WIDTH = 42;
+const TABLE_MIN_WIDTH =
+    DAY_COLUMN_WIDTH + PRAYERS.length * TIME_COLUMN_MIN_WIDTH;
 
 const getRaw = (item) => item?.raw ?? item ?? {};
 const cleanTime = (value) =>
@@ -46,15 +62,11 @@ const formatMonthYear = (date, language) =>
         month: "long",
         year: "numeric",
     });
-const inferMonthLabel = (items, language) => {
-    const firstDate = getDateValue(getRaw(items[0]));
-    if (!firstDate) {
-        return formatMonthYear(new Date(), language);
-    }
-    const parsed = new Date(`${firstDate}T00:00:00`);
-    if (Number.isNaN(parsed.getTime())) return firstDate.slice(0, 7);
-    return formatMonthYear(parsed, language);
-};
+const getBaseMonth = (items) =>
+    parseImsakiyahMonth(getDateValue(getRaw(items[0]))) ??
+    currentImsakiyahMonth();
+const formatMonthLabel = ({ month, year }, language) =>
+    formatMonthYear(new Date(year, month - 1, 1), language);
 const todayKey = () => {
     const date = new Date();
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -83,36 +95,26 @@ function ImsakiyahRow({ index, isDarkTheme, item, t }) {
                 </Text>
                 {isToday ? <View style={[styles.todayDot, isDarkTheme && styles.todayDotDark]} /> : null}
             </View>
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.timesScroller}
-            >
-                <View style={styles.timesRow}>
-                    {PRAYERS.map((prayer) => (
-                        <View key={prayer.key} style={styles.timeCell}>
-                            <Text
-                                style={[
-                                    styles.timeLabel,
-                                    isDarkTheme && styles.timeLabelDark,
-                                    prayer.key === "imsak" && (isDarkTheme ? styles.imsakLabelDark : styles.imsakLabel),
-                                ]}
-                            >
-                                {t(`prayer.name.${prayer.key}`)}
-                            </Text>
-                            <Text
-                                style={[
-                                    styles.timeValue,
-                                    isDarkTheme && styles.timeValueDark,
-                                    prayer.key === "imsak" && (isDarkTheme ? styles.imsakValueDark : styles.imsakValue),
-                                ]}
-                            >
-                                {getPrayerValue(row, prayer)}
-                            </Text>
-                        </View>
-                    ))}
-                </View>
-            </ScrollView>
+            {PRAYERS.map((prayer) => {
+                const value = getPrayerValue(row, prayer);
+                return (
+                    <View key={prayer.key} style={styles.timeCell}>
+                        <Text
+                            accessibilityLabel={`${t(`prayer.name.${prayer.key}`)} ${value}`}
+                            adjustsFontSizeToFit
+                            minimumFontScale={0.7}
+                            numberOfLines={1}
+                            style={[
+                                styles.timeValue,
+                                isDarkTheme && styles.timeValueDark,
+                                prayer.key === "imsak" && (isDarkTheme ? styles.imsakValueDark : styles.imsakValue),
+                            ]}
+                        >
+                            {value}
+                        </Text>
+                    </View>
+                );
+            })}
         </View>
     );
 }
@@ -123,6 +125,49 @@ export function WebAppImsakiyahRoute({ error, isDarkTheme: isDarkThemeProp = fal
     const isDarkTheme = isDarkThemeProp || isDarkThemePref;
     const location =
         getLocationLabel(items) || t("explore.imsakiyah.defaultLocation");
+    const [viewed, setViewed] = useState(null);
+    const [months, setMonths] = useState({});
+    const [retryCount, setRetryCount] = useState(0);
+    const baseMonth = getBaseMonth(items);
+    const viewedMonth = viewed ?? baseMonth;
+    const { month: viewedMonthNumber, year: viewedYear } = viewedMonth;
+    const viewedKey = imsakiyahMonthKey(viewedMonth);
+    const isBaseMonth = viewedKey === imsakiyahMonthKey(baseMonth);
+    const monthDistance = imsakiyahMonthDistance(baseMonth, viewedMonth);
+    const canGoPrev = monthDistance > -IMSAKIYAH_MONTH_WINDOW;
+    const canGoNext = monthDistance < IMSAKIYAH_MONTH_WINDOW;
+    const remote = isBaseMonth ? null : months[viewedKey];
+    const viewItems = isBaseMonth ? items : (remote?.items ?? []);
+    const viewLoading = isBaseMonth
+        ? loading
+        : !remote || remote.status === "loading";
+    const viewError = isBaseMonth ? error : remote?.status === "error";
+
+    useEffect(() => {
+        if (isBaseMonth) return undefined;
+        const key = imsakiyahMonthKey({
+            month: viewedMonthNumber,
+            year: viewedYear,
+        });
+        if (months[key]?.status === "ready") return undefined;
+        let cancelled = false;
+        const store = (entry) =>
+            setMonths((current) => ({ ...current, [key]: entry }));
+        store({ items: [], status: "loading" });
+        getImsakiyahMonth({ month: viewedMonthNumber, year: viewedYear })
+            .then((rows) => {
+                if (!cancelled) store({ items: rows, status: "ready" });
+            })
+            .catch(() => {
+                if (!cancelled) store({ items: [], status: "error" });
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [isBaseMonth, viewedMonthNumber, viewedYear, retryCount]);
+
+    const goToMonth = (delta) =>
+        setViewed(shiftImsakiyahMonth(viewedMonth, delta));
 
     return (
         <ScrollView
@@ -139,18 +184,48 @@ export function WebAppImsakiyahRoute({ error, isDarkTheme: isDarkThemeProp = fal
             </View>
 
             <View style={styles.monthBar}>
-                <View style={[styles.monthButton, isDarkTheme && styles.monthButtonDark]}>
+                <Pressable
+                    accessibilityLabel={t("explore.imsakiyah.prevMonth")}
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: !canGoPrev }}
+                    disabled={!canGoPrev}
+                    hitSlop={4}
+                    onPress={() => goToMonth(-1)}
+                    style={[
+                        styles.monthButton,
+                        isDarkTheme && styles.monthButtonDark,
+                        !canGoPrev && styles.monthButtonDisabled,
+                    ]}
+                    testID='web-app-imsakiyah-prev-month'
+                >
                     <Text style={[styles.monthButtonText, isDarkTheme && styles.monthButtonTextDark]}>←</Text>
-                </View>
-                <Text style={[styles.monthText, isDarkTheme && styles.monthTextDark]}>
-                    {inferMonthLabel(items, language)}
+                </Pressable>
+                <Text
+                    accessibilityLiveRegion='polite'
+                    style={[styles.monthText, isDarkTheme && styles.monthTextDark]}
+                    testID='web-app-imsakiyah-month-label'
+                >
+                    {formatMonthLabel(viewedMonth, language)}
                 </Text>
-                <View style={[styles.monthButton, isDarkTheme && styles.monthButtonDark]}>
+                <Pressable
+                    accessibilityLabel={t("explore.imsakiyah.nextMonth")}
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: !canGoNext }}
+                    disabled={!canGoNext}
+                    hitSlop={4}
+                    onPress={() => goToMonth(1)}
+                    style={[
+                        styles.monthButton,
+                        isDarkTheme && styles.monthButtonDark,
+                        !canGoNext && styles.monthButtonDisabled,
+                    ]}
+                    testID='web-app-imsakiyah-next-month'
+                >
                     <Text style={[styles.monthButtonText, isDarkTheme && styles.monthButtonTextDark]}>→</Text>
-                </View>
+                </Pressable>
             </View>
 
-            {loading ? (
+            {viewLoading ? (
                 <View style={styles.state}>
                     <ActivityIndicator color={isDarkTheme ? '#34d399' : '#059669'} size='small' />
                     <Text style={[styles.stateText, isDarkTheme && styles.stateTextDark]}>
@@ -159,33 +234,67 @@ export function WebAppImsakiyahRoute({ error, isDarkTheme: isDarkThemeProp = fal
                 </View>
             ) : null}
 
-            {error ? (
-                <Text style={styles.error}>{t("explore.imsakiyah.error")}</Text>
-            ) : null}
-
-            {!loading && !error && items.length ? (
-                <View style={[styles.table, isDarkTheme && styles.tableDark]}>
-                    <View style={[styles.tableHeader, isDarkTheme && styles.tableHeaderDark]}>
-                        <Text style={styles.tableHeaderDay}>
-                            {t("explore.imsakiyah.dayColumn")}
-                        </Text>
-                        <Text style={styles.tableHeaderText}>
-                            {t("explore.imsakiyah.scheduleColumn")}
-                        </Text>
-                    </View>
-                    {items.map((item, index) => (
-                        <ImsakiyahRow
-                            index={index}
-                            isDarkTheme={isDarkTheme}
-                            item={item}
-                            key={`${getDateValue(getRaw(item)) || index}-${index}`}
-                            t={t}
-                        />
-                    ))}
+            {viewError ? (
+                <View style={styles.errorBlock}>
+                    <Text style={styles.error}>{t("explore.imsakiyah.error")}</Text>
+                    {!isBaseMonth ? (
+                        <Pressable
+                            accessibilityRole='button'
+                            onPress={() => setRetryCount((count) => count + 1)}
+                            style={[styles.retryButton, isDarkTheme && styles.retryButtonDark]}
+                            testID='web-app-imsakiyah-retry'
+                        >
+                            <Text style={[styles.retryButtonText, isDarkTheme && styles.retryButtonTextDark]}>
+                                {t("explore.imsakiyah.retry")}
+                            </Text>
+                        </Pressable>
+                    ) : null}
                 </View>
             ) : null}
 
-            {!loading && !error && !items.length ? (
+            {!viewLoading && !viewError && viewItems.length ? (
+                <View style={[styles.table, isDarkTheme && styles.tableDark]}>
+                    <ScrollView
+                        contentContainerStyle={styles.tableScrollContent}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        testID='web-app-imsakiyah-table-scroll'
+                    >
+                        <View style={styles.tableBody}>
+                            <View
+                                style={[styles.tableHeader, isDarkTheme && styles.tableHeaderDark]}
+                                testID='web-app-imsakiyah-header'
+                            >
+                                <Text style={styles.tableHeaderDay}>
+                                    {t("explore.imsakiyah.dayColumn")}
+                                </Text>
+                                {PRAYERS.map((prayer) => (
+                                    <Text
+                                        adjustsFontSizeToFit
+                                        key={prayer.key}
+                                        minimumFontScale={0.7}
+                                        numberOfLines={1}
+                                        style={styles.tableHeaderCell}
+                                    >
+                                        {t(`prayer.name.${prayer.key}`)}
+                                    </Text>
+                                ))}
+                            </View>
+                            {viewItems.map((item, index) => (
+                                <ImsakiyahRow
+                                    index={index}
+                                    isDarkTheme={isDarkTheme}
+                                    item={item}
+                                    key={`${getDateValue(getRaw(item)) || index}-${index}`}
+                                    t={t}
+                                />
+                            ))}
+                        </View>
+                    </ScrollView>
+                </View>
+            ) : null}
+
+            {!viewLoading && !viewError && !viewItems.length ? (
                 <View style={[styles.empty, isDarkTheme && styles.emptyDark]}>
                     <CalendarDays color={isDarkTheme ? '#64748b' : '#9ca3af'} size={32} strokeWidth={1.8} />
                     <Text style={[styles.emptyTitle, isDarkTheme && styles.emptyTitleDark]}>
@@ -235,13 +344,19 @@ const styles = StyleSheet.create({
     },
     monthButton: {
         alignItems: "center",
+        backgroundColor: "#ffffff",
+        borderColor: "#e5e7eb",
         borderRadius: radius.sm,
-        height: 36,
+        borderWidth: 1,
+        height: 40,
         justifyContent: "center",
-        width: 36,
+        width: 40,
+    },
+    monthButtonDisabled: {
+        opacity: 0.35,
     },
     monthButtonText: {
-        color: "#64748b",
+        color: "#047857",
         fontSize: 18,
         fontWeight: "800",
     },
@@ -263,12 +378,30 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "800",
     },
+    errorBlock: {
+        alignItems: "center",
+    },
     error: {
         color: "#ef4444",
         fontSize: 13,
         fontWeight: "800",
         paddingVertical: spacing.xl,
         textAlign: "center",
+    },
+    retryButton: {
+        alignItems: "center",
+        backgroundColor: "#ecfdf5",
+        borderColor: "#a7f3d0",
+        borderRadius: radius.sm,
+        borderWidth: 1,
+        justifyContent: "center",
+        minHeight: 40,
+        paddingHorizontal: spacing.lg,
+    },
+    retryButtonText: {
+        color: "#047857",
+        fontSize: 13,
+        fontWeight: "900",
     },
     table: {
         backgroundColor: "#ffffff",
@@ -277,33 +410,40 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         overflow: "hidden",
     },
+    tableScrollContent: {
+        flexGrow: 1,
+    },
+    tableBody: {
+        flexGrow: 1,
+        minWidth: TABLE_MIN_WIDTH,
+    },
     tableHeader: {
+        alignItems: "center",
         backgroundColor: "#047857",
         flexDirection: "row",
         minHeight: 38,
     },
     tableHeaderDay: {
         color: "#ffffff",
-        fontSize: 12,
+        fontSize: 10,
         fontWeight: "900",
-        paddingHorizontal: spacing.md,
-        paddingVertical: spacing.sm,
-        width: 56,
+        textAlign: "center",
+        width: DAY_COLUMN_WIDTH,
     },
-    tableHeaderText: {
+    tableHeaderCell: {
         color: "#ffffff",
         flex: 1,
-        fontSize: 12,
+        fontSize: 10,
         fontWeight: "900",
-        paddingHorizontal: spacing.sm,
-        paddingVertical: spacing.sm,
+        minWidth: TIME_COLUMN_MIN_WIDTH,
+        textAlign: "center",
     },
     row: {
         alignItems: "center",
         borderBottomColor: "#f1f5f9",
         borderBottomWidth: 1,
         flexDirection: "row",
-        minHeight: 66,
+        minHeight: 40,
     },
     rowToday: {
         backgroundColor: "#ecfdf5",
@@ -311,9 +451,9 @@ const styles = StyleSheet.create({
     dayCell: {
         alignItems: "center",
         flexDirection: "row",
-        gap: 5,
+        gap: 3,
         justifyContent: "center",
-        width: 56,
+        width: DAY_COLUMN_WIDTH,
     },
     dayText: {
         color: "#374151",
@@ -329,27 +469,10 @@ const styles = StyleSheet.create({
         height: 6,
         width: 6,
     },
-    timesScroller: {
-        flex: 1,
-    },
-    timesRow: {
-        flexDirection: "row",
-        gap: spacing.sm,
-        paddingHorizontal: spacing.sm,
-        paddingVertical: spacing.sm,
-    },
     timeCell: {
-        minWidth: 72,
-    },
-    timeLabel: {
-        color: "#94a3b8",
-        fontSize: 10,
-        fontWeight: "800",
-        marginBottom: 3,
-        textAlign: "center",
-    },
-    imsakLabel: {
-        color: "#d97706",
+        flex: 1,
+        minWidth: TIME_COLUMN_MIN_WIDTH,
+        paddingVertical: spacing.sm,
     },
     timeValue: {
         color: "#374151",
@@ -399,6 +522,14 @@ const styles = StyleSheet.create({
     },
     monthButtonDark: {
         backgroundColor: "#1e293b",
+        borderColor: "#334155",
+    },
+    retryButtonDark: {
+        backgroundColor: "#064e3b",
+        borderColor: "#047857",
+    },
+    retryButtonTextDark: {
+        color: "#34d399",
     },
     monthButtonTextDark: {
         color: "#cbd5e1",
@@ -430,12 +561,6 @@ const styles = StyleSheet.create({
     },
     todayDotDark: {
         backgroundColor: "#34d399",
-    },
-    timeLabelDark: {
-        color: "#64748b",
-    },
-    imsakLabelDark: {
-        color: "#fbbf24",
     },
     timeValueDark: {
         color: "#e2e8f0",
