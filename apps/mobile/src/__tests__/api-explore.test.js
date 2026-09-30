@@ -368,6 +368,23 @@ describe("explore api", () => {
             expect(plain.meta.total).toBeNull();
         });
 
+        test("treats a null items list as empty instead of one bogus item", async () => {
+            requestJson.mockResolvedValueOnce({
+                items: null,
+                last: true,
+                page: 0,
+                size: 20,
+                total: 0,
+            });
+            const result = await getFeatureItemPage(
+                { endpoint: "/api/v1/empty-list", type: "list" },
+                { page: 0, size: 20 },
+            );
+            expect(result.items).toEqual([]);
+            expect(result.meta.total).toBe(0);
+            expect(result.meta.hasMore).toBe(false);
+        });
+
         test("adds pagination params when pagination given", async () => {
             requestJson.mockResolvedValueOnce({ items: [] });
             await getFeatureItemPage(

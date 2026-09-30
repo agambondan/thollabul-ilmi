@@ -18,6 +18,7 @@ const pickItems = (payload) => {
     if (Array.isArray(payload?.data)) return payload.data;
     if (Array.isArray(payload?.questions)) return payload.questions;
     if (Array.isArray(payload?.events)) return payload.events;
+    if (payload?.items === null) return [];
     return payload ? [payload?.data ?? payload] : [];
 };
 
