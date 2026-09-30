@@ -42,6 +42,27 @@ var (
 	})
 )
 
+func methodLabel(c *fiber.Ctx) string {
+	switch c.Method() {
+	case fiber.MethodGet:
+		return fiber.MethodGet
+	case fiber.MethodHead:
+		return fiber.MethodHead
+	case fiber.MethodPost:
+		return fiber.MethodPost
+	case fiber.MethodPut:
+		return fiber.MethodPut
+	case fiber.MethodPatch:
+		return fiber.MethodPatch
+	case fiber.MethodDelete:
+		return fiber.MethodDelete
+	case fiber.MethodOptions:
+		return fiber.MethodOptions
+	default:
+		return "OTHER"
+	}
+}
+
 func MetricsMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now()
@@ -55,17 +76,18 @@ func MetricsMiddleware() fiber.Handler {
 			return err
 		}
 
+		method := methodLabel(c)
 		status := c.Response().StatusCode()
 		elapsed := time.Since(start)
 		duration := elapsed.Seconds()
 
-		requestsTotal.WithLabelValues(c.Method(), path, strconv.Itoa(status)).Inc()
-		requestDuration.WithLabelValues(c.Method(), path).Observe(duration)
+		requestsTotal.WithLabelValues(method, path, strconv.Itoa(status)).Inc()
+		requestDuration.WithLabelValues(method, path).Observe(duration)
 
 		if duration >= 1.0 {
-			slowRequestsTotal.WithLabelValues(c.Method(), path).Inc()
+			slowRequestsTotal.WithLabelValues(method, path).Inc()
 			slog.Warn("slow request detected",
-				"method", c.Method(),
+				"method", method,
 				"path", path,
 				"duration_ms", elapsed.Milliseconds(),
 				"status", status,

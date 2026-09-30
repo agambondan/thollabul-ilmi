@@ -1,4 +1,10 @@
-import { requestJson } from "./client";
+import {
+    getAyahById,
+    getHadithDetail,
+    normalizeAyah,
+    normalizeHadith,
+    requestJson,
+} from "./client";
 import { getBookmarks } from "./personal";
 import { fetchCached, cacheKeys } from "./apiCache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -359,14 +365,85 @@ export const getFeatureItemPage = async (feature, pagination) => {
     };
 };
 
+const SAVED_REF_LOOKUPS = { ayah: getAyahById, hadith: getHadithDetail };
+const MAX_SAVED_REF_LOOKUPS = 40;
+
+const describeSavedRef = (refType, detail) => {
+    if (!detail) return null;
+    if (refType === "ayah") {
+        return {
+            arabic: detail.arabic,
+            body: detail.translation,
+            title: [detail.surahName, `Ayat ${detail.number}`]
+                .filter(Boolean)
+                .join(" · "),
+        };
+    }
+    if (refType === "hadith") {
+        return {
+            arabic: detail.arabic,
+            body: detail.translation,
+            title: [detail.book, detail.number ? `No. ${detail.number}` : ""]
+                .filter(Boolean)
+                .join(" "),
+        };
+    }
+    return null;
+};
+
+const withSavedRefLabel = (item, detail) => {
+    const label = describeSavedRef(item.raw?.ref_type, detail);
+    if (!label) return item;
+    return {
+        ...item,
+        arabic: item.arabic || label.arabic,
+        body: item.body || label.body,
+        title: label.title,
+    };
+};
+
+const nestedSavedRef = (raw) => {
+    if (raw?.ayah) return normalizeAyah(raw.ayah);
+    if (raw?.hadith) return normalizeHadith(raw.hadith);
+    return null;
+};
+
+const labelNotes = (items) => {
+    const lookups = new Map();
+    const lookup = (refType, refId) => {
+        const fetchDetail = SAVED_REF_LOOKUPS[refType];
+        if (!fetchDetail || !refId) return Promise.resolve(null);
+        const key = `${refType}:${refId}`;
+        if (!lookups.has(key)) {
+            lookups.set(
+                key,
+                lookups.size < MAX_SAVED_REF_LOOKUPS
+                    ? fetchDetail(refId).catch(() => null)
+                    : Promise.resolve(null),
+            );
+        }
+        return lookups.get(key);
+    };
+    return Promise.all(
+        items.map(async (item) =>
+            withSavedRefLabel(
+                item,
+                await lookup(item.raw?.ref_type, item.raw?.ref_id),
+            ),
+        ),
+    );
+};
+
 export const getAllNotes = async () => {
     const payload = await requestJson("/api/v1/notes", { auth: true });
-    return pickItems(payload).map(normalizeExploreItem);
+    return labelNotes(pickItems(payload).map(normalizeExploreItem));
 };
 
 export const getBookmarkItems = async () => {
     const items = await getBookmarks();
-    return items.map(normalizeExploreItem);
+    return items.map((item) =>
+        withSavedRefLabel(normalizeExploreItem(item), nestedSavedRef(item)),
+    );
 };
 
 const authRequest = (path, init = {}) =>
