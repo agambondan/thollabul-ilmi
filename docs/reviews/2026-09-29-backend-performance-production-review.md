@@ -311,6 +311,7 @@ kalau `api_slow_requests_total` naik).
 | —   | Alert berbasis metrik aplikasi (`api_slow_requests_total`) | 🟡 Rendah-sedang                                      | 2j     | ⏳ Belum                |
 | D2  | Index duplikat/tak terpakai (temuan pgHero)                | 🟠 Sedang (biaya tulis + disk)                        | 1j     | ✅ Fixed (Bagian D2)    |
 | D3  | Disk VPS 90%                                               | 🔴 Tinggi (risiko outage semua project)               | 2j     | ✅ Fixed, jadi 52% (D3) |
+| D4  | Kolom `embedding` kajian tidak terpakai (288 MB + cron)    | 🟡 Sedang (payload API + disk + cron sia-sia)         | 2j     | ✅ Fixed (Bagian D4)    |
 
 Bagian A dan B0-B3 semua sudah diperbaiki + di-build/vet/test hijau, dan B4
 (deploy) sudah live. B5 murni item pantau, bukan sesuatu untuk "difix".
@@ -354,14 +355,60 @@ Sekarang ada `docker image prune` harian dan `ops/scripts/registry-gc.py`
 mingguan. Registry turun ke 3,4 GB; semua tag yang tersisa diverifikasi lewat
 API dan satu rilis lama berhasil ditarik dengan `docker pull`.
 
-### D4. Belum dikerjakan
+### D4. Kolom `embedding` di `kajian_transcript` dibuang
 
-- **Tes regresi `deleted_at`.** B0 berstatus fixed tetapi belum dijaga tes: `go
-test ./...` hijau tidak menangkap regresi soft delete karena tidak ada tes
-  yang menegaskan baris `deleted_at IS NOT NULL` tidak muncul di repository
-  raw-SQL.
+Kolom `vector(256)` berisi hash embedding (`kajian-local-hash-v1`) yang sudah
+dicabut dari ranking pada 8 Sep karena noise, tetapi kolom, index, dan cron
+mingguan pengisinya masih ada. Dibuang total pada 30 Sep: field di model, flag
+`-backfill-embeddings`, lib dan cmd backfill kajian, script serta cron
+root-nya. `content_embeddings` (semantic search konten lain) tidak disentuh.
+
+**Pencarian "Makna" tidak bergantung pada vektor.**
+`transcriptCandidatesPostgres` memakai FTS stemmer `indonesian` (`text_tsv`)
+dengan ekspansi varian ejaan, kecocokan judul/topik, dan trigram fuzzy untuk
+salah ketik; kolom `embedding` tidak ada di SELECT maupun ORDER BY. Dibuktikan
+dengan 30 set hasil produksi (10 query x mode exact/semantic/hybrid): identik
+sebelum dan sesudah `DROP COLUMN` + `VACUUM FULL`, dan `total`,
+`kajian_count`, serta `expanded_terms` sama dengan sebelum perubahan apa pun.
+Contoh: `salat` menemukan kajian berjudul "Sholat/Shalat", dan `ribaa` (salah
+ketik) 0 hasil di Exact tetapi 20 hasil yang memang membahas riba di Makna.
+
+**Efek samping baik.** `GET /kajian/:id/transcripts` ikut mengirim array 256
+float di setiap baris. Untuk kajian 116 chunk, respons turun dari 282 KB ke
+63 KB (gzip 44,5 KB ke 11 KB).
+
+**Hasil di database.** `kajian_transcript` 1.240 MB jadi 552 MB (heap 559 ke
+350 MB, TOAST 273 ke 4,7 MB, index 401 ke 198 MB). Penyusutannya lebih besar
+dari 288 MB vektor karena `VACUUM FULL` juga membuang bloat dari upsert seeder.
+Tabel terkunci selama 52 detik.
+
+Urutan rollout: cabut cron, deploy kode (kolom masih ada), verifikasi,
+`DROP COLUMN`, `VACUUM FULL`. `AutoMigrate` tidak pernah menghapus kolom, jadi
+database lain (mis. lokal) tetap memilikinya; itu tidak berbahaya, dan
+`ALTER TABLE kajian_transcript DROP COLUMN IF EXISTS embedding` cukup untuk
+merapikannya.
+
+### D5. Belum dikerjakan
+
+- **Tombstone.** 74.736 baris `kajian_transcript` (25%) berstatus soft-delete
+  sejak 9 Sep. Tidak dibaca query mana pun, tetapi masih ikut di tabel dan
+  index trigram. Membuangnya (hard delete lalu `VACUUM FULL` lagi) memperkecil
+  tabel dan index lebih jauh; butuh persetujuan karena menghapus data.
+- **Id chunk berganti setiap seeding untuk 20 video.** Video yang sama ada di
+  `cintasunnahtv.json` dan `rodjatv.json` dengan batas chunk sedikit berbeda,
+  jadi dua entri saling menghapus chunk lawannya di setiap deploy (±2.036
+  chunk, id baru tiap kali). Bug laten: `kajian_user_bookmark.chunk_id` menunjuk
+  id chunk, dan produksi belum punya bookmark (0 baris), tetapi bookmark pada
+  video-video itu akan yatim di deploy berikutnya. Perbaikan: dedupe per
+  `video_id` di `seedKajianFromFile`, atau hapus salah satu entri dari data
+  seed.
+- **Upsert seeder menulis ulang semua baris.** `DoUpdates` menimpa ±294 rb baris
+  di setiap deploy walaupun isinya sama (Postgres tidak melewati UPDATE bernilai
+  sama), menghasilkan dead tuple dan WAL. Klausa `WHERE ... IS DISTINCT FROM`
+  pada konflik akan melewati baris yang tidak berubah.
+- **Tes regresi `deleted_at`.** B0 berstatus fixed tetapi belum dijaga tes:
+  `go test ./...` hijau tidak menangkap regresi soft delete karena tidak ada
+  tes yang menegaskan baris `deleted_at IS NOT NULL` tidak muncul di
+  repository raw-SQL.
 - `search_repository_test.go` (build tag postgres) belum pernah dijalankan;
   butuh Postgres sekali pakai yang terisolasi.
-- Kolom `kajian_transcript.embedding` (288 MB) tidak dibaca kode mana pun,
-  sementara cron mingguan `backfill-kajian-embeddings.sh` masih mengisinya.
-  Keputusan buang/pertahankan ada di pemilik.

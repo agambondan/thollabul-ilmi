@@ -103,19 +103,20 @@ Rework 2026-09-08, dokumen: [`reviews/2026-09-08-kajian-transcript-search-tuning
   `ustaz` 1609× vs `ustadz` 12×. Tanpa peta varian ejaan
   (`app/lib/textsearch/variants.go`), query user bisa dapat 0 hasil.
 - **Embedding `kajian-local-hash-v1` (FNV token+trigram, 256 dim) itu
-  noise murni** untuk query pendek — sudah dicabut dari ranking. Kolom
-  `embedding`/HNSW index/`-backfill-embeddings` masih ada tapi tidak
-  dipakai search. Jangan pakai lagi sebagai sinyal "semantik" tanpa model
-  embedding sungguhan.
+  noise murni** untuk query pendek — dicabut dari ranking 2026-09-08, lalu
+  kolom `kajian_transcript.embedding`, HNSW index, `-backfill-embeddings`
+  dan cron-nya dibuang total 2026-09-30. Jangan pakai lagi sebagai sinyal
+  "semantik" tanpa model embedding sungguhan. Mode "Makna" berjalan di atas
+  FTS stemmer Indonesia + varian ejaan + trigram fuzzy (typo).
 - Konfigurasi FTS Postgres `'indonesian'` tidak membuang stopword dan
   stemmer Snowball-nya kadang salah (`menikah`→`meni`).
 - `KajianTranscript` soft-delete — seeder wajib `Unscoped()` pas hapus,
   dan semua query search wajib filter `deleted_at IS NULL`.
 - **Zero-value `pgvector.Vector` diserialisasi GORM jadi `'[]'` dan
-  ditolak Postgres** ("vector must have at least 1 dimension") — bikin
-  SEMUA insert transkrip gagal diam-diam. Fix: tag `default:null` di
-  model + `db.Omit("Embedding")` di seeder. Kalau nambah kolom `vector`
-  lain, wajib `default:null` atau pointer.
+  ditolak Postgres** ("vector must have at least 1 dimension"). Dulu ini
+  bikin SEMUA insert transkrip gagal diam-diam (kolomnya sudah dibuang,
+  jebakannya tetap berlaku). Kalau nambah kolom `vector` di model, wajib
+  `default:null` atau pointer, dan `Omit` field itu di insert.
 
 Uji lewat harness lokal (seed ke Postgres compose, port 54320):
 `KAJIAN_SEARCH_PG_DSN=... go test ./app/repository/ -run TestKajianSearchPostgres`.

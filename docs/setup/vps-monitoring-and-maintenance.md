@@ -150,10 +150,9 @@ MB ke 113,8 MB.
   migrate, image sudah ada di registry; jalankan ulang migrate saja lalu
   recreate container. Migrate aman dijalankan ulang (sudah dilakukan beberapa
   kali).
-
-## Belum diputuskan
-
-- Kolom `kajian_transcript.embedding` (288 MB, 293.713 baris) tidak dibaca kode
-  mana pun, tetapi cron mingguan `ops/scripts/backfill-kajian-embeddings.sh`
-  (root, Minggu 04:00) terus mengisinya. Buang atau pertahankan: keputusan
-  pemilik.
+- **`AutoMigrate` tidak pernah menghapus kolom.** Membuang kolom dari model
+  tidak membuangnya dari database; deploy kode dulu (kolom masih ada, tidak ada
+  yang rusak), baru `ALTER TABLE ... DROP COLUMN` manual. Kebalikannya berisiko:
+  API lama yang masih jalan bisa error kalau ada query yang menyebut kolom itu.
+  `DROP COLUMN` juga belum mengecilkan file; ruangnya baru kembali setelah
+  `VACUUM FULL`, yang mengunci tabel selama proses.

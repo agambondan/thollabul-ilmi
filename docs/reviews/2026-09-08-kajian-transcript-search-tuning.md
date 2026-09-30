@@ -120,6 +120,10 @@ ulang `to_tsvector` per baris, dengan fallback ekspresi + index
 Daftar vektor **dicabut** dari ranking (kolom, HNSW index, dan
 `-backfill-embeddings` dibiarkan; tidak lagi dipakai search).
 
+**Update 2026-09-30:** ketiganya akhirnya dibuang total, berikut cron
+mingguannya — lihat
+[Bagian D4 di review performa backend](./2026-09-29-backend-performance-production-review.md#d4-kolom-embedding-di-kajian_transcript-dibuang).
+
 ### Web (`apps/web/src/app/kajian/`)
 
 - Tombol **Muat lebih banyak** (`meta.has_more`), append + dedupe by id,
