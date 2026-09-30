@@ -36,32 +36,8 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	app.Use(middlewares.SentryMiddleware())
 	app.Use(middlewares.MetricsMiddleware())
 
-	globalMax := viper.GetInt("RATE_LIMIT_GLOBAL")
-	if globalMax <= 0 {
-		globalMax = 300
-	}
-	globalLimiter := limiter.New(limiter.Config{
-		Max:               globalMax,
-		Expiration:        1 * time.Minute,
-		LimiterMiddleware: limiter.SlidingWindow{},
-		KeyGenerator: func(c *fiber.Ctx) string {
-			if uid := c.Locals("userId"); uid != nil {
-				return "auth:" + uid.(string)
-			}
-			return "ip:" + c.IP()
-		},
-		SkipSuccessfulRequests: false,
-		LimitReached: func(c *fiber.Ctx) error {
-			return c.Status(429).JSON(fiber.Map{
-				"error":       "too many requests",
-				"retry_after": 60,
-			})
-		},
-		Next: func(c *fiber.Ctx) bool {
-			return c.Path() == "/metrics" || c.Path() == "/health"
-		},
-	})
-	app.Use(globalLimiter)
+	publicLimiter, internalLimiter := globalLimiters()
+	app.Use(publicLimiter, internalLimiter)
 
 	searchMax := viper.GetInt("RATE_LIMIT_SEARCH")
 	if searchMax <= 0 {
