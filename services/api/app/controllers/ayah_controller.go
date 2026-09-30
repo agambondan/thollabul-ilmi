@@ -48,6 +48,9 @@ func (c *ayahController) Create(ctx *fiber.Ctx) error {
 	if err := lib.BodyParser(ctx, data); nil != err {
 		return lib.ErrorBadRequest(ctx, err)
 	}
+	if data.Number == nil || data.SurahID == nil || data.TranslationID == nil {
+		return lib.ErrorBadRequest(ctx, "number, surah_id, and translation_id are required")
+	}
 	if _, err := c.ayah.Create(data); err != nil {
 		return lib.ErrorConflict(ctx, err)
 	}
