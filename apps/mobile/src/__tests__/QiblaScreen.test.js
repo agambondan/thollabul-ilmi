@@ -315,10 +315,9 @@ describe("QiblaScreen", () => {
 
         await waitFor(() => {
             expect(getByText("Arah Kiblat")).toBeTruthy();
+            expect(getByText("Lokasi aktif")).toBeTruthy();
+            expect(getByText("Kompas aktif")).toBeTruthy();
         });
-
-        expect(getByText("Lokasi aktif")).toBeTruthy();
-        expect(getByText("Kompas aktif")).toBeTruthy();
     });
 
     test("shows calibrate message when heading is null", async () => {
@@ -353,7 +352,10 @@ describe("QiblaScreen", () => {
         compassModule.signedOffset.mockReturnValue(5);
 
         mockWatchCompass.mockImplementation(async (onHeading) => {
-            onHeading(180);
+            await Promise.resolve();
+            act(() => {
+                onHeading(180);
+            });
             return { remove: mockRemoveSubscription };
         });
 
@@ -430,5 +432,304 @@ describe("QiblaScreen", () => {
                 ),
             ).toBeTruthy();
         });
+    });
+});
+
+describe("QiblaScreen navigation", () => {
+    const buildNavigation = () => ({
+        close: jest.fn(),
+        setHeader: jest.fn(),
+    });
+
+    const useLayout = (isWebAppLayout) =>
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout,
+        });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockWatchCompass.mockResolvedValue({ remove: mockRemoveSubscription });
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "granted",
+        });
+        Location.getCurrentPositionAsync.mockResolvedValue({
+            coords: mockCoords,
+        });
+        useLayout(false);
+    });
+
+    test("the Classic back button returns to the Ibadah hub through onBack", async () => {
+        const onBack = jest.fn();
+        const navigation = buildNavigation();
+        const { getByTestId } = render(
+            <QiblaScreen navigation={navigation} onBack={onBack} />,
+        );
+        await waitFor(() => {
+            expect(getByTestId("action-Kembali ke Ibadah")).toBeTruthy();
+        });
+
+        fireEvent.press(getByTestId("action-Kembali ke Ibadah"));
+
+        expect(onBack).toHaveBeenCalledTimes(1);
+        expect(navigation.close).not.toHaveBeenCalled();
+    });
+
+    test("the Classic back button closes the Ibadah route when there is no onBack", async () => {
+        const navigation = buildNavigation();
+        const { getByTestId } = render(<QiblaScreen navigation={navigation} />);
+        await waitFor(() => {
+            expect(getByTestId("action-Kembali ke Ibadah")).toBeTruthy();
+        });
+
+        fireEvent.press(getByTestId("action-Kembali ke Ibadah"));
+
+        expect(navigation.close).toHaveBeenCalledTimes(1);
+        expect(navigation.close).toHaveBeenCalledWith("ibadah");
+    });
+
+    test("does not show a back button when the screen cannot go back", async () => {
+        const { queryByTestId } = render(<QiblaScreen />);
+
+        await waitFor(() => {
+            expect(queryByTestId("screen-title")).toBeTruthy();
+        });
+        expect(queryByTestId("action-Kembali ke Ibadah")).toBeNull();
+    });
+
+    test("the Modern header back button closes Qibla", async () => {
+        useLayout(true);
+        const navigation = buildNavigation();
+        render(<QiblaScreen navigation={navigation} />);
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalled();
+        });
+
+        const config = navigation.setHeader.mock.calls[0][0];
+        expect(config).toEqual({
+            onBack: expect.any(Function),
+            showBack: true,
+            title: "Arah Kiblat",
+        });
+        config.onBack();
+
+        expect(navigation.close).toHaveBeenCalledTimes(1);
+        expect(navigation.close).toHaveBeenCalledWith("ibadah");
+    });
+
+    test("the Modern header back button follows the latest onBack", async () => {
+        useLayout(true);
+        const navigation = buildNavigation();
+        const first = jest.fn();
+        const second = jest.fn();
+        const { rerender } = render(
+            <QiblaScreen navigation={navigation} onBack={first} />,
+        );
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledTimes(1);
+        });
+        const config = navigation.setHeader.mock.calls[0][0];
+
+        rerender(<QiblaScreen navigation={navigation} onBack={second} />);
+        config.onBack();
+
+        expect(first).not.toHaveBeenCalled();
+        expect(second).toHaveBeenCalledTimes(1);
+        expect(navigation.close).not.toHaveBeenCalled();
+    });
+
+    test("does not re-register the header on every render", async () => {
+        useLayout(true);
+        const navigation = buildNavigation();
+        const { rerender } = render(
+            <QiblaScreen navigation={navigation} onBack={() => {}} />,
+        );
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledTimes(1);
+        });
+
+        rerender(<QiblaScreen navigation={navigation} onBack={() => {}} />);
+        rerender(<QiblaScreen navigation={navigation} onBack={() => {}} />);
+
+        expect(navigation.setHeader).toHaveBeenCalledTimes(1);
+    });
+
+    test("clears the header when Qibla closes", async () => {
+        useLayout(true);
+        const navigation = buildNavigation();
+        const { unmount } = render(<QiblaScreen navigation={navigation} />);
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledTimes(1);
+        });
+        expect(navigation.setHeader).not.toHaveBeenLastCalledWith(null);
+
+        unmount();
+
+        expect(navigation.setHeader).toHaveBeenCalledTimes(2);
+        expect(navigation.setHeader).toHaveBeenLastCalledWith(null);
+    });
+
+    test("clears the header when the layout switches to Classic", async () => {
+        useLayout(true);
+        const navigation = buildNavigation();
+        const { rerender } = render(<QiblaScreen navigation={navigation} />);
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledTimes(1);
+        });
+
+        useLayout(false);
+        rerender(<QiblaScreen navigation={navigation} />);
+
+        expect(navigation.setHeader).toHaveBeenLastCalledWith(null);
+    });
+
+    test("moves the header to a new navigation object and clears the old one", async () => {
+        useLayout(true);
+        const first = buildNavigation();
+        const second = buildNavigation();
+        const { rerender } = render(<QiblaScreen navigation={first} />);
+        await waitFor(() => {
+            expect(first.setHeader).toHaveBeenCalledTimes(1);
+        });
+
+        rerender(<QiblaScreen navigation={second} />);
+
+        expect(first.setHeader).toHaveBeenLastCalledWith(null);
+        expect(second.setHeader).toHaveBeenCalledTimes(1);
+        expect(second.setHeader).not.toHaveBeenCalledWith(null);
+    });
+
+    test("does not set a header in the Classic layout or while inactive", async () => {
+        const navigation = buildNavigation();
+        const classic = render(<QiblaScreen navigation={navigation} />);
+        await waitFor(() => {
+            expect(classic.getByTestId("qibla-classic-surface")).toBeTruthy();
+        });
+        classic.unmount();
+
+        useLayout(true);
+        const inactive = render(
+            <QiblaScreen navigation={navigation} isActive={false} />,
+        );
+        await waitFor(() => {
+            expect(inactive.getByTestId("qibla-web-app-surface")).toBeTruthy();
+        });
+
+        expect(navigation.setHeader).not.toHaveBeenCalled();
+    });
+});
+
+describe("QiblaScreen compass permission", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockWatchCompass.mockResolvedValue({ remove: mockRemoveSubscription });
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "granted",
+        });
+        Location.getCurrentPositionAsync.mockResolvedValue({
+            coords: mockCoords,
+        });
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: false,
+        });
+    });
+
+    test("starts the compass without asking for permission again", async () => {
+        render(<QiblaScreen onBack={jest.fn()} />);
+
+        await waitFor(() => {
+            expect(mockWatchCompass).toHaveBeenCalledTimes(1);
+        });
+        expect(mockWatchCompass.mock.calls[0][2]).toEqual(
+            expect.objectContaining({ skipPermissionRequest: true }),
+        );
+        expect(
+            Location.requestForegroundPermissionsAsync,
+        ).toHaveBeenCalledTimes(1);
+    });
+
+    test("does not start the compass while location permission is denied", async () => {
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "denied",
+        });
+
+        const { getByText } = render(<QiblaScreen onBack={jest.fn()} />);
+
+        await waitFor(() => {
+            expect(
+                getByText(
+                    "Aktifkan lokasi untuk menghitung arah kiblat dari posisimu.",
+                ),
+            ).toBeTruthy();
+        });
+        expect(mockWatchCompass).not.toHaveBeenCalled();
+        expect(
+            Location.requestForegroundPermissionsAsync,
+        ).toHaveBeenCalledTimes(1);
+    });
+
+    test("starts the compass after a refresh grants permission", async () => {
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "denied",
+        });
+        const { getByTestId, getByText } = render(
+            <QiblaScreen onBack={jest.fn()} />,
+        );
+        await waitFor(() => {
+            expect(
+                getByText(
+                    "Aktifkan lokasi untuk menghitung arah kiblat dari posisimu.",
+                ),
+            ).toBeTruthy();
+        });
+        expect(mockWatchCompass).not.toHaveBeenCalled();
+
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "granted",
+        });
+        await act(async () => {
+            fireEvent.press(getByTestId("screen-refresh"));
+        });
+
+        await waitFor(() => {
+            expect(mockWatchCompass).toHaveBeenCalledTimes(1);
+        });
+        expect(
+            Location.requestForegroundPermissionsAsync,
+        ).toHaveBeenCalledTimes(2);
+    });
+
+    test("stops the compass when the screen unmounts", async () => {
+        const { unmount } = render(<QiblaScreen onBack={jest.fn()} />);
+        await waitFor(() => {
+            expect(mockWatchCompass).toHaveBeenCalledTimes(1);
+        });
+        await act(async () => {});
+
+        unmount();
+
+        expect(mockRemoveSubscription).toHaveBeenCalledTimes(1);
+    });
+
+    test("releases a compass subscription that arrives after unmount", async () => {
+        let resolveWatch;
+        mockWatchCompass.mockReturnValue(
+            new Promise((resolve) => {
+                resolveWatch = resolve;
+            }),
+        );
+        const { unmount } = render(<QiblaScreen onBack={jest.fn()} />);
+        await waitFor(() => {
+            expect(mockWatchCompass).toHaveBeenCalledTimes(1);
+        });
+
+        unmount();
+        expect(mockRemoveSubscription).not.toHaveBeenCalled();
+        await act(async () => {
+            resolveWatch({ remove: mockRemoveSubscription });
+        });
+
+        expect(mockRemoveSubscription).toHaveBeenCalledTimes(1);
     });
 });

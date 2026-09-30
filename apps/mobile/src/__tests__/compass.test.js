@@ -1,5 +1,18 @@
 import { Platform } from "react-native";
-import { compassSupported, qiblaOffset, signedOffset } from "../utils/compass";
+import * as Location from "expo-location";
+import {
+    compassSupported,
+    qiblaOffset,
+    signedOffset,
+    watchCompassHeading,
+} from "../utils/compass";
+
+const mockWatchHeadingAsync = jest.fn();
+
+jest.mock("expo-location", () => ({
+    requestForegroundPermissionsAsync: jest.fn(),
+    watchHeadingAsync: (...args) => mockWatchHeadingAsync(...args),
+}));
 
 describe("compassSupported", () => {
     test("returns true on native platforms", () => {
@@ -73,5 +86,112 @@ describe("signedOffset", () => {
     test("returns null for non-number", () => {
         expect(signedOffset(null)).toBeNull();
         expect(signedOffset(undefined)).toBeNull();
+    });
+});
+
+describe("watchCompassHeading", () => {
+    const subscription = { remove: jest.fn() };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        Platform.OS = "ios";
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "granted",
+        });
+        mockWatchHeadingAsync.mockResolvedValue(subscription);
+    });
+
+    test("asks for location permission by default and starts watching", async () => {
+        const result = await watchCompassHeading(jest.fn(), jest.fn());
+
+        expect(result).toBe(subscription);
+        expect(
+            Location.requestForegroundPermissionsAsync,
+        ).toHaveBeenCalledTimes(1);
+        expect(mockWatchHeadingAsync).toHaveBeenCalledTimes(1);
+    });
+
+    test("reports a missing permission and does not watch", async () => {
+        Location.requestForegroundPermissionsAsync.mockResolvedValue({
+            status: "denied",
+        });
+        const onUnavailable = jest.fn();
+
+        const result = await watchCompassHeading(jest.fn(), onUnavailable);
+
+        expect(result).toBeNull();
+        expect(onUnavailable).toHaveBeenCalledWith(
+            "Izin lokasi diperlukan untuk mengaktifkan kompas.",
+        );
+        expect(mockWatchHeadingAsync).not.toHaveBeenCalled();
+    });
+
+    test("does not ask again when the caller already holds the permission", async () => {
+        const result = await watchCompassHeading(jest.fn(), jest.fn(), {
+            skipPermissionRequest: true,
+        });
+
+        expect(result).toBe(subscription);
+        expect(
+            Location.requestForegroundPermissionsAsync,
+        ).not.toHaveBeenCalled();
+        expect(mockWatchHeadingAsync).toHaveBeenCalledTimes(1);
+    });
+
+    test("passes the watch options to the heading watcher", async () => {
+        await watchCompassHeading(jest.fn(), jest.fn(), {
+            distanceFilter: 3,
+            enableHighAccuracy: true,
+            interval: 250,
+            skipPermissionRequest: true,
+        });
+
+        expect(mockWatchHeadingAsync).toHaveBeenCalledWith(
+            { distanceFilter: 3, enableHighAccuracy: true, interval: 250 },
+            expect.any(Function),
+        );
+    });
+
+    test("reports that the compass is only available in the mobile app on web", async () => {
+        Platform.OS = "web";
+        const onUnavailable = jest.fn();
+
+        const result = await watchCompassHeading(jest.fn(), onUnavailable);
+
+        expect(result).toBeNull();
+        expect(onUnavailable).toHaveBeenCalledWith(
+            "Kompas tersedia di aplikasi mobile.",
+        );
+        expect(
+            Location.requestForegroundPermissionsAsync,
+        ).not.toHaveBeenCalled();
+    });
+
+    test("reports a device without a compass when watching fails", async () => {
+        mockWatchHeadingAsync.mockRejectedValue(new Error("no sensor"));
+        const onUnavailable = jest.fn();
+
+        const result = await watchCompassHeading(jest.fn(), onUnavailable, {
+            skipPermissionRequest: true,
+        });
+
+        expect(result).toBeNull();
+        expect(onUnavailable).toHaveBeenCalledWith(
+            "Kompas tidak tersedia di perangkat ini.",
+        );
+    });
+
+    test("prefers the true heading and falls back to the magnetic heading", async () => {
+        const onHeading = jest.fn();
+        await watchCompassHeading(onHeading, jest.fn(), {
+            skipPermissionRequest: true,
+        });
+        const listener = mockWatchHeadingAsync.mock.calls[0][1];
+
+        listener({ magHeading: 10, trueHeading: 370 });
+        listener({ magHeading: 95, trueHeading: -1 });
+        listener({ magHeading: -1, trueHeading: -1 });
+
+        expect(onHeading.mock.calls).toEqual([[10], [95]]);
     });
 });

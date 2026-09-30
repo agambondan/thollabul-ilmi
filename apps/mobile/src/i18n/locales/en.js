@@ -879,6 +879,10 @@ export const en = {
         "prayer.countdown.now": "It is prayer time",
         "prayer.countdown.nowClassic": "✧ It is prayer time! ✧",
         "prayer.countdown.towards": "Towards {prayer}",
+        "prayer.error.network":
+            "No internet connection. Check your network and reload the schedule.",
+        "prayer.error.rateLimited":
+            "The server is busy. Please try reloading in a moment.",
         "prayer.location.invalidManual":
             "Enter valid coordinates. Example: -6.2088, 106.8456",
         "prayer.location.inactive": "Location is not active",
@@ -886,9 +890,14 @@ export const en = {
             "Enable location to load prayer times for your place.",
         "prayer.location.unavailable":
             "Location was not detected. Enable GPS then reload prayer times.",
+        "prayer.location.usingSaved":
+            "Current location could not be read. Using the last saved location.",
         "prayer.manual.apply": "Apply Location",
+        "prayer.manual.currentManual": "Manual location: {location}",
+        "prayer.manual.currentSaved": "Last known location: {location}",
         "prayer.manual.description":
             "Enable GPS or enter your location coordinates to load prayer times.",
+        "prayer.manual.edit": "Change location",
         "prayer.manual.latPlaceholder": "-6.2088 (Latitude)",
         "prayer.manual.lngPlaceholder": "106.8456 (Longitude)",
         "prayer.manual.meta": "GPS Coordinates",
@@ -909,6 +918,11 @@ export const en = {
         "prayer.name.maghrib": "Maghrib",
         "prayer.name.sunrise": "Sunrise",
         "prayer.nextBadge": "NEXT",
+        "prayer.notification.reminder.body": "{prayer} starts at {time}.",
+        "prayer.notification.reminder.bodyNow": "{prayer} time is now.",
+        "prayer.notification.reminder.title": "{prayer} Reminder",
+        "prayer.notification.time.body": "It is now time for {prayer}.",
+        "prayer.notification.time.title": "Prayer Time: {prayer}",
         "prayer.offline.cleared": "Offline prayer schedule removed.",
         "prayer.offline.clearError":
             "Offline prayer schedule could not be removed.",
@@ -946,11 +960,16 @@ export const en = {
         "prayer.reminder.prayers": "Prayer Times",
         "prayer.reminder.reschedule": "Reset reminders",
         "prayer.reminder.scheduled": "{count} prayer reminders scheduled.",
+        "prayer.reminder.scheduleError":
+            "Prayer reminders could not be scheduled.",
         "prayer.reminder.scheduleRequired":
             "Load prayer times before setting reminders.",
         "prayer.reminder.title": "Adhan Reminder",
         "prayer.schedule.loadingContext":
             "The schedule loads based on the selected location and method.",
+        "prayer.schedule.stale": "Old data · updated {updated}",
+        "prayer.schedule.staleOtherMethod":
+            "Old data ({method} · {madhab}) · updated {updated}",
         "prayer.scheduleUnavailable": "Prayer times are not available yet.",
         "prayer.scheduleUnavailableForLocation":
             "Prayer times are not available for this location.",

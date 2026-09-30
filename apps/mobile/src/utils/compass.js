@@ -16,20 +16,32 @@ export const signedOffset = (offset) => {
     return ((offset + 540) % 360) - 180;
 };
 
-export const watchCompassHeading = async (onHeading, onUnavailable, options = {}) => {
-    const { interval = 500, distanceFilter = 1, enableHighAccuracy = false } = options;
+export const watchCompassHeading = async (
+    onHeading,
+    onUnavailable,
+    options = {},
+) => {
+    const {
+        interval = 500,
+        distanceFilter = 1,
+        enableHighAccuracy = false,
+        skipPermissionRequest = false,
+    } = options;
     if (!compassSupported()) {
         onUnavailable?.("Kompas tersedia di aplikasi mobile.");
         return null;
     }
 
     try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-            onUnavailable?.(
-                "Izin lokasi diperlukan untuk mengaktifkan kompas.",
-            );
-            return null;
+        if (!skipPermissionRequest) {
+            const { status } =
+                await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                onUnavailable?.(
+                    "Izin lokasi diperlukan untuk mengaktifkan kompas.",
+                );
+                return null;
+            }
         }
         const subscription = await Location.watchHeadingAsync(
             {

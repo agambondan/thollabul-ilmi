@@ -89,7 +89,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
     );
 }
 
-export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
+export function QiblaScreen({ navigation, onBack, isActive = true }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
     const webAppTheme = getThemeColors({ isDark: isDarkTheme, isPaperLayout: false });
@@ -103,8 +103,19 @@ export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const [locationMode, setLocationMode] = useState("gps");
+    const [locationPermission, setLocationPermission] = useState(null);
     const [manualLatInput, setManualLatInput] = useState("");
     const [manualLngInput, setManualLngInput] = useState("");
+    const onBackRef = useRef(onBack);
+    onBackRef.current = onBack;
+    const canGoBack = Boolean(onBack || navigation?.close);
+    const goBack = useCallback(() => {
+        if (onBackRef.current) {
+            onBackRef.current();
+            return;
+        }
+        navigation?.close?.("ibadah");
+    }, [navigation]);
 
     // Ring rotates opposite to heading so N always points to geographic North
     const ringRotation = useRef(new Animated.Value(0)).current;
@@ -225,10 +236,13 @@ export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
     const load = useCallback(async () => {
         setLoading(true);
         setMessage("");
+        let permissionGranted = false;
         try {
             const permission =
                 await Location.requestForegroundPermissionsAsync();
-            if (permission.status !== "granted") {
+            permissionGranted = permission.status === "granted";
+            setLocationPermission(permissionGranted ? "granted" : "denied");
+            if (!permissionGranted) {
                 setCoords(null);
                 setDirection(null);
                 setDistance(null);
@@ -247,6 +261,7 @@ export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
             setDirection(calculateQiblaDirection(current.lat, current.lng));
             setDistance(calculateKaabaDistance(current.lat, current.lng));
         } catch {
+            if (!permissionGranted) setLocationPermission("denied");
             setCoords(null);
             setDirection(null);
             setDistance(null);
@@ -266,11 +281,11 @@ export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
         />
     ) : (
         <>
-            {onOpenTab ? (
+            {canGoBack ? (
                 <IconActionButton
                     Icon={ArrowLeft}
                     label={t("qibla.action.backIbadah")}
-                    onPress={() => onOpenTab("ibadah")}
+                    onPress={goBack}
                 />
             ) : null}
             <IconActionButton
@@ -282,23 +297,24 @@ export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
         </>
     );
 
-    // Update header in web app layout
     useEffect(() => {
-        if (isWebAppLayout && navigation?.setHeader) {
-            navigation.setHeader({
-                showBack: true,
-                title: t("qibla.heading"),
-                onBack: () => onOpenTab?.("ibadah"),
-            });
+        if (!isActive || !isWebAppLayout || !navigation?.setHeader) {
+            return undefined;
         }
-    }, [isWebAppLayout, navigation, onOpenTab, t]);
+        navigation.setHeader({
+            showBack: true,
+            title: t("qibla.heading"),
+            onBack: goBack,
+        });
+        return () => navigation.setHeader(null);
+    }, [goBack, isActive, isWebAppLayout, navigation, t]);
 
     useEffect(() => {
         load();
     }, [load]);
 
     useEffect(() => {
-        if (!isActive) return;
+        if (!isActive || locationPermission !== "granted") return undefined;
         let mounted = true;
         let subscription;
         watchCompassHeading(
@@ -310,15 +326,19 @@ export function QiblaScreen({ navigation, onOpenTab, isActive = true }) {
             (nextMessage) => {
                 if (mounted) setCompassMessage(nextMessage);
             },
-            { interval: 500, distanceFilter: 1 },
+            { interval: 500, distanceFilter: 1, skipPermissionRequest: true },
         ).then((nextSubscription) => {
-            subscription = nextSubscription;
+            if (mounted) {
+                subscription = nextSubscription;
+            } else {
+                nextSubscription?.remove?.();
+            }
         });
         return () => {
             mounted = false;
             subscription?.remove?.();
         };
-    }, [isActive, smoothHeading]);
+    }, [isActive, locationPermission, smoothHeading]);
 
     // Ring rotates by -heading: when device points East (heading=90), ring rotates -90deg so N stays at North
     useEffect(() => {

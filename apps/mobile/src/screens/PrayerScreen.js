@@ -44,10 +44,10 @@ import {
 } from "../storage/preferences";
 import { colors, radius, spacing } from "../theme";
 import {
-    cancelPrayerReminders,
+    listPrayerReminders,
     notificationsSupported,
-    schedulePrayerReminders,
     showPrayerTimeNotification,
+    syncPrayerReminders,
 } from "../utils/prayerNotifications";
 import { ADZAN_SOUNDS, getAdzanSound } from "../utils/adzanSounds";
 
@@ -93,6 +93,9 @@ const prayerArabicLabels = {
 };
 const defaultReminderPrayers = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 const reminderLeadOptions = [0, 5, 10, 15, 30];
+const LOCATION_TIMEOUT_MS = 10000;
+const SCHEDULE_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+const SCHEDULE_CACHE_COORD_TOLERANCE = 0.1;
 const WEB_APP_PRAYER_BG = "#f8fafc";
 const WEB_APP_PRAYER_SURFACE = "#ffffff";
 const WEB_APP_PRAYER_BORDER = "#e5e7eb";
@@ -155,6 +158,114 @@ const formatMinutes = (value) => {
     return `${hours}:${minutes}`;
 };
 
+const withTimeout = (promise, ms) =>
+    new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error("timeout")), ms);
+        promise.then(
+            (value) => {
+                clearTimeout(timer);
+                resolve(value);
+            },
+            (error) => {
+                clearTimeout(timer);
+                reject(error);
+            },
+        );
+    });
+
+const persistQuietly = async (key, value) => {
+    try {
+        await writePreference(key, value);
+    } catch {}
+};
+
+const hasUsablePrayerTimes = (value) =>
+    Boolean(value) &&
+    typeof value === "object" &&
+    defaultReminderPrayers.every((key) => toMinutes(value[key]) !== null);
+
+const normalizeCoords = (value) =>
+    Number.isFinite(value?.lat) &&
+    Number.isFinite(value?.lng) &&
+    Math.abs(value.lat) <= 90 &&
+    Math.abs(value.lng) <= 180
+        ? { lat: value.lat, lng: value.lng }
+        : null;
+
+const normalizeSavedLocation = (value) => {
+    const saved = normalizeCoords(value);
+    if (!saved) return null;
+    return { ...saved, source: value.source === "manual" ? "manual" : "gps" };
+};
+
+const normalizeScheduleCache = (value) => {
+    const cachedCoords = normalizeCoords(value?.coords);
+    if (
+        !cachedCoords ||
+        !hasUsablePrayerTimes(value?.prayers) ||
+        typeof value?.method !== "string" ||
+        typeof value?.madhab !== "string" ||
+        !Number.isFinite(value?.updatedAt)
+    ) {
+        return null;
+    }
+
+    return {
+        coords: cachedCoords,
+        madhab: value.madhab,
+        method: value.method,
+        prayers: value.prayers,
+        updatedAt: value.updatedAt,
+    };
+};
+
+const pickCachedSchedule = (cache, target) => {
+    if (
+        !cache ||
+        Date.now() - cache.updatedAt > SCHEDULE_CACHE_MAX_AGE_MS ||
+        Math.abs(cache.coords.lat - target.lat) >
+            SCHEDULE_CACHE_COORD_TOLERANCE ||
+        Math.abs(cache.coords.lng - target.lng) > SCHEDULE_CACHE_COORD_TOLERANCE
+    ) {
+        return null;
+    }
+    return cache;
+};
+
+const describeScheduleError = (error, translate, fallbackKey) => {
+    if (error?.status === 429) return translate("prayer.error.rateLimited");
+    if (
+        !error?.status &&
+        /network request failed/i.test(error?.message ?? "")
+    ) {
+        return translate("prayer.error.network");
+    }
+    return translate(fallbackKey);
+};
+
+const locateDevice = async () => {
+    try {
+        const permission = await Location.requestForegroundPermissionsAsync();
+        if (permission.status !== "granted") {
+            return { coords: null, problem: "permission" };
+        }
+
+        const position = await withTimeout(
+            Location.getCurrentPositionAsync({}),
+            LOCATION_TIMEOUT_MS,
+        );
+        return {
+            coords: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            },
+            problem: null,
+        };
+    } catch {
+        return { coords: null, problem: "unavailable" };
+    }
+};
+
 export function PrayerScreen({ isActive, navigation }) {
     const { showError, showInfo, showSuccess } = useFeedback();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
@@ -167,6 +278,18 @@ export function PrayerScreen({ isActive, navigation }) {
         backgroundColor: webTheme.surface,
         borderColor: webTheme.border,
     };
+    const webChoiceStyle = {
+        backgroundColor: webTheme.input,
+        borderColor: webTheme.border,
+    };
+    const webTextStyle = { color: webTheme.text };
+    const webMutedStyle = { color: webTheme.muted };
+    const webLineStyle = { borderBottomColor: webTheme.line };
+    const webSoundActiveStyle = {
+        backgroundColor: webTheme.accentSoft,
+        borderColor: webTheme.accent,
+    };
+    const webSoundActiveTextStyle = { color: webTheme.accent };
     const defaultOfflineMessage = t("prayer.offline.defaultMessage");
     const [coords, setCoords] = useState(null);
     const [prayers, setPrayers] = useState(null);
@@ -187,6 +310,10 @@ export function PrayerScreen({ isActive, navigation }) {
     const [view, setView] = useState("main");
     const [manualLatInput, setManualLatInput] = useState("");
     const [manualLngInput, setManualLngInput] = useState("");
+    const [manualFormOpen, setManualFormOpen] = useState(false);
+    const [locationSource, setLocationSource] = useState(null);
+    const [scheduleStale, setScheduleStale] = useState(null);
+    const [reminderSyncTick, setReminderSyncTick] = useState(0);
     const [prayerOffline, setPrayerOffline] = useState(null);
     const [offlineBusy, setOfflineBusy] = useState(false);
     const [offlineProgress, setOfflineProgress] = useState(0);
@@ -200,6 +327,19 @@ export function PrayerScreen({ isActive, navigation }) {
     const lastPrayerAlertRef = useRef("");
     const nextPrayerRef = useRef(null);
     const defaultOfflineMessageRef = useRef(defaultOfflineMessage);
+    const mountedRef = useRef(true);
+    const coordsRef = useRef(null);
+    const methodRef = useRef(method);
+    const madhabRef = useRef(madhab);
+    const tRef = useRef(t);
+    const requestRef = useRef(0);
+    const fetchedKeyRef = useRef(null);
+    const savedLocationRef = useRef(null);
+    const scheduleCacheRef = useRef(null);
+    const reminderAnnounceRef = useRef(false);
+    methodRef.current = method;
+    madhabRef.current = madhab;
+    tRef.current = t;
     const dateLocale = language === "en" ? "en-US" : "id-ID";
     const translatedPrayerLabels = Object.fromEntries(
         scheduleRows.map(([key]) => [key, t(`prayer.name.${key}`)]),
@@ -226,8 +366,18 @@ export function PrayerScreen({ isActive, navigation }) {
     }, [defaultOfflineMessage]);
 
     useEffect(() => {
-        if (navigation?.current?.view === "settings") {
+        mountedRef.current = true;
+        return () => {
+            mountedRef.current = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        const requestedView = navigation?.current?.view;
+        if (requestedView === "settings") {
             setView("settings");
+        } else if (requestedView === "prayer") {
+            setView("main");
         }
     }, [navigation?.current?.id, navigation?.current?.view]);
 
@@ -243,89 +393,166 @@ export function PrayerScreen({ isActive, navigation }) {
         }
     }, [isActive, view, navigation]);
 
-    const loadPrayerOfflineStatus = useCallback(
-        async (currentCoords) => {
-            if (!currentCoords) return;
+    const loadPrayerOfflineStatus = useCallback(async (currentCoords) => {
+        if (!currentCoords) return;
 
-            const overview = await getPrayerOfflineOverview({
-                ...currentCoords,
-                method,
-                madhab,
-            });
-            setPrayerOffline(overview);
-            if (!overview.supported) {
-                setOfflineMessage(
-                    overview.error ?? t("prayer.offline.mobileOnly"),
+        const overview = await getPrayerOfflineOverview({
+            ...currentCoords,
+            method: methodRef.current,
+            madhab: madhabRef.current,
+        });
+        setPrayerOffline(overview);
+        if (!overview.supported) {
+            setOfflineMessage(
+                overview.error ?? tRef.current("prayer.offline.mobileOnly"),
+            );
+        } else if (overview.savedAt) {
+            setOfflineMessage(
+                tRef.current("prayer.offline.savedOverview", {
+                    days: overview.days,
+                }),
+            );
+        }
+    }, []);
+
+    const applyLocation = useCallback((nextCoords, source) => {
+        coordsRef.current = nextCoords;
+        setCoords(nextCoords);
+        setLocationSource(source);
+        if (source !== "gps") {
+            setManualLatInput((current) => current || `${nextCoords.lat}`);
+            setManualLngInput((current) => current || `${nextCoords.lng}`);
+        }
+        if (source === "saved") return;
+
+        savedLocationRef.current = { ...nextCoords, source };
+        persistQuietly(preferenceKeys.prayerLocation, {
+            ...nextCoords,
+            source,
+            updatedAt: Date.now(),
+        });
+    }, []);
+
+    const fetchSchedule = useCallback(
+        async (
+            target,
+            requestId,
+            unavailableKey = "prayer.scheduleUnavailable",
+        ) => {
+            const isCurrent = () => requestId === requestRef.current;
+            const scheduleMethod = methodRef.current;
+            const scheduleMadhab = madhabRef.current;
+            fetchedKeyRef.current = `${scheduleMethod}:${scheduleMadhab}`;
+
+            try {
+                const next = await getPrayerTimes({
+                    ...target,
+                    method: scheduleMethod,
+                    madhab: scheduleMadhab,
+                });
+                if (!hasUsablePrayerTimes(next)) {
+                    throw new Error("Prayer schedule is not available yet.");
+                }
+                if (!isCurrent()) return;
+
+                const record = {
+                    coords: target,
+                    date: today(),
+                    madhab: scheduleMadhab,
+                    method: scheduleMethod,
+                    prayers: next,
+                    updatedAt: Date.now(),
+                };
+                scheduleCacheRef.current = record;
+                persistQuietly(preferenceKeys.prayerScheduleCache, record);
+                setPrayers(next);
+                setScheduleStale(null);
+                await loadPrayerOfflineStatus(target).catch(() => null);
+            } catch (error) {
+                if (!isCurrent()) return;
+
+                let offlinePrayers = null;
+                try {
+                    offlinePrayers = await getOfflinePrayerForDate({
+                        ...target,
+                        method: scheduleMethod,
+                        madhab: scheduleMadhab,
+                        date: today(),
+                    });
+                } catch {}
+                if (!isCurrent()) return;
+
+                if (offlinePrayers) {
+                    setPrayers(offlinePrayers);
+                    setScheduleStale(null);
+                    setMessage(tRef.current("prayer.offline.todayLoaded"));
+                    return;
+                }
+
+                setMessage(
+                    describeScheduleError(error, tRef.current, unavailableKey),
                 );
-            } else if (overview.savedAt) {
-                setOfflineMessage(
-                    t("prayer.offline.savedOverview", { days: overview.days }),
+                const cached = pickCachedSchedule(
+                    scheduleCacheRef.current,
+                    target,
                 );
+                if (cached) {
+                    setPrayers(cached.prayers);
+                    setScheduleStale({
+                        madhab: cached.madhab,
+                        method: cached.method,
+                        updatedAt: cached.updatedAt,
+                    });
+                } else {
+                    setPrayers(null);
+                    setScheduleStale(null);
+                }
+            } finally {
+                if (isCurrent()) setLoading(false);
             }
         },
-        [madhab, method, t],
+        [loadPrayerOfflineStatus],
     );
 
     const load = useCallback(async () => {
+        const requestId = ++requestRef.current;
         setLoading(true);
         setMessage("");
-        let currentCoords = null;
 
-        try {
-            const permission =
-                await Location.requestForegroundPermissionsAsync();
-            if (permission.status === "granted") {
-                const position = await Location.getCurrentPositionAsync({});
-                currentCoords = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-                setCoords(currentCoords);
-            } else {
-                setCoords(null);
-                setPrayers(null);
-                setMessage(t("prayer.location.permissionRequired"));
-                setLoading(false);
-                return;
+        const located = await locateDevice();
+        if (requestId !== requestRef.current) return;
+
+        let target = located.coords;
+        let source = "gps";
+        let notice = "";
+        const saved = savedLocationRef.current;
+        if (!target && saved) {
+            target = { lat: saved.lat, lng: saved.lng };
+            source = saved.source === "manual" ? "manual" : "saved";
+            if (source === "saved") {
+                notice = tRef.current("prayer.location.usingSaved");
             }
-        } catch {
+        }
+
+        if (!target) {
+            coordsRef.current = null;
             setCoords(null);
-            setPrayers(null);
-            setMessage(t("prayer.location.unavailable"));
+            setLocationSource(null);
+            setMessage(
+                tRef.current(
+                    located.problem === "permission"
+                        ? "prayer.location.permissionRequired"
+                        : "prayer.location.unavailable",
+                ),
+            );
             setLoading(false);
             return;
         }
 
-        try {
-            const next = await getPrayerTimes({
-                ...currentCoords,
-                method,
-                madhab,
-            });
-            setPrayers(next);
-            await loadPrayerOfflineStatus(currentCoords);
-        } catch (error) {
-            try {
-                const offlinePrayers = await getOfflinePrayerForDate({
-                    ...currentCoords,
-                    method,
-                    madhab,
-                    date: today(),
-                });
-                if (offlinePrayers) {
-                    setPrayers(offlinePrayers);
-                    setMessage(t("prayer.offline.todayLoaded"));
-                    return;
-                }
-            } catch {
-                // fall through to the live-fetch error below
-            }
-            setPrayers(null);
-            setMessage(error?.message ?? t("prayer.scheduleUnavailable"));
-        } finally {
-            setLoading(false);
-        }
-    }, [loadPrayerOfflineStatus, madhab, method, t]);
+        applyLocation(target, source);
+        if (notice) setMessage(notice);
+        await fetchSchedule(target, requestId);
+    }, [applyLocation, fetchSchedule]);
 
     const applyManualLocation = useCallback(async () => {
         const lat = parseFloat(manualLatInput.replace(",", "."));
@@ -343,35 +570,18 @@ export function PrayerScreen({ isActive, navigation }) {
             return;
         }
 
+        const requestId = ++requestRef.current;
+        const currentCoords = { lat, lng };
         setLoading(true);
         setMessage("");
-        const currentCoords = { lat, lng };
-        setCoords(currentCoords);
-
-        try {
-            const next = await getPrayerTimes({
-                ...currentCoords,
-                method,
-                madhab,
-            });
-            setPrayers(next);
-            await loadPrayerOfflineStatus(currentCoords);
-        } catch (err) {
-            setPrayers(null);
-            setMessage(
-                err?.message ?? t("prayer.scheduleUnavailableForLocation"),
-            );
-        } finally {
-            setLoading(false);
-        }
-    }, [
-        loadPrayerOfflineStatus,
-        madhab,
-        manualLatInput,
-        manualLngInput,
-        method,
-        t,
-    ]);
+        setManualFormOpen(false);
+        applyLocation(currentCoords, "manual");
+        await fetchSchedule(
+            currentCoords,
+            requestId,
+            "prayer.scheduleUnavailableForLocation",
+        );
+    }, [applyLocation, fetchSchedule, manualLatInput, manualLngInput, t]);
 
     const refreshAll = useCallback(async () => {
         await load();
@@ -394,9 +604,6 @@ export function PrayerScreen({ isActive, navigation }) {
         };
         setAdjustments(next);
         await writePreference(preferenceKeys.prayerAdjustments, next);
-        if (reminderEnabled) {
-            await syncPrayerReminders({ nextAdjustments: next, silent: true });
-        }
     };
 
     const resetAdjustments = async () => {
@@ -405,12 +612,6 @@ export function PrayerScreen({ isActive, navigation }) {
             preferenceKeys.prayerAdjustments,
             defaultAdjustments,
         );
-        if (reminderEnabled) {
-            await syncPrayerReminders({
-                nextAdjustments: defaultAdjustments,
-                silent: true,
-            });
-        }
     };
 
     const adjustedPrayerTime = (key) => {
@@ -555,9 +756,11 @@ export function PrayerScreen({ isActive, navigation }) {
             if (lastPrayerAlertRef.current !== alertKey) {
                 lastPrayerAlertRef.current = alertKey;
                 const label = getPrayerLabel(prayerKey);
-                showPrayerTimeNotification({ label, prayer: prayerKey }).catch(
-                    (e) => console.error(e),
-                );
+                showPrayerTimeNotification({
+                    label,
+                    prayer: prayerKey,
+                    t: tRef.current,
+                }).catch((e) => console.error(e));
                 playAdzan(prayerKey);
             }
             const nextTimer = setTimeout(
@@ -577,56 +780,14 @@ export function PrayerScreen({ isActive, navigation }) {
         return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
     };
 
-    const syncPrayerReminders = async ({
-        enabled = reminderEnabled,
-        leadMinutes = reminderLeadMinutes,
-        nextAdjustments = adjustments,
-        previous = notificationIds,
-        selectedPrayers = reminderPrayers,
-        silent = false,
-    } = {}) => {
-        if (!enabled) {
-            await cancelPrayerReminders(previous);
-            setNotificationIds([]);
-            await writePreference(preferenceKeys.prayerReminderIds, []);
-            if (!silent) setMessage(t("prayer.reminder.disabled"));
-            return;
-        }
-
+    const resyncReminders = () => {
         if (!notificationsSupported()) {
-            if (!silent) setMessage(t("prayer.reminder.mobileOnly"));
+            setMessage(t("prayer.reminder.mobileOnly"));
             return;
         }
 
-        if (!prayers) {
-            if (!silent) setMessage(t("prayer.reminder.scheduleRequired"));
-            return;
-        }
-
-        const result = await schedulePrayerReminders({
-            leadMinutes,
-            labels: translatedPrayerLabels,
-            previous,
-            selectedPrayers,
-            times: adjustedPrayerTimes(nextAdjustments),
-        });
-
-        if (result.status !== "scheduled") {
-            if (!silent) setMessage(t("prayer.reminder.permissionRequired"));
-            return;
-        }
-
-        setNotificationIds(result.scheduled);
-        await writePreference(
-            preferenceKeys.prayerReminderIds,
-            result.scheduled,
-        );
-        if (!silent)
-            setMessage(
-                t("prayer.reminder.scheduled", {
-                    count: result.scheduled.length,
-                }),
-            );
+        reminderAnnounceRef.current = true;
+        setReminderSyncTick((tick) => tick + 1);
     };
 
     const toggleReminder = async () => {
@@ -636,9 +797,9 @@ export function PrayerScreen({ isActive, navigation }) {
         }
 
         const next = !reminderEnabled;
+        reminderAnnounceRef.current = true;
         setReminderEnabled(next);
         await writePreference(preferenceKeys.prayerReminderEnabled, next);
-        await syncPrayerReminders({ enabled: next });
     };
 
     const selectReminderLead = async (minutes) => {
@@ -647,9 +808,6 @@ export function PrayerScreen({ isActive, navigation }) {
             preferenceKeys.prayerReminderLeadMinutes,
             minutes,
         );
-        if (reminderEnabled) {
-            await syncPrayerReminders({ leadMinutes: minutes, silent: true });
-        }
     };
 
     const toggleAdzanAudio = async () => {
@@ -673,9 +831,6 @@ export function PrayerScreen({ isActive, navigation }) {
 
         setReminderPrayers(next);
         await writePreference(preferenceKeys.prayerReminderPrayers, next);
-        if (reminderEnabled) {
-            await syncPrayerReminders({ selectedPrayers: next, silent: true });
-        }
     };
 
     const downloadPrayerPack = async () => {
@@ -752,6 +907,7 @@ export function PrayerScreen({ isActive, navigation }) {
                 return;
             }
             setPrayers(offlinePrayers);
+            setScheduleStale(null);
             setOfflineMessage(t("prayer.offline.todayLoaded"));
         } catch (error) {
             setOfflineMessage(error?.message ?? t("prayer.offline.loadError"));
@@ -759,25 +915,80 @@ export function PrayerScreen({ isActive, navigation }) {
     };
 
     useEffect(() => {
+        if (!preferencesReady) return;
         refreshAll();
-    }, [refreshAll]);
+    }, [preferencesReady, refreshAll]);
 
     useEffect(() => {
-        if (
-            !preferencesReady ||
-            !reminderEnabled ||
-            !prayers ||
-            !notificationsSupported()
-        )
-            return;
-        syncPrayerReminders({ silent: true });
+        if (!preferencesReady || fetchedKeyRef.current === null) return;
+        if (fetchedKeyRef.current === `${method}:${madhab}`) return;
+
+        const target = coordsRef.current;
+        if (!target) return;
+
+        const requestId = ++requestRef.current;
+        setLoading(true);
+        setMessage("");
+        fetchSchedule(target, requestId);
+    }, [fetchSchedule, madhab, method, preferencesReady]);
+
+    useEffect(() => {
+        if (!preferencesReady || !notificationsSupported()) return;
+
+        const announce = reminderAnnounceRef.current;
+        reminderAnnounceRef.current = false;
+        const report = (text) => {
+            if (announce && mountedRef.current) setMessage(text);
+        };
+
+        const applyReminders = async () => {
+            try {
+                if (reminderEnabled && !prayers) {
+                    report(t("prayer.reminder.scheduleRequired"));
+                    const active = await listPrayerReminders();
+                    if (mountedRef.current) setNotificationIds(active);
+                    return;
+                }
+
+                const result = await syncPrayerReminders({
+                    enabled: reminderEnabled,
+                    labels: translatedPrayerLabels,
+                    leadMinutes: reminderLeadMinutes,
+                    selectedPrayers: reminderPrayers,
+                    t,
+                    times: adjustedPrayerTimes(adjustments),
+                });
+                if (!mountedRef.current) return;
+
+                setNotificationIds(result.scheduled);
+                if (!reminderEnabled) {
+                    report(t("prayer.reminder.disabled"));
+                } else if (result.status !== "scheduled") {
+                    report(t("prayer.reminder.permissionRequired"));
+                } else {
+                    report(
+                        t("prayer.reminder.scheduled", {
+                            count: result.scheduled.length,
+                        }),
+                    );
+                }
+            } catch {
+                report(t("prayer.reminder.scheduleError"));
+                const active = await listPrayerReminders().catch(() => null);
+                if (active && mountedRef.current) setNotificationIds(active);
+            }
+        };
+
+        applyReminders();
     }, [
         adjustments,
+        language,
         preferencesReady,
         prayers,
         reminderEnabled,
         reminderLeadMinutes,
         reminderPrayers,
+        reminderSyncTick,
     ]);
 
     useEffect(() => {
@@ -797,57 +1008,67 @@ export function PrayerScreen({ isActive, navigation }) {
                 preferenceKeys.prayerReminderPrayers,
                 defaultReminderPrayers,
             ),
-            readPreference(preferenceKeys.prayerReminderIds, []),
-        ]).then(
-            ([
-                savedMethod,
-                savedMadhab,
-                savedAdjustments,
-                savedAdzanAudioEnabled,
-                savedAdzanSound,
-                savedReminderEnabled,
-                savedLeadMinutes,
-                savedReminderPrayers,
-                savedNotificationIds,
-            ]) => {
-                if (!mounted) return;
-                if (methods.some(([key]) => key === savedMethod)) {
-                    setMethod(savedMethod);
-                }
-                if (madhabs.some(([key]) => key === savedMadhab)) {
-                    setMadhab(savedMadhab);
-                }
-                setAdjustments({
-                    ...defaultAdjustments,
-                    ...(savedAdjustments && typeof savedAdjustments === "object"
-                        ? savedAdjustments
-                        : {}),
-                });
-                setAdzanAudioEnabled(Boolean(savedAdzanAudioEnabled));
-                if (
-                    typeof savedAdzanSound === "string" &&
-                    ADZAN_SOUNDS.some((s) => s.value === savedAdzanSound)
-                ) {
-                    setAdzanSound(savedAdzanSound);
-                }
-                setReminderEnabled(Boolean(savedReminderEnabled));
-                if (reminderLeadOptions.includes(savedLeadMinutes)) {
-                    setReminderLeadMinutes(savedLeadMinutes);
-                }
-                if (
-                    Array.isArray(savedReminderPrayers) &&
-                    savedReminderPrayers.some((key) => prayerLabels[key])
-                ) {
-                    setReminderPrayers(
-                        savedReminderPrayers.filter((key) => prayerLabels[key]),
-                    );
-                }
-                if (Array.isArray(savedNotificationIds)) {
-                    setNotificationIds(savedNotificationIds);
-                }
-                setPreferencesReady(true);
-            },
-        );
+            readPreference(preferenceKeys.prayerLocation, null),
+            readPreference(preferenceKeys.prayerScheduleCache, null),
+        ])
+            .then(
+                ([
+                    savedMethod,
+                    savedMadhab,
+                    savedAdjustments,
+                    savedAdzanAudioEnabled,
+                    savedAdzanSound,
+                    savedReminderEnabled,
+                    savedLeadMinutes,
+                    savedReminderPrayers,
+                    savedLocation,
+                    savedScheduleCache,
+                ]) => {
+                    if (!mounted) return;
+                    if (methods.some(([key]) => key === savedMethod)) {
+                        setMethod(savedMethod);
+                    }
+                    if (madhabs.some(([key]) => key === savedMadhab)) {
+                        setMadhab(savedMadhab);
+                    }
+                    setAdjustments({
+                        ...defaultAdjustments,
+                        ...(savedAdjustments &&
+                        typeof savedAdjustments === "object"
+                            ? savedAdjustments
+                            : {}),
+                    });
+                    setAdzanAudioEnabled(Boolean(savedAdzanAudioEnabled));
+                    if (
+                        typeof savedAdzanSound === "string" &&
+                        ADZAN_SOUNDS.some((s) => s.value === savedAdzanSound)
+                    ) {
+                        setAdzanSound(savedAdzanSound);
+                    }
+                    setReminderEnabled(Boolean(savedReminderEnabled));
+                    if (reminderLeadOptions.includes(savedLeadMinutes)) {
+                        setReminderLeadMinutes(savedLeadMinutes);
+                    }
+                    if (
+                        Array.isArray(savedReminderPrayers) &&
+                        savedReminderPrayers.some((key) => prayerLabels[key])
+                    ) {
+                        setReminderPrayers(
+                            savedReminderPrayers.filter(
+                                (key) => prayerLabels[key],
+                            ),
+                        );
+                    }
+                    savedLocationRef.current =
+                        normalizeSavedLocation(savedLocation);
+                    scheduleCacheRef.current =
+                        normalizeScheduleCache(savedScheduleCache);
+                    setPreferencesReady(true);
+                },
+            )
+            .catch(() => {
+                if (mounted) setPreferencesReady(true);
+            });
         return () => {
             mounted = false;
         };
@@ -881,6 +1102,77 @@ export function PrayerScreen({ isActive, navigation }) {
         });
         return current;
     })();
+    const showLocationCard = !loading && locationSource !== "gps";
+    const staleLabel = scheduleStale
+        ? t(
+              scheduleStale.method === method && scheduleStale.madhab === madhab
+                  ? "prayer.schedule.stale"
+                  : "prayer.schedule.staleOtherMethod",
+              {
+                  madhab:
+                      madhabs.find(
+                          ([key]) => key === scheduleStale.madhab,
+                      )?.[1] ?? scheduleStale.madhab,
+                  method:
+                      methods.find(
+                          ([key]) => key === scheduleStale.method,
+                      )?.[1] ?? scheduleStale.method,
+                  updated: new Date(scheduleStale.updatedAt).toLocaleString(
+                      dateLocale,
+                      {
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          month: "short",
+                      },
+                  ),
+              },
+          )
+        : "";
+
+    const renderSavedLocationCard = (webApp = false) => (
+        <Card style={webApp ? [styles.webAppCard, webCardStyle] : null}>
+            <Text
+                style={
+                    webApp
+                        ? [styles.webAppMutedText, { color: webTheme.muted }]
+                        : styles.statsText
+                }
+            >
+                {t(
+                    locationSource === "manual"
+                        ? "prayer.manual.currentManual"
+                        : "prayer.manual.currentSaved",
+                    { location: locationLabel },
+                )}
+            </Text>
+            <Pressable
+                accessibilityRole='button'
+                onPress={() => setManualFormOpen(true)}
+                style={
+                    webApp
+                        ? [
+                              styles.webAppSecondaryButton,
+                              { borderColor: webTheme.border },
+                          ]
+                        : styles.secondaryButton
+                }
+            >
+                <Text
+                    style={
+                        webApp
+                            ? [
+                                  styles.webAppSecondaryButtonText,
+                                  { color: webTheme.text },
+                              ]
+                            : styles.secondaryButtonText
+                    }
+                >
+                    {t("prayer.manual.edit")}
+                </Text>
+            </Pressable>
+        </Card>
+    );
 
     const renderManualLocationCard = (webApp = false) => (
         <Card style={webApp ? [styles.webAppCard, webCardStyle] : null}>
@@ -977,6 +1269,11 @@ export function PrayerScreen({ isActive, navigation }) {
             </Pressable>
         </Card>
     );
+
+    const renderLocationCard = (webApp = false) =>
+        coords && !manualFormOpen
+            ? renderSavedLocationCard(webApp)
+            : renderManualLocationCard(webApp);
 
     if (view === "settings") {
         if (isWebAppLayout) {
@@ -1275,12 +1572,22 @@ export function PrayerScreen({ isActive, navigation }) {
                         >
                             {t("prayer.reminder.title")}
                         </CardTitle>
-                        <View style={styles.webAppReminderRow}>
+                        <View style={[styles.webAppReminderRow, webLineStyle]}>
                             <View style={styles.webAppReminderCopy}>
-                                <Text style={styles.webAppPrayerLabel}>
+                                <Text
+                                    style={[
+                                        styles.webAppPrayerLabel,
+                                        isDarkTheme ? webTextStyle : null,
+                                    ]}
+                                >
                                     {t("prayer.reminder.local")}
                                 </Text>
-                                <Text style={styles.webAppMutedText}>
+                                <Text
+                                    style={[
+                                        styles.webAppMutedText,
+                                        webMutedStyle,
+                                    ]}
+                                >
                                     {t(
                                         reminderEnabled
                                             ? "prayer.status.active"
@@ -1294,6 +1601,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 style={[
                                     styles.toggleButton,
                                     styles.webAppToggleButton,
+                                    webChoiceStyle,
                                     reminderEnabled
                                         ? styles.webAppToggleButtonActive
                                         : null,
@@ -1303,6 +1611,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                     style={[
                                         styles.toggleText,
                                         styles.webAppToggleText,
+                                        webTextStyle,
                                         reminderEnabled
                                             ? styles.webAppToggleTextActive
                                             : null,
@@ -1317,12 +1626,22 @@ export function PrayerScreen({ isActive, navigation }) {
                             </Pressable>
                         </View>
 
-                        <View style={styles.webAppReminderRow}>
+                        <View style={[styles.webAppReminderRow, webLineStyle]}>
                             <View style={styles.webAppReminderCopy}>
-                                <Text style={styles.webAppPrayerLabel}>
+                                <Text
+                                    style={[
+                                        styles.webAppPrayerLabel,
+                                        isDarkTheme ? webTextStyle : null,
+                                    ]}
+                                >
                                     {t("prayer.reminder.audio")}
                                 </Text>
-                                <Text style={styles.webAppMutedText}>
+                                <Text
+                                    style={[
+                                        styles.webAppMutedText,
+                                        webMutedStyle,
+                                    ]}
+                                >
                                     {t(
                                         adzanAudioEnabled
                                             ? "prayer.status.audioActive"
@@ -1336,6 +1655,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 style={[
                                     styles.toggleButton,
                                     styles.webAppToggleButton,
+                                    webChoiceStyle,
                                     adzanAudioEnabled
                                         ? styles.webAppToggleButtonActive
                                         : null,
@@ -1345,6 +1665,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                     style={[
                                         styles.toggleText,
                                         styles.webAppToggleText,
+                                        webTextStyle,
                                         adzanAudioEnabled
                                             ? styles.webAppToggleTextActive
                                             : null,
@@ -1361,7 +1682,12 @@ export function PrayerScreen({ isActive, navigation }) {
 
                         {adzanAudioEnabled && (
                             <>
-                                <Text style={styles.webAppSettingsLabel}>
+                                <Text
+                                    style={[
+                                        styles.webAppSettingsLabel,
+                                        webMutedStyle,
+                                    ]}
+                                >
                                     {t("prayer.reminder.audio_choice") ??
                                         "Pilihan Muadzin / Suara Adzan"}
                                 </Text>
@@ -1380,8 +1706,14 @@ export function PrayerScreen({ isActive, navigation }) {
                                                 }
                                                 style={[
                                                     styles.adzanSoundItem,
+                                                    isDarkTheme
+                                                        ? webChoiceStyle
+                                                        : null,
                                                     isSelected
                                                         ? styles.adzanSoundItemActive
+                                                        : null,
+                                                    isSelected && isDarkTheme
+                                                        ? webSoundActiveStyle
                                                         : null,
                                                 ]}
                                             >
@@ -1393,17 +1725,27 @@ export function PrayerScreen({ isActive, navigation }) {
                                                     <Text
                                                         style={[
                                                             styles.adzanSoundLabel,
+                                                            isDarkTheme
+                                                                ? webTextStyle
+                                                                : null,
                                                             isSelected
                                                                 ? styles.adzanSoundLabelActive
+                                                                : null,
+                                                            isSelected &&
+                                                            isDarkTheme
+                                                                ? webSoundActiveTextStyle
                                                                 : null,
                                                         ]}
                                                     >
                                                         {sound.label}
                                                     </Text>
                                                     <Text
-                                                        style={
-                                                            styles.adzanSoundQari
-                                                        }
+                                                        style={[
+                                                            styles.adzanSoundQari,
+                                                            isDarkTheme
+                                                                ? webMutedStyle
+                                                                : null,
+                                                        ]}
                                                     >
                                                         {sound.qari} •{" "}
                                                         {sound.region}
@@ -1431,7 +1773,9 @@ export function PrayerScreen({ isActive, navigation }) {
                             </>
                         )}
 
-                        <Text style={styles.webAppSettingsLabel}>
+                        <Text
+                            style={[styles.webAppSettingsLabel, webMutedStyle]}
+                        >
                             {t("prayer.reminder.lead")}
                         </Text>
                         <View style={styles.methodGrid}>
@@ -1443,6 +1787,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                     style={[
                                         styles.methodButton,
                                         styles.webAppChoiceButton,
+                                        webChoiceStyle,
                                         reminderLeadMinutes === minutes
                                             ? styles.webAppChoiceButtonActive
                                             : null,
@@ -1452,6 +1797,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                         style={[
                                             styles.methodText,
                                             styles.webAppChoiceText,
+                                            webTextStyle,
                                             reminderLeadMinutes === minutes
                                                 ? styles.webAppChoiceTextActive
                                                 : null,
@@ -1463,7 +1809,9 @@ export function PrayerScreen({ isActive, navigation }) {
                             ))}
                         </View>
 
-                        <Text style={styles.webAppSettingsLabel}>
+                        <Text
+                            style={[styles.webAppSettingsLabel, webMutedStyle]}
+                        >
                             {t("prayer.reminder.prayers")}
                         </Text>
                         <View style={styles.methodGrid}>
@@ -1479,6 +1827,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                         style={[
                                             styles.methodButton,
                                             styles.webAppChoiceButton,
+                                            webChoiceStyle,
                                             selected
                                                 ? styles.webAppChoiceButtonActive
                                                 : null,
@@ -1488,6 +1837,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                             style={[
                                                 styles.methodText,
                                                 styles.webAppChoiceText,
+                                                webTextStyle,
                                                 selected
                                                     ? styles.webAppChoiceTextActive
                                                     : null,
@@ -1502,10 +1852,18 @@ export function PrayerScreen({ isActive, navigation }) {
 
                         <Pressable
                             accessibilityRole='button'
-                            onPress={() => syncPrayerReminders()}
-                            style={styles.webAppSecondaryButton}
+                            onPress={resyncReminders}
+                            style={[
+                                styles.webAppSecondaryButton,
+                                { borderColor: webTheme.border },
+                            ]}
                         >
-                            <Text style={styles.webAppSecondaryButtonText}>
+                            <Text
+                                style={[
+                                    styles.webAppSecondaryButtonText,
+                                    webTextStyle,
+                                ]}
+                            >
                                 {t("prayer.reminder.reschedule")}
                             </Text>
                         </Pressable>
@@ -1537,7 +1895,14 @@ export function PrayerScreen({ isActive, navigation }) {
                         >
                             {t("prayer.offline.description")}
                         </Text>
-                        <View style={styles.webAppProgressTrack}>
+                        <View
+                            style={[
+                                styles.webAppProgressTrack,
+                                isDarkTheme
+                                    ? { backgroundColor: webTheme.border }
+                                    : null,
+                            ]}
+                        >
                             <View
                                 style={[
                                     styles.webAppProgressFill,
@@ -1547,7 +1912,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 ]}
                             />
                         </View>
-                        <Text style={styles.webAppMutedText}>
+                        <Text style={[styles.webAppMutedText, webMutedStyle]}>
                             {offlineMessage}
                         </Text>
                         <View style={styles.offlineActions}>
@@ -1588,6 +1953,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 style={[
                                     styles.offlineButton,
                                     styles.webAppOfflineButton,
+                                    webChoiceStyle,
                                     offlineBusy ||
                                     prayerOffline?.supported === false
                                         ? styles.disabled
@@ -1613,6 +1979,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 style={[
                                     styles.offlineButton,
                                     styles.webAppOfflineButton,
+                                    webChoiceStyle,
                                     offlineBusy ||
                                     prayerOffline?.supported === false
                                         ? styles.disabled
@@ -1993,7 +2360,7 @@ export function PrayerScreen({ isActive, navigation }) {
 
                     <Pressable
                         accessibilityRole='button'
-                        onPress={() => syncPrayerReminders()}
+                        onPress={resyncReminders}
                         style={styles.secondaryButton}
                     >
                         <Text style={styles.secondaryButtonText}>
@@ -2178,7 +2545,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     </Text>
                 </View>
 
-                {!coords && !loading ? renderManualLocationCard(true) : null}
+                {showLocationCard ? renderLocationCard(true) : null}
 
                 <View style={styles.webAppClockPanel}>
                     <Text
@@ -2268,6 +2635,17 @@ export function PrayerScreen({ isActive, navigation }) {
                         >
                             {methodLabel} · {madhabLabel}
                         </Text>
+                        {staleLabel ? (
+                            <Text
+                                style={[
+                                    styles.webAppScheduleMeta,
+                                    { color: webTheme.messageText },
+                                ]}
+                                testID='prayer-stale-indicator'
+                            >
+                                {staleLabel}
+                            </Text>
+                        ) : null}
                     </View>
                     {loading && !prayers ? (
                         <ActivityIndicator color={webTheme.accent} />
@@ -2426,7 +2804,7 @@ export function PrayerScreen({ isActive, navigation }) {
             />
             {message ? <Text style={styles.message}>{message}</Text> : null}
 
-            {!coords && !loading ? renderManualLocationCard(false) : null}
+            {showLocationCard ? renderLocationCard(false) : null}
 
             {prayers && countdown !== null ? (
                 <Card>
@@ -2471,6 +2849,14 @@ export function PrayerScreen({ isActive, navigation }) {
                 >
                     {`${t("prayer.today")} · ${today()}`}
                 </CardTitle>
+                {staleLabel ? (
+                    <Text
+                        style={styles.staleText}
+                        testID='prayer-stale-indicator'
+                    >
+                        {staleLabel}
+                    </Text>
+                ) : null}
                 {loading && !prayers ? (
                     <ActivityIndicator color={colors.primary} />
                 ) : (
@@ -2916,6 +3302,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "700",
         marginTop: 3,
+    },
+    staleText: {
+        color: colors.accent,
+        fontSize: 12,
+        fontWeight: "700",
+        marginBottom: spacing.sm,
     },
     adjustmentText: {
         color: colors.muted,

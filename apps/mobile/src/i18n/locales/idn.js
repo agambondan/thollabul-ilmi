@@ -938,6 +938,10 @@ export const idn = {
         "prayer.countdown.now": "Waktunya sholat",
         "prayer.countdown.nowClassic": "✧ Waktunya sholat! ✧",
         "prayer.countdown.towards": "Menuju {prayer}",
+        "prayer.error.network":
+            "Tidak ada koneksi internet. Periksa jaringanmu lalu muat ulang jadwal.",
+        "prayer.error.rateLimited":
+            "Server sedang sibuk. Coba muat ulang beberapa saat lagi.",
         "prayer.location.invalidManual":
             "Masukkan koordinat yang valid. Contoh: -6.2088, 106.8456",
         "prayer.location.inactive": "Lokasi belum aktif",
@@ -945,9 +949,14 @@ export const idn = {
             "Aktifkan lokasi untuk memuat jadwal sholat sesuai tempatmu.",
         "prayer.location.unavailable":
             "Lokasi belum terbaca. Aktifkan GPS lalu muat ulang jadwal sholat.",
+        "prayer.location.usingSaved":
+            "Lokasi saat ini belum terbaca. Memakai lokasi terakhir yang tersimpan.",
         "prayer.manual.apply": "Terapkan Lokasi",
+        "prayer.manual.currentManual": "Lokasi manual: {location}",
+        "prayer.manual.currentSaved": "Lokasi terakhir: {location}",
         "prayer.manual.description":
             "Aktifkan GPS atau masukkan koordinat lokasimu untuk memuat jadwal sholat.",
+        "prayer.manual.edit": "Ubah lokasi",
         "prayer.manual.latPlaceholder": "-6.2088 (Lintang)",
         "prayer.manual.lngPlaceholder": "106.8456 (Bujur)",
         "prayer.manual.meta": "Koordinat GPS",
@@ -968,6 +977,12 @@ export const idn = {
         "prayer.name.maghrib": "Maghrib",
         "prayer.name.sunrise": "Terbit",
         "prayer.nextBadge": "BERIKUTNYA",
+        "prayer.notification.reminder.body":
+            "Waktu {prayer} masuk pukul {time}.",
+        "prayer.notification.reminder.bodyNow": "Waktu {prayer} telah tiba.",
+        "prayer.notification.reminder.title": "Pengingat {prayer}",
+        "prayer.notification.time.body": "Sudah masuk waktu {prayer}.",
+        "prayer.notification.time.title": "Waktu Sholat: {prayer}",
         "prayer.offline.cleared": "Jadwal sholat offline dihapus.",
         "prayer.offline.clearError":
             "Jadwal sholat offline belum bisa dihapus.",
@@ -1004,11 +1019,16 @@ export const idn = {
         "prayer.reminder.prayers": "Waktu Sholat",
         "prayer.reminder.reschedule": "Atur ulang pengingat",
         "prayer.reminder.scheduled": "{count} pengingat sholat dijadwalkan.",
+        "prayer.reminder.scheduleError":
+            "Pengingat sholat belum bisa dijadwalkan.",
         "prayer.reminder.scheduleRequired":
             "Muat jadwal sholat sebelum mengatur pengingat.",
         "prayer.reminder.title": "Pengingat Adzan",
         "prayer.schedule.loadingContext":
             "Jadwal dimuat sesuai lokasi dan metode yang dipilih.",
+        "prayer.schedule.stale": "Data lama · diperbarui {updated}",
+        "prayer.schedule.staleOtherMethod":
+            "Data lama ({method} · {madhab}) · diperbarui {updated}",
         "prayer.scheduleUnavailable": "Jadwal sholat belum tersedia.",
         "prayer.scheduleUnavailableForLocation":
             "Jadwal sholat belum tersedia untuk lokasi ini.",
