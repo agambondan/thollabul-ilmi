@@ -5,7 +5,6 @@ import {
     Play,
     Search,
     Trash2,
-    Youtube,
 } from "lucide-react-native";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -300,7 +299,7 @@ function TranscriptCard({
                     />
 
                     <View style={styles.watchRow}>
-                        <Youtube color='#ef4444' size={14} />
+                        <Play color='#ef4444' fill='#ef4444' size={14} />
                         <Text style={styles.watchText}>
                             Tonton @ {item.timestamp}
                         </Text>
