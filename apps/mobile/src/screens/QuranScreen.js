@@ -1863,7 +1863,6 @@ export function QuranScreen({
         audioPlayerOpen,
         audioRangeCollapsed,
         selectedSurah,
-        closeAyahDetail,
         navigation,
         setSettingsVisible,
         setTajweedVisible,
