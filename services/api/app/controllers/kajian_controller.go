@@ -155,7 +155,7 @@ func (c *kajianController) Delete(ctx *fiber.Ctx) error {
 // @Produce json
 // @Param q query string false "Search query text"
 // @Param speaker query string false "Filter by ustadz/speaker name"
-// @Param mode query string false "Search mode: exact (verbatim phrase) | semantic (stemmed + spelling variants + embedding) | hybrid (exact first, then all-concept, then semantic tail; default)"
+// @Param mode query string false "Search mode: exact (verbatim phrase) | semantic (stemmed + spelling variants + fuzzy typo match) | hybrid (exact first, then all-concept, then semantic tail; default)"
 // @Param page query int false "Page number (default: 1)"
 // @Param limit query int false "Items per page (default: 20, max 100). Response meta carries total, has_more, kajian_count and expanded_terms."
 // @Success 200 {object} lib.Response

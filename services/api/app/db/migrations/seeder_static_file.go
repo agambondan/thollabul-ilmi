@@ -706,9 +706,7 @@ func seedKajianFromFile(db *gorm.DB) {
 			})
 		}
 		if len(chunkRows) > 0 {
-			// Omit the embedding: the zero pgvector.Vector serialises as '[]'
-			// which Postgres rejects, silently dropping every chunk.
-			err := db.Omit("Embedding").Clauses(clause.OnConflict{
+			err := db.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
 				DoUpdates: clause.AssignmentColumns([]string{"video_id", "text", "timestamp_url", "deleted_at"}),
 			}).CreateInBatches(&chunkRows, 200).Error

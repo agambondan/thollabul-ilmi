@@ -1,7 +1,5 @@
 package model
 
-import "github.com/pgvector/pgvector-go"
-
 type KajianType string
 
 const (
@@ -63,17 +61,13 @@ type KajianTranscript struct {
 	// seeder can upsert a chunk by its (video, window) identity instead of
 	// deleting and recreating every row on each run — bookmarks and notes
 	// reference a chunk's id directly, and churning ids silently orphans them.
-	KajianID     int    `json:"kajian_id" gorm:"not null;uniqueIndex:idx_kajian_transcript_chunk"`
-	VideoID      string `json:"video_id" gorm:"type:varchar(64);index"`
-	StartSeconds int    `json:"start_seconds" gorm:"not null;index;uniqueIndex:idx_kajian_transcript_chunk"`
-	EndSeconds   int    `json:"end_seconds" gorm:"not null;uniqueIndex:idx_kajian_transcript_chunk"`
-	Text         string `json:"text" gorm:"type:text;not null"`
-	TimestampURL string `json:"timestamp_url" gorm:"type:varchar(1024)"`
-	// default:null makes GORM skip the column on insert when the value is the
-	// zero Vector; otherwise it serialises as '[]', which Postgres rejects
-	// ("vector must have at least 1 dimension") and every seeded chunk fails.
-	Embedding pgvector.Vector `json:"embedding,omitempty" gorm:"type:vector(256);default:null"`
-	Kajian    *Kajian         `json:"kajian,omitempty" gorm:"foreignKey:KajianID;-:migration"`
+	KajianID     int     `json:"kajian_id" gorm:"not null;uniqueIndex:idx_kajian_transcript_chunk"`
+	VideoID      string  `json:"video_id" gorm:"type:varchar(64);index"`
+	StartSeconds int     `json:"start_seconds" gorm:"not null;index;uniqueIndex:idx_kajian_transcript_chunk"`
+	EndSeconds   int     `json:"end_seconds" gorm:"not null;uniqueIndex:idx_kajian_transcript_chunk"`
+	Text         string  `json:"text" gorm:"type:text;not null"`
+	TimestampURL string  `json:"timestamp_url" gorm:"type:varchar(1024)"`
+	Kajian       *Kajian `json:"kajian,omitempty" gorm:"foreignKey:KajianID;-:migration"`
 }
 
 type SearchTranscriptResult struct {

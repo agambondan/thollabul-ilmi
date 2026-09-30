@@ -121,7 +121,7 @@ func SeedKajianTranscriptsFromFile(db *gorm.DB) {
 				_ = db.Clauses(clause.OnConflict{
 					Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
 					DoNothing: true,
-				}).Omit("Embedding").CreateInBatches(&transcripts, 200).Error
+				}).CreateInBatches(&transcripts, 200).Error
 			}
 		}
 	}
