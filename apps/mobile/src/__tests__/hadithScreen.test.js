@@ -158,7 +158,7 @@ jest.mock("../components/SectionHeader", () => ({
 
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import { StyleSheet } from "react-native";
+import { InteractionManager, StyleSheet } from "react-native";
 import { HadithScreen } from "../screens/HadithScreen";
 
 const { useSession } = require("../context/SessionContext");
@@ -337,6 +337,79 @@ describe("HadithScreen", () => {
                 expect.objectContaining({ bookSlug: "bukhari" }),
             );
         });
+    });
+
+    test("selecting a book reloads its list without waiting for interactions to settle", async () => {
+        const runAfterInteractions = jest.spyOn(
+            InteractionManager,
+            "runAfterInteractions",
+        );
+        runAfterInteractions
+            .mockImplementationOnce((task) => {
+                task();
+                return { cancel: jest.fn() };
+            })
+            .mockImplementation(() => ({ cancel: jest.fn() }));
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: true,
+        });
+        const { getAllByText } = render(<HadithScreen isActive />);
+
+        fireEvent.press((await waitFor(() => getAllByText("Buka Reader")))[0]);
+
+        await waitFor(() => {
+            expect(clientApi.getHadithPage).toHaveBeenCalledWith(
+                expect.objectContaining({ bookSlug: "bukhari" }),
+            );
+        });
+        runAfterInteractions.mockRestore();
+    });
+
+    test("keeps the newest list when an older request answers late", async () => {
+        const { findAllByTestId, findByText, getAllByText, queryByText } =
+            render(<HadithScreen isActive />);
+        expect(await findAllByTestId("content-card")).toHaveLength(2);
+
+        let answerOlder;
+        clientApi.getHadithPage
+            .mockImplementationOnce(
+                () =>
+                    new Promise((resolve) => {
+                        answerOlder = resolve;
+                    }),
+            )
+            .mockResolvedValueOnce({
+                items: [mockHadithItem(20)],
+                page: 0,
+                hasMore: false,
+                total: 1,
+            });
+
+        fireEvent.press(await findByText("Shahih Muslim"));
+        await waitFor(() => {
+            expect(clientApi.getHadithPage).toHaveBeenCalledWith(
+                expect.objectContaining({ bookSlug: "muslim" }),
+            );
+        });
+        fireEvent.press(getAllByText("Shahih Bukhari")[0]);
+        await waitFor(() => {
+            expect(queryByText(/ 20 text\./)).toBeTruthy();
+        });
+
+        answerOlder({
+            items: [
+                mockHadithItem(10, { book: "Shahih Muslim", bookSlug: "muslim" }),
+                mockHadithItem(11, { book: "Shahih Muslim", bookSlug: "muslim" }),
+            ],
+            page: 0,
+            hasMore: false,
+            total: 2,
+        });
+        await new Promise((resolve) => setTimeout(resolve, 50));
+
+        expect(queryByText(/ 10 text\./)).toBeNull();
+        expect(queryByText(/ 20 text\./)).toBeTruthy();
     });
 
     test("loads books and displays them in filter row", async () => {

@@ -258,6 +258,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const loadingMoreRef = useRef(false);
     const webAppScrollRef = useRef(null);
     const hadSearchQueryRef = useRef(false);
+    const loadSequenceRef = useRef(0);
+    const refreshedOnceRef = useRef(false);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [books, setBooks] = useState([]);
     const [failedBookCovers, setFailedBookCovers] = useState({});
@@ -328,6 +330,10 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             preferOffline = true,
             q = null,
         } = {}) => {
+            const sequence = append
+                ? loadSequenceRef.current
+                : ++loadSequenceRef.current;
+            const isSuperseded = () => sequence !== loadSequenceRef.current;
             if (append) {
                 loadingMoreRef.current = true;
                 setLoadingMore(true);
@@ -341,6 +347,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             try {
                 if (preferOffline && !append && !q) {
                     const offlineItems = await loadOfflineHadiths(bookSlug);
+                    if (isSuperseded()) return;
                     if (offlineItems) {
                         setHadiths(offlineItems);
                         setHadithTotal(offlineItems.length);
@@ -357,6 +364,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     size: HADITH_LIST_PAGE_SIZE,
                     q,
                 });
+                if (isSuperseded()) return;
                 setHadithSource("backend");
                 setRemotePage(result.page);
                 setHasMoreRemote(result.hasMore);
@@ -380,6 +388,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         : HADITH_LIST_PAGE_SIZE,
                 );
             } catch (error) {
+                if (isSuperseded()) return;
                 if (!append) {
                     setHadiths([]);
                     setHadithTotal(0);
@@ -387,10 +396,12 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                 }
                 setMessage(error?.message ?? "Daftar hadis belum bisa dimuat.");
             } finally {
-                setLoading(false);
-                setLoadingMore(false);
-                if (append) {
-                    loadingMoreRef.current = false;
+                if (!isSuperseded()) {
+                    setLoading(false);
+                    setLoadingMore(false);
+                    if (append) {
+                        loadingMoreRef.current = false;
+                    }
                 }
             }
         },
@@ -1137,6 +1148,11 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     );
 
     useEffect(() => {
+        if (refreshedOnceRef.current) {
+            refreshAll();
+            return undefined;
+        }
+        refreshedOnceRef.current = true;
         const task = InteractionManager.runAfterInteractions(() => {
             refreshAll();
         });
