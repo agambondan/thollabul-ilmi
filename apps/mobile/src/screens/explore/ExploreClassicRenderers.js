@@ -40,7 +40,7 @@ import {
     PaperSearchInput,
 } from "../../components/Paper";
 import { Screen } from "../../components/Screen";
-import { colors, radius, spacing } from "../../theme";
+import { colors, getThemeColors, radius, spacing } from "../../theme";
 import {
     deleteFaraidh,
     deleteKalkulasiZakat,
@@ -297,6 +297,10 @@ export function createExploreClassicRenderers(context) {
         zakatTradeStock,
         zakatTimerRef,
     } = context;
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
 
     const renderCurrencyInput = ({
         label,
@@ -314,7 +318,7 @@ export function createExploreClassicRenderers(context) {
                         onChangeText(sanitizeCurrencyInput(nextValue))
                     }
                     placeholder={placeholder}
-                    placeholderTextColor={colors.muted}
+                    placeholderTextColor={theme.muted}
                     returnKeyType='done'
                     style={styles.currencyInput}
                     value={formatNumericInput(value)}
@@ -333,7 +337,7 @@ export function createExploreClassicRenderers(context) {
                         onChangeText(sanitizeDecimalInput(nextValue))
                     }
                     placeholder={placeholder}
-                    placeholderTextColor={colors.muted}
+                    placeholderTextColor={theme.muted}
                     returnKeyType='done'
                     style={styles.currencyInput}
                     value={sanitizeDecimalInput(value)}
@@ -359,7 +363,7 @@ export function createExploreClassicRenderers(context) {
                     }))
                 }
                 placeholder={placeholder}
-                placeholderTextColor={colors.muted}
+                placeholderTextColor={theme.muted}
                 style={[
                     styles.input,
                     multiline && styles.textArea,
@@ -711,7 +715,7 @@ export function createExploreClassicRenderers(context) {
                     <Text style={styles.detailTitle}>Komentar</Text>
                     {commentLoading ? (
                         <ActivityIndicator
-                            color={colors.primary}
+                            color={theme.primary}
                             size='small'
                         />
                     ) : null}
@@ -747,7 +751,7 @@ export function createExploreClassicRenderers(context) {
                                 ? "Tulis komentar..."
                                 : "Masuk untuk menulis komentar"
                         }
-                        placeholderTextColor={colors.muted}
+                        placeholderTextColor={theme.muted}
                         style={styles.commentInput}
                         value={commentDraft}
                     />
@@ -943,7 +947,7 @@ export function createExploreClassicRenderers(context) {
                                 style={{
                                     fontSize: 13,
                                     fontWeight: "900",
-                                    color: colors.ink,
+                                    color: theme.ink,
                                     marginBottom: spacing.sm,
                                 }}
                             >
@@ -965,7 +969,7 @@ export function createExploreClassicRenderers(context) {
                                 style={{
                                     fontSize: 13,
                                     fontWeight: "900",
-                                    color: colors.ink,
+                                    color: theme.ink,
                                     marginBottom: spacing.sm,
                                 }}
                             >
@@ -1048,7 +1052,7 @@ export function createExploreClassicRenderers(context) {
                                     }))
                                 }
                                 placeholder='0'
-                                placeholderTextColor={colors.muted}
+                                placeholderTextColor={theme.muted}
                                 style={styles.input}
                                 value={libraryProgressDraft.currentPage}
                             />
@@ -1064,7 +1068,7 @@ export function createExploreClassicRenderers(context) {
                                     }))
                                 }
                                 placeholder='Misalnya: sampai bab ikhlas...'
-                                placeholderTextColor={colors.muted}
+                                placeholderTextColor={theme.muted}
                                 style={[styles.input, styles.textArea]}
                                 value={libraryProgressDraft.note}
                             />
@@ -1407,7 +1411,7 @@ export function createExploreClassicRenderers(context) {
                             testID='web-app-detail-back'
                         >
                             <ArrowLeft
-                                color={colors.primary}
+                                color={theme.primary}
                                 size={16}
                                 strokeWidth={2.4}
                             />
@@ -1525,7 +1529,7 @@ export function createExploreClassicRenderers(context) {
                                     }))
                                 }
                                 placeholder='1'
-                                placeholderTextColor={colors.muted}
+                                placeholderTextColor={theme.muted}
                                 style={styles.input}
                                 value={userWirdForm.count}
                             />
@@ -1613,7 +1617,7 @@ export function createExploreClassicRenderers(context) {
                             onChangeText={setDictionaryQuery}
                             onSubmitEditing={runDictionarySearch}
                             placeholder='Cari kata Arab atau Indonesia'
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={theme.muted}
                             style={styles.input}
                             value={dictionaryQuery}
                         />
@@ -1745,7 +1749,7 @@ export function createExploreClassicRenderers(context) {
                         {activeFeature.title}
                     </CardTitle>
                     {asmaulLoading ? (
-                        <ActivityIndicator color={colors.primary} />
+                        <ActivityIndicator color={theme.primary} />
                     ) : currentName ? (
                         <>
                             <View style={styles.asmaulHeader}>
@@ -1810,7 +1814,7 @@ export function createExploreClassicRenderers(context) {
                             <View
                                 style={{
                                     height: 6,
-                                    backgroundColor: colors.faint,
+                                    backgroundColor: theme.border,
                                     borderRadius: 3,
                                     marginVertical: spacing.md,
                                 }}
@@ -1819,8 +1823,8 @@ export function createExploreClassicRenderers(context) {
                                     style={{
                                         height: 6,
                                         backgroundColor: isComplete
-                                            ? colors.primary
-                                            : colors.muted,
+                                            ? theme.primary
+                                            : theme.muted,
                                         borderRadius: 3,
                                         width: `${Math.min(100, (currentCount / 33) * 100)}%`,
                                     }}
@@ -1887,7 +1891,7 @@ export function createExploreClassicRenderers(context) {
                         {activeFeature.title}
                     </CardTitle>
                     {asmaulLoading ? (
-                        <ActivityIndicator color={colors.primary} />
+                        <ActivityIndicator color={theme.primary} />
                     ) : currentName ? (
                         <>
                             <Pressable
@@ -2002,7 +2006,7 @@ export function createExploreClassicRenderers(context) {
                         autoCapitalize='none'
                         onChangeText={setSurahSearch}
                         placeholder='Cari nama atau nomor surah'
-                        placeholderTextColor={colors.muted}
+                        placeholderTextColor={theme.muted}
                         style={styles.surahSearchInput}
                         value={surahSearch}
                     />
@@ -2183,7 +2187,7 @@ export function createExploreClassicRenderers(context) {
                                     ? "#F59E0B"
                                     : color === "blue"
                                       ? "#3B82F6"
-                                      : colors.primary,
+                                      : theme.primary,
                             borderWidth: 1,
                             marginTop: spacing.md,
                         },
@@ -2258,7 +2262,7 @@ export function createExploreClassicRenderers(context) {
                                         styles.body,
                                         {
                                             fontSize: 12,
-                                            color: colors.muted,
+                                            color: theme.muted,
                                             marginBottom: spacing.sm,
                                         },
                                     ]}
@@ -2289,10 +2293,10 @@ export function createExploreClassicRenderers(context) {
                                     value={zakatHaul}
                                     onValueChange={setZakatHaul}
                                     trackColor={{
-                                        false: colors.faint,
-                                        true: colors.primary,
+                                        false: theme.border,
+                                        true: theme.primary,
                                     }}
-                                    thumbColor={colors.surface}
+                                    thumbColor={theme.surface}
                                 />
                             </View>
                             <View style={styles.resultPanel}>
@@ -2503,10 +2507,10 @@ export function createExploreClassicRenderers(context) {
                                     value={zakatTradeHaul}
                                     onValueChange={setZakatTradeHaul}
                                     trackColor={{
-                                        false: colors.faint,
-                                        true: colors.primary,
+                                        false: theme.border,
+                                        true: theme.primary,
                                     }}
-                                    thumbColor={colors.surface}
+                                    thumbColor={theme.surface}
                                 />
                             </View>
                             <View style={styles.resultPanel}>
@@ -2592,10 +2596,10 @@ export function createExploreClassicRenderers(context) {
                                     value={zakatHarvestIrrigated}
                                     onValueChange={setZakatHarvestIrrigated}
                                     trackColor={{
-                                        false: colors.faint,
-                                        true: colors.primary,
+                                        false: theme.border,
+                                        true: theme.primary,
                                     }}
-                                    thumbColor={colors.surface}
+                                    thumbColor={theme.surface}
                                 />
                             </View>
                             {harvest > 0 && harvest < NISAB_HARVEST_KG && (
@@ -2694,10 +2698,10 @@ export function createExploreClassicRenderers(context) {
                                     value={zakatGoldHaul}
                                     onValueChange={setZakatGoldHaul}
                                     trackColor={{
-                                        false: colors.faint,
-                                        true: colors.primary,
+                                        false: theme.border,
+                                        true: theme.primary,
                                     }}
-                                    thumbColor={colors.surface}
+                                    thumbColor={theme.surface}
                                 />
                             </View>
                             {renderZakatResult(
@@ -2785,7 +2789,7 @@ export function createExploreClassicRenderers(context) {
                             style={{
                                 textAlign: "center",
                                 fontSize: 13,
-                                color: colors.primary,
+                                color: theme.primary,
                                 marginTop: spacing.sm,
                             }}
                         >
@@ -2979,7 +2983,7 @@ export function createExploreClassicRenderers(context) {
                                         <Text
                                             style={[
                                                 styles.secondaryButtonText,
-                                                { color: colors.danger },
+                                                { color: theme.danger },
                                             ]}
                                         >
                                             Hapus
@@ -3273,7 +3277,7 @@ export function createExploreClassicRenderers(context) {
                         <TextInput
                             onChangeText={setForumAskTitle}
                             placeholder='Judul pertanyaan (min 10 karakter)'
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={theme.muted}
                             style={styles.inputField}
                             value={forumAskTitle}
                         />
@@ -3281,7 +3285,7 @@ export function createExploreClassicRenderers(context) {
                             multiline
                             onChangeText={setForumAskBody}
                             placeholder='Isi pertanyaan (min 20 karakter)'
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={theme.muted}
                             style={[styles.inputField, { minHeight: 120 }]}
                             textAlignVertical='top'
                             value={forumAskBody}
@@ -3290,7 +3294,7 @@ export function createExploreClassicRenderers(context) {
                             autoCapitalize='none'
                             onChangeText={setForumAskTags}
                             placeholder='Tag (pisahkan dengan koma, opsional)'
-                            placeholderTextColor={colors.muted}
+                            placeholderTextColor={theme.muted}
                             style={styles.inputField}
                             value={forumAskTags}
                         />
@@ -3298,7 +3302,7 @@ export function createExploreClassicRenderers(context) {
                             <Text
                                 style={[
                                     styles.statusNote,
-                                    { color: colors.danger },
+                                    { color: theme.danger },
                                 ]}
                             >
                                 {forumError}
@@ -3394,7 +3398,7 @@ export function createExploreClassicRenderers(context) {
                             {forumDetail?.title ?? "Detail"}
                         </CardTitle>
                         {forumLoading ? (
-                            <ActivityIndicator color={colors.primary} />
+                            <ActivityIndicator color={theme.primary} />
                         ) : !forumDetail ? (
                             <Text style={styles.body}>
                                 Pertanyaan tidak ditemukan.
@@ -3640,7 +3644,7 @@ export function createExploreClassicRenderers(context) {
                                                 ))}
                                                 <Text
                                                     style={{
-                                                        color: colors.text,
+                                                        color: theme.text,
                                                         fontSize: 12,
                                                     }}
                                                 >
@@ -3710,7 +3714,7 @@ export function createExploreClassicRenderers(context) {
                                             multiline
                                             onChangeText={setForumAnswerDraft}
                                             placeholder='Tulis jawaban...'
-                                            placeholderTextColor={colors.muted}
+                                            placeholderTextColor={theme.muted}
                                             style={[
                                                 styles.inputField,
                                                 {
@@ -3823,7 +3827,7 @@ export function createExploreClassicRenderers(context) {
                             setForumLoading(false);
                         }}
                         placeholder='Cari pertanyaan...'
-                        placeholderTextColor={colors.muted}
+                        placeholderTextColor={theme.muted}
                         returnKeyType='search'
                         style={styles.inputField}
                         value={forumSearch}
@@ -3832,14 +3836,14 @@ export function createExploreClassicRenderers(context) {
                         <Text
                             style={[
                                 styles.statusNote,
-                                { color: colors.danger },
+                                { color: theme.danger },
                             ]}
                         >
                             {forumError}
                         </Text>
                     ) : null}
                     {forumLoading ? (
-                        <ActivityIndicator color={colors.primary} />
+                        <ActivityIndicator color={theme.primary} />
                     ) : forumQuestions.length === 0 ? (
                         <Text
                             style={[
@@ -4065,13 +4069,13 @@ export function createExploreClassicRenderers(context) {
                             >
                                 {sholatLog[p.key] ? (
                                     <CheckCircle2
-                                        color={colors.primary}
+                                        color={theme.primary}
                                         size={22}
                                         strokeWidth={2.5}
                                     />
                                 ) : (
                                     <Circle
-                                        color={colors.faint}
+                                        color={theme.border}
                                         size={22}
                                         strokeWidth={2}
                                     />

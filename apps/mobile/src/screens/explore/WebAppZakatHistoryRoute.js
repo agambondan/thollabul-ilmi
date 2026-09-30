@@ -2,7 +2,8 @@ import { ArrowLeft, BookOpen, Trash2 } from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, spacing } from "../../theme";
+import { colors, getThemeColors, spacing } from "../../theme";
+import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { styles } from "../ExploreScreen.styles";
 
 const formatDate = (item, language) => {
@@ -20,13 +21,18 @@ const formatDate = (item, language) => {
 
 export function ClassicZakatHistoryItem({ formatCurrency, item, onDelete }) {
     const { language, t } = useMobileLocale();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
         <View
             key={item.id}
             style={[styles.faraidhHistoryCard, { marginTop: spacing.xs }]}
         >
             <View style={{ flex: 1 }}>
-                <Text style={{ fontWeight: "700", color: colors.ink }}>
+                <Text style={{ fontWeight: "700", color: theme.ink }}>
                     {item.nama_jenis}
                 </Text>
                 <Text style={[styles.resultValue, { fontSize: 13 }]}>
@@ -35,23 +41,23 @@ export function ClassicZakatHistoryItem({ formatCurrency, item, onDelete }) {
                 <Text
                     style={{
                         fontSize: 11,
-                        color: item.is_local ? colors.muted : colors.primary,
+                        color: item.is_local ? theme.muted : theme.primary,
                     }}
                 >
                     {item.is_local
                         ? t("explore.zakatHistory.localDevice")
                         : t("explore.zakatHistory.syncedAccount")}
                 </Text>
-                <Text style={{ fontSize: 11, color: colors.muted }}>
+                <Text style={{ fontSize: 11, color: theme.muted }}>
                     {formatDate(item, language)}
                 </Text>
             </View>
             <Pressable
                 accessibilityRole='button'
                 onPress={() => onDelete(item)}
-                style={[styles.heirButton, { borderColor: colors.danger }]}
+                style={[styles.heirButton, { borderColor: theme.danger }]}
             >
-                <Text style={[styles.heirButtonText, { color: colors.danger }]}>
+                <Text style={[styles.heirButtonText, { color: theme.danger }]}>
                     {t("explore.zakatHistory.delete")}
                 </Text>
             </Pressable>

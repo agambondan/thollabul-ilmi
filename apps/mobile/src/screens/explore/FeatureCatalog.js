@@ -19,7 +19,7 @@ import { Card, CardTitle } from "../../components/Card";
 import { CompactRow, SectionHeader } from "../../components/Paper";
 import { allFeatures, belajarFeatureGroups } from "../../data/mobileFeatures";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, radius, spacing } from "../../theme";
+import { colors, getThemeColors, radius, spacing } from "../../theme";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 
 export const LOCAL_TOOL_TYPES = [
@@ -383,6 +383,11 @@ const FeatureRow = memo(function FeatureRow({
     webAppTheme,
     webAppThemeStyles = {},
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const badges = useMemo(
         () => (badgeLabels ? badgeLabels.split("|") : []),
         [badgeLabels],
@@ -411,11 +416,15 @@ const FeatureRow = memo(function FeatureRow({
                         borderless: true,
                     }}
                     onPress={handleTogglePinned}
-                    style={[styles.pinButton, pinned && styles.pinButtonActive]}
+                    style={[
+                        styles.pinButton,
+                        { backgroundColor: theme.surface, borderColor: theme.border },
+                        pinned && [styles.pinButtonActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
+                    ]}
                 >
                     <Star
-                        color={pinned ? colors.onPrimary : colors.primary}
-                        fill={pinned ? colors.onPrimary : "transparent"}
+                        color={pinned ? theme.onPrimary : theme.primary}
+                        fill={pinned ? theme.onPrimary : "transparent"}
                         size={15}
                         strokeWidth={2.2}
                     />

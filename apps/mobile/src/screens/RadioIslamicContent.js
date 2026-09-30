@@ -14,7 +14,8 @@ import {
     IconActionButton,
     PaperSearchInput,
 } from "../components/Paper";
-import { colors, spacing } from "../theme";
+import { colors, getThemeColors, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { getRadioIslamicStations } from "../api/client";
 import { playAudioUrl, stopAudio } from "../utils/audioPlayer";
 import {
@@ -24,6 +25,11 @@ import {
 } from "../utils/audioSession";
 
 export function RadioIslamicContent() {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -99,7 +105,7 @@ export function RadioIslamicContent() {
 
             {loading ? (
                 <View style={styles.loading}>
-                    <ActivityIndicator color={colors.primary} size='large' />
+                    <ActivityIndicator color={theme.primary} size='large' />
                 </View>
             ) : error ? (
                 <ErrorState />
@@ -129,7 +135,7 @@ export function RadioIslamicContent() {
                                     station.stream_url ? (
                                         isBuffering ? (
                                             <ActivityIndicator
-                                                color={colors.primary}
+                                                color={theme.primary}
                                                 size='small'
                                             />
                                         ) : (
@@ -161,7 +167,7 @@ export function RadioIslamicContent() {
             !error &&
             items.length > 0 &&
             !items.some((s) => s.stream_url) ? (
-                <Text style={styles.notice}>
+                <Text style={[styles.notice, { color: theme.muted }]}>
                     Belum ada siaran online untuk daftar ini.
                 </Text>
             ) : null}
