@@ -226,6 +226,38 @@ describe("explore api", () => {
             expect(result.meta).toBeDefined();
         });
 
+        test("keeps the API total in the page meta", async () => {
+            requestJson.mockResolvedValueOnce({
+                items: [{ title: "A" }],
+                last: false,
+                page: 0,
+                size: 20,
+                total: 7346,
+            });
+            const paged = await getFeatureItemPage(
+                { endpoint: "/api/v1/kajian", type: "list" },
+                { page: 0, size: 20 },
+            );
+            expect(paged.meta.total).toBe(7346);
+
+            requestJson.mockResolvedValueOnce({
+                items: [{ title: "A" }],
+                meta: { has_more: true, total: "12" },
+            });
+            const withMeta = await getFeatureItemPage({
+                endpoint: "/api/v1/other",
+                type: "list",
+            });
+            expect(withMeta.meta.total).toBe(12);
+
+            requestJson.mockResolvedValueOnce([{ title: "A" }]);
+            const plain = await getFeatureItemPage({
+                endpoint: "/api/v1/plain",
+                type: "list",
+            });
+            expect(plain.meta.total).toBeNull();
+        });
+
         test("adds pagination params when pagination given", async () => {
             requestJson.mockResolvedValueOnce({ items: [] });
             await getFeatureItemPage(

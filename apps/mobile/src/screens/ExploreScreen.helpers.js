@@ -699,11 +699,17 @@ export const getFilteredKajianItems = (
         return matchesSearch && matchesCategory;
     });
 };
-export const getKajianSummary = (items = []) => ({
-    categoryCount: new Set(items.map(getKajianTopic).filter(Boolean)).size,
-    total: items.length,
-    videoCount: items.filter((item) => getKajianType(item) === "video").length,
-});
+export const getKajianSummary = (items = [], { total } = {}) => {
+    const knownTotal =
+        Number.isFinite(total) && total >= items.length ? total : null;
+    return {
+        categoryCount: new Set(items.map(getKajianTopic).filter(Boolean)).size,
+        total: knownTotal ?? items.length,
+        videoCount:
+            knownTotal ??
+            items.filter((item) => getKajianType(item) === "video").length,
+    };
+};
 export const getBlogRaw = (item = {}) => item?.raw ?? item;
 export const getBlogTitle = (item = {}, index = 0) => {
     const raw = getBlogRaw(item);

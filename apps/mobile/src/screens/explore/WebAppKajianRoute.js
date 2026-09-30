@@ -23,6 +23,7 @@ import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors, iconStroke, radius, spacing, touchTarget } from "../../theme";
 import { KajianPlayerModal } from "../../components/KajianPlayerModal";
+import { API_URL } from "../../api/client";
 import { readSession } from "../../storage/session";
 import {
     listSyncedKajianBookmarks,
@@ -322,7 +323,7 @@ function KajianStat({ accent = "#047857", formatValue, isDarkTheme, label, value
 }
 
 export function WebAppKajianRoute({
-    apiUrl = "https://api.thollabulilmi.site",
+    apiUrl = API_URL,
     categories,
     clearFeature,
     error,
@@ -363,6 +364,7 @@ export function WebAppKajianRoute({
     // is dropped instead of appended to the new result list.
     const transcriptRequestRef = useRef(0);
     const [speakers, setSpeakers] = useState([]);
+    const [categoryTotal, setCategoryTotal] = useState(null);
 
     // Player modal
     const [playerItem, setPlayerItem] = useState(null);
@@ -532,6 +534,24 @@ export function WebAppKajianRoute({
         };
     }, [apiUrl]);
 
+    useEffect(() => {
+        let active = true;
+        fetch(`${apiUrl}/api/v1/kajian/categories`)
+            .then((r) => r.json())
+            .then((data) => {
+                const list = Array.isArray(data?.data)
+                    ? data.data
+                    : Array.isArray(data)
+                      ? data
+                      : [];
+                if (active && list.length) setCategoryTotal(list.length);
+            })
+            .catch(() => {});
+        return () => {
+            active = false;
+        };
+    }, [apiUrl]);
+
     const buildTranscriptParams = useCallback(
         (page) => {
             const params = new URLSearchParams({
@@ -673,7 +693,7 @@ export function WebAppKajianRoute({
                     formatValue={formatStat}
                     isDarkTheme={isDarkTheme}
                     label={t("explore.kajian.categoryStat")}
-                    value={summary.categoryCount}
+                    value={categoryTotal ?? summary.categoryCount}
                 />
             </View>
 

@@ -386,6 +386,7 @@ export function ExploreScreen({
         page: 0,
         hasMore: false,
         loadingMore: false,
+        total: null,
     });
     const loadingMoreRef = useRef(false);
 
@@ -704,6 +705,7 @@ export function ExploreScreen({
                         page: 0,
                         hasMore: paginated && page.meta.hasMore,
                         loadingMore: false,
+                        total: page.meta.total ?? null,
                     });
                 }
                 setItems(nextItems);
@@ -751,11 +753,12 @@ export function ExploreScreen({
             const merged = mergeUniqueItems(items, nextItems, isFeed ? 200 : 200);
             const addedCount = merged.length - items.length;
             setItems(merged);
-            setPagination({
+            setPagination((current) => ({
                 page: nextPage,
                 hasMore: page.meta.hasMore && addedCount > 0,
                 loadingMore: false,
-            });
+                total: page.meta.total ?? current.total ?? null,
+            }));
         } catch (err) {
             setError(err?.message ?? t("explore.loadMoreError"));
             setPagination((current) => ({ ...current, loadingMore: false }));

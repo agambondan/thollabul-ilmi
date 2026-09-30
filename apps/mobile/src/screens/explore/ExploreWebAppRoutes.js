@@ -3588,7 +3588,9 @@ export function renderExploreWebAppRoute(context) {
             kajianSearch,
             kajianCategory,
         );
-        const summary = getKajianSummary(visibleItems);
+        const summary = getKajianSummary(visibleItems, {
+            total: pagination?.total,
+        });
 
         return (
             <WebAppKajianRoute

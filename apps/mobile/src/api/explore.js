@@ -18,6 +18,18 @@ const pickItems = (payload) => {
 const paginationOffset = (pagination = {}) =>
     Number(pagination.page ?? 0) * Number(pagination.size ?? 0) || 0;
 
+const pickTotal = (...values) => {
+    const found = values.find(
+        (value) =>
+            value !== null &&
+            value !== undefined &&
+            value !== "" &&
+            Number.isFinite(Number(value)) &&
+            Number(value) >= 0,
+    );
+    return found === undefined ? null : Number(found);
+};
+
 const pickPaginationMeta = (payload, pagination, itemCount = 0) => {
     const meta = payload?.meta ?? payload?.data?.meta;
     if (meta) {
@@ -28,6 +40,7 @@ const pickPaginationMeta = (payload, pagination, itemCount = 0) => {
             limit: Number(meta.limit ?? pagination?.size ?? itemCount),
             offset: Number(meta.offset ?? paginationOffset(pagination)),
             nextOffset: meta.next_offset ?? meta.nextOffset ?? null,
+            total: pickTotal(meta.total, payload?.total),
         };
     }
 
@@ -39,6 +52,7 @@ const pickPaginationMeta = (payload, pagination, itemCount = 0) => {
                 Number(payload.page ?? pagination?.page ?? 0) *
                 Number(payload.size ?? pagination?.size ?? itemCount),
             nextOffset: null,
+            total: pickTotal(payload.total),
         };
     }
 
@@ -47,6 +61,7 @@ const pickPaginationMeta = (payload, pagination, itemCount = 0) => {
         limit: pagination?.size ?? itemCount,
         offset: (pagination?.page ?? 0) * (pagination?.size ?? itemCount),
         nextOffset: null,
+        total: pickTotal(payload?.total),
     };
 };
 
