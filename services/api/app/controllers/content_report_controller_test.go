@@ -12,11 +12,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func setupContentReportTestEnv(t *testing.T) (*gorm.DB, *service.Services) {
 	viper.Set("ACCESS_SECRET", "test-secret-key-12345")
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{SingularTable: true},
+	})
 	assert.NoError(t, err)
 
 	err = db.AutoMigrate(&model.User{}, &model.ContentReport{}, &model.UserNotification{}, &model.UserPoints{}, &model.Doa{}, &model.Translation{}, &model.PushToken{})

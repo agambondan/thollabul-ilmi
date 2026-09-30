@@ -239,8 +239,8 @@ func (s *contentReportService) updateTranslationByAyahNumber(db *gorm.DB, ayahRe
 	}
 
 	var ayah model.Ayah
-	if err := db.Joins("JOIN surahs ON surahs.id = ayahs.surah_id").
-		Where("surahs.number = ? AND ayahs.number = ?", surahNumber, ayahNumber).
+	if err := db.Joins("JOIN surah ON surah.id = ayah.surah_id AND surah.deleted_at IS NULL").
+		Where("surah.number = ? AND ayah.number = ?", surahNumber, ayahNumber).
 		First(&ayah).Error; err != nil {
 		return "", fmt.Errorf("ayah not found: %v", err)
 	}
@@ -255,8 +255,8 @@ func (s *contentReportService) updateTranslationByHadithSlugNumber(db *gorm.DB, 
 		lang = "idn"
 	}
 	var hadith model.Hadith
-	if err := db.Joins("JOIN books ON books.id = hadiths.book_id").
-		Where("books.slug = ? AND hadiths.number = ?", bookSlug, number).
+	if err := db.Joins("JOIN book ON book.id = hadith.book_id AND book.deleted_at IS NULL").
+		Where("book.slug = ? AND hadith.number = ?", bookSlug, number).
 		First(&hadith).Error; err != nil {
 		return "", fmt.Errorf("hadith not found: %v", err)
 	}
@@ -280,7 +280,9 @@ func (s *contentReportService) updateDoaTranslation(db *gorm.DB, targetID, lang,
 	} else {
 		oldVal = doa.TranslationText
 	}
-	_ = db.Table("doas").Where("id = ?", targetID).Update("translation", text)
+	if err := db.Table("doa").Where("id = ?", targetID).Update("translation", text).Error; err != nil {
+		return "", err
+	}
 	return oldVal, nil
 }
 
@@ -298,7 +300,9 @@ func (s *contentReportService) updateDzikirTranslation(db *gorm.DB, targetID, la
 	} else {
 		oldVal = dzikir.TranslationText
 	}
-	_ = db.Table("dzikirs").Where("id = ?", targetID).Update("translation", text)
+	if err := db.Table("dzikir").Where("id = ?", targetID).Update("translation", text).Error; err != nil {
+		return "", err
+	}
 	return oldVal, nil
 }
 
@@ -311,7 +315,7 @@ func (s *contentReportService) updateFiqhItemContent(db *gorm.DB, targetID, lang
 	if item.TranslationID != nil {
 		_, _ = s.updateTranslationRow(db, *item.TranslationID, lang, text)
 	}
-	res := db.Table("fiqh_items").Where("id = ?", targetID).Update("content", text)
+	res := db.Table("fiqh_item").Where("id = ?", targetID).Update("content", text)
 	if res.Error != nil {
 		return "", res.Error
 	}
@@ -327,7 +331,7 @@ func (s *contentReportService) updateSirohContent(db *gorm.DB, targetID, lang, t
 	if item.TranslationID != nil {
 		_, _ = s.updateTranslationRow(db, *item.TranslationID, lang, text)
 	}
-	res := db.Table("siroh_contents").Where("id = ?", targetID).Update("content", text)
+	res := db.Table("siroh_content").Where("id = ?", targetID).Update("content", text)
 	if res.Error != nil {
 		return "", res.Error
 	}
@@ -368,7 +372,7 @@ func (s *contentReportService) updateTranslationRow(db *gorm.DB, translationID i
 		}
 	}
 
-	res := db.Table("translations").Where("id = ?", translationID).Update(col, text)
+	res := db.Table("translation").Where("id = ?", translationID).Update(col, text)
 	if res.Error != nil {
 		return "", res.Error
 	}
