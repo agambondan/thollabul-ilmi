@@ -204,11 +204,10 @@ ffmpeg -y -ss "$(cat demo-mobile-app-account.trim.txt)" -i demo-mobile-app-accou
 - **Hadis search is server-side since `c9f593f7`.** An API without that change
   (production until the next deploy) ignores the query and returns the
   unfiltered list, so the public tour's "niat" search only looks right against
-  a current backend. The script avoids "Buka Reader": on the pre-fix build it
-  intermittently left the previous book's list under the new book's header.
-- **Kajian: use the "Transkrip" sub-tab.** The list sub-tab and the stat cards
-  above it only reflect the loaded page (20 / 20 / 9 on production, 1 / 0 / 0
-  locally), so the script scrolls past them.
+  a current backend.
+- **Kajian: use the "Transkrip" sub-tab.** The list sub-tab only filters the
+  items already loaded (20 at a time); transcript search is the real search.
+  The stat cards above them show the API totals.
 - **Ibadah is visited last.** Sub-screens opened from the hub (Jadwal Sholat
   and friends) can only be left with Android's hardware back; on web there is
   no way back to the hub without a reload.

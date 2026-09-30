@@ -453,7 +453,6 @@ async function publicTour(page) {
         page.getByText("Transkrip").filter({ visible: true }).first(),
         600,
     );
-    await smoothScroll(page, 110, 2, 200);
     await showCaption(page, "🔍 Cari langsung di isi kajian", 3000);
     const kajianSearch = page.locator("input:visible").first();
     await tapOn(page, kajianSearch, 500);
