@@ -12,7 +12,8 @@ import {
     View,
 } from "react-native";
 import { X } from "lucide-react-native";
-import { colors, spacing } from "../theme";
+import { colors, getThemeColors, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { hapticTap } from "../utils/haptics";
 
 const DRAG_THRESHOLD = 100;
@@ -86,6 +87,11 @@ function ModalSheetInner({
     subtitleStyle,
     scroll,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const panY = useRef(new Animated.Value(0)).current;
     const isDragging = useRef(false);
     const headerRef = useRef(null);
@@ -165,7 +171,7 @@ function ModalSheetInner({
                 importantForAccessibility='yes'
                 style={[
                     styles.sheet,
-                    { maxHeight, transform: [{ translateY: panY }] },
+                    { backgroundColor: theme.bg, maxHeight, transform: [{ translateY: panY }] },
                     sheetStyle,
                 ]}
             >
@@ -174,7 +180,7 @@ function ModalSheetInner({
                     importantForAccessibility='no-hide-descendants'
                 >
                     <View style={styles.handleWrapper}>
-                        <View style={styles.handle} />
+                        <View style={[styles.handle, { backgroundColor: theme.borderStrong || theme.border }]} />
                     </View>
                 </View>
                 <View style={[styles.header, headerStyle]}>
@@ -182,14 +188,14 @@ function ModalSheetInner({
                         <Text
                             accessibilityRole='header'
                             ref={headerRef}
-                            style={[styles.title, titleStyle]}
+                            style={[styles.title, { color: theme.ink }, titleStyle]}
                         >
                             {title}
                         </Text>
                         {subtitle ? (
                             <Text
                                 numberOfLines={2}
-                                style={[styles.subtitle, subtitleStyle]}
+                                style={[styles.subtitle, { color: theme.muted }, subtitleStyle]}
                             >
                                 {subtitle}
                             </Text>
@@ -199,7 +205,7 @@ function ModalSheetInner({
                         accessibilityLabel={closeLabel}
                         accessibilityRole='button'
                         android_ripple={{
-                            color: colors.primaryBg,
+                            color: theme.ripple,
                             borderless: true,
                         }}
                         hitSlop={8}
@@ -207,9 +213,9 @@ function ModalSheetInner({
                             hapticTap();
                             onClose?.(event);
                         }}
-                        style={styles.close}
+                        style={[styles.close, { backgroundColor: theme.surfaceMuted }]}
                     >
-                        <X color={colors.muted} size={18} strokeWidth={2.2} />
+                        <X color={theme.muted} size={18} strokeWidth={2.2} />
                     </Pressable>
                 </View>
                 <Body {...bodyProps}>
@@ -226,7 +232,7 @@ function ModalSheetInner({
                     ) : null}
                 </Body>
                 {stickyFooter ? (
-                    <View style={styles.footer}>{footer}</View>
+                    <View style={[styles.footer, { backgroundColor: theme.bg, borderTopColor: theme.border }]}>{footer}</View>
                 ) : null}
             </Animated.View>
         </Modal>

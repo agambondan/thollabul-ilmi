@@ -8,7 +8,7 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { colors, radius, spacing, touchTarget } from "../theme";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
 import { HistoricalMapView } from "./HistoricalMapView";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
@@ -95,6 +95,10 @@ const WEB_APP_HISTORICAL_MAP_THEMES = {
 
 export function HistoricalMapContent() {
     const { isDarkTheme = false, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const { t } = useMobileLocale();
     const webAppTheme = isDarkTheme
         ? WEB_APP_HISTORICAL_MAP_THEMES.dark
@@ -321,11 +325,16 @@ export function HistoricalMapContent() {
             onChangeText={setSearch}
             placeholder={t("historicalMap.searchPlaceholder")}
             placeholderTextColor={
-                isWebAppLayout ? webAppTheme.muted : colors.muted
+                isWebAppLayout ? webAppTheme.muted : theme.muted
             }
             returnKeyType='search'
             style={[
                 styles.searchInput,
+                !isWebAppLayout && {
+                    backgroundColor: theme.bg,
+                    borderColor: theme.border,
+                    color: theme.ink,
+                },
                 isWebAppLayout && styles.webAppSearchInput,
                 isWebAppLayout && {
                     backgroundColor: webAppTheme.surface,
@@ -346,6 +355,7 @@ export function HistoricalMapContent() {
             <Text
                 style={[
                     styles.resultCount,
+                    !isWebAppLayout && { color: theme.muted },
                     isWebAppLayout && styles.webAppResultCount,
                     isWebAppLayout && { color: webAppTheme.muted },
                 ]}
@@ -363,6 +373,7 @@ export function HistoricalMapContent() {
                     onPress={() => setViewMode("map")}
                     style={[
                         styles.locationRow,
+                        !isWebAppLayout && { borderBottomColor: theme.border },
                         isWebAppLayout && styles.webAppLocationRow,
                         isWebAppLayout && {
                             backgroundColor: webAppTheme.surface,
@@ -539,7 +550,7 @@ export function HistoricalMapContent() {
 
             {loading ? (
                 <View style={styles.loadingContainer}>
-                    <ActivityIndicator size='large' color={colors.primary} />
+                    <ActivityIndicator size='large' color={theme.primary} />
                 </View>
             ) : viewMode === "map" ? (
                 <HistoricalMapView locations={locations} />

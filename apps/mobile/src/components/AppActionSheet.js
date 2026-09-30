@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { hapticTap } from "../utils/haptics";
 import { AppModalSheet } from "./AppModalSheet";
 
@@ -18,6 +19,11 @@ export function ActionSheetRow({
     accessibilityLabel,
     accessibilityHint,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
         <Pressable
             // Title is the name, subtitle is the hint. Left implicit, a screen
@@ -27,7 +33,7 @@ export function ActionSheetRow({
             accessibilityRole='button'
             accessibilityState={{ disabled, selected: active }}
             android_ripple={{
-                color: "rgba(91, 110, 91, 0.12)",
+                color: theme.ripple,
                 borderless: false,
             }}
             disabled={disabled}
@@ -37,7 +43,8 @@ export function ActionSheetRow({
             }}
             style={[
                 styles.row,
-                active && styles.rowActive,
+                { backgroundColor: theme.surface, borderColor: theme.border },
+                active && [styles.rowActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
                 disabled && styles.disabled,
                 style,
             ]}
@@ -45,7 +52,7 @@ export function ActionSheetRow({
             {Icon ? (
                 <View style={[styles.rowIcon, iconStyle]}>
                     <Icon
-                        color={active ? colors.onPrimary : colors.primary}
+                        color={active ? theme.onPrimary : theme.primary}
                         size={18}
                         strokeWidth={2.3}
                     />
@@ -55,7 +62,8 @@ export function ActionSheetRow({
                 <Text
                     style={[
                         styles.rowTitle,
-                        active && styles.rowTitleActive,
+                        { color: theme.ink },
+                        active && [styles.rowTitleActive, { color: theme.onPrimary }],
                         titleStyle,
                     ]}
                 >
@@ -79,9 +87,14 @@ export function ActionSheetRow({
 }
 
 export function ActionSheetSection({ title, style }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     if (!title) return null;
     return (
-        <Text style={[styles.sectionTitle, style]}>{title}</Text>
+        <Text style={[styles.sectionTitle, { color: theme.muted }, style]}>{title}</Text>
     );
 }
 

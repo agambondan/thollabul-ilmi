@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors, radius, spacing, touchTarget } from "../theme";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { hapticTap } from "../utils/haptics";
 
 export function DetailHeader({
@@ -15,8 +16,13 @@ export function DetailHeader({
     subtitleStyle,
     metaStyle,
 }) {
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     return (
-        <View style={[styles.header, style]}>
+        <View style={[styles.header, { borderBottomColor: theme.border }, style]}>
             <View style={styles.copy}>
                 <View style={styles.titleRow}>
                     {onBack ? (
@@ -24,7 +30,7 @@ export function DetailHeader({
                             accessibilityLabel={backLabel}
                             accessibilityRole='button'
                             android_ripple={{
-                                color: colors.primaryBg,
+                                color: theme.ripple,
                                 borderless: true,
                             }}
                             hitSlop={8}
@@ -32,22 +38,22 @@ export function DetailHeader({
                                 hapticTap();
                                 onBack(event);
                             }}
-                            style={styles.backButton}
+                            style={[styles.backButton, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}
                         >
                             <ArrowLeft
-                                color={colors.primary}
+                                color={theme.primary}
                                 size={18}
                                 strokeWidth={2.3}
                             />
                         </Pressable>
                     ) : null}
-                    <Text numberOfLines={2} style={[styles.title, titleStyle]}>
+                    <Text numberOfLines={2} style={[styles.title, { color: theme.ink }, titleStyle]}>
                         {title}
                     </Text>
                     {meta ? (
                         <Text
                             numberOfLines={1}
-                            style={[styles.meta, metaStyle]}
+                            style={[styles.meta, { color: theme.primary }, metaStyle]}
                         >
                             {meta}
                         </Text>
@@ -56,7 +62,7 @@ export function DetailHeader({
                 {subtitle ? (
                     <Text
                         numberOfLines={2}
-                        style={[styles.subtitle, subtitleStyle]}
+                        style={[styles.subtitle, { color: theme.muted }, subtitleStyle]}
                     >
                         {subtitle}
                     </Text>

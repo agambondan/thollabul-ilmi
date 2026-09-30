@@ -11,13 +11,19 @@ import { createNote, deleteNote, getNotes, updateNote } from "../api/personal";
 import { useFeedback } from "../context/FeedbackContext";
 import { useSession } from "../context/SessionContext";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { CardTitle } from "./Card";
 
 export function NotesPanel({ refType, refId }) {
     const { user } = useSession();
     const { showError, showSuccess } = useFeedback();
     const { t } = useMobileLocale();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const [content, setContent] = useState("");
     const [editingId, setEditingId] = useState(null);
     const [items, setItems] = useState([]);
@@ -122,7 +128,7 @@ export function NotesPanel({ refType, refId }) {
                 <CardTitle meta={t("notes.loginMeta")}>
                     {t("notes.title")}
                 </CardTitle>
-                <Text style={styles.muted}>{t("notes.loginPrompt")}</Text>
+                <Text style={[styles.muted, { color: theme.muted }]}>{t("notes.loginPrompt")}</Text>
             </View>
         );
     }
@@ -136,8 +142,8 @@ export function NotesPanel({ refType, refId }) {
                 multiline
                 onChangeText={setContent}
                 placeholder={t("notes.placeholder")}
-                placeholderTextColor={colors.muted}
-                style={styles.input}
+                placeholderTextColor={theme.muted}
+                style={[styles.input, { backgroundColor: theme.bg, borderColor: theme.border, color: theme.ink }]}
                 value={content}
             />
             <View style={styles.actions}>
@@ -145,9 +151,9 @@ export function NotesPanel({ refType, refId }) {
                     <Pressable
                         accessibilityRole='button'
                         onPress={resetForm}
-                        style={styles.secondaryButton}
+                        style={[styles.secondaryButton, { borderColor: theme.border }]}
                     >
-                        <Text style={styles.secondaryText}>
+                        <Text style={[styles.secondaryText, { color: theme.primary }]}>
                             {t("notes.cancel")}
                         </Text>
                     </Pressable>
@@ -159,12 +165,12 @@ export function NotesPanel({ refType, refId }) {
                     }}
                     disabled={loading || !content.trim()}
                     onPress={submit}
-                    style={styles.primaryButton}
+                    style={[styles.primaryButton, { backgroundColor: theme.primary }]}
                 >
                     {loading ? (
                         <ActivityIndicator color='#ffffff' />
                     ) : (
-                        <Text style={styles.primaryText}>
+                        <Text style={[styles.primaryText, { color: theme.onPrimary }]}>
                             {editingId
                                 ? t("notes.updateAction")
                                 : t("notes.saveAction")}
@@ -174,27 +180,27 @@ export function NotesPanel({ refType, refId }) {
             </View>
             {message ? <Text style={styles.message}>{message}</Text> : null}
             {loading && items.length === 0 ? (
-                <ActivityIndicator color={colors.primary} />
+                <ActivityIndicator color={theme.primary} />
             ) : null}
             {(showAll ? items : items.slice(0, PREVIEW_COUNT)).map((item) => (
-                <View key={item.id} style={styles.note}>
-                    <Text style={styles.noteText}>{item.content}</Text>
+                <View key={item.id} style={[styles.note, { borderTopColor: theme.border }]}>
+                    <Text style={[styles.noteText, { color: theme.text }]}>{item.content}</Text>
                     <View style={styles.noteActions}>
                         <Pressable
                             accessibilityRole='button'
                             onPress={() => startEdit(item)}
-                            style={styles.noteButton}
+                            style={[styles.noteButton, { borderColor: theme.border }]}
                         >
-                            <Text style={styles.noteButtonText}>
+                            <Text style={[styles.noteButtonText, { color: theme.primary }]}>
                                 {t("notes.editAction")}
                             </Text>
                         </Pressable>
                         <Pressable
                             accessibilityRole='button'
                             onPress={() => remove(item.id)}
-                            style={styles.noteButton}
+                            style={[styles.noteButton, { borderColor: theme.border }]}
                         >
-                            <Text style={styles.deleteText}>
+                            <Text style={[styles.deleteText, { color: theme.danger }]}>
                                 {t("notes.deleteAction")}
                             </Text>
                         </Pressable>
