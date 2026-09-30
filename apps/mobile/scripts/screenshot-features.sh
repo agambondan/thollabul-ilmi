@@ -33,7 +33,7 @@ set -euo pipefail
 # Login-gated features (protected-list type) will show their gated state on
 # a guest session, same as a real fresh install.
 
-PACKAGE="com.anonymous.thullaabulilmimobile"
+PACKAGE="com.thullaabulilmi.app"
 APK_PATH="android/app/build/outputs/apk/release/app-release.apk"
 OUT_DIR="output/native/$(date +%F)"
 SKIP_INSTALL=0
