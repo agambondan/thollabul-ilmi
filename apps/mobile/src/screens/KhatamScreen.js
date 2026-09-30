@@ -19,7 +19,7 @@ import {
     readPreference,
     writePreference,
 } from "../storage/preferences";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
 import {
     ayahIndex,
     dailyTarget,
@@ -121,6 +121,10 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
     const { user } = useSession();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { language, t } = useMobileLocale();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const webAppTheme = isDarkTheme
         ? WEB_APP_KHATAM_THEMES.dark
         : WEB_APP_KHATAM_THEMES.light;
@@ -757,7 +761,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
             ) : null}
 
             {user && loading && !progress ? (
-                <ActivityIndicator color={colors.primary} />
+                <ActivityIndicator color={theme.primary} />
             ) : null}
             {user && error ? <Text style={styles.message}>{error}</Text> : null}
 
@@ -788,35 +792,35 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                         <CardTitle meta={`${Math.round(stats.pct)}%`}>
                             {t("khatam.progress.current")}
                         </CardTitle>
-                        <View style={styles.progressTrack}>
+                        <View style={[styles.progressTrack, { backgroundColor: theme.surfaceMuted }]}>
                             <View
                                 style={[
                                     styles.progressFill,
-                                    { width: `${Math.min(100, stats.pct)}%` },
+                                    { backgroundColor: theme.primary, width: `${Math.min(100, stats.pct)}%` },
                                 ]}
                             />
                         </View>
                         <View style={styles.heroStats}>
-                            <View style={styles.statBlock}>
-                                <Text style={styles.statValue}>
+                            <View style={[styles.statBlock, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+                                <Text style={[styles.statValue, { color: theme.ink }]}>
                                     {stats.currentIdx}
                                 </Text>
-                                <Text style={styles.statLabel}>
+                                <Text style={[styles.statLabel, { color: theme.muted }]}>
                                     {t("khatam.progress.ofAyahs", {
                                         total: TOTAL_AYAH,
                                     })}
                                 </Text>
                             </View>
-                            <View style={styles.statBlock}>
-                                <Text style={styles.statValue}>
+                            <View style={[styles.statBlock, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+                                <Text style={[styles.statValue, { color: theme.ink }]}>
                                     {stats.target.ayahsLeft}
                                 </Text>
-                                <Text style={styles.statLabel}>
+                                <Text style={[styles.statLabel, { color: theme.muted }]}>
                                     {t("khatam.progress.ayahsLeft")}
                                 </Text>
                             </View>
                         </View>
-                        <Text style={styles.lastRead}>
+                        <Text style={[styles.lastRead, { color: theme.muted }]}>
                             {t("khatam.lastRead", {
                                 date: lastRead,
                                 surah: progress.surahNumber,
@@ -839,19 +843,19 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                             {t("khatam.target.title")}
                         </CardTitle>
                         <View style={styles.targetGrid}>
-                            <View style={styles.targetBox}>
-                                <Text style={styles.targetValue}>
+                            <View style={[styles.targetBox, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+                                <Text style={[styles.targetValue, { color: theme.primary }]}>
                                     {stats.target.ayahsPerDay}
                                 </Text>
-                                <Text style={styles.targetLabel}>
+                                <Text style={[styles.targetLabel, { color: theme.muted }]}>
                                     {t("khatam.target.ayahsPerDayFull")}
                                 </Text>
                             </View>
-                            <View style={styles.targetBox}>
-                                <Text style={styles.targetValue}>
+                            <View style={[styles.targetBox, { backgroundColor: theme.bg, borderColor: theme.border }]}>
+                                <Text style={[styles.targetValue, { color: theme.primary }]}>
                                     {Math.ceil(stats.target.ayahsPerDay / 20)}
                                 </Text>
-                                <Text style={styles.targetLabel}>
+                                <Text style={[styles.targetLabel, { color: theme.muted }]}>
                                     {t("khatam.target.pagesPerDay")}
                                 </Text>
                             </View>
@@ -868,15 +872,17 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                                     key={item.juz}
                                     style={[
                                         styles.juzCell,
-                                        item.pct >= 100 && styles.juzCellDone,
-                                        item.isCurrent && styles.juzCellCurrent,
+                                        { backgroundColor: theme.surfaceMuted, borderColor: theme.border },
+                                        item.pct >= 100 && [styles.juzCellDone, { backgroundColor: theme.primary, borderColor: theme.primary }],
+                                        item.isCurrent && [styles.juzCellCurrent, { borderColor: theme.accent }],
                                     ]}
                                 >
                                     <Text
                                         style={[
                                             styles.juzText,
+                                            { color: theme.text },
                                             item.pct >= 100 &&
-                                                styles.juzTextDone,
+                                                [styles.juzTextDone, { color: theme.onPrimary }],
                                         ]}
                                     >
                                         {item.juz}

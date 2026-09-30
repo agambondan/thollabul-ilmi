@@ -42,7 +42,7 @@ import {
     readPreference,
     writePreference,
 } from "../storage/preferences";
-import { colors, radius, spacing } from "../theme";
+import { colors, getThemeColors, radius, spacing } from "../theme";
 import {
     listPrayerReminders,
     notificationsSupported,
@@ -270,6 +270,10 @@ export function PrayerScreen({ isActive, navigation }) {
     const { showError, showInfo, showSuccess } = useFeedback();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { language, t } = useMobileLocale();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const webTheme = isDarkTheme
         ? WEB_APP_PRAYER_THEMES.dark
         : WEB_APP_PRAYER_THEMES.light;
@@ -1136,7 +1140,7 @@ export function PrayerScreen({ isActive, navigation }) {
                 style={
                     webApp
                         ? [styles.webAppMutedText, { color: webTheme.muted }]
-                        : styles.statsText
+                        : [styles.statsText, { color: theme.muted }]
                 }
             >
                 {t(
@@ -1155,7 +1159,7 @@ export function PrayerScreen({ isActive, navigation }) {
                               styles.webAppSecondaryButton,
                               { borderColor: webTheme.border },
                           ]
-                        : styles.secondaryButton
+                        : [styles.secondaryButton, { borderColor: theme.border }]
                 }
             >
                 <Text
@@ -1165,7 +1169,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                   styles.webAppSecondaryButtonText,
                                   { color: webTheme.text },
                               ]
-                            : styles.secondaryButtonText
+                            : [styles.secondaryButtonText, { color: theme.ink }]
                     }
                 >
                     {t("prayer.manual.edit")}
@@ -1211,11 +1215,18 @@ export function PrayerScreen({ isActive, navigation }) {
                     onChangeText={setManualLatInput}
                     placeholder={t("prayer.manual.latPlaceholder")}
                     placeholderTextColor={
-                        webApp ? webTheme.muted : colors.muted
+                        webApp ? webTheme.muted : theme.muted
                     }
                     returnKeyType='next'
                     style={[
                         styles.manualLocInput,
+                        !webApp
+                            ? {
+                                  backgroundColor: theme.bg,
+                                  borderColor: theme.border,
+                                  color: theme.ink,
+                              }
+                            : null,
                         webApp ? styles.webAppManualLocInput : null,
                         webApp
                             ? {
@@ -1232,11 +1243,18 @@ export function PrayerScreen({ isActive, navigation }) {
                     onChangeText={setManualLngInput}
                     placeholder={t("prayer.manual.lngPlaceholder")}
                     placeholderTextColor={
-                        webApp ? webTheme.muted : colors.muted
+                        webApp ? webTheme.muted : theme.muted
                     }
                     returnKeyType='done'
                     style={[
                         styles.manualLocInput,
+                        !webApp
+                            ? {
+                                  backgroundColor: theme.bg,
+                                  borderColor: theme.border,
+                                  color: theme.ink,
+                              }
+                            : null,
                         webApp ? styles.webAppManualLocInput : null,
                         webApp
                             ? {
@@ -2858,7 +2876,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     </Text>
                 ) : null}
                 {loading && !prayers ? (
-                    <ActivityIndicator color={colors.primary} />
+                    <ActivityIndicator color={theme.primary} />
                 ) : (
                     translatedScheduleRows.map(([key, label]) => {
                         const adjustment = adjustments[key] ?? 0;

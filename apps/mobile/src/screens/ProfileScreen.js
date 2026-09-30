@@ -1246,6 +1246,10 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     } = useSession();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const webAppProfileTheme = isDarkTheme
         ? WEB_APP_PROFILE_THEMES.dark
         : WEB_APP_PROFILE_THEMES.light;
@@ -2156,38 +2160,38 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                     <Text style={styles.avatarText}>{initials || "TI"}</Text>
                 </View>
                 <View style={styles.profileBody}>
-                    <Text style={styles.name}>
+                    <Text style={[styles.name, { color: theme.ink }]}>
                         {user?.name || "Thullabul Ilmi"}
                     </Text>
-                    <Text style={styles.email}>
+                    <Text style={[styles.email, { color: theme.muted }]}>
                         {user?.email || t("profile.guestEmail")}
                     </Text>
                 </View>
                 <Pressable
                     accessibilityRole='button'
                     accessibilityLabel={t("profile.settings.open")}
-                    android_ripple={{ color: colors.faint, borderless: true }}
+                    android_ripple={{ color: theme.ripple, borderless: true }}
                     hitSlop={12}
                     onPress={() => push("settings")}
                     style={styles.gearButton}
                 >
-                    <Settings color={colors.muted} size={20} strokeWidth={2} />
+                    <Settings color={theme.muted} size={20} strokeWidth={2} />
                 </Pressable>
             </Card>
 
             {stats ? (
                 <View style={styles.statsRow}>
                     <Card style={styles.statCard}>
-                        <Text style={styles.statValue}>
+                        <Text style={[styles.statValue, { color: theme.ink }]}>
                             {stats.points.toLocaleString("id-ID")}
                         </Text>
-                        <Text style={styles.statLabel}>
+                        <Text style={[styles.statLabel, { color: theme.muted }]}>
                             {t("profile.stats.totalPoints")}
                         </Text>
                     </Card>
                     <Card style={styles.statCard}>
-                        <Text style={styles.statValue}>{stats.streak}</Text>
-                        <Text style={styles.statLabel}>
+                        <Text style={[styles.statValue, { color: theme.ink }]}>{stats.streak}</Text>
+                        <Text style={[styles.statLabel, { color: theme.muted }]}>
                             {t("profile.stats.streakDays")}
                         </Text>
                     </Card>
@@ -2199,7 +2203,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 stats.sholatWeekly !== null ||
                 stats.tilawahPages !== null) ? (
                 <View style={styles.progressSection}>
-                    <Text style={styles.sectionLabel}>
+                    <Text style={[styles.sectionLabel, { color: theme.muted }]}>
                         {t("profile.progress.title")}
                     </Text>
                     <View style={styles.progressGrid}>
@@ -2209,17 +2213,17 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                                 onPress={() =>
                                     onOpenTab("quran", { tab: "hafalan" })
                                 }
-                                style={styles.progressCard}
+                                style={[styles.progressCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                             >
                                 <BookOpen
-                                    color={colors.primary}
+                                    color={theme.primary}
                                     size={20}
                                     strokeWidth={2}
                                 />
-                                <Text style={styles.progressValue}>
+                                <Text style={[styles.progressValue, { color: theme.ink }]}>
                                     {stats.hafalanCount}
                                 </Text>
-                                <Text style={styles.progressLabel}>
+                                <Text style={[styles.progressLabel, { color: theme.muted }]}>
                                     {t("profile.progress.hafalan")}
                                 </Text>
                             </Pressable>
@@ -2228,17 +2232,17 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             <Pressable
                                 accessibilityRole='button'
                                 onPress={() => onOpenTab("ibadah")}
-                                style={styles.progressCard}
+                                style={[styles.progressCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                             >
                                 <Target
-                                    color={colors.primary}
+                                    color={theme.primary}
                                     size={20}
                                     strokeWidth={2}
                                 />
-                                <Text style={styles.progressValue}>
+                                <Text style={[styles.progressValue, { color: theme.ink }]}>
                                     {stats.sholatWeekly}%
                                 </Text>
-                                <Text style={styles.progressLabel}>
+                                <Text style={[styles.progressLabel, { color: theme.muted }]}>
                                     {t("profile.progress.prayerWeek")}
                                 </Text>
                             </Pressable>
@@ -2247,17 +2251,17 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             <Pressable
                                 accessibilityRole='button'
                                 onPress={() => onOpenTab("quran")}
-                                style={styles.progressCard}
+                                style={[styles.progressCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                             >
                                 <Trophy
-                                    color={colors.primary}
+                                    color={theme.primary}
                                     size={20}
                                     strokeWidth={2}
                                 />
-                                <Text style={styles.progressValue}>
+                                <Text style={[styles.progressValue, { color: theme.ink }]}>
                                     {stats.tilawahPages}
                                 </Text>
-                                <Text style={styles.progressLabel}>
+                                <Text style={[styles.progressLabel, { color: theme.muted }]}>
                                     {t("profile.progress.tilawahPages")}
                                 </Text>
                             </Pressable>
@@ -2268,13 +2272,13 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
             <View style={styles.badgeSection}>
                 <View style={styles.sectionHeaderRow}>
-                    <Text style={styles.sectionLabel}>
+                    <Text style={[styles.sectionLabel, { color: theme.muted }]}>
                         {t("profile.achievements.sectionTitle")}
                     </Text>
                     <View style={styles.sectionHeaderActions}>
                         {achievementsLoading ? (
                             <ActivityIndicator
-                                color={colors.primary}
+                                color={theme.primary}
                                 size='small'
                             />
                         ) : null}
@@ -2290,11 +2294,11 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             onPress={() => push("achievements")}
                             style={styles.sectionLink}
                         >
-                            <Text style={styles.sectionLinkText}>
+                            <Text style={[styles.sectionLinkText, { color: theme.primary }]}>
                                 {t("profile.achievements.seeAll")}
                             </Text>
                             <ChevronRight
-                                color={colors.primary}
+                                color={theme.primary}
                                 size={14}
                                 strokeWidth={2.5}
                             />
@@ -2302,7 +2306,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                     </View>
                 </View>
                 {achievementsMessage ? (
-                    <Text style={styles.sectionHint}>
+                    <Text style={[styles.sectionHint, { color: theme.muted }]}>
                         {achievementsMessage}
                     </Text>
                 ) : null}
@@ -2318,6 +2322,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             onPress={() => push("achievements")}
                             style={[
                                 styles.badge,
+                                { backgroundColor: theme.surface, borderColor: theme.border },
                                 !badge.unlocked && styles.badgeLocked,
                             ]}
                         >
@@ -2334,7 +2339,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                                 {!badge.unlocked ? (
                                     <View style={styles.badgeLock}>
                                         <Lock
-                                            color={colors.muted}
+                                            color={theme.muted}
                                             size={10}
                                             strokeWidth={2.4}
                                         />
@@ -2344,6 +2349,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             <Text
                                 style={[
                                     styles.badgeLabel,
+                                    { color: theme.ink },
                                     !badge.unlocked && styles.badgeLabelLocked,
                                 ]}
                             >
@@ -2352,7 +2358,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             {badge.description ? (
                                 <Text
                                     numberOfLines={2}
-                                    style={styles.badgeDescription}
+                                    style={[styles.badgeDescription, { color: theme.muted }]}
                                 >
                                     {badge.description}
                                 </Text>

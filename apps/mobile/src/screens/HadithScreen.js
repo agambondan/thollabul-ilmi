@@ -56,7 +56,7 @@ import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { getOfflineItems, getOfflineOverview } from "../storage/offlineContent";
 import { arabicTypography } from "../styles/arabicTypography";
-import { colors, radius, spacing, touchTarget } from "../theme";
+import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 
 const HADITH_LIST_PAGE_SIZE = 20;
 const WEB_APP_HADITH_BG = "#020617";
@@ -252,6 +252,10 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const { showError, showInfo, showSuccess } = useFeedback();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
+    const theme = getThemeColors({
+        isDark: isDarkTheme,
+        isPaperLayout: !isWebAppLayout,
+    });
     const webAppTheme = isDarkTheme
         ? WEB_APP_HADITH_THEMES.dark
         : WEB_APP_HADITH_THEMES.light;
@@ -607,7 +611,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const renderPerawiList = (items, listKey) => {
         if (!items.length)
             return (
-                <Text style={styles.emptyText}>
+                <Text style={[styles.emptyText, { color: theme.muted }]}>
                     {t("hadith.perawiRelatedEmpty")}
                 </Text>
             );
@@ -623,9 +627,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         accessibilityRole='button'
                         key={item.id}
                         onPress={() => openPerawi(item)}
-                        style={styles.perawiChip}
+                        style={[styles.perawiChip, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}
                     >
-                        <Text style={styles.perawiChipText}>
+                        <Text style={[styles.perawiChipText, { color: theme.primary }]}>
                             {item.nama_latin ||
                                 item.nama_lengkap ||
                                 `Perawi ${item.id}`}
@@ -645,9 +649,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 [listKey]: !current[listKey],
                             }))
                         }
-                        style={styles.moreChip}
+                        style={[styles.moreChip, { borderColor: theme.border }]}
                     >
-                        <Text style={styles.moreChipText}>
+                        <Text style={[styles.moreChipText, { color: theme.muted }]}>
                             {expanded
                                 ? "Ringkas"
                                 : `Tampilkan semua (${hiddenCount} lagi)`}
@@ -1473,23 +1477,23 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 {selectedHadithTitle}
                             </CardTitle>
                             {selectedHadith.arabic ? (
-                                <Text style={styles.arabic}>
+                                <Text style={[styles.arabic, { color: theme.ink }]}>
                                     {selectedHadith.arabic}
                                 </Text>
                             ) : null}
-                            <Text style={styles.translation}>
+                            <Text style={[styles.translation, { color: theme.text }]}>
                                 {cleanHadithText(
                                     selectedHadith.translation ||
                                         selectedHadith.book,
                                 )}
                             </Text>
                             {selectedHadith.gradeNotes ? (
-                                <Text style={styles.detailNote}>
+                                <Text style={[styles.detailNote, { color: theme.muted }]}>
                                     {selectedHadith.gradeNotes}
                                 </Text>
                             ) : null}
                             {selectedHadith.sanad ? (
-                                <Text style={styles.inlineSanad}>
+                                <Text style={[styles.inlineSanad, { color: theme.muted }]}>
                                     {selectedHadith.sanad}
                                 </Text>
                             ) : null}
@@ -1523,9 +1527,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 Hadis Terkait
                             </CardTitle>
                             {detailLoading && relatedHadiths.length === 0 ? (
-                                <ActivityIndicator color={colors.primary} />
+                                <ActivityIndicator color={theme.primary} />
                             ) : relatedHadiths.length === 0 ? (
-                                <Text style={styles.emptyText}>
+                                <Text style={[styles.emptyText, { color: theme.muted }]}>
                                     {t("hadith.relatedEmpty")}
                                 </Text>
                             ) : (
@@ -1543,16 +1547,16 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                             Sanad
                         </CardTitle>
                         {detailLoading && sanad.length === 0 ? (
-                            <ActivityIndicator color={colors.primary} />
+                            <ActivityIndicator color={theme.primary} />
                         ) : sanad.length === 0 ? (
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, { color: theme.muted }]}>
                                 {t("hadith.sanadEmpty")}
                             </Text>
                         ) : (
                             sanad.map((path, index) => (
                                 <View
                                     key={`${path.id}-${index}`}
-                                    style={styles.detailBlock}
+                                    style={[styles.detailBlock, { borderTopColor: theme.border }]}
                                 >
                                     <SectionHeader
                                         title={`Jalur ${path.nomor_jalur ?? index + 1}`}
@@ -1563,7 +1567,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                         }
                                     />
                                     {path.catatan ? (
-                                        <Text style={styles.detailNote}>
+                                        <Text style={[styles.detailNote, { color: theme.muted }]}>
                                             {path.catatan}
                                         </Text>
                                     ) : null}
@@ -1577,19 +1581,23 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                                 }
                                                 style={[
                                                     styles.chainRow,
+                                                    {
+                                                        backgroundColor: theme.surfaceMuted,
+                                                        borderColor: theme.border,
+                                                    },
                                                     selectedPerawi?.id ===
                                                     mata.perawi?.id
-                                                        ? styles.chainRowActive
+                                                        ? [styles.chainRowActive, { borderColor: theme.primary }]
                                                         : null,
                                                 ]}
                                             >
-                                                <Text style={styles.chainIndex}>
+                                                <Text style={[styles.chainIndex, { color: theme.primary }]}>
                                                     {mata.urutan ??
                                                         mataIndex + 1}
                                                 </Text>
                                                 <View style={styles.chainBody}>
                                                     <Text
-                                                        style={styles.chainName}
+                                                        style={[styles.chainName, { color: theme.ink }]}
                                                     >
                                                         {mata.perawi
                                                             ?.nama_latin ||
@@ -1599,9 +1607,10 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                                     </Text>
                                                     {mata.perawi?.nama_arab ? (
                                                         <Text
-                                                            style={
-                                                                styles.chainArabic
-                                                            }
+                                                            style={[
+                                                                styles.chainArabic,
+                                                                { color: theme.text },
+                                                            ]}
                                                         >
                                                             {
                                                                 mata.perawi
@@ -1610,7 +1619,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                                         </Text>
                                                     ) : null}
                                                     <Text
-                                                        style={styles.chainMeta}
+                                                        style={[styles.chainMeta, { color: theme.muted }]}
                                                     >
                                                         {[
                                                             mata.metode,
@@ -1629,7 +1638,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 </View>
                             ))
                         )}
-                        <Text style={styles.referenceMeta}>
+                        <Text style={[styles.referenceMeta, { color: theme.muted }]}>
                             Ketuk perawi untuk membuka ringkasan biografi.
                         </Text>
                     </Card>
@@ -1647,9 +1656,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                         accessibilityRole='button'
                                         key={perawi.id}
                                         onPress={() => openPerawi(perawi)}
-                                        style={styles.perawiChip}
+                                        style={[styles.perawiChip, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}
                                     >
-                                        <Text style={styles.perawiChipText}>
+                                        <Text style={[styles.perawiChipText, { color: theme.primary }]}>
                                             {perawi.nama_latin ||
                                                 perawi.nama_lengkap ||
                                                 `Perawi ${perawi.id}`}
@@ -1658,7 +1667,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 ))}
                             </View>
                         ) : (
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, { color: theme.muted }]}>
                                 Data perawi untuk hadis ini belum tersedia.
                             </Text>
                         )}
@@ -1678,16 +1687,16 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                     }
                                 />
                                 {selectedPerawi.nama_arab ? (
-                                    <Text style={styles.perawiArabic}>
+                                    <Text style={[styles.perawiArabic, { color: theme.text }]}>
                                         {selectedPerawi.nama_arab}
                                     </Text>
                                 ) : null}
                                 {selectedPerawi.nama_lengkap ? (
-                                    <Text style={styles.detailNote}>
+                                    <Text style={[styles.detailNote, { color: theme.muted }]}>
                                         {selectedPerawi.nama_lengkap}
                                     </Text>
                                 ) : null}
-                                <Text style={styles.chainMeta}>
+                                <Text style={[styles.chainMeta, { color: theme.muted }]}>
                                     {[
                                         selectedPerawi.kunyah,
                                         selectedPerawi.nisbah,
@@ -1699,21 +1708,21 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                         .join(" · ") || "Profil perawi"}
                                 </Text>
                                 {selectedPerawi.biografis ? (
-                                    <Text style={styles.perawiBio}>
+                                    <Text style={[styles.perawiBio, { color: theme.text }]}>
                                         {selectedPerawi.biografis}
                                     </Text>
                                 ) : null}
 
                                 {perawiPanel.loading ? (
-                                    <ActivityIndicator color={colors.primary} />
+                                    <ActivityIndicator color={theme.primary} />
                                 ) : null}
 
                                 <View style={styles.subSection}>
-                                    <Text style={styles.subTitle}>
+                                    <Text style={[styles.subTitle, { color: theme.ink }]}>
                                         Jarh wa Ta'dil
                                     </Text>
                                     {perawiPanel.jarhTadil.length === 0 ? (
-                                        <Text style={styles.emptyText}>
+                                        <Text style={[styles.emptyText, { color: theme.muted }]}>
                                             Penilaian jarh-ta'dil belum
                                             tersedia.
                                         </Text>
@@ -1721,19 +1730,20 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                         perawiPanel.jarhTadil.map((item) => (
                                             <View
                                                 key={item.id}
-                                                style={styles.assessmentRow}
+                                                style={[styles.assessmentRow, { borderTopColor: theme.border }]}
                                             >
                                                 <Text
-                                                    style={
-                                                        styles.assessmentTitle
-                                                    }
+                                                    style={[
+                                                        styles.assessmentTitle,
+                                                        { color: theme.ink },
+                                                    ]}
                                                 >
                                                     {item.teks_nilai ||
                                                         item.jenis_nilai ||
                                                         "Penilaian"}
                                                 </Text>
                                                 <Text
-                                                    style={styles.referenceMeta}
+                                                    style={[styles.referenceMeta, { color: theme.muted }]}
                                                 >
                                                     {[
                                                         item.penilai
@@ -1760,7 +1770,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 </View>
 
                                 <View style={styles.subSection}>
-                                    <Text style={styles.subTitle}>Guru</Text>
+                                    <Text style={[styles.subTitle, { color: theme.ink }]}>Guru</Text>
                                     <View style={styles.chipWrap}>
                                         {renderPerawiList(
                                             perawiPanel.guru,
@@ -1770,7 +1780,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 </View>
 
                                 <View style={styles.subSection}>
-                                    <Text style={styles.subTitle}>Murid</Text>
+                                    <Text style={[styles.subTitle, { color: theme.ink }]}>Murid</Text>
                                     <View style={styles.chipWrap}>
                                         {renderPerawiList(
                                             perawiPanel.murid,
@@ -1780,7 +1790,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 </View>
                             </View>
                         ) : sanadPerawi.length ? (
-                            <Text style={styles.referenceMeta}>
+                            <Text style={[styles.referenceMeta, { color: theme.muted }]}>
                                 Pilih salah satu perawi untuk melihat ringkasan
                                 biografi.
                             </Text>
@@ -1794,18 +1804,18 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                             Takhrij
                         </CardTitle>
                         {detailLoading && takhrij.length === 0 ? (
-                            <ActivityIndicator color={colors.primary} />
+                            <ActivityIndicator color={theme.primary} />
                         ) : takhrij.length === 0 ? (
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, { color: theme.muted }]}>
                                 Rujukan takhrij untuk hadis ini belum tersedia.
                             </Text>
                         ) : (
                             takhrij.map((item, index) => (
                                 <View
                                     key={`${item.id}-${index}`}
-                                    style={styles.referenceRow}
+                                    style={[styles.referenceRow, { borderTopColor: theme.border }]}
                                 >
-                                    <Text style={styles.referenceTitle}>
+                                    <Text style={[styles.referenceTitle, { color: theme.ink }]}>
                                         {item.book?.translation?.latin_en ||
                                             item.book?.translation?.idn ||
                                             item.book?.slug ||
@@ -1837,9 +1847,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                             Ayat Terkait
                         </CardTitle>
                         {detailLoading && hadithAyahs.length === 0 ? (
-                            <ActivityIndicator color={colors.primary} />
+                            <ActivityIndicator color={theme.primary} />
                         ) : hadithAyahs.length === 0 ? (
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, { color: theme.muted }]}>
                                 Ayat terkait untuk hadis ini belum tersedia.
                             </Text>
                         ) : (
@@ -1857,10 +1867,10 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                     }}
                                     key={item.id}
                                     onPress={() => openRelatedAyah(item)}
-                                    style={styles.referenceRow}
+                                    style={[styles.referenceRow, { borderTopColor: theme.border }]}
                                 >
                                     {item.ayah ? (
-                                        <Text style={styles.referenceTitle}>
+                                        <Text style={[styles.referenceTitle, { color: theme.ink }]}>
                                             {item.ayah.surahName} · Ayat{" "}
                                             {item.ayah.number}
                                         </Text>
@@ -1900,7 +1910,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                 refId={selectedHadith.id}
                             />
                         ) : (
-                            <Text style={styles.emptyText}>
+                            <Text style={[styles.emptyText, { color: theme.muted }]}>
                                 Buka Profil untuk masuk dan menulis catatan
                                 hadis.
                             </Text>
@@ -2021,9 +2031,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         : "hadith-classic-list"
                 }
             />
-            {message ? <Text style={styles.message}>{message}</Text> : null}
+            {message ? <Text style={[styles.message, { color: theme.primary }]}>{message}</Text> : null}
             {!user ? (
-                <Text style={styles.notice}>{t("hadith.bookmark.notice")}</Text>
+                <Text style={[styles.notice, { color: theme.muted, backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}>{t("hadith.bookmark.notice")}</Text>
             ) : null}
 
             {books.length > 0 ? (
@@ -2037,16 +2047,18 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         onPress={() => selectBook(null)}
                         style={[
                             styles.bookChip,
+                            { backgroundColor: theme.surface, borderColor: theme.border },
                             selectedBook === null
-                                ? styles.bookChipActive
+                                ? [styles.bookChipActive, { backgroundColor: theme.primary, borderColor: theme.primary }]
                                 : null,
                         ]}
                     >
                         <Text
                             style={[
                                 styles.bookChipText,
+                                { color: theme.muted },
                                 selectedBook === null
-                                    ? styles.bookChipTextActive
+                                    ? [styles.bookChipTextActive, { color: theme.onPrimary }]
                                     : null,
                             ]}
                         >
@@ -2068,8 +2080,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                             <Text
                                 style={[
                                     styles.bookChipText,
+                                    { color: theme.muted },
                                     selectedBook === book.slug
-                                        ? styles.bookChipTextActive
+                                        ? [styles.bookChipTextActive, { color: theme.onPrimary }]
                                         : null,
                                 ]}
                             >
@@ -2094,34 +2107,34 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             {hadithSource === "offline" ? (
                 <View
                     testID="hadith-offline-banner"
-                    style={styles.offlineBanner}
+                    style={[styles.offlineBanner, { backgroundColor: theme.surfaceMuted, borderColor: theme.border }]}
                 >
-                    <WifiOff color={colors.textMuted} size={14} />
-                    <Text style={styles.offlineBannerText}>
+                    <WifiOff color={theme.muted} size={14} />
+                    <Text style={[styles.offlineBannerText, { color: theme.muted }]}>
                         Mode Offline: Menampilkan hadis dari penyimpanan lokal
                     </Text>
                 </View>
             ) : null}
             <View style={styles.listSummary}>
                 <View style={styles.listSummaryCopy}>
-                    <Text style={styles.listSummaryTitle}>
+                    <Text style={[styles.listSummaryTitle, { color: theme.ink }]}>
                         {selectedBookName}
                     </Text>
-                    <Text style={styles.listSummaryMeta}>{summaryMeta}</Text>
+                    <Text style={[styles.listSummaryMeta, { color: theme.muted }]}>{summaryMeta}</Text>
                 </View>
-                <Text numberOfLines={1} style={styles.queryBadge}>
+                <Text numberOfLines={1} style={[styles.queryBadge, { backgroundColor: theme.surfaceMuted, borderColor: theme.border, color: theme.primary }]}>
                     {summaryBadge}
                 </Text>
             </View>
 
             {loading && hadiths.length === 0 ? (
-                <ActivityIndicator color={colors.primary} />
+                <ActivityIndicator color={theme.primary} />
             ) : filteredHadiths.length === 0 ? (
                 <Card>
                     <CardTitle meta={query ? "Tidak cocok" : "Kosong"}>
                         Hadis belum ditemukan
                     </CardTitle>
-                    <Text style={styles.emptyText}>
+                    <Text style={[styles.emptyText, { color: theme.muted }]}>
                         {query
                             ? "Coba kata kunci lain, nomor hadis, nama kitab, atau tema yang lebih umum."
                             : "Daftar hadis untuk filter ini belum tersedia."}
@@ -2149,9 +2162,9 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                             accessibilityState={{ disabled: loadingMore }}
                             disabled={loadingMore}
                             onPress={loadMoreHadiths}
-                            style={styles.loadMoreButton}
+                            style={[styles.loadMoreButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
                         >
-                            <Text style={styles.loadMoreText}>
+                            <Text style={[styles.loadMoreText, { color: theme.primary }]}>
                                 {loadingMore
                                     ? "Memuat hadis berikutnya..."
                                     : hasBufferedHadiths
