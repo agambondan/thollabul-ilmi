@@ -23,6 +23,12 @@ func NewKajianNoteRepository(db *gorm.DB) KajianNoteRepository {
 }
 
 func (r *kajianNoteRepository) Create(note *model.KajianUserNote) error {
+	if note.CreatedAt == nil {
+		note.CreatedAt = unixNow()
+	}
+	if note.UpdatedAt == nil {
+		note.UpdatedAt = note.CreatedAt
+	}
 	return r.db.Create(note).Error
 }
 
@@ -135,6 +141,7 @@ func (r *kajianNoteRepository) List(userID uuid.UUID, query model.KajianNoteList
 }
 
 func (r *kajianNoteRepository) Update(note *model.KajianUserNote) error {
+	note.UpdatedAt = unixNow()
 	return r.db.Save(note).Error
 }
 

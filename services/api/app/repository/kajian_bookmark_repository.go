@@ -22,12 +22,22 @@ func NewKajianBookmarkRepository(db *gorm.DB) KajianBookmarkRepository {
 
 func (r *kajianBookmarkRepository) Add(userID uuid.UUID, chunkID int, kajianID int, note string) (bool, error) {
 	row := model.KajianUserBookmark{
-		UserID:   userID,
-		ChunkID:  chunkID,
-		KajianID: kajianID,
-		Note:     note,
+		UserID:    userID,
+		ChunkID:   chunkID,
+		KajianID:  kajianID,
+		Note:      note,
+		CreatedAt: unixNow(),
 	}
-	res := r.db.Clauses(clause.OnConflict{DoNothing: true}).Create(&row)
+	res := r.db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "user_id"}, {Name: "chunk_id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"deleted_at", "note", "kajian_id", "created_at", "updated_at"}),
+		Where: clause.Where{Exprs: []clause.Expression{
+			clause.Expr{
+				SQL:  "? IS NOT NULL",
+				Vars: []interface{}{clause.Column{Table: clause.CurrentTable, Name: "deleted_at"}},
+			},
+		}},
+	}).Create(&row)
 	if res.Error != nil {
 		return false, res.Error
 	}
