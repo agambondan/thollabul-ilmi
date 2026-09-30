@@ -5,11 +5,13 @@ import {
     Plus,
     Save,
     Scale,
+    Share2,
     Trash2,
 } from "lucide-react-native";
 import {
     Pressable,
     ScrollView,
+    Share,
     StyleSheet,
     Text,
     TextInput,
@@ -33,10 +35,10 @@ import {
 } from "../../storage/calculatorHistory";
 import { radius, spacing } from "../../theme";
 import {
-    digitsOnly,
     formatCurrency,
     formatNumericInput,
     parseNumericInput,
+    sanitizeCurrencyInput,
 } from "../ExploreScreen.helpers";
 
 const HEIR_FIELDS = [
@@ -77,6 +79,8 @@ const HEIR_FIELDS = [
         group: "maternal_siblings",
     },
 ];
+
+const EXCLUSIVE_HEIRS = { suami: "istri", istri: "suami" };
 
 const formatDate = (item = {}, language, t) => {
     const value = item.created_at ?? item.createdAt ?? item.date;
@@ -129,7 +133,7 @@ function CurrencyField({ activeDark, hint, label, onChangeText, value }) {
                 <TextInput
                     keyboardType='numeric'
                     onChangeText={(nextValue) =>
-                        onChangeText(digitsOnly(nextValue))
+                        onChangeText(sanitizeCurrencyInput(nextValue))
                     }
                     placeholder='0'
                     placeholderTextColor={activeDark ? "#64748b" : "#94a3b8"}
@@ -335,6 +339,32 @@ function ResultRows({ activeDark, calculation, distributable, language, t }) {
                     {formatCurrency(distributable * calculation.totalShare)}
                 </Text>
             </View>
+            <Pressable
+                accessibilityLabel="Bagikan semua hasil waris"
+                accessibilityRole="button"
+                hitSlop={8}
+                onPress={() => {
+                    const lines = calculation.rows
+                        .map((row) => {
+                            const label = getHeirLabel(row, language);
+                            const pct = (row.share * 100).toFixed(2);
+                            return `${label}: ${formatCurrency(row.amount)} (${pct}%)`;
+                        })
+                        .join("\n");
+                    const msg =
+                        `Pembagian Waris (${formatCurrency(distributable)})\n\n` +
+                        lines +
+                        `\n\nTotal: ${formatCurrency(distributable * calculation.totalShare)}` +
+                        "\n\nDihitung via Thollabul Ilmi";
+                    Share.share({ message: msg }).catch(() => {});
+                }}
+                style={styles.shareAllBtn}
+            >
+                <Share2 color={activeDark ? "#9ca3af" : "#64748b"} size={18} />
+                <Text style={[styles.shareAllText, activeDark && { color: "#9ca3af" }]}>
+                    Bagikan Ringkasan
+                </Text>
+            </Pressable>
         </View>
     );
 }
@@ -461,6 +491,7 @@ export function WebAppFaraidhRoute({ context }) {
 
     const setHeir = (key, delta) => {
         const field = HEIR_FIELDS.find((item) => item.key === key);
+        const exclusiveKey = EXCLUSIVE_HEIRS[key];
         setFaraidh((current) => {
             const currentValue = current.heirs[key] ?? 0;
             const nextValue = Math.min(
@@ -469,7 +500,13 @@ export function WebAppFaraidhRoute({ context }) {
             );
             return {
                 ...current,
-                heirs: { ...current.heirs, [key]: nextValue },
+                heirs: {
+                    ...current.heirs,
+                    ...(exclusiveKey && nextValue > 0
+                        ? { [exclusiveKey]: 0 }
+                        : {}),
+                    [key]: nextValue,
+                },
             };
         });
     };
@@ -477,7 +514,7 @@ export function WebAppFaraidhRoute({ context }) {
     const wealth = parseNumericInput(faraidh.estate);
     const debts = parseNumericInput(faraidh.debts);
     const requestedBequest = parseNumericInput(faraidh.bequest);
-    const maxBequest = Math.floor(wealth / 3);
+    const maxBequest = Math.floor(Math.max(0, wealth - debts) / 3);
     const bequest = Math.min(requestedBequest, maxBequest);
     const distributable = Math.max(0, wealth - debts - bequest);
     const bequestCapped = wealth > 0 && requestedBequest > maxBequest;
@@ -1359,5 +1396,18 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontWeight: "800",
         marginTop: spacing.sm,
+    },
+    shareAllBtn: {
+        alignItems: "center",
+        flexDirection: "row",
+        gap: 6,
+        justifyContent: "center",
+        marginTop: spacing.md,
+        minHeight: 44,
+    },
+    shareAllText: {
+        color: "#64748b",
+        fontSize: 13,
+        fontWeight: "800",
     },
 });

@@ -65,6 +65,7 @@ import {
     saveCalculatorHistory,
 } from "../../storage/calculatorHistory";
 import { calculateFaraidh, HEIR_LABELS } from "../../lib/faraidh";
+import { calculateZakat, NISAB_HARVEST_KG } from "../../lib/zakat";
 import { hapticMedium, hapticTap } from "../../utils/haptics";
 import { HistoricalMapContent } from "../HistoricalMapScreen";
 import { styles } from "../ExploreScreen.styles";
@@ -86,10 +87,13 @@ import {
     getItemRef,
     getLibraryProgressLabel,
     normalizeSearchText,
+    parseDecimalInput,
     parseNumericInput,
     pickText,
     quizOptions,
     refKey,
+    sanitizeCurrencyInput,
+    sanitizeDecimalInput,
     stripHtmlText,
 } from "../ExploreScreen.helpers";
 import {
@@ -305,13 +309,32 @@ export function createExploreClassicRenderers(context) {
                 <TextInput
                     keyboardType='numeric'
                     onChangeText={(nextValue) =>
-                        onChangeText(digitsOnly(nextValue))
+                        onChangeText(sanitizeCurrencyInput(nextValue))
                     }
                     placeholder={placeholder}
                     placeholderTextColor={colors.muted}
                     returnKeyType='done'
                     style={styles.currencyInput}
                     value={formatNumericInput(value)}
+                />
+            </View>
+        </View>
+    );
+
+    const renderWeightInput = ({ label, value, onChangeText, placeholder }) => (
+        <View style={styles.currencyField}>
+            <Text style={styles.inputLabel}>{label}</Text>
+            <View style={styles.currencyInputShell}>
+                <TextInput
+                    keyboardType='decimal-pad'
+                    onChangeText={(nextValue) =>
+                        onChangeText(sanitizeDecimalInput(nextValue))
+                    }
+                    placeholder={placeholder}
+                    placeholderTextColor={colors.muted}
+                    returnKeyType='done'
+                    style={styles.currencyInput}
+                    value={sanitizeDecimalInput(value)}
                 />
             </View>
         </View>
@@ -2007,43 +2030,54 @@ export function createExploreClassicRenderers(context) {
         }
 
         if (activeFeature.type === "zakat") {
-            const NISAB_GRAM = 85;
-            const NISAB_SILVER_GRAM = 595;
-            const NISAB_HARVEST_KG = 653;
-            const goldPrice = parseNumericInput(zakatGoldPrice) || 1050000;
-            const nisab = NISAB_GRAM * goldPrice;
-            const assets = parseNumericInput(zakat.assets);
-            const debts = parseNumericInput(zakat.debts);
-            const net = Math.max(0, assets - debts);
-            const zakatMaal = net >= nisab && zakatHaul ? net * 0.025 : 0;
-            const ricePrice = parseNumericInput(zakatRicePrice) || 16000;
-            const zakatFitrah = 2.5 * ricePrice * zakatFamilyCount;
-            const tradeNet =
-                (parseNumericInput(zakatTradeCapital) || 0) +
-                (parseNumericInput(zakatTradeStock) || 0) +
-                (parseNumericInput(zakatTradeReceivable) || 0) -
-                (parseNumericInput(zakatTradeDebt) || 0);
-            const zakatTrade =
-                tradeNet >= nisab && zakatTradeHaul ? tradeNet * 0.025 : 0;
-            const harvest = parseNumericInput(zakatHarvestWeight) || 0;
-            const riceKgPrice = parseNumericInput(zakatRiceKgPrice) || 16000;
-            const harvestRate = zakatHarvestIrrigated ? 0.05 : 0.1;
-            const zakatAgriculture =
-                harvest >= NISAB_HARVEST_KG
-                    ? harvest * harvestRate * riceKgPrice
-                    : 0;
-            const goldG = parseNumericInput(zakatGoldGrams) || 0;
-            const silverPriceNum = parseNumericInput(zakatSilverPrice) || 14000;
-            const silverG = parseNumericInput(zakatSilverGrams) || 0;
-            const goldValue = goldG * goldPrice;
-            const silverValue = silverG * silverPriceNum;
-            const goldNisabValue = NISAB_GRAM * goldPrice;
-            const silverNisabValue = NISAB_SILVER_GRAM * silverPriceNum;
-            const zakatGold =
-                zakatGoldHaul &&
-                (goldValue >= goldNisabValue || silverValue >= silverNisabValue)
-                    ? (goldValue + silverValue) * 0.025
-                    : 0;
+            const goldPrice = parseNumericInput(zakatGoldPrice);
+            const harvest = parseDecimalInput(zakatHarvestWeight);
+            const {
+                goldNisabValue,
+                goldPriceMissing,
+                goldValue,
+                net,
+                nisab,
+                ricePriceMissing,
+                riceKgPriceMissing,
+                silverPriceMissing,
+                silverValue,
+                tradeNet,
+                zakatAgriculture,
+                zakatFitrah,
+                zakatGold,
+                zakatMaal,
+                zakatTrade,
+            } = calculateZakat({
+                assets: parseNumericInput(zakat.assets),
+                debts: parseNumericInput(zakat.debts),
+                familyCount: zakatFamilyCount,
+                goldGrams: parseDecimalInput(zakatGoldGrams),
+                goldHaul: zakatGoldHaul,
+                goldPrice,
+                harvest,
+                harvestIrrigated: zakatHarvestIrrigated,
+                haul: zakatHaul,
+                riceKgPrice: parseNumericInput(zakatRiceKgPrice),
+                ricePrice: parseNumericInput(zakatRicePrice),
+                silverGrams: parseDecimalInput(zakatSilverGrams),
+                silverPrice: parseNumericInput(zakatSilverPrice),
+                tradeCapital: parseNumericInput(zakatTradeCapital),
+                tradeDebt: parseNumericInput(zakatTradeDebt),
+                tradeHaul: zakatTradeHaul,
+                tradeReceivable: parseNumericInput(zakatTradeReceivable),
+                tradeStock: parseNumericInput(zakatTradeStock),
+            });
+            const renderPriceWarning = (field) => (
+                <Text
+                    style={[
+                        styles.statusNote,
+                        { color: "#D97706", marginBottom: spacing.sm },
+                    ]}
+                >
+                    Isi {field} untuk menghitung zakat.
+                </Text>
+            );
 
             const ZAKAT_TABS = [
                 { key: "maal", label: "Maal" },
@@ -2191,19 +2225,25 @@ export function createExploreClassicRenderers(context) {
                                 Zakat 2,5% dari harta bersih yang sudah mencapai
                                 nisab dan haul.
                             </Text>
-                            <Text
-                                style={[
-                                    styles.body,
-                                    {
-                                        fontSize: 12,
-                                        color: colors.muted,
-                                        marginBottom: spacing.sm,
-                                    },
-                                ]}
-                            >
-                                Nisab: {formatCurrency(nisab)} (85g emas ×{" "}
-                                {formatCurrency(goldPrice)}/g)
-                            </Text>
+                            {goldPriceMissing ? (
+                                renderPriceWarning(
+                                    "harga emas/gram di tab Emas",
+                                )
+                            ) : (
+                                <Text
+                                    style={[
+                                        styles.body,
+                                        {
+                                            fontSize: 12,
+                                            color: colors.muted,
+                                            marginBottom: spacing.sm,
+                                        },
+                                    ]}
+                                >
+                                    Nisab: {formatCurrency(nisab)} (85g emas ×{" "}
+                                    {formatCurrency(goldPrice)}/g)
+                                </Text>
+                            )}
                             {renderCurrencyInput({
                                 label: "Total harta",
                                 value: zakat.assets,
@@ -2246,7 +2286,9 @@ export function createExploreClassicRenderers(context) {
                                         Nisab
                                     </Text>
                                     <Text style={styles.resultValue}>
-                                        {formatCurrency(nisab)}
+                                        {goldPriceMissing
+                                            ? "-"
+                                            : formatCurrency(nisab)}
                                     </Text>
                                 </View>
                                 <View style={styles.resultDivider} />
@@ -2306,6 +2348,9 @@ export function createExploreClassicRenderers(context) {
                                 placeholder: "16000",
                                 onChangeText: setZakatRicePrice,
                             })}
+                            {ricePriceMissing
+                                ? renderPriceWarning("harga beras/kg")
+                                : null}
                             <View style={styles.heirGrid}>
                                 <Pressable
                                     accessibilityRole='button'
@@ -2422,6 +2467,11 @@ export function createExploreClassicRenderers(context) {
                                 placeholder: "0",
                                 onChangeText: setZakatTradeDebt,
                             })}
+                            {goldPriceMissing
+                                ? renderPriceWarning(
+                                      "harga emas/gram di tab Emas",
+                                  )
+                                : null}
                             <View style={styles.toggleRow}>
                                 <Text style={styles.toggleLabel}>
                                     Sudah haul (1 tahun)
@@ -2496,7 +2546,7 @@ export function createExploreClassicRenderers(context) {
                                 Nisab 5 wasq ({NISAB_HARVEST_KG} kg). Irigasi:
                                 5%, tadah hujan: 10%. Wajib tiap panen.
                             </Text>
-                            {renderCurrencyInput({
+                            {renderWeightInput({
                                 label: "Hasil panen (kg)",
                                 value: zakatHarvestWeight,
                                 placeholder: "0",
@@ -2508,6 +2558,9 @@ export function createExploreClassicRenderers(context) {
                                 placeholder: "16000",
                                 onChangeText: setZakatRiceKgPrice,
                             })}
+                            {riceKgPriceMissing
+                                ? renderPriceWarning("harga gabah/kg")
+                                : null}
                             <View style={styles.toggleRow}>
                                 <Text style={styles.toggleLabel}>
                                     Pakai irigasi (tarif 5%)
@@ -2586,7 +2639,10 @@ export function createExploreClassicRenderers(context) {
                                 placeholder: "1050000",
                                 onChangeText: setZakatGoldPrice,
                             })}
-                            {renderCurrencyInput({
+                            {goldPriceMissing
+                                ? renderPriceWarning("harga emas/gram")
+                                : null}
+                            {renderWeightInput({
                                 label: "Berat emas (gram)",
                                 value: zakatGoldGrams,
                                 placeholder: "0",
@@ -2598,7 +2654,10 @@ export function createExploreClassicRenderers(context) {
                                 placeholder: "14000",
                                 onChangeText: setZakatSilverPrice,
                             })}
-                            {renderCurrencyInput({
+                            {silverPriceMissing
+                                ? renderPriceWarning("harga perak/gram")
+                                : null}
+                            {renderWeightInput({
                                 label: "Berat perak (gram)",
                                 value: zakatSilverGrams,
                                 placeholder: "0",
@@ -2728,8 +2787,11 @@ export function createExploreClassicRenderers(context) {
                 { key: "saudaraP", max: 20, label: "Sdr Pr" },
             ];
 
+            const EXCLUSIVE_HEIRS = { suami: "istri", istri: "suami" };
+
             const setHeir = (key, delta) => {
                 const field = HEIR_FIELDS.find((f) => f.key === key);
+                const exclusiveKey = EXCLUSIVE_HEIRS[key];
                 setFaraidh((current) => {
                     const currentVal = current.heirs[key] ?? 0;
                     const next = Math.min(
@@ -2738,7 +2800,13 @@ export function createExploreClassicRenderers(context) {
                     );
                     return {
                         ...current,
-                        heirs: { ...current.heirs, [key]: next },
+                        heirs: {
+                            ...current.heirs,
+                            ...(exclusiveKey && next > 0
+                                ? { [exclusiveKey]: 0 }
+                                : {}),
+                            [key]: next,
+                        },
                     };
                 });
             };
@@ -2746,7 +2814,7 @@ export function createExploreClassicRenderers(context) {
             const wealth = parseNumericInput(faraidh.estate);
             const debts = parseNumericInput(faraidh.debts);
             const requestedBequest = parseNumericInput(faraidh.bequest);
-            const maxBequest = Math.floor(wealth / 3);
+            const maxBequest = Math.floor(Math.max(0, wealth - debts) / 3);
             const bequest = Math.min(requestedBequest, maxBequest);
             const distributable = Math.max(0, wealth - debts - bequest);
             const bequestCapped = wealth > 0 && requestedBequest > maxBequest;

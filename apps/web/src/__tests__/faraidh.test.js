@@ -194,10 +194,10 @@ describe("calculateFaraidh", () => {
         expect(totalAmount).toBeCloseTo(200, 5);
     });
 
-    describe("Umariyyatain (ayah + pasangan)", () => {
+    describe("ayah + pasangan tanpa ibu (bukan Umariyyatain)", () => {
         test("ayah + suami tanpa anak: suami 1/2, ayah sisa", () => {
             const result = calculateFaraidh({ ayah: 1, suami: 1 }, 100);
-            expect(result.applied.umariyyah).toBe(true);
+            expect(result.applied.umariyyah).toBe(false);
             const suami = result.rows.find((r) => r.key === "suami");
             const ayah = result.rows.find(
                 (r) => r.key === "ayah" || r.key === "ayah_residue",
@@ -208,7 +208,7 @@ describe("calculateFaraidh", () => {
 
         test("ayah + istri tanpa anak: istri 1/4, ayah sisa", () => {
             const result = calculateFaraidh({ ayah: 1, istri: 1 }, 100);
-            expect(result.applied.umariyyah).toBe(true);
+            expect(result.applied.umariyyah).toBe(false);
             const istri = result.rows.find((r) => r.key === "istri");
             const ayah = result.rows.find(
                 (r) => r.key === "ayah" || r.key === "ayah_residue",
@@ -225,6 +225,68 @@ describe("calculateFaraidh", () => {
             expect(result.applied.umariyyah).toBe(false);
             const suami = result.rows.find((r) => r.key === "suami");
             expect(suami.share).toBeCloseTo(0.25, 5);
+        });
+    });
+
+    describe("Umariyyatain (ayah + ibu + satu pasangan)", () => {
+        const find = (result, key) => result.rows.find((r) => r.key === key);
+
+        test("suami + ayah + ibu: 120 jt / 80 jt / 40 jt dari 240 jt", () => {
+            const result = calculateFaraidh(
+                { suami: 1, ayah: 1, ibu: 1 },
+                240000000,
+            );
+            expect(result.applied.umariyyah).toBe(true);
+            expect(result.applied.aul).toBe(false);
+            expect(result.applied.radd).toBe(false);
+            expect(find(result, "suami").amount).toBeCloseTo(120000000, 0);
+            expect(find(result, "ayah").amount).toBeCloseTo(80000000, 0);
+            expect(find(result, "ibu").amount).toBeCloseTo(40000000, 0);
+            expect(find(result, "ibu").fraction).toEqual({ num: 1, den: 6 });
+            expect(result.totalShare).toBeCloseTo(1, 10);
+        });
+
+        test("istri + ayah + ibu: 60 jt / 120 jt / 60 jt dari 240 jt", () => {
+            const result = calculateFaraidh(
+                { istri: 1, ayah: 1, ibu: 1 },
+                240000000,
+            );
+            expect(result.applied.umariyyah).toBe(true);
+            expect(find(result, "istri").amount).toBeCloseTo(60000000, 0);
+            expect(find(result, "ayah").amount).toBeCloseTo(120000000, 0);
+            expect(find(result, "ibu").amount).toBeCloseTo(60000000, 0);
+            expect(find(result, "ibu").fraction).toEqual({ num: 1, den: 4 });
+            expect(result.totalShare).toBeCloseTo(1, 10);
+        });
+
+        test("ayah selalu mendapat dua kali bagian ibu", () => {
+            [{ suami: 1 }, { istri: 1 }, { istri: 3 }].forEach((spouse) => {
+                const result = calculateFaraidh(
+                    { ...spouse, ayah: 1, ibu: 1 },
+                    1000,
+                );
+                expect(find(result, "ayah").amount).toBeCloseTo(
+                    2 * find(result, "ibu").amount,
+                    8,
+                );
+            });
+        });
+
+        test("tanpa pasangan, tanpa ayah, atau ada anak: bukan Umariyyatain", () => {
+            expect(
+                calculateFaraidh({ ayah: 1, ibu: 1 }, 240000000).applied
+                    .umariyyah,
+            ).toBe(false);
+            expect(
+                calculateFaraidh({ suami: 1, ibu: 1 }, 240000000).applied
+                    .umariyyah,
+            ).toBe(false);
+            const withChild = calculateFaraidh(
+                { suami: 1, ayah: 1, ibu: 1, anakL: 1 },
+                240000000,
+            );
+            expect(withChild.applied.umariyyah).toBe(false);
+            expect(find(withChild, "ibu").fraction).toEqual({ num: 1, den: 6 });
         });
     });
 

@@ -12,6 +12,7 @@ import {
 import { deleteKalkulasiZakat, saveKalkulasiZakat } from "../../api/personal";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
+import { calculateZakat, NISAB_HARVEST_KG } from "../../lib/zakat";
 import {
     deleteCalculatorHistory,
     mergeCalculatorHistory,
@@ -19,16 +20,15 @@ import {
 } from "../../storage/calculatorHistory";
 import { colors, radius, spacing, touchTarget } from "../../theme";
 import {
-    digitsOnly,
     formatCurrency,
+    formatDecimalValue,
     formatNumericInput,
+    parseDecimalInput,
     parseNumericInput,
+    sanitizeCurrencyInput,
+    sanitizeDecimalInput,
 } from "../ExploreScreen.helpers";
 import { WebAppZakatHistoryRoute } from "./WebAppZakatHistoryRoute";
-
-const NISAB_GRAM = 85;
-const NISAB_SILVER_GRAM = 595;
-const NISAB_HARVEST_KG = 653;
 
 const ZAKAT_TABS = [
     { key: "maal", labelKey: "explore.zakat.tab.maal", testID: "pill-Maal" },
@@ -50,7 +50,7 @@ const ZAKAT_TABS = [
         testID: "pill-Riwayat",
     },
 ];
-function Field({ hint, isDarkTheme, label, onChangeText, placeholder = "0", value }) {
+function Field({ hint, hintWarning = false, isDarkTheme, label, onChangeText, placeholder = "0", value }) {
     return (
         <View style={styles.field}>
             <Text style={[styles.fieldLabel, isDarkTheme && styles.textPrimaryDark]}>{label}</Text>
@@ -59,7 +59,7 @@ function Field({ hint, isDarkTheme, label, onChangeText, placeholder = "0", valu
                 <TextInput
                     keyboardType='numeric'
                     onChangeText={(nextValue) =>
-                        onChangeText(digitsOnly(nextValue))
+                        onChangeText(sanitizeCurrencyInput(nextValue))
                     }
                     placeholder={placeholder}
                     placeholderTextColor={isDarkTheme ? "#64748b" : "#94a3b8"}
@@ -68,7 +68,18 @@ function Field({ hint, isDarkTheme, label, onChangeText, placeholder = "0", valu
                     value={formatNumericInput(value)}
                 />
             </View>
-            {hint ? <Text style={[styles.hint, isDarkTheme && styles.textMutedDark]}>{hint}</Text> : null}
+            {hint ? (
+                <Text
+                    style={[
+                        styles.hint,
+                        isDarkTheme && styles.textMutedDark,
+                        hintWarning && styles.hintWarning,
+                        hintWarning && isDarkTheme && styles.warningDark,
+                    ]}
+                >
+                    {hint}
+                </Text>
+            ) : null}
         </View>
     );
 }
@@ -78,15 +89,15 @@ function NumberField({ hint, isDarkTheme, label, onChangeText, placeholder = "0"
         <View style={styles.field}>
             <Text style={[styles.fieldLabel, isDarkTheme && styles.textPrimaryDark]}>{label}</Text>
             <TextInput
-                keyboardType='numeric'
+                keyboardType='decimal-pad'
                 onChangeText={(nextValue) =>
-                    onChangeText(digitsOnly(nextValue))
+                    onChangeText(sanitizeDecimalInput(nextValue))
                 }
                 placeholder={placeholder}
                 placeholderTextColor={isDarkTheme ? "#64748b" : "#94a3b8"}
                 returnKeyType='done'
                 style={[styles.inputShell, styles.numberInput, isDarkTheme && styles.inputShellDark, isDarkTheme && styles.inputDark]}
-                value={formatNumericInput(value)}
+                value={sanitizeDecimalInput(value)}
             />
             {hint ? <Text style={[styles.hint, isDarkTheme && styles.textMutedDark]}>{hint}</Text> : null}
         </View>
@@ -226,40 +237,57 @@ export function WebAppZakatRoute({
     zakatTradeReceivable = "",
     zakatTradeStock = "",
 }) {
-    const { t } = useMobileLocale();
+    const { language, t } = useMobileLocale();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
-    const goldPrice = parseNumericInput(zakatGoldPrice) || 1050000;
-    const nisab = NISAB_GRAM * goldPrice;
     const assets = parseNumericInput(zakat.assets);
     const debts = parseNumericInput(zakat.debts);
-    const net = Math.max(0, assets - debts);
-    const zakatMaal = net >= nisab && zakatHaul ? net * 0.025 : 0;
-    const ricePrice = parseNumericInput(zakatRicePrice) || 16000;
-    const zakatFitrah = 2.5 * ricePrice * zakatFamilyCount;
-    const tradeNet =
-        (parseNumericInput(zakatTradeCapital) || 0) +
-        (parseNumericInput(zakatTradeStock) || 0) +
-        (parseNumericInput(zakatTradeReceivable) || 0) -
-        (parseNumericInput(zakatTradeDebt) || 0);
-    const zakatTrade =
-        tradeNet >= nisab && zakatTradeHaul ? tradeNet * 0.025 : 0;
-    const harvest = parseNumericInput(zakatHarvestWeight) || 0;
-    const riceKgPrice = parseNumericInput(zakatRiceKgPrice) || 16000;
-    const harvestRate = zakatHarvestIrrigated ? 0.05 : 0.1;
-    const zakatAgriculture =
-        harvest >= NISAB_HARVEST_KG ? harvest * harvestRate * riceKgPrice : 0;
-    const goldG = parseNumericInput(zakatGoldGrams) || 0;
-    const silverPriceNum = parseNumericInput(zakatSilverPrice) || 14000;
-    const silverG = parseNumericInput(zakatSilverGrams) || 0;
-    const goldValue = goldG * goldPrice;
-    const silverValue = silverG * silverPriceNum;
-    const goldNisabValue = NISAB_GRAM * goldPrice;
-    const silverNisabValue = NISAB_SILVER_GRAM * silverPriceNum;
-    const zakatGold =
-        zakatGoldHaul &&
-        (goldValue >= goldNisabValue || silverValue >= silverNisabValue)
-            ? (goldValue + silverValue) * 0.025
-            : 0;
+    const harvest = parseDecimalInput(zakatHarvestWeight);
+    const goldG = parseDecimalInput(zakatGoldGrams);
+    const silverG = parseDecimalInput(zakatSilverGrams);
+    const ricePrice = parseNumericInput(zakatRicePrice);
+    const riceKgPrice = parseNumericInput(zakatRiceKgPrice);
+    const {
+        goldNisabValue,
+        goldPriceMissing,
+        goldValue,
+        harvestRate,
+        net,
+        nisab,
+        ricePriceMissing,
+        riceKgPriceMissing,
+        silverNisabValue,
+        silverPriceMissing,
+        silverValue,
+        tradeNet,
+        zakatAgriculture,
+        zakatFitrah,
+        zakatGold,
+        zakatMaal,
+        zakatTrade,
+    } = calculateZakat({
+        assets,
+        debts,
+        familyCount: zakatFamilyCount,
+        goldGrams: goldG,
+        goldHaul: zakatGoldHaul,
+        goldPrice: parseNumericInput(zakatGoldPrice),
+        harvest,
+        harvestIrrigated: zakatHarvestIrrigated,
+        haul: zakatHaul,
+        riceKgPrice,
+        ricePrice,
+        silverGrams: silverG,
+        silverPrice: parseNumericInput(zakatSilverPrice),
+        tradeCapital: parseNumericInput(zakatTradeCapital),
+        tradeDebt: parseNumericInput(zakatTradeDebt),
+        tradeHaul: zakatTradeHaul,
+        tradeReceivable: parseNumericInput(zakatTradeReceivable),
+        tradeStock: parseNumericInput(zakatTradeStock),
+    });
+    const priceRequired = (name) =>
+        t("explore.zakat.warning.priceRequired", {
+            field: t(`explore.zakat.field.${name}`).toLowerCase(),
+        });
 
     const handleSave = async (
         jenis,
@@ -401,9 +429,14 @@ export function WebAppZakatRoute({
                     <>
                         <InfoBox isDarkTheme={isDarkTheme} text={t("explore.zakat.info.maal")} />
                         <Field
-                            hint={t("explore.zakat.nisabHint", {
-                                amount: formatCurrency(nisab),
-                            })}
+                            hint={
+                                goldPriceMissing
+                                    ? priceRequired("goldPrice")
+                                    : t("explore.zakat.nisabHint", {
+                                          amount: formatCurrency(nisab),
+                                      })
+                            }
+                            hintWarning={goldPriceMissing}
                             isDarkTheme={isDarkTheme}
                             label={t("explore.zakat.field.goldPrice")}
                             onChangeText={setZakatGoldPrice}
@@ -444,7 +477,7 @@ export function WebAppZakatRoute({
                                 })}
                             </Text>
                         ) : null}
-                        {assets >= nisab && !zakatHaul ? (
+                        {!goldPriceMissing && assets >= nisab && !zakatHaul ? (
                             <Text style={[styles.warning, isDarkTheme && styles.warningDark]}>
                                 {t("explore.zakat.warning.noHaul")}
                             </Text>
@@ -484,6 +517,12 @@ export function WebAppZakatRoute({
                             text={t("explore.zakat.info.fitrah")}
                         />
                         <Field
+                            hint={
+                                ricePriceMissing
+                                    ? priceRequired("ricePrice")
+                                    : undefined
+                            }
+                            hintWarning
                             isDarkTheme={isDarkTheme}
                             label={t("explore.zakat.field.ricePrice")}
                             onChangeText={setZakatRicePrice}
@@ -556,9 +595,14 @@ export function WebAppZakatRoute({
                     <>
                         <InfoBox isDarkTheme={isDarkTheme} text={t("explore.zakat.info.dagang")} />
                         <Field
-                            hint={t("explore.zakat.nisabHint", {
-                                amount: formatCurrency(nisab),
-                            })}
+                            hint={
+                                goldPriceMissing
+                                    ? priceRequired("goldPrice")
+                                    : t("explore.zakat.nisabHint", {
+                                          amount: formatCurrency(nisab),
+                                      })
+                            }
+                            hintWarning={goldPriceMissing}
                             isDarkTheme={isDarkTheme}
                             label={t("explore.zakat.field.goldPrice")}
                             onChangeText={setZakatGoldPrice}
@@ -643,6 +687,12 @@ export function WebAppZakatRoute({
                             value={zakatHarvestWeight}
                         />
                         <Field
+                            hint={
+                                riceKgPriceMissing
+                                    ? priceRequired("riceKgPrice")
+                                    : undefined
+                            }
+                            hintWarning
                             isDarkTheme={isDarkTheme}
                             label={t("explore.zakat.field.riceKgPrice")}
                             onChangeText={setZakatRiceKgPrice}
@@ -669,7 +719,10 @@ export function WebAppZakatRoute({
                                 harvest >= NISAB_HARVEST_KG
                                     ? t("explore.zakat.note.tani", {
                                           rate: harvestRate * 100,
-                                          weight: harvest,
+                                          weight: formatDecimalValue(
+                                              harvest,
+                                              language,
+                                          ),
                                           price: formatCurrency(riceKgPrice),
                                       })
                                     : ""
@@ -706,9 +759,15 @@ export function WebAppZakatRoute({
                             text={t("explore.zakat.info.emas")}
                         />
                         <Field
-                            hint={t("explore.zakat.goldNisabHint", {
-                                amount: formatCurrency(goldNisabValue),
-                            })}
+                            hint={
+                                goldPriceMissing
+                                    ? priceRequired("goldPrice")
+                                    : t("explore.zakat.goldNisabHint", {
+                                          amount:
+                                              formatCurrency(goldNisabValue),
+                                      })
+                            }
+                            hintWarning={goldPriceMissing}
                             isDarkTheme={isDarkTheme}
                             label={t("explore.zakat.field.goldPrice")}
                             onChangeText={setZakatGoldPrice}
@@ -721,9 +780,15 @@ export function WebAppZakatRoute({
                             value={zakatGoldGrams}
                         />
                         <Field
-                            hint={t("explore.zakat.silverNisabHint", {
-                                amount: formatCurrency(silverNisabValue),
-                            })}
+                            hint={
+                                silverPriceMissing
+                                    ? priceRequired("silverPrice")
+                                    : t("explore.zakat.silverNisabHint", {
+                                          amount:
+                                              formatCurrency(silverNisabValue),
+                                      })
+                            }
+                            hintWarning={silverPriceMissing}
                             isDarkTheme={isDarkTheme}
                             label={t("explore.zakat.field.silverPrice")}
                             onChangeText={setZakatSilverPrice}
@@ -1003,6 +1068,9 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontWeight: "700",
         lineHeight: 16,
+    },
+    hintWarning: {
+        color: "#b45309",
     },
     toggleRow: {
         alignItems: "center",

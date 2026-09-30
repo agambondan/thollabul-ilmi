@@ -332,6 +332,8 @@ export const exploreIdn = {
         "explore.zakat.warning.harvestBelowNisab":
             "Panen kurang dari nisab ({kg} kg), belum wajib zakat.",
         "explore.zakat.warning.noHaul": "Belum wajib zakat karena belum haul.",
+        "explore.zakat.warning.priceRequired":
+            "Isi {field} untuk menghitung zakat.",
         "explore.zakatHistory.back": "Kembali ke Kalkulator",
         "explore.zakatHistory.dateUnavailable": "Tanggal belum tersedia",
         "explore.zakatHistory.delete": "Hapus",

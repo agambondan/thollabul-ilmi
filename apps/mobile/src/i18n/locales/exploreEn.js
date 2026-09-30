@@ -336,6 +336,8 @@ export const exploreEn = {
             "Harvest is below nisab ({kg} kg), so zakat is not due yet.",
         "explore.zakat.warning.noHaul":
             "Zakat is not due yet because haul is incomplete.",
+        "explore.zakat.warning.priceRequired":
+            "Enter {field} to calculate zakat.",
         "explore.zakatHistory.back": "Back to Calculator",
         "explore.zakatHistory.dateUnavailable": "Date unavailable",
         "explore.zakatHistory.delete": "Delete",

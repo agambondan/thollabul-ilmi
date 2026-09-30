@@ -251,7 +251,7 @@ export const en = {
         "explore.faraidh.remainder": "Remainder",
         "explore.faraidh.resultSection": "Calculation Result",
         "explore.faraidh.umariyyahNotice":
-            "Umariyyatain: father takes the remainder after spouse.",
+            "Umariyyatain: the mother takes 1/3 of the remainder after the spouse's share (equal to 1/6 of the estate with a husband, 1/4 with a wife), and the father takes the rest.",
         "explore.faraidh.kakekSaudaraNotice":
             "Minbariyah: grandfather takes 1/6, siblings take the remainder as ashabah.",
         "explore.faraidh.akdariyahNotice":

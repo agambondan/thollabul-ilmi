@@ -1019,15 +1019,17 @@ describe("Explore web app reference list routes", () => {
                 },
             ),
         );
-        const { getByTestId, getByText, queryByText } = render(route);
+        const { getAllByText, getByTestId, getByText, queryByText } =
+            render(route);
 
         expect(getByTestId("explore-web-app-faraidh-surface")).toBeTruthy();
         expect(queryByText("Tool content")).toBeNull();
         expect(getByText("Kalkulator Waris")).toBeTruthy();
         expect(getByText("Harta dan Pengurang")).toBeTruthy();
         expect(getByText("Ahli Waris")).toBeTruthy();
-        expect(getByText("Rp 80.000.000")).toBeTruthy();
-        expect(getByText("Rp 40.000.000")).toBeTruthy();
+        expect(getAllByText("Rp 80.000.000")).toHaveLength(2);
+        expect(getAllByText("Rp 40.000.000")).toHaveLength(2);
+        expect(queryByText("Mahjub (Terhalang)")).toBeNull();
 
         fireEvent.press(getByTestId("web-app-faraidh-heir-anakL-plus"));
         expect(setFaraidh).toHaveBeenCalledWith(expect.any(Function));

@@ -24,11 +24,67 @@ const HEIR_METAS = {
     pamanSeayah: { label: "Paman Seayah", arabic: "الْعَمُّ لِأَب" },
 };
 
+const HEIR_ROW_KEYS = {
+    kakek: ["kakek", "kakek_residue"],
+    nenek: ["nenek"],
+    ayah: ["ayah", "ayah_residue"],
+    ibu: ["ibu"],
+    suami: ["suami"],
+    istri: ["istri"],
+    saudaraL: ["saudara_laki"],
+    saudaraP: ["saudara_perempuan"],
+    saudaraSeayahL: ["saudara_seayah_laki"],
+    saudaraSeayahP: ["saudara_seayah_perempuan"],
+    anakL: ["anak_laki"],
+    anakP: ["anak_perempuan"],
+    cucuL: ["cucu_laki"],
+    cucuP: ["cucu_perempuan"],
+};
+
+export const resolveHeirResult = (calculation, heirKey) => {
+    const matches = [];
+    (calculation?.rows ?? []).forEach((row) => {
+        if (row.members) {
+            const heads = Number(row.members[heirKey]) || 0;
+            if (heads > 0) {
+                matches.push({
+                    row,
+                    portion: row.count > 0 ? heads / row.count : 1,
+                    shared: row.count > heads,
+                });
+            }
+            return;
+        }
+        if (HEIR_ROW_KEYS[heirKey]?.includes(row.key)) {
+            matches.push({ row, portion: 1, shared: false });
+        }
+    });
+    if (matches.length === 0) return null;
+    const furudh = matches.find(({ row }) => !row.isAshabah && row.fraction);
+    return {
+        amount: matches.reduce((sum, m) => sum + m.row.amount * m.portion, 0),
+        fraction: furudh?.row.fraction ?? null,
+        hasAshabah: matches.some(({ row }) => row.isAshabah),
+        share: matches.reduce((sum, m) => sum + m.row.share * m.portion, 0),
+        shared: matches.some((m) => m.shared),
+    };
+};
+
+export const formatHeirBadge = (result) => {
+    if (result.hasAshabah && !result.fraction) return "Ashabah";
+    const fraction = result.fraction
+        ? `${result.fraction.num}/${result.fraction.den}`
+        : `${(result.share * 100).toFixed(0)}%`;
+    if (result.hasAshabah) return `${fraction} + Ashabah`;
+    return result.shared ? `${fraction} bersama` : fraction;
+};
+
 function HeirCardMobile({ activeDark, heirKey, count, resultRow }) {
     const meta = HEIR_METAS[heirKey] || { label: heirKey, arabic: "" };
     const isPresent = Boolean(count && count > 0);
     const isEligible = Boolean(resultRow && resultRow.share > 0);
     const isMahjub = isPresent && !isEligible;
+    const isAshabah = Boolean(resultRow?.hasAshabah && !resultRow.fraction);
 
     if (!isPresent && !isEligible) return null;
 
@@ -37,7 +93,7 @@ function HeirCardMobile({ activeDark, heirKey, count, resultRow }) {
             style={[
                 styles.node,
                 isEligible
-                    ? resultRow.isAshabah
+                    ? isAshabah
                         ? [styles.nodeAshabah, activeDark && { backgroundColor: "#451a03", borderColor: "#78350f" }]
                         : [styles.nodeFurudh, activeDark && { backgroundColor: "#064e3b", borderColor: "#059669" }]
                     : [styles.nodeMahjub, activeDark && { backgroundColor: "#450a0a", borderColor: "#7f1d1d" }],
@@ -58,18 +114,12 @@ function HeirCardMobile({ activeDark, heirKey, count, resultRow }) {
                     <Text
                         style={[
                             styles.badge,
-                            resultRow.isAshabah
-                                ? styles.badgeAshabah
-                                : styles.badgeFurudh,
-                            activeDark && resultRow.isAshabah && { backgroundColor: "#78350f", color: "#fde68a" },
-                            activeDark && !resultRow.isAshabah && { backgroundColor: "#065f46", color: "#6ee7b7" },
+                            isAshabah ? styles.badgeAshabah : styles.badgeFurudh,
+                            activeDark && isAshabah && { backgroundColor: "#78350f", color: "#fde68a" },
+                            activeDark && !isAshabah && { backgroundColor: "#065f46", color: "#6ee7b7" },
                         ]}
                     >
-                        {resultRow.isAshabah
-                            ? "Ashabah"
-                            : resultRow.fraction
-                              ? `${resultRow.fraction.numerator}/${resultRow.fraction.denominator}`
-                              : `${(resultRow.share * 100).toFixed(0)}%`}
+                        {formatHeirBadge(resultRow)}
                     </Text>
                     <Text style={[styles.amount, activeDark && { color: "#34d399" }]}>
                         {formatCurrency(resultRow.amount)}
@@ -82,16 +132,13 @@ function HeirCardMobile({ activeDark, heirKey, count, resultRow }) {
     );
 }
 
-export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
+export function FaraidhFamilyTreeMobile({ calculation, heirs = {} }) {
     const { isDarkTheme } = useLayoutModePreference();
     const activeDark = isDarkTheme ?? false;
 
     if (!calculation?.rows?.length) return null;
 
-    const rowMap = (calculation.rows || []).reduce((acc, row) => {
-        acc[row.key] = row;
-        return acc;
-    }, {});
+    const resultOf = (heirKey) => resolveHeirResult(calculation, heirKey);
 
     const ushulKeys = ["kakek", "nenek", "ayah", "ibu"];
     const spouseKeys = ["suami", "istri"];
@@ -116,7 +163,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
             </View>
 
             {/* Generasi 1: Ushul */}
-            {ushulKeys.some((k) => heirs[k] > 0 || rowMap[k]) && (
+            {ushulKeys.some((k) => heirs[k] > 0 || resultOf(k)) && (
                 <View style={styles.tierSection}>
                     <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>1. Ushul (Leluhur)</Text>
                     <View style={styles.tierGrid}>
@@ -126,7 +173,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
                                 count={heirs[k]}
                                 heirKey={k}
                                 key={k}
-                                resultRow={rowMap[k]}
+                                resultRow={resultOf(k)}
                             />
                         ))}
                     </View>
@@ -149,7 +196,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
                             count={heirs[k]}
                             heirKey={k}
                             key={k}
-                            resultRow={rowMap[k]}
+                            resultRow={resultOf(k)}
                         />
                     ))}
                     {siblingKeys.map((k) => (
@@ -158,14 +205,14 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
                             count={heirs[k]}
                             heirKey={k}
                             key={k}
-                            resultRow={rowMap[k]}
+                            resultRow={resultOf(k)}
                         />
                     ))}
                 </View>
             </View>
 
             {/* Generasi 3: Furu' */}
-            {furuKeys.some((k) => heirs[k] > 0 || rowMap[k]) && (
+            {furuKeys.some((k) => heirs[k] > 0 || resultOf(k)) && (
                 <View style={styles.tierSection}>
                     <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>3. Furu' (Keturunan)</Text>
                     <View style={styles.tierGrid}>
@@ -175,7 +222,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
                                 count={heirs[k]}
                                 heirKey={k}
                                 key={k}
-                                resultRow={rowMap[k]}
+                                resultRow={resultOf(k)}
                             />
                         ))}
                     </View>
@@ -183,7 +230,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
             )}
 
             {/* Generasi 4: Hawasyi */}
-            {hawasyiKeys.some((k) => heirs[k] > 0 || rowMap[k]) && (
+            {hawasyiKeys.some((k) => heirs[k] > 0 || resultOf(k)) && (
                 <View style={styles.tierSection}>
                     <Text style={[styles.tierLabel, activeDark && { color: "#6ee7b7" }]}>4. Hawasyi (Paman)</Text>
                     <View style={styles.tierGrid}>
@@ -193,7 +240,7 @@ export function FaraidhFamilyTreeMobile({ calculation, heirs }) {
                                 count={heirs[k]}
                                 heirKey={k}
                                 key={k}
-                                resultRow={rowMap[k]}
+                                resultRow={resultOf(k)}
                             />
                         ))}
                     </View>

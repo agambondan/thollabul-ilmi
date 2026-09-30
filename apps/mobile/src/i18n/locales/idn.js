@@ -252,7 +252,7 @@ export const idn = {
         "explore.faraidh.remainder": "Sisa",
         "explore.faraidh.resultSection": "Hasil Perhitungan",
         "explore.faraidh.umariyyahNotice":
-            "Umariyyatain: ayah mengambil sisa setelah pasangan.",
+            "Umariyyatain: ibu mendapat 1/3 dari sisa setelah bagian pasangan (setara 1/6 harta bila pasangan suami, 1/4 bila istri), ayah mengambil sisanya.",
         "explore.faraidh.kakekSaudaraNotice":
             "Minbariyah: kakek 1/6, saudara ashabah sisanya.",
         "explore.faraidh.akdariyahNotice":

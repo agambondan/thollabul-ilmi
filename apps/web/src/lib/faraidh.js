@@ -35,7 +35,13 @@ export function calculateFaraidh(input, total) {
     const hasMother = ibu > 0;
     const hasGrandmother = nenek > 0 && !hasMother;
 
-    const totalSiblings = saudaraL + saudaraP + saudaraSeayahL + saudaraSeayahP;
+    const totalSiblings =
+        saudaraL +
+        saudaraP +
+        saudaraSeayahL +
+        saudaraSeayahP +
+        saudaraSeibuL +
+        saudaraSeibuP;
     const hasMultipleSiblings = totalSiblings >= 2;
     const hasSiblingsKandung = saudaraL > 0 || saudaraP > 0;
     const hasSiblingsSeayah = saudaraSeayahL > 0 || saudaraSeayahP > 0;
@@ -71,10 +77,11 @@ export function calculateFaraidh(input, total) {
 
     const isUmariyyah =
         hasFather &&
+        hasMother &&
         hasSpouse &&
         !hasChildren &&
-        !hasGrandson &&
-        !hasActiveSiblings;
+        !hasGrandchild &&
+        !hasMultipleSiblings;
 
     const isMusytarakah =
         suami > 0 &&
@@ -131,6 +138,20 @@ export function calculateFaraidh(input, total) {
                     activeSaudaraSeayahP,
                 fraction: fr(1, 3),
                 note: "Musytarakah: 1/3 untuk ibu + saudara (dibagi 1:1)",
+                members: {
+                    ibu: 1,
+                    saudaraL: activeSaudaraL,
+                    saudaraP: activeSaudaraP,
+                    saudaraSeayahL: activeSaudaraSeayahL,
+                    saudaraSeayahP: activeSaudaraSeayahP,
+                },
+            });
+        } else if (isUmariyyah) {
+            rows.push({
+                key: "ibu",
+                count: 1,
+                fraction: suami > 0 ? fr(1, 6) : fr(1, 4),
+                note: "Umariyyatain: 1/3 dari sisa setelah bagian pasangan",
             });
         } else {
             rows.push({
@@ -275,6 +296,7 @@ export function calculateFaraidh(input, total) {
                 key: "saudara_seibu",
                 count: activeSaudaraSeibu,
                 fraction: activeSaudaraSeibu === 1 ? fr(1, 6) : fr(1, 3),
+                members: { saudaraSeibuL, saudaraSeibuP },
             });
         }
     }
@@ -343,6 +365,7 @@ export function calculateFaraidh(input, total) {
             share: dec,
             amount: (total ?? 0) * dec,
             note: r.note,
+            members: r.members,
         };
     });
 

@@ -82,6 +82,30 @@ export const emptyUserWirdForm = {
 export const refKey = (refType, refId) => `${refType}:${refId}`;
 export const digitsOnly = (value = "") => `${value}`.replace(/[^\d]/g, "");
 export const parseNumericInput = (value = "") => Number(digitsOnly(value)) || 0;
+export const MAX_CURRENCY_DIGITS = 15;
+export const MAX_WEIGHT_INTEGER_DIGITS = 9;
+export const MAX_WEIGHT_FRACTION_DIGITS = 3;
+export const sanitizeCurrencyInput = (value = "") =>
+    digitsOnly(value).slice(0, MAX_CURRENCY_DIGITS);
+export const sanitizeDecimalInput = (value = "") => {
+    const text = `${value}`.replace(/[^\d.,]/g, "");
+    const separatorAt = text.search(/[.,]/);
+    const integerDigits = (
+        separatorAt === -1 ? text : text.slice(0, separatorAt)
+    )
+        .replace(/^0+(?=\d)/, "")
+        .slice(0, MAX_WEIGHT_INTEGER_DIGITS);
+    if (separatorAt === -1) return integerDigits;
+    const fractionDigits = text
+        .slice(separatorAt + 1)
+        .replace(/[.,]/g, "")
+        .slice(0, MAX_WEIGHT_FRACTION_DIGITS);
+    return `${integerDigits || "0"}${text[separatorAt]}${fractionDigits}`;
+};
+export const parseDecimalInput = (value = "") => {
+    const parsed = Number(sanitizeDecimalInput(value).replace(",", "."));
+    return Number.isFinite(parsed) ? parsed : 0;
+};
 export const normalizeSearchText = (value = "") =>
     `${value}`.trim().toLowerCase();
 export const normalizeBookmarkType = (value = "") => {
@@ -132,6 +156,10 @@ export const formatNumericInput = (value = "") => {
     if (!normalized) return "";
     return Number(normalized).toLocaleString("id-ID");
 };
+export const formatDecimalValue = (value = 0, language = "idn") =>
+    (Number(value) || 0).toLocaleString(language === "en" ? "en-US" : "id-ID", {
+        maximumFractionDigits: MAX_WEIGHT_FRACTION_DIGITS,
+    });
 export const formatCurrency = (value = 0) =>
     `Rp ${Math.round(Number(value) || 0).toLocaleString("id-ID")}`;
 export const pickText = (...values) =>
