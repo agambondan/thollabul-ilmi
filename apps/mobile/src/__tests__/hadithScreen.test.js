@@ -157,7 +157,7 @@ jest.mock("../components/SectionHeader", () => ({
 }));
 
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { act, render, fireEvent, waitFor } from "@testing-library/react-native";
 import { InteractionManager, StyleSheet } from "react-native";
 import { HadithScreen } from "../screens/HadithScreen";
 
@@ -397,16 +397,24 @@ describe("HadithScreen", () => {
             expect(queryByText(/ 20 text\./)).toBeTruthy();
         });
 
-        answerOlder({
-            items: [
-                mockHadithItem(10, { book: "Shahih Muslim", bookSlug: "muslim" }),
-                mockHadithItem(11, { book: "Shahih Muslim", bookSlug: "muslim" }),
-            ],
-            page: 0,
-            hasMore: false,
-            total: 2,
+        await act(async () => {
+            answerOlder({
+                items: [
+                    mockHadithItem(10, {
+                        book: "Shahih Muslim",
+                        bookSlug: "muslim",
+                    }),
+                    mockHadithItem(11, {
+                        book: "Shahih Muslim",
+                        bookSlug: "muslim",
+                    }),
+                ],
+                page: 0,
+                hasMore: false,
+                total: 2,
+            });
+            await new Promise((resolve) => setTimeout(resolve, 50));
         });
-        await new Promise((resolve) => setTimeout(resolve, 50));
 
         expect(queryByText(/ 10 text\./)).toBeNull();
         expect(queryByText(/ 20 text\./)).toBeTruthy();
