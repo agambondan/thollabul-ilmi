@@ -136,40 +136,62 @@ LFS commands needed for a routine content update.
 ## Native mobile app (`record-mobile-app.js`)
 
 Records the React Native app in `apps/mobile` (the 5-tab shell: Beranda ·
-Al-Quran · Hadis · Ibadah · Belajar) through Expo's web export, and produces
-`docs/media/demo-mobile-app.mp4`. It is separate from `record-mobile.js`, which
-drives the _website_ at a phone-sized viewport.
-
+Al-Quran · Hadis · Ibadah · Belajar) through Expo's web export. It is separate
+from `record-mobile.js`, which drives the _website_ at a phone-sized viewport.
 There is no emulator or simulator on this Linux dev machine that can be relied
-on, so the app is rendered by `react-native-web` and driven with Playwright. No
-credentials are needed: the tour runs as a guest.
+on, so the app is rendered by `react-native-web` and driven with Playwright.
+
+Whether login credentials are set picks one of two recordings:
+
+| Mode                  | Trigger                                         | Output in `output/mobile-app/` | Video in `docs/media/`        |
+| --------------------- | ----------------------------------------------- | ------------------------------ | ----------------------------- |
+| Public tour (default) | no credentials                                  | `demo-mobile-app.webm`         | `demo-mobile-app.mp4`         |
+| Account clip          | `DEMO_LOGIN_IDENTIFIER` + `DEMO_LOGIN_PASSWORD` | `demo-mobile-app-account.webm` | `demo-mobile-app-account.mp4` |
+
+The public tour walks through every tab as a guest. The account clip signs in,
+bookmarks Al-Kahf 18:9, writes a note on it and opens Statistik.
 
 ```bash
-# terminal 1 - keep it running (restart after editing app code, see below)
+# public tour (production data): Expo with the default API URL
 cd apps/mobile && CI=1 npx expo start --web --port 19010
-
-# terminal 2
 node scripts/demo-recording/record-mobile-app.js
+
+# account clip: Expo against the local stack (`make docker-up`, API on :29900)
+cd apps/mobile && EXPO_PUBLIC_API_URL=http://localhost:29900 CI=1 npx expo start --web --port 19010 --clear
+DEMO_LOGIN_IDENTIFIER=admin@tholabul-ilmi.com DEMO_LOGIN_PASSWORD='<admin password>' \
+  node scripts/demo-recording/record-mobile-app.js
 ```
 
-`DEMO_MOBILE_APP_URL` overrides the URL. The script writes
-`output/mobile-app/demo-mobile-app.webm` plus `trim.txt` (seconds of blank
-loading time to skip). Convert with:
+The seeded admin's password is `ADMIN_PASSWORD` or the default in
+`services/api/app/db/migrations/seeder_idempotency.go`. That account exists
+only on the local API: production's was rotated (`docs/web/FINDINGS.md`, F2).
+`DEMO_MOBILE_APP_URL` overrides the Expo URL. Each run writes the `.webm` plus a
+`<name>.trim.txt` (seconds of loading time to skip). Convert with:
 
 ```bash
-cd scripts/demo-recording
-ffmpeg -y -ss "$(cat output/mobile-app/trim.txt)" -i output/mobile-app/demo-mobile-app.webm -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../docs/media/demo-mobile-app.mp4
+cd scripts/demo-recording/output/mobile-app
+ffmpeg -y -ss "$(cat demo-mobile-app.trim.txt)" -i demo-mobile-app.webm -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../../../docs/media/demo-mobile-app.mp4
+ffmpeg -y -ss "$(cat demo-mobile-app-account.trim.txt)" -i demo-mobile-app-account.webm -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../../../docs/media/demo-mobile-app-account.mp4
 ```
 
 ### Gotchas specific to this script
 
-- **Guest only: login cannot work on the web export.** The app keeps auth
+- **Login only works through a recording-time patch.** The app keeps auth
   tokens in `expo-secure-store`, which does not exist on web, and
   `src/storage/session.js` deliberately refuses to fall back to plaintext
-  ("SecureStore tidak tersedia..."). The API login itself succeeds, the app
-  just cannot keep the session. Do not weaken that check to make a recording.
-  Bookmarks, notes and progress are therefore not shown. The seeded admin's
-  default password is also rotated on production (`docs/web/FINDINGS.md`, F2).
+  ("SecureStore tidak tersedia..."). In account mode the script swaps the empty
+  `ExpoSecureStore.web` module inside the dev bundle served to the recording
+  browser for a localStorage-backed one (`withWebSecureStore`). Nothing in the
+  repo, the Metro config or any build changes. The script aborts if it cannot
+  find that module (for example after an Expo SDK upgrade).
+- **The account must exist on the API that Expo talks to.** Before recording,
+  the script logs in once over HTTP (fails fast with the status code) and
+  removes that account's bookmark and notes for Al-Kahf 18:9, then removes them
+  again afterwards so runs are repeatable. It touches nothing else.
+- **The local stack can lack data.** `services/api/.dockerignore` used to
+  exclude `data/`, so the static-file seeders (asbabun nuzul, kajian list) did
+  not run in the local image and both are empty there. The account clip avoids
+  them; the public tour needs the production API or a rebuilt local image.
 - **`CI=1` turns off Metro's file watcher**, so Expo keeps serving the old
   bundle after app code changes. Restart it (add `--clear` if old code still
   shows up).
@@ -179,15 +201,14 @@ ffmpeg -y -ss "$(cat output/mobile-app/trim.txt)" -i output/mobile-app/demo-mobi
 - **Geolocation is granted to the browser context** (Jakarta coordinates) so
   Jadwal Sholat shows real prayer times and a countdown instead of the "enable
   location" state.
-- **Hadis uses the search-first flow on purpose.** The "Hadith" pill has no
-  `onPress` (it only reflects state), and "Buka Reader" intermittently leaves
-  the previous list on screen under the new book's header. Typing in the search
-  box is reliable, but it only filters the ~20 hadith already loaded, so the
-  query (`Funerals`) has to match one of those.
-- **Kajian: use the "Transkrip" sub-tab.** The "Kajian" list sub-tab also
-  filters only loaded items, and the stat cards at the top (20 / 20 / 9) show
-  that loaded count, not the real totals. The transcript result line shows the
-  real numbers.
+- **Hadis search is server-side since `c9f593f7`.** An API without that change
+  (production until the next deploy) ignores the query and returns the
+  unfiltered list, so the public tour's "niat" search only looks right against
+  a current backend. The script avoids "Buka Reader": on the pre-fix build it
+  intermittently left the previous book's list under the new book's header.
+- **Kajian: use the "Transkrip" sub-tab.** The list sub-tab and the stat cards
+  above it only reflect the loaded page (20 / 20 / 9 on production, 1 / 0 / 0
+  locally), so the script scrolls past them.
 - **Ibadah is visited last.** Sub-screens opened from the hub (Jadwal Sholat
   and friends) can only be left with Android's hardware back; on web there is
   no way back to the hub without a reload.
