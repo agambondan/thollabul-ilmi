@@ -102,11 +102,12 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 
 ## Setup & Infrastruktur
 
-| Dokumen                                                    | Isi                                             |
-| ---------------------------------------------------------- | ----------------------------------------------- |
-| [setup/local-development.md](./setup/local-development.md) | Cara menjalankan stack lokal (Docker, API, Web) |
-| [setup/chronicle.md](./setup/chronicle.md)                 | Setup Chronicle (memory & context system)       |
-| [setup/ai-providers.md](./setup/ai-providers.md)           | Konfigurasi AI provider                         |
+| Dokumen                                                                              | Isi                                                                            |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| [setup/local-development.md](./setup/local-development.md)                           | Cara menjalankan stack lokal (Docker, API, Web)                                |
+| [setup/chronicle.md](./setup/chronicle.md)                                           | Setup Chronicle (memory & context system)                                      |
+| [setup/ai-providers.md](./setup/ai-providers.md)                                     | Konfigurasi AI provider                                                        |
+| [setup/vps-monitoring-and-maintenance.md](./setup/vps-monitoring-and-maintenance.md) | Beszel + pgHero, alert Telegram, perawatan disk VPS (image prune, registry GC) |
 
 ---
 

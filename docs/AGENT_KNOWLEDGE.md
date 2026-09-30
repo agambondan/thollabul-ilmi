@@ -146,3 +146,23 @@ Heuristik cepat deteksi citation-padding: rentang halaman >1 untuk satu
 hadis, nomor Tirmidzi/Ahmad yang topik/perawinya beda dari klaim naratif,
 atau perawi minor diatribusikan ke juz 1 Musnad Ahmad (khusus Khulafa
 Rasyidin + 'Asyarah Mubasysyarin).
+
+---
+
+## VPS: deploy meninggalkan sampah yang diam-diam menghabiskan disk
+
+Tiap `make <service>.deploy` memindahkan tag `:prod` ke image baru. Image
+lama jadi tanpa tag (±285 MB per deploy untuk API) dan **tidak pernah hilang
+sendiri**. Di registry lokal, tiap push menyisakan revisi manifest tanpa tag,
+dan `registry_cleanup.sh` lama hanya menghapus tag, bukan blob-nya. Per
+2026-09-30 disk VPS (yang dipakai bareng eduplay dan wedding) sampai 90%
+sebelum ketahuan; sesudah dibersihkan 52%.
+
+Sekarang sudah otomatis (crontab `ubuntu` di VPS): `docker image prune`
+harian dan `ops/scripts/registry-gc.py` mingguan, plus alert disk > 85% di
+Beszel. Kalau alert itu bunyi, jalankan dulu dry run script di atas, jangan
+`registry garbage-collect --delete-untagged` mentah: opsi itu berisiko
+menghapus manifest anak dari OCI index yang masih dipakai.
+
+Detail lengkap dan jebakannya:
+[`setup/vps-monitoring-and-maintenance.md`](./setup/vps-monitoring-and-maintenance.md).

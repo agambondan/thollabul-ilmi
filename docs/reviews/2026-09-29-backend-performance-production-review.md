@@ -289,27 +289,79 @@ hanya bisa ditemukan KARENA baseline ini sekarang aktif:
 | Structured log `latency_ms`     | ✅ Aktif, angka asli     | `docker logs tholabul-ilmi-tholabul-ilmi-api-1`                                        |
 | `ObserveDBQuery()` wiring       | ✅ Aktif                 | `RegisterDBMetrics()` di `db/postgresql.go`                                            |
 
-**Belum ada:** alerting otomatis (Temuan #28 di
-`2026-09-28-mobile-performance-deep-review.md` masih relevan — metrik
-sekarang valid, tapi tidak ada yang memantau otomatis kalau
-`api_slow_requests_total` naik).
+**Update 30 Sep:** alerting host/container sudah aktif lewat Beszel
+(Bagian D). **Yang masih belum ada:** alert berbasis metrik aplikasi
+(Temuan #28 di `2026-09-28-mobile-performance-deep-review.md` masih
+relevan — metrik sekarang valid, tapi tidak ada yang memantau otomatis
+kalau `api_slow_requests_total` naik).
 
 ---
 
 ## Prioritas Tindak Lanjut
 
-| #   | Temuan                                                  | Dampak                                                | Effort | Status                   |
-| --- | ------------------------------------------------------- | ----------------------------------------------------- | ------ | ------------------------ |
-| B0  | Filter `deleted_at` hilang sistemik (34 file)           | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j   | ✅ Fixed (`b7ed2aba`)    |
-| B1  | Batch insert `kajian_transcript` seeder                 | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j   | ✅ Fixed (`8a98f69b`)    |
-| B2  | B-tree index `translation.en`                           | 🟠 Sedang (seeder-time)                               | 15m    | ✅ Fixed (`8a98f69b`)    |
-| B3  | `ayah_repository.go` `FindDaily` offset-scan            | 🟡 Sedang (pola sama dgn A3, tabel lebih kecil)       | 1j     | ✅ Fixed (`8a98f69b`)    |
-| B4  | Deploy HEAD ke production                               | 🔴 Tinggi                                             | 15m    | 🚀 Sedang dieksekusi     |
-| B5  | Pantau disk I/O growth                                  | 🟢 Rendah (observasi)                                 | -      | 👁️ Pantau                |
-| —   | Alerting `api_slow_requests_total`/`pg_stat_statements` | 🟠 Sedang (mencegah insiden berulang)                 | 2j     | ⏳ Belum (di luar scope) |
+| #   | Temuan                                                     | Dampak                                                | Effort | Status                  |
+| --- | ---------------------------------------------------------- | ----------------------------------------------------- | ------ | ----------------------- |
+| B0  | Filter `deleted_at` hilang sistemik (34 file)              | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j   | ✅ Fixed (`b7ed2aba`)   |
+| B1  | Batch insert `kajian_transcript` seeder                    | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j   | ✅ Fixed (`8a98f69b`)   |
+| B2  | B-tree index `translation.en`                              | 🟠 Sedang (seeder-time)                               | 15m    | ✅ Fixed (`8a98f69b`)   |
+| B3  | `ayah_repository.go` `FindDaily` offset-scan               | 🟡 Sedang (pola sama dgn A3, tabel lebih kecil)       | 1j     | ✅ Fixed (`8a98f69b`)   |
+| B4  | Deploy HEAD ke production                                  | 🔴 Tinggi                                             | 15m    | ✅ Deployed (30 Sep)    |
+| B5  | Pantau disk I/O growth                                     | 🟢 Rendah (observasi)                                 | -      | 👁️ Pantau               |
+| —   | Alert host/container (disk, memori, CPU, status)           | 🟠 Sedang (mencegah insiden berulang)                 | 2j     | ✅ Aktif (Bagian D1)    |
+| —   | Alert berbasis metrik aplikasi (`api_slow_requests_total`) | 🟡 Rendah-sedang                                      | 2j     | ⏳ Belum                |
+| D2  | Index duplikat/tak terpakai (temuan pgHero)                | 🟠 Sedang (biaya tulis + disk)                        | 1j     | ✅ Fixed (Bagian D2)    |
+| D3  | Disk VPS 90%                                               | 🔴 Tinggi (risiko outage semua project)               | 2j     | ✅ Fixed, jadi 52% (D3) |
 
-Bagian A dan B0-B3 semua sudah diperbaiki + di-build/vet/test hijau. B4
-(deploy) sedang dieksekusi begitu dokumen ini ditulis; B5 murni item
-pantau, bukan sesuatu untuk "difix". Item alerting di baris terakhir tetap
-di luar scope — butuh keputusan terpisah soal tooling (Grafana/Prometheus
-Alertmanager belum ada di infra ini).
+Bagian A dan B0-B3 semua sudah diperbaiki + di-build/vet/test hijau, dan B4
+(deploy) sudah live. B5 murni item pantau, bukan sesuatu untuk "difix".
+
+---
+
+## Bagian D — Tindak Lanjut 30 Sep: Monitoring, Index, dan Disk
+
+Detail operasional (lokasi, alert, jadwal, jebakan) ada di
+[`docs/setup/vps-monitoring-and-maintenance.md`](../setup/vps-monitoring-and-maintenance.md).
+Bagian ini mencatat temuan dan hasilnya.
+
+### D1. Dashboard dan alert
+
+Beszel (host + container) dan pgHero (Postgres) terpasang dan bisa dibuka di
+subdomain `beszel.thollabulilmi.site` / `pghero.thollabulilmi.site`. Lima
+alert Beszel aktif dan dikirim ke Telegram: status, disk > 85%, memori > 90%,
+CPU > 90%, dan container unhealthy. Alert berbasis metrik aplikasi belum ada.
+
+### D2. Index Postgres dibersihkan
+
+- pgHero menandai index duplikat (kolom pertamanya sudah dicakup index lain);
+  19 di antaranya di-`DROP`. `AutoMigrate` GORM hanya menambah dan tidak pernah
+  menghapus, jadi definisinya juga dihapus dari `createCompositeIndexes()` dan
+  tag GORM di model. Kalau hanya salah satu yang diubah, index muncul lagi di
+  deploy berikutnya.
+- Di `kajian_transcript`: index HNSW untuk `embedding` (305 MB, tidak dipakai
+  query mana pun) dan index FTS yang duplikat dengan `text_tsv` (86 MB) di-drop.
+  Total index tabel itu turun dari 791 MB jadi ±400 MB. Biaya pemeliharaan
+  keduanya di setiap INSERT/UPDATE ikut menjelaskan lonjakan durasi INSERT ke
+  tabel ini yang terlihat di `pg_stat_statements`.
+- `pg_stat_statements` bersifat kumulatif, jadi lonjakan lama tetap terlihat
+  sampai `pg_stat_statements_reset()` dijalankan.
+
+### D3. Disk VPS 90% jadi 52%
+
+Disk sempat 90% (sisa 4,1 GB) di VPS yang dipakai bersama eduplay dan wedding.
+Penyebabnya image tanpa tag yang menumpuk tiap deploy (5,96 GB) dan registry
+lokal 12,6 GB yang tidak pernah di-GC (ratusan revisi manifest tanpa tag).
+Sekarang ada `docker image prune` harian dan `ops/scripts/registry-gc.py`
+mingguan. Registry turun ke 3,4 GB; semua tag yang tersisa diverifikasi lewat
+API dan satu rilis lama berhasil ditarik dengan `docker pull`.
+
+### D4. Belum dikerjakan
+
+- **Tes regresi `deleted_at`.** B0 berstatus fixed tetapi belum dijaga tes: `go
+test ./...` hijau tidak menangkap regresi soft delete karena tidak ada tes
+  yang menegaskan baris `deleted_at IS NOT NULL` tidak muncul di repository
+  raw-SQL.
+- `search_repository_test.go` (build tag postgres) belum pernah dijalankan;
+  butuh Postgres sekali pakai yang terisolasi.
+- Kolom `kajian_transcript.embedding` (288 MB) tidak dibaca kode mana pun,
+  sementara cron mingguan `backfill-kajian-embeddings.sh` masih mengisinya.
+  Keputusan buang/pertahankan ada di pemilik.
