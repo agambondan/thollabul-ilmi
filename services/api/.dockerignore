@@ -9,6 +9,8 @@ data/
 # material and stays out of the build context.
 !data/static
 !data/static/**
+data/static/kajian_listing_cache.json
+data/static/kajian_scrape_state.json
 .firecrawl/
 .playwright-mcp/
 .claude/
