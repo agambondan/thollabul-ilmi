@@ -484,6 +484,19 @@ export function PrayerScreen({ isActive, navigation }) {
         return next;
     }, [prayers, adjustments]);
 
+    const stopAdzan = useCallback(() => {
+        unregisterAudioSource(AudioSource.ADZAN);
+        if (adzanTimerRef.current) clearTimeout(adzanTimerRef.current);
+        if (playerRef.current) {
+            try {
+                playerRef.current.stop();
+                playerRef.current.remove?.();
+            } catch {}
+            playerRef.current = null;
+        }
+        setAdzanPlaying(false);
+    }, []);
+
     const playAdzan = useCallback(
         async (prayerKey) => {
             if (!adzanAudioEnabled) return;
@@ -510,19 +523,6 @@ export function PrayerScreen({ isActive, navigation }) {
         },
         [adzanAudioEnabled, adzanSound, stopAdzan],
     );
-
-    const stopAdzan = useCallback(() => {
-        unregisterAudioSource(AudioSource.ADZAN);
-        if (adzanTimerRef.current) clearTimeout(adzanTimerRef.current);
-        if (playerRef.current) {
-            try {
-                playerRef.current.stop();
-                playerRef.current.remove?.();
-            } catch {}
-            playerRef.current = null;
-        }
-        setAdzanPlaying(false);
-    }, []);
 
     useEffect(() => {
         return () => {
