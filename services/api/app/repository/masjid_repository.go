@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
 )
@@ -37,16 +39,20 @@ func (r *masjidRepo) Update(id int, fields map[string]interface{}) (*model.Masji
 func (r *masjidRepo) FindAll(search, city, province string, limit, offset int) ([]model.Masjid, int64, error) {
 	var list []model.Masjid
 	var total int64
+	likeOp := "ILIKE"
+	if r.db.Dialector.Name() == "sqlite" {
+		likeOp = "LIKE"
+	}
 	query := r.db.Model(&model.Masjid{}).Where("is_active = ?", true)
 	if search != "" {
 		q := "%" + search + "%"
-		query = query.Where("name ILIKE ? OR address ILIKE ? OR district ILIKE ?", q, q, q)
+		query = query.Where(fmt.Sprintf("name %[1]s ? OR address %[1]s ? OR district %[1]s ? OR city %[1]s ?", likeOp), q, q, q, q)
 	}
 	if city != "" {
-		query = query.Where("city ILIKE ?", "%"+city+"%")
+		query = query.Where(fmt.Sprintf("city %s ?", likeOp), "%"+city+"%")
 	}
 	if province != "" {
-		query = query.Where("province ILIKE ?", "%"+province+"%")
+		query = query.Where(fmt.Sprintf("province %s ?", likeOp), "%"+province+"%")
 	}
 	query.Count(&total)
 	err := query.Order("name asc").Offset(offset).Limit(limit).Find(&list).Error
@@ -82,7 +88,7 @@ func (r *masjidRepo) FindNearby(lat, lng, radiusKm float64, limit int) ([]model.
 					))
 				)) as distance_km
 			FROM masjid
-			WHERE is_active = true
+			WHERE is_active = true AND deleted_at IS NULL
 		) sub
 		WHERE distance_km <= ?
 		ORDER BY distance_km ASC
@@ -100,7 +106,7 @@ func (r *masjidRepo) FindNearby(lat, lng, radiusKm float64, limit int) ([]model.
 				))
 			)) as distance_km
 			FROM masjid
-			WHERE is_active = true
+			WHERE is_active = true AND deleted_at IS NULL
 		) sub
 		WHERE distance_km <= ?
 	`
