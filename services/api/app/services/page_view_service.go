@@ -1,6 +1,7 @@
 package service
 
 import (
+	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/google/uuid"
+	"github.com/spf13/viper"
 )
 
 type PageViewService interface {
@@ -32,7 +34,7 @@ func (s *pageViewService) Record(req *model.CreatePageViewRequest, ip, userAgent
 
 	source := normalizePageViewSource(req.Source, path)
 	visitorID := clampString(req.VisitorID, 128)
-	ipHash := hashString(ip)
+	ipHash := hashIP(ip)
 	if visitorID == "" {
 		visitorID = ipHash
 	}
@@ -148,9 +150,19 @@ func clampString(value string, max int) string {
 	return value[:max]
 }
 
-func hashString(value string) string {
-	hash := sha256.Sum256([]byte(value))
-	return hex.EncodeToString(hash[:])
+func ipHashKey() []byte {
+	if key := viper.GetString("IP_HASH_SECRET"); key != "" {
+		return []byte(key)
+	}
+	derive := hmac.New(sha256.New, []byte(viper.GetString("ACCESS_SECRET")))
+	derive.Write([]byte("page-view-ip-hash-v1"))
+	return derive.Sum(nil)
+}
+
+func hashIP(ip string) string {
+	mac := hmac.New(sha256.New, ipHashKey())
+	mac.Write([]byte(ip))
+	return hex.EncodeToString(mac.Sum(nil))
 }
 
 func fillDailyPageViews(since time.Time, days int, rows []model.PageViewDailyStat) []model.PageViewDailyStat {
