@@ -18,7 +18,7 @@ const (
 
 type SocialModerationAction struct {
 	BaseID
-	UserID     uuid.UUID                  `json:"user_id" gorm:"type:uuid;not null;index;uniqueIndex:idx_social_moderation_once,priority:1"`
+	UserID     uuid.UUID                  `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_social_moderation_once,priority:1"`
 	TargetType SocialModerationTargetType `json:"target_type" gorm:"type:varchar(30);not null;index;uniqueIndex:idx_social_moderation_once,priority:2"`
 	TargetID   string                     `json:"target_id" gorm:"type:varchar(64);not null;index;uniqueIndex:idx_social_moderation_once,priority:3"`
 	Action     SocialModerationActionType `json:"action" gorm:"type:varchar(20);not null;index;uniqueIndex:idx_social_moderation_once,priority:4"`

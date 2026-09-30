@@ -63,7 +63,7 @@ type KajianTranscript struct {
 	// seeder can upsert a chunk by its (video, window) identity instead of
 	// deleting and recreating every row on each run — bookmarks and notes
 	// reference a chunk's id directly, and churning ids silently orphans them.
-	KajianID     int    `json:"kajian_id" gorm:"index;not null;uniqueIndex:idx_kajian_transcript_chunk"`
+	KajianID     int    `json:"kajian_id" gorm:"not null;uniqueIndex:idx_kajian_transcript_chunk"`
 	VideoID      string `json:"video_id" gorm:"type:varchar(64);index"`
 	StartSeconds int    `json:"start_seconds" gorm:"not null;index;uniqueIndex:idx_kajian_transcript_chunk"`
 	EndSeconds   int    `json:"end_seconds" gorm:"not null;uniqueIndex:idx_kajian_transcript_chunk"`

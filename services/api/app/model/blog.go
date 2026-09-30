@@ -36,7 +36,7 @@ type BlogTag struct {
 type BlogPost struct {
 	BaseUUID
 	AuthorID      uuid.UUID     `json:"author_id" gorm:"type:uuid;not null;index"`
-	CategoryID    *int          `json:"category_id,omitempty" gorm:"index"`
+	CategoryID    *int          `json:"category_id,omitempty"`
 	Title         string        `json:"title" gorm:"type:varchar(512);not null"`
 	Slug          string        `json:"slug" gorm:"type:varchar(512);uniqueIndex;not null"`
 	Excerpt       string        `json:"excerpt,omitempty" gorm:"type:text"`

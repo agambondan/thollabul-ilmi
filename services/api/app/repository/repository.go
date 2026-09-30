@@ -271,16 +271,11 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_tafsir_ayah_id       ON tafsir (ayah_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_tafsir_ayah_surah    ON tafsir (ayah_id, surah_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_ayah_surah_num       ON ayah (surah_id, number)`,
-		`CREATE INDEX IF NOT EXISTS idx_hadith_ayah_hadith   ON hadith_ayah (hadith_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_hadith_ayah_ayah     ON hadith_ayah (ayah_id)`,
-		`CREATE INDEX IF NOT EXISTS idx_munasabah_from_ayah  ON munasabah (ayah_from_id)`,
-		`CREATE INDEX IF NOT EXISTS idx_munasabah_to_ayah    ON munasabah (ayah_to_id)`,
-		`CREATE INDEX IF NOT EXISTS idx_asbab_ayahs_nuzul    ON asbabun_nuzul_ayahs (asbabun_nuzul_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_asbab_ayahs_ayah     ON asbabun_nuzul_ayahs (ayah_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_siroh_cat_order      ON siroh_content (category_id, "order" ASC)`,
 		`CREATE INDEX IF NOT EXISTS idx_fiqh_cat_order       ON fiqh_content (category_id, sort_order ASC)`,
 		`CREATE INDEX IF NOT EXISTS idx_blog_post_cat_pub    ON blog_post (category_id, published_at DESC)`,
-		`CREATE INDEX IF NOT EXISTS idx_blog_post_tags_comp  ON blog_post_tags (blog_post_id, blog_tag_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_munasabah_from_to    ON munasabah (ayah_from_id, ayah_to_id)`,
 	}
 	for _, sql := range indexes {

@@ -4,7 +4,7 @@ import "github.com/google/uuid"
 
 type KajianUserNote struct {
 	BaseID
-	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index:idx_kajian_user_note_user_kajian,priority:1;index"`
+	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index:idx_kajian_user_note_user_kajian,priority:1"`
 	KajianID  int       `json:"kajian_id" gorm:"not null;index:idx_kajian_user_note_user_kajian,priority:2;index"`
 	StartSec  int       `json:"start_sec" gorm:"not null"`
 	EndSec    *int      `json:"end_sec" gorm:""`

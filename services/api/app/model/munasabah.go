@@ -2,7 +2,7 @@ package model
 
 type Munasabah struct {
 	BaseID
-	AyahFromID  *int   `json:"ayah_from_id" gorm:"not null;index"`
+	AyahFromID  *int   `json:"ayah_from_id" gorm:"not null"`
 	AyahToID    *int   `json:"ayah_to_id" gorm:"not null;index"`
 	Description string `json:"description" gorm:"type:text;not null"`
 	AyahFrom    *Ayah  `json:"ayah_from,omitempty" gorm:"foreignKey:AyahFromID;references:ID"`

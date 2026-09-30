@@ -7,7 +7,7 @@ import "github.com/google/uuid"
 // across multiple devices and survive local cache clears.
 type KajianUserBookmark struct {
 	BaseID
-	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_kajian_user_bookmark_u_c,priority:1;index"`
+	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_kajian_user_bookmark_u_c,priority:1"`
 	ChunkID   int       `json:"chunk_id" gorm:"not null;uniqueIndex:idx_kajian_user_bookmark_u_c,priority:2;index"`
 	KajianID  int       `json:"kajian_id" gorm:"not null;index"`
 	Note      string    `json:"note" gorm:"type:text"`

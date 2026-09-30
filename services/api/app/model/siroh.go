@@ -12,7 +12,7 @@ type SirohCategory struct {
 
 type SirohContent struct {
 	BaseID
-	CategoryID    *int           `json:"category_id,omitempty" gorm:"not null;index"`
+	CategoryID    *int           `json:"category_id,omitempty" gorm:"not null"`
 	Title         string         `json:"title" gorm:"type:varchar(256);not null"`
 	Slug          string         `json:"slug" gorm:"type:varchar(256);uniqueIndex;not null"`
 	Content       string         `json:"content" gorm:"type:text;not null"`

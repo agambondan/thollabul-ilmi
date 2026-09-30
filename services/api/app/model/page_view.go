@@ -5,9 +5,9 @@ import "github.com/google/uuid"
 type PageView struct {
 	BaseUUID
 	VisitorID string     `json:"visitor_id,omitempty" gorm:"type:varchar(128);index:idx_page_view_visitor_created"`
-	UserID    *uuid.UUID `json:"user_id,omitempty" gorm:"type:uuid;index"`
+	UserID    *uuid.UUID `json:"user_id,omitempty" gorm:"type:uuid"`
 	Path      string     `json:"path" gorm:"type:varchar(512);not null;index:idx_page_view_path_created"`
-	Source    string     `json:"source" gorm:"type:varchar(50);not null;default:'public';index"`
+	Source    string     `json:"source" gorm:"type:varchar(50);not null;default:'public'"`
 	Referrer  string     `json:"referrer,omitempty" gorm:"type:varchar(512)"`
 	UserAgent string     `json:"user_agent,omitempty" gorm:"type:varchar(512)"`
 	IPHash    string     `json:"-" gorm:"type:varchar(64);index"`

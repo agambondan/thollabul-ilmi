@@ -17,7 +17,7 @@ const (
 // Legacy string columns are kept in DB for backward compat but hidden from JSON output.
 type Dzikir struct {
 	BaseID
-	Category        DzikirCategory `json:"category" gorm:"type:varchar(50);not null;index;uniqueIndex:idx_dzikir_category_title"`
+	Category        DzikirCategory `json:"category" gorm:"type:varchar(50);not null;uniqueIndex:idx_dzikir_category_title"`
 	Occasion        string         `json:"occasion,omitempty" gorm:"type:varchar(100);index"`
 	Title           string         `json:"-" gorm:"type:varchar(256);not null;uniqueIndex:idx_dzikir_category_title"`
 	Arabic          string         `json:"-" gorm:"type:text;not null"`
