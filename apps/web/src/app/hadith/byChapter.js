@@ -6,13 +6,16 @@ import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const normalizeItems = (data) => data?.items ?? data ?? [];
 
 const ByChapter = ({ basePath = "/hadith" }) => {
     const { t, lang } = useLocale();
+    const searchParams = useSearchParams();
+    const urlBook = searchParams.get("book");
     const [bookList, setBookList] = useState([]);
-    const [selectedBookSlug, setSelectedBookSlug] = useState("");
+    const [selectedBookSlug, setSelectedBookSlug] = useState(urlBook || "");
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
@@ -24,10 +27,13 @@ const ByChapter = ({ basePath = "/hadith" }) => {
             .then((data) => {
                 const items = normalizeItems(data);
                 setBookList(items);
+                const matched = urlBook && items.some((b) => b.slug === urlBook);
                 setSelectedBookSlug(
-                    items.find((book) => book.slug === "bukhari")?.slug ??
-                        items[0]?.slug ??
-                        "",
+                    matched
+                        ? urlBook
+                        : items.find((book) => book.slug === "bukhari")?.slug ??
+                            items[0]?.slug ??
+                            "",
                 );
             })
             .catch(() => setIsError(true))
@@ -61,7 +67,15 @@ const ByChapter = ({ basePath = "/hadith" }) => {
                 <select
                     id='bychapter-select-book'
                     value={selectedBookSlug}
-                    onChange={(e) => setSelectedBookSlug(e.target.value)}
+                    onChange={(e) => {
+                        const slug = e.target.value;
+                        setSelectedBookSlug(slug);
+                        if (typeof window !== "undefined") {
+                            const params = new URLSearchParams(window.location.search);
+                            params.set("book", slug);
+                            window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
+                        }
+                    }}
                     className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 >
                     {books.map((book) => (

@@ -6,7 +6,8 @@ import { useLocale } from "@/context/Locale";
 import { quizApi } from "@/lib/api";
 import { getLocalizedField, getLocalizedOption } from "@/lib/translation";
 import { useEffect, useState } from "react";
-import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
+import { BsCheckCircleFill, BsXCircleFill, BsShareFill, BsTrophyFill } from "react-icons/bs";
+import Link from "next/link";
 import { FaBrain } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 
@@ -108,6 +109,7 @@ export default function QuizContent({ initialType = "" }) {
     const [isLoading, setIsLoading] = useState(false);
     const [fetchError, setFetchError] = useState(false);
     const [history, setHistory] = useState([]);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         try {
@@ -207,6 +209,39 @@ export default function QuizContent({ initialType = "" }) {
     const pct = questions.length
         ? Math.round((correctCount / questions.length) * 100)
         : 0;
+
+    const handleShare = async () => {
+        const activeTypeObj = QUIZ_TYPES.find((item) => item.key === selectedType);
+        const categoryLabel = activeTypeObj
+            ? t(activeTypeObj.labelKey) || activeTypeObj.fallback
+            : t("quiz.type_all");
+        const shareText = `Alhamdulillah! Saya baru saja menyelesaikan Quiz Thollabul Ilmi (${categoryLabel}) dengan skor ${pct}% (${correctCount}/${questions.length} benar). Uji pengetahuan Islammu di sini!`;
+        const shareUrl =
+            typeof window !== "undefined"
+                ? window.location.origin + "/quiz"
+                : "https://thollabulilmi.site/quiz";
+
+        if (typeof navigator !== "undefined" && navigator.share) {
+            try {
+                await navigator.share({
+                    title: "Thollabul Ilmi Quiz",
+                    text: shareText,
+                    url: shareUrl,
+                });
+                return;
+            } catch (err) {
+                if (err?.name === "AbortError") return;
+            }
+        }
+
+        if (typeof navigator !== "undefined" && navigator.clipboard) {
+            try {
+                await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            } catch {}
+        }
+    };
 
     const resultRating = () => {
         if (pct === 100) return { emoji: "🏆", msg: t("quiz.result_perfect") };
@@ -444,9 +479,31 @@ export default function QuizContent({ initialType = "" }) {
                     <div className='inline-flex items-baseline gap-1 text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-1'>
                         <span>{pct}%</span>
                     </div>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mb-8'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400 mb-6'>
                         {correctCount} / {questions.length} {t("quiz.correct")}
                     </p>
+
+                    <div className='flex flex-wrap items-center justify-center gap-2 mb-6'>
+                        <button
+                            type='button'
+                            onClick={handleShare}
+                            className='inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 font-semibold text-xs sm:text-sm transition-colors border border-emerald-200 dark:border-emerald-800/60 shadow-sm'
+                        >
+                            <BsShareFill className='text-xs' />
+                            <span>
+                                {copied
+                                    ? t("quiz.copied_to_clipboard")
+                                    : t("quiz.share_score")}
+                            </span>
+                        </button>
+                        <Link
+                            href='/leaderboard'
+                            className='inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/60 font-semibold text-xs sm:text-sm transition-colors border border-amber-200 dark:border-amber-800/60 shadow-sm'
+                        >
+                            <BsTrophyFill className='text-xs' />
+                            <span>{t("quiz.view_leaderboard")}</span>
+                        </Link>
+                    </div>
 
                     <div className='flex flex-col sm:flex-row gap-3'>
                         <button

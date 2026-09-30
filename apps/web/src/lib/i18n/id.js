@@ -897,6 +897,9 @@ const id = {
     "quiz.type_asmaul_husna": "Asmaul Husna",
     "quiz.load_error":
         "Gagal memuat soal. Pastikan server berjalan lalu coba lagi.",
+    "quiz.share_score": "Bagikan Skor",
+    "quiz.copied_to_clipboard": "Tautan Tersalin!",
+    "quiz.view_leaderboard": "Lihat Peringkat",
     "quiz.finished": "Selesai!",
     "quiz.correct": "benar",
     "quiz.retry": "Ulangi Quiz",

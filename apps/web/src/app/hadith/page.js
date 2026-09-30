@@ -48,7 +48,7 @@ export default async function Page(props) {
         <main className='min-h-screen flex flex-col'>
             <Section>
                 <div className='py-2' />
-                <HadithBookGrid books={initialBooks} />
+                <HadithBookGrid books={initialBooks} currentBook={searchParams?.book} />
             </Section>
         </main>
     );

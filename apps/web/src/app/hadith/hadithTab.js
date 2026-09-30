@@ -1,9 +1,12 @@
 import classNames from "classnames";
 import { useLocale } from "@/context/Locale";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const HadithTab = ({ tabs, basePath, activeTab, children }) => {
     const { t } = useLocale();
+    const searchParams = useSearchParams();
+    const currentBook = searchParams?.get("book");
 
     return (
         <div className='w-full'>
@@ -15,7 +18,9 @@ const HadithTab = ({ tabs, basePath, activeTab, children }) => {
                     const labelKey = `hadith.tab_${tab.label.toLowerCase()}`;
                     const displayLabel = t(labelKey) || tab.label;
                     const tabId = tab.href.replace("#", "");
-                    const href = `${basePath}?tab=${tabId}`;
+                    const href = currentBook
+                        ? `${basePath}?tab=${tabId}&book=${encodeURIComponent(currentBook)}`
+                        : `${basePath}?tab=${tabId}`;
                     const isActive = activeTab === tab.href;
 
                     return (

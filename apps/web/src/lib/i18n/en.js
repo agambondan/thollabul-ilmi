@@ -902,6 +902,9 @@ const en = {
     "quiz.type_asmaul_husna": "Names of Allah",
     "quiz.load_error":
         "Failed to load questions. Make sure the server is running, then try again.",
+    "quiz.share_score": "Share Score",
+    "quiz.copied_to_clipboard": "Link Copied!",
+    "quiz.view_leaderboard": "View Leaderboard",
     "quiz.finished": "Finished!",
     "quiz.correct": "correct",
     "quiz.retry": "Retry Quiz",

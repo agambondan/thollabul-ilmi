@@ -8,7 +8,7 @@ import { getLocalizedTranslation } from "@/lib/translation";
 import classNames from "classnames";
 import Link from "next/link";
 
-export default function HadithBookGrid({ books, basePath = "/hadith" }) {
+export default function HadithBookGrid({ books, basePath = "/hadith", currentBook = null }) {
     const { t, lang } = useLocale();
     const TAB_LABELS = {
         book: t("hadith.tab_book") || "Kitab",
@@ -25,10 +25,10 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                     role='tablist'
                 >
                     {[
-                        { id: "book", href: "/hadith?tab=book" },
-                        { id: "theme", href: "/hadith?tab=theme" },
-                        { id: "chapter", href: "/hadith?tab=chapter" },
-                        { id: "hadith", href: "/hadith?tab=hadith" },
+                        { id: "book", href: currentBook ? `${basePath}?tab=book&book=${encodeURIComponent(currentBook)}` : `${basePath}?tab=book` },
+                        { id: "theme", href: currentBook ? `${basePath}?tab=theme&book=${encodeURIComponent(currentBook)}` : `${basePath}?tab=theme` },
+                        { id: "chapter", href: currentBook ? `${basePath}?tab=chapter&book=${encodeURIComponent(currentBook)}` : `${basePath}?tab=chapter` },
+                        { id: "hadith", href: currentBook ? `${basePath}?tab=hadith&book=${encodeURIComponent(currentBook)}` : `${basePath}?tab=hadith` },
                     ].map((entry) => {
                         const isActive = entry.id === "book";
                         return (

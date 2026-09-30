@@ -9,6 +9,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BookmarkButton from "@/components/BookmarkButton";
+import { useSearchParams } from "next/navigation";
 
 const PAGE_SIZE = 20;
 
@@ -16,6 +17,8 @@ const normalizeItems = (data) => data?.items ?? data ?? [];
 
 const ByHadith = ({ basePath = "/hadith" }) => {
     const { t, lang } = useLocale();
+    const searchParams = useSearchParams();
+    const urlBook = searchParams?.get("book");
     const [bookList, setBookList] = useState([]);
     const [selectedBookIds, setSelectedBookIds] = useState([]);
     const [query, setQuery] = useState("");
@@ -40,7 +43,8 @@ const ByHadith = ({ basePath = "/hadith" }) => {
             .then((data) => {
                 const items = normalizeItems(data);
                 setBookList(items);
-                const defaultBook = items.find((b) => b.slug === "bukhari") || items[0];
+                const matched = urlBook ? items.find((b) => b.slug === urlBook) : null;
+                const defaultBook = matched || items.find((b) => b.slug === "bukhari") || items[0];
                 if (defaultBook) setSelectedBookIds([defaultBook.id]);
             })
             .catch(() => setIsError(true))
@@ -56,11 +60,27 @@ const ByHadith = ({ basePath = "/hadith" }) => {
     }, [bookList, lang]);
 
     const toggleBook = (bookId) => {
-        setSelectedBookIds((prev) =>
-            prev.includes(bookId)
+        setSelectedBookIds((prev) => {
+            const next = prev.includes(bookId)
                 ? prev.filter((id) => id !== bookId)
-                : [...prev, bookId],
-        );
+                : [...prev, bookId];
+            if (typeof window !== "undefined") {
+                const params = new URLSearchParams(window.location.search);
+                if (next.length === 1) {
+                    const singleBook = bookList.find((b) => b.id === next[0]);
+                    if (singleBook) params.set("book", singleBook.slug);
+                    else params.delete("book");
+                } else {
+                    params.delete("book");
+                }
+                window.history.replaceState(
+                    null,
+                    "",
+                    `${window.location.pathname}?${params.toString()}`,
+                );
+            }
+            return next;
+        });
     };
 
     const bookIdParam = selectedBookIds.length > 0
