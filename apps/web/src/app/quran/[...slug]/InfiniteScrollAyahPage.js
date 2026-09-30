@@ -487,7 +487,7 @@ const InfiniteScrollAyahPage = ({
                                 getSurahName(surah?.prev_surah, lang) ??
                                 t("quran.prev_surah")
                             }
-                            className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                            className='flex items-center gap-1 px-3 py-2 min-h-9 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             <svg
                                 width={13}
@@ -509,7 +509,7 @@ const InfiniteScrollAyahPage = ({
                             </span>
                         </Link>
                     ) : (
-                        <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
+                        <span className='flex items-center gap-1 px-3 py-2 min-h-9 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
                             <svg
                                 width={13}
                                 height={13}
@@ -537,7 +537,7 @@ const InfiniteScrollAyahPage = ({
                                 getSurahName(surah?.next_surah, lang) ??
                                 t("quran.next_surah")
                             }
-                            className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                            className='flex items-center gap-1 px-3 py-2 min-h-9 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             <span className='max-w-[75px] sm:max-w-[120px] truncate'>
                                 {getSurahName(surah?.next_surah, lang) ??
@@ -559,7 +559,7 @@ const InfiniteScrollAyahPage = ({
                             </svg>
                         </Link>
                     ) : (
-                        <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
+                        <span className='flex items-center gap-1 px-3 py-2 min-h-9 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
                             <span>{t("quran.next")}</span>
                             <svg
                                 width={13}

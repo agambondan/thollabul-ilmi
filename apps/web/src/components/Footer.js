@@ -87,7 +87,7 @@ const Footer = () => {
 
     return (
         <footer className='bg-emerald-950 dark:bg-gray-950 text-white'>
-            <div className='max-w-7xl mx-auto px-6 pt-12 pb-8'>
+            <div className='max-w-7xl mx-auto px-6 pt-12 pb-24 lg:pb-8'>
                 <div className='grid grid-cols-2 md:grid-cols-5 gap-8 mb-10'>
                     <div className='md:col-span-1'>
                         <Link href='/' className='inline-block mb-3'>

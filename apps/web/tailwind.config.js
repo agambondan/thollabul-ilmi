@@ -8,6 +8,12 @@ module.exports = {
     darkMode: "class",
     theme: {
         extend: {
+            minHeight: (theme) => ({
+                ...theme("spacing"),
+            }),
+            minWidth: (theme) => ({
+                ...theme("spacing"),
+            }),
             // Modifier opacity pada warna (mis. dark:bg-slate-800/35) hanya
             // ter-generate kalau angkanya ada di skala ini. Default Tailwind 3
             // tidak punya 15 dan 35, jadi kelas yang memakainya dilewatkan

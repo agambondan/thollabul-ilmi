@@ -400,7 +400,7 @@ const AyahPage = ({
                             <button
                                 title={t("common.share")}
                                 onClick={() => SetShareImagePopUp(true)}
-                                className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                                className='min-w-9 min-h-9 flex items-center justify-center p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <svg
                                     width='1em'
@@ -418,7 +418,7 @@ const AyahPage = ({
                                 ref={menuButtonRef}
                                 title={t("common.more")}
                                 onClick={toggleSettingPopUp}
-                                className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                                className='min-w-9 min-h-9 flex items-center justify-center p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <svg
                                     width='1em'

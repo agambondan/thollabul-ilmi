@@ -501,7 +501,7 @@ const HadithPage = ({
                                 <Link
                                     href={detailPath}
                                     title={t("hadith.open_detail")}
-                                    className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                                    className='min-w-9 min-h-9 flex items-center justify-center p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                                 >
                                     <IoIosLink />
                                 </Link>
@@ -558,7 +558,7 @@ const HadithPage = ({
                             <button
                                 title={t("common.share")}
                                 onClick={toggleShareImagePopUp}
-                                className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                                className='min-w-9 min-h-9 flex items-center justify-center p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsShare />
                             </button>
@@ -567,7 +567,7 @@ const HadithPage = ({
                             <button
                                 title={t("common.more")}
                                 onClick={toggleSettingPopUp}
-                                className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                                className='min-w-9 min-h-9 flex items-center justify-center p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsThreeDotsVertical />
                             </button>

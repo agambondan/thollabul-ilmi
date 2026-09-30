@@ -176,7 +176,7 @@ const NoteButton = ({ refType, refId, className = "" }) => {
                         : (t("notes.add") ?? "Tambah Catatan")
                 }
                 onClick={openModal}
-                className={`p-2 rounded-lg text-lg transition-colors ${
+                className={`min-w-9 min-h-9 flex items-center justify-center p-2 rounded-lg text-lg transition-colors ${
                     note
                         ? "text-amber-500 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-700"
                         : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
