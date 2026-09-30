@@ -2,7 +2,9 @@
 
 Playwright scripts that drive the public site end-to-end (desktop + mobile
 viewport) and record the session as a `.webm` video, used to produce
-`docs/media/demo-desktop.mp4` and `docs/media/demo-mobile.mp4`.
+`docs/media/demo-desktop.mp4` and `docs/media/demo-mobile.mp4`. A third script
+records the React Native app itself, see
+[Native mobile app](#native-mobile-app-record-mobile-appjs) below.
 
 ## Prerequisites
 
@@ -67,7 +69,7 @@ LFS commands needed for a routine content update.
 - **Font family changes visually affect apparent size.** Different Arabic
   typefaces (Naskh/Scheherazade vs. Kemenag/LPMQ) render at different
   visual proportions for the same pixel value. If you re-order the script,
-  keep any font-family switching *before* the size-shrink loop, not after,
+  keep any font-family switching _before_ the size-shrink loop, not after,
   or the "after" shot will be back in a different (and possibly
   larger-looking) typeface than the "before" shot.
 - **Bookmark/note button titles toggle.** `Simpan Bookmark` ⇄
@@ -94,7 +96,7 @@ LFS commands needed for a routine content update.
   Clicking a background thumbnail builds a canvas (loads the font +
   background image, then draws the ayah text) before it can share/copy it.
   Both scripts call `context.grantPermissions(['clipboard-read',
-  'clipboard-write'])` right after creating the browser context - without
+'clipboard-write'])` right after creating the browser context - without
   it, headless Chromium has no clipboard access and the flow falls through
   to its worst-case fallback, a red "Clipboard tidak didukung. Gambar
   diunduh." error, instead of the intended "Gambar tersalin ke clipboard!"
@@ -115,7 +117,7 @@ LFS commands needed for a routine content update.
 - **Typed note text needs the field cleared first.** Both scripts type the
   ayah/kajian note text with `pressSequentially()` (so it visibly types out
   instead of snapping in all at once like `fill()` does) — but the ayah note
-  in particular re-opens as an *edit* once this account has annotated that
+  in particular re-opens as an _edit_ once this account has annotated that
   ayah in a previous run, pre-filled with the old content, and
   `pressSequentially()` types at the current cursor position rather than
   replacing it. Both scripts call `fill('')` right before typing to clear
@@ -130,3 +132,66 @@ LFS commands needed for a routine content update.
   timeouts at random, unrelated points (not the same step twice), check
   `uptime`/`free -h` before assuming it's a real site bug; a severely
   loaded local machine makes headless Chromium miss timing everywhere.
+
+## Native mobile app (`record-mobile-app.js`)
+
+Records the React Native app in `apps/mobile` (the 5-tab shell: Beranda ·
+Al-Quran · Hadis · Ibadah · Belajar) through Expo's web export, and produces
+`docs/media/demo-mobile-app.mp4`. It is separate from `record-mobile.js`, which
+drives the _website_ at a phone-sized viewport.
+
+There is no emulator or simulator on this Linux dev machine that can be relied
+on, so the app is rendered by `react-native-web` and driven with Playwright. No
+credentials are needed: the tour runs as a guest.
+
+```bash
+# terminal 1 - keep it running (restart after editing app code, see below)
+cd apps/mobile && CI=1 npx expo start --web --port 19010
+
+# terminal 2
+node scripts/demo-recording/record-mobile-app.js
+```
+
+`DEMO_MOBILE_APP_URL` overrides the URL. The script writes
+`output/mobile-app/demo-mobile-app.webm` plus `trim.txt` (seconds of blank
+loading time to skip). Convert with:
+
+```bash
+cd scripts/demo-recording
+ffmpeg -y -ss "$(cat output/mobile-app/trim.txt)" -i output/mobile-app/demo-mobile-app.webm -c:v libx264 -pix_fmt yuv420p -crf 23 -preset medium ../../docs/media/demo-mobile-app.mp4
+```
+
+### Gotchas specific to this script
+
+- **Guest only: login cannot work on the web export.** The app keeps auth
+  tokens in `expo-secure-store`, which does not exist on web, and
+  `src/storage/session.js` deliberately refuses to fall back to plaintext
+  ("SecureStore tidak tersedia..."). The API login itself succeeds, the app
+  just cannot keep the session. Do not weaken that check to make a recording.
+  Bookmarks, notes and progress are therefore not shown. The seeded admin's
+  default password is also rotated on production (`docs/web/FINDINGS.md`, F2).
+- **`CI=1` turns off Metro's file watcher**, so Expo keeps serving the old
+  bundle after app code changes. Restart it (add `--clear` if old code still
+  shows up).
+- **Chromium runs with `--disable-web-security`** (recording only): the
+  production API's CORS allow-list does not include `http://localhost:19010`.
+  Native apps are not subject to CORS, so this is not an app bug.
+- **Geolocation is granted to the browser context** (Jakarta coordinates) so
+  Jadwal Sholat shows real prayer times and a countdown instead of the "enable
+  location" state.
+- **Hadis uses the search-first flow on purpose.** The "Hadith" pill has no
+  `onPress` (it only reflects state), and "Buka Reader" intermittently leaves
+  the previous list on screen under the new book's header. Typing in the search
+  box is reliable, but it only filters the ~20 hadith already loaded, so the
+  query (`Funerals`) has to match one of those.
+- **Kajian: use the "Transkrip" sub-tab.** The "Kajian" list sub-tab also
+  filters only loaded items, and the stat cards at the top (20 / 20 / 9) show
+  that loaded count, not the real totals. The transcript result line shows the
+  real numbers.
+- **Ibadah is visited last.** Sub-screens opened from the hub (Jadwal Sholat
+  and friends) can only be left with Android's hardware back; on web there is
+  no way back to the hub without a reload.
+- **Leave Belajar sub-features with the header back button before switching
+  tabs**, otherwise the header keeps showing the previous feature's title.
+- The script exits non-zero if the "Terjadi Kesalahan" error boundary shows
+  up, so a crashed screen cannot end up in the video unnoticed.
