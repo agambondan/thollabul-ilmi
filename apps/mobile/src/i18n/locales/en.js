@@ -43,6 +43,7 @@ export const en = {
         "hadith.bookmark.saved": "Hadith saved to bookmarks.",
         "hadith.bookmark.saveError": "Bookmark could not be updated.",
         "hadith.detailLoadError": "Hadith details could not be loaded.",
+        "hadith.detailNotFound": "Hadith not found.",
         "hadith.perawiLoadError": "Narrator details could not be loaded.",
         "hadith.perawiRelatedEmpty": "Related narrators are not available yet.",
         "hadith.relatedEmpty": "No related hadith for this theme yet.",

@@ -763,6 +763,7 @@ export const getHadithPage = async ({
     page = 0,
     size = 20,
     updatedAfter = null,
+    q = null,
 } = {}) => {
     const encodedBook = bookSlug ? encodeURIComponent(bookSlug) : null;
     const params = new URLSearchParams({
@@ -770,6 +771,7 @@ export const getHadithPage = async ({
         size: String(size),
     });
     if (updatedAfter) params.set("updated_after", updatedAfter);
+    if (q) params.set("q", q);
     const path = encodedBook
         ? `/api/v1/hadiths/book/${encodedBook}?${params.toString()}`
         : `/api/v1/hadiths?${params.toString()}`;

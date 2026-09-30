@@ -245,12 +245,11 @@ describe("HadithScreen", () => {
             getByTestId,
             getByText,
             queryByTestId,
+            queryByText,
         } = render(<HadithScreen isActive />);
 
         await waitFor(() => {
             expect(getByText("Book")).toBeTruthy();
-            expect(getByText("Theme")).toBeTruthy();
-            expect(getByText("Chapter")).toBeTruthy();
             expect(getAllByText("Hadith").length).toBeGreaterThanOrEqual(1);
             expect(
                 getByPlaceholderText(
@@ -262,6 +261,8 @@ describe("HadithScreen", () => {
             );
             expect(getByTestId("hadith-web-app-list")).toBeTruthy();
         });
+        expect(queryByText("Theme")).toBeNull();
+        expect(queryByText("Chapter")).toBeNull();
         expect(queryByTestId("hadith-classic-list")).toBeNull();
     });
 
@@ -389,6 +390,42 @@ describe("HadithScreen", () => {
 
         await waitFor(() => {
             expect(queryAllByTestId("content-card")).toHaveLength(1);
+        });
+    });
+
+    test("search sends one debounced server query with the term and book filter, and clearing drops it", async () => {
+        const { getByTestId, findAllByTestId, findByText } = render(
+            <HadithScreen isActive />,
+        );
+        expect(await findAllByTestId("content-card")).toHaveLength(2);
+
+        fireEvent.press(await findByText("Shahih Muslim"));
+        await waitFor(() => {
+            expect(clientApi.getHadithPage).toHaveBeenCalledWith(
+                expect.objectContaining({ bookSlug: "muslim" }),
+            );
+        });
+
+        clientApi.getHadithPage.mockClear();
+        const searchInput = getByTestId("search-input");
+        fireEvent.changeText(searchInput, "2");
+        fireEvent.changeText(searchInput, "25");
+
+        await waitFor(() => {
+            expect(clientApi.getHadithPage).toHaveBeenCalledWith({
+                bookSlug: "muslim",
+                page: 0,
+                size: 20,
+                q: "25",
+            });
+        });
+        expect(clientApi.getHadithPage).toHaveBeenCalledTimes(1);
+
+        fireEvent.changeText(searchInput, "");
+        await waitFor(() => {
+            expect(clientApi.getHadithPage).toHaveBeenLastCalledWith(
+                expect.objectContaining({ bookSlug: "muslim", q: "" }),
+            );
         });
     });
 
@@ -580,5 +617,83 @@ describe("HadithScreen", () => {
                 },
             );
         });
+    });
+
+    test("invalid hadith id deep link shows not-found message instead of a fake stub", async () => {
+        clientApi.getHadithDetail.mockRejectedValue(
+            Object.assign(new Error("Request failed: 404"), { status: 404 }),
+        );
+
+        const { findByText, queryByText } = render(
+            <HadithScreen
+                isActive
+                deepLinkTarget={{
+                    id: "dl-invalid",
+                    params: { hadithId: "999999999" },
+                }}
+            />,
+        );
+
+        expect(await findByText("Hadis tidak ditemukan.")).toBeTruthy();
+        expect(queryByText("Kitab hadis No. 999999999")).toBeNull();
+        expect(queryByText("Belum dinilai")).toBeNull();
+        expect(queryByText("Hadis Terkait")).toBeNull();
+    });
+
+    test("transient detail failure on a deep link shows a retryable load error, not not-found", async () => {
+        clientApi.getHadithDetail.mockRejectedValue(
+            new Error("Network request failed"),
+        );
+
+        const { findByText, queryByText } = render(
+            <HadithScreen
+                isActive
+                deepLinkTarget={{
+                    id: "dl-flaky",
+                    params: { hadithId: "42" },
+                }}
+            />,
+        );
+
+        expect(await findByText("Detail hadis belum bisa dimuat.")).toBeTruthy();
+        expect(queryByText("Hadis tidak ditemukan.")).toBeNull();
+        expect(queryByText("Kitab hadis No. 42")).toBeNull();
+    });
+
+    test("opening a listed hadith still falls back to list data when the detail refresh fails", async () => {
+        clientApi.getHadithDetail.mockRejectedValue(
+            new Error("Network request failed"),
+        );
+
+        const { findAllByTestId, findByText, queryByText } = render(
+            <HadithScreen isActive />,
+        );
+        const cards = await findAllByTestId("content-card");
+
+        fireEvent.press(cards[0]);
+
+        expect(await findByText("Detail Hadis")).toBeTruthy();
+        expect(await findByText("Narrated Hadis 1 text.")).toBeTruthy();
+        expect(queryByText("Hadis tidak ditemukan.")).toBeNull();
+        expect(queryByText("Detail hadis belum bisa dimuat.")).toBeNull();
+    });
+
+    test("valid hadith id deep link still opens the real detail (no regression)", async () => {
+        clientApi.getHadithDetail.mockResolvedValue(
+            mockHadithItem(42, { translation: "Valid detail text" }),
+        );
+
+        const { findByText } = render(
+            <HadithScreen
+                isActive
+                deepLinkTarget={{
+                    id: "dl-valid",
+                    params: { hadithId: "42" },
+                }}
+            />,
+        );
+
+        expect(await findByText("Detail Hadis")).toBeTruthy();
+        expect(await findByText("Valid detail text")).toBeTruthy();
     });
 });

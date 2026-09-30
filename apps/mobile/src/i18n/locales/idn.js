@@ -43,6 +43,7 @@ export const idn = {
         "hadith.bookmark.saved": "Hadis disimpan ke bookmark.",
         "hadith.bookmark.saveError": "Bookmark belum bisa diperbarui.",
         "hadith.detailLoadError": "Detail hadis belum bisa dimuat.",
+        "hadith.detailNotFound": "Hadis tidak ditemukan.",
         "hadith.perawiLoadError": "Detail perawi belum bisa dimuat.",
         "hadith.perawiRelatedEmpty": "Perawi terkait belum tersedia.",
         "hadith.relatedEmpty": "Belum ada hadis terkait untuk tema ini.",

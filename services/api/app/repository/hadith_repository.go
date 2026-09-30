@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
@@ -19,6 +21,21 @@ func parseUpdatedAfter(ctx *fiber.Ctx) *time.Time {
 		return &t
 	}
 	return nil
+}
+
+func applyHadithSearch(mod *gorm.DB, ctx *fiber.Ctx) *gorm.DB {
+	q := strings.TrimSpace(ctx.Query("q"))
+	if q == "" {
+		return mod
+	}
+	if number, err := strconv.Atoi(q); err == nil {
+		return mod.Where("hadith.number = ?", number)
+	}
+	like := "%" + q + "%"
+	return mod.Where(
+		`"Translation".idn ILIKE ? OR "Translation".ar ILIKE ? OR "Book__Translation".idn ILIKE ? OR "Book".slug ILIKE ? OR "Theme__Translation".idn ILIKE ? OR "Chapter__Translation".idn ILIKE ?`,
+		like, like, like, like, like, like,
+	)
 }
 
 type HadithRepository interface {
@@ -74,7 +91,7 @@ func (c *hadithRepo) withRelations(db *gorm.DB, selectArgs ...string) *gorm.DB {
 
 func (c *hadithRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var hadiths []model.Hadith
-	mod := c.withRelations(c.db.Model(&model.Hadith{})).Order("id")
+	mod := applyHadithSearch(c.withRelations(c.db.Model(&model.Hadith{})).Order("id"), ctx)
 	page := c.pg.With(mod).Request(ctx.Request()).Response(&hadiths)
 
 	return &page
@@ -137,6 +154,7 @@ func (c *hadithRepo) FindByBookSlug(ctx *fiber.Ctx, bookSlug *string) (*paginate
 	if updatedAfter := parseUpdatedAfter(ctx); updatedAfter != nil {
 		mod = mod.Where("hadith.updated_at > ?", *updatedAfter)
 	}
+	mod = applyHadithSearch(mod, ctx)
 	page := c.pg.With(mod).Request(ctx.Request()).Response(&hadiths)
 
 	return &page, nil

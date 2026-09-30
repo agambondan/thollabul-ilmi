@@ -98,8 +98,6 @@ const WEB_APP_HADITH_THEMES = {
 
 const WEB_APP_HADITH_TABS = [
     { key: "book", label: "Book" },
-    { key: "theme", label: "Theme" },
-    { key: "chapter", label: "Chapter" },
     { key: "hadith", label: "Hadith" },
 ];
 
@@ -150,7 +148,9 @@ const HADITH_BOOK_LABELS = {
 
 const HADITH_BOOK_SHORT_LABELS = {
     "abu-daud": "Abu Daud",
+    ahmad: "Ahmad",
     bukhari: "Bukhari",
+    darimi: "Darimi",
     "ibnu-majah": "Ibnu Majah",
     malik: "Malik",
     muslim: "Muslim",
@@ -243,6 +243,9 @@ const getBookCoverStyle = (book) =>
         borderColor: WEB_APP_HADITH_BORDER,
     };
 
+const hasHadithContent = (hadith) =>
+    Boolean(hadith?.arabic || hadith?.translation || hadith?.bookSlug);
+
 export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const { user } = useSession();
     const { showError, showInfo, showSuccess } = useFeedback();
@@ -254,6 +257,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const handledDeepLinkId = useRef(null);
     const loadingMoreRef = useRef(false);
     const webAppScrollRef = useRef(null);
+    const hadSearchQueryRef = useRef(false);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [books, setBooks] = useState([]);
     const [failedBookCovers, setFailedBookCovers] = useState({});
@@ -294,6 +298,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     });
     const [savingId, setSavingId] = useState(null);
     const [message, setMessage] = useState("");
+    const [detailFailure, setDetailFailure] = useState(null);
 
     const loadOfflineHadiths = useCallback(async (bookSlug = null) => {
         const overview = await getOfflineOverview();
@@ -321,6 +326,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             bookSlug = null,
             page = 0,
             preferOffline = true,
+            q = null,
         } = {}) => {
             if (append) {
                 loadingMoreRef.current = true;
@@ -333,7 +339,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             }
 
             try {
-                if (preferOffline && !append) {
+                if (preferOffline && !append && !q) {
                     const offlineItems = await loadOfflineHadiths(bookSlug);
                     if (offlineItems) {
                         setHadiths(offlineItems);
@@ -349,6 +355,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     bookSlug,
                     page,
                     size: HADITH_LIST_PAGE_SIZE,
+                    q,
                 });
                 setHadithSource("backend");
                 setRemotePage(result.page);
@@ -461,10 +468,11 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         [selectedBook],
     );
 
-    const openHadith = async (hadith) => {
+    const openHadith = async (hadith, { retry = false } = {}) => {
         setSelectedHadith(hadith);
         setDetailLoading(true);
         setMessage("");
+        if (!retry) setDetailFailure(null);
         setSelectedPerawi(null);
         setPerawiPanel({ guru: [], jarhTadil: [], loading: false, murid: [] });
         setExpandedPerawiList({ guru: false, murid: false });
@@ -479,13 +487,19 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             });
         }
 
+        let detailError = null;
         try {
             const [detail, sanadItems, takhrijItems] = await Promise.all([
-                getHadithDetail(hadith.id).catch(() => hadith),
+                getHadithDetail(hadith.id).catch((detailErr) => {
+                    if (hasHadithContent(hadith)) return hadith;
+                    detailError = detailErr ?? new Error();
+                    throw detailErr;
+                }),
                 getHadithSanad(hadith.id),
                 getHadithTakhrij(hadith.id),
             ]);
             const nextHadith = { ...hadith, ...detail };
+            setDetailFailure(null);
             setSelectedHadith(nextHadith);
             setSanad(sanadItems);
             setTakhrij(takhrijItems);
@@ -494,7 +508,15 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             await loadBookmarks();
             await loadNoteCounts();
         } catch (err) {
-            setMessage(err?.message ?? t("hadith.detailLoadError"));
+            if (detailError) {
+                setDetailFailure(
+                    [400, 404].includes(detailError.status)
+                        ? "notFound"
+                        : "error",
+                );
+            } else {
+                setMessage(err?.message ?? t("hadith.detailLoadError"));
+            }
             setSanad([]);
             setTakhrij([]);
             setHadithAyahs([]);
@@ -702,6 +724,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                 bookSlug: selectedBook,
                 page: remotePage + 1,
                 preferOffline: false,
+                q: query.trim(),
             });
         }
     }, [
@@ -712,6 +735,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         load,
         loading,
         loadingMore,
+        query,
         remotePage,
         selectedBook,
     ]);
@@ -1124,6 +1148,29 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     }, [query, selectedBook]);
 
     useEffect(() => {
+        const trimmed = query.trim();
+        if (!trimmed && !hadSearchQueryRef.current) return undefined;
+        if (hadithSource === "offline") return undefined;
+
+        let active = true;
+        const timer = setTimeout(() => {
+            if (!active) return;
+            hadSearchQueryRef.current = Boolean(trimmed);
+            load({
+                bookSlug: selectedBook,
+                page: 0,
+                preferOffline: !trimmed,
+                q: trimmed,
+            });
+        }, trimmed ? 320 : 0);
+
+        return () => {
+            active = false;
+            clearTimeout(timer);
+        };
+    }, [query, selectedBook, hadithSource, load]);
+
+    useEffect(() => {
         const hadithId = deepLinkTarget?.params?.hadithId;
         if (handledDeepLinkId.current === deepLinkTarget?.id) return;
         if (!hadithId) return;
@@ -1213,6 +1260,44 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             </AppActionSheet>
         );
     };
+
+    if (selectedHadith && detailFailure) {
+        const isNotFound = detailFailure === "notFound";
+
+        return (
+            <Screen
+                title={isWebAppLayout ? "Detail Hadith" : "Detail Hadis"}
+                refreshing={detailLoading}
+                onRefresh={() => openHadith(selectedHadith, { retry: true })}
+                actions={
+                    isWebAppLayout ? null : (
+                        <IconActionButton
+                            Icon={ArrowLeft}
+                            label='Kembali ke daftar hadis'
+                            onPress={() => setSelectedHadith(null)}
+                        />
+                    )
+                }
+            >
+                <Card>
+                    <CardTitle
+                        meta={isNotFound ? "Tidak ditemukan" : "Gagal memuat"}
+                    >
+                        {t(
+                            isNotFound
+                                ? "hadith.detailNotFound"
+                                : "hadith.detailLoadError",
+                        )}
+                    </CardTitle>
+                    <Text style={styles.emptyText}>
+                        {isNotFound
+                            ? "Hadis ini mungkin sudah dihapus atau tautannya tidak valid."
+                            : "Periksa koneksi internet, lalu tarik layar ke bawah untuk mencoba lagi."}
+                    </Text>
+                </Card>
+            </Screen>
+        );
+    }
 
     if (selectedHadith) {
         const selectedHadithBook = getHadithBookLabel(selectedHadith);
