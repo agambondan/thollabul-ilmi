@@ -299,19 +299,23 @@ kalau `api_slow_requests_total` naik).
 
 ## Prioritas Tindak Lanjut
 
-| #   | Temuan                                                     | Dampak                                                | Effort | Status                  |
-| --- | ---------------------------------------------------------- | ----------------------------------------------------- | ------ | ----------------------- |
-| B0  | Filter `deleted_at` hilang sistemik (34 file)              | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j   | ✅ Fixed (`b7ed2aba`)   |
-| B1  | Batch insert `kajian_transcript` seeder                    | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j   | ✅ Fixed (`8a98f69b`)   |
-| B2  | B-tree index `translation.en`                              | 🟠 Sedang (seeder-time)                               | 15m    | ✅ Fixed (`8a98f69b`)   |
-| B3  | `ayah_repository.go` `FindDaily` offset-scan               | 🟡 Sedang (pola sama dgn A3, tabel lebih kecil)       | 1j     | ✅ Fixed (`8a98f69b`)   |
-| B4  | Deploy HEAD ke production                                  | 🔴 Tinggi                                             | 15m    | ✅ Deployed (30 Sep)    |
-| B5  | Pantau disk I/O growth                                     | 🟢 Rendah (observasi)                                 | -      | 👁️ Pantau               |
-| —   | Alert host/container (disk, memori, CPU, status)           | 🟠 Sedang (mencegah insiden berulang)                 | 2j     | ✅ Aktif (Bagian D1)    |
-| —   | Alert berbasis metrik aplikasi (`api_slow_requests_total`) | 🟡 Rendah-sedang                                      | 2j     | ⏳ Belum                |
-| D2  | Index duplikat/tak terpakai (temuan pgHero)                | 🟠 Sedang (biaya tulis + disk)                        | 1j     | ✅ Fixed (Bagian D2)    |
-| D3  | Disk VPS 90%                                               | 🔴 Tinggi (risiko outage semua project)               | 2j     | ✅ Fixed, jadi 52% (D3) |
-| D4  | Kolom `embedding` kajian tidak terpakai (288 MB + cron)    | 🟡 Sedang (payload API + disk + cron sia-sia)         | 2j     | ✅ Fixed (Bagian D4)    |
+| #   | Temuan                                                      | Dampak                                                | Effort | Status                  |
+| --- | ----------------------------------------------------------- | ----------------------------------------------------- | ------ | ----------------------- |
+| B0  | Filter `deleted_at` hilang sistemik (34 file)               | 🔴🔴 Kritis (live, risiko data fabrikasi muncul lagi) | 4-6j   | ✅ Fixed (`b7ed2aba`)   |
+| B1  | Batch insert `kajian_transcript` seeder                     | 🔴 Tinggi (deploy time + shared DB load)              | 2-3j   | ✅ Fixed (`8a98f69b`)   |
+| B2  | B-tree index `translation.en`                               | 🟠 Sedang (seeder-time)                               | 15m    | ✅ Fixed (`8a98f69b`)   |
+| B3  | `ayah_repository.go` `FindDaily` offset-scan                | 🟡 Sedang (pola sama dgn A3, tabel lebih kecil)       | 1j     | ✅ Fixed (`8a98f69b`)   |
+| B4  | Deploy HEAD ke production                                   | 🔴 Tinggi                                             | 15m    | ✅ Deployed (30 Sep)    |
+| B5  | Pantau disk I/O growth                                      | 🟢 Rendah (observasi)                                 | -      | 👁️ Pantau               |
+| —   | Alert host/container (disk, memori, CPU, status)            | 🟠 Sedang (mencegah insiden berulang)                 | 2j     | ✅ Aktif (Bagian D1)    |
+| —   | Alert berbasis metrik aplikasi (`api_slow_requests_total`)  | 🟡 Rendah-sedang                                      | 2j     | ⏳ Belum                |
+| D2  | Index duplikat/tak terpakai (temuan pgHero)                 | 🟠 Sedang (biaya tulis + disk)                        | 1j     | ✅ Fixed (Bagian D2)    |
+| D3  | Disk VPS 90%                                                | 🔴 Tinggi (risiko outage semua project)               | 2j     | ✅ Fixed, jadi 52% (D3) |
+| D4  | Kolom `embedding` kajian tidak terpakai (288 MB + cron)     | 🟡 Sedang (payload API + disk + cron sia-sia)         | 2j     | ✅ Fixed (Bagian D4)    |
+| D5  | Rate limiter menghitung semua pengguna sebagai satu IP      | 🔴🔴 Kritis (auth 10/menit untuk semua orang)         | 3j     | ✅ Fixed (Bagian D5)    |
+| D6  | `/metrics` error: label `method` beralias buffer request    | 🟠 Sedang (observability)                             | 1j     | ✅ Fixed (Bagian D6)    |
+| D7  | Seeder kajian: id chunk berganti + upsert tulis ulang semua | 🟠 Sedang (data pengguna + I/O)                       | 2j     | ✅ Fixed (Bagian D7)    |
+| D8  | Tombstone yatim + endpoint transkrip bocorkan soft-delete   | 🟡 Sedang (chunk ganda ke app + disk)                 | 1j     | ✅ Fixed (Bagian D8)    |
 
 Bagian A dan B0-B3 semua sudah diperbaiki + di-build/vet/test hijau, dan B4
 (deploy) sudah live. B5 murni item pantau, bukan sesuatu untuk "difix".
@@ -388,27 +392,116 @@ database lain (mis. lokal) tetap memilikinya; itu tidak berbahaya, dan
 `ALTER TABLE kajian_transcript DROP COLUMN IF EXISTS embedding` cukup untuk
 merapikannya.
 
-### D5. Belum dikerjakan
+### D5. Rate limiter menghitung semua pengguna sebagai satu IP
 
-- **Tombstone.** 74.736 baris `kajian_transcript` (25%) berstatus soft-delete
-  sejak 9 Sep. Tidak dibaca query mana pun, tetapi masih ikut di tabel dan
-  index trigram. Membuangnya (hard delete lalu `VACUUM FULL` lagi) memperkecil
-  tabel dan index lebih jauh; butuh persetujuan karena menghapus data.
-- **Id chunk berganti setiap seeding untuk 20 video.** Video yang sama ada di
-  `cintasunnahtv.json` dan `rodjatv.json` dengan batas chunk sedikit berbeda,
-  jadi dua entri saling menghapus chunk lawannya di setiap deploy (±2.036
-  chunk, id baru tiap kali). Bug laten: `kajian_user_bookmark.chunk_id` menunjuk
-  id chunk, dan produksi belum punya bookmark (0 baris), tetapi bookmark pada
-  video-video itu akan yatim di deploy berikutnya. Perbaikan: dedupe per
-  `video_id` di `seedKajianFromFile`, atau hapus salah satu entri dari data
-  seed.
-- **Upsert seeder menulis ulang semua baris.** `DoUpdates` menimpa ±294 rb baris
-  di setiap deploy walaupun isinya sama (Postgres tidak melewati UPDATE bernilai
-  sama), menghasilkan dead tuple dan WAL. Klausa `WHERE ... IS DISTINCT FROM`
-  pada konflik akan melewati baris yang tidak berubah.
+Gejala: agent stress test kena 429 terus, bahkan setelah berpindah dari laptop
+ke VPS.
+
+**Akar masalah.** Fiber dibuat tanpa `ProxyHeader`. Semua lalu lintas tunnel
+masuk lewat cloudflared ke `127.0.0.1:29900`, lalu diteruskan `docker-proxy`,
+sehingga container hanya melihat satu alamat: gateway jaringan Docker
+(`172.21.0.1`). Panggilan yang diproksikan aplikasi web datang dari container
+web (`172.21.0.5`). Jadi `c.IP()` sama untuk semua klien, dan tiap limiter
+punya satu bucket untuk seluruh pengguna:
+
+- Limiter auth (`RATE_LIMIT_AUTH=10` per menit): register, login, refresh
+  token, lupa/reset password, verifikasi, dan login Google. Sepuluh percobaan
+  per menit untuk seluruh basis pengguna.
+- Limiter global (180 per menit) dan search (60 per menit) dibagi semua
+  pengguna anonim.
+- `page_view` mengelompokkan semua pengunjung tanpa `visitor_id` menjadi satu
+  hash IP.
+
+Kenapa tidak terlihat: `MetricsMiddleware` terpasang setelah limiter global,
+jadi 429 tidak pernah masuk `api_requests_total`.
+
+**Perbaikan** (`app/http/client_ip.go`, `main.go`, `routes.go`): baca
+`CF-Connecting-IP`, hanya dari peer privat atau loopback (`TRUSTED_PROXIES`
+untuk menimpa), dengan `EnableIPValidation` supaya pemanggil tanpa header jatuh
+ke IP peer. Tanpa validasi `c.IP()` mengembalikan isi header apa adanya, yaitu
+string kosong, dan semua pemanggil tanpa header berbagi satu kunci kosong. Port
+API terikat ke `127.0.0.1`, jadi header tidak bisa dipalsukan dari luar. Proxy
+Next.js sudah menyalin semua header masuk, sehingga pengguna web ikut
+terbedakan tanpa perubahan di sisi web. `MetricsMiddleware` dipindah ke depan
+limiter.
+
+**Bukti di produksi (30 Sep).**
+
+- Jalur lokal VPS dengan header palsu dari peer tepercaya: klien A 180 sukses
+  lalu 429; klien B, pemanggil tanpa header, dan header sampah tetap 200. Di
+  `/auth/refresh` tiap klien mendapat 10 percobaan sendiri-sendiri.
+- Lewat Cloudflare: laptop (`103.95.160.130`) burst 260 request, 180 sukses
+  lalu 429 dan terus 429 selama lebih dari 40 detik, sementara VPS
+  (`43.156.65.196`) lewat URL publik yang sama tetap 200. Hasilnya sama lewat
+  proxy web.
+- Satu percobaan awal menyimpang (request sesudah burst lolos) dan tidak muncul
+  pada dua pengulangan terkontrol.
+- `api_requests_total{status="429"}` kini tercatat.
+
+**Load test.** Satu IP tetap dibatasi 180 per menit (auth 10 per menit). Untuk
+mensimulasikan banyak klien dari VPS, kirim `CF-Connecting-IP` berbeda per
+klien ke `http://127.0.0.1:29900` (peer lokal tepercaya). Dari luar header itu
+tidak berpengaruh karena Cloudflare menimpanya.
+
+**Sisa risiko.** Pengunjung di balik NAT bersama (mis. CGNAT operator seluler)
+tetap berbagi bucket. Render server Next.js (server components) tidak membawa
+header pengunjung, jadi berbagi satu bucket container web.
+
+### D6. `/metrics` mengembalikan error karena label `method` beralias buffer request
+
+Ditemukan saat memverifikasi D5. `MetricsMiddleware` memakai `c.Method()` sebagai
+label. Fiber mengembalikan string yang menunjuk ke buffer request fasthttp yang
+dipakai ulang, dan Prometheus menyimpan string label itu. Di koneksi keep-alive,
+POST lalu GET mengubah "POST" yang tersimpan menjadi "GETT", dan seri ganda
+membuat seluruh eksposisi gagal: halaman error alih-alih metrik. Kode ini
+berasal dari perbaikan A1 di dokumen ini, jadi `/metrics` bisa rusak sewaktu-waktu
+sejak itu. Kini method dipetakan ke konstanta (yang tidak dikenal menjadi
+`OTHER`, sekaligus membatasi kardinalitas), dan tes regresi memutar ulang
+POST/GET di satu koneksi (gagal dengan kode lama). Pemindaian tempat lain yang
+menyimpan string request (goroutine, kunci cache) tidak menemukan kasus serupa.
+
+### D7. Seeder kajian: id chunk berganti dan upsert menulis ulang semua baris
+
+- Dua puluh video ada di dua file channel (`cintasunnahtv.json` dan
+  `rodjatv.json`) dengan batas chunk sedikit berbeda. Tiap entri menghapus chunk
+  lawannya lalu menyisipkan miliknya, jadi setiap re-seed ±2.000 chunk itu
+  mendapat id baru. `kajian_user_bookmark.chunk_id` menunjuk id chunk; produksi
+  belum punya bookmark (0 baris) sehingga belum ada korban, tetapi bookmark pada
+  video-video ini akan yatim di re-seed berikutnya. Kini hanya entri terakhir per
+  `video_id` yang di-seed, sama dengan isi database saat ini, jadi tidak ada
+  churn tambahan.
+- Re-seed hanya terjadi bila sidik direktori berubah (mtime terbaru, ukuran
+  total, jumlah file), yaitu setelah scrape baru atau deploy dari checkout dengan
+  mtime baru. Deploy dari worktree yang selalu segar memicunya di setiap deploy.
+- Upsert kini hanya menyentuh baris yang isinya berbeda (`ON CONFLICT ... DO
+UPDATE ... WHERE`). Sebelumnya ±294 rb baris ditulis ulang di tiap re-seed
+  walau tidak berubah (dead tuple dan WAL). Diverifikasi di Postgres 17: `xmin`
+  baris yang tidak berubah tetap, dan setelah satu chunk diedit tepat satu baris
+  yang berubah.
+
+### D8. Tombstone yatim dan endpoint transkrip yang membocorkan soft-delete
+
+- 74.736 baris `kajian_transcript` berstatus soft-delete sejak 9 Sep. Semuanya
+  yatim (kajian induknya sudah tidak ada), tanpa foreign key, dan tanpa bookmark
+  yang menunjuknya. Dihapus permanen (salinan CSV terkompresi 12,7 MB di
+  `/works/me/backups/kajian_transcript-orphan-tombstones-20260930.csv.gz`), lalu
+  `VACUUM FULL` selama 37 detik. Tabel 552 MB jadi 413 MB (1.240 MB semula),
+  219.931 baris hidup.
+- `GET /kajian/:id/transcripts` melewati filter soft-delete (`Table().Scan()`) dan
+  menarik semua chunk yang berbagi video id, sehingga tombstone ikut tersaji:
+  kajian 58 chunk tampil 116. Kini difilter `deleted_at IS NULL` dengan tes
+  regresi, dan urutan `start_seconds` yang sama dipecah dengan `id`.
+- Masih ada `.Table("...").Count` (ayah, book, chapter, hadith, theme, surah, juz)
+  yang ikut menghitung baris soft-delete. Hanya statistik, dampaknya kecil.
+
+### D9. Belum dikerjakan
+
 - **Tes regresi `deleted_at`.** B0 berstatus fixed tetapi belum dijaga tes:
   `go test ./...` hijau tidak menangkap regresi soft delete karena tidak ada
   tes yang menegaskan baris `deleted_at IS NOT NULL` tidak muncul di
   repository raw-SQL.
 - `search_repository_test.go` (build tag postgres) belum pernah dijalankan;
   butuh Postgres sekali pakai yang terisolasi.
+- Render server Next.js berbagi bucket container web (lihat sisa risiko D5).
+  Solusi: teruskan `cf-connecting-ip` di fetch server-side, atau kecualikan
+  panggilan internal dari limiter.

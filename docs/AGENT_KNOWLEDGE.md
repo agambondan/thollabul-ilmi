@@ -117,6 +117,17 @@ Rework 2026-09-08, dokumen: [`reviews/2026-09-08-kajian-transcript-search-tuning
   bikin SEMUA insert transkrip gagal diam-diam (kolomnya sudah dibuang,
   jebakannya tetap berlaku). Kalau nambah kolom `vector` di model, wajib
   `default:null` atau pointer, dan `Omit` field itu di insert.
+- **Query dengan `Table().Scan()` melewati soft-delete.**
+  `GetTranscriptsByKajianID` pernah menyajikan tombstone: kajian 58 chunk
+  tampil 116. Tulis `deleted_at IS NULL` eksplisit, dengan `OR` dalam kurung.
+- **Seeder kajian dilewati bila sidik direktori tidak berubah** (mtime
+  terbaru, ukuran total, jumlah file). Deploy dari worktree baru mengubah
+  mtime sehingga memicu re-seed penuh; deploy dari checkout yang sama tidak.
+- **Video yang sama boleh ada di dua file channel** (20 video di
+  `cintasunnahtv.json` dan `rodjatv.json`, batas chunk sedikit berbeda).
+  Hanya entri terakhir per `video_id` yang di-seed; tanpa itu dua entri saling
+  menghapus chunk lawannya dan id chunk berganti di tiap re-seed, yang
+  menjadikan `kajian_user_bookmark.chunk_id` yatim.
 
 Uji lewat harness lokal (seed ke Postgres compose, port 54320):
 `KAJIAN_SEARCH_PG_DSN=... go test ./app/repository/ -run TestKajianSearchPostgres`.
@@ -167,3 +178,36 @@ menghapus manifest anak dari OCI index yang masih dipakai.
 
 Detail lengkap dan jebakannya:
 [`setup/vps-monitoring-and-maintenance.md`](./setup/vps-monitoring-and-maintenance.md).
+
+---
+
+## API di belakang Cloudflare Tunnel: IP klien, rate limit, dan metrik
+
+Insiden 2026-09-30: semua klien tampak sebagai satu IP, jadi tiap rate limiter
+punya satu bucket untuk seluruh pengguna (limiter auth: 10 percobaan per menit
+untuk semua orang; agent stress test kena 429 dari IP mana pun).
+Detail: [`reviews/2026-09-29-backend-performance-production-review.md`](./reviews/2026-09-29-backend-performance-production-review.md#d5-rate-limiter-menghitung-semua-pengguna-sebagai-satu-ip).
+
+- **IP klien = `CF-Connecting-IP`, dipercaya hanya dari peer privat atau
+  loopback** (`app/http/client_ip.go`, override dengan `TRUSTED_PROXIES`). Lewat
+  cloudflared dan `docker-proxy`, alamat peer selalu gateway Docker
+  (`172.21.0.1`); panggilan dari container web datang dari `172.21.0.5`.
+- **Jangan hapus `EnableIPValidation`.** Tanpa itu `c.IP()` mengembalikan isi
+  header apa adanya, kosong untuk pemanggil tanpa header (curl di VPS, panggilan
+  internal), dan semuanya berbagi satu kunci kosong.
+- Port API hanya terikat ke `127.0.0.1:29900`, jadi header tidak bisa
+  dipalsukan dari luar. Kalau port pernah dibuka ke publik, persempit
+  `TRUSTED_PROXIES` ke alamat proxy saja.
+- **Load test.** Satu IP dibatasi 180 per menit global dan 10 per menit di
+  endpoint auth. Dari VPS, kirim `CF-Connecting-IP` berbeda per klien simulasi
+  ke `http://127.0.0.1:29900`. Dari luar, header itu ditimpa Cloudflare.
+- Proxy Next.js `/api/v1/*` menyalin semua header masuk, jadi IP pengunjung
+  ikut terbawa. Render server components tidak, dan berbagi bucket container
+  web.
+- **`MetricsMiddleware` harus di depan semua limiter.** Kalau tidak, 429 tidak
+  tercatat dan masalah seperti ini tidak terlihat.
+- **String dari `c.Method()`, `c.Path()`, `c.Query()`, `c.Params()`, `c.Get()`
+  menunjuk ke buffer request yang dipakai ulang** dan hanya valid selama
+  handler. Jangan disimpan (label Prometheus, map, goroutine, cache in-memory)
+  tanpa disalin dengan `strings.Clone` atau dipetakan ke konstanta. Insiden:
+  label `method` menjadi "GETT" dan `/metrics` mengembalikan error.
