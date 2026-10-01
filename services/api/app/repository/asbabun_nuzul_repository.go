@@ -202,7 +202,7 @@ func (r *asbabunNuzulRepository) FindAll(page, size int) ([]model.AsbabunNuzul, 
 
 func (r *asbabunNuzulRepository) FindByAyahID(ayahID int) ([]model.AsbabunNuzul, error) {
 	var ids []int
-	if err := r.db.Raw("SELECT DISTINCT asbabun_nuzul_id FROM asbabun_nuzul_ayahs WHERE ayah_id = ? ORDER BY asbabun_nuzul_id ASC", ayahID).Scan(&ids).Error; err != nil {
+	if err := r.db.Raw("SELECT DISTINCT ana.asbabun_nuzul_id FROM asbabun_nuzul_ayahs ana JOIN ayah ay ON ay.id = ana.ayah_id AND ay.deleted_at IS NULL WHERE ana.ayah_id = ? ORDER BY ana.asbabun_nuzul_id ASC", ayahID).Scan(&ids).Error; err != nil {
 		return nil, err
 	}
 	if len(ids) == 0 {

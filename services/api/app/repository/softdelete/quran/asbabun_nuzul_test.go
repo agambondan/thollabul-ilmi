@@ -171,15 +171,8 @@ func TestSoftDeleteAsbabunNuzulFindByAyahID(t *testing.T) {
 		if err != nil {
 			t.Fatalf("FindByAyahID: %v", err)
 		}
-		for _, item := range items {
-			if idOf(item.ID) == idOf(f.goneRow.ID) {
-				t.Fatalf("deleted asbab leaked: %+v", item)
-			}
-			for _, ayah := range item.Ayahs {
-				if idOf(ayah.ID) == ayahID(f.goneAyah) {
-					t.Fatalf("deleted ayah leaked through asbab %d", idOf(item.ID))
-				}
-			}
+		if len(items) != 0 {
+			t.Fatalf("lookup by a deleted ayah must return no asbab, got %d items", len(items))
 		}
 	})
 
