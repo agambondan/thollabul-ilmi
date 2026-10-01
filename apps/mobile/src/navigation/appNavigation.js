@@ -74,6 +74,9 @@ const openReturnRouteState = (state, returnRoute, makeId = defaultRouteId) => {
     return { handled: true, state: next };
 };
 
+const belajarShowsAsIbadah = (returnRoutes = {}) =>
+    returnRoutes.belajar?.tab === "ibadah";
+
 const openTabState = (
     state,
     requestedTab,
@@ -86,6 +89,11 @@ const openTabState = (
         current.activeTab && current.activeTab !== tab
             ? current.activeTab
             : null;
+    const resetContent =
+        !returnTab &&
+        !params &&
+        tab === "belajar" &&
+        belajarShowsAsIbadah(current.returnRoutes);
     const next = cloneState({
         ...current,
         activeTab: tab,
@@ -122,7 +130,7 @@ const openTabState = (
         );
     }
 
-    return { handled: true, state: next };
+    return { handled: true, resetContent, state: next };
 };
 
 const openInternalViewState = (
@@ -228,7 +236,7 @@ const getShellActiveTab = ({
     returnRoutes = {},
 } = {}) => {
     if (internalRoutes.home?.view === "global-search") return "home";
-    if (activeTab === "belajar" && returnRoutes.belajar?.tab === "ibadah") {
+    if (activeTab === "belajar" && belajarShowsAsIbadah(returnRoutes)) {
         return "ibadah";
     }
     return activeTab;

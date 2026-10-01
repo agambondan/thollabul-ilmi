@@ -394,6 +394,82 @@ describe("Ibadah hub feature rows", () => {
     });
 });
 
+describe("B12: re-tapping a tab whose shell highlight had diverged", () => {
+    const { getShellActiveTab } = require("./appNavigation");
+    const ibadahRoute = { tab: "ibadah" };
+    const ibadahState = () => ({ ...initialState(), activeTab: "ibadah" });
+
+    test("Doa opened from Ibadah highlights Ibadah while raw activeTab is already Belajar", () => {
+        const state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        expect(state.activeTab).toBe("belajar");
+        expect(getShellActiveTab(state)).toBe("ibadah");
+    });
+
+    test("re-tapping Belajar in that state asks the content to reset to the hub", () => {
+        const state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        const result = openTabState(state, "belajar", null, makeId);
+
+        expect(result.state.activeTab).toBe("belajar");
+        expect(getShellActiveTab(result.state)).toBe("belajar");
+        expect(result.resetContent).toBe(true);
+    });
+
+    test("re-tapping Belajar while already cleanly on the hub is not a reset", () => {
+        const state = { ...initialState(), activeTab: "belajar" };
+
+        const result = openTabState(state, "belajar", null, makeId);
+
+        expect(result.resetContent).toBe(false);
+    });
+
+    test("switching to Belajar from a different tab is a real navigation, not a reset", () => {
+        const result = openTabState(ibadahState(), "belajar", null, makeId);
+
+        expect(result.state.activeTab).toBe("belajar");
+        expect(result.resetContent).toBe(false);
+    });
+
+    test("opening another Belajar feature from Ibadah is not forced to reset", () => {
+        const state = openTabState(
+            ibadahState(),
+            "belajar",
+            { featureKey: "doa", returnTo: ibadahRoute },
+            makeId,
+        ).state;
+
+        const result = openTabState(
+            state,
+            "belajar",
+            { featureKey: "asmaul-husna", returnTo: ibadahRoute },
+            makeId,
+        );
+
+        expect(result.resetContent).toBe(false);
+    });
+
+    test("re-tapping Ibadah while its own highlight already matches is not a reset", () => {
+        const state = ibadahState();
+
+        expect(getShellActiveTab(state)).toBe("ibadah");
+
+        const result = openTabState(state, "ibadah", null, makeId);
+
+        expect(result.resetContent).toBe(false);
+    });
+});
+
 describe("Profile opened from Khatam", () => {
     const khatamRoute = {
         params: { returnTab: null, view: "khatam" },

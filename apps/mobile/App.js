@@ -75,6 +75,7 @@ export default function App() {
     const [keyboardVisible, setKeyboardVisible] = useState(false);
     const [headerConfig, setHeaderConfigState] = useState(null);
     const [mountedTabs, setMountedTabs] = useState(() => new Set(["home"]));
+    const [belajarContentResetKey, setBelajarContentResetKey] = useState(0);
 
 
     // Refs so the single BackHandler registration never goes stale
@@ -162,6 +163,9 @@ export default function App() {
                 requestedParams,
             );
             applyNavigationState(result.state);
+            if (result.resetContent) {
+                setBelajarContentResetKey((key) => key + 1);
+            }
         },
         [applyNavigationState, getNavigationState],
     );
@@ -477,9 +481,14 @@ export default function App() {
                                                     />
                                                 );
 
+                                            const paneKey =
+                                                tab === "belajar"
+                                                    ? `belajar:${belajarContentResetKey}`
+                                                    : tab;
+
                                             return (
                                                 <View
-                                                    key={tab}
+                                                    key={paneKey}
                                                     style={[
                                                         styles.screenPane,
                                                         isActive
