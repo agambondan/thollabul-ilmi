@@ -1743,3 +1743,81 @@ tiap temuan B1-B16 di atas untuk bukti spesifik per kasus.
     - Perintah `cd apps/mobile/android && ./gradlew assembleRelease` sukses dieksekusi.
     - Berkas APK terbaru berukuran ~85MB di `apps/mobile/android/app/build/outputs/apk/release/app-release.apk` dan disalin ke `apps/mobile/Thullaabul-Ilmi-release.apk`.
 - **Hasil Uji**: Seluruh 91 test suite mobile PASS (1.444 tests), 95 test suite web PASS (656 tests), dan seluruh unit test Go PASS.
+
+---
+
+## Status Perbaikan — Sesi 4 (2026-10-01)
+
+B10–B16 (ditemukan di sesi 3) sekarang semuanya diperbaiki dan dites,
+dalam 4 commit terpisah berdasarkan kelompok file supaya tidak tabrakan
+dengan sesi lain yang konkuren jalan di repo yang sama:
+
+- **B15 → FIXED, commit `a9111a9b`.** Global Search sekarang memanggil
+  `navigation.setHeader({showBack:true,...})` dari `HomeScreen.js`
+  (pola yang sama persis dengan `QiblaScreen.js`), jadi header bersama
+  menampilkan panah kembali yang bisa ditekan. Classic sudah benar dari
+  awal, tidak disentuh. Tes: `homeScreen.test.js`.
+- **B12 → FIXED, commit `ae704030`.** Akar masalah dipastikan penuh
+  (bukan dugaan black-box lagi): `ExploreScreen`'s `activeFeature`
+  adalah **state komponen murni**, di luar pohon reducer
+  `appNavigation.js` — saran fix di dokumen audit asli (reset
+  `internalRoutes[tab]` di reducer) **tidak akan menyentuh bug ini
+  sama sekali**, dibuktikan lewat grep (`ExploreScreen.js` tidak pernah
+  membaca `internalRoutes`/`navigation.current`). Fix sebenarnya:
+  `openTabState` melaporkan `resetContent: true` saat tab yang diminta
+  = tab aktif mentah SAAT INI, tanpa params, padahal chrome sedang
+  menyamarkannya sebagai tab lain (`belajarShowsAsIbadah`); `App.js`
+  menaikkan counter dan menyisipkannya ke `key` pane Belajar supaya
+  React me-remount `ExploreScreen` bersih kembali ke hub. Tes:
+  `appNavigation.test.js` (6 tes baru, dipastikan gagal dulu sebelum
+  fix diterapkan, baru lolos setelahnya).
+- **B10, B11 (3 dari 5), B13, B16 → FIXED, commit `6ca564a0`.**
+    - B10: satu konstanta `APP_NAME` (`theme.js`) dipakai di `ProfileScreen.js`
+      dan `MobileTopHeader.js`, menyamai ejaan `app.json`/kunci
+      `profile.about.appName` yang sudah benar.
+    - B11: hero hub Belajar (`BelajarHubHero`, komponen baru supaya hook
+      `useMobileLocale` tidak dipanggil kondisional), 9 judul header
+      Modern Profil, dan toggle Book/Hadith di Hadis sekarang lewat
+      `t()`. **Belum dikerjakan (scope besar, sengaja ditunda)**: katalog
+      `mobileFeatures.js` (46 fitur/92 literal judul-meta) dan nama 6
+      badge Pencapaian (sumbernya API, di luar kode mobile).
+    - B13: label "Tema"/"Bahasa Konten"/"Mode Layout" dan Q&A Bantuan
+      sekarang dapat override `isDarkTheme && {color: colors.dark.ink}`
+      inline — tanpa merombak `ProfileScreen.styles.js` yang statis.
+      **Ditemukan kelas bug yang sama, belum diperbaiki** (di luar scope
+      4 label yang diminta): judul section Keamanan
+      (`profile.security.guest/sessions/password/delete.title`) dan
+      `profile.about.descriptionTitle` — kemungkinan sama-sama kurang
+      kontras di dark mode, perlu sesi fix terpisah.
+    - B16: dipakai ulang pipa `currentFeatureKey` yang sudah ada dari fix
+      B5 (bukan bikin mekanisme baru) — `ProfileScreen.js` sekarang ikut
+      mendeklarasikan `featureKey: currentScreen` di `setHeader`-nya, dan
+      3 baris "Lainnya" di `MobileMenuSheet.js` dapat `params.featureKey`
+      yang cocok.
+    - Tes: `profileScreen.test.js`, `mobileMenuSheet.test.js`,
+      `exploreWebAppRoutes.test.js`, `hadithScreen.test.js`,
+      `mobileAppShell.test.js`.
+- **B14 → FIXED, commit `84d30cbe`.** Classic sekarang punya search box
+  (debounce 300ms, sama seperti fix B8) + chip kategori + counter untuk
+  8 fitur `type:"list"` (Dzikir, Wirid, Doa, Asmaul Husna, Panduan
+  Sholat, Sejarah, Manasik, Jarh Tadil), lewat komponen baru
+  `ClassicReferenceListContent` + helper murni baru
+  `referenceListFilter.js` yang meng-port logika kategori/pencarian
+  Modern (termasuk alias `dzikir_umum→umum` dan daftar kategori khusus
+  Doa + fallback judul "Bangun"). 8 fitur `type:"list"` LAIN yang sudah
+  punya layar Modern sendiri (Kajian, Library, Blog, dll.) sengaja
+  dikecualikan lewat allowlist eksplisit, bukan cek `type` polos — tidak
+  disentuh. Tes: `exploreClassicReferenceList.test.js` (baru, 8 tes).
+- **B4 masih SEBAGIAN.** Mitigasi Bantuan/Tentang di Profil (dari sesi
+  lain/Codex, commit `49bdb571`/sekitarnya) dikonfirmasi live sesi 3.
+  Yang masih kosong — Classic tidak punya padanan hamburger sama sekali
+  untuk Tokoh Islam/Peta Interaktif/Perawi Hadith — sengaja TIDAK
+  ditambal di sesi 4 ini karena itu keputusan desain navigasi Classic,
+  ditunda ke fase redesign Classic yang memang sudah direncanakan
+  setelah seluruh audit fitur selesai.
+
+**Verifikasi setelah sesi 4**: full suite mobile `npx jest --runInBand`
+hijau di tiap commit (93 suite / 1479 test di commit terakhir).
+**Belum diverifikasi live** (tidak ada akses emulator/device selama sesi
+4, semua fix dikerjakan code+Jest saja) — perlu sesi live-verify
+terpisah sebelum build APK berikutnya dianggap final untuk B10-B16.

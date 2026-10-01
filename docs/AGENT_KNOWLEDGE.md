@@ -256,3 +256,39 @@ banjir percobaan login dari internet (lihat D11 di review performa). Coba ulang
 tidak cukup karena satu deploy butuh belasan koneksi. Buka satu koneksi master
 dengan retry dan jalankan deploy dengan `ssh` yang memakai `ControlMaster` (satu
 koneksi dipakai semua langkah), lalu tutup dengan `ssh -O exit`.
+
+---
+
+## `ExploreScreen`'s `activeFeature` hidup di luar pohon state `appNavigation.js`
+
+Per audit B12 (`docs/reviews/2026-10-01-belajar-hub-deep-audit.md`,
+`2026-10-01`): fitur Belajar yang dibuka dari hub LAIN (mis. "Doa" dari hub
+Ibadah) dirender di bawah tab `"belajar"` yang sesungguhnya, dengan
+`returnRoutes.belajar = {tab: "ibadah"}` supaya chrome (`getShellActiveTab`)
+menampilkan "Ibadah". Menekan tab "Belajar" dari state ini tampak seperti
+tombol mati — highlight berubah tapi konten tetap nyangkut di fitur lama.
+
+**Kenapa:** `activeFeature` (fitur yang sedang ditampilkan `ExploreScreen`)
+adalah `useState` murni di komponen itu sendiri — **bukan** bagian dari
+pohon reducer `appNavigation.js`. `ExploreScreen` tidak pernah membaca
+`internalRoutes`/`navigation.current` sama sekali (dicek lewat grep). Jadi
+perbaikan level reducer saja (mis. "reset `internalRoutes[tab]` saat tab
+diminta ulang") **tidak akan pernah menyentuh bug sejenis ini** — reducer
+dan konten yang terlihat adalah dua sumber kebenaran terpisah yang
+kebetulan biasanya sinkron.
+
+**Pola fix yang benar** (dipakai di B12): reducer melaporkan sinyal eksplisit
+(`openTabState` mengembalikan `resetContent: true`) saat terdeteksi kasus
+"tab diminta ulang tapi chrome sedang menyamarkannya sebagai tab lain";
+`App.js` menaikkan counter dan menyisipkannya ke `key` pane React supaya
+`ExploreScreen` di-remount bersih — bukan mengandalkan state reducer untuk
+memberi tahu komponen secara langsung.
+
+**Terkait:** pipa `currentFeatureKey` (dari fix B5, `commit 8d7611a0`) adalah
+mekanisme GENERIK "`featureKey` apa yang dideklarasikan layar yang sedang
+tampil lewat `navigation.setHeader({featureKey: ...})`", diteruskan
+`App.js` → shell → `MobileMenuSheet`. Bukan khusus `ExploreScreen`/fitur
+Belajar — `ProfileScreen.js` ikut memakainya (fix B16) untuk membedakan
+Pengaturan/Bantuan/Tentang di hamburger. Kalau butuh "layar mana yang lagi
+aktif" untuk highlight semacam ini, pakai pipa yang sudah ada ini dulu
+sebelum bikin mekanisme paralel baru.
