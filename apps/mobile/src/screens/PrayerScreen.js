@@ -50,38 +50,30 @@ import {
     syncPrayerReminders,
 } from "../utils/prayerNotifications";
 import { ADZAN_SOUNDS, getAdzanSound } from "../utils/adzanSounds";
+import {
+    buildAdjustedPrayerTimes,
+    buildPrayerLabels,
+    countReminderPrayers,
+    createPrayerTimesResolver,
+    defaultAdjustments,
+    defaultReminderPrayers,
+    formatMinutes,
+    hasUsablePrayerTimes,
+    normalizeAdjustments,
+    normalizePrayerMadhab,
+    normalizePrayerMethod,
+    normalizeReminderLead,
+    normalizeReminderPrayers,
+    normalizeSavedLocation,
+    normalizeScheduleCache,
+    prayerMadhabs as madhabs,
+    prayerMethods as methods,
+    prayerScheduleRows as scheduleRows,
+    reminderLeadOptions,
+    scheduleCacheMatchesLocation,
+    toMinutes,
+} from "../utils/prayerReminderSettings";
 
-const scheduleRows = [
-    ["imsak", "prayer.name.imsak"],
-    ["fajr", "prayer.name.fajr"],
-    ["sunrise", "prayer.name.sunrise"],
-    ["dhuhr", "prayer.name.dhuhr"],
-    ["asr", "prayer.name.asr"],
-    ["maghrib", "prayer.name.maghrib"],
-    ["isha", "prayer.name.isha"],
-];
-
-const methods = [
-    ["kemenag", "Kemenag"],
-    ["mwl", "MWL"],
-    ["makkah", "Makkah"],
-    ["isna", "ISNA"],
-];
-
-const madhabs = [
-    ["shafi", "Shafi"],
-    ["hanafi", "Hanafi"],
-];
-
-const defaultAdjustments = scheduleRows.reduce(
-    (acc, [key]) => ({
-        ...acc,
-        [key]: 0,
-    }),
-    {},
-);
-
-const prayerLabels = Object.fromEntries(scheduleRows);
 const prayerArabicLabels = {
     imsak: "الإمساك",
     fajr: "الفجر",
@@ -91,11 +83,8 @@ const prayerArabicLabels = {
     maghrib: "المغرب",
     isha: "العشاء",
 };
-const defaultReminderPrayers = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
-const reminderLeadOptions = [0, 5, 10, 15, 30];
 const LOCATION_TIMEOUT_MS = 10000;
 const SCHEDULE_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-const SCHEDULE_CACHE_COORD_TOLERANCE = 0.1;
 const WEB_APP_PRAYER_BG = "#f8fafc";
 const WEB_APP_PRAYER_SURFACE = "#ffffff";
 const WEB_APP_PRAYER_BORDER = "#e5e7eb";
@@ -144,20 +133,6 @@ const today = () => {
     return `${year}-${month}-${day}`;
 };
 
-const toMinutes = (time) => {
-    const match = /^(\d{1,2}):(\d{2})/.exec(time ?? "");
-    if (!match) return null;
-
-    return Number(match[1]) * 60 + Number(match[2]);
-};
-
-const formatMinutes = (value) => {
-    const wrapped = ((value % 1440) + 1440) % 1440;
-    const hours = `${Math.floor(wrapped / 60)}`.padStart(2, "0");
-    const minutes = `${wrapped % 60}`.padStart(2, "0");
-    return `${hours}:${minutes}`;
-};
-
 const withTimeout = (promise, ms) =>
     new Promise((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error("timeout")), ms);
@@ -179,53 +154,11 @@ const persistQuietly = async (key, value) => {
     } catch {}
 };
 
-const hasUsablePrayerTimes = (value) =>
-    Boolean(value) &&
-    typeof value === "object" &&
-    defaultReminderPrayers.every((key) => toMinutes(value[key]) !== null);
-
-const normalizeCoords = (value) =>
-    Number.isFinite(value?.lat) &&
-    Number.isFinite(value?.lng) &&
-    Math.abs(value.lat) <= 90 &&
-    Math.abs(value.lng) <= 180
-        ? { lat: value.lat, lng: value.lng }
-        : null;
-
-const normalizeSavedLocation = (value) => {
-    const saved = normalizeCoords(value);
-    if (!saved) return null;
-    return { ...saved, source: value.source === "manual" ? "manual" : "gps" };
-};
-
-const normalizeScheduleCache = (value) => {
-    const cachedCoords = normalizeCoords(value?.coords);
-    if (
-        !cachedCoords ||
-        !hasUsablePrayerTimes(value?.prayers) ||
-        typeof value?.method !== "string" ||
-        typeof value?.madhab !== "string" ||
-        !Number.isFinite(value?.updatedAt)
-    ) {
-        return null;
-    }
-
-    return {
-        coords: cachedCoords,
-        madhab: value.madhab,
-        method: value.method,
-        prayers: value.prayers,
-        updatedAt: value.updatedAt,
-    };
-};
-
 const pickCachedSchedule = (cache, target) => {
     if (
         !cache ||
         Date.now() - cache.updatedAt > SCHEDULE_CACHE_MAX_AGE_MS ||
-        Math.abs(cache.coords.lat - target.lat) >
-            SCHEDULE_CACHE_COORD_TOLERANCE ||
-        Math.abs(cache.coords.lng - target.lng) > SCHEDULE_CACHE_COORD_TOLERANCE
+        !scheduleCacheMatchesLocation(cache, target)
     ) {
         return null;
     }
@@ -345,9 +278,7 @@ export function PrayerScreen({ isActive, navigation }) {
     madhabRef.current = madhab;
     tRef.current = t;
     const dateLocale = language === "en" ? "en-US" : "id-ID";
-    const translatedPrayerLabels = Object.fromEntries(
-        scheduleRows.map(([key]) => [key, t(`prayer.name.${key}`)]),
-    );
+    const translatedPrayerLabels = buildPrayerLabels(t);
     const translatedScheduleRows = scheduleRows.map(([key]) => [
         key,
         translatedPrayerLabels[key],
@@ -626,17 +557,7 @@ export function PrayerScreen({ isActive, navigation }) {
     };
 
     const adjustedPrayerTimes = (nextAdjustments = adjustments) =>
-        scheduleRows.reduce((acc, [key]) => {
-            const raw = prayers?.[key];
-            const minutes = toMinutes(raw);
-            return {
-                ...acc,
-                [key]:
-                    minutes === null
-                        ? raw
-                        : formatMinutes(minutes + (nextAdjustments[key] ?? 0)),
-            };
-        }, {});
+        buildAdjustedPrayerTimes(prayers, nextAdjustments);
 
     const toSeconds = (val) => {
         if (!val) return null;
@@ -961,6 +882,13 @@ export function PrayerScreen({ isActive, navigation }) {
                     selectedPrayers: reminderPrayers,
                     t,
                     times: adjustedPrayerTimes(adjustments),
+                    timesForDate: createPrayerTimesResolver({
+                        adjustments,
+                        coords: coordsRef.current,
+                        lookup: getOfflinePrayerForDate,
+                        madhab: madhabRef.current,
+                        method: methodRef.current,
+                    }),
                 });
                 if (!mountedRef.current) return;
 
@@ -972,7 +900,7 @@ export function PrayerScreen({ isActive, navigation }) {
                 } else {
                     report(
                         t("prayer.reminder.scheduled", {
-                            count: result.scheduled.length,
+                            count: countReminderPrayers(result.scheduled),
                         }),
                     );
                 }
@@ -1029,19 +957,9 @@ export function PrayerScreen({ isActive, navigation }) {
                     savedScheduleCache,
                 ]) => {
                     if (!mounted) return;
-                    if (methods.some(([key]) => key === savedMethod)) {
-                        setMethod(savedMethod);
-                    }
-                    if (madhabs.some(([key]) => key === savedMadhab)) {
-                        setMadhab(savedMadhab);
-                    }
-                    setAdjustments({
-                        ...defaultAdjustments,
-                        ...(savedAdjustments &&
-                        typeof savedAdjustments === "object"
-                            ? savedAdjustments
-                            : {}),
-                    });
+                    setMethod(normalizePrayerMethod(savedMethod));
+                    setMadhab(normalizePrayerMadhab(savedMadhab));
+                    setAdjustments(normalizeAdjustments(savedAdjustments));
                     setAdzanAudioEnabled(Boolean(savedAdzanAudioEnabled));
                     if (
                         typeof savedAdzanSound === "string" &&
@@ -1050,19 +968,12 @@ export function PrayerScreen({ isActive, navigation }) {
                         setAdzanSound(savedAdzanSound);
                     }
                     setReminderEnabled(Boolean(savedReminderEnabled));
-                    if (reminderLeadOptions.includes(savedLeadMinutes)) {
-                        setReminderLeadMinutes(savedLeadMinutes);
-                    }
-                    if (
-                        Array.isArray(savedReminderPrayers) &&
-                        savedReminderPrayers.some((key) => prayerLabels[key])
-                    ) {
-                        setReminderPrayers(
-                            savedReminderPrayers.filter(
-                                (key) => prayerLabels[key],
-                            ),
-                        );
-                    }
+                    setReminderLeadMinutes(
+                        normalizeReminderLead(savedLeadMinutes),
+                    );
+                    setReminderPrayers(
+                        normalizeReminderPrayers(savedReminderPrayers),
+                    );
                     savedLocationRef.current =
                         normalizeSavedLocation(savedLocation);
                     scheduleCacheRef.current =
@@ -1575,7 +1486,9 @@ export function PrayerScreen({ isActive, navigation }) {
                             meta={
                                 notificationsSupported()
                                     ? t("prayer.status.activeCount", {
-                                          count: notificationIds.length,
+                                          count: countReminderPrayers(
+                                              notificationIds,
+                                          ),
                                       })
                                     : t("prayer.meta.mobileApp")
                             }
@@ -2160,7 +2073,9 @@ export function PrayerScreen({ isActive, navigation }) {
                         meta={
                             notificationsSupported()
                                 ? t("prayer.status.activeCount", {
-                                      count: notificationIds.length,
+                                      count: countReminderPrayers(
+                                          notificationIds,
+                                      ),
                                   })
                                 : t("prayer.meta.mobileApp")
                         }

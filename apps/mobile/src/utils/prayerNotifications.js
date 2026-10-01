@@ -4,6 +4,8 @@ import { defaultMobileLanguage, translateMobile } from "../i18n/translations";
 export const PRAYER_REMINDER_CHANNEL_ID = "prayer-reminders";
 export const PRAYER_REMINDER_TYPE = "prayer_reminder";
 export const PRAYER_REMINDER_ID_PREFIX = "prayer-reminder:";
+export const REMINDER_HORIZON_DAYS = 7;
+export const MAX_PENDING_PRAYER_REMINDERS = 60;
 
 let Notifications;
 let handlerReady = false;
@@ -23,12 +25,18 @@ const runExclusive = (task) => {
 
 export const notificationsSupported = () => Platform.OS !== "web";
 
-const getNotifications = () => {
+const loadNotifications = () => {
     if (!notificationsSupported()) return null;
 
     if (!Notifications) {
         Notifications = require("expo-notifications");
     }
+
+    return Notifications;
+};
+
+const getNotifications = () => {
+    if (!loadNotifications()) return null;
 
     if (!handlerReady) {
         Notifications.setNotificationHandler({
@@ -45,7 +53,7 @@ const getNotifications = () => {
     return Notifications;
 };
 
-export const ensurePrayerNotificationPermission = async () => {
+const resolvePermission = async ({ prompt }) => {
     const nativeNotifications = getNotifications();
     if (!nativeNotifications) {
         return { granted: false, reason: "unsupported" };
@@ -57,7 +65,7 @@ export const ensurePrayerNotificationPermission = async () => {
         existing.ios?.status ===
             nativeNotifications.IosAuthorizationStatus.PROVISIONAL;
 
-    if (!granted) {
+    if (!granted && prompt) {
         const requested = await nativeNotifications.requestPermissionsAsync({
             ios: {
                 allowAlert: true,
@@ -86,6 +94,12 @@ export const ensurePrayerNotificationPermission = async () => {
 
     return { granted };
 };
+
+export const ensurePrayerNotificationPermission = () =>
+    resolvePermission({ prompt: true });
+
+export const checkPrayerNotificationPermission = () =>
+    resolvePermission({ prompt: false });
 
 const isPrayerReminder = (request) =>
     request?.content?.data?.type === PRAYER_REMINDER_TYPE ||
@@ -146,18 +160,16 @@ const toMinutes = (time) => {
     return Number(match[1]) * 60 + Number(match[2]);
 };
 
-const nextTriggerDate = (time, leadMinutes) => {
+const addDays = (date, days) =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+
+const triggerDateFor = (day, time, leadMinutes) => {
     const minutes = toMinutes(time);
     if (minutes === null) return null;
 
-    const target = new Date();
+    const target = new Date(day.getTime());
     target.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
     target.setMinutes(target.getMinutes() - leadMinutes);
-
-    if (target.getTime() <= Date.now()) {
-        target.setDate(target.getDate() + 1);
-    }
-
     return target;
 };
 
@@ -170,17 +182,92 @@ const localDateKey = (date) => {
 const reminderIdentifier = (prayer, date) =>
     `${PRAYER_REMINDER_ID_PREFIX}${prayer}:${localDateKey(date)}`;
 
+const resolveDayTimes = async (timesForDate, day, fallback) => {
+    try {
+        const resolved = await timesForDate(day);
+        return resolved && typeof resolved === "object" ? resolved : fallback;
+    } catch {
+        return fallback;
+    }
+};
+
+const pickTime = (resolved, fallback, prayer) =>
+    toMinutes(resolved?.[prayer]) === null
+        ? fallback[prayer]
+        : resolved[prayer];
+
+const planReminders = async ({
+    leadMinutes,
+    selectedPrayers,
+    times,
+    timesForDate,
+}) => {
+    const prayers = [...new Set(selectedPrayers)];
+    if (!prayers.length) return [];
+
+    const nowMs = Date.now();
+    const today = addDays(new Date(nowMs), 0);
+    const baseTimes = times && typeof times === "object" ? times : {};
+    const offsets = Array.from(
+        { length: REMINDER_HORIZON_DAYS + 1 },
+        (_, offset) => offset,
+    );
+    const timesByOffset = await Promise.all(
+        offsets.map((offset) =>
+            offset === 0 || typeof timesForDate !== "function"
+                ? baseTimes
+                : resolveDayTimes(
+                      timesForDate,
+                      addDays(today, offset),
+                      baseTimes,
+                  ),
+        ),
+    );
+
+    const plan = [];
+    for (const prayer of prayers) {
+        let count = 0;
+        for (const offset of offsets) {
+            if (count >= REMINDER_HORIZON_DAYS) break;
+
+            const time = pickTime(timesByOffset[offset], baseTimes, prayer);
+            const date = triggerDateFor(
+                addDays(today, offset),
+                time,
+                leadMinutes,
+            );
+            if (!date || date.getTime() <= nowMs) continue;
+
+            plan.push({
+                date,
+                id: reminderIdentifier(prayer, date),
+                prayer,
+                time,
+            });
+            count += 1;
+        }
+    }
+
+    return plan
+        .sort((a, b) => a.date.getTime() - b.date.getTime())
+        .slice(0, MAX_PENDING_PRAYER_REMINDERS);
+};
+
 export const syncPrayerReminders = ({
     enabled = true,
     leadMinutes = 0,
     labels = {},
     previous = [],
+    requestPermission = true,
     selectedPrayers = [],
     t = defaultTranslate,
     times = {},
+    timesForDate,
 } = {}) =>
     runExclusive(async () => {
-        const nativeNotifications = getNotifications();
+        const nativeNotifications = enabled
+            ? getNotifications()
+            : loadNotifications();
         if (!nativeNotifications) {
             return { scheduled: [], status: "unsupported" };
         }
@@ -196,21 +283,25 @@ export const syncPrayerReminders = ({
             return { scheduled: [], status: "disabled" };
         }
 
-        const permission = await ensurePrayerNotificationPermission();
+        const permission = await resolvePermission({
+            prompt: requestPermission,
+        });
         if (!permission.granted) {
             await cancelIdentifiers(nativeNotifications, outdated);
             return { scheduled: [], status: permission.reason ?? "denied" };
         }
 
+        const plan = await planReminders({
+            leadMinutes,
+            selectedPrayers,
+            times,
+            timesForDate,
+        });
         const scheduled = [];
-        for (const key of selectedPrayers) {
-            const time = times[key];
-            const date = nextTriggerDate(time, leadMinutes);
-            if (!date) continue;
-
-            const label = labels[key] ?? key;
+        for (const { date, id: identifier, prayer, time } of plan) {
+            const label = labels[prayer] ?? prayer;
             const id = await nativeNotifications.scheduleNotificationAsync({
-                identifier: reminderIdentifier(key, date),
+                identifier,
                 content: {
                     title: t("prayer.notification.reminder.title", {
                         prayer: label,
@@ -225,7 +316,7 @@ export const syncPrayerReminders = ({
                                   prayer: label,
                               }),
                     data: {
-                        prayer: key,
+                        prayer,
                         type: PRAYER_REMINDER_TYPE,
                         url: "thullaabulilmi://prayer",
                     },
@@ -238,7 +329,7 @@ export const syncPrayerReminders = ({
                 },
             });
 
-            scheduled.push({ id, prayer: key, fireAt: date.toISOString() });
+            scheduled.push({ id, prayer, fireAt: date.toISOString() });
         }
 
         const kept = new Set(scheduled.map((item) => item.id));

@@ -138,8 +138,16 @@ import * as Notifications from "expo-notifications";
 import { getPrayerTimes } from "../api/client";
 import { useFeedback } from "../context/FeedbackContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
-import { getPrayerOfflineOverview } from "../storage/offlineContent";
+import {
+    getOfflinePrayerForDate,
+    getPrayerOfflineOverview,
+} from "../storage/offlineContent";
 import { PrayerScreen } from "../screens/PrayerScreen";
+import { REMINDER_HORIZON_DAYS } from "../utils/prayerNotifications";
+
+const PRAYERS_WITH_REMINDERS = 5;
+const FULL_WINDOW = PRAYERS_WITH_REMINDERS * REMINDER_HORIZON_DAYS;
+const windowOf = (prayerCount) => prayerCount * REMINDER_HORIZON_DAYS;
 
 const prayerTimes = {
     imsak: "04:30",
@@ -193,12 +201,78 @@ const renderSettings = async () => {
     return view;
 };
 
+const openSettingsWhenIdle = async () => {
+    const view = render(
+        <PrayerScreen isActive={true} navigation={navigation} />,
+    );
+    await settleIdle();
+    fireEvent.press(view.getByTestId("action-Buka pengaturan sholat"));
+    await settle(() => Boolean(view.queryByText("Metode Jadwal")));
+    await settleIdle();
+    return view;
+};
+
+const seedWeek = (prayer) => {
+    for (let day = 1; day <= REMINDER_HORIZON_DAYS; day += 1) {
+        const id = `prayer-reminder:${prayer}:2026-10-0${day}`;
+        mockStore.set(id, {
+            identifier: id,
+            content: { data: { prayer, type: "prayer_reminder" } },
+            trigger: { type: "date" },
+        });
+    }
+};
+
+const freezeClock = (date) =>
+    jest.useFakeTimers({
+        now: date,
+        doNotFake: [
+            "hrtime",
+            "nextTick",
+            "performance",
+            "queueMicrotask",
+            "requestAnimationFrame",
+            "cancelAnimationFrame",
+            "requestIdleCallback",
+            "cancelIdleCallback",
+            "setImmediate",
+            "clearImmediate",
+            "setInterval",
+            "clearInterval",
+            "setTimeout",
+            "clearTimeout",
+        ],
+    });
+
 const reminderToggle = (view) =>
     view.getAllByRole("button", { name: /^(Mati|Aktif)$/ })[0];
 
+const nativeCalls = () =>
+    Notifications.scheduleNotificationAsync.mock.calls.length +
+    Notifications.cancelScheduledNotificationAsync.mock.calls.length +
+    Notifications.getAllScheduledNotificationsAsync.mock.calls.length;
+
+const settleIdle = async (quietTicks = 4, attempts = 200) => {
+    let last = -1;
+    let quiet = 0;
+    for (let index = 0; index < attempts && quiet < quietTicks; index += 1) {
+        await act(async () => {
+            await delay(15);
+        });
+        const current = nativeCalls();
+        quiet = current === last ? quiet + 1 : 0;
+        last = current;
+    }
+};
+
 describe("PrayerScreen reminders with real scheduling", () => {
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
+        getOfflinePrayerForDate.mockReset();
         mockStore.clear();
         mockPrefs.clear();
         mockAutoId = 0;
@@ -228,46 +302,56 @@ describe("PrayerScreen reminders with real scheduling", () => {
         });
     });
 
-    test("turning reminders on schedules exactly one notification per prayer", async () => {
+    test("turning reminders on schedules the week ahead for every prayer", async () => {
         const view = await renderSettings();
         expect(reminderEntries()).toHaveLength(0);
 
         fireEvent.press(reminderToggle(view));
-        await settle(() => reminderEntries().length === 5);
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
 
         const ids = reminderEntries().map((request) => request.identifier);
-        expect(ids).toHaveLength(5);
-        expect(new Set(ids).size).toBe(5);
+        expect(ids).toHaveLength(FULL_WINDOW);
+        expect(new Set(ids).size).toBe(FULL_WINDOW);
         ids.forEach((id) => expect(id).toMatch(/^prayer-reminder:/));
-        expect(mockStore.size).toBe(5);
+        expect(mockStore.size).toBe(FULL_WINDOW);
+        expect(
+            new Set(reminderEntries().map((item) => item.content.data.prayer))
+                .size,
+        ).toBe(PRAYERS_WITH_REMINDERS);
         expect(view.getByText("5 aktif")).toBeTruthy();
         expect(view.getByText("5 pengingat sholat dijadwalkan.")).toBeTruthy();
+        expect(view.queryByText(`${FULL_WINDOW} aktif`)).toBeNull();
+        expect(
+            view.queryByText(`${FULL_WINDOW} pengingat sholat dijadwalkan.`),
+        ).toBeNull();
     });
 
     test("turning reminders off cancels everything", async () => {
         const view = await renderSettings();
         fireEvent.press(reminderToggle(view));
-        await settle(() => reminderEntries().length === 5);
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
 
         fireEvent.press(reminderToggle(view));
         await settle(() => reminderEntries().length === 0);
+        await settleIdle();
 
         expect(mockStore.size).toBe(0);
         expect(view.getByText("0 aktif")).toBeTruthy();
         expect(view.getByText("Pengingat sholat dinonaktifkan.")).toBeTruthy();
     });
 
-    test("rapid on, off, on leaves exactly one notification per prayer", async () => {
+    test("rapid on, off, on leaves exactly one week of reminders per prayer", async () => {
         const view = await renderSettings();
 
         fireEvent.press(reminderToggle(view));
         fireEvent.press(reminderToggle(view));
         fireEvent.press(reminderToggle(view));
-        await settle(() => reminderEntries().length === 5);
-        await settle();
+        await settleIdle();
 
-        expect(reminderEntries()).toHaveLength(5);
-        expect(mockStore.size).toBe(5);
+        expect(reminderEntries()).toHaveLength(FULL_WINDOW);
+        expect(mockStore.size).toBe(FULL_WINDOW);
         expect(view.getByText("5 aktif")).toBeTruthy();
     });
 
@@ -292,41 +376,42 @@ describe("PrayerScreen reminders with real scheduling", () => {
             fireEvent.press(toggle);
             fireEvent.press(toggle);
         });
-        await settle(() => reminderEntries().length === 5);
-        await settle();
+        await settleIdle();
 
-        expect(reminderEntries()).toHaveLength(5);
-        expect(mockStore.size).toBe(5);
+        expect(reminderEntries()).toHaveLength(FULL_WINDOW);
+        expect(mockStore.size).toBe(FULL_WINDOW);
         expect(view.getByText("5 aktif")).toBeTruthy();
     });
 
-    test("the reschedule button keeps one notification per prayer", async () => {
+    test("the reschedule button keeps one week of reminders per prayer", async () => {
         const view = await renderSettings();
         fireEvent.press(reminderToggle(view));
-        await settle(() => reminderEntries().length === 5);
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
 
         fireEvent.press(view.getByText("Atur ulang pengingat"));
         fireEvent.press(view.getByText("Atur ulang pengingat"));
-        await settle();
-        await settle();
+        await settleIdle();
 
-        expect(reminderEntries()).toHaveLength(5);
-        expect(mockStore.size).toBe(5);
+        expect(reminderEntries()).toHaveLength(FULL_WINDOW);
+        expect(mockStore.size).toBe(FULL_WINDOW);
     });
 
     test("changing lead, prayers and corrections reschedules without growth", async () => {
         const view = await renderSettings();
         fireEvent.press(reminderToggle(view));
-        await settle(() => reminderEntries().length === 5);
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
 
         fireEvent.press(view.getByText("30 menit"));
-        await settle();
-        expect(reminderEntries()).toHaveLength(5);
+        await settleIdle();
+        expect(reminderEntries()).toHaveLength(FULL_WINDOW);
 
         const subuhPills = view.getAllByText("Subuh");
         fireEvent.press(subuhPills[subuhPills.length - 1]);
-        await settle(() => reminderEntries().length === 4);
-        expect(reminderEntries()).toHaveLength(4);
+        await settle(() => reminderEntries().length === windowOf(4));
+        await settleIdle();
+        expect(reminderEntries()).toHaveLength(windowOf(4));
         expect(
             reminderEntries().some(
                 (request) => request.content.data.prayer === "fajr",
@@ -335,18 +420,24 @@ describe("PrayerScreen reminders with real scheduling", () => {
         expect(view.getByText("4 aktif")).toBeTruthy();
 
         fireEvent.press(view.getAllByText("-1")[3]);
-        await settle();
-        const dhuhr = reminderEntries().find(
+        await settleIdle();
+        const dhuhrEntries = reminderEntries().filter(
             (request) => request.content.data.prayer === "dhuhr",
         );
-        expect(reminderEntries()).toHaveLength(4);
-        expect(dhuhr.content.body).toBe("Waktu Dzuhur masuk pukul 11:44.");
+        expect(reminderEntries()).toHaveLength(windowOf(4));
+        expect(dhuhrEntries).toHaveLength(REMINDER_HORIZON_DAYS);
+        dhuhrEntries.forEach((request) =>
+            expect(request.content.body).toBe(
+                "Waktu Dzuhur masuk pukul 11:44.",
+            ),
+        );
 
         const pills = view.getAllByText("Subuh");
         fireEvent.press(pills[pills.length - 1]);
-        await settle(() => reminderEntries().length === 5);
-        expect(reminderEntries()).toHaveLength(5);
-        expect(mockStore.size).toBe(5);
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
+        expect(reminderEntries()).toHaveLength(FULL_WINDOW);
+        expect(mockStore.size).toBe(FULL_WINDOW);
         expect(view.getByText("5 aktif")).toBeTruthy();
     });
 
@@ -366,11 +457,11 @@ describe("PrayerScreen reminders with real scheduling", () => {
         seedOrphans(5);
 
         const view = await renderSettings();
-        await settle(() => reminderEntries().length === 5);
-        await settle();
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
 
         const ids = reminderEntries().map((request) => request.identifier);
-        expect(ids).toHaveLength(5);
+        expect(ids).toHaveLength(FULL_WINDOW);
         ids.forEach((id) => expect(id).toMatch(/^prayer-reminder:/));
         expect(view.getByText("5 aktif")).toBeTruthy();
     });
@@ -379,14 +470,15 @@ describe("PrayerScreen reminders with real scheduling", () => {
         mockPrefs.set("prayer-reminder-enabled", true);
 
         const first = await renderSettings();
-        await settle(() => reminderEntries().length === 5);
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
         first.unmount();
 
         const second = await renderSettings();
-        await settle();
+        await settleIdle();
 
-        expect(reminderEntries()).toHaveLength(5);
-        expect(mockStore.size).toBe(5);
+        expect(reminderEntries()).toHaveLength(FULL_WINDOW);
+        expect(mockStore.size).toBe(FULL_WINDOW);
         expect(second.getByText("5 aktif")).toBeTruthy();
     });
 
@@ -403,5 +495,72 @@ describe("PrayerScreen reminders with real scheduling", () => {
         expect(view.getByText("Izin notifikasi belum aktif.")).toBeTruthy();
         expect(reminderEntries()).toHaveLength(0);
         expect(view.getByText("0 aktif")).toBeTruthy();
+    });
+
+    test("counts prayers, not notifications, when it only lists what is already scheduled", async () => {
+        mockPrefs.set("prayer-reminder-enabled", true);
+        getPrayerTimes.mockRejectedValue(new Error("offline"));
+        ["fajr", "dhuhr", "asr", "maghrib"].forEach(seedWeek);
+
+        const view = await openSettingsWhenIdle();
+
+        expect(reminderEntries()).toHaveLength(windowOf(4));
+        expect(view.getByText("4 aktif")).toBeTruthy();
+        expect(view.queryByText(`${windowOf(4)} aktif`)).toBeNull();
+        expect(Notifications.scheduleNotificationAsync).not.toHaveBeenCalled();
+
+        seedWeek("isha");
+        fireEvent.press(view.getByText("Atur ulang pengingat"));
+        await settleIdle();
+
+        expect(view.getByText("5 aktif")).toBeTruthy();
+    });
+
+    test("uses the offline prayer pack for the coming days", async () => {
+        freezeClock(new Date(2026, 9, 1, 3, 0));
+        mockPrefs.set("prayer-reminder-enabled", true);
+        getOfflinePrayerForDate.mockImplementation(async ({ date }) =>
+            date === "2026-10-03" ? { ...prayerTimes, fajr: "04:30" } : null,
+        );
+
+        const view = await renderSettings();
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
+
+        const fajrOn = (day) =>
+            mockStore.get(`prayer-reminder:fajr:2026-10-0${day}`);
+        expect(fajrOn(1).content.body).toBe("Waktu Subuh masuk pukul 04:40.");
+        expect(fajrOn(2).content.body).toBe("Waktu Subuh masuk pukul 04:40.");
+        expect(fajrOn(3).content.body).toBe("Waktu Subuh masuk pukul 04:30.");
+        expect(fajrOn(3).trigger.date).toEqual(new Date(2026, 9, 3, 4, 20));
+        expect(fajrOn(4).content.body).toBe("Waktu Subuh masuk pukul 04:40.");
+        expect(getOfflinePrayerForDate).toHaveBeenCalledWith({
+            date: "2026-10-03",
+            lat: -6.2088,
+            lng: 106.8456,
+            madhab: "shafi",
+            method: "kemenag",
+        });
+        expect(view.getByText("5 aktif")).toBeTruthy();
+    });
+
+    test("applies the saved corrections to the offline pack times as well", async () => {
+        freezeClock(new Date(2026, 9, 1, 3, 0));
+        mockPrefs.set("prayer-reminder-enabled", true);
+        mockPrefs.set("prayer-adjustments", { fajr: 2 });
+        getOfflinePrayerForDate.mockImplementation(async ({ date }) =>
+            date === "2026-10-05" ? { ...prayerTimes, fajr: "04:30" } : null,
+        );
+
+        await openSettingsWhenIdle();
+        await settle(() => reminderEntries().length === FULL_WINDOW);
+        await settleIdle();
+
+        expect(
+            mockStore.get("prayer-reminder:fajr:2026-10-05").content.body,
+        ).toBe("Waktu Subuh masuk pukul 04:32.");
+        expect(
+            mockStore.get("prayer-reminder:fajr:2026-10-04").content.body,
+        ).toBe("Waktu Subuh masuk pukul 04:42.");
     });
 });
