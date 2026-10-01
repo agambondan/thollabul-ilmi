@@ -24,3 +24,4 @@ Folder ini berisi feature yang sudah ditutup.
 - [Manasik Haji & Umrah](./manasik-haji-umrah.md)
 - [Siroh Nabawiyah](./siroh-nabawiyah.md)
 - [Asbabun Nuzul](./quran-asbabun-nuzul.md)
+- [Peta Sirah Interaktif & Visual Faraidh](./peta-sirah-faraidh-visual.md)

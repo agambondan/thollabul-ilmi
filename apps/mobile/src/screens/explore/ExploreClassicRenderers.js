@@ -938,7 +938,9 @@ export function createExploreClassicRenderers(context) {
                         <View
                             style={{
                                 flex: 1,
-                                backgroundColor: "#f0fdf4",
+                                backgroundColor: isDarkTheme
+                                    ? "rgba(16, 185, 129, 0.12)"
+                                    : "#f0fdf4",
                                 borderRadius: radius.md,
                                 padding: spacing.md,
                             }}
@@ -953,14 +955,21 @@ export function createExploreClassicRenderers(context) {
                             >
                                 Kemenag
                             </Text>
-                            <Text style={styles.detailBody}>
+                            <Text
+                                style={[
+                                    styles.detailBody,
+                                    { color: theme.text },
+                                ]}
+                            >
                                 {selectedItem.tafsir}
                             </Text>
                         </View>
                         <View
                             style={{
                                 flex: 1,
-                                backgroundColor: "#f0f9ff",
+                                backgroundColor: isDarkTheme
+                                    ? "rgba(59, 130, 246, 0.12)"
+                                    : "#f0f9ff",
                                 borderRadius: radius.md,
                                 padding: spacing.md,
                             }}
@@ -975,7 +984,12 @@ export function createExploreClassicRenderers(context) {
                             >
                                 Al-Mishbah
                             </Text>
-                            <Text style={styles.detailBody}>
+                            <Text
+                                style={[
+                                    styles.detailBody,
+                                    { color: theme.text },
+                                ]}
+                            >
                                 {selectedItem.secondaryTafsir}
                             </Text>
                         </View>
@@ -1190,8 +1204,8 @@ export function createExploreClassicRenderers(context) {
 
                     <View
                         style={{
-                            backgroundColor: "#f8fafc",
-                            borderColor: "#e2e8f0",
+                            backgroundColor: isDarkTheme ? theme.card : "#f8fafc",
+                            borderColor: theme.border,
                             borderRadius: radius.sm,
                             borderWidth: 1,
                             marginVertical: spacing.xs,
@@ -1200,7 +1214,7 @@ export function createExploreClassicRenderers(context) {
                     >
                         <Text
                             style={{
-                                color: "#1e293b",
+                                color: theme.text,
                                 fontSize: bookReaderFontSize,
                                 lineHeight: Math.round(
                                     bookReaderFontSize * 1.75,

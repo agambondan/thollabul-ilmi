@@ -11,4 +11,4 @@ kerja, tetapi belum mulai aktif.
 
 ## Task List
 
-- [Peta Sirah Interaktif & Visual Faraidh](./peta-sirah-faraidh-visual.md) (P2)
+- [Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis](./perpustakaan-ekstraksi-konten-untuk-belajar.md) (P2)
