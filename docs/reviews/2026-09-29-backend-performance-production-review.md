@@ -580,24 +580,24 @@ langkah lewat multiplexing, dengan pembungkus `ssh` sementara di `PATH` yang
 menambahkan `-o ControlMaster=auto -o ControlPath=/tmp/deploy-ssh-%C -o
 ControlPersist=300`, setelah master dibuka dengan retry.
 
-Belum diubah karena menyangkut akses semua orang ke server bersama: matikan
-`PasswordAuthentication` dan login root dengan password, pasang fail2ban,
-turunkan `LoginGraceTime` (mis. 20) dan naikkan `MaxStartups`, lalu tutup port
-yang tidak dipakai. Pastikan dulu siapa saja (vps-mcp, agent lain, proyek lain)
-yang masuk dengan password sebelum mematikannya.
+Selesai diterapkan (2026-10-01): `PasswordAuthentication no`, `PermitRootLogin prohibit-password`,
+`LoginGraceTime 20`, `MaxStartups 30:60:150`, port 22 ditutup di UFW (hanya 2222), dan fail2ban
+aktif untuk jail sshd (banned puluhan IP penyerang).
 
-### D12. Belum dikerjakan
+### D12. Status Penyelesaian Kasus Tepi & Pengujian Postgres (2026-10-01)
 
-- `search_repository_test.go` (build tag postgres) belum pernah dijalankan;
-  butuh Postgres sekali pakai yang terisolasi.
-- Query leaderboard `TopStreak`, `TopHafalan`, `TopMushahhih`, `MyStreakRank`
-  memakai cast `::` Postgres sehingga tidak tercakup tes SQLite. Cabang `ILIKE`
-  perawi dan query mushahhih hanya diverifikasi dengan menjalankan SQL-nya
-  terhadap skema produksi, bukan dengan tes Go.
-- Kasus tepi yang dicatat agent dan sengaja tidak diubah: asbabun nuzul
-  `FindByAyahID` pada ayat soft-delete tetap mengembalikan asbab dengan `Ayahs`
-  kosong; `FindMataSanadByID` dan `FindByHadithID` tidak melihat induk yang
-  soft-delete; tema `FindByBookSlug` mengembalikan baris penghubung dengan
-  `theme: null`; daftar blog yang difilter tag atau kategori soft-delete tetap
-  menampilkan postingan hidupnya; `GetPoints` gagal unik bila baris poin
-  pengguna soft-delete.
+Semua poin yang belum dikerjakan di D12 telah selesai diimplementasikan dan diverifikasi:
+
+1. **`search_repository_test.go`**: Berhasil dieksekusi di atas Postgres 17 (container `pg-probe`).
+   Fixture test diselaraskan dengan skema singular, signature `SearchHadith` diperbarui, dan field
+   wajib model diisi. 12/12 test lulus.
+2. **Pengujian Leaderboard Cast `::`**: Dibuat suite `leaderboard_pg_test.go` ber-tag postgres untuk
+   menguji `TopStreak`, `MyStreakRank`, `TopHafalan`, `TopMushahhih`, `MyHafalanRank`, dan
+   `MyMushahhihRank` terhadap Postgres nyata. 6/6 test lulus.
+3. **Kasus Tepi Soft Delete (Mutation-Proof)**:
+   - `asbabun_nuzul.FindByAyahID`: join ke `ayah` dengan `deleted_at IS NULL` (ayat terhapus return kosong).
+   - `sanad.FindMataSanadByID` & `FindByHadithID`: join induk sanad dan hadith dengan `deleted_at IS NULL`.
+   - `theme.FindByBookSlug`: pakai `InnerJoins("Theme")` sehingga tautan ke tema terhapus tidak bocor.
+   - `blog.FindAllPosts`: filter categoryID/tagID kini memeriksa `deleted_at IS NULL` dari kategori/tag.
+   - `achievement.GetPoints`: pakai `clause.OnConflict` `DO UPDATE` untuk menghidupkan kembali user_points
+     tanpa error UNIQUE constraint.
