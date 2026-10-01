@@ -292,3 +292,23 @@ Belajar — `ProfileScreen.js` ikut memakainya (fix B16) untuk membedakan
 Pengaturan/Bantuan/Tentang di hamburger. Kalau butuh "layar mana yang lagi
 aktif" untuk highlight semacam ini, pakai pipa yang sudah ada ini dulu
 sebelum bikin mekanisme paralel baru.
+
+**Efek samping kedua, ditemukan lewat B20** (sesi 5): karena
+`ExploreScreen` menutup `activeFeature` lewat state lokal (bukan lewat
+`appNavigation.js`), transisi itu juga tidak terlihat oleh bagian LAIN
+`App.js` yang cuma mengamati `activeTab`/`internalRoutes` — termasuk
+listener `Keyboard.addListener("keyboardDidHide", ...)` yang menentukan
+`keyboardVisible` (dipakai `ClassicAppShell`/`WebAppShell` buat
+menyembunyikan tab bar saat keyboard terbuka). Menutup fitur Belajar yang
+sedang fokus di kolom pencarian bisa membongkar native view input SEBELUM
+event `keyboardDidHide` sempat terkirim, jadi `keyboardVisible` tersangkut
+`true` selamanya (tab bar hilang permanen, cuma pulih lewat restart
+proses penuh). Fix-nya: `headerConfig` (state yang DIUBAH tiap
+`navigation.setHeader(...)` dipanggil layar manapun, lintas layout) ikut
+jadi dependency di `useEffect` penangkal yang me-reset `keyboardVisible`
+ke `false` — satu-satunya sinyal `App.js`-level yang benar-benar
+menangkap transisi `ExploreScreen` ini. Pelajaran umum: kalau sebuah
+mekanisme di `App.js` cuma mengamati `activeTab`/`internalRoutes` buat
+tahu "layar barusan berubah", dia TIDAK akan melihat transisi internal
+`ExploreScreen` — pakai `headerConfig` (via `setHeader`) sebagai sinyal
+tambahan kalau itu yang sebenarnya ingin diketahui.

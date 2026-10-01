@@ -2196,3 +2196,56 @@ bebas dari kelas bug B18/B19.
 **Akhir sesi**: dikembalikan ke state awal yang diminta — Modern (Web App),
 tema Ikuti Sistem, Bahasa Indonesia, tab Beranda. Font scale, Wi-Fi, dan
 airplane mode tidak disentuh (tetap default).
+
+---
+
+## Status Perbaikan — Sesi 5 (2026-10-01)
+
+B17–B20 (ditemukan sesi 4 saat live-verify B10–B16) semuanya sudah
+diperbaiki dan dites, belum di-live-verify ulang (code+Jest saja, tidak
+ada akses emulator selama sesi 5):
+
+- **B17 → FIXED, commit `27c9801a`.** 4 lokasi residual ejaan nama app
+  dibetulkan: `profile.about.description` dan `theme.light.meta` di
+  `idn.js`/`en.js` (koreksi literal langsung, menyamai
+  `profile.about.appName` yang sudah benar), dan teks share
+  Zakat/Faraidh (`WebAppZakatRoute.js`, `WebAppFaraidhRoute.js`) yang
+  sekarang memakai `${APP_NAME}` seperti pola B10, bukan literal baru.
+  Tes baru di `mobileI18n.test.js` meng-grep pola ejaan salah
+  (`/Th[ou]ll?abul/`) terhadap kedua key di kedua bahasa.
+- **B18 & B19 → FIXED, commit `fbfda767`.** Ditelusuri manual sampai ke
+  `normalizeExploreItem` (api/explore.js) untuk memastikan akar masalah
+  B19, bukan sekadar menebak dari gejala: title Asmaul Husna berasal
+  dari `translation.idn` (arti Indonesia), transliterasi API
+  (`raw.transliteration`) tidak pernah masuk title/body/arabic/meta
+  manapun — makanya tidak pernah ikut terindeks pencarian. Fix:
+  `transliteration`/`indonesian`/`english` ditambahkan ke haystack
+  pencarian di KEDUA layout (`referenceListFilter.js` untuk Classic,
+  `WebAppReferenceListRoute.js` untuk Modern — bug ini juga berlaku di
+  Modern, bukan cuma Classic, dikonfirmasi lewat pembacaan kode yang
+  sama). B18: `categories` Panduan Sholat dikosongkan di kedua layout
+  (sama seperti pola `asmaul-husna` yang sudah `categories: []`) sampai
+  API beneran mengirim field kategori.
+- **B20 → FIXED, commit `5c5c0a44`.** Mekanisme sebenarnya ditemukan
+  lebih spesifik dari hipotesis sesi 4: trigger utamanya BUKAN
+  perpindahan tab, tapi `ExploreScreen` menutup `activeFeature`-nya
+  sendiri (state komponen lokal, sama seperti temuan B12) — transisi ini
+  bisa membongkar native view kolom pencarian yang sedang fokus sebelum
+  event `keyboardDidHide` sempat terkirim, jadi `keyboardVisible` di
+  `App.js` tersangkut `true` selamanya. Fix: `useEffect` penangkal yang
+  me-reset `keyboardVisible` ke `false` tiap kali `activeTab`,
+  `internalRoutes`, ATAU `headerConfig` berubah (`headerConfig` yang
+  justru menangkap kasus `ExploreScreen`, karena SEMUA `setHeader` lewat
+  situ terlepas dari layout), plus `Keyboard.dismiss()` di awal hardware
+  back handler. **Celah residual yang BELUM diperbaiki** (di luar scope
+  file yang diizinkan sesi ini): `HadithScreen.js`, `ProfileScreen.js`,
+  `QiblaScreen.js`, `HomeScreen.js` masing-masing render tombol back
+  Classic-nya sendiri yang langsung menutup state lokal tanpa lewat
+  `setHeader` — tap VISUAL pada tombol itu (bukan hardware back) dengan
+  keyboard terbuka tidak tertangkap penangkal ini. Perlu sesi fix
+  terpisah yang menyentuh keempat file layar itu.
+
+**Verifikasi**: full suite mobile `npx jest --runInBand` hijau di tiap
+commit (94 suite / 1489 test di commit terakhir). **Belum live-verify** —
+perlu sesi emulator terpisah sebelum build APK berikutnya dianggap final
+untuk B17-B20, termasuk celah residual B20 di atas.
