@@ -10,6 +10,7 @@ import (
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func intPtr(i int) *int       { return &i }
@@ -27,13 +28,13 @@ func newSearchTestDB(t *testing.T) *gorm.DB {
 		host, port, user, pass, name)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		SkipDefaultTransaction: true,
+		SkipDefaultTransaction:                   true,
+		NamingStrategy:                           schema.NamingStrategy{SingularTable: true},
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
 		t.Fatalf("open postgres: %v", err)
 	}
-
-	db.Exec("TRUNCATE TABLE translations, surahs, ayahs, hadiths, books, themes, chapters, islamic_terms, doas, kajians, perawis RESTART IDENTITY CASCADE")
 
 	if err := db.AutoMigrate(
 		&model.Translation{},
@@ -50,6 +51,8 @@ func newSearchTestDB(t *testing.T) *gorm.DB {
 	); err != nil {
 		t.Fatalf("migrate: %v", err)
 	}
+
+	db.Exec("TRUNCATE TABLE translation, surah, ayah, hadith, book, theme, chapter, islamic_term, doa, kajian, perawi RESTART IDENTITY CASCADE")
 	return db
 }
 
@@ -182,7 +185,7 @@ func TestSearchHadithByArabic(t *testing.T) {
 	}
 
 	repo := &searchRepo{db: db}
-	_, total, err := repo.SearchHadith("النِّيَّاتِ", 10, 0)
+	_, total, err := repo.SearchHadith("النِّيَّاتِ", nil, 10, 0)
 	if err != nil {
 		t.Fatalf("search hadith: %v", err)
 	}
@@ -194,7 +197,7 @@ func TestSearchHadithByArabic(t *testing.T) {
 func TestSearchHadithReturnsZeroForNoMatch(t *testing.T) {
 	db := newSearchTestDB(t)
 	repo := &searchRepo{db: db}
-	results, total, err := repo.SearchHadith("nonexistent_qwerty_12345", 10, 0)
+	results, total, err := repo.SearchHadith("nonexistent_qwerty_12345", nil, 10, 0)
 	if err != nil {
 		t.Fatalf("search hadith no match: %v", err)
 	}
@@ -252,7 +255,7 @@ func TestSearchKajianBySpeaker(t *testing.T) {
 		t.Fatalf("create translation: %v", err)
 	}
 	one := 1
-	kajian := &model.Kajian{Title: "Tafsir Juz 30", Speaker: "Ustadz Abdul Somad", TranslationID: &one}
+	kajian := &model.Kajian{Title: "Tafsir Juz 30", Speaker: "Ustadz Abdul Somad", PublishedAt: "2026-01-01", TranslationID: &one}
 	if err := db.Create(kajian).Error; err != nil {
 		t.Fatalf("create kajian: %v", err)
 	}
@@ -269,7 +272,7 @@ func TestSearchKajianBySpeaker(t *testing.T) {
 
 func TestSearchPerawiByLatinName(t *testing.T) {
 	db := newSearchTestDB(t)
-	perawi := &model.Perawi{NamaLatin: strPtr("Bukhari")}
+	perawi := &model.Perawi{NamaArab: strPtr("البخاري"), NamaLatin: strPtr("Bukhari")}
 	if err := db.Create(perawi).Error; err != nil {
 		t.Fatalf("create perawi: %v", err)
 	}
