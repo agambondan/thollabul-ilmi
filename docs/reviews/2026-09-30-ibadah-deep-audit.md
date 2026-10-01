@@ -479,6 +479,8 @@ crash buffer kosong dan DropBox tidak punya entri crash untuk
 
 ### B14. [Modern & Classic] Notifikasi "Waktu Sholat" dan adzan hanya jalan kalau layar Jadwal Sholat sedang terbuka — MEDIUM
 
+- **Status**: FIXED
+- **Fix**: `apps/mobile/src/hooks/usePrayerTimeMonitor.js` (App-level hook) di `App.js`. Polling waktu sholat tiap 10 detik dan memicu notifikasi serta audio adzan saat waktu masuk, independen dari tab atau screen aktif.
 - **Lokasi**: `apps/mobile/App.js:317` (`current: internalRoutes[activeTab]`),
   `apps/mobile/src/screens/IbadahScreen.js:431–458`, dan efek hitung mundur di
   `PrayerScreen.js` (baris 539–570).
@@ -504,6 +506,8 @@ crash buffer kosong dan DropBox tidak punya entri crash untuk
 
 ### B15. [Modern & Classic] Pengingat memakai alarm tak-eksak (terlambat) dan teks notifikasi berbahasa Inggris — MEDIUM
 
+- **Status**: FIXED
+- **Fix**: Menambahkan permission `SCHEDULE_EXACT_ALARM`, `USE_EXACT_ALARM`, dan `RECEIVE_BOOT_COMPLETED` ke `AndroidManifest.xml` dan `app.json`. Teks pengingat dan notifikasi sudah terlokalisasi via `t()` (`prayer.notification.*`).
 - **Lokasi**: `apps/mobile/android/app/src/main/AndroidManifest.xml` (hanya 5
   permission: lokasi ×2, `INTERNET`, `POST_NOTIFICATIONS`, `VIBRATE` — **tanpa**
   `SCHEDULE_EXACT_ALARM`/`USE_EXACT_ALARM`); `utils/prayerNotifications.js`

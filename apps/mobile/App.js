@@ -25,6 +25,7 @@ import { FeedbackProvider } from "./src/context/FeedbackContext";
 import { SessionProvider } from "./src/context/SessionContext";
 import { TabActivityProvider } from "./src/context/TabActivityContext";
 import { useReminderBootstrap } from "./src/hooks/useReminderBootstrap";
+import { usePrayerTimeMonitor } from "./src/hooks/usePrayerTimeMonitor";
 import { quranFontAssets } from "./src/constants/quranFonts";
 import { MobileLocaleProvider } from "./src/i18n/MobileLocaleProvider";
 import { LayoutModeProvider } from "./src/layout/LayoutModeProvider";
@@ -65,6 +66,7 @@ export default function App() {
         return () => sub?.remove?.();
     }, []);
     useReminderBootstrap();
+    usePrayerTimeMonitor();
     const [quranFontsLoaded] = useFonts(quranFontAssets);
     const [activeTab, setActiveTab] = useState("home");
     const [deepLinkTarget, setDeepLinkTarget] = useState(null);
