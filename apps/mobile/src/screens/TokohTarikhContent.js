@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
-    Modal,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -10,6 +9,7 @@ import {
     View,
 } from "react-native";
 import { AppImage } from "../components/AppImage";
+import { AppModalSheet } from "../components/AppModalSheet";
 import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
@@ -160,7 +160,7 @@ export function TokohTarikhContent() {
             style={[
                 styles.searchInput,
                 !isWebAppLayout && {
-                    backgroundColor: theme.bg,
+                    backgroundColor: theme.surface,
                     borderColor: theme.border,
                     color: theme.ink,
                 },
@@ -181,6 +181,7 @@ export function TokohTarikhContent() {
             horizontal
             showsHorizontalScrollIndicator={false}
             style={styles.filterRow}
+            contentContainerStyle={styles.filterContent}
         >
             {ERA_FILTERS.map((f) => (
                 <Pressable
@@ -198,7 +199,14 @@ export function TokohTarikhContent() {
                             backgroundColor: webAppTheme.surface,
                             borderColor: webAppTheme.border,
                         },
-                        era === f.value && !isWebAppLayout && [styles.chipActive, { backgroundColor: theme.primary, borderColor: theme.primary }],
+                        era === f.value &&
+                            !isWebAppLayout && [
+                                styles.chipActive,
+                                {
+                                    backgroundColor: theme.primary,
+                                    borderColor: theme.primary,
+                                },
+                            ],
                         isWebAppLayout &&
                             era === f.value &&
                             styles.webAppChipActive,
@@ -214,7 +222,13 @@ export function TokohTarikhContent() {
                             styles.chipText,
                             !isWebAppLayout && { color: theme.muted },
                             isWebAppLayout && { color: webAppTheme.chipText },
-                            era === f.value && !isWebAppLayout && [styles.chipTextActive, { color: theme.onPrimary }],
+                            era === f.value &&
+                                !isWebAppLayout && [
+                                    styles.chipTextActive,
+                                    { color: theme.onPrimary },
+                                ],
+                            isWebAppLayout &&
+                                era === f.value && { color: "#ffffff" },
                         ]}
                     >
                         {f.label}
@@ -228,7 +242,7 @@ export function TokohTarikhContent() {
         <View
             style={[
                 styles.loadingContainer,
-                isWebAppLayout && styles.webAppLoadingContainer,
+                isWebAppLayout ? styles.webAppLoadingContainer : null,
                 isWebAppLayout && {
                     backgroundColor: webAppTheme.surface,
                     borderColor: webAppTheme.border,
@@ -246,7 +260,7 @@ export function TokohTarikhContent() {
                         { color: webAppTheme.muted },
                     ]}
                 >
-                    Memuat tokoh...
+                    Memuat tokoh tarikh...
                 </Text>
             ) : null}
         </View>
@@ -255,6 +269,7 @@ export function TokohTarikhContent() {
     const renderEmpty = () => (
         <View
             style={[
+                styles.emptyContainer,
                 isWebAppLayout ? styles.webAppEmpty : null,
                 isWebAppLayout && {
                     backgroundColor: webAppTheme.surface,
@@ -265,6 +280,7 @@ export function TokohTarikhContent() {
             <Text
                 style={[
                     styles.empty,
+                    !isWebAppLayout && { color: theme.muted },
                     isWebAppLayout && styles.webAppEmptyText,
                     isWebAppLayout && { color: webAppTheme.note },
                 ]}
@@ -286,20 +302,31 @@ export function TokohTarikhContent() {
                       borderColor: webAppTheme.border,
                   },
               ]
-            : [styles.card, { backgroundColor: theme.surface, borderColor: theme.border }];
+            : [
+                  styles.card,
+                  {
+                      backgroundColor: theme.surface,
+                      borderColor: theme.border,
+                  },
+              ];
         const avatarStyle = isWebAppLayout
             ? [
                   styles.webAppCardAvatar,
                   { backgroundColor: webAppTheme.accentSoft },
               ]
-            : styles.cardAvatar;
+            : [
+                  styles.cardAvatar,
+                  { backgroundColor: theme.surfaceMuted },
+              ];
 
         return (
             <Pressable
                 accessibilityRole='button'
                 key={tokoh.id ?? title}
                 android_ripple={{
-                    color: "rgba(79, 70, 229, 0.12)",
+                    color: isWebAppLayout
+                        ? "rgba(79, 70, 229, 0.12)"
+                        : theme.ripple,
                     borderless: false,
                 }}
                 onPress={() => setSelected(tokoh)}
@@ -314,18 +341,24 @@ export function TokohTarikhContent() {
                             style={styles.avatarImage}
                         />
                     ) : (
-                        <Text
-                            style={[
-                                styles.avatarFallback,
-                                isWebAppLayout && styles.webAppAvatarFallback,
-                                isWebAppLayout && {
-                                    backgroundColor: webAppTheme.accentSoft,
-                                    color: webAppTheme.accent,
-                                },
-                            ]}
-                        >
-                            {getTokohInitial(tokoh)}
-                        </Text>
+                        <View style={styles.avatarFallbackWrap}>
+                            <Text
+                                style={[
+                                    styles.avatarFallback,
+                                    !isWebAppLayout && {
+                                        color: theme.primary,
+                                    },
+                                    isWebAppLayout &&
+                                        styles.webAppAvatarFallback,
+                                    isWebAppLayout && {
+                                        backgroundColor: webAppTheme.accentSoft,
+                                        color: webAppTheme.accent,
+                                    },
+                                ]}
+                            >
+                                {getTokohInitial(tokoh)}
+                            </Text>
+                        </View>
                     )}
                 </View>
                 <View style={styles.cardBody}>
@@ -342,19 +375,32 @@ export function TokohTarikhContent() {
                     </Text>
                     <View style={styles.cardMetaRow}>
                         {meta ? (
-                            <Text
+                            <View
                                 style={[
-                                    styles.cardEra,
-                                    !isWebAppLayout && { backgroundColor: theme.surfaceMuted, color: theme.primary },
-                                    isWebAppLayout && styles.webAppCardEra,
+                                    styles.cardEraBadge,
+                                    !isWebAppLayout && {
+                                        backgroundColor: theme.surfaceMuted,
+                                    },
                                     isWebAppLayout && {
                                         backgroundColor: webAppTheme.accentSoft,
-                                        color: webAppTheme.accent,
                                     },
                                 ]}
                             >
-                                {meta}
-                            </Text>
+                                <Text
+                                    style={[
+                                        styles.cardEra,
+                                        !isWebAppLayout && {
+                                            color: theme.primary,
+                                        },
+                                        isWebAppLayout && styles.webAppCardEra,
+                                        isWebAppLayout && {
+                                            color: webAppTheme.accent,
+                                        },
+                                    ]}
+                                >
+                                    {meta}
+                                </Text>
+                            </View>
                         ) : null}
                         {years ? (
                             <Text
@@ -387,6 +433,7 @@ export function TokohTarikhContent() {
                     <Text
                         style={[
                             styles.resultCount,
+                            !isWebAppLayout && { color: theme.muted },
                             isWebAppLayout && styles.webAppResultCount,
                             isWebAppLayout && { color: webAppTheme.muted },
                         ]}
@@ -407,197 +454,188 @@ export function TokohTarikhContent() {
         const years = getTokohYears(selected);
         const bio = getTokohBio(selected);
         const contribution = getTokohContribution(selected);
+        const subtitle = [meta, years].filter(Boolean).join(" · ");
 
         return (
-            <Modal
-                visible={!!selected}
-                transparent
-                animationType='slide'
-                onRequestClose={() => setSelected(null)}
+            <AppModalSheet
+                onClose={() => setSelected(null)}
+                subtitle={subtitle}
+                title={title}
+                visible={Boolean(selected)}
             >
-                <Pressable
-                    accessibilityRole='button'
-                    style={styles.modalOverlay}
-                    onPress={() => setSelected(null)}
-                >
-                    <Pressable
-                        accessibilityRole='button'
-                        style={[
-                            styles.modalContent,
-                            isWebAppLayout && {
-                                backgroundColor: webAppTheme.surface,
-                            },
-                        ]}
-                        onPress={() => {}}
-                    >
-                        <View style={styles.handleWrapper}>
-                            <View style={styles.handle} />
-                        </View>
-                        {selected && (
-                            <ScrollView showsVerticalScrollIndicator={false}>
-                                <Pressable
-                                    accessibilityRole='button'
-                                    style={styles.modalClose}
-                                    onPress={() => setSelected(null)}
+                {selected && (
+                    <View style={styles.modalBodyWrap}>
+                        <View style={styles.modalAvatarWrap}>
+                            {selected.image_url ? (
+                                <AppImage
+                                    accessibilityLabel={
+                                        selected.name || "Foto tokoh"
+                                    }
+                                    source={{ uri: selected.image_url }}
+                                    style={styles.modalAvatar}
+                                />
+                            ) : (
+                                <View
+                                    style={[
+                                        styles.modalAvatarFallback,
+                                        !isWebAppLayout && {
+                                            backgroundColor: theme.surfaceMuted,
+                                        },
+                                        isWebAppLayout && {
+                                            backgroundColor:
+                                                webAppTheme.accentSoft,
+                                        },
+                                    ]}
                                 >
                                     <Text
                                         style={[
-                                            styles.modalCloseText,
+                                            styles.modalAvatarFallbackText,
+                                            !isWebAppLayout && {
+                                                color: theme.primary,
+                                            },
                                             isWebAppLayout && {
                                                 color: webAppTheme.accent,
                                             },
                                         ]}
                                     >
-                                        Tutup
+                                        {getTokohInitial(selected)}
                                     </Text>
-                                </Pressable>
-
-                                <View style={styles.modalAvatarWrap}>
-                                    {selected.image_url ? (
-                                        <AppImage
-                                            accessibilityLabel={selected.name || "Foto tokoh"}
-                                            source={{ uri: selected.image_url }}
-                                            style={styles.modalAvatar}
-                                        />
-                                    ) : (
-                                        <View
-                                            style={[
-                                                styles.modalAvatarFallback,
-                                                isWebAppLayout && {
-                                                    backgroundColor:
-                                                        webAppTheme.accentSoft,
-                                                },
-                                            ]}
-                                        >
-                                            <Text
-                                                style={[
-                                                    styles.modalAvatarFallbackText,
-                                                    isWebAppLayout && {
-                                                        color: webAppTheme.accent,
-                                                    },
-                                                ]}
-                                            >
-                                                {getTokohInitial(selected)}
-                                            </Text>
-                                        </View>
-                                    )}
                                 </View>
+                            )}
+                        </View>
 
+                        <View style={styles.modalBadgeRow}>
+                            {meta ? (
+                                <View
+                                    style={[
+                                        styles.modalBadge,
+                                        !isWebAppLayout && {
+                                            backgroundColor: theme.surfaceMuted,
+                                        },
+                                        isWebAppLayout && {
+                                            backgroundColor:
+                                                webAppTheme.accentSoft,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.modalBadgeText,
+                                            !isWebAppLayout && {
+                                                color: theme.primary,
+                                            },
+                                            isWebAppLayout && {
+                                                color: webAppTheme.accent,
+                                            },
+                                        ]}
+                                    >
+                                        {meta}
+                                    </Text>
+                                </View>
+                            ) : null}
+                            {selected.kategori &&
+                            selected.kategori !== meta ? (
+                                <View
+                                    style={[
+                                        styles.modalBadge,
+                                        styles.modalBadgeKategori,
+                                        !isWebAppLayout && {
+                                            backgroundColor: theme.surfaceMuted,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.modalBadgeText,
+                                            !isWebAppLayout && {
+                                                color: theme.muted,
+                                            },
+                                        ]}
+                                    >
+                                        {selected.kategori}
+                                    </Text>
+                                </View>
+                            ) : null}
+                        </View>
+
+                        {bio ? (
+                            <View style={styles.modalSection}>
                                 <Text
                                     style={[
-                                        styles.modalName,
+                                        styles.modalSectionTitle,
+                                        !isWebAppLayout && {
+                                            color: theme.ink,
+                                        },
                                         isWebAppLayout && {
                                             color: webAppTheme.text,
                                         },
                                     ]}
                                 >
-                                    {title}
+                                    Biografi
                                 </Text>
+                                <Text
+                                    style={[
+                                        styles.modalBody,
+                                        !isWebAppLayout && {
+                                            color: theme.muted,
+                                        },
+                                        isWebAppLayout && {
+                                            color: webAppTheme.muted,
+                                        },
+                                    ]}
+                                >
+                                    {bio}
+                                </Text>
+                            </View>
+                        ) : null}
 
-                                <View style={styles.modalBadgeRow}>
-                                    {meta ? (
-                                        <Text
-                                            style={[
-                                                styles.modalBadge,
-                                                isWebAppLayout && {
-                                                    backgroundColor:
-                                                        webAppTheme.accentSoft,
-                                                    color: webAppTheme.accent,
-                                                },
-                                            ]}
-                                        >
-                                            {meta}
-                                        </Text>
-                                    ) : null}
-                                    {selected.kategori &&
-                                    selected.kategori !== meta ? (
-                                        <Text
-                                            style={[
-                                                styles.modalBadge,
-                                                styles.modalBadgeKategori,
-                                            ]}
-                                        >
-                                            {selected.kategori}
-                                        </Text>
-                                    ) : null}
-                                </View>
-
-                                {years ? (
-                                    <Text
-                                        style={[
-                                            styles.modalTahun,
-                                            isWebAppLayout && {
-                                                color: webAppTheme.muted,
-                                            },
-                                        ]}
-                                    >
-                                        {years}
-                                    </Text>
-                                ) : null}
-
-                                {bio ? (
-                                    <View style={styles.modalSection}>
-                                        <Text
-                                            style={[
-                                                styles.modalSectionTitle,
-                                                isWebAppLayout && {
-                                                    color: webAppTheme.text,
-                                                },
-                                            ]}
-                                        >
-                                            Biografi
-                                        </Text>
-                                        <Text
-                                            style={[
-                                                styles.modalBody,
-                                                isWebAppLayout && {
-                                                    color: webAppTheme.muted,
-                                                },
-                                            ]}
-                                        >
-                                            {bio}
-                                        </Text>
-                                    </View>
-                                ) : null}
-
-                                {contribution ? (
-                                    <View
-                                        style={[
-                                            styles.modalSection,
-                                            styles.modalSectionHighlight,
-                                            isWebAppLayout && {
-                                                backgroundColor:
-                                                    webAppTheme.modalHighlight,
-                                            },
-                                        ]}
-                                    >
-                                        <Text
-                                            style={[
-                                                styles.modalSectionTitle,
-                                                isWebAppLayout && {
-                                                    color: webAppTheme.accent,
-                                                },
-                                            ]}
-                                        >
-                                            Kontribusi
-                                        </Text>
-                                        <Text
-                                            style={[
-                                                styles.modalBody,
-                                                isWebAppLayout && {
-                                                    color: webAppTheme.muted,
-                                                },
-                                            ]}
-                                        >
-                                            {contribution}
-                                        </Text>
-                                    </View>
-                                ) : null}
-                            </ScrollView>
-                        )}
-                    </Pressable>
-                </Pressable>
-            </Modal>
+                        {contribution ? (
+                            <View
+                                style={[
+                                    styles.modalSection,
+                                    styles.modalSectionHighlight,
+                                    !isWebAppLayout && {
+                                        backgroundColor: theme.surfaceMuted,
+                                        borderColor: theme.border,
+                                    },
+                                    isWebAppLayout && {
+                                        backgroundColor:
+                                            webAppTheme.modalHighlight,
+                                        borderColor: webAppTheme.border,
+                                    },
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.modalSectionTitle,
+                                        !isWebAppLayout && {
+                                            color: theme.primary,
+                                        },
+                                        isWebAppLayout && {
+                                            color: webAppTheme.accent,
+                                        },
+                                    ]}
+                                >
+                                    Kontribusi
+                                </Text>
+                                <Text
+                                    style={[
+                                        styles.modalBody,
+                                        !isWebAppLayout && {
+                                            color: theme.ink,
+                                        },
+                                        isWebAppLayout && {
+                                            color: webAppTheme.muted,
+                                        },
+                                    ]}
+                                >
+                                    {contribution}
+                                </Text>
+                            </View>
+                        ) : null}
+                    </View>
+                )}
+            </AppModalSheet>
         );
     };
 
@@ -665,8 +703,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     searchInput: {
-        backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        backgroundColor: colors.surface,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         color: colors.ink,
@@ -678,12 +716,15 @@ const styles = StyleSheet.create({
     filterRow: {
         marginBottom: spacing.sm,
     },
+    filterContent: {
+        gap: 6,
+        paddingVertical: 2,
+    },
     chip: {
-        borderColor: colors.faint,
-        borderRadius: 20,
+        borderColor: colors.border,
+        borderRadius: radius.full || 20,
         borderWidth: 1,
-        marginRight: 6,
-        paddingHorizontal: 14,
+        paddingHorizontal: 12,
         paddingVertical: 6,
     },
     chipActive: {
@@ -691,195 +732,155 @@ const styles = StyleSheet.create({
         borderColor: colors.primary,
     },
     chipText: {
-        color: colors.text,
+        color: colors.muted,
         fontSize: 12,
-        fontWeight: "500",
+        fontWeight: "600",
     },
     chipTextActive: {
-        color: "#fff",
+        color: "#ffffff",
     },
     loadingContainer: {
         alignItems: "center",
-        height: 300,
+        height: 240,
         justifyContent: "center",
+    },
+    emptyContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: spacing.xl,
     },
     empty: {
         color: colors.muted,
         fontSize: 14,
-        paddingVertical: spacing.xxl,
         textAlign: "center",
     },
     resultCount: {
         color: colors.muted,
-        fontSize: 11,
+        fontSize: 12,
+        fontWeight: "600",
         marginBottom: spacing.xs,
+        marginTop: spacing.xs,
     },
     card: {
         alignItems: "center",
         backgroundColor: colors.surface,
+        borderColor: colors.border,
         borderRadius: radius.md,
+        borderWidth: 1,
         flexDirection: "row",
         marginBottom: spacing.sm,
         padding: spacing.md,
     },
     cardAvatar: {
-        borderRadius: 28,
-        height: 56,
+        alignItems: "center",
+        borderRadius: 22,
+        height: 44,
+        justifyContent: "center",
         marginRight: spacing.md,
         overflow: "hidden",
-        width: 56,
+        width: 44,
     },
     avatarImage: {
         height: "100%",
         width: "100%",
     },
+    avatarFallbackWrap: {
+        alignItems: "center",
+        height: "100%",
+        justifyContent: "center",
+        width: "100%",
+    },
     avatarFallback: {
-        backgroundColor: colors.primary,
-        borderRadius: 28,
-        color: colors.onPrimary,
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: "700",
-        lineHeight: 56,
         textAlign: "center",
     },
     cardBody: {
         flex: 1,
+        justifyContent: "center",
     },
     cardName: {
-        color: colors.text,
+        color: colors.ink,
         fontSize: 15,
         fontWeight: "700",
+        lineHeight: 20,
     },
     cardMetaRow: {
-        flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 6,
         marginTop: 4,
     },
-    cardEra: {
-        backgroundColor: "#dcfce7",
-        borderRadius: 8,
-        color: "#166534",
-        fontSize: 10,
-        fontWeight: "600",
-        overflow: "hidden",
+    cardEraBadge: {
+        borderRadius: 6,
         paddingHorizontal: 6,
         paddingVertical: 2,
     },
+    cardEra: {
+        fontSize: 11,
+        fontWeight: "600",
+    },
     cardTahun: {
         color: colors.muted,
-        fontSize: 11,
+        fontSize: 12,
     },
-    // Modal
-    modalOverlay: {
-        backgroundColor: "rgba(0,0,0,0.5)",
-        flex: 1,
-        justifyContent: "flex-end",
-    },
-    modalContent: {
-        backgroundColor: colors.bg,
-        borderTopLeftRadius: radius.xl,
-        borderTopRightRadius: radius.xl,
-        maxHeight: "85%",
-        padding: spacing.lg,
-    },
-    handleWrapper: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingBottom: spacing.sm,
-        paddingTop: spacing.xs,
-        width: "100%",
-    },
-    handle: {
-        alignSelf: "center",
-        backgroundColor: colors.borderStrong,
-        borderRadius: 3,
-        height: 4,
-        width: 40,
-    },
-    modalClose: {
-        alignItems: "center",
-        alignSelf: "flex-end",
-        height: touchTarget,
-        justifyContent: "center",
-        minWidth: touchTarget,
-        padding: spacing.xs,
-    },
-    modalCloseText: {
-        color: colors.primary,
-        fontSize: 14,
-        fontWeight: "600",
+    modalBodyWrap: {
+        gap: spacing.sm,
     },
     modalAvatarWrap: {
         alignItems: "center",
-        marginBottom: spacing.md,
+        marginVertical: spacing.xs,
     },
     modalAvatar: {
-        borderRadius: 48,
-        height: 96,
-        width: 96,
+        borderRadius: 40,
+        height: 80,
+        width: 80,
     },
     modalAvatarFallback: {
         alignItems: "center",
-        backgroundColor: colors.primary,
-        borderRadius: 48,
-        height: 96,
+        borderRadius: 40,
+        height: 80,
         justifyContent: "center",
-        width: 96,
+        width: 80,
     },
     modalAvatarFallbackText: {
-        color: colors.onPrimary,
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: "700",
-    },
-    modalName: {
-        color: colors.text,
-        fontSize: 20,
-        fontWeight: "700",
-        textAlign: "center",
     },
     modalBadgeRow: {
         flexDirection: "row",
+        flexWrap: "wrap",
         gap: 6,
         justifyContent: "center",
-        marginTop: spacing.sm,
+        marginVertical: spacing.xs,
     },
     modalBadge: {
-        backgroundColor: "#dcfce7",
-        borderRadius: 12,
-        color: "#166534",
-        fontSize: 11,
-        fontWeight: "600",
-        overflow: "hidden",
+        borderRadius: radius.full || 16,
         paddingHorizontal: 10,
         paddingVertical: 4,
     },
     modalBadgeKategori: {
-        backgroundColor: "#dbeafe",
-        color: "#1e40af",
+        opacity: 0.8,
     },
-    modalTahun: {
-        color: colors.muted,
-        fontSize: 14,
-        marginTop: spacing.xs,
-        textAlign: "center",
+    modalBadgeText: {
+        fontSize: 11,
+        fontWeight: "600",
     },
     modalSection: {
-        marginTop: spacing.lg,
+        marginTop: spacing.sm,
     },
     modalSectionHighlight: {
-        backgroundColor: "#fefce8",
         borderRadius: radius.md,
+        borderWidth: 1,
         padding: spacing.md,
     },
     modalSectionTitle: {
-        color: colors.text,
         fontSize: 14,
         fontWeight: "700",
-        marginBottom: spacing.sm,
+        marginBottom: spacing.xs,
     },
     modalBody: {
-        color: colors.muted,
         fontSize: 14,
         lineHeight: 22,
     },
