@@ -235,7 +235,7 @@ export function WebAppDoaRoute({
         if (category) {
             navigation.setHeader({
                 showBack: true,
-                title: category,
+                title: getCategoryLabel(category, t),
                 onBack: () => {
                     setCategory("");
                     return true;

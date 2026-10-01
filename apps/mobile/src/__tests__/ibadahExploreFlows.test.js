@@ -815,6 +815,28 @@ describe("Modern route headers (B18)", () => {
         expect(first).not.toHaveBeenCalled();
         expect(second).toHaveBeenCalledTimes(1);
     });
+
+    test("shows a translated category label in the header, not the raw category key (B9)", () => {
+        const setHeader = jest.fn();
+        const routeProps = {
+            error: "",
+            items: [],
+            loading: false,
+            navigation: { setHeader },
+            onLoadMore: jest.fn(),
+            onOpenItem: jest.fn(),
+            pagination: { hasMore: false, loadingMore: false },
+        };
+        const view = render(
+            <WebAppDoaRoute {...routeProps} clearFeature={jest.fn()} />,
+        );
+
+        fireEvent.press(view.getAllByTestId("web-app-doa-category")[5]);
+        expect(setHeader.mock.calls.at(-1)[0].title).toBe("Bangun");
+
+        fireEvent.press(view.getAllByTestId("web-app-doa-category")[1]);
+        expect(setHeader.mock.calls.at(-1)[0].title).toBe("Pagi");
+    });
 });
 
 describe("Faraidh history flag is scoped to the Faraidh feature (B23)", () => {

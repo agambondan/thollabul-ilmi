@@ -1,5 +1,5 @@
 import { BookOpen, ChevronDown, Search } from "lucide-react-native";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
@@ -36,6 +36,7 @@ const titleCase = (value) =>
         : "";
 const CATEGORY_ALIASES = { dzikir_umum: "umum" };
 const canonicalCategory = (value) => CATEGORY_ALIASES[value] ?? value;
+const SEARCH_DEBOUNCE_MS = 300;
 
 const formatYear = (raw, t) => {
     if (raw.year_hijri)
@@ -410,8 +411,17 @@ export function WebAppReferenceListRoute({
     const isDark = isDarkTheme || isDarkThemePref;
     const [category, setCategory] = useState("");
     const [search, setSearch] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
     const config = getConfig(feature, providedConfig, routeKey, t);
     const key = routeKey ?? feature?.key ?? "reference";
+    useEffect(() => {
+        const trimmed = search.trim();
+        const timer = setTimeout(
+            () => setDebouncedSearch(search),
+            trimmed ? SEARCH_DEBOUNCE_MS : 0,
+        );
+        return () => clearTimeout(timer);
+    }, [search]);
     const categories = useMemo(() => {
         const seen = new Set();
         return [...(config.categories ?? []), ...items.map(getFilterCategory)]
@@ -423,7 +433,7 @@ export function WebAppReferenceListRoute({
             });
     }, [config.categories, items]);
     const filteredItems = useMemo(() => {
-        const query = normalizeSearchText(search);
+        const query = normalizeSearchText(debouncedSearch);
         return items.filter((item, index) => {
             const itemCategory = getFilterCategory(item);
             return (
@@ -434,14 +444,14 @@ export function WebAppReferenceListRoute({
                     ).includes(query))
             );
         });
-    }, [category, config.leading, items, search, t]);
+    }, [category, config.leading, items, debouncedSearch, t]);
     const { autoLoading } = useAutoLoadMore({
-        active: Boolean(category || normalizeSearchText(search)),
+        active: Boolean(category || normalizeSearchText(debouncedSearch)),
         busy: Boolean(loading || pagination?.loadingMore),
         error: Boolean(error),
         hasMore: Boolean(pagination?.hasMore),
         onLoadMore,
-        resetKey: `${category}|${search}`,
+        resetKey: `${category}|${debouncedSearch}`,
     });
     const showLoading = loading || (autoLoading && !filteredItems.length);
 
@@ -585,7 +595,7 @@ export function WebAppReferenceListRoute({
                             index={index}
                             isDark={isDark}
                             item={item}
-                            key={`${getItemId(item, index)}-${index}`}
+                            key={getItemId(item, index)}
                             onOpen={onOpenItem}
                             t={t}
                         />

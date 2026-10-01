@@ -45,7 +45,7 @@ jest.mock("../screens/TokohTarikhContent", () => {
 });
 
 import React from "react";
-import { fireEvent, render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 import { StyleSheet, Text, View } from "react-native";
 
 import { allFeatures } from "../data/mobileFeatures";
@@ -507,7 +507,7 @@ describe("Explore web app reference list routes", () => {
         expect(view.getByText("Wirid Tidur")).toBeTruthy();
     });
 
-    test("does not carry an Asmaul Husna search over to another reference list", () => {
+    test("does not carry an Asmaul Husna search over to another reference list", async () => {
         const view = render(
             <View>
                 {renderExploreWebAppRoute(
@@ -538,6 +538,9 @@ describe("Explore web app reference list routes", () => {
             view.getByTestId("web-app-asmaul-husna-search"),
             "kuat",
         );
+        await act(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 350));
+        });
         expect(view.queryByText("Al-Matin")).toBeNull();
 
         view.rerender(
@@ -564,7 +567,7 @@ describe("Explore web app reference list routes", () => {
         expect(view.getByText("Khulafaur Rasyidin")).toBeTruthy();
     });
 
-    test("keeps the chip and search while the same reference list gets more items", () => {
+    test("keeps the chip and search while the same reference list gets more items", async () => {
         const first = {
             id: "dzikir-1",
             title: "Dzikir Pagi",
@@ -590,6 +593,10 @@ describe("Explore web app reference list routes", () => {
             view.getByTestId("web-app-dzikir-search"),
             "petang",
         );
+        await act(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 350));
+        });
+        expect(view.queryByText("Dzikir Pagi")).toBeNull();
         view.rerender(
             <View>
                 {renderExploreWebAppRoute(
