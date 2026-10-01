@@ -165,6 +165,29 @@ Repo ini dibuka bersamaan oleh beberapa sesi agent konkuren:
 - **DILARANG** menjalankan `git add .`, `git add -A`, atau `git commit -a` secara global.
 - File modifikasi/untracked milik sesi agent lain yang sedang berjalan bersamaan tidak boleh disentuh, di-stage, di-stash, ataupun di-revert.
 
+## Dokumentasi Wajib Diperbarui Saat Selesai (Mengikat)
+
+Setiap agent **WAJIB** memperbarui dokumentasi terkait saat menyelesaikan task sebelum turn diakhiri:
+
+1. **Review docs**: Jika task menyelesaikan/fix temuan di `docs/reviews/*-deep-audit.md` atau `docs/reviews/*-review.md`:
+   - Perbarui dokumen tersebut dengan status per bug/temuan (FIXED / VERIFIED).
+   - Catat commit hash yang memperbaiki dan bukti pengujian (unit test, live verify).
+   - Perbarui ringkasan di tabel `docs/reviews/README.md`.
+
+2. **Feature boards**: Jika task menyentuh fitur di `docs/features/`:
+   - Pindahkan file `docs/features/todo/<feature>.md` → `docs/features/done/` saat status berubah ke `DONE`.
+   - Perbarui tabel/indeks di `docs/features/todo/README.md` dan `docs/features/done/README.md`.
+   - Jalankan `node scripts/check-feature-parity.js` dan pastikan lolos.
+   - Perbarui `docs/features/feature-manifest.json` bila ada perubahan route/key/status.
+
+3. **Agent knowledge**: Jika menemukan insiden atau gotcha teknis non-obvious baru, tambahkan entry baru ke [`docs/AGENT_KNOWLEDGE.md`](docs/AGENT_KNOWLEDGE.md).
+
+4. **INDEX.md**: Pastikan dokumen baru atau perubahan status terdaftar di [`docs/INDEX.md`](docs/INDEX.md).
+
+5. **Commit scoping**: Stage file dokumentasi bersama dengan code fix-nya atau commit terpisah yang jelas.
+
+**DILARANG** menutup task tanpa memperbarui status dokumentasi. Dokumentasi adalah bagian dari definisi "selesai" (Definition of Done).
+
 ## Deploy tooling in `ops/deploy-workspace/`
 
 That directory is a **mirrored backup**, not configuration for this repo. Deploys
