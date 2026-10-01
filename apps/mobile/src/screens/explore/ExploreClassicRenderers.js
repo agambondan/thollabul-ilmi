@@ -14,6 +14,7 @@ import {
     StickyNote,
     Trash2,
 } from "lucide-react-native";
+import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
@@ -102,6 +103,98 @@ import {
     ClassicZakatHistoryItem,
     WebAppZakatHistoryRoute,
 } from "./WebAppZakatHistoryRoute";
+import {
+    filterReferenceListItems,
+    getReferenceListCategoryOptions,
+    getReferenceListSearchPlaceholder,
+    getReferenceListUnit,
+    isClassicReferenceListFeature,
+    REFERENCE_LIST_SEARCH_DEBOUNCE_MS,
+} from "./referenceListFilter";
+
+function ClassicReferenceListContent({ feature, items, renderCard }) {
+    const featureKey = feature?.key;
+    const [searchInput, setSearchInput] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        const trimmed = searchInput.trim();
+        const timer = setTimeout(
+            () => setDebouncedSearch(searchInput),
+            trimmed ? REFERENCE_LIST_SEARCH_DEBOUNCE_MS : 0,
+        );
+        return () => clearTimeout(timer);
+    }, [searchInput]);
+
+    const categoryOptions = useMemo(
+        () => getReferenceListCategoryOptions(featureKey, items),
+        [featureKey, items],
+    );
+    const filteredItems = useMemo(
+        () =>
+            filterReferenceListItems(featureKey, items, {
+                category,
+                search: debouncedSearch,
+            }),
+        [category, featureKey, items, debouncedSearch],
+    );
+    const unit = getReferenceListUnit(featureKey);
+    const isFiltering = Boolean(searchInput.trim() || category);
+    const counterText = isFiltering
+        ? `Menampilkan ${filteredItems.length} dari ${items.length} ${unit}`
+        : `${items.length} ${unit} tersedia`;
+
+    return (
+        <>
+            <Card>
+                <CardTitle meta={counterText}>{feature?.title}</CardTitle>
+                <PaperSearchInput
+                    onChangeText={setSearchInput}
+                    placeholder={getReferenceListSearchPlaceholder(featureKey)}
+                    value={searchInput}
+                />
+                {categoryOptions.length ? (
+                    <ScrollView
+                        contentContainerStyle={{
+                            gap: spacing.sm,
+                            paddingRight: spacing.md,
+                        }}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={{ marginTop: spacing.md }}
+                    >
+                        <ActionPill
+                            active={!category}
+                            label='Semua'
+                            onPress={() => setCategory("")}
+                        />
+                        {categoryOptions.map((option) => (
+                            <ActionPill
+                                active={category === option.value}
+                                key={option.value}
+                                label={option.label}
+                                onPress={() =>
+                                    setCategory((current) =>
+                                        current === option.value
+                                            ? ""
+                                            : option.value,
+                                    )
+                                }
+                            />
+                        ))}
+                    </ScrollView>
+                ) : null}
+            </Card>
+            {items.length > 0 && filteredItems.length === 0 ? (
+                <Text style={styles.empty}>
+                    {`Tidak ada ${unit} yang cocok dengan pencarian atau kategori ini.`}
+                </Text>
+            ) : null}
+            {filteredItems.map((item, index) => renderCard(item, index))}
+        </>
+    );
+}
 
 export function createExploreClassicRenderers(context) {
     const {
@@ -409,11 +502,9 @@ export function createExploreClassicRenderers(context) {
     };
 
     const renderItem = (item, index) => {
-        const bookId = item?.raw?.id ?? item?.id;
-        const libraryProgressEntry =
-            activeFeature?.key === "library" && bookId
-                ? libraryProgressMap[String(bookId)]
-                : null;
+        if (isClassicReferenceListFeature(activeFeature)) {
+            return null;
+        }
 
         if (activeFeature?.type === "surah-content") {
             return (
@@ -558,6 +649,15 @@ export function createExploreClassicRenderers(context) {
             );
         }
 
+        return renderDefaultListCard(item, index);
+    };
+
+    const renderDefaultListCard = (item, index) => {
+        const bookId = item?.raw?.id ?? item?.id;
+        const libraryProgressEntry =
+            activeFeature?.key === "library" && bookId
+                ? libraryProgressMap[String(bookId)]
+                : null;
         const isManasikItem = activeFeature?.key === "manasik";
         const cardMeta = isManasikItem ? titleCaseLabel(item.meta) : item.meta;
         const cardBody = isManasikItem
@@ -4149,6 +4249,16 @@ export function createExploreClassicRenderers(context) {
                     <CardTitle>Radio Islam</CardTitle>
                     <RadioIslamicContent />
                 </Card>
+            );
+        }
+
+        if (isClassicReferenceListFeature(activeFeature)) {
+            return (
+                <ClassicReferenceListContent
+                    feature={activeFeature}
+                    items={items}
+                    renderCard={renderDefaultListCard}
+                />
             );
         }
 
