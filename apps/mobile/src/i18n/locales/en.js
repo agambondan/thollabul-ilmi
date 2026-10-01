@@ -50,6 +50,8 @@ export const en = {
         "hadith.relatedEmpty": "No related hadith for this theme yet.",
         "hadith.sanadEmpty":
             "Sanad paths for this hadith are not available yet.",
+        "hadith.tab.book": "Book",
+        "hadith.tab.hadith": "Hadith",
         "historicalMap.category.all": "All",
         "historicalMap.category.city": "City",
         "historicalMap.category.mosque": "Mosque",
@@ -79,6 +81,9 @@ export const en = {
         "explore.bookmarkRemoved": "Bookmark removed.",
         "explore.bookmarkSaved": "Item saved to bookmarks.",
         "explore.bookmarkSaveError": "Bookmark could not be updated.",
+        "explore.catalog.subtitle":
+            "Lectures, Islamic references, and personal features in one dashboard catalog.",
+        "explore.catalog.title": "Learn",
         "explore.commentLoginRequired":
             "Open Profile to sign in and write a comment.",
         "explore.commentSaved": "Comment sent.",

@@ -159,6 +159,10 @@ jest.mock("../components/SectionHeader", () => ({
 import React from "react";
 import { act, render, fireEvent, waitFor } from "@testing-library/react-native";
 import { InteractionManager, StyleSheet } from "react-native";
+import {
+    MobileLocaleProvider,
+    writeStoredMobileLanguage,
+} from "../i18n/MobileLocaleProvider";
 import { HadithScreen } from "../screens/HadithScreen";
 
 const { useSession } = require("../context/SessionContext");
@@ -249,8 +253,8 @@ describe("HadithScreen", () => {
         } = render(<HadithScreen isActive />);
 
         await waitFor(() => {
-            expect(getByText("Book")).toBeTruthy();
-            expect(getAllByText("Hadith").length).toBeGreaterThanOrEqual(1);
+            expect(getByText("Kitab")).toBeTruthy();
+            expect(getAllByText("Hadis").length).toBeGreaterThanOrEqual(1);
             expect(
                 getByPlaceholderText(
                     "Cari nomor, kitab, tema, atau teks hadis",
@@ -266,6 +270,38 @@ describe("HadithScreen", () => {
         expect(queryByTestId("hadith-classic-list")).toBeNull();
     });
 
+    test("translates the Book/Hadith toggle to match the active app language", async () => {
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: true,
+        });
+
+        const { getByTestId, queryByText, unmount } = render(
+            <HadithScreen isActive />,
+        );
+        await waitFor(() => {
+            expect(getByTestId("hadith-web-app-tab-book")).toBeTruthy();
+        });
+        expect(queryByText("Book")).toBeNull();
+        expect(queryByText("Kitab")).toBeTruthy();
+        unmount();
+
+        try {
+            await writeStoredMobileLanguage("en");
+            const { findByText, queryByText: queryByTextEn } = render(
+                <MobileLocaleProvider>
+                    <HadithScreen isActive />
+                </MobileLocaleProvider>,
+            );
+
+            expect(await findByText("Book")).toBeTruthy();
+            expect(await findByText("Hadith")).toBeTruthy();
+            expect(queryByTextEn("Kitab")).toBeNull();
+        } finally {
+            await writeStoredMobileLanguage("idn");
+        }
+    });
+
     test("uses light web app Hadith palette when theme is light", async () => {
         useLayoutModePreference.mockReturnValue({
             isDarkTheme: false,
@@ -273,7 +309,7 @@ describe("HadithScreen", () => {
         });
         const { getByTestId, getByText } = render(<HadithScreen isActive />);
 
-        await waitFor(() => expect(getByText("Book")).toBeTruthy());
+        await waitFor(() => expect(getByText("Kitab")).toBeTruthy());
 
         expect(
             StyleSheet.flatten(
@@ -299,7 +335,7 @@ describe("HadithScreen", () => {
         });
         const { getByTestId, getByText } = render(<HadithScreen isActive />);
 
-        await waitFor(() => expect(getByText("Book")).toBeTruthy());
+        await waitFor(() => expect(getByText("Kitab")).toBeTruthy());
 
         expect(
             StyleSheet.flatten(

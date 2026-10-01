@@ -49,6 +49,8 @@ export const idn = {
         "hadith.perawiRelatedEmpty": "Perawi terkait belum tersedia.",
         "hadith.relatedEmpty": "Belum ada hadis terkait untuk tema ini.",
         "hadith.sanadEmpty": "Jalur sanad untuk hadis ini belum tersedia.",
+        "hadith.tab.book": "Kitab",
+        "hadith.tab.hadith": "Hadis",
         "historicalMap.category.all": "Semua",
         "historicalMap.category.city": "Kota",
         "historicalMap.category.mosque": "Masjid",
@@ -77,6 +79,9 @@ export const idn = {
         "explore.bookmarkRemoved": "Bookmark dihapus.",
         "explore.bookmarkSaved": "Item disimpan ke bookmark.",
         "explore.bookmarkSaveError": "Bookmark belum bisa diperbarui.",
+        "explore.catalog.subtitle":
+            "Kajian, referensi Islam, dan fitur personal dalam katalog dashboard.",
+        "explore.catalog.title": "Belajar",
         "explore.commentLoginRequired":
             "Buka Profil untuk masuk dan menulis komentar.",
         "explore.commentSaved": "Komentar terkirim.",

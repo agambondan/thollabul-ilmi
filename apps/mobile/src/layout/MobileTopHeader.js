@@ -1,7 +1,13 @@
 import { ChevronDown, Menu, Search } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { radius, spacing, touchTarget, getThemeColors } from "../theme";
+import {
+    APP_NAME,
+    radius,
+    spacing,
+    touchTarget,
+    getThemeColors,
+} from "../theme";
 import { ArrowLeft } from "lucide-react-native";
 
 export function MobileTopHeader({
@@ -89,7 +95,7 @@ export function MobileTopHeader({
                         ]}
                         numberOfLines={1}
                     >
-                        Thullaabul 'Ilmi
+                        {APP_NAME}
                     </Text>
                 </View>
             )}

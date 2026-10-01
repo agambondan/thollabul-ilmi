@@ -44,11 +44,17 @@ jest.mock("../screens/TokohTarikhContent", () => {
     };
 });
 
+jest.mock("../context/SessionContext", () => ({
+    useSession: () => ({ user: null }),
+}));
+
 import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { act, fireEvent, render } from "@testing-library/react-native";
 import { StyleSheet, Text, View } from "react-native";
 
 import { allFeatures } from "../data/mobileFeatures";
+import { MobileLocaleProvider } from "../i18n/MobileLocaleProvider";
 import { renderExploreWebAppRoute } from "../screens/explore/ExploreWebAppRoutes";
 import {
     WEB_APP_EXPLORE_THEMES,
@@ -317,6 +323,31 @@ describe("Explore web app reference list routes", () => {
         expect(
             StyleSheet.flatten(darkView.getByText("Belajar").props.style).color,
         ).toBe("#f8fafc");
+    });
+
+    test("translates the Belajar hub hero when the stored locale is English", async () => {
+        await AsyncStorage.setItem(
+            "tholabul:pref:app-language",
+            JSON.stringify("en"),
+        );
+        try {
+            const route = renderExploreWebAppRoute(baseContext(null));
+            const { findByText, queryByText } = render(
+                <MobileLocaleProvider>{route}</MobileLocaleProvider>,
+            );
+
+            expect(await findByText("ISLAMIC CONTENT")).toBeTruthy();
+            expect(await findByText("Learn")).toBeTruthy();
+            expect(
+                await findByText(
+                    "Lectures, Islamic references, and personal features in one dashboard catalog.",
+                ),
+            ).toBeTruthy();
+            expect(queryByText("KONTEN ISLAM")).toBeNull();
+            expect(queryByText("Belajar")).toBeNull();
+        } finally {
+            await AsyncStorage.removeItem("tholabul:pref:app-language");
+        }
     });
 
     test("renders every mobile Explore feature through a web app route surface", () => {

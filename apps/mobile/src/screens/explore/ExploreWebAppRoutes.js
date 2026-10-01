@@ -18,6 +18,7 @@ import {
 } from "react-native";
 
 import { NotificationCenter } from "../../components/NotificationCenter";
+import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors } from "../../theme";
 import { styles } from "../ExploreScreen.styles";
 import {
@@ -119,6 +120,24 @@ import { HistoricalMapContent } from "../HistoricalMapScreen";
 import { MasjidDirectoryContent } from "../MasjidDirectoryContent";
 import { RadioIslamicContent } from "../RadioIslamicContent";
 import { TokohTarikhContent } from "../TokohTarikhContent";
+
+function BelajarHubHero({ themeStyles }) {
+    const { t } = useMobileLocale();
+
+    return (
+        <View style={[styles.webAppCatalogHero, themeStyles.hero]}>
+            <Text style={[styles.webAppCatalogEyebrow, themeStyles.eyebrow]}>
+                {t("menu.content")}
+            </Text>
+            <Text style={[styles.webAppCatalogTitle, themeStyles.title]}>
+                {t("explore.catalog.title")}
+            </Text>
+            <Text style={[styles.webAppCatalogSubtitle, themeStyles.subtitle]}>
+                {t("explore.catalog.subtitle")}
+            </Text>
+        </View>
+    );
+}
 
 export function renderExploreWebAppRoute(context) {
     const {
@@ -3206,38 +3225,7 @@ export function renderExploreWebAppRoute(context) {
                 ]}
                 testID='explore-web-app-surface'
             >
-                <View
-                    style={[
-                        styles.webAppCatalogHero,
-                        webAppExploreThemeStyles.hero,
-                    ]}
-                >
-                    <Text
-                        style={[
-                            styles.webAppCatalogEyebrow,
-                            webAppExploreThemeStyles.eyebrow,
-                        ]}
-                    >
-                        KONTEN ISLAM
-                    </Text>
-                    <Text
-                        style={[
-                            styles.webAppCatalogTitle,
-                            webAppExploreThemeStyles.title,
-                        ]}
-                    >
-                        Belajar
-                    </Text>
-                    <Text
-                        style={[
-                            styles.webAppCatalogSubtitle,
-                            webAppExploreThemeStyles.subtitle,
-                        ]}
-                    >
-                        Kajian, referensi Islam, dan fitur personal dalam
-                        katalog dashboard.
-                    </Text>
-                </View>
+                <BelajarHubHero themeStyles={webAppExploreThemeStyles} />
                 <View
                     style={[
                         styles.webAppCatalogSearch,

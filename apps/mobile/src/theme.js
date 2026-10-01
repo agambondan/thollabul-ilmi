@@ -1,3 +1,5 @@
+export const APP_NAME = "Thullaabul Ilmi";
+
 export const colors = {
     bg: "#fefdf9",
     surface: "#f5f2eb",

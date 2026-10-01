@@ -54,7 +54,7 @@ import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { useLayoutMode } from "../layout/LayoutModeProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
-import { colors, getThemeColors } from "../theme";
+import { APP_NAME, colors, getThemeColors } from "../theme";
 import { styles, WEB_APP_PROFILE_THEMES } from "./ProfileScreen.styles";
 
 const APP_VERSION = appConfig?.expo?.version ?? "";
@@ -427,6 +427,7 @@ function AppearanceSettings({ onUserUpdated, user }) {
         setThemePreference: setAppThemePreference,
         layoutMode,
     } = useLayoutMode();
+    const { isDarkTheme } = useLayoutModePreference();
     const { setLanguage: setAppLanguage, t } = useMobileLocale();
     const [theme, setTheme] = useState("system");
     const [language, setLanguage] = useState(user?.preferred_lang ?? "idn");
@@ -508,7 +509,12 @@ function AppearanceSettings({ onUserUpdated, user }) {
     return (
         <>
             <Card>
-                <Text style={styles.appearanceLabel}>
+                <Text
+                    style={[
+                        styles.appearanceLabel,
+                        isDarkTheme && { color: colors.dark.ink },
+                    ]}
+                >
                     {t("profile.appearance.theme.label")}
                 </Text>
                 <Text style={styles.appearanceMeta}>
@@ -528,7 +534,12 @@ function AppearanceSettings({ onUserUpdated, user }) {
             </Card>
 
             <Card>
-                <Text style={styles.appearanceLabel}>
+                <Text
+                    style={[
+                        styles.appearanceLabel,
+                        isDarkTheme && { color: colors.dark.ink },
+                    ]}
+                >
                     {t("profile.appearance.language.label")}
                 </Text>
                 <Text style={styles.appearanceMeta}>
@@ -548,7 +559,12 @@ function AppearanceSettings({ onUserUpdated, user }) {
             </Card>
 
             <Card>
-                <Text style={styles.appearanceLabel}>
+                <Text
+                    style={[
+                        styles.appearanceLabel,
+                        isDarkTheme && { color: colors.dark.ink },
+                    ]}
+                >
                     {t("layout.mode.label")}
                 </Text>
                 <Text style={styles.appearanceMeta}>
@@ -1325,18 +1341,23 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             if (isWebAppLayout && navigation?.setHeader) {
                 const currentScreen = stack[stack.length - 1];
                 const titles = {
-                    settings: "Pengaturan",
-                    achievements: "Pencapaian",
-                    help: "Bantuan",
-                    about: "Tentang Aplikasi",
-                    "settings-account": "Akun",
-                    "settings-notifications": "Notifikasi",
-                    "settings-storage": "Penyimpanan",
-                    "settings-appearance": "Tampilan",
-                    "settings-security": "Keamanan",
+                    settings: t("profile.settings.title"),
+                    achievements: t("profile.achievements.title"),
+                    help: t("profile.help.title"),
+                    about: t("profile.about.title"),
+                    "settings-account": t("profile.settings.account.label"),
+                    "settings-notifications": t(
+                        "profile.settings.notifications.label",
+                    ),
+                    "settings-storage": t("profile.settings.storage.label"),
+                    "settings-appearance": t(
+                        "profile.settings.appearance.label",
+                    ),
+                    "settings-security": t("profile.settings.security.label"),
                 };
                 navigation.setHeader({
                     title: titles[currentScreen] || currentScreen,
+                    featureKey: currentScreen,
                     showBack: true,
                     onBack: pop,
                 });
@@ -1356,7 +1377,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 }
             }
         }
-    }, [isActive, stack, navigation, isWebAppLayout]);
+    }, [isActive, stack, navigation, isWebAppLayout, t]);
 
     const initials = `${user?.name || user?.email || "TI"}`
         .split(/\s+/)
@@ -1601,7 +1622,12 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             <SubScreen title={t("profile.help.title")} onBack={pop}>
                 {[1, 2, 3, 4, 5, 6].map((n) => (
                     <Card key={n}>
-                        <Text style={styles.appearanceLabel}>
+                        <Text
+                            style={[
+                                styles.appearanceLabel,
+                                isDarkTheme && { color: colors.dark.ink },
+                            ]}
+                        >
                             {t(`profile.help.q${n}`)}
                         </Text>
                         <Text style={styles.appearanceMeta}>
@@ -1744,7 +1770,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                             { color: webAppProfileTheme.title },
                         ]}
                     >
-                        {user?.name || "Thullabul Ilmi"}
+                        {user?.name || APP_NAME}
                     </Text>
                     <Text
                         style={[
@@ -2174,7 +2200,7 @@ export function ProfileScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 </View>
                 <View style={styles.profileBody}>
                     <Text style={[styles.name, { color: theme.ink }]}>
-                        {user?.name || "Thullabul Ilmi"}
+                        {user?.name || APP_NAME}
                     </Text>
                     <Text style={[styles.email, { color: theme.muted }]}>
                         {user?.email || t("profile.guestEmail")}

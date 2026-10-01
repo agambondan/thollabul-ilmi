@@ -137,7 +137,7 @@ describe("MobileAppShell", () => {
         expect(getByTestId("mobile-top-header")).toBeTruthy();
         expect(getByTestId("mobile-bottom-nav")).toBeTruthy();
         expect(queryByTestId("classic-app-shell")).toBeNull();
-        expect(getByText("Thullaabul 'Ilmi")).toBeTruthy();
+        expect(getByText("Thullaabul Ilmi")).toBeTruthy();
         expect(getByText("T")).toBeTruthy();
         expect(getByText("Beranda")).toBeTruthy();
         expect(getByText("Al-Quran")).toBeTruthy();
@@ -431,7 +431,10 @@ describe("MobileAppShell", () => {
         fireEvent.press(getByTestId("mobile-menu-item-pengaturan"));
 
         expect(onOpenProfile).toHaveBeenCalledTimes(1);
-        expect(onOpenProfile).toHaveBeenCalledWith({ view: "settings" });
+        expect(onOpenProfile).toHaveBeenCalledWith({
+            featureKey: "settings",
+            view: "settings",
+        });
     });
 
     test("routes web app bottom nav taps through existing tab handler", async () => {

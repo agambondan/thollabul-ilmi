@@ -61,7 +61,7 @@ export const webAppMenuGroups = [
                 key: "pengaturan",
                 label: "Pengaturan",
                 labelKey: "menu.settings",
-                params: { view: "settings" },
+                params: { featureKey: "settings", view: "settings" },
                 tab: "profile",
             },
             {
@@ -69,7 +69,7 @@ export const webAppMenuGroups = [
                 key: "bantuan",
                 label: "Bantuan",
                 labelKey: "menu.help",
-                params: { view: "help" },
+                params: { featureKey: "help", view: "help" },
                 tab: "profile",
             },
             {
@@ -77,7 +77,7 @@ export const webAppMenuGroups = [
                 key: "tentang",
                 label: "Tentang Aplikasi",
                 labelKey: "menu.about",
-                params: { view: "about" },
+                params: { featureKey: "about", view: "about" },
                 tab: "profile",
             },
         ],

@@ -88,7 +88,12 @@ jest.mock("../hooks/useLayoutModePreference", () => ({
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
+import {
+    MobileLocaleProvider,
+    writeStoredMobileLanguage,
+} from "../i18n/MobileLocaleProvider";
 import { ProfileScreen } from "../screens/ProfileScreen";
+import { colors } from "../theme";
 
 const { useSession } = require("../context/SessionContext");
 const { useLayoutModePreference } = require("../hooks/useLayoutModePreference");
@@ -146,7 +151,7 @@ describe("ProfileScreen", () => {
         const { getByText } = render(<ProfileScreen isActive />);
         await waitFor(() => {
             expect(getByText("Profil")).toBeTruthy();
-            expect(getByText("Thullabul Ilmi")).toBeTruthy();
+            expect(getByText("Thullaabul Ilmi")).toBeTruthy();
             expect(getByText("Belum masuk ke akun")).toBeTruthy();
         });
     });
@@ -368,7 +373,7 @@ describe("ProfileScreen", () => {
         const { getByLabelText, getByText, findByText } = render(
             <ProfileScreen isActive />,
         );
-        await waitFor(() => expect(getByText("Thullabul Ilmi")).toBeTruthy());
+        await waitFor(() => expect(getByText("Thullaabul Ilmi")).toBeTruthy());
 
         fireEvent.press(getByLabelText("Buka pengaturan profil"));
         fireEvent.press(getByText("Tampilan"));
@@ -660,5 +665,106 @@ describe("ProfileScreen", () => {
 
         fireEvent.press(getByLabelText("Kembali"));
         expect(getByText("Profil")).toBeTruthy();
+    });
+
+    test("translates Modern header titles and tags them with a featureKey", async () => {
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: true,
+        });
+        await writeStoredMobileLanguage("en");
+        const setHeader = jest.fn();
+        const buildNavigation = (id, view) => ({
+            current: { id, view },
+            routes: {},
+            setBack: jest.fn(),
+            setHeader,
+        });
+
+        try {
+            const { rerender } = render(
+                <MobileLocaleProvider>
+                    <ProfileScreen
+                        isActive
+                        navigation={buildNavigation(1, "settings")}
+                    />
+                </MobileLocaleProvider>,
+            );
+            await waitFor(() => {
+                expect(setHeader).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        featureKey: "settings",
+                        title: "Settings",
+                    }),
+                );
+            });
+
+            rerender(
+                <MobileLocaleProvider>
+                    <ProfileScreen
+                        isActive
+                        navigation={buildNavigation(2, "help")}
+                    />
+                </MobileLocaleProvider>,
+            );
+            await waitFor(() => {
+                expect(setHeader).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        featureKey: "help",
+                        title: "Help",
+                    }),
+                );
+            });
+
+            rerender(
+                <MobileLocaleProvider>
+                    <ProfileScreen
+                        isActive
+                        navigation={buildNavigation(3, "about")}
+                    />
+                </MobileLocaleProvider>,
+            );
+            await waitFor(() => {
+                expect(setHeader).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        featureKey: "about",
+                        title: "About App",
+                    }),
+                );
+            });
+        } finally {
+            await writeStoredMobileLanguage("idn");
+        }
+    });
+
+    test("keeps appearance and help section labels readable in dark mode", async () => {
+        useSession.mockReturnValue(loggedInSession);
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: true,
+            isWebAppLayout: false,
+        });
+
+        const { getByLabelText, getByText } = render(
+            <ProfileScreen isActive />,
+        );
+        await waitFor(() => expect(getByText("Test User")).toBeTruthy());
+
+        fireEvent.press(getByLabelText("Buka pengaturan profil"));
+        fireEvent.press(getByText("Tampilan"));
+
+        for (const label of ["Tema", "Bahasa Konten", "Mode Layout"]) {
+            const style = StyleSheet.flatten(getByText(label).props.style);
+            expect(style.color).not.toBe(colors.ink);
+            expect(style.color).toBe(colors.dark.ink);
+        }
+
+        fireEvent.press(getByLabelText("Kembali"));
+        fireEvent.press(getByText("Bantuan"));
+
+        const qaLabelStyle = StyleSheet.flatten(
+            getByText("Bagaimana cara masuk ke akun?").props.style,
+        );
+        expect(qaLabelStyle.color).not.toBe(colors.ink);
+        expect(qaLabelStyle.color).toBe(colors.dark.ink);
     });
 });

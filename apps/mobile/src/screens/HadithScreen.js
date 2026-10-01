@@ -98,8 +98,8 @@ const WEB_APP_HADITH_THEMES = {
 };
 
 const WEB_APP_HADITH_TABS = [
-    { key: "book", label: "Book" },
-    { key: "hadith", label: "Hadith" },
+    { key: "book", labelKey: "hadith.tab.book" },
+    { key: "hadith", labelKey: "hadith.tab.hadith" },
 ];
 
 const WEB_APP_BOOK_COVER_STYLES = {
@@ -850,7 +850,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                     : null,
                             ]}
                         >
-                            {tab.label}
+                            {t(tab.labelKey)}
                         </Text>
                     </Pressable>
                 ))}
