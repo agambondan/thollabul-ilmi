@@ -29,7 +29,7 @@ func NewSanadRepository(db *gorm.DB) SanadRepository {
 	return &sanadRepo{db}
 }
 
-func (r *sanadRepo) tableNames() (sanadTbl, mataTbl, perawiTbl string) {
+func (r *sanadRepo) tableNames() (sanadTbl, mataTbl, perawiTbl, hadithTbl string) {
 	sanadTbl = "sanads"
 	if r.db.Migrator().HasTable("sanad") {
 		sanadTbl = "sanad"
@@ -41,6 +41,10 @@ func (r *sanadRepo) tableNames() (sanadTbl, mataTbl, perawiTbl string) {
 	perawiTbl = "perawis"
 	if r.db.Migrator().HasTable("perawi") {
 		perawiTbl = "perawi"
+	}
+	hadithTbl = "hadiths"
+	if r.db.Migrator().HasTable("hadith") {
+		hadithTbl = "hadith"
 	}
 	return
 }
@@ -195,10 +199,16 @@ func (r *sanadRepo) Save(s *model.Sanad) (*model.Sanad, error) {
 }
 
 func (r *sanadRepo) FindAll() ([]model.Sanad, error) {
-	sanadTbl, mataTbl, perawiTbl := r.tableNames()
+	sanadTbl, mataTbl, perawiTbl, hadithTbl := r.tableNames()
+	var joinHadith string
+	var hadithCond string
+	if r.db.Migrator().HasTable(hadithTbl) {
+		joinHadith = " LEFT JOIN " + hadithTbl + " h ON h.id = s.hadith_id "
+		hadithCond = " AND (s.hadith_id IS NULL OR h.deleted_at IS NULL)"
+	}
 	var rows []sanadJoinRow
-	err := r.db.Raw(r.joinSelectSQL(sanadTbl, mataTbl, perawiTbl)+`
-		WHERE s.deleted_at IS NULL
+	err := r.db.Raw(r.joinSelectSQL(sanadTbl, mataTbl, perawiTbl)+joinHadith+`
+		WHERE s.deleted_at IS NULL`+hadithCond+`
 		ORDER BY s.hadith_id ASC, s.id ASC, ms.urutan ASC
 		LIMIT 500
 	`).Scan(&rows).Error
@@ -209,10 +219,16 @@ func (r *sanadRepo) FindAll() ([]model.Sanad, error) {
 }
 
 func (r *sanadRepo) FindByID(id *int) (*model.Sanad, error) {
-	sanadTbl, mataTbl, perawiTbl := r.tableNames()
+	sanadTbl, mataTbl, perawiTbl, hadithTbl := r.tableNames()
+	var joinHadith string
+	var hadithCond string
+	if r.db.Migrator().HasTable(hadithTbl) {
+		joinHadith = " LEFT JOIN " + hadithTbl + " h ON h.id = s.hadith_id "
+		hadithCond = " AND (s.hadith_id IS NULL OR h.deleted_at IS NULL)"
+	}
 	var rows []sanadJoinRow
-	err := r.db.Raw(r.joinSelectSQL(sanadTbl, mataTbl, perawiTbl)+`
-		WHERE s.id = ? AND s.deleted_at IS NULL
+	err := r.db.Raw(r.joinSelectSQL(sanadTbl, mataTbl, perawiTbl)+joinHadith+`
+		WHERE s.id = ? AND s.deleted_at IS NULL`+hadithCond+`
 		ORDER BY ms.urutan ASC
 	`, id).Scan(&rows).Error
 	if err != nil {
@@ -226,9 +242,13 @@ func (r *sanadRepo) FindByID(id *int) (*model.Sanad, error) {
 }
 
 func (r *sanadRepo) FindByHadithID(hadithID *int) ([]model.Sanad, error) {
-	sanadTbl, mataTbl, perawiTbl := r.tableNames()
+	sanadTbl, mataTbl, perawiTbl, hadithTbl := r.tableNames()
+	var joinHadith string
+	if r.db.Migrator().HasTable(hadithTbl) {
+		joinHadith = " JOIN " + hadithTbl + " h ON h.id = s.hadith_id AND h.deleted_at IS NULL "
+	}
 	var rows []sanadJoinRow
-	err := r.db.Raw(r.joinSelectSQL(sanadTbl, mataTbl, perawiTbl)+`
+	err := r.db.Raw(r.joinSelectSQL(sanadTbl, mataTbl, perawiTbl)+joinHadith+`
 		WHERE s.hadith_id = ? AND s.deleted_at IS NULL
 		ORDER BY s.nomor_jalur ASC, ms.urutan ASC
 	`, hadithID).Scan(&rows).Error
@@ -265,7 +285,7 @@ func (r *sanadRepo) SaveMataSanad(m *model.MataSanad) (*model.MataSanad, error) 
 }
 
 func (r *sanadRepo) FindMataSanadByID(id *int) (*model.MataSanad, error) {
-	_, mataTbl, perawiTbl := r.tableNames()
+	sanadTbl, mataTbl, perawiTbl, _ := r.tableNames()
 	type mataSanadSingleRow struct {
 		ID        *int
 		SanadID   *int
@@ -311,6 +331,7 @@ func (r *sanadRepo) FindMataSanadByID(id *int) (*model.MataSanad, error) {
 			p.biografis AS p_biografis, p.translation_id AS p_translation_id,
 			p.created_at AS p_created_at, p.updated_at AS p_updated_at, p.deleted_at AS p_deleted_at
 		FROM `+mataTbl+` ms
+		JOIN `+sanadTbl+` s ON s.id = ms.sanad_id AND s.deleted_at IS NULL
 		LEFT JOIN `+perawiTbl+` p ON p.id = ms.perawi_id AND p.deleted_at IS NULL
 		WHERE ms.id = ? AND ms.deleted_at IS NULL
 		LIMIT 1

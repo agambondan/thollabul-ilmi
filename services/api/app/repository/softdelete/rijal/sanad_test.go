@@ -12,7 +12,14 @@ import (
 
 func seedSanad(t *testing.T) *gorm.DB {
 	t.Helper()
-	db := testdb.Open(t, &model.Perawi{}, &model.Sanad{}, &model.MataSanad{})
+	db := testdb.Open(t, &model.Hadith{}, &model.Perawi{}, &model.Sanad{}, &model.MataSanad{})
+	hadith := func(id int) {
+		mustCreate(t, db, &model.Hadith{BaseID: baseID(id)})
+	}
+	hadith(10)
+	hadith(11)
+	hadith(12)
+	testdb.Delete(t, db, &model.Hadith{BaseID: baseID(12)})
 
 	perawi := func(id int, name string) {
 		mustCreate(t, db, &model.Perawi{
@@ -38,6 +45,7 @@ func seedSanad(t *testing.T) *gorm.DB {
 	sanad(3, 10, 3, "sanad-live-empty")
 	sanad(4, 11, 1, "other-hadith-live")
 	sanad(5, 11, 2, "other-hadith-deleted")
+	sanad(6, 12, 1, "sanad-in-deleted-hadith")
 	testdb.Delete(t, db, &model.Sanad{BaseID: baseID(2)})
 	testdb.Delete(t, db, &model.Sanad{BaseID: baseID(5)})
 
@@ -123,6 +131,14 @@ func TestSoftDeleteSanadFindByHadithID(t *testing.T) {
 		t.Fatalf("FindByHadithID(11): %v", err)
 	}
 	assertIDs(t, "FindByHadithID(11)", sanadIDs(other), 4)
+
+	deadHadithList, err := repo.FindByHadithID(testdb.Int(12))
+	if err != nil {
+		t.Fatalf("FindByHadithID(12): %v", err)
+	}
+	if len(deadHadithList) != 0 {
+		t.Fatalf("FindByHadithID(deleted hadith): want 0 sanad, got %v", sanadIDs(deadHadithList))
+	}
 }
 
 func TestSoftDeleteSanadFindAll(t *testing.T) {
@@ -164,6 +180,9 @@ func TestSoftDeleteSanadFindMataSanadByID(t *testing.T) {
 
 	if _, err := repo.FindMataSanadByID(testdb.Int(3)); !errors.Is(err, gorm.ErrRecordNotFound) {
 		t.Fatalf("FindMataSanadByID(soft-deleted): want ErrRecordNotFound, got %v", err)
+	}
+	if _, err := repo.FindMataSanadByID(testdb.Int(5)); !errors.Is(err, gorm.ErrRecordNotFound) {
+		t.Fatalf("FindMataSanadByID(mata of soft-deleted sanad): want ErrRecordNotFound, got %v", err)
 	}
 
 	live, err := repo.FindMataSanadByID(testdb.Int(1))
