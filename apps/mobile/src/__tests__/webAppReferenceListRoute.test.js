@@ -198,3 +198,103 @@ describe("WebAppReferenceListRoute search debounce (B8)", () => {
         expect(view.getByText("Dinasti Umayyah")).toBeTruthy();
     });
 });
+
+const buildAsmaulHusnaItems = () => [
+    {
+        id: 2,
+        title: "Yang Maha Pengasih",
+        body: "Yang memiliki rahmat yang luas mencakup seluruh makhluk.",
+        arabic: "الرَّحْمَنُ",
+        raw: {
+            english: "The Most Gracious",
+            indonesian: "Yang Maha Pengasih",
+            transliteration: "Ar-Rahman",
+        },
+    },
+    {
+        id: 3,
+        title: "Yang Maha Merajai",
+        body: "Yang memiliki kekuasaan atas seluruh alam semesta.",
+        arabic: "الْمَلِكُ",
+        raw: {
+            english: "The King",
+            indonesian: "Yang Maha Merajai",
+            transliteration: "Al-Malik",
+        },
+    },
+];
+
+describe("WebAppReferenceListRoute search by transliteration (B19)", () => {
+    test("matches the Latin transliteration, not only the Indonesian meaning", async () => {
+        const view = render(
+            <WebAppReferenceListRoute
+                error=''
+                items={buildAsmaulHusnaItems()}
+                loading={false}
+                onLoadMore={jest.fn()}
+                onOpenItem={jest.fn()}
+                pagination={{ hasMore: false, loadingMore: false }}
+                routeKey='asmaul-husna'
+            />,
+        );
+
+        fireEvent.changeText(
+            view.getByTestId("web-app-asmaul-husna-search"),
+            "rahman",
+        );
+        await waitForDebounce();
+
+        expect(view.getByText("Yang Maha Pengasih")).toBeTruthy();
+        expect(view.queryByText("Yang Maha Merajai")).toBeNull();
+    });
+
+    test("still matches the Indonesian meaning as before", async () => {
+        const view = render(
+            <WebAppReferenceListRoute
+                error=''
+                items={buildAsmaulHusnaItems()}
+                loading={false}
+                onLoadMore={jest.fn()}
+                onOpenItem={jest.fn()}
+                pagination={{ hasMore: false, loadingMore: false }}
+                routeKey='asmaul-husna'
+            />,
+        );
+
+        fireEvent.changeText(
+            view.getByTestId("web-app-asmaul-husna-search"),
+            "merajai",
+        );
+        await waitForDebounce();
+
+        expect(view.getByText("Yang Maha Merajai")).toBeTruthy();
+        expect(view.queryByText("Yang Maha Pengasih")).toBeNull();
+    });
+});
+
+describe("WebAppReferenceListRoute Panduan Sholat categories (B18)", () => {
+    test("renders no category chips since the API sends no category field", () => {
+        const view = render(
+            <WebAppReferenceListRoute
+                error=''
+                items={[
+                    {
+                        id: 1,
+                        title: "Niat",
+                        body: "Niat tempatnya di dalam hati.",
+                        raw: {},
+                    },
+                ]}
+                loading={false}
+                onLoadMore={jest.fn()}
+                onOpenItem={jest.fn()}
+                pagination={{ hasMore: false, loadingMore: false }}
+                routeKey='panduan-sholat'
+            />,
+        );
+
+        expect(
+            view.queryByTestId("web-app-panduan-sholat-category"),
+        ).toBeNull();
+    });
+});

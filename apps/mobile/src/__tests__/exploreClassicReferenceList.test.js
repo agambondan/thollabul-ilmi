@@ -302,4 +302,79 @@ describe("Classic reference-list search and filter (B14)", () => {
 
         expect(renderers.renderItem(items[0], 0)).toBeNull();
     });
+
+    test("asmaul-husna search matches the Latin transliteration, not only the Indonesian meaning (B19)", async () => {
+        const items = [
+            {
+                id: 2,
+                title: "Yang Maha Pengasih",
+                body: "Yang memiliki rahmat yang luas mencakup seluruh makhluk.",
+                arabic: "الرَّحْمَنُ",
+                raw: {
+                    english: "The Most Gracious",
+                    indonesian: "Yang Maha Pengasih",
+                    transliteration: "Ar-Rahman",
+                },
+            },
+            {
+                id: 3,
+                title: "Yang Maha Merajai",
+                body: "Yang memiliki kekuasaan atas seluruh alam semesta.",
+                arabic: "الْمَلِكُ",
+                raw: {
+                    english: "The King",
+                    indonesian: "Yang Maha Merajai",
+                    transliteration: "Al-Malik",
+                },
+            },
+        ];
+        const view = render(
+            <ClassicReferenceList
+                feature={ASMAUL_HUSNA_FEATURE}
+                items={items}
+            />,
+        );
+
+        fireEvent.changeText(
+            view.getByPlaceholderText(
+                "Cari nama Allah, arti, atau transliterasi...",
+            ),
+            "rahman",
+        );
+        await waitForDebounce();
+
+        expect(view.getByText("Yang Maha Pengasih")).toBeTruthy();
+        expect(view.queryByText("Yang Maha Merajai")).toBeNull();
+    });
+
+    test("Panduan Sholat renders no category chips since the API sends no category field (B18)", () => {
+        const feature = {
+            key: "panduan-sholat",
+            title: "Panduan Sholat",
+            type: "list",
+        };
+        const view = render(
+            <ClassicReferenceList
+                feature={feature}
+                items={[
+                    {
+                        id: 1,
+                        title: "Niat",
+                        body: "Niat tempatnya di dalam hati.",
+                        raw: {},
+                    },
+                    {
+                        id: 2,
+                        title: "Takbiratul Ihram",
+                        body: "Mengangkat kedua tangan sambil bertakbir.",
+                        raw: {},
+                    },
+                ]}
+            />,
+        );
+
+        expect(view.getByText("Niat")).toBeTruthy();
+        expect(view.queryByText("Semua")).toBeNull();
+        expect(view.getByText("2 panduan tersedia")).toBeTruthy();
+    });
 });

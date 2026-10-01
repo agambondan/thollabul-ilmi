@@ -86,7 +86,7 @@ export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
         unitKey: "explore.reference.asmaulHusna.unit",
     },
     "panduan-sholat": {
-        categories: ["wudhu", "sholat", "sunnah", "dzikir", "umum"],
+        categories: [],
         emptyTextKey: "explore.reference.panduanSholat.empty",
         loadingTextKey: "explore.reference.panduanSholat.loading",
         searchPlaceholderKey:
@@ -257,6 +257,9 @@ const getItemSearchText = (item, index, leading, t) => {
         raw.translation?.text_en,
         raw.translation?.description_idn,
         raw.translation?.description_en,
+        raw.transliteration,
+        raw.indonesian,
+        raw.english,
         raw.source,
         raw.sumber,
     ].join(" ");

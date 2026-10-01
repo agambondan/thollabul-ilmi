@@ -48,7 +48,7 @@ const REFERENCE_LIST_CONFIGS = {
         unit: "nama",
     },
     "panduan-sholat": {
-        categories: ["wudhu", "sholat", "sunnah", "dzikir", "umum"],
+        categories: [],
         placeholder: "Cari tata cara, bacaan, atau dalil...",
         unit: "panduan",
     },
@@ -171,6 +171,9 @@ const getItemSearchHaystack = (item) => {
         raw?.translation?.latin_en,
         raw?.translation?.text_idn,
         raw?.translation?.text_en,
+        raw?.transliteration,
+        raw?.indonesian,
+        raw?.english,
         raw?.source,
         raw?.sumber,
     ]
