@@ -222,14 +222,10 @@ func (r *perawiRepo) FindMurid(id *int) ([]model.Perawi, error) {
 
 func (r *perawiRepo) FindHadiths(ctx *fiber.Ctx, id *int) *paginate.Page {
 	var hadiths []model.Hadith
-	p, err := r.FindByID(id)
 	query := r.db.Model(&model.Hadith{}).
 		Joins("Book").Joins("Book.Translation").
 		Joins("Translation")
-	if err == nil && p != nil && p.NamaLatin != nil && *p.NamaLatin != "" {
-		like := "%" + *p.NamaLatin + "%"
-		query = query.Where("(hadith.id IN (SELECT DISTINCT sanad.hadith_id FROM sanad JOIN mata_sanad ON mata_sanad.sanad_id = sanad.id AND mata_sanad.deleted_at IS NULL WHERE mata_sanad.perawi_id = ? AND sanad.deleted_at IS NULL) OR hadith.sanad ILIKE ?)", *id, like)
-	} else {
+	if id != nil {
 		query = query.Where("hadith.id IN (SELECT DISTINCT sanad.hadith_id FROM sanad JOIN mata_sanad ON mata_sanad.sanad_id = sanad.id AND mata_sanad.deleted_at IS NULL WHERE mata_sanad.perawi_id = ? AND sanad.deleted_at IS NULL)", *id)
 	}
 	query = query.Order("hadith.id ASC")

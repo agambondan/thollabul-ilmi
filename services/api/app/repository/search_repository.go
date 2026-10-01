@@ -25,13 +25,16 @@ func NewSearchRepository(db *gorm.DB) SearchRepository {
 }
 
 // tsvAyah builds the tsvector expression over the ayah translation columns.
-const tsvAyah = `to_tsvector('simple', coalesce("Translation".idn,'') || ' ' || coalesce("Translation".en,''))`
+// tsvAyah references the stored text_tsv column on ayah translation.
+const tsvAyah = `"Translation".text_tsv`
 
 // tsvHadith builds the tsvector expression over the hadith translation columns.
-const tsvHadith = `to_tsvector('simple', coalesce("Translation".idn,'') || ' ' || coalesce("Translation".en,''))`
+// tsvHadith references the stored text_tsv column on hadith translation.
+const tsvHadith = `"Translation".text_tsv`
 
 // tsvTranslation builds the same expression without a join alias for subqueries.
-const tsvTranslation = `to_tsvector('simple', coalesce(idn,'') || ' ' || coalesce(en,''))`
+// tsvTranslation references the stored text_tsv column for subqueries.
+const tsvTranslation = `text_tsv`
 
 // prefixQuery turns a user query into a prefix-aware tsquery so "iman"
 // matches "iman", "beriman", "imani", etc. websearch_to_tsquery already
@@ -98,7 +101,7 @@ func (r *searchRepo) SearchHadith(query string, bookID *int, limit, offset int) 
 	hadithQuery.Count(&total)
 
 	results := r.db.Model(&model.Hadith{}).
-		Joins("Translation").
+		InnerJoins("Translation").
 		Preload("Book.Translation").
 		Preload("Theme.Translation").
 		Preload("Chapter.Translation").
@@ -137,13 +140,12 @@ func (r *searchRepo) SearchDoa(query string, limit, offset int) ([]model.Doa, in
 	var doas []model.Doa
 	var total int64
 
-	filter := `doa.title ILIKE ? OR doa.arabic ILIKE ? OR doa.translation ILIKE ? OR doa.source ILIKE ? OR doa.category::text ILIKE ? OR "Translation".idn ILIKE ? OR "Translation".en ILIKE ? OR "Translation".latin_idn ILIKE ? OR "Translation".latin_en ILIKE ? OR "Translation".ar ILIKE ?`
+	filter := `doa.title ILIKE ? OR doa.arabic ILIKE ? OR doa.translation ILIKE ? OR doa.source ILIKE ? OR doa.category::text ILIKE ?`
 	args := []interface{}{
-		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
 		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
 	}
 
-	r.db.Model(&model.Doa{}).Joins("Translation").Where(filter, args...).Count(&total)
+	r.db.Model(&model.Doa{}).Where(filter, args...).Count(&total)
 
 	err := r.db.Model(&model.Doa{}).Joins("Translation").
 		Where(filter, args...).
@@ -157,13 +159,12 @@ func (r *searchRepo) SearchKajian(query string, limit, offset int) ([]model.Kaji
 	var kajians []model.Kajian
 	var total int64
 
-	filter := `kajian.title ILIKE ? OR kajian.description ILIKE ? OR kajian.speaker ILIKE ? OR kajian.topic ILIKE ? OR kajian.type::text ILIKE ? OR "Translation".idn ILIKE ? OR "Translation".en ILIKE ? OR "Translation".description_idn ILIKE ? OR "Translation".description_en ILIKE ?`
+	filter := `kajian.title ILIKE ? OR kajian.description ILIKE ? OR kajian.speaker ILIKE ? OR kajian.topic ILIKE ? OR kajian.type::text ILIKE ?`
 	args := []interface{}{
 		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
-		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
 	}
 
-	r.db.Model(&model.Kajian{}).Joins("Translation").Where(filter, args...).Count(&total)
+	r.db.Model(&model.Kajian{}).Where(filter, args...).Count(&total)
 
 	err := r.db.Model(&model.Kajian{}).Joins("Translation").
 		Where(filter, args...).

@@ -258,6 +258,8 @@ func (s *Repositories) createCompositeIndexes() {
 		// to_tsvector per matched row (PG12+ generated column).
 		`ALTER TABLE kajian_transcript ADD COLUMN IF NOT EXISTS text_tsv tsvector GENERATED ALWAYS AS (to_tsvector('indonesian', text)) STORED`,
 		`CREATE INDEX IF NOT EXISTS idx_kajian_transcript_text_tsv ON kajian_transcript USING GIN (text_tsv)`,
+		`ALTER TABLE translation ADD COLUMN IF NOT EXISTS text_tsv tsvector GENERATED ALWAYS AS (to_tsvector('simple', coalesce(idn,'') || ' ' || coalesce(en,''))) STORED`,
+		`CREATE INDEX IF NOT EXISTS idx_translation_text_tsv ON translation USING GIN (text_tsv)`,
 		// Trigram index backing the typo-tolerant `query <% text` candidate list of the transcript search.
 		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_transcript_text ON kajian_transcript USING GIN (text gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_perawi_latin    ON perawi USING GIN (nama_latin gin_trgm_ops)`,

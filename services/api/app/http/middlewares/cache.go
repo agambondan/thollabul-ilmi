@@ -48,7 +48,7 @@ func CacheByType(staticMaxAge, dynamicMaxAge int) fiber.Handler {
 		"/api/v1/hijri", "/api/v1/dictionary", "/api/v1/perawi", "/api/v1/tafsir",
 		"/api/v1/siroh", "/api/v1/kajian", "/api/v1/asbabun-nuzul", "/api/v1/history",
 		"/api/v1/tokoh-tarikh", "/api/v1/jarh-tadil", "/api/v1/blog",
-		"/api/v1/tajweed", "/api/v1/curriculum",
+		"/api/v1/tajweed", "/api/v1/curriculum", "/api/v1/search",
 	}
 	privatePrefixes := []string{
 		"/api/v1/auth", "/api/v1/users", "/api/v1/dashboard",
@@ -111,6 +111,7 @@ func RedisResponseCache(client *redis.Client, defaultTTL time.Duration) fiber.Ha
 		"/api/v1/siroh", "/api/v1/kajian", "/api/v1/asbabun-nuzul", "/api/v1/history",
 		"/api/v1/tokoh-tarikh", "/api/v1/jarh-tadil", "/api/v1/munasabah",
 		"/api/v1/hadiths", "/api/v1/library/books", "/api/v1/tajweed", "/api/v1/curriculum",
+		"/api/v1/search",
 	}
 
 	privatePrefixes := []string{

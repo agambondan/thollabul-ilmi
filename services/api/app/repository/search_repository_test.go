@@ -52,6 +52,7 @@ func newSearchTestDB(t *testing.T) *gorm.DB {
 		t.Fatalf("migrate: %v", err)
 	}
 
+	db.Exec("ALTER TABLE translation ADD COLUMN IF NOT EXISTS text_tsv tsvector GENERATED ALWAYS AS (to_tsvector('simple', coalesce(idn,'') || ' ' || coalesce(en,''))) STORED")
 	db.Exec("TRUNCATE TABLE translation, surah, ayah, hadith, book, theme, chapter, islamic_term, doa, kajian, perawi RESTART IDENTITY CASCADE")
 	return db
 }
