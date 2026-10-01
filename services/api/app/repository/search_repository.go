@@ -55,16 +55,21 @@ func (r *searchRepo) SearchAyah(query string, limit, offset int) ([]model.Ayah, 
 
 	prefixed := prefixQuery(query)
 	filter := tsvAyah + ` @@ websearch_to_tsquery('simple', ?) OR "Translation".ar ILIKE ?`
+	translationFilter := tsvTranslation + ` @@ websearch_to_tsquery('simple', ?) OR ar ILIKE ?`
 	args := []interface{}{prefixed, "%" + query + "%"}
 
-	r.db.Model(&model.Ayah{}).
-		Joins("Translation").
-		Joins("Surah").Joins("Surah.Translation").
-		Where(filter, args...).
-		Count(&total)
+	matchingTranslations := r.db.Model(&model.Translation{}).
+		Select("id").
+		Where(translationFilter, args...)
+
+	if err := r.db.Model(&model.Ayah{}).
+		Where("translation_id IN (?)", matchingTranslations).
+		Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
 
 	err := r.db.Model(&model.Ayah{}).
-		Joins("Translation").
+		InnerJoins("Translation").
 		Joins("Surah").Joins("Surah.Translation").
 		Where(filter, args...).
 		Order(gorm.Expr(`ts_rank(`+tsvAyah+`, websearch_to_tsquery('simple', ?)) DESC`, prefixed)).
