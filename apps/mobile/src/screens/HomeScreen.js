@@ -956,6 +956,28 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
         };
     }, [isActive, navigation, navigation?.current?.view]);
 
+    useEffect(() => {
+        if (
+            !isActive ||
+            !isWebAppLayout ||
+            !navigation?.setHeader ||
+            navigation?.current?.view !== "global-search"
+        ) {
+            return undefined;
+        }
+
+        navigation.setHeader({
+            showBack: true,
+            title: t("search.title.webApp"),
+            onBack: () => {
+                navigation?.close?.("home");
+                return true;
+            },
+        });
+
+        return () => navigation.setHeader(null);
+    }, [isActive, isWebAppLayout, navigation, navigation?.current?.view, t]);
+
     const openDirectoryRow = useCallback(
         (row) => {
             if (row.type === "internal" && row.view) {

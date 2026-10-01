@@ -127,6 +127,13 @@ jest.mock("../components/DetailHeader", () => {
     };
 });
 
+jest.mock("../screens/GlobalSearchScreen", () => {
+    const { Text } = require("react-native");
+    return {
+        GlobalSearchScreen: () => <Text testID='global-search-screen-stub' />,
+    };
+});
+
 jest.mock("../data/mobileFeatures", () => ({
     featureGroups: [
         {
@@ -762,5 +769,85 @@ describe("HomeScreen", () => {
             expect(getByText("Terakhir Dibuka")).toBeTruthy();
             expect(getByText("Kamus Arab")).toBeTruthy();
         });
+    });
+
+    test("shows a shared-header back arrow when global search opens in web app layout", async () => {
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: true,
+        });
+        const navigation = {
+            ...defaultNavigation,
+            current: { view: "global-search", params: {} },
+        };
+
+        await renderHomeScreen({ navigation });
+
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    onBack: expect.any(Function),
+                    showBack: true,
+                    title: "Pencarian",
+                }),
+            );
+        });
+
+        const headerCall = navigation.setHeader.mock.calls.find(
+            (call) => call[0]?.showBack,
+        );
+        headerCall[0].onBack();
+        expect(navigation.close).toHaveBeenCalledWith("home");
+    });
+
+    test("clears the shared header once global search closes", async () => {
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: true,
+        });
+        const navigation = {
+            ...defaultNavigation,
+            current: { view: "global-search", params: {} },
+        };
+
+        const view = await renderHomeScreen({ navigation });
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledWith(
+                expect.objectContaining({ showBack: true }),
+            );
+        });
+        navigation.setHeader.mockClear();
+
+        const closedNavigation = {
+            ...navigation,
+            current: { view: undefined, params: {} },
+        };
+        view.rerender(
+            <HomeScreen
+                isActive
+                navigation={closedNavigation}
+                onOpenTab={jest.fn()}
+            />,
+        );
+
+        await waitFor(() => {
+            expect(navigation.setHeader).toHaveBeenCalledWith(null);
+        });
+    });
+
+    test("does not touch the shared header for global search in classic layout", async () => {
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: false,
+        });
+        const navigation = {
+            ...defaultNavigation,
+            current: { view: "global-search", params: {} },
+        };
+
+        await renderHomeScreen({ navigation });
+        await flushAsyncWork();
+
+        expect(navigation.setHeader).not.toHaveBeenCalled();
     });
 });
