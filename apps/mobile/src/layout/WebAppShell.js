@@ -30,6 +30,7 @@ export function getWebAppAccountLabel(user, guestLabel = "Tamu") {
 export function WebAppShell({
     activeTab,
     children,
+    currentFeatureKey = null,
     headerConfig,
     internalRoutes,
     keyboardVisible,
@@ -179,6 +180,7 @@ export function WebAppShell({
             <MobileMenuSheet
                 accountLabel={accountLabel}
                 active={activeTab}
+                currentFeatureKey={currentFeatureKey}
                 isDarkTheme={isDarkTheme}
                 onClose={closeMenu}
                 onSelect={handleMenuSelect}

@@ -522,12 +522,12 @@ describe("getShellActiveTab", () => {
         ).toBe("belajar");
     });
 
-    test("keeps global search highlighted as search", () => {
+    test("highlights Beranda while Global Search is open", () => {
         expect(
             getShellActiveTab({
                 activeTab: "home",
                 internalRoutes: { home: { view: "global-search" } },
             }),
-        ).toBe("search");
+        ).toBe("home");
     });
 });

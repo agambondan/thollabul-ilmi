@@ -218,6 +218,7 @@ export const exploreEn = {
         "explore.quiz.percentCorrect": "{percent}% correct answers",
         "explore.quiz.progressLabel": "Question {current} / {total}",
         "explore.quiz.questionFallback": "Question {number}",
+        "explore.quiz.questionProgress": "Question {current} / {total}",
         "explore.quiz.restart": "Restart Quiz",
         "explore.quiz.retry": "Try Again",
         "explore.quiz.scoreCorrect": "{score} correct",
@@ -292,6 +293,7 @@ export const exploreEn = {
             "A collection of wirid you create yourself",
         "explore.userWird.title": "Personal Wirid",
         "explore.userWird.wiridCount": "Wirid",
+        "explore.wird.editTitle": "Edit Wirid",
         "explore.zakat.deleteError": "Zakat history could not be deleted.",
         "explore.zakat.disclaimer":
             "This calculator is an estimation aid. Consult special cases with a trusted teacher or zakat institution.",

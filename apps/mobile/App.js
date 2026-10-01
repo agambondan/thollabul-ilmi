@@ -389,6 +389,9 @@ export default function App() {
                                     />
                                     <MobileAppShell
                                         activeTab={shellActiveTab}
+                                        currentFeatureKey={
+                                            headerConfig?.featureKey ?? null
+                                        }
                                         internalRoutes={internalRoutes}
                                         returnRoutes={returnRoutes}
                                         headerConfig={headerConfig}

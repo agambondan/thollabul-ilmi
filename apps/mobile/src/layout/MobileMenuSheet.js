@@ -101,6 +101,7 @@ const sheet = {
 export function MobileMenuSheet({
     active,
     accountLabel = "Tamu",
+    currentFeatureKey = null,
     isDarkTheme = false,
     onClose,
     onSelect,
@@ -193,8 +194,10 @@ export function MobileMenuSheet({
                                 <View style={styles.grid}>
                                     {group.items.map((item) => {
                                         const selected =
-                                            active === item.tab ||
-                                            active === item.key;
+                                            active === item.tab &&
+                                            (!item.params?.featureKey ||
+                                                currentFeatureKey ===
+                                                    item.params.featureKey);
                                         const Icon = item.Icon;
                                         const label = t(item.labelKey);
 

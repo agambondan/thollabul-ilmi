@@ -18,6 +18,7 @@ import {
     Sparkles,
 } from "lucide-react-native";
 import { Card } from "../../components/Card";
+import { MarkdownView } from "../../components/MarkdownView";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { colors, radius, spacing } from "../../theme";
@@ -510,14 +511,11 @@ export function WebAppLessonsRoute({
                     </Text>
 
                     {step?.body || step?.content ? (
-                        <Text
-                            style={[
-                                localStyles.stepBody,
-                                activeDark && { color: "#d1d5db" },
-                            ]}
-                        >
-                            {step?.body || step?.content}
-                        </Text>
+                        <MarkdownView
+                            content={step?.body || step?.content}
+                            isDark={activeDark}
+                            testID='lesson-step-markdown-view'
+                        />
                     ) : null}
 
                     {step?.arabic ? (

@@ -29,6 +29,27 @@ describe("mobile i18n translations", () => {
         expect(translateMobile("en", "missing.key")).toBe("missing.key");
     });
 
+    test("has the explore.* keys for the wird edit, forum detail, and quiz progress headers", () => {
+        expect(translateMobile("idn", "explore.wird.editTitle")).toBe(
+            "Edit Wirid",
+        );
+        expect(translateMobile("idn", "explore.forum.detailTitle")).toBe(
+            "Detail Pertanyaan",
+        );
+        expect(
+            translateMobile("idn", "explore.quiz.questionProgress", {
+                current: 2,
+                total: 5,
+            }),
+        ).toBe("Pertanyaan 2 / 5");
+        expect(
+            translateMobile("en", "explore.quiz.questionProgress", {
+                current: 2,
+                total: 5,
+            }),
+        ).toBe("Question 2 / 5");
+    });
+
     test("keeps a non-empty Indonesian dictionary for shell migration", () => {
         expect(mobileTranslationKeys.length).toBeGreaterThan(80);
     });

@@ -227,7 +227,7 @@ const getShellActiveTab = ({
     internalRoutes = {},
     returnRoutes = {},
 } = {}) => {
-    if (internalRoutes.home?.view === "global-search") return "search";
+    if (internalRoutes.home?.view === "global-search") return "home";
     if (activeTab === "belajar" && returnRoutes.belajar?.tab === "ibadah") {
         return "ibadah";
     }

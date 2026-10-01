@@ -1453,6 +1453,7 @@ export function ExploreScreen({
 
         let onBack = null;
         let title = null;
+        let featureKey = null;
 
         if (selectedItem) {
             title = selectedItem?.title || "Detail";
@@ -1500,6 +1501,7 @@ export function ExploreScreen({
             };
         } else if (activeFeature) {
             title = activeFeature.title;
+            featureKey = activeFeature.key;
             onBack = () => {
                 clearFeatureRef.current?.();
                 return true;
@@ -1511,6 +1513,7 @@ export function ExploreScreen({
             navigation?.setHeader?.({
                 showBack: true,
                 title,
+                featureKey,
                 onBack,
             });
         } else {

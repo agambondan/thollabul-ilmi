@@ -132,6 +132,7 @@ export const exploreIdn = {
         "explore.quiz.percentCorrect": "{percent}% jawaban benar",
         "explore.quiz.progressLabel": "Pertanyaan {current} / {total}",
         "explore.quiz.questionFallback": "Pertanyaan {number}",
+        "explore.quiz.questionProgress": "Pertanyaan {current} / {total}",
         "explore.quiz.restart": "Ulangi Quiz",
         "explore.quiz.retry": "Coba Lagi",
         "explore.quiz.scoreCorrect": "{score} benar",
@@ -290,6 +291,7 @@ export const exploreIdn = {
         "explore.userWird.subtitle": "Kumpulan wirid yang kamu buat sendiri",
         "explore.userWird.title": "Wirid Pribadi",
         "explore.userWird.wiridCount": "Wirid",
+        "explore.wird.editTitle": "Edit Wirid",
         "explore.zakat.deleteError": "Riwayat zakat gagal dihapus.",
         "explore.zakat.disclaimer":
             "Kalkulator ini adalah alat bantu estimasi. Konsultasikan detail kasus khusus kepada ustadz atau lembaga zakat terpercaya.",

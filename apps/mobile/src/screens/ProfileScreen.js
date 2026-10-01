@@ -4,6 +4,7 @@ import {
     BookOpen,
     ChevronRight,
     HardDrive,
+    HelpCircle,
     Info,
     Lock,
     LogOut,
@@ -361,6 +362,18 @@ function SettingsList({ onNavigate }) {
             label: t("profile.settings.security.label"),
             meta: t("profile.settings.security.meta"),
             screen: "settings-security",
+        },
+        {
+            Icon: HelpCircle,
+            label: t("profile.help.title"),
+            meta: t("profile.help.meta"),
+            screen: "help",
+        },
+        {
+            Icon: Info,
+            label: t("profile.about.title"),
+            meta: t("profile.about.meta"),
+            screen: "about",
         },
     ];
     return (

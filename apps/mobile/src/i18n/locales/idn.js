@@ -31,6 +31,7 @@ export const idn = {
         "common.back": "Kembali",
         "common.cancel": "Batal",
         "common.closeMenu": "Tutup menu",
+        "common.scrollToTop": "Gulir ke atas",
         "feedback.close": "Tutup notifikasi",
         "feedback.error": "Gagal",
         "feedback.info": "Info",
@@ -289,6 +290,7 @@ export const idn = {
         "explore.forum.askTitlePlaceholder":
             "Judul pertanyaan (min 10 karakter)",
         "explore.forum.detailLoadError": "Detail forum belum bisa dimuat.",
+        "explore.forum.detailTitle": "Detail Pertanyaan",
         "explore.forum.detailTitleFallback": "Detail pertanyaan",
         "explore.forum.downvote": "Turun",
         "explore.forum.emptyText":
@@ -1213,6 +1215,7 @@ export const idn = {
             "Thollabul Ilmi adalah aplikasi Islamic knowledge untuk penuntut ilmu, menghadirkan Al-Quran, Hadis, tracker ibadah, dan materi belajar Islam dalam satu aplikasi.",
         "profile.about.descriptionTitle": "Tentang",
         "profile.about.title": "Tentang Aplikasi",
+        "profile.about.meta": "Informasi aplikasi dan versi",
         "profile.about.version": "Versi {version}",
         "profile.help.a1":
             "Buka Profil, lalu masuk ke Pengaturan > Tampilan. Pada bagian Mode Layout, pilih Klasik atau Modern (Web App) sesuai preferensi Anda.",
@@ -1236,6 +1239,7 @@ export const idn = {
         "profile.help.q6":
             "Ke mana saya bisa melaporkan bug atau memberi masukan?",
         "profile.help.title": "Bantuan",
+        "profile.help.meta": "Pertanyaan umum dan panduan penggunaan",
         "profile.settings.account.label": "Akun",
         "profile.settings.account.meta": "Login, sandi, dan data akun",
         "profile.settings.appearance.label": "Tampilan",

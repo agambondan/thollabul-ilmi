@@ -807,15 +807,17 @@ export const getBlogExcerpt = (item = {}) => {
     const raw = getBlogRaw(item);
     const translation = raw.translation ?? {};
     return stripHtmlText(
-        pickText(
-            item.body,
-            translation.excerpt_idn,
-            translation.excerpt_en,
-            translation.description_idn,
-            translation.description_en,
-            raw.excerpt,
-            raw.summary,
-            raw.description,
+        stripMarkdownText(
+            pickText(
+                item.body,
+                translation.excerpt_idn,
+                translation.excerpt_en,
+                translation.description_idn,
+                translation.description_en,
+                raw.excerpt,
+                raw.summary,
+                raw.description,
+            ),
         ),
     );
 };

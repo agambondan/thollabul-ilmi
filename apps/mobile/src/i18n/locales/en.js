@@ -31,6 +31,7 @@ export const en = {
         "common.back": "Back",
         "common.cancel": "Cancel",
         "common.closeMenu": "Close menu",
+        "common.scrollToTop": "Scroll to top",
         "feedback.close": "Dismiss notification",
         "feedback.error": "Error",
         "feedback.info": "Info",
@@ -287,6 +288,7 @@ export const en = {
         "explore.forum.askTitlePlaceholder":
             "Question title (min 10 characters)",
         "explore.forum.detailLoadError": "Forum detail could not be loaded.",
+        "explore.forum.detailTitle": "Question Detail",
         "explore.forum.detailTitleFallback": "Question detail",
         "explore.forum.downvote": "Down",
         "explore.forum.emptyText":
@@ -1156,6 +1158,7 @@ export const en = {
             "Thollabul Ilmi is an Islamic knowledge app for seekers of knowledge, bringing the Quran, Hadith, worship trackers, and Islamic learning material together in one app.",
         "profile.about.descriptionTitle": "About",
         "profile.about.title": "About App",
+        "profile.about.meta": "Application information and version",
         "profile.about.version": "Version {version}",
         "profile.help.a1":
             "Open Profile, then go to Settings > Appearance. Under Layout Mode, choose Classic or Modern (Web App) based on your preference.",
@@ -1176,6 +1179,7 @@ export const en = {
         "profile.help.q5": "Is my data saved if I'm not signed in?",
         "profile.help.q6": "Where can I report a bug or give feedback?",
         "profile.help.title": "Help",
+        "profile.help.meta": "Frequently asked questions and guides",
         "profile.settings.account.label": "Account",
         "profile.settings.account.meta": "Login, password, and account data",
         "profile.settings.appearance.label": "Appearance",

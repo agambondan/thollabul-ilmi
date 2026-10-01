@@ -672,6 +672,84 @@ describe("Explore web app reference list routes", () => {
         );
     });
 
+    test("shows the login-required message for a guest, not a generic error", () => {
+        const route = renderExploreWebAppRoute(
+            baseContext(
+                {
+                    key: "amalan",
+                    title: "Amalan Harian",
+                    type: "protected-list",
+                },
+                {
+                    error: "Buka Profil untuk masuk dan membuka fitur personal ini.",
+                },
+            ),
+        );
+        const { getByText, queryByText } = render(route);
+
+        expect(
+            getByText(
+                "Buka Profil untuk masuk dan membuka fitur personal ini.",
+            ),
+        ).toBeTruthy();
+        expect(
+            queryByText(
+                "Data amalan belum bisa dimuat. Coba refresh halaman.",
+            ),
+        ).toBeNull();
+    });
+
+    test("still shows a real load failure message for a logged-in user", () => {
+        const route = renderExploreWebAppRoute(
+            baseContext(
+                {
+                    key: "amalan",
+                    title: "Amalan Harian",
+                    type: "protected-list",
+                },
+                {
+                    error: "Fitur ini belum bisa dimuat.",
+                },
+            ),
+        );
+        const { getByText, queryByText } = render(route);
+
+        expect(getByText("Fitur ini belum bisa dimuat.")).toBeTruthy();
+        expect(
+            queryByText(
+                "Buka Profil untuk masuk dan membuka fitur personal ini.",
+            ),
+        ).toBeNull();
+    });
+
+    test("renders Lessons step body through MarkdownView instead of raw markdown", () => {
+        const route = renderExploreWebAppRoute(
+            baseContext(
+                { key: "lessons", title: "Modul & Kelas", type: "lessons" },
+                {
+                    visibleItems: [
+                        {
+                            slug: "test-module",
+                            title: "Modul Uji",
+                            steps: [
+                                {
+                                    title: "Langkah 1",
+                                    body: "**Niat wudhu** bertempat di dalam hati.\n\n- Membasuh tangan\n- Membaca basmalah",
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ),
+        );
+        const { getByTestId, getByText, queryByText } = render(route);
+
+        expect(getByTestId("lesson-step-markdown-view")).toBeTruthy();
+        expect(getByText("Niat wudhu")).toBeTruthy();
+        expect(getByText("Membasuh tangan")).toBeTruthy();
+        expect(queryByText(/\*\*Niat wudhu\*\*/)).toBeNull();
+    });
+
     test("renders Imsakiyah route as dashboard schedule table", () => {
         const route = renderExploreWebAppRoute(
             baseContext(

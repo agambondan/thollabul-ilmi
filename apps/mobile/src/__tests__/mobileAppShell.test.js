@@ -49,6 +49,7 @@ function renderShell(props = {}) {
             <LayoutModeProvider>
                 <MobileAppShell
                     activeTab={props.activeTab ?? "home"}
+                    currentFeatureKey={props.currentFeatureKey ?? null}
                     keyboardVisible={props.keyboardVisible ?? false}
                     onOpenProfile={onOpenProfile}
                     onTabChange={onTabChange}
@@ -463,6 +464,7 @@ describe("MobileAppShell", () => {
         AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
         const { getByLabelText, getByTestId } = renderShell({
             activeTab: "belajar",
+            currentFeatureKey: "tokoh",
         });
 
         await waitFor(() => expect(getByTestId("web-app-shell")).toBeTruthy());

@@ -129,7 +129,7 @@ export function WebAppAmalanRoute({
                         color: "#f87171",
                     },
                 ]}>
-                    {t("explore.amalan.loadError")}
+                    {error}
                 </Text>
             ) : null}
 
