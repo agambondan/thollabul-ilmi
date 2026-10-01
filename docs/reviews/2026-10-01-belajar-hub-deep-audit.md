@@ -922,6 +922,20 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
 - **Screenshot**: `051-classic-profile-root-live.png` (Thullabul Ilmi),
   `056-modern-switched-live-B10-header-name.png` (Thullaabul 'Ilmi),
   `055-classic-tentang-open-B4-LIVE.png` (Thullaabul Ilmi, benar).
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `6ca564a0`)**: APK fresh
+  install, guest, Modern. Ketiga lokasi asli yang disebut di judul bug kini
+  **identik**, "Thullaabul Ilmi" (dua huruf "a", tanpa apostrof), dikonfirmasi
+  lewat crop-zoom ImageMagick di ketiganya: Profil root (fallback nama guest,
+  `004-profile-root-guest.png` + zoom), header Modern
+  (`002-after-location-perm.png` + zoom), dan Tentang Aplikasi
+  (`007-tentang-aplikasi-open2.png` + zoom, termasuk Classic
+  `045-classic-selected.png`). Konstanta `APP_NAME` (`theme.js:1`) dipakai
+  konsisten di ketiganya — bug asli **ditutup, FIXED**. **TAPI** ditemukan
+  residual: perbaikan ini scope-nya cuma 3 lokasi yang disebut di laporan
+  asli, sementara masih ada 2 key i18n + 2 literal JS lain yang memakai
+  ejaan lama berbeda ("Thollabul Ilmi" di `profile.about.description` dan
+  teks share Zakat/Faraidh, "Thullabul Ilmi" satu-l di `theme.light.meta`)
+  — lihat **B17 (baru)** untuk rincian lengkap.
 
 ### B11. [Modern; CONFIRMED live] Toggle bahasa ID/EN tidak diterapkan ke hero+tile hub Belajar, nama badge Pencapaian, 7 dari 9 judul header Profil/Pengaturan, dan toggle Kitab/Hadis — MEDIUM
 
@@ -989,6 +1003,22 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
   `072-bantuan-header-not-translated-B11.png`,
   `073-tentang-header-not-translated-B11.png`,
   `074-pengaturan-header-not-translated-B11.png`.
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `6ca564a0`)**: ketiga
+  sub-fix dites satu-satu, Modern, APK fresh. (a) Hub Belajar dalam English:
+  hero sekarang "ISLAMIC CONTENT" / "Learn" / "Lectures, Islamic references,
+  and personal features in one dashboard catalog." —
+  `012-belajar-hub-en-v2.png`; tile hub (Kajian/Artikel/dst.) tetap Indonesia,
+  **sesuai ekspektasi** (scope `mobileFeatures.js` sengaja ditunda). (b)
+  Profil → Settings/Help/About header: ketiganya sekarang Inggris penuh
+  ("Settings" `016-settings-en-v2.png`, "Help" `018-help-en-v2.png`, "About
+  App" `010-about-app-en-closed-menu.png`), isi badan (FAQ, app info) juga
+  Inggris; bonus cek "Security" header ikut Inggris
+  (`017-help-en.png`, tap nyasar). (c) Toggle Hadis: default Indonesia
+  sekarang "Kitab"/"Hadis" (`020-hadis-tab-id-default.png`), flip ke English
+  jadi "Book"/"Hadith" (`021-hadis-tab-en-toggle.png`) — kedua arah benar.
+  Ketiga sub-fix **ditutup, FIXED**. Badge Pencapaian & katalog
+  `mobileFeatures.js` dikonfirmasi ulang tetap Indonesia-only, sesuai catatan
+  "sengaja ditunda" di commit — bukan regresi baru.
 
 ### B12. [Modern; CONFIRMED live, direproduksi bersih] Tab bottom-nav Belajar tidak benar-benar berpindah konten saat fitur yang dibuka dari hub LAIN sedang tampil — MEDIUM
 
@@ -1051,6 +1081,14 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
   `076-hwback-reveals-real-tab-was-ibadah-B12.png`,
   `077-tab-switch-works-from-hub-screen-B12-contrast.png`,
   `078-B12-clean-repro-doa-stuck-belajar-highlighted.png`.
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `ae704030`)**: repro
+  asli diulang bersih 2× (Belajar hub → Ibadah fresh → Doa → tap Belajar) —
+  **kedua kali** langsung menampilkan hub Belajar ("KONTEN ISLAM" terlihat),
+  bukan lagi stuck di Doa (`026-b12-step3-tap-belajar-FIRST.png`,
+  `029-b12-run2-tap-belajar-RESULT.png`). Dua non-regresi juga dites: re-tap
+  Belajar saat sudah bersih di hub (scroll position tidak berubah, tidak ada
+  flicker, `030` vs `031`) dan re-tap Ibadah saat highlight-nya sudah cocok
+  (`032` vs `033`, tetap normal). Bug **ditutup, FIXED**, non-regresi PASS.
 
 ### B13. [Modern & Classic; CONFIRMED live] Label section "Tema"/"Bahasa Konten"/"Mode Layout" nyaris tak terbaca di tema gelap — MEDIUM
 
@@ -1087,6 +1125,19 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
   `theme.js`'s `getThemeColors`), dipanggil ulang tiap render alih-alih
   `StyleSheet.create` statis sekali di level modul.
 - **Screenshot**: `109-dark-enabled.png`, `112-modern-tampilan-dark-B13.png`.
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `6ca564a0`)**: tema
+  Gelap aktif, Modern. Label "Tema"/"Bahasa Konten"/"Mode Layout" sekarang
+  terang/putih, kontras tinggi terhadap background gelap
+  (`038-tampilan-dark-B13.png`) — perbaikan dramatis dibanding sebelumnya.
+  Label Q&A Bantuan juga dicek: judul pertanyaan putih terang, jawaban abu
+  muda, kontras baik di semua 5 Q&A yang terlihat
+  (`039-bantuan-dark-B13.png`). Kedua target **ditutup, FIXED**. Sesuai
+  prediksi dokumen fix, dicek ulang dan dikonfirmasi **masih buram** (belum
+  diperbaiki, bukan regresi baru, memang sengaja ditunda): judul "Keamanan
+  Akun" di layar Keamanan (`040-keamanan-dark-still-bad.png`) dan judul
+  "Tentang" di layar Tentang Aplikasi (`035-profile-root-dark.png` + zoom) —
+  keduanya coklat-redup nyaris menyatu dengan background gelap, kelas bug
+  identik, perlu sesi fix terpisah seperti sudah dicatat di commit.
 
 ### B14. [Classic; CONFIRMED live + source] 8 fitur bertipe `"list"` di Classic sama sekali tidak punya UI cari/filter kategori — padahal Modern dapat UI lengkap — MEDIUM
 
@@ -1129,6 +1180,31 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
   sengaja minimalis — setidaknya tambahkan search box saja.
 - **Screenshot**: `108-classic-sejarah-open.png` (Classic, tanpa search),
   `058-sejarah-open-B8.png` (Modern, dengan search lengkap).
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `84d30cbe`)**: UI
+  cari/filter sekarang ADA dan BERFUNGSI di Classic untuk 4 dari 8 fitur yang
+  dites langsung — Panduan Sholat (`050-classic-panduan-sholat-B14.png`,
+  search box + 5 chip + counter "12 panduan tersedia"), Asmaul Husna
+  (`072-classic-asmaul-husna-wait.png`, tanpa chip sesuai `categories: []`,
+  counter "99 nama tersedia"), Doa (`086-classic-doa-loaded.png`, 6+ chip
+  termasuk "Bangun", counter "82 doa tersedia"), Dzikir
+  (`089-classic-dzikir-B14.png`, chip horizontal-scroll, counter "37 dzikir
+  tersedia"). Search box debounced bekerja benar (`057`/`073`/`074`: teks
+  muncul instan, counter update ~300ms kemudian, tidak ANR). Tap item →
+  detail terbuka normal, dikonfirmasi 2× (Asmaul Husna `075`, Doa `088`).
+  Chip kategori "Bangun" pada Doa (match via title-regex, bukan field
+  kategori literal) dikonfirmasi tepat: `087-classic-doa-bangun-chip.png`
+  ("Menampilkan 1 dari 82 doa", item "Doa Bangun Tidur"). **UI/mekanisme B14
+  sendiri ditutup, FIXED** untuk kedelapan fitur (6 sisanya — Wirid,
+  Manasik, Jarh Tadil — tidak sempat ditekan satu-satu tapi memakai
+  komponen/helper generik yang sama persis, risiko rendah). **TAPI
+  ditemukan 2 bug data/konten BARU** selama verifikasi (bukan kegagalan
+  komponen B14, tapi `referenceListFilter.js`'s asumsi field generik yang
+  meleset untuk 2 fitur spesifik) — lihat **B18** (kategori Panduan Sholat
+  0% berfungsi) dan **B19** (pencarian Asmaul Husna tidak mengindeks nama
+  transliterasi) di bawah. Juga ditemukan **B20** (bug lingkungan navigasi,
+  bukan spesifik B14 tapi jadi jauh lebih sering ketemu karena B14 menambah
+  banyak search box baru ke Classic): TabBar Classic bisa hilang permanen
+  setelah fokus search box diikuti navigasi-kembali.
 
 ### B15. [Modern; CONFIRMED live] Pencarian Global tidak punya cara tutup yang terlihat — hanya hardware back yang berfungsi — LOW
 
@@ -1157,6 +1233,17 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
   TOGGLE (tap lagi = tutup) saat Pencarian sedang terbuka.
 - **Screenshot**: `093-search-icon-retap.png`,
   `094-tap-beranda-from-search.png`.
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `a9111a9b`)**: Modern,
+  buka Pencarian Global lewat ikon kaca pembesar — header sekarang
+  menampilkan panah-kembali hijau yang terlihat jelas
+  (`096-global-search-open-B15.png`). Tap panah tersebut menutup Pencarian
+  dan kembali dengan bersih ke layar sebelumnya
+  (`097-global-search-closed-B15.png` — kebetulan Profil karena jalur
+  navigasi sesi ini berasal dari Profil, bukan dari Beranda langsung; bukan
+  bug, cuma konsekuensi urutan tap sendiri). Hardware back juga dites ulang
+  dari Pencarian dan tetap berfungsi menutup
+  (`098-global-search-hwback-B15.png`). Classic tidak disentuh (memang sudah
+  benar sebelumnya). Bug **ditutup, FIXED**.
 
 ### B16. [Modern; CONFIRMED live — bug class sama dengan B5, belum di-fix untuk grup ini] 3 baris grup "Lainnya" hamburger (Pengaturan/Bantuan/Tentang) menyala "selected" bersamaan — MEDIUM
 
@@ -1196,6 +1283,220 @@ notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
   `ProfileScreen.js`'s `stack`/`currentScreen` lewat rute yang sama
   seperti `currentFeatureKey` dialirkan untuk `ExploreScreen`.
 - **Screenshot**: `068-hamburger-triple-highlight-LAINNYA-B5-REGRESSION.png`.
+- **LIVE-CONFIRMED 2026-10-01 (sesi 5, live-verify fix `6ca564a0`)**: dites 2
+  kondisi kontras — (1) hamburger dibuka saat di layar Pengaturan: **hanya**
+  "Pengaturan" yang highlight hijau di grup "Lainnya", "Bantuan"/"Tentang
+  Aplikasi" polos (`100-hamburger-at-settings-B16.png`); (2) hamburger
+  dibuka saat di layar Bantuan (bukan Pengaturan): **hanya** "Bantuan" yang
+  highlight, "Pengaturan"/"Tentang Aplikasi" polos
+  (`102-hamburger-at-bantuan-B16.png`) — membuktikan highlight memang
+  mengikuti layar aktif sungguhan, bukan selalu baris pertama. Regresi
+  "Akses Cepat" (Tokoh Islam/Peta Interaktif/Perawi Hadith, fix B5) dicek
+  ulang di kedua screenshot: tetap polos semua (benar, karena sedang di tab
+  Profile bukan Belajar) — tidak ada regresi. Bug **ditutup, FIXED**.
+
+---
+
+### B17. [Modern & Classic; BARU, ditemukan saat live-verify B10] Residual ejaan nama aplikasi — 2 key i18n + 2 literal JS masih memakai ejaan lama, di luar scope fix B10 — LOW
+
+- **Lokasi**: konstanta resmi `APP_NAME = "Thullaabul Ilmi"` ada di
+  `apps/mobile/src/theme.js:1` (dipakai benar di `ProfileScreen.js:1773,2203`
+  dan `MobileTopHeader.js:98` — ini bagian yang sudah di-fix B10). Empat
+  tempat LAIN tidak pernah disentuh fix B10 (bukan termasuk 3 lokasi yang
+  disebut judul bug asli) dan masih memakai string literal lama: - `apps/mobile/src/i18n/locales/idn.js:1220` (key
+  `profile.about.description`) dan `en.js:1163` — isi paragraf "Tentang"
+  di layar Tentang Aplikasi: `"Thollabul Ilmi adalah aplikasi Islamic
+      knowledge..."` / `"Thollabul Ilmi is an Islamic knowledge app..."` —
+  ejaan **"Thollabul"** (o, bukan u; satu l; satu a) — beda dari kanon. - `apps/mobile/src/i18n/locales/idn.js:1321` (key `theme.light.meta`)
+  dan `en.js:1263` — teks meta opsi tema "Terang"/"Light":
+  `"Palet terang klasik Thullabul Ilmi."` / `"Classic Thullabul Ilmi
+light palette."` — ejaan **"Thullabul"** (satu l, bukan dua) — tampil di
+  Profil → Tampilan, terlihat setiap kali user membuka pengaturan tema. - `apps/mobile/src/screens/explore/WebAppZakatRoute.js:161` dan
+  `WebAppFaraidhRoute.js:358` — teks share hasil hitung Zakat/Faraidh:
+  `"\n\nDihitung via Thollabul Ilmi"` — ejaan **"Thollabul"** sama
+  dengan di atas, muncul di pesan yang di-share keluar aplikasi
+  (WhatsApp dll.), jadi berpotensi paling terlihat oleh pihak luar.
+- **Expected**: seluruh kemunculan nama aplikasi memakai `APP_NAME`
+  (`theme.js`) sebagai satu sumber kebenaran, sesuai saran fix B10 asli.
+- **Actual**: **CONFIRMED live untuk 2 dari 4** (sisanya dikonfirmasi lewat
+  pembacaan source, bukan live-trigger — share Zakat/Faraidh butuh alur
+  hitung yang di luar scope sesi ini). Tentang Aplikasi, paragraf body:
+  "Thollabul Ilmi adalah aplikasi Islamic knowledge..." —
+  `007-tentang-aplikasi-open2.png` + crop zoom, dan sama persis di versi
+  EN (`010-about-app-en-closed-menu.png`). Profil → Tampilan → opsi
+  "Terang": "Palet terang klasik **Thullabul** Ilmi." —
+  `038-tampilan-dark-B13.png` + crop zoom `zoom-terang-meta.png`.
+- **Root cause**: fix B10 (commit `6ca564a0`) diterapkan presisi hanya ke 3
+  lokasi yang disebut eksplisit di judul bug asli (`ProfileScreen.js` fallback
+  nama, `MobileTopHeader.js` judul header, key `profile.about.appName`) —
+  tidak ada sapuan global untuk string literal nama aplikasi lain yang
+  kebetulan tidak disebut di laporan B10 asli.
+- **Dampak**: kosmetik, LOW — tapi "Thollabul Ilmi" (beda ejaan paling jauh
+  dari kanon, bukan cuma 1 huruf) muncul di teks yang di-share ke aplikasi
+  lain (WhatsApp dll.) via fitur Zakat/Faraidh, jadi paling berisiko
+  terlihat oleh orang di luar aplikasi.
+- **Saran fix**: grep menyeluruh `Th[ou]ll?a+bul` di `src/` (sudah dilakukan
+  sesi ini, hasil lengkap: 4 lokasi di atas) lalu ganti ke `APP_NAME` import
+  atau interpolasi `${APP_NAME}` di template string i18n.
+- **Screenshot**: `007-tentang-aplikasi-open2.png`, `038-tampilan-dark-B13.png`
+  (crop: `zoom-about-desc.png`, `zoom-terang-meta.png` di scratchpad sesi
+  ini, tidak disalin ke folder output).
+
+### B18. [Modern & Classic; BARU, ditemukan saat live-verify B14] Kategori Panduan Sholat (Wudhu/Sholat/Sunnah/Dzikir/Umum) 100% tidak pernah menampilkan hasil — API tidak pernah mengirim field kategori — MEDIUM
+
+- **Lokasi**: `apps/mobile/src/screens/explore/referenceListFilter.js:50-54`
+  (`REFERENCE_LIST_CONFIGS["panduan-sholat"].categories = ["wudhu", "sholat",
+  "sunnah", "dzikir", "umum"]`, dipakai untuk render chip DAN untuk filter di
+  `filterReferenceListItems` baris 181-196 via `getGenericItemCategory`
+  baris 117-122: `raw.category ?? raw.jenis_nilai ?? raw.type ??
+raw.occasion`). Dikonfirmasi lewat `curl
+https://api.thollabulilmi.site/api/v1/panduan-sholat`: setiap item HANYA
+  berisi `id, step, description, source, notes, translation_id,
+translation.{id,idn,ar}` — **tidak ada satu pun** field `category`,
+  `jenis_nilai`, `type`, atau `occasion`. Jadi `getGenericItemCategory`
+  SELALU mengembalikan string kosong `""` untuk tiap item.
+- **Expected**: memilih chip kategori (mis. "Sholat") menyaring daftar ke
+  item yang relevan dengan kategori itu.
+- **Actual**: **CONFIRMED live, 3 chip dicoba, ketiganya 0 hasil** —
+  "Wudhu" → "Menampilkan 0 dari 12 panduan"
+  (`061-classic-wudhu-chip-retry.png`), "Sholat" → tetap 0
+  (`064-classic-sholat-chip-v3.png`, padahal item yang terlihat seperti
+  "Niat"/"Takbiratul Ihram" jelas-jelas tahapan sholat), "Umum" → tetap 0
+  (`066-classic-umum-chip-check.png`). "Semua" tetap benar menampilkan 12
+  (`065-classic-semua-reset-check.png`) — regresi murni di cabang filter
+  kategori, bukan di loading data. **Kontras dibuktikan**: fitur Dzikir
+  (API punya field `category: "dzikir_umum"`, dicek via curl) dan chip
+  "Setelah Sholat"-nya BENAR menyaring ("Menampilkan 4 dari 37 dzikir",
+  `090-classic-dzikir-setelahsholat-chip.png`) — jadi mekanisme
+  filter/chip-nya sendiri TIDAK rusak, murni data Panduan Sholat yang tidak
+  pernah punya field kategori sejak dari API.
+- **Root cause**: lihat Lokasi — mismatch antara daftar kategori HARDCODE di
+  `REFERENCE_LIST_CONFIGS` (ditulis seolah data `panduan-sholat` sudah
+  punya tagging kategori) dengan skema API sungguhan yang tidak pernah
+  menyertakan field itu sama sekali — kemungkinan kategori ditulis
+  berdasarkan desain/rencana awal, bukan dicek terhadap respons API nyata.
+  Bug ini berlaku di KEDUA layout (Classic baru dapat chip-nya dari B14,
+  Modern sudah dapat chip ini sejak B8 — keduanya sama-sama 0 hasil karena
+  memakai helper filter yang sama).
+- **Dampak**: 5 dari 6 chip (semua kecuali "Semua") di fitur Panduan Sholat
+  effectively mati total — user yang mencoba filter kategori apa pun selalu
+  mendapat "Tidak ada panduan yang cocok", padahal datanya ADA (12 panduan,
+  tampil sempurna di "Semua"). Berpotensi bikin user mengira fitur/datanya
+  kosong/rusak.
+- **Saran fix**: jangka pendek, hapus array `categories` untuk
+  `"panduan-sholat"` di `REFERENCE_LIST_CONFIGS` (sembunyikan chip yang
+  memang tidak bisa pernah match, sama seperti `asmaul-husna` yang
+  `categories: []`) sampai backend benar-benar menambah field kategori;
+  jangka panjang, tambah field kategori di tabel/endpoint
+  `/api/v1/panduan-sholat` lalu kembalikan array `categories` sesuai data
+  asli.
+- **Screenshot**: `061-classic-wudhu-chip-retry.png`,
+  `064-classic-sholat-chip-v3.png`, `066-classic-umum-chip-check.png`
+  (ketiganya 0 hasil), `065-classic-semua-reset-check.png` (kontras,
+  "Semua" benar 12), `090-classic-dzikir-setelahsholat-chip.png` (kontras,
+  Dzikir chip berfungsi normal).
+
+### B19. [Modern & Classic; BARU, ditemukan saat live-verify B14] Pencarian Asmaul Husna tidak mengindeks nama transliterasi ("Rahman", "Ar-Rahman") — hanya cocok dengan arti Indonesia — MEDIUM
+
+- **Lokasi**: `apps/mobile/src/screens/explore/referenceListFilter.js:163-179`
+  (`getItemSearchHaystack`, dipakai oleh `filterReferenceListItems` untuk
+  SEMUA fitur non-doa termasuk `asmaul-husna`) hanya menggabungkan
+  `item.title, item.body, item.arabic, item.meta,
+raw.translation.{latin_idn,latin_en,text_idn,text_en}, raw.source,
+raw.sumber` — TIDAK PERNAH membaca field top-level `transliteration` yang
+  nyata-nyata ada di respons API. Dikonfirmasi lewat
+  `curl https://api.thollabulilmi.site/api/v1/asmaul-husna`: tiap item
+  punya `arabic, transliteration, indonesian, english, meaning, source,
+translation_id, translation.{id,idn,ar}` — field `transliteration` (mis.
+  `"Ar-Rahman"`) dan `indonesian`/`english`/`meaning` sama sekali tidak
+  masuk daftar field yang di-gabung `getItemSearchHaystack`.
+- **Expected**: mencari nama Asmaul Husna lewat ejaan Latin/transliterasi
+  Arab-nya (cara paling umum orang mencari nama Allah, mis. "Rahman",
+  "Rahim", "Malik") seharusnya menemukan item yang sesuai.
+- **Actual**: **CONFIRMED live**. Cari "rahman" (transliterasi nama kedua,
+  "Ar-Rahman" / "Yang Maha Pengasih") → **"Menampilkan 0 dari 99 nama"**,
+  "Tidak ada nama yang cocok" (`073-classic-asmaul-search-rahman.png`) —
+  padahal item itu ADA dan terlihat jelas di daftar "Semua"
+  (`072-classic-asmaul-husna-wait.png`, baris ke-2 "Yang Maha Pengasih").
+  Sebagai kontras, cari "pengasih" (kata arti Indonesia, ada di `item.title`)
+  → **benar** "Menampilkan 2 dari 99 nama" (Ar-Rahman dan Ar-Rauf, keduanya
+  mengandung kata "pengasih" di artinya) —
+  `074-classic-asmaul-search-pengasih.png`. Jadi pencarian HANYA berfungsi
+  lewat arti Indonesia, tidak pernah lewat ejaan Arab/transliterasi.
+- **Root cause**: lihat Lokasi — `getItemSearchHaystack` ditulis generik
+  untuk semua fitur reference-list, asumsi field `raw.translation.latin_idn`
+  dkk. yang dipakai fitur LAIN (mis. Panduan Sholat, Dzikir) — tapi skema
+  API `asmaul-husna` berbeda, menaruh transliterasi di field top-level
+  `transliteration`, bukan di `translation.latin_idn`. Helper generik tidak
+  pernah disesuaikan per-skema, jadi field itu lolos tanpa pernah terindeks.
+- **Dampak**: cara pencarian paling natural untuk fitur "99 Nama Allah" —
+  mengetik nama Arabnya dalam ejaan Latin — tidak berfungsi sama sekali;
+  user harus tahu/menebak kata arti Indonesia-nya dulu, yang jauh kurang
+  intuitif dan mengurangi nilai fitur pencarian ini secara signifikan.
+- **Saran fix**: tambah `raw?.transliteration` (dan idealnya
+  `raw?.indonesian`, `raw?.english`, `raw?.meaning` sebagai fallback umum)
+  ke array di `getItemSearchHaystack`, atau — lebih tahan lama — buat
+  varian haystack per-`featureKey` yang eksplisit mencantumkan field asli
+  tiap skema API alih-alih satu daftar generik untuk semua fitur.
+- **Screenshot**: `073-classic-asmaul-search-rahman.png` (0 hasil, salah),
+  `074-classic-asmaul-search-pengasih.png` (2 hasil, benar via arti).
+
+### B20. [Classic; BARU, ditemukan saat live-verify B14 — kemungkinan besar bug lama, baru sering ketemu karena B14 menambah banyak search box baru] TabBar Classic bisa hilang permanen setelah search box difokus lalu dinavigasi-keluar — MEDIUM
+
+- **Lokasi**: `apps/mobile/src/layout/ClassicAppShell.js:40-42`
+  (`{activeTab === "quran" || keyboardVisible ? null : (<TabBar ... />)}`)
+  — `keyboardVisible` adalah PROP dari `App.js`, bukan state lokal shell.
+  `apps/mobile/App.js:111-127` mengisi state itu murni dari event native
+  `Keyboard.addListener("keyboardDidShow"/"keyboardDidHide", ...)` tanpa
+  fallback/guard lain — tidak ada `Keyboard.dismiss()` eksplisit atau
+  pengecekan blur manual saat navigasi terjadi.
+- **Expected**: TabBar Classic selalu terlihat di semua layar kecuali tab
+  Quran, termasuk setelah search box dipakai lalu ditinggal/dinavigasi.
+- **Actual**: **CONFIRMED live, terjadi berulang (3×) secara independen
+  dalam sesi yang sama**: (1) setelah mengetik di search box Panduan Sholat
+  lalu navigasi kembali ke Belajar hub via header-back, TabBar hilang total
+  (tidak ada di screenshot MAUPUN di `uiautomator dump` — bukan cuma
+  tersembunyi visual, betul-betul tidak ter-render,
+  `080-check-scroll-position.png` dan dump `ui47.xml` dikonfirmasi 0 node
+  di area y>2100); (2) pola sama terulang setelah memakai search box Kamus
+  Arab; (3) satu kali terjadi tanpa interaksi search box yang jelas
+  (kemungkinan sisa state dari kejadian sebelumnya). **Deep-link ke
+  `thullaabulilmi://belajar` SAJA tidak selalu memulihkan** (kadang cuma
+  "delivered to currently running top-most instance" tanpa remount JS,
+  `082-relaunch-restore-tabbar.png` masih hilang) — pemulihan pasti hanya
+  lewat `am force-stop` diikuti relaunch penuh
+  (`083-force-restart-check.png`, TabBar kembali). Ini konsisten dengan
+  `keyboardVisible` yang tersangkut `true` di state React murni `App.js`,
+  yang hanya bisa direset lewat remount JS penuh, bukan sekadar
+  intent/navigasi.
+- **Root cause**: dari pembacaan kode, kemungkinan besar race antara event
+  native `keyboardDidHide` (dipicu animasi IME menutup) dengan transisi
+  navigasi yang terjadi HAMPIR bersamaan (mis. tekan tombol back saat
+  keyboard baru mulai animasi tertutup) — pada kondisi tertentu Android
+  tidak sempat mengirim `keyboardDidHide` sebelum unmount/transisi layar
+  berikutnya selesai, sehingga `setKeyboardVisible(false)` tidak pernah
+  terpanggil dan nilainya tersangkut `true` selamanya (exact timing belum
+  dipastikan baris-demi-baris, perlu logging runtime seperti catatan
+  serupa di B12 lama).
+- **Dampak**: MEDIUM — user Classic kehilangan SELURUH akses navigasi
+  bottom-tab (satu-satunya cara pindah hub di Classic selain back-stack)
+  sampai me-restart aplikasi penuh; makin sering ketemu sekarang karena
+  fix B14 baru saja menambah search box ke 8 fitur Classic yang sebelumnya
+  nyaris tidak punya text input sama sekali — jadi walau akar masalahnya
+  bukan kode B14, B14 secara tidak langsung memperbesar permukaan
+  (surface) untuk memicu bug lama ini.
+- **Saran fix**: opsi aman jangka pendek — di `ClassicAppShell.js`, jangan
+  gantungkan visibilitas TabBar 100% ke `keyboardVisible` state React;
+  tambahkan `Keyboard.dismiss()` eksplisit di titik-titik navigasi
+  (header-back, hardware-back handler) sebelum transisi terjadi, supaya
+  `keyboardDidHide` sempat terpicu lebih deterministik. Opsi lebih tahan
+  lama — deteksi "stuck" dengan timeout kecil (mis. jika `keyboardVisible`
+  masih `true` 500ms setelah blur event terakhir tapi tidak ada `TextInput`
+  yang fokus, paksa `false`).
+- **Screenshot**: `080-check-scroll-position.png` (TabBar hilang di Kamus
+  Arab), `081-hwback-from-kamus-arab.png` (masih hilang setelah hardware
+  back), `082-relaunch-restore-tabbar.png` (deep-link saja tidak cukup),
+  `083-force-restart-check.png` (force-stop+relaunch memulihkan).
 
 ---
 
@@ -1821,3 +2122,77 @@ hijau di tiap commit (93 suite / 1479 test di commit terakhir).
 **Belum diverifikasi live** (tidak ada akses emulator/device selama sesi
 4, semua fix dikerjakan code+Jest saja) — perlu sesi live-verify
 terpisah sebelum build APK berikutnya dianggap final untuk B10-B16.
+
+## Status Live-Verify — Sesi 5 (2026-10-01)
+
+Sesi terpisah (device baru pertama kali melihat fix sesi 4), APK release
+fresh-install (`firstInstallTime` = `lastUpdateTime` 17:38:29, data app
+kosong), guest-only, API produksi. **Seluruh B10–B16 dikonfirmasi FIXED
+secara live** (screenshot per item ada di update masing-masing di atas,
+folder `apps/mobile/output/native/2026-10-01-b10-b16-live-verify/`):
+
+- **B10 FIXED** — 3 lokasi asli (Profil, header Modern, Tentang Aplikasi)
+  kini identik "Thullaabul Ilmi". Residual 4 lokasi lain (di luar scope
+  judul bug asli) → **B17 baru**.
+- **B11 FIXED** — hero hub Belajar, 3 header Profil/Settings, toggle
+  Kitab/Hadis-Book/Hadith semuanya ikut toggle bahasa dengan benar di kedua
+  arah.
+- **B12 FIXED** — tab Belajar sekarang benar me-remount ke hub saat ditekan
+  dari state cross-hub yang disamarkan; direproduksi 2× + 2 non-regresi
+  (re-tap bersih, re-tap Ibadah) semuanya PASS.
+- **B13 FIXED** — label Tema/Bahasa Konten/Mode Layout + Q&A Bantuan
+  terang jelas di dark mode. Keamanan & About description title
+  dikonfirmasi ulang **masih buram** persis seperti catatan "sengaja
+  ditunda" di commit — bukan regresi baru.
+- **B14 FIXED** (UI/mekanisme) — search+chip+counter+debounce+item-tap
+  bekerja di 4 fitur Classic yang dites langsung (Panduan Sholat, Asmaul
+  Husna, Doa termasuk chip "Bangun", Dzikir). Tapi ditemukan 2 bug
+  data/konten baru yang sebelumnya tidak kelihatan karena UI-nya memang
+  belum ada → **B18, B19 baru**; plus 1 bug navigasi lingkungan yang jadi
+  lebih sering ketemu karena B14 → **B20 baru**.
+- **B15 FIXED** — panah-kembali Pencarian Global berfungsi, hardware back
+  juga tetap berfungsi.
+- **B16 FIXED** — dikonfirmasi dengan 2 kondisi kontras (Pengaturan-only,
+  Bantuan-only), regresi Akses Cepat (B5) tetap aman.
+
+**4 temuan baru (B17-B20)**, detail lengkap root-cause + saran fix ada di
+masing-masing entri di atas:
+
+- **B17 (LOW)** — residual ejaan nama aplikasi di 2 key i18n
+  (`profile.about.description`, `theme.light.meta`) + 2 literal share-text
+  Zakat/Faraidh, di luar scope 3 lokasi yang di-fix B10.
+- **B18 (MEDIUM)** — kategori Panduan Sholat (Wudhu/Sholat/Sunnah/Dzikir/
+  Umum) 100% selalu 0 hasil di KEDUA layout, karena endpoint
+  `panduan-sholat` tidak pernah mengirim field kategori apa pun — bug data,
+  bukan bug UI B14 (kontras: Dzikir yang API-nya punya field kategori,
+  chip-nya berfungsi normal).
+- **B19 (MEDIUM)** — pencarian Asmaul Husna tidak mengindeks field
+  `transliteration` ("Ar-Rahman" dkk.) dari API, cuma cocok lewat arti
+  Indonesia (`item.title`) — cara pencarian paling natural untuk fitur ini
+  (ejaan Arab/transliterasi) tidak berfungsi.
+- **B20 (MEDIUM)** — TabBar Classic bisa hilang permanen (butuh
+  force-stop+relaunch untuk pulih) jika search box difokus lalu dinavigasi
+  keluar sebelum event `keyboardDidHide` sempat terpicu bersih; kemungkinan
+  bug lama di `App.js`/`ClassicAppShell.js`, baru sering ketemu sekarang
+  karena B14 menambah banyak search box baru ke Classic.
+
+**Regresi sweep**: `adb logcat -c` lalu Home → Quran → Al-Fatihah → Hadis →
+Shahih Bukhari reader → Ibadah hub → Belajar hub (Modern), plus seluruh
+navigasi B10-B16/B18-B20 di atas (puluhan layar, kedua layout, kedua
+bahasa, dark+light theme) — `adb logcat -d -s ReactNativeJS:V
+AndroidRuntime:E` dan `adb logcat -b crash -d` **kosong total** (0 baris),
+tidak ada crash/red-box teramati di screenshot manapun sepanjang sesi.
+
+**Hal yang tidak sempat diverifikasi**: 4 dari 8 fitur reference-list B14
+(Wirid, Panduan Sholat kategori lain selain 3 yang dites, Manasik,
+Jarh Tadil) tidak ditekan satu-satu secara eksplisit — dinilai risiko
+rendah karena memakai komponen `ClassicReferenceListContent` + helper
+`referenceListFilter.js` yang identik dengan 4 fitur yang sudah dites,
+TAPI B18 justru membuktikan asumsi "komponen sama = aman" tidak selalu
+berlaku untuk lapisan DATA (tiap fitur punya skema API sendiri) — jadi
+4 fitur yang belum dicek sebaiknya tetap di-spot-check sebelum dianggap
+bebas dari kelas bug B18/B19.
+
+**Akhir sesi**: dikembalikan ke state awal yang diminta — Modern (Web App),
+tema Ikuti Sistem, Bahasa Indonesia, tab Beranda. Font scale, Wi-Fi, dan
+airplane mode tidak disentuh (tetap default).
