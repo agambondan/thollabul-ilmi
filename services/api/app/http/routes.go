@@ -495,7 +495,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/library/books/:id", admin, newLibraryBookController.Delete)
 	master.Get("/library/progress", jwt, newLibraryBookProgressController.FindAll)
 	master.Get("/library/progress/:bookId", jwt, newLibraryBookProgressController.FindByBook)
-	master.Put("/library/progress/:bookId", jwt, newLibraryBookProgressController.Update)
+	master.Put("/library/progress/:bookId", jwt, personalWriteLimiter, newLibraryBookProgressController.Update)
 
 	// Bookmark
 	master.Post("/bookmarks", jwt, personalWriteLimiter, newBookmarkController.Add)
@@ -596,15 +596,15 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/stats/weekly", jwt, newStatsController.GetWeekly)
 
 	// Tilawah Tracker (protected)
-	master.Post("/tilawah", jwt, newTilawahController.Add)
+	master.Post("/tilawah", jwt, personalWriteLimiter, newTilawahController.Add)
 	master.Get("/tilawah", jwt, newTilawahController.FindAll)
 	master.Get("/tilawah/summary", jwt, newTilawahController.Summary)
-	master.Delete("/tilawah/:id", jwt, newTilawahController.Delete)
+	master.Delete("/tilawah/:id", jwt, personalWriteLimiter, newTilawahController.Delete)
 
 	// Amalan Harian (items: public; status/toggle/history: protected)
 	master.Get("/amalan", newAmalanController.FindAllItems)
 	master.Get("/amalan/today", jwt, newAmalanController.GetToday)
-	master.Put("/amalan/:id/check", jwt, newAmalanController.Toggle)
+	master.Put("/amalan/:id/check", jwt, personalWriteLimiter, newAmalanController.Toggle)
 	master.Get("/amalan/history", jwt, newAmalanController.GetHistory)
 	// Admin: amalan master items
 	master.Post("/amalan/items", middlewares.EditorOrAdminMiddleware(), newAmalanController.CreateItem)
@@ -620,9 +620,9 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/dzikir/:id", middlewares.EditorOrAdminMiddleware(), newDzikirController.Delete)
 
 	// Dzikir Log (protected — daily tracker)
-	master.Post("/dzikir/log", jwt, newDzikirLogController.Log)
+	master.Post("/dzikir/log", jwt, personalWriteLimiter, newDzikirLogController.Log)
 	master.Get("/dzikir/log/today", jwt, newDzikirLogController.GetToday)
-	master.Delete("/dzikir/log/:id", jwt, newDzikirLogController.Delete)
+	master.Delete("/dzikir/log/:id", jwt, personalWriteLimiter, newDzikirLogController.Delete)
 
 	// Leaderboard (public read, my-rank: protected)
 	master.Get("/leaderboard/streak", newLeaderboardController.TopStreak)
@@ -664,7 +664,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/faraidh/simpan/:id", jwt, newSimpanFaraidhController.Delete)
 
 	// Prayer Tracker / Sholat (protected user; panduan: public)
-	master.Put("/sholat/today", jwt, newSholatController.LogPrayer)
+	master.Put("/sholat/today", jwt, personalWriteLimiter, newSholatController.LogPrayer)
 	master.Get("/sholat/today", jwt, newSholatController.GetToday)
 	master.Get("/sholat/history", jwt, newSholatController.GetHistory)
 	master.Get("/sholat/stats", jwt, newSholatController.GetStats)
@@ -677,7 +677,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/panduan-sholat/:id", middlewares.EditorOrAdminMiddleware(), newSholatController.DeleteGuide)
 
 	// Muroja'ah Mode (protected)
-	master.Post("/murojaah/result", jwt, newMurojaahController.RecordSession)
+	master.Post("/murojaah/result", jwt, personalWriteLimiter, newMurojaahController.RecordSession)
 	master.Get("/murojaah/history", jwt, newMurojaahController.GetHistory)
 	master.Get("/murojaah/stats", jwt, newMurojaahController.GetStats)
 
@@ -713,13 +713,13 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Synced per-user bookmarks (protected)
 	master.Get("/kajian/bookmarks/me", jwt, newKajianBookmarkController.ListMine)
 	master.Get("/kajian/bookmarks/ids", jwt, newKajianBookmarkController.ChunkIDs)
-	master.Post("/kajian/bookmarks", jwt, newKajianBookmarkController.Add)
-	master.Delete("/kajian/bookmarks/:chunk_id", jwt, newKajianBookmarkController.Remove)
+	master.Post("/kajian/bookmarks", jwt, personalWriteLimiter, newKajianBookmarkController.Add)
+	master.Delete("/kajian/bookmarks/:chunk_id", jwt, personalWriteLimiter, newKajianBookmarkController.Remove)
 	// Synced per-user timestamped notes (protected)
 	master.Get("/kajian/notes/me", jwt, newKajianNoteController.ListMine)
-	master.Post("/kajian/notes", jwt, newKajianNoteController.Create)
-	master.Put("/kajian/notes/:id", jwt, newKajianNoteController.Update)
-	master.Delete("/kajian/notes/:id", jwt, newKajianNoteController.Delete)
+	master.Post("/kajian/notes", jwt, personalWriteLimiter, newKajianNoteController.Create)
+	master.Put("/kajian/notes/:id", jwt, personalWriteLimiter, newKajianNoteController.Update)
+	master.Delete("/kajian/notes/:id", jwt, personalWriteLimiter, newKajianNoteController.Delete)
 
 	// Wirid Khusus (public — query dzikir by occasion)
 	master.Get("/wirid", newDzikirController.FindAll)
@@ -922,12 +922,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Forum Q&A
 	master.Get("/forum/questions", newForumController.ListQuestions)
 	master.Get("/forum/questions/:slug", newForumController.GetQuestion)
-	master.Post("/forum/questions", jwt, newForumController.CreateQuestion)
+	master.Post("/forum/questions", jwt, personalWriteLimiter, newForumController.CreateQuestion)
 	master.Delete("/forum/questions/:id", jwt, newForumController.DeleteQuestion)
-	master.Post("/forum/questions/:id/answers", jwt, newForumController.CreateAnswer)
+	master.Post("/forum/questions/:id/answers", jwt, personalWriteLimiter, newForumController.CreateAnswer)
 	master.Put("/forum/questions/:id/answers/:answerId/accept", jwt, newForumController.AcceptAnswer)
 	master.Delete("/forum/answers/:id", jwt, newForumController.DeleteAnswer)
-	master.Post("/forum/votes", jwt, newForumController.Vote)
+	master.Post("/forum/votes", jwt, personalWriteLimiter, newForumController.Vote)
 
 	// Komunitas chat (public read/stream, protected write)
 	master.Get("/komunitas/chat", newChatController.List)
@@ -992,7 +992,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/takhrij/:id", middlewares.EditorOrAdminMiddleware(), newTakhrijController.DeleteByID)
 
 	// Content correction reports (review user)
-	master.Post("/reports", jwt, newContentReportController.Create)
+	master.Post("/reports", jwt, personalWriteLimiter, newContentReportController.Create)
 	master.Get("/reports/mine", jwt, newContentReportController.FindMine)
 	master.Get("/admin/reports", admin, newContentReportController.FindAll)
 	master.Get("/admin/reports/:id", admin, newContentReportController.FindByID)
