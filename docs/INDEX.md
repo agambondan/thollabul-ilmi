@@ -79,12 +79,13 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 
 ## Bukti Visual (Before/After)
 
-| Dokumen                                                                                                     | Isi                                                                                                                     |
-| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **[VISUAL_EVIDENCE.md](./VISUAL_EVIDENCE.md)**                                                              | **← Aturan mengikat, resep pengambilan, template README folder bukti.**                                                 |
-| [media/before-after/2026-09-30-mobile-ui-fixes/](./media/before-after/2026-09-30-mobile-ui-fixes/README.md) | 7 pasang: header bocor antar-tab, daftar Hadis tidak dimuat, total Kajian, judul Bookmark/Catatan, daftar Kajian kosong |
-| [media/before-after/2026-10-01-belajar-hub-fixes/](./media/before-after/2026-10-01-belajar-hub-fixes/README.md) | 6 pasang: amalan guest error, lessons markdown, blog excerpt markdown, hamburger highlight, search nav highlight, quiz progress title |
-| [media/before-after/2026-10-01-tokoh-tarikh-layout-fixes/](./media/before-after/2026-10-01-tokoh-tarikh-layout-fixes/README.md) | 2 pasang: standardisasi padding & badge era daftar Tokoh Tarikh, migrasi modal detail ke AppModalSheet |
+| Dokumen                                                                                                                         | Isi                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[VISUAL_EVIDENCE.md](./VISUAL_EVIDENCE.md)**                                                                                  | **← Aturan mengikat, resep pengambilan, template README folder bukti.**                                                                                                                                    |
+| [media/before-after/2026-09-30-mobile-ui-fixes/](./media/before-after/2026-09-30-mobile-ui-fixes/README.md)                     | 7 pasang: header bocor antar-tab, daftar Hadis tidak dimuat, total Kajian, judul Bookmark/Catatan, daftar Kajian kosong                                                                                    |
+| [media/before-after/2026-10-01-belajar-hub-fixes/](./media/before-after/2026-10-01-belajar-hub-fixes/README.md)                 | 6 pasang: amalan guest error, lessons markdown, blog excerpt markdown, hamburger highlight, search nav highlight, quiz progress title                                                                      |
+| [media/before-after/2026-10-01-tokoh-tarikh-layout-fixes/](./media/before-after/2026-10-01-tokoh-tarikh-layout-fixes/README.md) | 2 pasang: standardisasi padding & badge era daftar Tokoh Tarikh, migrasi modal detail ke AppModalSheet                                                                                                     |
+| [media/before-after/2026-10-01-belajar-hub-code-fixes/](./media/before-after/2026-10-01-belajar-hub-code-fixes/README.md)       | 8 pasang (B10-B16): nama app, toggle Book/Hadith ID, hero Belajar EN, tab Belajar nyangkut di Doa, kontras label dark mode, search/filter Classic, tombol tutup Global Search, highlight hamburger Lainnya |
 
 ---
 
