@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { colors, getThemeColors, radius, spacing, touchTarget } from "../theme";
 import { requestJson } from "../api/client";
+import { AppModalSheet } from "../components/AppModalSheet";
 import { HistoricalMapView } from "./HistoricalMapView";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
@@ -109,6 +110,7 @@ export function HistoricalMapContent() {
     const [viewMode, setViewMode] = useState("map");
     const [category, setCategory] = useState("");
     const [era, setEra] = useState("");
+    const [selected, setSelected] = useState(null);
     const locationFallback = t("historicalMap.locationFallback");
     const categories = CATEGORIES.map((item) => ({
         ...item,
@@ -232,6 +234,7 @@ export function HistoricalMapContent() {
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.filterContent}
                 style={styles.filterRow}
             >
                 {categories.map((item) => (
@@ -277,6 +280,7 @@ export function HistoricalMapContent() {
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.filterContent}
                 style={styles.filterRow}
             >
                 {eras.map((item) => (
@@ -370,7 +374,7 @@ export function HistoricalMapContent() {
                         color: "rgba(16, 185, 129, 0.12)",
                         borderless: false,
                     }}
-                    onPress={() => setViewMode("map")}
+                    onPress={() => setSelected(loc)}
                     style={[
                         styles.locationRow,
                         !isWebAppLayout && { borderBottomColor: theme.border },
@@ -406,6 +410,10 @@ export function HistoricalMapContent() {
                                 <Text
                                     style={[
                                         styles.rowTag,
+                                        !isWebAppLayout && {
+                                            backgroundColor: theme.surfaceMuted,
+                                            color: theme.primary,
+                                        },
                                         isWebAppLayout && {
                                             backgroundColor:
                                                 webAppTheme.accentSoft,
@@ -421,6 +429,10 @@ export function HistoricalMapContent() {
                                     style={[
                                         styles.rowTag,
                                         styles.rowTagEra,
+                                        !isWebAppLayout && {
+                                            backgroundColor: theme.bg,
+                                            color: theme.muted,
+                                        },
                                         isWebAppLayout && {
                                             backgroundColor:
                                                 webAppTheme.infoSoft,
@@ -478,6 +490,74 @@ export function HistoricalMapContent() {
                 renderList()
             )}
         </>
+    );
+
+
+    const renderDetailModal = () => (
+        <AppModalSheet
+            onClose={() => setSelected(null)}
+            subtitle={
+                selected
+                    ? `${selected.category ?? ""} · ${selected.era ?? ""}`
+                    : ""
+            }
+            title={getLocationName(selected, locationFallback)}
+            visible={Boolean(selected)}
+        >
+            {selected ? (
+                <View>
+                    <Text
+                        style={[
+                            styles.modalDesc,
+                            { color: isWebAppLayout ? webAppTheme.text : theme.text },
+                        ]}
+                    >
+                        {getLocationDescription(selected)}
+                    </Text>
+                    {(selected.category || selected.era) && (
+                        <View style={styles.rowTags}>
+                            {selected.category ? (
+                                <Text
+                                    style={[
+                                        styles.rowTag,
+                                        isWebAppLayout
+                                            ? {
+                                                  backgroundColor: webAppTheme.accentSoft,
+                                                  color: webAppTheme.accentText,
+                                              }
+                                            : {
+                                                  backgroundColor: theme.surfaceMuted,
+                                                  color: theme.primary,
+                                              },
+                                    ]}
+                                >
+                                    {selected.category}
+                                </Text>
+                            ) : null}
+                            {selected.era ? (
+                                <Text
+                                    style={[
+                                        styles.rowTag,
+                                        styles.rowTagEra,
+                                        isWebAppLayout
+                                            ? {
+                                                  backgroundColor: webAppTheme.infoSoft,
+                                                  color: webAppTheme.infoText,
+                                              }
+                                            : {
+                                                  backgroundColor: theme.bg,
+                                                  color: theme.muted,
+                                              },
+                                    ]}
+                                >
+                                    {selected.era}
+                                </Text>
+                            ) : null}
+                        </View>
+                    )}
+                </View>
+            ) : null}
+        </AppModalSheet>
     );
 
     if (isWebAppLayout) {
@@ -539,6 +619,7 @@ export function HistoricalMapContent() {
                     {renderFilters()}
                 </View>
                 {renderBody()}
+                {renderDetailModal()}
             </View>
         );
     }
@@ -586,6 +667,9 @@ const styles = StyleSheet.create({
     toggleBtnTextActive: {
         color: "#fff",
     },
+    filterContent: {
+        paddingHorizontal: spacing.md,
+    },
     filterRow: {
         marginBottom: spacing.sm,
     },
@@ -622,8 +706,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     searchInput: {
-        backgroundColor: colors.bg,
-        borderColor: colors.faint,
+        backgroundColor: colors.surface,
+        borderColor: colors.border,
         borderRadius: radius.md,
         borderWidth: 1,
         color: colors.ink,
@@ -638,9 +722,12 @@ const styles = StyleSheet.create({
         marginBottom: spacing.xs,
     },
     locationRow: {
-        borderBottomColor: colors.faint,
-        borderBottomWidth: 1,
-        paddingVertical: spacing.md,
+        backgroundColor: colors.surface,
+        borderColor: colors.border,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        marginBottom: spacing.sm,
+        padding: spacing.md,
     },
     locationCopy: {
         flex: 1,
@@ -662,18 +749,18 @@ const styles = StyleSheet.create({
         marginTop: 6,
     },
     rowTag: {
-        backgroundColor: "#dcfce7",
         borderRadius: 8,
-        color: "#166534",
         fontSize: 10,
         fontWeight: "600",
         overflow: "hidden",
         paddingHorizontal: 6,
         paddingVertical: 2,
     },
-    rowTagEra: {
-        backgroundColor: "#dbeafe",
-        color: "#1e40af",
+    rowTagEra: {},
+    modalDesc: {
+        fontSize: 14,
+        lineHeight: 21,
+        marginBottom: spacing.md,
     },
     webAppRoot: {
         backgroundColor: "#f8fafc",

@@ -85,12 +85,13 @@ export function HistoricalMapView({
                                     <Text
                                         style={[
                                             styles.tag,
-                                            isWebAppLayout &&
-                                                webAppTheme && {
-                                                    backgroundColor:
-                                                        webAppTheme.accentSoft,
-                                                    color: webAppTheme.accentText,
-                                                },
+                                            isWebAppLayout
+                                                ? {
+                                                      backgroundColor:
+                                                          webAppTheme.accentSoft,
+                                                      color: webAppTheme.accentText,
+                                                  }
+                                                : styles.tagClassic,
                                         ]}
                                     >
                                         {loc.category}
@@ -101,12 +102,13 @@ export function HistoricalMapView({
                                         style={[
                                             styles.tag,
                                             styles.tagEra,
-                                            isWebAppLayout &&
-                                                webAppTheme && {
-                                                    backgroundColor:
-                                                        webAppTheme.infoSoft,
-                                                    color: webAppTheme.infoText,
-                                                },
+                                            isWebAppLayout
+                                                ? {
+                                                      backgroundColor:
+                                                          webAppTheme.infoSoft,
+                                                      color: webAppTheme.infoText,
+                                                  }
+                                                : styles.tagEraClassic,
                                         ]}
                                     >
                                         {loc.era}
@@ -172,18 +174,21 @@ const styles = StyleSheet.create({
         marginTop: spacing.xs,
     },
     tag: {
-        backgroundColor: "#dcfce7",
         borderRadius: 8,
-        color: "#166534",
         fontSize: 10,
         fontWeight: "700",
         overflow: "hidden",
         paddingHorizontal: spacing.xs,
         paddingVertical: spacing.xs,
     },
-    tagEra: {
-        backgroundColor: "#dbeafe",
-        color: "#1e40af",
+    tagEra: {},
+    tagClassic: {
+        backgroundColor: "rgba(16, 185, 129, 0.12)",
+        color: "#10b981",
+    },
+    tagEraClassic: {
+        backgroundColor: "rgba(59, 130, 246, 0.12)",
+        color: "#3b82f6",
     },
     webAppContainer: {
         backgroundColor: "#ffffff",
