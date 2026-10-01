@@ -19,7 +19,7 @@ import {
     mergeCalculatorHistory,
     saveCalculatorHistory,
 } from "../../storage/calculatorHistory";
-import { colors, radius, spacing, touchTarget } from "../../theme";
+import { APP_NAME, colors, radius, spacing, touchTarget } from "../../theme";
 import {
     formatCurrency,
     formatDecimalValue,
@@ -158,7 +158,7 @@ function ResultCard({ amount, color = "emerald", isDarkTheme, label, note }) {
               ? (isDarkTheme ? styles.resultAmountBlueDark : styles.resultAmountBlue)
               : (isDarkTheme ? styles.resultAmountEmeraldDark : styles.resultAmountEmerald);
     const handleShare = () => {
-        const msg = `${label}: ${formatCurrency(amount)}` + (note ? ` (${note})` : "") + "\n\nDihitung via Thollabul Ilmi";
+        const msg = `${label}: ${formatCurrency(amount)}` + (note ? ` (${note})` : "") + `\n\nDihitung via ${APP_NAME}`;
         Share.share({ message: msg }).catch(() => {});
     };
     return (

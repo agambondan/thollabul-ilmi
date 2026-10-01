@@ -33,7 +33,7 @@ import {
     readCalculatorHistory,
     saveCalculatorHistory,
 } from "../../storage/calculatorHistory";
-import { radius, spacing } from "../../theme";
+import { APP_NAME, radius, spacing } from "../../theme";
 import {
     formatCurrency,
     formatNumericInput,
@@ -355,7 +355,7 @@ function ResultRows({ activeDark, calculation, distributable, language, t }) {
                         `Pembagian Waris (${formatCurrency(distributable)})\n\n` +
                         lines +
                         `\n\nTotal: ${formatCurrency(distributable * calculation.totalShare)}` +
-                        "\n\nDihitung via Thollabul Ilmi";
+                        `\n\nDihitung via ${APP_NAME}`;
                     Share.share({ message: msg }).catch(() => {});
                 }}
                 style={styles.shareAllBtn}

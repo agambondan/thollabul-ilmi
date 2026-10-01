@@ -1217,7 +1217,7 @@ export const idn = {
         "profile.security.signOutDevice": "Keluar dari perangkat ini",
         "profile.about.appName": "Thullaabul Ilmi",
         "profile.about.description":
-            "Thollabul Ilmi adalah aplikasi Islamic knowledge untuk penuntut ilmu, menghadirkan Al-Quran, Hadis, tracker ibadah, dan materi belajar Islam dalam satu aplikasi.",
+            "Thullaabul Ilmi adalah aplikasi Islamic knowledge untuk penuntut ilmu, menghadirkan Al-Quran, Hadis, tracker ibadah, dan materi belajar Islam dalam satu aplikasi.",
         "profile.about.descriptionTitle": "Tentang",
         "profile.about.title": "Tentang Aplikasi",
         "profile.about.meta": "Informasi aplikasi dan versi",
@@ -1318,7 +1318,7 @@ export const idn = {
         "theme.dark.meta":
             "Disimpan sebagai preferensi perangkat untuk mode layout berikutnya.",
         "theme.light.label": "Terang",
-        "theme.light.meta": "Palet terang klasik Thullabul Ilmi.",
+        "theme.light.meta": "Palet terang klasik Thullaabul Ilmi.",
         "theme.saved": "Preferensi tema tersimpan di perangkat ini.",
         "theme.saveError": "Preferensi tema belum bisa disimpan.",
         "theme.system.label": "Ikuti Sistem",

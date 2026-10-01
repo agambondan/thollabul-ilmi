@@ -4,6 +4,7 @@ import {
     normalizeMobileLanguage,
     translateMobile,
 } from "../i18n/translations";
+import { APP_NAME } from "../theme";
 
 describe("mobile i18n translations", () => {
     test("normalizes API, web, and local language codes", () => {
@@ -52,5 +53,19 @@ describe("mobile i18n translations", () => {
 
     test("keeps a non-empty Indonesian dictionary for shell migration", () => {
         expect(mobileTranslationKeys.length).toBeGreaterThan(80);
+    });
+
+    test("spells the app name consistently everywhere it appears in the dictionaries (B17)", () => {
+        const misspelled = /Th[ou]ll?abul/;
+        for (const [language, key] of [
+            ["idn", "profile.about.description"],
+            ["en", "profile.about.description"],
+            ["idn", "theme.light.meta"],
+            ["en", "theme.light.meta"],
+        ]) {
+            const text = translateMobile(language, key);
+            expect(text).toContain(APP_NAME);
+            expect(misspelled.test(text.replace(APP_NAME, ""))).toBe(false);
+        }
     });
 });

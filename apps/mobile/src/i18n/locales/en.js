@@ -1160,7 +1160,7 @@ export const en = {
         "profile.security.signOutDevice": "Sign out from this device",
         "profile.about.appName": "Thullaabul Ilmi",
         "profile.about.description":
-            "Thollabul Ilmi is an Islamic knowledge app for seekers of knowledge, bringing the Quran, Hadith, worship trackers, and Islamic learning material together in one app.",
+            "Thullaabul Ilmi is an Islamic knowledge app for seekers of knowledge, bringing the Quran, Hadith, worship trackers, and Islamic learning material together in one app.",
         "profile.about.descriptionTitle": "About",
         "profile.about.title": "About App",
         "profile.about.meta": "Application information and version",
@@ -1260,7 +1260,7 @@ export const en = {
         "theme.dark.meta":
             "Saved as device preference for the next layout mode.",
         "theme.light.label": "Light",
-        "theme.light.meta": "Classic Thullabul Ilmi light palette.",
+        "theme.light.meta": "Classic Thullaabul Ilmi light palette.",
         "theme.saved": "Theme preference saved on this device.",
         "theme.saveError": "Theme preference could not be saved.",
         "theme.system.label": "Follow System",
