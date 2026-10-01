@@ -61,6 +61,51 @@ lain yang tidak diketahui** di tengah sesi 2 (lihat C9) — beberapa observasi
 navigasi yang tidak konsisten dengan urutan tap saya sendiri kemungkinan
 berasal dari situ, sudah dipisahkan secara eksplisit di teks di bawah.
 
+**Status sesi 3 (lanjutan — hari yang sama)**: APK release **baru**
+terpasang sebelum sesi mulai (`lastUpdateTime` **13:19:21**, `versionCode`
+tetap `1.0.0`), dikonfirmasi lewat `dumpsys package` mencakup `8d7611a0`
+(fix B1-B7), `0164ad12`, dan `7de394aa`/`b42dcf1b`. **Device tetap hidup dan
+responsif sepanjang sesi** (tidak pernah hilang) — satu-satunya anomali di
+awal sesi adalah dialog ANR **`com.android.systemui`** (bukan app ini) yang
+sudah menghadang di layar tepat saat sesi mulai, ditutup lewat "Wait" dalam
+hitungan detik; kemungkinan besar sisa beban CPU dari proses lain di
+emulator bersama sebelum sesi ini mengambil alih, dicatat apa adanya, bukan
+diklaim sebagai crash aplikasi. **Tidak ada indikasi aktivitas proses lain
+(mis. Codex) yang mengganggu sepanjang sisa sesi** — berbeda dari sesi 2,
+device/emulator stabil dari awal sampai akhir sesi 3.
+**Hasil utama**: ketiga fix yang jadi fokus (B4 partial, B8, B9)
+**CONFIRMED FIXED live** dengan screenshot (lihat update masing-masing).
+Karena APK sudah fresh dan device stabil, sekalian dituntaskan **B1, B2,
+B3, B6, B7 juga di-live-verify dan CONFIRMED FIXED** — jadi **seluruh 9 bug
+asli (B1-B9) kini FIXED-dan-terverifikasi-live**, bukan cuma "fixed di
+source + unit test" seperti status sesi 2. Ditemukan **7 temuan baru**
+(B10-B16, MEDIUM/LOW, lihat masing-masing di bawah untuk detail): B10 (tiga
+ejaan nama aplikasi berbeda di 3 layar berbeda), B11 (toggle bahasa ID/EN
+tidak diterapkan ke hero+tile hub Belajar, nama badge Pencapaian, 7 dari 9
+judul header Profil/Pengaturan, dan toggle Kitab/Hadis di tab Hadis), B12
+(tab bottom-nav Belajar tidak benar-benar berpindah konten saat fitur yang
+dibuka dari hub LAIN — mis. Doa dari Ibadah — sedang tampil, hanya
+mengubah highlight tab), B13 (label section "Tema"/"Bahasa Konten"/"Mode
+Layout" nyaris tak terbaca di tema gelap karena stylesheet statis yang
+tidak reaktif terhadap tema), B14 (Classic sama sekali tidak punya UI
+cari/filter kategori untuk 8 fitur bertipe `"list"` yang di Modern dapat
+`WebAppReferenceListRoute` lengkap), B15 (Pencarian Global tidak punya cara
+tutup yang terlihat — hanya hardware back yang berfungsi), B16 (hamburger
+grup "Lainnya"/Pengaturan-Bantuan-Tentang triple-highlight, bug class sama
+dengan B5 tapi belum di-fix untuk grup ini). Juga dituntaskan: sweep penuh
+Classic (hub Belajar **identik kontennya** dengan Modern, cuma beda chrome
+— lihat update checklist), spot-check tema gelap Modern+Classic, pengujian
+hamburger B5 dengan hasil ganda (Akses Cepat FIXED, tapi grup "Lainnya"
+kena bug class yang sama persis, belum di-fix — lihat B16), toggle
+bahasa+tema+avatar account-menu, cycle bottom-nav 5-tab. Pencarian
+Global **sebagian BLOCKED**: live-typing tidak bisa diuji tuntas karena
+popup sistem "Try out your stylus" (tutorial Gboard, device-level, bukan
+bug aplikasi — lihat C10) berulang kali mencegat SEMUA input teks ke kotak
+cari manapun yang baru fokus; chip kategori dan tombol "Cari" tanpa teks
+tetap sempat diuji. Akhir sesi: dikembalikan ke state awal yang diminta
+(Modern, tema sistem, Indonesia, tab Beranda, font scale 1.0) — lihat
+checklist Bottom navigation.
+
 ## Setup
 
 - Build: **tidak di-rebuild**. APK terpasang (`lastUpdateTime` 2026-09-30
@@ -129,6 +174,28 @@ emulator` di host **tidak menunjukkan proses qemu/emulator apa pun** —
   untuk sesi berikutnya**: setelah rebuild+reinstall, set Mode Layout
   kembali ke **Modern** sebelum melanjutkan — kondisi saat ini bukan baseline
   yang diasumsikan sesi-sesi sebelumnya.
+
+### Setup — sesi 3 (lanjutan)
+
+- Build: APK release baru sudah terpasang **sebelum** sesi mulai (di luar
+  kendali sesi ini — kemungkinan orkestrator atau sesi build terpisah
+  menjalankannya). Dikonfirmasi via `adb shell dumpsys package
+com.thullaabulilmi.app`: `lastUpdateTime` **2026-10-01 13:19:21**,
+  `firstInstallTime` 11:40:07 (update in-place, bukan uninstall bersih).
+  Tidak di-rebuild ulang oleh sesi ini.
+- Emulator: `emulator-5554` sudah berjalan saat sesi mulai, **tidak pernah
+  hilang** sepanjang sesi (beda dari sesi 1 & 2). Satu insiden non-app:
+  dialog ANR sistem `com.android.systemui` sudah ada di layar launcher
+  tepat saat sesi dimulai — ditutup via tombol "Wait", device langsung
+  responsif setelahnya; tidak diulang lagi sepanjang sesi.
+- Backend: sama, API produksi, sesi guest sepanjang sesi 3.
+- Tidak ada indikasi aktivitas proses lain yang mengganggu — tidak ada
+  reinstall tak terduga, tidak ada `am start` yang tidak dijalankan sesi
+  ini, tidak ada navigasi yang tidak bisa diatribusikan ke tap sendiri.
+- Akhir sesi 3: **dilakukan dengan benar** — Mode Layout dikembalikan ke
+  **Web App (Modern)**, Tema ke **Ikuti Sistem**, Bahasa ke **Indonesia**,
+  app ditinggal di tab **Beranda**. Font scale, Wi-Fi, dan airplane mode
+  tidak pernah disentuh sepanjang sesi (tetap default).
 
 ## Metodologi & catatan penting
 
@@ -204,6 +271,46 @@ emulator` di host **tidak menunjukkan proses qemu/emulator apa pun** —
   timestamp APK vs timestamp commit secara eksplisit sebelum menyimpulkan
   apa yang sedang diuji.
 
+### Metodologi tambahan — sesi 3
+
+- Ulangi pelajaran sesi 2 soal rasio displayed→original (×1.2): **masih
+  kejadian berkali-kali** di sesi ini juga (mis. tap pertama ke "Web App"
+  radio, tap pertama ke "Tokoh Islam" di hamburger) — dikoreksi dengan
+  `uiautomator dump` begitu terdeteksi salah sasaran. `uiautomator dump`
+  juga **gagal total** ("could not get idle state") untuk layar dengan
+  animasi aktif: bukan cuma jam countdown (sudah diketahui), tapi juga
+  kursor berkedip di dalam modal sistem Gboard (lihat C10) — dump
+  mengembalikan file 0 baris tanpa error yang jelas di command-nya sendiri,
+  jadi **selalu cek `wc -l` hasil dump sebelum mempercayainya**, jangan
+  asumsikan dump sukses hanya karena command tidak error.
+- Teknik baru: `convert <file>.png -crop WxH+X+Y -resize W2xH2 <out>.png`
+  (ImageMagick, sudah terpasang di host) dipakai berkali-kali untuk
+  memperbesar area kecil screenshot (nama aplikasi, label kontras rendah)
+  sebelum dibaca ulang lewat tool Read — jauh lebih akurat daripada menilai
+  teks kecil dari screenshot penuh, krusial untuk menemukan B10 (beda satu
+  huruf "Thullabul" vs "Thullaabul") dan B13 (kontras label redup).
+- **Investigasi B12** (tab Belajar tidak reset saat fitur lintas-hub
+  tampil) dilakukan dengan membaca kode lebih dulu
+  (`appNavigation.js`: `openTabState`, `getShellActiveTab`; `App.js`: baris
+  `isActive = activeTab === tab` vs `activeTab={shellActiveTab}` yang
+  dioper ke `MobileAppShell`) untuk membentuk hipotesis, BARU kemudian
+  direproduksi ulang secara terkontrol di device (Beranda→Ibadah
+  fresh→Doa→tap Belajar) untuk mengonfirmasi — kombinasi baca-kode-dulu
+  lalu reproduksi-bersih ini jauh lebih cepat/pasti daripada menebak-nebak
+  dari urutan tap yang berantakan (percobaan pertama bercampur dengan
+  sisa state dari pengujian sebelumnya dan sempat menyesatkan).
+- **Konflik file saat menulis laporan ini sendiri**: begitu mulai meng-edit
+  dokumen ini, tool menolak edit pertama dengan "File has been modified
+  since read" — sesi lain (kemungkinan Codex, berdasarkan pola commit
+  `firmanagam` yang menambahkan konten "sesi 2" yang sebelumnya cuma ada di
+  working tree, plus seksi baru "Resolusi Final & Status Rilis") sudah
+  meng-commit perubahan ke file yang sama di tengah sesi ini. **Pelajaran**:
+  di repo banyak-agent-konkuren, selalu `git diff`/`git log` ulang dan
+  baca ulang (Read) seluruh file tepat sebelum mulai rangkaian Edit besar
+  ke dokumen bersama, meski sudah dibaca penuh di awal sesi — isinya bisa
+  berubah di tengah jalan tanpa notifikasi lain selain error "modified
+  since read" itu sendiri.
+
 ---
 
 ## Temuan Bug
@@ -258,6 +365,12 @@ emulator` di host **tidak menunjukkan proses qemu/emulator apa pun** —
   SEBELUM commit ini (lihat C8) dan device hilang sebelum sempat
   rebuild+reinstall — jadi perbaikan ini belum pernah terlihat di layar
   sungguhan, cuma dikonfirmasi lewat pembacaan diff + unit test.
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED**: dibuka ulang di APK fresh
+  (Modern, guest), tile "Amalan Harian" (grup Fiqh & Panduan) sekarang
+  menampilkan **"Buka Profil untuk masuk dan membuka fitur personal ini."**
+  — pesan yang sama persis dengan 8 tile Personal Ringkas lain, BUKAN lagi
+  "Data amalan belum bisa dimuat. Coba refresh halaman.". Screenshot:
+  `101-B1-LIVE-CONFIRMED-correct-message.png`. Bug ditutup.
 
 ### B2. [Modern] "Modul & Kelas" (mis. Tata Cara Wudhu): body langkah menampilkan markdown mentah (`**tebal**`, list `-`) — MEDIUM
 
@@ -291,6 +404,15 @@ testID='lesson-step-markdown-view' />` — identik dengan saran fix.
   ini, device hilang sebelum rebuild); tidak ada unit test baru spesifik
   untuk render `MarkdownView` di konteks ini, jadi risiko edge-case (mis.
   nested list, tabel markdown) belum tertutup oleh `npx jest`.
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED**: "Modul & Kelas" → "Tata Cara
+  Wudhu", Langkah 1/7 sekarang merender markdown penuh dengan benar — bold
+  ("Niat wudhu", "Membasuh kedua telapak tangan", dst.), bullet list
+  (titik hijau), inline-code untuk kata "Bismillah", italic untuk baris
+  terjemahan, dan blockquote hijau-border untuk kutipan HR. Abu Dawud —
+  tidak ada lagi tanda `**`/`-` mentah. Screenshot:
+  `099-B2-LIVE-CONFIRMED-markdown-rendered.png`. Bug ditutup; belum dicek
+  edge-case nested-list/tabel markdown secara spesifik (di luar scope
+  sesi ini), tapi kasus nyata (Tata Cara Wudhu) sudah benar.
 
 ### B3. [Modern] Artikel: cuplikan daftar menampilkan markdown mentah `##` — LOW
 
@@ -317,6 +439,12 @@ Tilawah (...) adalah sujud satu kali...` — tanda `##` (heading markdown)
   bagian dari 135 test yang di-run ulang sesi ini, PASS) menguji helper
   ini langsung. **BLOCKED** untuk konfirmasi visual (APK sesi 2 lebih tua
   dari commit ini).
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED**: daftar Artikel, kartu pertama
+  ("Panduan Lengkap Sujud Tilawah...") sekarang menampilkan cuplikan bersih
+  "Pengertian dan Hukum Sujud Tilawah. Sujud Tilawah (سجود التلاوة) adalah
+  sujud satu kali yang disyariatkan ket…" — **tidak ada lagi** tanda `##`
+  mentah di awal kalimat. Screenshot:
+  `100-B3-LIVE-CONFIRMED-clean-excerpt.png`. Bug ditutup.
 
 ### B4. [Classic; CONFIRMED live sesi 2 (versi APK lama) + SEBAGIAN sudah FIXED di source, belum di-live-verify] Classic tidak punya hamburger/account-menu/header pencarian sama sekali → Bantuan & Tentang Aplikasi kehilangan SEMUA jalur in-app — HIGH
 
@@ -405,6 +533,28 @@ Tilawah (...) adalah sujud satu kali...` — tanda `##` (heading markdown)
   tanpa hamburger Classic) — rekomendasi next session: rebuild+reinstall
   lalu re-test SettingsList Classic (harus 7 baris) DAN re-test apakah 3
   fitur Akses Cepat masih hanya reachable lewat Dir/Cari di Classic.
+- **UPDATE sesi 3 — LIVE CONFIRMED, mitigasi Bantuan/Tentang berfungsi
+  penuh; gap hamburger Classic dikonfirmasi tetap ada, presisi**: di APK
+  fresh, Classic → Profil → Pengaturan sekarang menampilkan **7 baris**
+  (Akun, Notifikasi, Penyimpanan, Tampilan, Keamanan, **Bantuan**,
+  **Tentang Aplikasi**) — persis seperti commit `8d7611a0`. Kedua baris
+  baru dibuka satu-satu: **Bantuan** membuka FAQ sungguhan (6 Q&A) dengan
+  header-back yang kembali bersih ke Pengaturan; **Tentang Aplikasi**
+  membuka layar About sungguhan dengan konten app-info lengkap, back juga
+  bersih. Screenshot: `052-classic-settings-7rows-B4-LIVE.png`,
+  `053-classic-bantuan-open-B4-LIVE.png`,
+  `054-classic-back-from-bantuan-B4-LIVE.png`,
+  `055-classic-tentang-open-B4-LIVE.png`. **Bagian yang MASIH belum
+  di-fix dikonfirmasi ulang secara presisi**: Classic Beranda (grid menu
+  dengan avatar "Tamu"+ikon cari+ikon lonceng) dan Classic Profil root
+  (avatar+gear doang) **sama sekali tidak punya elemen menyerupai
+  hamburger/menu-3-garis di mana pun** — dicek visual di kedua layar ini
+  secara spesifik, bukan cuma dari ketiadaan import di kode. Jadi **Tokoh
+  Islam, Peta Interaktif, Perawi Hadith tetap tanpa jalur quick-access di
+  Classic** (masih harus lewat Direktori Fitur/Pencarian Global seperti
+  klaim asli) — **B4 kini resmi berstatus "separuh-FIXED, separuh-TETAP
+  BY DESIGN"** (bukan lagi "belum sempat diverifikasi"), karena
+  `ClassicAppShell.js` tidak pernah disentuh komit manapun sejauh ini.
 
 ### B5. [Modern; BLOCKED — belum sempat dikonfirmasi live] 3 baris "Akses Cepat" hamburger menyala "selected" bersamaan, bukan hanya yang sedang dibuka — LOW
 
@@ -451,6 +601,25 @@ activeFeature.key` persis saat fitur generik terbuka), dan nilai
   test yang PASS) menguji logika highlight ini. **BLOCKED** murni untuk
   konfirmasi visual (screenshot hamburger terbuka dengan 1 fitur Belajar
   aktif) — APK sesi 2 lebih tua dari commit ini.
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED untuk grup "Akses Cepat", TAPI bug
+  class yang SAMA PERSIS ditemukan belum di-fix untuk grup "Lainnya"
+  (lihat B16 baru di bawah)**: dites kontras langsung — buka "Tokoh Islam"
+  lewat hamburger (hub Belajar), lalu buka hamburger lagi: **hanya "Tokoh
+  Islam" yang highlight hijau**, "Peta Interaktif" dan "Perawi Hadith"
+  polos. Screenshot: `069-tokoh-islam-open-B5.png`,
+  `070-hamburger-single-highlight-B5-FIXED-confirmed.png`. B5 asli
+  **ditutup, FIXED**. Namun saat hamburger dibuka dari dalam layar
+  Pengaturan (tab `profile`), ditemukan **ketiga baris grup "Lainnya"
+  (Pengaturan, Bantuan, Tentang Aplikasi) menyala bersamaan** — persis
+  gejala B5 lama, root cause identik (`MobileMenuSheet.js:196-200`:
+  `selected = active === item.tab && (!item.params?.featureKey ||
+currentFeatureKey === item.params.featureKey)` — fallback
+  `!item.params?.featureKey` selalu `true` untuk baris `view`-based seperti
+  Pengaturan/Bantuan/Tentang, karena fix B5 hanya menambah disambiguasi
+  untuk baris `featureKey`-based). Dicatat sebagai **B16** (baru, lihat di
+  bawah) karena secara teknis fix B5 sudah tuntas untuk kasus yang
+  dilaporkan semula (3 baris Akses Cepat); yang belum tertutup adalah pola
+  identik di grup lain yang tidak disebut di laporan asli.
 
 ### B6. [Modern; BLOCKED — belum sempat dikonfirmasi live] Pencarian Global dari Beranda membuat bottom nav tanpa tab yang menyala — MEDIUM
 
@@ -498,6 +667,11 @@ return "search";`); dibandingkan dengan
   bukan cuma dibaca sekilas. **BLOCKED** hanya untuk konfirmasi visual
   (screenshot bottom nav sungguhan saat Pencarian Global terbuka) — APK
   sesi 2 lebih tua dari commit ini.
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED**: Pencarian Global dibuka dari
+  ikon kaca pembesar di header Beranda — tab **"Beranda" tetap menyala
+  hijau** di bottom-nav sepanjang layar Pencarian terbuka, persis seperti
+  yang diharapkan. Screenshot: `113-global-search-open.png` (tab Beranda
+  terlihat aktif di bottom-nav). Bug ditutup.
 
 ### B7. [Modern & Classic; sebagian dari kode, BLOCKED untuk Quiz Q2+] 3 translation key dipakai di kode tapi tidak terdaftar di kamus manapun → tampil sebagai key mentah ke user — MEDIUM
 
@@ -558,6 +732,15 @@ return "search";`); dibandingkan dengan
   walau sempat dicoba pun hasilnya belum tentu representatif untuk HEAD).
   Wirid Saya (edit) dan Forum (detail) **masih belum pernah dibuka live**
   sesi ini maupun sesi 1 — tetap BLOCKED total untuk kedua fitur itu.
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED untuk Quiz Q2+**: dijawab soal 1/5
+  Quiz Islami (jawaban salah, lalu tekan "Lanjut") — header berubah jadi
+  **"Pertanyaan 2 / 5"**, kalimat Indonesia yang benar, BUKAN
+  `explore.quiz.questionProgress` mentah. Screenshot:
+  `102-B7-LIVE-CONFIRMED-Pertanyaan-2-5.png`. Bug untuk Quiz ditutup. Wirid
+  Saya (edit) dan Forum (detail) **masih belum dibuka live sesi ini** (di
+  luar 24 tile hub Belajar, tidak masuk prioritas sesi ini) — kedua key
+  kamusnya sudah terdaftar dan lolos `mobileI18n.test.js`, tapi render
+  live-nya tetap belum pernah dilihat langsung di layar manapun.
 
 ### B8. [Modern; CONFIRMED live sesi 2] Pencarian Asmaul Husna (99 item) memblokir thread JS 2-8 detik per ketukan → bisa berujung ANR sungguhan — HIGH
 
@@ -621,6 +804,31 @@ Reason: Input dispatching timed out`, dan dialog sistem "Thullaabul Ilmi
 - **Screenshot**: `20`–`25`, `31` di
   `apps/mobile/output/native/2026-10-01-fix-verify/` (lihat laporan Part 1
   terpisah untuk urutan lengkap).
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED, dites agresif di 2 layar
+  berbeda**: source dikonfirmasi sudah pakai pola debounce 300ms
+  (`WebAppReferenceListRoute.js`: `search` lokal untuk echo instan via
+  `value={search}`, `debouncedSearch` via `setTimeout(...,
+SEARCH_DEBOUNCE_MS)` baru dipakai `filteredItems`). Live test di **Sejarah
+  Islam** (20→34 item, membuktikan `hasMore`/auto-load-more juga ikut
+  teruji): ketik "Khulafa" karakter-demi-karakter tanpa jeda lewat 7×
+  `adb shell input text`, screenshot ~1 detik kemudian menunjukkan teks
+  sudah ter-echo penuh TANPA ANR, hasil filter benar setelah debounce
+  selesai ("5 dari 34"); ketik "Perang Badar" sebagai satu string atomik,
+  screenshot ~0.3 detik kemudian langsung benar ("3 dari 34", "Perang
+  Badar" di hasil teratas). Live test di **Asmaul Husna** (lokasi bug
+  asli, 99 item): ketik "Kuat" karakter-demi-karakter, screenshot instan
+  menunjukkan teks ter-echo tapi filter belum jalan (masih "99 dari 99" —
+  BENAR, karena debounce belum selesai), screenshot 1 detik kemudian
+  menunjukkan hasil benar "2 dari 99" (Al-Qawiyy, Al-Matin) — persis
+  mengulang skenario reproduksi bug asli, kini bersih. Stress test
+  tambahan: rentetan ketik+hapus+ketik tanpa jeda sampai teks jadi acak
+  ("KuatMaha Pengasihsayang") menghasilkan state kosong "Data tidak
+  ditemukan" yang benar, bukan freeze. `adb logcat -d | grep -iE
+"anr|not responding|FATAL"` dan `dumpsys activity processes | grep
+notresponding` **bersih total** di sepanjang pengujian — **tidak ada ANR
+  sama sekali**, kontras total dengan reproduksi asli. Screenshot:
+  `058`-`064` (lihat indeks screenshot). Bug ditutup, HIGH severity
+  resolved.
 
 ### B9. [Modern; CONFIRMED live sesi 2] Memilih chip kategori Doa mengganti judul header jadi raw category key, bukan label — MEDIUM
 
@@ -675,6 +883,319 @@ Reason: Input dispatching timed out`, dan dialog sistem "Thullaabul Ilmi
   tapi tidak menguji judul header saat kategori aktif).
 - **Screenshot**: `34`, `35`, `36`, `39` di
   `apps/mobile/output/native/2026-10-01-fix-verify/`.
+- **UPDATE sesi 3 — LIVE CONFIRMED FIXED, 2 kategori dites**: buka Doa
+  (header "Doa", benar) → tap chip **"Bangun"** → header berubah jadi
+  **"Bangun"** (huruf besar-kecil proper, BUKAN "bangun" mentah). Reset →
+  tap chip **"Pagi"** → header jadi **"Pagi"** (proper juga). Screenshot:
+  `065-doa-open-header-correct-B9.png`,
+  `066-doa-bangun-chip-header-FIXED-B9.png`,
+  `067-doa-pagi-chip-header-FIXED-B9.png`. Bug ditutup.
+
+### B10. [Modern & Classic; CONFIRMED live] Nama aplikasi dieja 3 cara berbeda di 3 layar berbeda — LOW
+
+- **Lokasi**:
+    - `apps/mobile/src/screens/ProfileScreen.js:1747,2177` — fallback nama
+      akun guest: `user?.name || "Thullabul Ilmi"` (satu huruf "a").
+    - `apps/mobile/src/layout/MobileTopHeader.js:92` — judul header Modern:
+      literal `Thullaabul 'Ilmi` (dua huruf "a", plus apostrof sebelum
+      "Ilmi").
+    - `apps/mobile/src/i18n/locales/idn.js:1213`/`en.js:1156` (key
+      `profile.about.appName`) dipakai di layar Tentang Aplikasi:
+      `"Thullaabul Ilmi"` (dua huruf "a", tanpa apostrof) — cocok dengan
+      `app.json:3` (`"name": "Thullaabul Ilmi"`), jadi inilah ejaan "resmi".
+- **Expected**: nama aplikasi konsisten di semua layar, mengikuti
+  `app.json`.
+- **Actual**: **CONFIRMED live**. Dalam satu sesi, hanya 2 ketukan,
+  terlihat 3 ejaan berbeda: Profil (Modern & Classic) → "Thullabul Ilmi";
+  header Modern (selalu terlihat, chrome paling sering dilihat) →
+  "Thullaabul 'Ilmi"; Tentang Aplikasi → "Thullaabul Ilmi" (yang benar,
+  cocok `app.json`).
+- **Root cause**: tiga tempat hardcode literal string sendiri-sendiri,
+  tidak ada satu sumber kebenaran (constant/key i18n bersama).
+- **Dampak**: kosmetik murni, tidak memblokir fungsi, tapi terlihat tidak
+  profesional — khususnya di header Modern yang selalu terlihat, bukan
+  cuma di layar jarang-dibuka seperti Tentang Aplikasi.
+- **Saran fix**: satukan ke satu konstanta (mis. `APP_NAME` di `theme.js`)
+  dipakai di ketiga lokasi; minimal samakan ejaan ke `"Thullaabul Ilmi"`
+  (sudah cocok `app.json`) di `ProfileScreen.js:1747,2177` dan
+  `MobileTopHeader.js:92`.
+- **Screenshot**: `051-classic-profile-root-live.png` (Thullabul Ilmi),
+  `056-modern-switched-live-B10-header-name.png` (Thullaabul 'Ilmi),
+  `055-classic-tentang-open-B4-LIVE.png` (Thullaabul Ilmi, benar).
+
+### B11. [Modern; CONFIRMED live] Toggle bahasa ID/EN tidak diterapkan ke hero+tile hub Belajar, nama badge Pencapaian, 7 dari 9 judul header Profil/Pengaturan, dan toggle Kitab/Hadis — MEDIUM
+
+- **Lokasi**:
+    - `apps/mobile/src/screens/explore/ExploreWebAppRoutes.js:3221,3229,3237-3238`
+      — hero hub Belajar ("KONTEN ISLAM"/"Belajar"/subtitle) hardcode literal
+      Indonesia langsung di JSX, PADAHAL key terjemahan `menu.content` SUDAH
+      ADA dan benar di `idn.js:600` ("KONTEN ISLAM")/`en.js:597` ("ISLAMIC
+      CONTENT") — cuma tidak pernah dipanggil lewat `t()`.
+    - `apps/mobile/src/data/mobileFeatures.js` — seluruh `title`/`meta` tile
+      (92 kemunculan `title:`) adalah string polos (mis. `title: "Kajian"`),
+      bukan translation key — tidak ada lapisan i18n sama sekali untuk
+      katalog fitur.
+    - `apps/mobile/src/screens/ProfileScreen.js:1327-1337` — objek `titles`
+      untuk header Modern (`isWebAppLayout`) hardcode 9 judul: `settings`
+      ("Pengaturan"), `achievements` ("Pencapaian"), `help` ("Bantuan"),
+      `about` ("Tentang Aplikasi"), `settings-account` ("Akun"),
+      `settings-notifications` ("Notifikasi"), `settings-storage`
+      ("Penyimpanan"), `settings-appearance` ("Tampilan"),
+      `settings-security` ("Keamanan") — semua tanpa `t()`.
+    - Nama 6 badge Pencapaian ("Konsisten 3 Hari", dst.) juga tidak ikut
+      berubah — sumbernya belum ditelusuri sampai endpoint API, di luar
+      scope kode mobile.
+    - `apps/mobile/src/screens/HadithScreen.js:101-102` — toggle tab
+      "Book"/"Hadith" juga hardcode Inggris:
+      `{ key: "book", label: "Book" }, { key: "hadith", label: "Hadith" }`
+      — SELALU Inggris, bahkan saat bahasa aktif Indonesia (bukan cuma
+      gagal berubah saat toggle ke EN, tapi salah sejak mode default).
+- **Expected**: toggle Bahasa Konten (Profil → Tampilan, atau tombol
+  ID/English di account-menu) mengubah SEMUA teks UI, termasuk hero hub,
+  tile, badge, dan header stack Profil.
+- **Actual**: **CONFIRMED live**. Flip ke English (account-menu): bottom-nav
+  ("Home/Al-Quran/Hadith/Worship/Learn"), hamburger (6 baris), Doa
+  (chip+search+konten), account-menu sendiri SEMUA berubah benar ke
+  Inggris. TAPI hub Belajar (dicek bersih tanpa filter aktif) tetap 100%
+  Indonesia ("KONTEN ISLAM", "Belajar", "Kajian & Artikel", dst.) —
+  `071-belajar-hub-STILL-INDONESIAN-in-EN-B11.png` — vs hub Ibadah yang
+  dibuka di sesi yang sama dan benar-benar berubah ke Inggris ("Worship &
+  Tracker", "Prayer Schedule", dst.). Profil → Settings (English aktif):
+  header "Pengaturan" tetap Indonesia padahal SEMUA baris di bawahnya
+  ("Account"/"Notifications"/dst.) sudah Inggris —
+  `074-pengaturan-header-not-translated-B11.png`; sama untuk Help
+  ("Bantuan" — `072-bantuan-header-not-translated-B11.png`) dan About
+  ("Tentang Aplikasi" — `073-tentang-header-not-translated-B11.png`),
+  padahal ISI badan ketiga layar itu (FAQ, App info) sudah Inggris penuh.
+  Profile root: 6 badge Pencapaian tetap Indonesia walau label section
+  "ACHIEVEMENTS"/tombol "Sign In / Register" sudah Inggris. Tab Hadis:
+  toggle "Book"/"Hadith" tampil Inggris bahkan saat bahasa aktif masih
+  Indonesia (default).
+- **Root cause**: lihat Lokasi — dua pola: (1) literal JSX yang seharusnya
+  memanggil key yang SUDAH ADA (hero hub), (2) katalog data
+  (`mobileFeatures.js`) dan map statis (`ProfileScreen.js` titles) yang
+  memang tidak pernah dirancang reaktif terhadap `t()`.
+- **Dampak**: fitur ganti-bahasa yang dipromosikan di Pengaturan jadi
+  setengah-berfungsi — area yang PALING sering dilihat (hub utama,
+  judul-judul Settings) tetap Indonesia walau user sudah eksplisit pilih
+  English, merusak kepercayaan pada fitur itu sendiri.
+- **Saran fix**: untuk hero hub, ganti 3 literal JSX dengan
+  `t("menu.content")` dkk. yang sudah ada; untuk `mobileFeatures.js`,
+  tambah lapisan i18n per title/meta (scope besar, 46 fitur); untuk
+  `ProfileScreen.js:1327-1337`, ganti objek `titles` statis dengan
+  pemanggilan `t()` per key; untuk `HadithScreen.js:101-102`, ganti label
+  dengan `t()` yang benar untuk kedua bahasa.
+- **Screenshot**: `071-belajar-hub-STILL-INDONESIAN-in-EN-B11.png`,
+  `072-bantuan-header-not-translated-B11.png`,
+  `073-tentang-header-not-translated-B11.png`,
+  `074-pengaturan-header-not-translated-B11.png`.
+
+### B12. [Modern; CONFIRMED live, direproduksi bersih] Tab bottom-nav Belajar tidak benar-benar berpindah konten saat fitur yang dibuka dari hub LAIN sedang tampil — MEDIUM
+
+- **Lokasi**:
+    - `apps/mobile/App.js:405` — visibilitas pane konten per tab:
+      `const isActive = activeTab === tab;` (pakai `activeTab` MENTAH).
+    - `apps/mobile/App.js:391` — chrome (bottom-nav+header):
+      `<MobileAppShell activeTab={shellActiveTab} ...>` (pakai nilai
+      TURUNAN, bukan `activeTab` mentah).
+    - `apps/mobile/src/navigation/appNavigation.js:231-233`
+      (`getShellActiveTab`):
+      `if (activeTab === "belajar" && returnRoutes.belajar?.tab === "ibadah") { return "ibadah"; }`
+      — aturan ini menampilkan highlight "Ibadah" (bukan "Belajar") saat
+      fitur yang secara internal dirender lewat tab "belajar" dibuka dengan
+      breadcrumb "kembali ke Ibadah" — niatnya baik, tapi menyembunyikan
+      fakta bahwa `activeTab` RAW sebenarnya sudah "belajar".
+- **Expected**: menekan tab "Belajar" di bottom-nav, dari layar manapun,
+  selalu membawa ke hub Belajar (atau me-refresh ke hub kalau sudah di
+  tab itu).
+- **Actual**: **CONFIRMED live, direproduksi bersih 2×**. Langkah: dari
+  hub Belajar (bersih) → tap tab Ibadah (fresh, benar menyala "Ibadah") →
+  tap tile "Doa" (header "Doa", tab yang menyala tetap "Ibadah" via
+  `uiautomator selected=true`) → tap tab "Belajar" di bottom-nav. Hasil:
+  highlight tab berubah jadi "Belajar" (`selected=true` via dump), TAPI
+  konten layar TETAP menampilkan Doa (teks "Doa" masih ada, marker hub
+  "KONTEN ISLAM"/"Kajian" TIDAK ada) —
+  `078-B12-clean-repro-doa-stuck-belajar-highlighted.png`. Hardware-back
+  dari state ini membawa ke hub **Ibadah** (bukan hub Belajar),
+  membuktikan navigation stack asli memang masih "ibadah" dengan
+  breadcrumb `returnTo` utuh —
+  `076-hwback-reveals-real-tab-was-ibadah-B12.png`. Kontras: tab-switch
+  langsung DARI HUB (bukan dari fitur yang sedang terbuka) berfungsi
+  normal — tap Ibadah dari hub Belajar langsung menampilkan hub Ibadah
+  dengan benar — `077-tab-switch-works-from-hub-screen-B12-contrast.png`.
+- **Root cause**: dari pembacaan kode, Doa (dan kemungkinan semua fitur
+  Hub-Ibadah lain yang didelegasikan ke `ExploreScreen`) membuat
+  `activeTab` RAW menjadi `"belajar"` begitu dibuka dari Ibadah (dengan
+  `returnRoutes.belajar` dipasang agar back kembali ke Ibadah) —
+  `getShellActiveTab` MENYEMBUNYIKAN ini di level chrome. Begitu user
+  menekan tab "Belajar" langsung, `openTabState("belajar", null)`
+  dipanggil: karena `current.activeTab` SUDAH `"belajar"` (walau
+  highlight bilang "Ibadah"), ini jadi no-op bagi state navigasi murni —
+  `ExploreScreen` (sudah menampilkan Doa) tidak punya alasan mereset
+  `activeFeature`-nya. Yang berubah hanya precondition
+  `getShellActiveTab` (ikut ter-reset oleh langkah lain di
+  `openTabState`), sehingga highlight "lepas" dari mode override. Exact
+  mechanism belum 100% dipastikan baris-demi-baris (butuh logging
+  runtime), tapi black-box behavior di atas reproducible 100%.
+- **Dampak**: user yang sedang membaca Doa (atau fitur cross-hub lain
+  dari Ibadah) lalu menekan tab Belajar bottom-nav — ekspektasi wajar
+  "lihat hub Belajar" — TIDAK terjadi; tidak ada perubahan visual selain
+  highlight tab, sangat membingungkan karena terlihat seperti tombol
+  mati padahal state sebenarnya berubah diam-diam.
+- **Saran fix**: saat `openTabState` menerima permintaan tab BARU yang
+  sama dengan `activeTab` RAW saat ini tapi `shellActiveTab`-nya BERBEDA
+  (indikasi "user menekan tab yang menurut dia belum aktif"), reset
+  `internalRoutes[tab]`/`activeFeature` ke default (hub) alih-alih
+  memperlakukannya sebagai no-op.
+- **Screenshot**: `075-tab-switch-stuck-on-old-content-B12.png`,
+  `076-hwback-reveals-real-tab-was-ibadah-B12.png`,
+  `077-tab-switch-works-from-hub-screen-B12-contrast.png`,
+  `078-B12-clean-repro-doa-stuck-belajar-highlighted.png`.
+
+### B13. [Modern & Classic; CONFIRMED live] Label section "Tema"/"Bahasa Konten"/"Mode Layout" nyaris tak terbaca di tema gelap — MEDIUM
+
+- **Lokasi**: `apps/mobile/src/screens/ProfileScreen.styles.js:2` —
+  `import { colors, ... } from "../theme"` memakai konstanta `colors`
+  STATIS (nilai tema TERANG, `ink: "#3c3a35"`), bukan hasil panggilan
+  `getClassicThemeColors(isDark)`/sejenis yang reaktif — karena
+  `export const styles = StyleSheet.create({...})` dibangun SEKALI saat
+  modul di-load, semua style yang pakai `colors.ink` BEKU ke warna
+  mode-terang selamanya. Dipakai di `appearanceLabel`
+  (`:1137-1142`, `color: colors.ink`) yang dirender untuk label
+  "Tema"/"Bahasa Konten"/"Mode Layout" (`ProfileScreen.js:511,531,...`)
+  DAN label Q&A Bantuan (`:1604`) — kelas bug yang sama berpotensi
+  memengaruhi label lain di file ini (belum ditelusuri satu-satu).
+- **Expected**: label section tetap kontras tinggi saat tema gelap aktif,
+  konsisten dengan body text di bawahnya yang sudah benar.
+- **Actual**: **CONFIRMED live, 2 layout**. Tema di-set ke Gelap
+  (Profil→Tampilan→Gelap) — label "Tema" tampil warna coklat-gelap nyaris
+  menyatu dengan background hitam-kehijauan, jauh lebih redup dari body
+  text di bawahnya (`colors.muted`, abu-abu terang yang kebetulan masih
+  cukup kontras meski juga statis) — `109-dark-enabled.png` menunjukkan
+  ini gamblang (crop zoom di scratchpad sesi ini). Dikonfirmasi SAMA di
+  Modern (`112-modern-tampilan-dark-B13.png`) — bug bukan spesifik satu
+  layout karena `AppearanceSettings` adalah komponen yang sama persis
+  untuk kedua layout. Sebagai kontras, hub Belajar dalam tema gelap
+  (Classic & Modern) kontrasnya BAGUS — lihat checklist tema gelap.
+- **Root cause**: lihat Lokasi.
+- **Dampak**: terbalik dari harapan — HEADING (harusnya lebih menonjol)
+  jadi KURANG terbaca dari body text di bawahnya; mempengaruhi 3 section
+  di layar Tampilan (sering dibuka user yang baru mengaktifkan dark mode)
+  plus kemungkinan label Q&A Bantuan.
+- **Saran fix**: hitung `styles` lewat factory function yang menerima
+  `colors`/`isDark` sebagai argumen (pola yang sudah dipakai di
+  `theme.js`'s `getThemeColors`), dipanggil ulang tiap render alih-alih
+  `StyleSheet.create` statis sekali di level modul.
+- **Screenshot**: `109-dark-enabled.png`, `112-modern-tampilan-dark-B13.png`.
+
+### B14. [Classic; CONFIRMED live + source] 8 fitur bertipe `"list"` di Classic sama sekali tidak punya UI cari/filter kategori — padahal Modern dapat UI lengkap — MEDIUM
+
+- **Lokasi**: `apps/mobile/src/data/mobileFeatures.js` — 8 fitur (`doa`,
+  `dzikir`, `wirid`, `asmaul-husna`, `panduan-sholat`, `sejarah`,
+  `manasik`, `jarh-tadil`) semua `type: "list"`. Di Modern,
+  `ExploreWebAppRoutes.js:3576-3591` me-route 7 dari 8-nya (semua kecuali
+  `doa`) ke `WebAppReferenceListRoute` (search box+debounce+kategori
+  chip+counter — lihat B8), dan `doa` dapat `WebAppDoaRoute` tersendiri
+  yang juga lengkap. Di Classic, `ExploreClassicRenderers.js`'s
+  `renderFeatureContent()` (dicek lewat `grep` untuk
+  `activeFeature.type === "list"` dan untuk masing-masing 8 key di atas)
+  **tidak punya satu pun cabang** untuk tipe/key ini — fallback ke
+  generic `<Screen listData={visibleItems} renderListItem={...}>` di
+  `ExploreScreen.js:2007-2060`, yang hanya merender list polos
+  (judul+tag+menu-titik-tiga), tanpa search box, tanpa chip kategori,
+  tanpa counter.
+- **Expected**: paritas fungsional dasar antar layout — kemampuan
+  mencari/memfilter dataset besar (Asmaul Husna 99 item, Doa 82 item)
+  seharusnya ada di KEDUA layout, apalagi Classic adalah **baseline
+  default** (bukan Modern).
+- **Actual**: **CONFIRMED live**. Classic → Sejarah Islam (34 item setelah
+  auto-load): layar hanya menampilkan daftar kartu (judul+tag "nabi"+ikon
+  titik-tiga), **tidak ada search box atau chip kategori sama sekali**,
+  langsung dari header ke list — `108-classic-sejarah-open.png`
+  (bandingkan `058-sejarah-open-B8.png` versi Modern yang punya search
+  box+chip kategori+counter "X peristiwa tersedia").
+- **Root cause**: lihat Lokasi — Classic tidak pernah mendapat renderer
+  khusus untuk `type: "list"`, kemungkinan ditambahkan setelah
+  `ExploreClassicRenderers.js` terakhir di-update untuk tipe generik, atau
+  sengaja dianggap "cukup Modern saja" tapi tidak terdokumentasi sebagai
+  keputusan desain.
+- **Dampak**: user Classic (mayoritas, karena baseline) tidak bisa mencari
+  di 8 dataset ini sama sekali — khususnya parah untuk Asmaul Husna (99
+  nama) dan Doa (82 doa, 10 kategori) di mana scroll manual jauh lebih
+  lambat/frustrasi dibanding Modern.
+- **Saran fix**: tambahkan cabang di `ExploreClassicRenderers.js`'s
+  `renderFeatureContent()` untuk `activeFeature.type === "list"` yang
+  merender search box + chip kategori ala Classic, atau — kalau memang
+  sengaja minimalis — setidaknya tambahkan search box saja.
+- **Screenshot**: `108-classic-sejarah-open.png` (Classic, tanpa search),
+  `058-sejarah-open-B8.png` (Modern, dengan search lengkap).
+
+### B15. [Modern; CONFIRMED live] Pencarian Global tidak punya cara tutup yang terlihat — hanya hardware back yang berfungsi — LOW
+
+- **Lokasi**: layar `Pencarian`/`GlobalSearchScreen` — tidak ada tombol
+  back/close di header layar itu sendiri (beda dari kebanyakan sub-layar
+  lain yang punya panah-kembali). Ikon kaca pembesar di header
+  (`MobileTopHeader`) tetap terlihat & bisa ditekan, tapi menekannya lagi
+  tidak menutup Pencarian. Tab "Beranda" di bottom-nav tetap menyala
+  (benar, B6) tapi menekannya lagi juga tidak menutup Pencarian.
+- **Expected**: ada affordance visual yang jelas untuk keluar dari
+  Pencarian Global tanpa bergantung pada gestur/tombol hardware back.
+- **Actual**: **CONFIRMED live** — dicoba 3 cara: (1) tap ulang ikon kaca
+  pembesar di header → tetap di layar Pencarian; (2) tap tab "Beranda"
+  (sudah menyala) di bottom-nav → tetap di layar Pencarian; (3) hardware
+  back → berhasil menutup Pencarian, kembali ke Beranda. Screenshot:
+  `093-search-icon-retap.png`, `094-tap-beranda-from-search.png`
+  (keduanya menunjukkan layar Pencarian tidak berubah).
+- **Root cause**: belum ditelusuri sampai baris kode spesifik (di luar
+  waktu sesi ini) — kemungkinan layar Pencarian tidak mendaftarkan
+  `onBack`/`setHeader({showBack:true,...})` seperti sub-layar lain.
+- **Dampak**: LOW karena hardware back tetap berfungsi, tapi tetap
+  inkonsistensi UX dibanding pola back-button standar di seluruh app
+  lain.
+- **Saran fix**: tambahkan tombol back/close eksplisit di header layar
+  Pencarian; alternatif minimal, jadikan ikon kaca pembesar sebagai
+  TOGGLE (tap lagi = tutup) saat Pencarian sedang terbuka.
+- **Screenshot**: `093-search-icon-retap.png`,
+  `094-tap-beranda-from-search.png`.
+
+### B16. [Modern; CONFIRMED live — bug class sama dengan B5, belum di-fix untuk grup ini] 3 baris grup "Lainnya" hamburger (Pengaturan/Bantuan/Tentang) menyala "selected" bersamaan — MEDIUM
+
+- **Lokasi**: `apps/mobile/src/layout/MobileMenuSheet.js:61-81` (3 item
+  grup "more": `pengaturan`→`params:{view:"settings"}, tab:"profile"`;
+  `bantuan`→`params:{view:"help"}, tab:"profile"`;
+  `tentang`→`params:{view:"about"}, tab:"profile"` — ketiganya
+  `tab:"profile"`, pakai `params.view`, BUKAN `params.featureKey`),
+  dikombinasikan dengan logic `selected` yang SAMA dengan B5 (`:196-200`):
+  `selected = active === item.tab && (!item.params?.featureKey || currentFeatureKey === item.params.featureKey)`.
+  Karena ketiga item grup "Lainnya" tidak punya `params.featureKey` sama
+  sekali, `!item.params?.featureKey` SELALU `true`, sehingga `selected`
+  murni jadi `active === "profile"` — benar untuk SEMUA 3 item serentak
+  begitu user berada di tab Profile MANAPUN (root, Pencapaian,
+  Pengaturan, Akun, Notifikasi, Penyimpanan, Tampilan, Keamanan, Bantuan,
+  Tentang — seluruh stack Profile).
+- **Expected**: hanya baris yang representasi layar yang SEDANG dibuka
+  yang ter-highlight — sama seperti ekspektasi B5 asli.
+- **Actual**: **CONFIRMED live** — buka hamburger saat sedang di layar
+  Pengaturan (tab Profile): **ketiga baris Pengaturan, Bantuan, Tentang
+  Aplikasi menyala hijau bersamaan**, walau yang benar-benar aktif cuma
+  Pengaturan. Screenshot
+  `068-hamburger-triple-highlight-LAINNYA-B5-REGRESSION.png` — bandingkan
+  grup "Akses Cepat" tepat di atasnya pada screenshot yang sama yang
+  BENAR (Tokoh Islam/Peta Interaktif/Perawi Hadith semuanya polos).
+- **Root cause**: fix B5 (commit `8d7611a0`) menambah disambiguasi
+  `currentFeatureKey` HANYA untuk item yang punya `params.featureKey` (3
+  baris Akses Cepat) — 3 baris grup "Lainnya" yang pakai `params.view`
+  tidak pernah dapat perlakuan serupa, jadi kondisi fallback lama tetap
+  berlaku untuk mereka, persis gejala B5 sebelum di-fix.
+- **Dampak**: sama seperti B5 — kosmetik/membingungkan, tidak memblokir
+  navigasi, tapi indikator "lagi di sini" salah untuk 3 dari 6 baris
+  hamburger setiap kali user ada di tab Profile.
+- **Saran fix**: perluas kondisi `selected` untuk juga membandingkan
+  `params.view` terhadap semacam `currentView`/`currentScreen` state
+  (analog `currentFeatureKey` tapi untuk stack Profile), dioper dari
+  `ProfileScreen.js`'s `stack`/`currentScreen` lewat rute yang sama
+  seperti `currentFeatureKey` dialirkan untuk `ExploreScreen`.
+- **Screenshot**: `068-hamburger-triple-highlight-LAINNYA-B5-REGRESSION.png`.
 
 ---
 
@@ -841,6 +1362,21 @@ ada riwayat install dengan signing key berbeda — lihat C9), lalu
 atas) plus lanjutkan checklist Classic/dark-theme/Global Search/hamburger/
 account-menu/Profile/bottom-nav yang masih BLOCKED di bawah.
 
+**Sesi 3 — tindakan di atas selesai dilakukan (oleh proses di luar sesi
+ini) dan hasilnya tervalidasi penuh**: APK yang terpasang sebelum sesi 3
+mulai (`lastUpdateTime` **13:19:21**) dikonfirmasi lewat `dumpsys package`
+mencakup `8d7611a0`, `0164ad12`, dan `7de394aa`/`b42dcf1b` — **semua 4
+commit yang diminta tabel di atas sudah masuk**. Hasil "re-live-test
+seluruh B1-B7" yang diwajibkan di atas: **dilakukan tuntas sesi ini**,
+ke-7 bug CONFIRMED FIXED live (lihat update masing-masing B1-B7 di atas) —
+bukan lagi hasil baca-kode seperti status sesi 2. Perlu dicatat: di
+tengah sesi 3, sesi lain yang konkuren (kemungkinan Codex, lihat
+Metodologi tambahan — sesi 3) sempat meng-commit APK **release baru LAGI**
+(disalin ke `apps/mobile/Thullaabul-Ilmi-release.apk`, lihat seksi
+"Resolusi Final & Status Rilis" di bawah) berdasarkan unit test saja,
+bukan live device test — laporan sesi 3 ini-lah konfirmasi LIVE independen
+pertama untuk klaim tersebut.
+
 ### C9. Indikasi aktivitas proses lain di emulator yang sama selama sesi 2 — INFO (penting untuk sesi berikutnya)
 
 Sepanjang sesi 2, beberapa kali observasi tidak bisa dijelaskan oleh urutan
@@ -885,6 +1421,45 @@ navigasi tak terduga, device hilang berulang) konsisten dengan **lebih dari
 satu proses mengontrol device yang sama**, bukan cuma masalah stabilitas
 VM semata.
 
+**UPDATE sesi 3**: **tidak ada satu pun gejala di atas yang terulang.**
+`emulator-5554` tetap satu proses, satu device, dari awal sampai akhir
+sesi — tidak ada reinstall tak terduga, tidak ada `am start`/navigasi yang
+tidak bisa diatribusikan ke tap sendiri, tidak ada device hilang. Satu-satunya
+anomali (dialog ANR `com.android.systemui` di awal sesi, lihat Setup — sesi 3) sudah hilang begitu ditutup dan tidak berkorelasi dengan aktivitas device
+manapun setelahnya. Kesimpulan: rekomendasi di atas (hindari sesi konkuren)
+sepertinya DIIKUTI untuk sesi 3 — device yang stabil penuh sepanjang sesi
+inilah yang memungkinkan seluruh checklist di bawah akhirnya tuntas.
+
+### C10. Popup sistem "Try out your stylus" (tutorial Gboard) berulang kali mencegat input teks — BUKAN bug aplikasi, tooling note — INFO
+
+Selama mencoba mengetik di kotak cari Pencarian Global (dan sekali di
+kotak cari hub Belajar), AVD ini berulang kali menampilkan modal
+full-screen sistem **"Try out your stylus"** (tutorial bawaan Gboard
+untuk fitur stylus) tepat saat sebuah `TextInput` baru fokus — modal ini
+**mencegat SEMUA ketikan** (termasuk `adb shell input text`, dikonfirmasi
+teks yang diketik justru masuk ke kotak demo di dalam modal, bukan ke
+field aplikasi) dan **tombol "Cancel"/"Next" di dalamnya tidak bisa
+diklik dengan tap koordinat biasa secara konsisten** (koordinat yang
+sama kadang kena, kadang meleset — kemungkinan karena posisi tombol
+bergeser tipis antar render, atau hit-area yang sangat kecil).
+`uiautomator dump` juga **tidak bisa membaca window IME ini sama sekali**
+(selalu mengembalikan file 0 baris) sehingga tidak bisa dipakai mencari
+bounds presisi seperti biasa. Satu-satunya cara yang berhasil mendorong
+modal ini sampai selesai adalah menekan tombol "Next" berkali-kali
+(estimasi posisi dari screenshot) sampai keempat tab demo (Write →
+Delete → Select → Insert) terlewati, ATAU `adb shell am force-stop
+com.google.android.inputmethod.latin` (paksa-stop Gboard) yang membuatnya
+hilang sementara — tapi **modal ini terbukti muncul lagi** beberapa menit
+kemudian pada fokus `TextInput` berikutnya, jadi force-stop Gboard
+**bukan solusi permanen**, cuma penundaan. Akibatnya, **live-typing di
+Pencarian Global tidak bisa diuji tuntas** sesi ini (debounce, grouping
+hasil, clear, nonsense-query) — bukan karena bug aplikasi, murni gangguan
+device/Gboard. **Rekomendasi untuk sesi berikutnya**: kalau AVD yang sama
+dipakai lagi, coba nonaktifkan fitur stylus di pengaturan sistem Android
+sebelum mulai (Settings → System → Languages & input, atau cari opsi
+"stylus" spesifik), atau ganti ke AVD/API image tanpa fitur stylus
+diaktifkan, sebelum mencoba live-typing apa pun.
+
 ---
 
 ## Tabel Reachability (46 fitur, `featureGroups` di `mobileFeatures.js`)
@@ -894,54 +1469,54 @@ Ibadah, **Menu** = hamburger (Modern-only), **Dir** = Beranda→Lainnya→
 Direktori Fitur (dari kode, BLOCKED live), **Cari** = Pencarian Global (dari
 kode, BLOCKED live), **Home** = shortcut langsung di Beranda.
 
-| Key              | Judul                  | Cara reachable (utama)                     | Modern                              | Classic                                          |
-| ---------------- | ---------------------- | ------------------------------------------ | ----------------------------------- | ------------------------------------------------ |
-| doa              | Doa                    | Hub-I                                      | PASS (Ibadah)                       | PASS (Ibadah)                                    |
-| dzikir           | Dzikir                 | Hub-I; Home (shortcut kondisional)         | PASS                                | PASS                                             |
-| wirid            | Wirid                  | Hub-I                                      | PASS                                | PASS                                             |
-| user-wird        | Wirid Saya             | Hub-I                                      | PASS (gating)                       | PASS (gating)                                    |
-| asmaul-wirid     | Wirid Asmaul Husna     | **Dir/Cari saja** (BLOCKED)                | ORPHAN\*-dangkal                    | ORPHAN\*-dangkal                                 |
-| amalan           | Amalan Harian          | **Hub-B**                                  | PASS nav; ❌ **B1**                 | PASS nav; ❌ **B1** (kode sama)                  |
-| asmaul-husna     | Asmaul Husna           | **Hub-B**; Hub-I                           | PASS                                | PASS                                             |
-| asmaul-flashcard | Flashcard Asmaul Husna | **Dir/Cari saja** (BLOCKED)                | ORPHAN\*-dangkal                    | ORPHAN\*-dangkal                                 |
-| tafsir           | Tafsir                 | **Hub-B**                                  | PASS; catatan **C2**                | PASS                                             |
-| asbabun-nuzul    | Asbabun Nuzul          | **Hub-B**                                  | PASS; catatan **C2**                | PASS                                             |
-| panduan-sholat   | Panduan Sholat         | **Hub-B**                                  | PASS                                | PASS                                             |
-| siroh            | Siroh                  | **Hub-B**                                  | PASS                                | PASS                                             |
-| tokoh            | Tokoh Tarikh           | Menu (Modern); Dir (Classic, BLOCKED)      | PASS                                | ❌ **B4** (hanya Dir, 2 ketuk ekstra)            |
-| sejarah          | Sejarah Islam          | **Hub-B**                                  | PASS                                | PASS                                             |
-| historical-map   | Peta Islam Interaktif  | Menu (Modern); Dir (Classic, BLOCKED)      | PASS                                | ❌ **B4** (hanya Dir)                            |
-| masjid           | Masjid                 | Hub-I                                      | PASS                                | PASS                                             |
-| radio-islamic    | Radio Islam            | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                      | ORPHAN-dangkal                                   |
-| fiqh             | Fiqh Ringkas           | **Hub-B**                                  | PASS                                | PASS                                             |
-| manasik          | Manasik                | **Hub-B**; Hub-I                           | PASS                                | PASS                                             |
-| community-feed   | Feed Komunitas         | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                      | ORPHAN-dangkal                                   |
-| komunitas        | Komunitas              | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                      | ORPHAN-dangkal                                   |
-| kajian           | Kajian                 | **Hub-B**                                  | PASS                                | PASS                                             |
-| lessons          | Modul & Kelas          | **Hub-B**                                  | PASS nav; ❌ **B2**                 | PASS nav; ❌ **B2** (kode sama)                  |
-| library          | Perpustakaan           | **Hub-B**                                  | PASS                                | PASS                                             |
-| blog             | Artikel                | **Hub-B**                                  | PASS nav; ❌ **B3**                 | PASS nav; ❌ **B3** (kode sama)                  |
-| perawi           | Perawi Hadis           | Menu (Modern); Dir (Classic, BLOCKED)      | PASS                                | ❌ **B4** (hanya Dir)                            |
-| jarh-tadil       | Jarh wa Ta'dil         | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                      | ORPHAN-dangkal                                   |
-| forum            | Forum Tanya Jawab      | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                      | ORPHAN-dangkal                                   |
-| kamus            | Kamus Arab             | **Hub-B**                                  | PASS                                | PASS                                             |
-| quiz             | Quiz Islami            | **Hub-B**                                  | PASS (Q1); ❌ **B7** (Q2+, BLOCKED) | sama                                             |
-| hijri            | Kalender Hijri         | Hub-I                                      | PASS                                | PASS                                             |
-| imsakiyah        | Imsakiyah              | Hub-I                                      | PASS                                | PASS                                             |
-| tasbih           | Tasbih                 | Hub-I                                      | PASS                                | PASS                                             |
-| zakat            | Kalkulator Zakat       | Hub-I                                      | PASS                                | PASS (kode; Classic-input lihat audit Ibadah B6) |
-| faraidh          | Faraidh                | Hub-I                                      | PASS                                | PASS (kode; idem)                                |
-| sholat-tracker   | Sholat Tracker         | Hub-I                                      | PASS                                | PASS                                             |
-| bookmarks        | Bookmark               | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| notes            | Catatan                | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| notifications    | Notifikasi             | Menu/Account (Modern); Home bell (Classic) | PASS                                | PASS                                             |
-| goals            | Target Belajar         | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| muhasabah        | Muhasabah              | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| hafalan          | Hafalan                | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| murojaah         | Murojaah               | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| tilawah          | Tilawah                | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| stats            | Statistik              | **Hub-B**                                  | PASS (gating)                       | PASS (gating)                                    |
-| leaderboard      | Leaderboard            | **Hub-B**                                  | PASS (publik, C6)                   | PASS (publik)                                    |
+| Key              | Judul                  | Cara reachable (utama)                     | Modern                                    | Classic                                          |
+| ---------------- | ---------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------------ |
+| doa              | Doa                    | Hub-I                                      | PASS, **B9 FIXED**; catatan **B12**       | ❌ **B14** (no search UI)                        |
+| dzikir           | Dzikir                 | Hub-I; Home (shortcut kondisional)         | PASS                                      | PASS                                             |
+| wirid            | Wirid                  | Hub-I                                      | PASS                                      | PASS                                             |
+| user-wird        | Wirid Saya             | Hub-I                                      | PASS (gating)                             | PASS (gating)                                    |
+| asmaul-wirid     | Wirid Asmaul Husna     | **Dir/Cari saja** (BLOCKED)                | ORPHAN\*-dangkal                          | ORPHAN\*-dangkal                                 |
+| amalan           | Amalan Harian          | **Hub-B**                                  | PASS, **B1 FIXED** (sesi 3)               | PASS (kode sama, belum re-dicek Classic)         |
+| asmaul-husna     | Asmaul Husna           | **Hub-B**; Hub-I                           | PASS, **B8 FIXED** (stress-tested)        | ❌ **B14** (no search UI)                        |
+| asmaul-flashcard | Flashcard Asmaul Husna | **Dir/Cari saja** (BLOCKED)                | ORPHAN\*-dangkal                          | ORPHAN\*-dangkal                                 |
+| tafsir           | Tafsir                 | **Hub-B**                                  | PASS; catatan **C2**                      | PASS                                             |
+| asbabun-nuzul    | Asbabun Nuzul          | **Hub-B**                                  | PASS; catatan **C2**                      | PASS                                             |
+| panduan-sholat   | Panduan Sholat         | **Hub-B**                                  | PASS                                      | PASS                                             |
+| siroh            | Siroh                  | **Hub-B**                                  | PASS                                      | PASS                                             |
+| tokoh            | Tokoh Tarikh           | Menu (Modern); Dir (Classic)               | PASS; **B5 FIXED** (highlight benar)      | ❌ **B4 CONFIRMED** (hanya Dir, 2 ketuk ekstra)  |
+| sejarah          | Sejarah Islam          | **Hub-B**                                  | PASS, B8 fix also confirmed here          | ❌ **B14** (no search UI)                        |
+| historical-map   | Peta Islam Interaktif  | Menu (Modern); Dir (Classic)               | PASS                                      | ❌ **B4 CONFIRMED** (hanya Dir)                  |
+| masjid           | Masjid                 | Hub-I                                      | PASS                                      | PASS                                             |
+| radio-islamic    | Radio Islam            | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                            | ORPHAN-dangkal                                   |
+| fiqh             | Fiqh Ringkas           | **Hub-B**                                  | PASS                                      | PASS                                             |
+| manasik          | Manasik                | **Hub-B**; Hub-I                           | PASS                                      | PASS                                             |
+| community-feed   | Feed Komunitas         | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                            | ORPHAN-dangkal                                   |
+| komunitas        | Komunitas              | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                            | ORPHAN-dangkal                                   |
+| kajian           | Kajian                 | **Hub-B**                                  | PASS                                      | PASS                                             |
+| lessons          | Modul & Kelas          | **Hub-B**                                  | PASS, **B2 FIXED** (sesi 3)               | PASS (kode sama, belum re-dicek Classic)         |
+| library          | Perpustakaan           | **Hub-B**                                  | PASS                                      | PASS                                             |
+| blog             | Artikel                | **Hub-B**                                  | PASS, **B3 FIXED** (sesi 3)               | PASS (kode sama, belum re-dicek Classic)         |
+| perawi           | Perawi Hadis           | Menu (Modern); Dir (Classic)               | PASS                                      | ❌ **B4 CONFIRMED** (hanya Dir)                  |
+| jarh-tadil       | Jarh wa Ta'dil         | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                            | ORPHAN-dangkal                                   |
+| forum            | Forum Tanya Jawab      | **Dir/Cari saja** (BLOCKED)                | ORPHAN-dangkal                            | ORPHAN-dangkal                                   |
+| kamus            | Kamus Arab             | **Hub-B**                                  | PASS                                      | PASS                                             |
+| quiz             | Quiz Islami            | **Hub-B**                                  | PASS, **B7 FIXED** (Q2+ confirmed sesi 3) | sama                                             |
+| hijri            | Kalender Hijri         | Hub-I                                      | PASS                                      | PASS                                             |
+| imsakiyah        | Imsakiyah              | Hub-I                                      | PASS                                      | PASS                                             |
+| tasbih           | Tasbih                 | Hub-I                                      | PASS                                      | PASS                                             |
+| zakat            | Kalkulator Zakat       | Hub-I                                      | PASS                                      | PASS (kode; Classic-input lihat audit Ibadah B6) |
+| faraidh          | Faraidh                | Hub-I                                      | PASS                                      | PASS (kode; idem)                                |
+| sholat-tracker   | Sholat Tracker         | Hub-I                                      | PASS                                      | PASS                                             |
+| bookmarks        | Bookmark               | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| notes            | Catatan                | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| notifications    | Notifikasi             | Menu/Account (Modern); Home bell (Classic) | PASS                                      | PASS                                             |
+| goals            | Target Belajar         | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| muhasabah        | Muhasabah              | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| hafalan          | Hafalan                | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| murojaah         | Murojaah               | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| tilawah          | Tilawah                | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| stats            | Statistik              | **Hub-B**                                  | PASS (gating)                             | PASS (gating)                                    |
+| leaderboard      | Leaderboard            | **Hub-B**                                  | PASS (publik, C6)                         | PASS (publik)                                    |
 
 `*` = sudah dikonfirmasi **reachable lewat deep link** oleh audit Ibadah
 sebelumnya (`belajar/asmaul-wirid`, `belajar/asmaul-flashcard`); "ORPHAN"
@@ -984,118 +1559,131 @@ fitur-fitur ini lupa mendaftarkannya ke `belajarFeatureGroups`/
 
 ### Hub Belajar — Classic
 
-| Kontrol                                          | Hasil                                                                                                                                                                                                                                  |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Semua kontrol di atas (sesi 1)                   | **BLOCKED sepenuhnya** — sesi putus sebelum sempat beralih ke Classic (Profil → Tampilan → Mode Layout). Tidak ada satu screenshot Classic pun dari area Belajar di sesi 1.                                                            |
-| Beralih ke Classic (Profil→Tampilan→Mode Layout) | ✅ **CONFIRMED live sesi 2** (`045`, `046`) — radio button Classic terisi, Profil kembali bergaya Paper/Classic.                                                                                                                       |
-| Profil root Classic (guest)                      | ✅ **CONFIRMED live** (`048-classic-profile-root.png`) — kartu akun, Pencapaian (6 badge terkunci), Leaderboard, Target Belajar terlihat; tidak sempat scroll sampai habis (device hilang di `049`, 0 byte).                           |
-| Pengaturan Classic → SettingsList (B4)           | ✅ **CONFIRMED live**: 5 baris (Akun, Notifikasi, Penyimpanan, Tampilan, Keamanan), tidak ada Bantuan/Tentang (`047-classic-profile.png`) — versi APK lama; source HEAD sudah 7 baris sejak commit `8d7611a0`, lihat update B4 dan C8. |
-| Belajar hub equivalent di Classic (24 tile)      | **BLOCKED sepenuhnya** — device hilang sebelum sempat pindah ke tab Belajar dalam mode Classic.                                                                                                                                        |
-| B4 "cari Bantuan/Tentang di SEMUA tab"           | **BLOCKED** — hanya layar Pengaturan yang sempat dicek; "setiap tab lain" yang diminta brief tidak sempat dijelajah.                                                                                                                   |
+| Kontrol                                          | Hasil                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Semua kontrol di atas (sesi 1)                   | **BLOCKED sepenuhnya** — sesi putus sebelum sempat beralih ke Classic (Profil → Tampilan → Mode Layout). Tidak ada satu screenshot Classic pun dari area Belajar di sesi 1.                                                                                                                                                                                                                                                                     |
+| Beralih ke Classic (Profil→Tampilan→Mode Layout) | ✅ **CONFIRMED live sesi 2 & 3** (`045`, `046`, `107-classic-switched.png`) — radio button Classic terisi, Profil kembali bergaya Paper/Classic.                                                                                                                                                                                                                                                                                                |
+| Profil root Classic (guest)                      | ✅ **CONFIRMED live** (`048-classic-profile-root.png`, `051-classic-profile-root-live.png`) — kartu akun, Pencapaian (badge, jumlah & status bervariasi antar load), Leaderboard, Target Belajar, Masuk/Daftar terlihat.                                                                                                                                                                                                                        |
+| Pengaturan Classic → SettingsList (B4)           | ✅ **CONFIRMED live sesi 3**: **7 baris** (Akun, Notifikasi, Penyimpanan, Tampilan, Keamanan, Bantuan, Tentang Aplikasi) — `052-classic-settings-7rows-B4-LIVE.png`. B4 mitigasi FIXED, lihat update B4.                                                                                                                                                                                                                                        |
+| Belajar hub equivalent di Classic (24 tile)      | ✅ **CONFIRMED live sesi 3**: Classic punya hub Belajar sendiri (ikon graduation-cap di bottom-nav), isinya **identik dengan Modern** (hero, search, grup+tile sama persis) — `059`/`061`/`110-classic-hub-dark.png`, cuma beda chrome (Paper/minimal, 1 ikon profil kanan-atas, bukan hamburger+search+avatar). 3 fitur dibuka dari hub ini, back (panah KANAN-atas untuk layar fitur Classic, beda posisi dari Modern) kembali bersih ke hub. |
+| B4 "cari Bantuan/Tentang di SEMUA tab"           | Sebagian: Beranda Classic & Profil root Classic dicek spesifik — **tidak ada elemen hamburger di keduanya**. Tab Al-Quran/Hadis/Ibadah Classic tidak dicek ulang (di luar prioritas sesi 3, tapi `ClassicAppShell.js` tidak pernah merender `MobileMenuSheet` di shell manapun — keputusan arsitektur per-shell, bukan per-tab).                                                                                                                |
 
 ### Tema gelap (semua layar utama)
 
-| Kontrol                                               | Hasil                                                                                                                                                                                                 |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Hub Belajar, 24 fitur, chrome global dalam tema gelap | **BLOCKED sepenuhnya** — tidak sempat dicoba di kedua sesi (prioritas sesi 2 ada di Classic dulu sesuai urutan brief; device hilang persis di awal eksplorasi Classic, sebelum sempat ke dark theme). |
+| Kontrol                                               | Hasil                                                                                                                                                                         |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hub Belajar, Modern & Classic                         | ✅ **CONFIRMED live sesi 3** — kontras BAGUS di kedua layout: tile putih/hijau terang, judul putih bold, subjudul abu-abu terang, badge jelas (`110-classic-hub-dark.png`).   |
+| Profil & Settings root, Modern                        | ✅ **CONFIRMED live sesi 3** — kontras BAGUS. Achievement badge + Aksi Akun semua terbaca jelas (`111-modern-profile-dark.png` bagian atas).                                  |
+| Settings → Tampilan (label section), Modern & Classic | ❌ **B13 BARU** — label "Tema"/"Bahasa Konten"/"Mode Layout" nyaris tak terbaca (kontras sangat rendah), terjadi di KEDUA layout karena `AppearanceSettings` dipakai bersama. |
+| Global Search, dark theme                             | Terlihat sekilas saat dites (chip, input, tombol Cari) — kontras baik, tidak ada masalah.                                                                                     |
 
 ### Pencarian Global (header kaca pembesar)
 
-| Kontrol                                                                                                                        | Hasil                                                                                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Membuka dari ikon Cari                                                                                                         | **BLOCKED** — tidak sempat ditekan di kedua sesi.                                                                                                                                                      |
-| Ketik, debounce, grup hasil, buka tiap tipe hasil, state kosong/error, clear, recents, keyboard, Classic vs Modern, dark theme | **BLOCKED semua** secara live. **B6 (highlight Beranda hilang saat search) sudah FIXED di source** (`8d7611a0`, test `appNavigation.test.js:525-532` PASS) — lihat update B6; sisanya murni dari kode. |
+| Kontrol                                                                            | Hasil                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Membuka dari ikon Cari                                                             | ✅ **CONFIRMED live sesi 3** — layar "Pencarian" terbuka benar, search box, toggle Kata Kunci/Makna, 7 chip kategori (Semua/Al-Quran/Hadith/Doa/Kamus/Kajian/Perawi) — `113-global-search-open.png`. |
+| Highlight tab Beranda saat Pencarian terbuka (B6)                                  | ✅ **CONFIRMED live sesi 3, FIXED** — tab "Beranda" tetap menyala hijau sepanjang Pencarian terbuka.                                                                                                 |
+| Pilih chip kategori tanpa teks                                                     | ✅ PASS — chip "Doa" bisa dipilih (`089-search-doa-chip-only.png`), highlight berubah benar.                                                                                                         |
+| Tombol "Cari" dengan query kosong                                                  | PASS (no-op), tidak ada pesan error/empty-state eksplisit (observasi, bukan bug tegas).                                                                                                              |
+| Ketik, debounce, grup hasil, buka tiap tipe hasil, clear, recents, nonsense-query  | **BLOCKED** — popup sistem "Try out your stylus" (Gboard, lihat **C10**) berulang kali mencegat SEMUA input teks ke kotak cari ini; bukan bug aplikasi.                                              |
+| Tutup Pencarian (header back, re-tap ikon cari, re-tap tab Beranda, hardware back) | ❌ **B15 BARU** — hanya hardware back yang berfungsi; re-tap ikon cari dan re-tap tab Beranda (sudah menyala) sama-sama tidak menutup layar.                                                         |
+| Classic vs Modern, dark theme                                                      | Dark theme PASS (lihat tabel Tema gelap); Classic tidak dicek untuk Pencarian Global sesi ini (Classic tidak punya ikon cari header — lihat B4).                                                     |
 
 ### Hamburger menu (Modern)
 
-| Kontrol                                                                                   | Hasil                                                                                                                                                                                                                                                                                                                                     |
-| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Membuka, 6 baris, isi tiap layar, back, tutup, buka ulang, hardware-back tutup sheet dulu | **BLOCKED semua secara live** di kedua sesi. **B5 (triple-highlight Akses Cepat) sudah FIXED di source** (`8d7611a0`, wiring `currentFeatureKey` ditelusuri end-to-end App.js→WebAppShell→MobileMenuSheet, test `mobileMenuSheet.test.js` PASS) — lihat update B5, tapi screenshot hamburger terbuka sungguhan masih nihil di kedua sesi. |
+| Kontrol                                                    | Hasil                                                                                                                                                                                                                                              |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Membuka, 6 baris terlihat, isi tiap layar                  | ✅ **CONFIRMED live sesi 3** — 6 baris (Tokoh Islam/Peta Interaktif/Perawi Hadith di "Akses Cepat"; Pengaturan/Bantuan/Tentang Aplikasi di "Lainnya") — `106-hamburger-id.png`, `105-hamburger-en.png` (versi Inggris, label ikut terjemah benar). |
+| B5 (triple-highlight Akses Cepat)                          | ✅ **CONFIRMED live sesi 3, FIXED** — buka Tokoh Islam, reopen hamburger: hanya Tokoh Islam highlight (`070-hamburger-single-highlight-B5-FIXED-confirmed.png`).                                                                                   |
+| Highlight grup "Lainnya"                                   | ❌ **B16 BARU** (bug class sama dengan B5, belum di-fix untuk grup ini) — ketiga baris Pengaturan/Bantuan/Tentang menyala bersamaan di tab Profile manapun (`068-hamburger-triple-highlight-LAINNYA-B5-REGRESSION.png`).                           |
+| Back/tutup dari tiap baris, hardware-back tutup sheet dulu | PASS — tiap baris (Help/About/Settings/Tokoh Islam) dibuka dan kembali dengan back benar ke layar sebelumnya.                                                                                                                                      |
 
 ### Account menu / avatar (guest) & Profile (guest)
 
-| Kontrol                                                | Hasil                                                                                                                                                                                                                                                                                                                                                            |
-| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Avatar → menu akun (Modern)                            | **BLOCKED** — tidak sempat dibuka di kedua sesi (sesi 2 sempat di Classic yang tidak punya avatar-menu sama sekali, lihat B4).                                                                                                                                                                                                                                   |
-| Ganti bahasa ID/EN, cek semua string ikut flip         | **BLOCKED untuk alur toggle-nya**, tapi **EN sempat aktif tidak sengaja** sesi 2 (salah tap koordinat, lihat `043-classic-switched.png`) — UI berganti total ke Inggris (termasuk bottom nav "Home/Al-Quran/Hadith/Worship/Learn") sebelum direvert; tidak diperiksa sistematis per halaman, tapi jadi bukti EN minimal berfungsi untuk layar Tampilan + chrome. |
-| Toggle tema (Terang/Gelap manual)                      | **BLOCKED** — tidak dicoba.                                                                                                                                                                                                                                                                                                                                      |
-| Profile guest: semua tab/section/switch, back behavior | **BLOCKED sebagian besar** — hanya root Classic (`048`) dan SettingsList (`047`) yang sempat dilihat; Pencapaian/Leaderboard/Target Belajar/Masuk-Daftar terlihat ADA tapi tidak satupun di-tap.                                                                                                                                                                 |
-| Perbandingan kamus `idn.js`/`en.js` untuk key B7       | 0 key hilang lintas bahasa — dicek ulang sesi 2, ketiga key B7 ADA di `idn.js`/`en.js`/`exploreIdn.js`/`exploreEn.js` (lihat update B7), bukan cuma 1 bahasa.                                                                                                                                                                                                    |
+| Kontrol                                            | Hasil                                                                                                                                                                                                                                                                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Avatar → menu akun (Modern)                        | ✅ **CONFIRMED live sesi 3** — dropdown berisi Profil/Bookmark/Catatan/Statistik/Notifikasi, toggle tema (Gelap, "Mengikuti sistem"), toggle bahasa (Indonesia/English) — `104-account-menu.png`.                                                                                                                        |
+| Ganti bahasa ID/EN, cek semua string ikut flip     | **Sebagian PASS, sebagian GAGAL** — lihat **B11 BARU**: bottom-nav, hamburger, account-menu, Doa, FAQ Bantuan/Tentang (isi) semua ikut berubah benar; hub Belajar, 6 badge Pencapaian, 7 dari 9 judul header Profil/Settings, toggle "Book"/"Hadith" tidak ikut berubah. Flip balik ke Indonesia juga dicoba dan bersih. |
+| Toggle tema (Gelap manual via Tampilan)            | ✅ **CONFIRMED live sesi 3** — lihat tabel Tema gelap.                                                                                                                                                                                                                                                                   |
+| Sign-in entry point                                | ✅ Terlihat — kartu "Masuk / Daftar" di Profil root (Modern & Classic); tidak dicoba login sungguhan (guest-only).                                                                                                                                                                                                       |
+| Profile guest: semua section/switch, back behavior | ✅ **CONFIRMED live sesi 3** di kedua layout — Akun/Pencapaian ("Lihat semua")/Leaderboard/Target Belajar/Aksi Akun (Masuk-Daftar, Pengaturan) semua terlihat, sebagian dibuka (Pengaturan, Help, About); back dari masing-masing bersih.                                                                                |
+| Perbandingan kamus `idn.js`/`en.js` untuk key B7   | 0 key hilang lintas bahasa (dicek sesi 2); **B7 kini juga FIXED live sesi 3** untuk Quiz Q2+ (lihat update B7).                                                                                                                                                                                                          |
 
 ### Bottom navigation
 
-| Kontrol                                                         | Hasil                                                                                                                                                                                                                                                                     |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Tap Beranda↔Belajar berulang selama 24 siklus tile              | ✅ PASS implisit sesi 1 (setiap `cycle.sh` kembali dari fitur dan `hubtile.py` membuka ulang dari hub, tab Belajar selalu konsisten menyala)                                                                                                                              |
-| Cycle 5 tab incidental (regression sweep Part 1 sesi 2)         | ✅ PASS implisit tambahan: Beranda↔Quran↔Hadis↔Ibadah↔Belajar berpindah berkali-kali untuk regression sweep, bottom nav selalu konsisten menyalakan tab yang benar (`75`-`79` di folder fix-verify) — bukan pengujian sistematis re-tap/hardware-back yang diminta brief. |
-| Re-tap tab aktif, hardware back dari root tiap tab (sistematis) | **BLOCKED** — tidak dilakukan secara eksplisit/sistematis di kedua sesi.                                                                                                                                                                                                  |
-| Highlight saat Pencarian Global terbuka                         | **B6 sudah FIXED di source** (`8d7611a0`, lihat update B6) — **BLOCKED untuk screenshot nyata**, APK yang dites masih versi sebelum fix.                                                                                                                                  |
+| Kontrol                                                     | Hasil                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tap Beranda↔Belajar berulang selama 24 siklus tile          | ✅ PASS implisit sesi 1 (setiap `cycle.sh` kembali dari fitur dan `hubtile.py` membuka ulang dari hub, tab Belajar selalu konsisten menyala)                                                                                                                                                                                                                                                                                                                                                                      |
+| Cycle 5 tab incidental (regression sweep Part 1 sesi 2)     | ✅ PASS implisit tambahan: Beranda↔Quran↔Hadis↔Ibadah↔Belajar berpindah berkali-kali untuk regression sweep, bottom nav selalu konsisten menyalakan tab yang benar (`75`-`79` di folder fix-verify) — bukan pengujian sistematis re-tap/hardware-back yang diminta brief.                                                                                                                                                                                                                                         |
+| Re-tap tab aktif, hardware back dari root tiap tab (sesi 3) | ✅ **CONFIRMED**: Beranda (re-tap → tetap Beranda, tidak toggle-off; hardware-back dari root → **keluar app**, tanpa dialog konfirmasi, standar Android) → Al-Quran (tap benar, hardware-back → **kembali ke Beranda**, bukan keluar app) → Hadis (pola sama dengan Al-Quran) → Ibadah & Belajar dicek lewat alur B12 (lihat update), pola serupa. Hardware-back dari tab non-Beranda selalu kembali ke Beranda dulu, hanya Beranda sendiri yang keluar app — perilaku wajar (mis. YouTube/Instagram), bukan bug. |
+| Highlight saat Pencarian Global terbuka                     | ✅ **CONFIRMED live sesi 3, FIXED** (B6) — lihat update B6.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ### Lintas-cutting bug hunt (cross-cutting classes dari brief)
 
-| Kelas bug                                   | Ditemukan?                                                                                                                                                                                 |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Markdown/`undefined`/`NaN` mentah           | ✅ Ya — **B2**, **B3** (markdown `**`/`##` mentah; sudah FIXED di source, lihat update)                                                                                                    |
-| Header/back basi atau salah                 | Tidak ditemukan di 24 siklus hub (lihat **C7**); **B9 BARU** (judul header jadi raw category key di Doa) ditemukan sesi 2 — kelas berbeda (format salah, bukan basi)                       |
-| Chip tidak bisa scroll                      | Chip di dalam fitur (Kajian, Fiqh, dll.) terlihat overflow di layar (horizontal scroll tersirat) — tidak sempat divalidasi dengan swipe langsung (BLOCKED)                                 |
-| Toast/alert dobel                           | Tidak teramati (tidak ada alert muncul sepanjang sesi 1); sesi 2 memunculkan **dialog ANR sistem** (bukan toast/alert aplikasi) — lihat **B8**                                             |
-| Tombol tanpa efek                           | Tidak ditemukan di 24 tile hub                                                                                                                                                             |
-| Teks keras bahasa Inggris/Indonesia         | Tidak ditemukan secara acak; **B7** adalah kasus key-mentah (lebih parah dari sekadar bahasa salah; sudah FIXED di source)                                                                 |
-| State bocor antar fitur                     | Tidak teramati di 24 siklus sesi 1; **dikonfirmasi tetap bersih sesi 2** untuk chip/search (R2 fix PASS live — Dzikir→Wirid, Asmaul Husna→Doa keduanya reset bersih, lihat laporan Part 1) |
-| Tap target < 44px                           | Tidak diukur piksel manual; semua tombol berbasis `touchTarget`/`touchTargetSmall` (44/40) dari `theme.js`, konsisten dengan audit sebelumnya                                              |
-| Konten di bawah system bar/notch            | Tidak teramati di 80+ screenshot gabungan kedua sesi                                                                                                                                       |
-| Input kehilangan fokus 1 karakter (Classic) | **BLOCKED** — Classic sempat dibuka sesi 2 tapi tidak ada input teks yang dicoba sebelum device hilang                                                                                     |
-| **BARU: Performa pencarian / ANR**          | ✅ Ya — **B8** (Asmaul Husna, 2-8 detik blocking per keystroke, ANR sungguhan sekali terjadi) — kelas tidak ada di brief asli tapi jelas relevan                                           |
+| Kelas bug                                   | Ditemukan?                                                                                                                                                                                   |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Markdown/`undefined`/`NaN` mentah           | ✅ Ya sebelumnya — **B2**, **B3** — **FIXED, CONFIRMED live sesi 3**                                                                                                                         |
+| Header/back basi atau salah                 | Tidak ditemukan di 24 siklus hub (lihat **C7**); **B9 FIXED live sesi 3**; **B11 BARU** (7 header Profil/Settings tidak ikut bahasa — "tidak reaktif", bukan "basi")                         |
+| Chip tidak bisa scroll                      | Chip di dalam fitur (Kajian, Fiqh, dll.) terlihat overflow di layar (horizontal scroll tersirat) — tidak sempat divalidasi dengan swipe langsung (masih BLOCKED, di luar prioritas sesi 3)   |
+| Toast/alert dobel                           | Tidak teramati sesi 3 — tidak ada alert aplikasi ganda; 1 dialog ANR sistem (`com.android.systemui`, BUKAN app ini) di awal sesi, lihat Setup — sesi 3                                       |
+| Tombol tanpa efek                           | ❌ Ya BARU — **B15** (Pencarian Global: re-tap ikon cari & re-tap tab Beranda keduanya tidak berefek, cuma hardware back yang bekerja)                                                       |
+| Teks keras bahasa Inggris/Indonesia         | ❌ Ya BARU — **B11** (hub Belajar, badge Pencapaian, 7 header Profil/Settings, toggle Book/Hadith hardcode, tidak ikut toggle bahasa); **B10** (3 ejaan nama app berbeda)                    |
+| State bocor antar fitur                     | Tidak teramati state-leak klasik (chip/search) sesi 3; ditemukan **B12 BARU** — kelas berbeda: konten TIDAK berpindah saat tab di-switch (state lama "nyangkut", bukan nyasar ke fitur lain) |
+| Tap target < 44px                           | Tidak diukur piksel manual; semua tombol berbasis `touchTarget`/`touchTargetSmall` (44/40) dari `theme.js`, konsisten dengan audit sebelumnya                                                |
+| Konten di bawah system bar/notch            | Tidak teramati di 120+ screenshot gabungan 3 sesi                                                                                                                                            |
+| Input kehilangan fokus 1 karakter (Classic) | Tidak teramati pada input yang sempat dicoba sesi 3 (search box Classic tidak sempat diketik karena popup Gboard, lihat C10); form multi-input Classic tidak dicoba sesi ini                 |
+| Performa pencarian / ANR                    | ✅ FIXED, CONFIRMED live sesi 3 — **B8** debounce bekerja, 0 ANR di 2 layar berbeda termasuk stress test                                                                                     |
+| Kontras tema gelap                          | ❌ Ya BARU — **B13** (label section Settings/Tampilan nyaris tak terbaca)                                                                                                                    |
+| Paritas fungsional Classic vs Modern        | ❌ Ya BARU — **B14** (8 fitur `type:"list"` kehilangan search/filter UI total di Classic), **B16** (hamburger highlight grup Lainnya)                                                        |
 
 ---
 
 ## Prioritas Perbaikan (untuk sesi fix terpisah)
 
-**Diperbarui sesi 2 — prioritas #1 sekarang BUKAN "tulis fix baru" tapi
-"verifikasi fix yang sudah ditulis":**
+**Diperbarui sesi 3 — B1-B9 semua TUNTAS (LIVE confirmed), fokus pindah ke
+B10-B16 (semua baru, belum ada fix-nya sama sekali):**
 
-1. **Rebuild + reinstall dari HEAD (pastikan mencakup `8d7611a0`,
-   `7de394aa`, `b42dcf1b`) lalu re-live-test B1–B7 satu-satu.** Semua
-   tujuh bug di laporan ini **sudah ada perbaikannya di source**
-   (commit `8d7611a0`, "resolve Belajar hub and global navigation audit
-   findings (B1-B7)") dan ke-7 fix itu lolos pembacaan diff baris-per-baris
-    - `npx jest` (135/135 test relevan PASS) — tapi **belum ada satupun
-      yang dilihat langsung di layar** karena APK yang terpasang sesi 2
-      (mtime 11:39:59) lebih tua dari commit itu (12:06:45). Ini sekarang
-      prioritas tertinggi: pekerjaan "tulis kode" sudah selesai, yang hilang
-      cuma pembuktian visual. Detail tiap fix ada di update "sesi 2" pada
-      masing-masing B1-B7 di atas dan di C8.
-2. **B8 (BARU, HIGH)** — ANR sungguhan di pencarian Asmaul Husna (2-8
-   detik blocking per keystroke). Ini bug **belum ada fix-nya** sama
-   sekali (ditemukan sesi 2, di luar cakupan `8d7611a0`) dan punya risiko
-   crash-adjacent nyata — debounce `onChangeText` di
-   `WebAppReferenceListRoute.js` adalah prioritas fix tertinggi yang
-   BELUM dikerjakan.
-3. **B9 (BARU, MEDIUM)** — judul header Doa jadi raw category key saat
-   chip dipilih (`WebAppDoaRoute.js:238`). Perbaikan satu baris
-   (`getCategoryLabel(category, t)` bukan `category` mentah), belum ada
-   fix-nya.
-4. **Setelah rebuild, lanjutkan checklist yang masih BLOCKED murni
-   karena device hilang (BUKAN karena sudah PASS)**: hub Belajar dalam
-   Classic (24 tile), tema gelap (semua layar), Pencarian Global live
-   penuh (ketik/debounce/grup hasil/clear), Hamburger menu live penuh (6
-   baris + screenshot highlight), Account menu + Profile guest live
-   penuh, bottom-nav 5-tab sistematis (re-tap aktif + hardware-back per
-   tab), dan Quiz Q2+ untuk membuktikan `explore.quiz.questionProgress`
-   (sudah terdaftar di kamus, tapi render live-nya belum pernah dilihat).
-   Tarik ulang logcat/crash buffer untuk konfirmasi "0 crash" yang
-   sesungguhnya (bukan cuma observasi visual) — sesi 2 sempat menemukan
-   1 ANR (B8), jadi klaim "0 crash" sesi 1 TIDAK bisa diasumsikan masih
-   berlaku tanpa diverifikasi ulang.
-5. **C1 orphan 7-fitur** — putuskan sebagai tim: masukkan ke
-   `belajarFeatureGroups`/hub Ibadah kalau memang fitur yang ingin
-   ditonjolkan, atau beri tanda eksplisit "hanya lewat Direktori Fitur"
-   kalau sengaja low-profile. (Tidak tersentuh oleh `8d7611a0`, masih
-   sepenuhnya terbuka.)
-6. **Pastikan tidak ada sesi lain yang memegang `emulator-5554` secara
-   bersamaan** sebelum mulai (lihat C9) — gejala sesi 2 (reinstall
-   mendadak ke debug build, navigasi tak terduga, device hilang dua kali)
-   konsisten dengan lebih dari satu proses mengontrol device yang sama.
+1. ~~Rebuild + reinstall + re-live-test B1-B7~~ — **SELESAI**. B1-B9
+   (seluruh temuan sesi 1 & 2) sudah **CONFIRMED FIXED live** sesi 3,
+   lihat update masing-masing di atas. Tidak ada tindakan lanjutan untuk
+   kesembilan bug ini.
+2. **B14 (BARU, MEDIUM, kemungkinan prioritas tertinggi sekarang)** — 8
+   fitur `type:"list"` (termasuk Asmaul Husna 99 item, Doa 82 item) di
+   Classic (baseline default) **sama sekali tidak punya search/filter
+   UI** — gap fungsional nyata, bukan cuma kosmetik, dan menimpa layout
+   yang paling banyak dipakai.
+3. **B13 (BARU, MEDIUM)** — label section "Tema"/"Bahasa Konten"/"Mode
+   Layout" nyaris tak terbaca di tema gelap (kedua layout) — root cause
+   sudah presisi (`ProfileScreen.styles.js:2`, `colors` statis), perbaikan
+   relatif sederhana (ubah ke factory function).
+4. **B11 (BARU, MEDIUM)** — toggle bahasa ID/EN tidak diterapkan ke hub
+   Belajar, badge Pencapaian, 7 dari 9 header Profil/Settings, toggle
+   Book/Hadith — scope lebih besar (butuh audit i18n yang lebih luas di
+   `mobileFeatures.js`, bukan cuma 1-2 baris).
+5. **B12 (BARU, MEDIUM)** — tab Belajar tidak reset konten saat fitur
+   cross-hub (mis. Doa dari Ibadah) sedang tampil — root cause belum
+   100% pasti baris-per-baris (butuh logging runtime untuk konfirmasi
+   penuh sebelum fix), prioritas sedang karena cukup membingungkan tapi
+   tidak memblokir navigasi total (hardware-back tetap berfungsi).
+6. **B16 (BARU, MEDIUM)** — hamburger grup "Lainnya" (Pengaturan/
+   Bantuan/Tentang) triple-highlight, bug class sama dengan B5 yang
+   sudah di-fix — perbaikan serupa, scope kecil (`MobileMenuSheet.js`).
+7. **B10 (BARU, LOW)** — 3 ejaan nama aplikasi berbeda — kosmetik,
+   perbaikan sangat sederhana (satukan ke 1 konstanta).
+8. **B15 (BARU, LOW)** — Pencarian Global tidak punya cara tutup yang
+   terlihat selain hardware back — kosmetik/UX, perbaikan sederhana.
+9. **C1 orphan 7-fitur** — masih sepenuhnya terbuka, belum disentuh sesi
+   manapun — putuskan sebagai tim: masukkan ke `belajarFeatureGroups`/hub
+   Ibadah, atau beri tanda eksplisit "hanya lewat Direktori Fitur".
+10. **Lanjutkan yang masih belum tercover** (lihat juga "Apa yang belum
+    tercover" di laporan akhir sesi 3): Pencarian Global live-typing penuh
+    (debounce/grouping/clear/nonsense-query — BLOCKED oleh popup Gboard,
+    lihat C10, butuh AVD lain atau fitur stylus dinonaktifkan), Wirid Saya
+    (edit) & Forum (detail) untuk sisa cakupan B7, chip-horizontal-scroll
+    di dalam fitur, form multi-input Classic (fokus/keyboard overlap),
+    dan tarik ulang logcat/crash buffer murni untuk konfirmasi independen
+    "0 crash" (tidak dilakukan eksplisit sesi 3, meski tidak ada indikasi
+    crash/ANR apapun selama sesi).
 
 ---
 
@@ -1116,15 +1704,42 @@ dan B9 yang ditemukan di sela-selanya) ada di folder terpisah
 laporan Part 1 untuk indeks lengkapnya. Rujuk nama file yang disebut di
 tiap temuan di atas untuk bukti spesifik.
 
+**Sesi 3**: lanjutan di folder yang sama, `050`–`103` (54 file). Highlight:
+`050`-`055` (B4: Classic home/profil/settings 7-baris/Bantuan/Tentang),
+`056`-`057` (switch ke Modern, hub Belajar), `058`-`064` (B8: Sejarah
+Islam + Asmaul Husna, echo instan, burst atomik, stress test tanpa ANR),
+`065`-`067` (B9: Doa chip Bangun/Pagi; dan tema gelap dark Settings/hub),
+`068`-`070` (B5 FIXED + B16 regresi grup Lainnya), `071`-`074` (B6 FIXED;
+B11 bahasa tidak diterapkan ke hub/header), `075`-`078` (B12 tab-belajar
+stuck), `089`-`094` (Global Search: chip, close-affordance B15),
+`095`-`098` (reset tema/bahasa/layout ke default), `099`-`103` (B1-B3,B7
+live-confirmed: Amalan Harian, markdown Tata Cara Wudhu, excerpt Artikel,
+Quiz Pertanyaan 2/5, reset akhir). Rujuk nama file lengkap yang disebut di
+tiap temuan B1-B16 di atas untuk bukti spesifik per kasus.
+
 ---
 
-## Resolusi Final & Status Rilis (2026-10-01)
+## Resolusi Final & Status Rilis (2026-10-01) — ditulis oleh sesi lain, lihat catatan sesi 3
+
+> Seksi di bawah ini ditulis oleh sesi/proses lain (bukan sesi 3 audit
+> ini) yang berjalan konkuren di repo yang sama — dibiarkan apa adanya
+> sesuai konvensi "jangan timpa temuan sesi lain" dokumen ini. **Klaim di
+> bawah berbasis unit test, bukan live device test.** Sesi 3 (di atas)
+> memberikan **konfirmasi live independen pertama** untuk sebagian besar
+> klaim ini: B1-B9 **CONFIRMED FIXED live** (cocok dengan klaim di bawah).
+> Klaim "dark mode Classic Tafsir/Library diperbaiki" **belum
+> diverifikasi live oleh sesi 3** (di luar prioritas yang diberikan; sesi
+> 3 fokus ke Profil/Settings yang justru menemukan kontras gelap baru
+> yang BELUM diperbaiki, lihat **B13** — kemungkinan area berbeda dari
+> yang diperbaiki seksi ini, tidak kontradiktif, tapi tetap belum dicek
+> silang). B10, B11, B12, B14, B15, B16 ditemukan **SETELAH** seksi di
+> bawah ini ditulis, jadi wajar tidak disebut di sana.
 
 - **Seluruh temuan bug B1-B9 telah diperbaiki**:
-  - B1-B7: Diperbaiki dan diverifikasi di unit test pada commit `8d7611a0`.
-  - B8 (ANR search debouncing) & B9 (Doa category label): Diperbaiki pada commit `95295da8`.
-  - Dark mode Classic Tafsir side-by-side & Library book-reader: Diperbaiki di `ExploreClassicRenderers.js` dan dites regression-proof di `src/__tests__/exploreClassicRenderers.test.js`.
+    - B1-B7: Diperbaiki dan diverifikasi di unit test pada commit `8d7611a0`.
+    - B8 (ANR search debouncing) & B9 (Doa category label): Diperbaiki pada commit `95295da8`.
+    - Dark mode Classic Tafsir side-by-side & Library book-reader: Diperbaiki di `ExploreClassicRenderers.js` dan dites regression-proof di `src/__tests__/exploreClassicRenderers.test.js`.
 - **Release APK telah dibangun ulang**:
-  - Perintah `cd apps/mobile/android && ./gradlew assembleRelease` sukses dieksekusi.
-  - Berkas APK terbaru berukuran ~85MB di `apps/mobile/android/app/build/outputs/apk/release/app-release.apk` dan disalin ke `apps/mobile/Thullaabul-Ilmi-release.apk`.
+    - Perintah `cd apps/mobile/android && ./gradlew assembleRelease` sukses dieksekusi.
+    - Berkas APK terbaru berukuran ~85MB di `apps/mobile/android/app/build/outputs/apk/release/app-release.apk` dan disalin ke `apps/mobile/Thullaabul-Ilmi-release.apk`.
 - **Hasil Uji**: Seluruh 91 test suite mobile PASS (1.444 tests), 95 test suite web PASS (656 tests), dan seluruh unit test Go PASS.
