@@ -6,6 +6,7 @@ import (
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type AchievementRepository interface {
@@ -129,10 +130,20 @@ func (r *achievementRepo) GetPoints(userID uuid.UUID) (*model.UserPoints, error)
 				UserID:      userID,
 				TotalPoints: 0,
 			}
-			if err := r.db.Create(&p).Error; err != nil {
-				return nil, err
+			res := r.db.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "user_id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"deleted_at", "total_points", "updated_at"}),
+				Where: clause.Where{Exprs: []clause.Expression{
+					clause.Expr{
+						SQL:  "? IS NOT NULL",
+						Vars: []interface{}{clause.Column{Table: clause.CurrentTable, Name: "deleted_at"}},
+					},
+				}},
+			}).Create(&p)
+			if res.Error != nil {
+				return nil, res.Error
 			}
-			return &p, nil
+			return r.GetPoints(userID)
 		}
 		return nil, err
 	}

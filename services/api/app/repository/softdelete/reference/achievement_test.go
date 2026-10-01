@@ -151,7 +151,20 @@ func TestSoftDeleteAchievementGetPoints(t *testing.T) {
 	}
 
 	deleted, err := f.repo.GetPoints(f.deletedPointsUserID)
-	if err == nil && deleted.TotalPoints == 999 {
-		t.Fatalf("soft-deleted points row leaked: %+v", deleted)
+	if err != nil {
+		t.Fatalf("GetPoints on soft-deleted points row should revive with 0 points: %v", err)
+	}
+	if deleted.TotalPoints != 0 {
+		t.Fatalf("soft-deleted points row should reset/start at 0 points: got %d", deleted.TotalPoints)
+	}
+	if err := f.repo.AddPoints(f.deletedPointsUserID, 15); err != nil {
+		t.Fatalf("AddPoints after revive: %v", err)
+	}
+	afterAdd, err := f.repo.GetPoints(f.deletedPointsUserID)
+	if err != nil {
+		t.Fatalf("GetPoints after AddPoints: %v", err)
+	}
+	if afterAdd.TotalPoints != 15 {
+		t.Fatalf("got %d points, want 15", afterAdd.TotalPoints)
 	}
 }
