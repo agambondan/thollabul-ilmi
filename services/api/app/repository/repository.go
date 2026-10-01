@@ -295,6 +295,16 @@ func (s *Repositories) createCompositeIndexes() {
 	for _, sql := range indexes {
 		s.db.Exec(sql)
 	}
+
+	if s.db.Dialector.Name() == "postgres" {
+		pgStorageOptions := []string{
+			`ALTER TABLE kajian_transcript SET (autovacuum_vacuum_scale_factor = 0.05, autovacuum_analyze_scale_factor = 0.02)`,
+			`ALTER TABLE translation SET (autovacuum_vacuum_scale_factor = 0.05, autovacuum_analyze_scale_factor = 0.02)`,
+		}
+		for _, sql := range pgStorageOptions {
+			s.db.Exec(sql)
+		}
+	}
 }
 
 // Seeder is insert data to table
