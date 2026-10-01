@@ -172,17 +172,19 @@ func TestSoftDeleteThemeFindByBookSlug(t *testing.T) {
 	}
 	var linkIDs, themeIDsSeen []int
 	for _, l := range *links {
+		if l.Theme == nil {
+			t.Fatal("soft-deleted theme returned as dangling link with null theme")
+		}
 		linkIDs = append(linkIDs, *l.ID)
-		if l.Theme != nil {
-			themeIDsSeen = append(themeIDsSeen, *l.Theme.ID)
-			if *l.Theme.ID == *themeTrDeleted.ID && l.Theme.Translation != nil {
-				t.Fatalf("soft-deleted theme translation leaked: %+v", l.Theme.Translation)
-			}
-			if *l.Theme.ID == *themeLive.ID && l.Theme.Translation == nil {
-				t.Fatal("live theme lost its live translation")
-			}
+		themeIDsSeen = append(themeIDsSeen, *l.Theme.ID)
+		if *l.Theme.ID == *themeTrDeleted.ID && l.Theme.Translation != nil {
+			t.Fatalf("soft-deleted theme translation leaked: %+v", l.Theme.Translation)
+		}
+		if *l.Theme.ID == *themeLive.ID && l.Theme.Translation == nil {
+			t.Fatal("live theme lost its live translation")
 		}
 	}
+	assertIDs(t, "link IDs of book", linkIDs, *linkLive.ID, *linkTrDeleted.ID)
 	assertIDs(t, "themes of book", themeIDsSeen, *themeLive.ID, *themeTrDeleted.ID)
 	for _, id := range linkIDs {
 		if id == *linkDead.ID {

@@ -169,7 +169,7 @@ func (c *themeRepo) FindById(id *int) (*model.Theme, error) {
 
 func (c *themeRepo) FindByBookSlug(ctx *fiber.Ctx, slug *string) (*[]model.BookThemes, error) {
 	var theme *[]model.BookThemes
-	if err := c.db.Joins("Theme").Joins("Theme.Translation").
+	if err := c.db.InnerJoins("Theme").Joins("Theme.Translation").
 		// Preload("Theme.Chapters").Preload("Theme.Chapters.Translation").
 		// Preload("Theme.Hadiths").Preload("Theme.Hadiths.Translation").
 		Joins("Book").Find(&theme, `"Book".slug = ?`, slug).Error; err != nil {
