@@ -126,6 +126,10 @@ export default function App() {
         };
     }, []);
 
+    useEffect(() => {
+        setKeyboardVisible(false);
+    }, [activeTab, internalRoutes, headerConfig]);
+
     const getNavigationState = useCallback(
         () => ({
             activeTab: activeTabRef.current,
@@ -217,6 +221,7 @@ export default function App() {
         const target = { ...rawTarget, ...normalized };
         if (!target) return;
 
+        setKeyboardVisible(false);
         setReturnRoutes((current) => {
             const next = { ...current };
             delete next[target.tab];
@@ -245,6 +250,7 @@ export default function App() {
     // Priority: screen sub-nav → internal cross-tab route → go to Home → OS handle (minimize).
     useEffect(() => {
         const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+            Keyboard.dismiss();
             if (screenBackRef.current?.()) return true;
             const result = hardwareBackState(getNavigationState());
             applyNavigationState(result.state);
