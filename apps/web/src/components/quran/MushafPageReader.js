@@ -157,6 +157,7 @@ export default function MushafPageReader({
     useEffect(() => {
         const handler = (e) => {
             if (loading) return;
+            if (["INPUT", "TEXTAREA", "SELECT"].includes(e.target?.tagName)) return;
             if (e.key === "ArrowLeft") goToPage(page + 1);
             if (e.key === "ArrowRight") goToPage(page - 1);
         };

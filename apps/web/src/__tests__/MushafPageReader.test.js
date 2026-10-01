@@ -102,4 +102,18 @@ describe("MushafPageReader", () => {
         await waitFor(() => expect(mockByPage).toHaveBeenCalledWith(296));
         expect(window.location.search).toBe("?page=296");
     });
+
+    test("arrow navigation turns page but does not turn page when focused on input", async () => {
+        render(<MushafPageReader />);
+        expect(await screen.findByText("وَإِذِ")).toBeInTheDocument();
+
+        // ArrowLeft turns to page 296
+        fireEvent.keyDown(window, { key: "ArrowLeft" });
+        await waitFor(() => expect(mockByPage).toHaveBeenCalledWith(296));
+
+        // When focused on input, ArrowLeft is ignored
+        const input = screen.getByRole("spinbutton");
+        fireEvent.keyDown(input, { key: "ArrowLeft" });
+        expect(mockByPage).not.toHaveBeenCalledWith(297);
+    });
 });
