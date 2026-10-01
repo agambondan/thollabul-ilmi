@@ -483,6 +483,23 @@ export async function setupApiMocks(page, options = {}) {
             });
         }
 
+        if (path.match(/\/forum/)) {
+            return route.fulfill({
+                status: 200,
+                contentType: "application/json",
+                body: JSON.stringify({
+                    id: 1,
+                    title: "Sample Question",
+                    slug: "sample-question",
+                    body: "Sample question content",
+                    answers: [],
+                    tags: "umum,ibadah",
+                    items: [],
+                    total: 0,
+                }),
+            });
+        }
+
         if (path.match(/\/kajian/)) {
             return route.fulfill({
                 status: 200,

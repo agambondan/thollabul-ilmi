@@ -78,7 +78,6 @@ export const publicRoutes = [
     "/siroh",
     "/stats",
     "/tafsir",
-    "/tahlil",
     "/tasbih",
     "/tilawah",
     "/wirid",

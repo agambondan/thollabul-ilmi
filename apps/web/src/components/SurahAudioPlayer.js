@@ -417,6 +417,12 @@ export default function SurahAudioPlayer({
         setCurrentLabel(
             `${ayah.surahName || `Surah ${ayah.surahNumber}`} · Ayat ${ayah.number}`,
         );
+        if (typeof window !== "undefined" && ayah.number) {
+            const el = document.getElementById(`ayah-${ayah.number}`);
+            if (el && typeof el.scrollIntoView === "function") {
+                el.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
         setLoading(true);
         setError("");
 

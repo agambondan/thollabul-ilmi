@@ -340,4 +340,33 @@ describe("SurahAudioPlayer", () => {
             expect(screen.getByText("Surah 1 · Ayat 2")).toBeInTheDocument();
         });
     });
+
+    test("auto-scrolls to active playing ayah element", async () => {
+        const mockScroll = jest.fn();
+        const ayahDiv = document.createElement("div");
+        ayahDiv.id = "ayah-2";
+        ayahDiv.scrollIntoView = mockScroll;
+        document.body.appendChild(ayahDiv);
+
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName="Al-Fatihah"
+                totalAyahs={7}
+            />,
+        );
+
+        fireEvent(
+            window,
+            new CustomEvent(OPEN_SURAH_AUDIO_EVENT, {
+                detail: { surahNumber: 1, ayahNumber: 2 },
+            }),
+        );
+
+        await waitFor(() => {
+            expect(mockScroll).toHaveBeenCalledWith({ behavior: "smooth", block: "center" });
+        });
+
+        document.body.removeChild(ayahDiv);
+    });
 });
