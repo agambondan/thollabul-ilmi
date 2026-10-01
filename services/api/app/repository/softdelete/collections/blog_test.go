@@ -281,6 +281,16 @@ func TestSoftDeleteBlogFindAllPosts(t *testing.T) {
 
 	page = run(nil, f.tagLive.ID, "")
 	assertStrings(t, "posts of live tag", postSlugs(pageItems[model.BlogPost](t, page.Items)), "p-live", "p-no-category", "p-tag-sibling")
+
+	page = run(f.catDeleted.ID, nil, "")
+	if got := pageItems[model.BlogPost](t, page.Items); len(got) != 0 {
+		t.Fatalf("filtering by soft-deleted category still returned posts: %v", postSlugs(got))
+	}
+
+	page = run(nil, f.tagDeleted.ID, "")
+	if got := pageItems[model.BlogPost](t, page.Items); len(got) != 0 {
+		t.Fatalf("filtering by soft-deleted tag still returned posts: %v", postSlugs(got))
+	}
 }
 
 func TestSoftDeleteBlogFindPostBySlug(t *testing.T) {

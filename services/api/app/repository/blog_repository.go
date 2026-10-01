@@ -64,7 +64,7 @@ func (r *blogRepo) postBase() *gorm.DB {
 
 func (r *blogRepo) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search, status string) *paginate.Page {
 	var posts []model.BlogPost
-	mod := r.postBase().Order("published_at desc, created_at desc")
+	mod := r.postBase().Order("blog_post.published_at desc, blog_post.created_at desc")
 	switch strings.ToLower(strings.TrimSpace(status)) {
 	case "":
 		mod = mod.Where("blog_post.status = ?", model.BlogStatusPublished)
@@ -73,10 +73,14 @@ func (r *blogRepo) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, sea
 		mod = mod.Where("blog_post.status = ?", status)
 	}
 	if categoryID != nil {
-		mod = mod.Where("blog_post.category_id = ?", *categoryID)
+		catTbl := r.categoryTableName()
+		mod = mod.Joins("JOIN " + catTbl + " ON " + catTbl + ".id = blog_post.category_id AND " + catTbl + ".deleted_at IS NULL").
+			Where("blog_post.category_id = ?", *categoryID)
 	}
 	if tagID != nil {
+		tagTbl := r.tagTableName()
 		mod = mod.Joins("JOIN blog_post_tags ON blog_post_tags.blog_post_id = blog_post.id").
+			Joins("JOIN " + tagTbl + " ON " + tagTbl + ".id = blog_post_tags.blog_tag_id AND " + tagTbl + ".deleted_at IS NULL").
 			Where("blog_post_tags.blog_tag_id = ?", *tagID)
 	}
 	if search != "" {
