@@ -107,11 +107,15 @@ const openTabState = (
     }
 
     if (params?.view) {
+        const hasExplicitReturnTab = Object.prototype.hasOwnProperty.call(
+            params,
+            "returnTab",
+        );
         next.internalRoutes[tab] = createInternalRoute(
             tab,
             params,
             {
-                returnTab,
+                returnTab: hasExplicitReturnTab ? params.returnTab : returnTab,
                 returnTo: params.returnTo ?? null,
             },
             makeId,

@@ -1,7 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
-import { Pressable, StatusBar, Text } from "react-native";
+import {
+    Keyboard,
+    Platform,
+    Pressable,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+} from "react-native";
+import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
+import { Screen } from "../components/Screen";
 import { TabActivityProvider } from "../context/TabActivityContext";
 import { MobileLocaleProvider } from "../i18n/MobileLocaleProvider";
 import { LayoutModeProvider, layoutModes, useLayoutMode } from "../layout/LayoutModeProvider";
@@ -10,8 +20,10 @@ import { getWebAppAccountLabel } from "../layout/WebAppShell";
 import { useSession } from "../context/SessionContext";
 
 jest.mock("react-native-safe-area-context", () => {
+    const { createContext } = require("react");
     const inset = { top: 0, right: 0, bottom: 0, left: 0 };
     return {
+        SafeAreaInsetsContext: createContext(null),
         SafeAreaView: ({ children, testID }) => {
             const { View } = require("react-native");
             return <View testID={testID}>{children}</View>;
@@ -540,5 +552,239 @@ describe("getWebAppAccountLabel", () => {
         );
         expect(getWebAppAccountLabel({ name: "   " })).toBe("Tamu");
         expect(getWebAppAccountLabel(null)).toBe("Tamu");
+    });
+});
+
+describe("Shell keyboard inset (R1)", () => {
+    let handlers;
+    let addListenerSpy;
+    let platformOs;
+
+    const spacerHeight = (view) =>
+        StyleSheet.flatten(
+            view.getByTestId("web-app-keyboard-inset").props.style,
+        ).height;
+
+    const screenPadding = (view) =>
+        StyleSheet.flatten(view.getByTestId("screen-root").props.style)
+            .paddingBottom;
+
+    const emitKeyboard = async (event, payload) => {
+        await act(async () => {
+            (handlers[event] ?? []).forEach((handler) => handler(payload));
+        });
+    };
+
+    const renderLayout = async (layout, children, bottomInset = 24) => {
+        AsyncStorage.getItem.mockImplementation(async (key) =>
+            key === "tholabul:pref:app-layout-mode"
+                ? JSON.stringify(layout)
+                : null,
+        );
+        const view = render(
+            <SafeAreaInsetsContext.Provider
+                value={{ bottom: bottomInset, left: 0, right: 0, top: 0 }}
+            >
+                <TabActivityProvider>
+                    <LayoutModeProvider>
+                        <MobileAppShell
+                            activeTab='home'
+                            keyboardVisible={false}
+                            onOpenProfile={jest.fn()}
+                            onTabChange={jest.fn()}
+                        >
+                            {children}
+                        </MobileAppShell>
+                    </LayoutModeProvider>
+                </TabActivityProvider>
+            </SafeAreaInsetsContext.Provider>,
+        );
+        await waitFor(() =>
+            expect(
+                view.getByTestId(
+                    layout === "classic"
+                        ? "classic-app-shell"
+                        : "web-app-shell",
+                ),
+            ).toBeTruthy(),
+        );
+        return view;
+    };
+
+    beforeEach(() => {
+        handlers = {};
+        addListenerSpy = jest
+            .spyOn(Keyboard, "addListener")
+            .mockImplementation((event, handler) => {
+                handlers[event] = [...(handlers[event] ?? []), handler];
+                return {
+                    remove: jest.fn(() => {
+                        handlers[event] = (handlers[event] ?? []).filter(
+                            (item) => item !== handler,
+                        );
+                    }),
+                };
+            });
+        platformOs = jest.replaceProperty(Platform, "OS", "android");
+    });
+
+    afterEach(() => {
+        addListenerSpy.mockRestore();
+        platformOs.restore();
+    });
+
+    test("reserves the keyboard height plus the bottom inset under the Modern content and clears on hide", async () => {
+        const view = await renderLayout(
+            "web_app",
+            <TextInput placeholder='Utang jatuh tempo' />,
+        );
+        const input = view.getByPlaceholderText("Utang jatuh tempo");
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 300, screenY: 900 },
+        });
+        expect(spacerHeight(view)).toBe(324);
+        expect(view.getByPlaceholderText("Utang jatuh tempo")).toBe(input);
+
+        await emitKeyboard("keyboardDidHide", {
+            endCoordinates: { height: 0 },
+        });
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+        expect(view.getByPlaceholderText("Utang jatuh tempo")).toBe(input);
+    });
+
+    test("clears when a zero-height or malformed show event replaces the keyboard", async () => {
+        const view = await renderLayout("web_app", <Text>Isi</Text>);
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 280 },
+        });
+        expect(spacerHeight(view)).toBe(304);
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 0 },
+        });
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 280 },
+        });
+        await emitKeyboard("keyboardDidShow", {});
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+    });
+
+    test("a Screen inside the Modern shell does not add a second padding", async () => {
+        const view = await renderLayout(
+            "web_app",
+            <Screen title='Zakat'>
+                <TextInput placeholder='Utang jatuh tempo' />
+            </Screen>,
+        );
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 300 },
+        });
+
+        expect(spacerHeight(view)).toBe(324);
+        expect(screenPadding(view)).toBeUndefined();
+
+        await emitKeyboard("keyboardDidHide", {
+            endCoordinates: { height: 0 },
+        });
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+        expect(screenPadding(view)).toBeUndefined();
+    });
+
+    test("a Screen inside the Classic shell keeps padding itself", async () => {
+        const view = await renderLayout(
+            "classic",
+            <Screen title='Zakat'>
+                <TextInput placeholder='Utang jatuh tempo' />
+            </Screen>,
+        );
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 300 },
+        });
+        expect(screenPadding(view)).toBe(324);
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+
+        await emitKeyboard("keyboardDidHide", {
+            endCoordinates: { height: 0 },
+        });
+        expect(screenPadding(view)).toBeUndefined();
+    });
+
+    test("leaves iOS to KeyboardAvoidingView", async () => {
+        platformOs.replaceValue("ios");
+        const view = await renderLayout("web_app", <Text>Isi</Text>);
+
+        expect(handlers.keyboardDidShow).toBeUndefined();
+        expect(view.queryByTestId("web-app-keyboard-inset")).toBeNull();
+    });
+
+    test("removes every shell keyboard listener on unmount", async () => {
+        const view = await renderLayout("web_app", <Text>Isi</Text>);
+        expect(handlers.keyboardDidShow.length).toBeGreaterThan(0);
+        expect(handlers.keyboardDidHide.length).toBeGreaterThan(0);
+
+        view.unmount();
+
+        expect(handlers.keyboardDidShow).toHaveLength(0);
+        expect(handlers.keyboardDidHide).toHaveLength(0);
+    });
+});
+
+describe("Profile header back arrow (R4)", () => {
+    const khatamRoute = {
+        params: { returnTab: null, view: "khatam" },
+        tab: "ibadah",
+    };
+
+    const renderProfile = async (returnRoutes) => {
+        AsyncStorage.getItem.mockImplementation(async (key) =>
+            key === "tholabul:pref:app-layout-mode" ? '"web_app"' : null,
+        );
+        const onTabChange = jest.fn();
+        const view = render(
+            <TabActivityProvider>
+                <LayoutModeProvider>
+                    <MobileAppShell
+                        activeTab='profile'
+                        keyboardVisible={false}
+                        onOpenProfile={jest.fn()}
+                        onTabChange={onTabChange}
+                        returnRoutes={returnRoutes}
+                    >
+                        <Text>Shell content</Text>
+                    </MobileAppShell>
+                </LayoutModeProvider>
+            </TabActivityProvider>,
+        );
+        await waitFor(() =>
+            expect(view.getByTestId("web-app-shell")).toBeTruthy(),
+        );
+        return { onTabChange, view };
+    };
+
+    test("shows a back arrow that reopens the Khatam return route", async () => {
+        const { onTabChange, view } = await renderProfile({
+            profile: khatamRoute,
+        });
+
+        expect(view.getByText("Profil")).toBeTruthy();
+        fireEvent.press(view.getByLabelText("Kembali"));
+
+        expect(onTabChange).toHaveBeenCalledWith("ibadah", {
+            returnTab: null,
+            view: "khatam",
+        });
+    });
+
+    test("has no back arrow on Profile without a return route", async () => {
+        const { view } = await renderProfile({});
+
+        expect(view.queryByLabelText("Kembali")).toBeNull();
     });
 });

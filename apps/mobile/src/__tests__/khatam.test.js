@@ -93,6 +93,11 @@ import { KhatamScreen } from "../screens/KhatamScreen";
 import { useSession } from "../context/SessionContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { getQuranProgress } from "../api/personal";
+import {
+    hardwareBackState,
+    openInternalViewState,
+    openTabState,
+} from "../navigation/appNavigation";
 import { readPreference, writePreference } from "../storage/preferences";
 
 const navigation = {
@@ -347,5 +352,90 @@ describe("KhatamScreen", () => {
                 surahSlug: "2",
             },
         );
+    });
+});
+
+describe("KhatamScreen login shortcut (R4)", () => {
+    let navState;
+
+    const mockNavState = () => {
+        const ibadah = {
+            activeTab: "ibadah",
+            deepLinkTarget: null,
+            internalRoutes: {},
+            returnRoutes: {},
+        };
+        navState = openInternalViewState(ibadah, "ibadah", "khatam", {}).state;
+    };
+
+    const renderGuestKhatam = async () => {
+        useSession.mockReturnValue({ user: null });
+        useLayoutModePreference.mockReturnValue({
+            isDarkTheme: false,
+            isWebAppLayout: true,
+        });
+        mockNavState();
+        const onOpenTab = jest.fn((tab, params) => {
+            navState = openTabState(navState, tab, params).state;
+        });
+        const view = render(
+            <KhatamScreen
+                isActive
+                navigation={navigation}
+                onOpenTab={onOpenTab}
+            />,
+        );
+        await waitFor(() => {
+            expect(view.getByText("Masuk dari Profil")).toBeTruthy();
+        });
+        return { onOpenTab, view };
+    };
+
+    test("opens Profile with a return route that reopens the Khatam view", async () => {
+        const { onOpenTab, view } = await renderGuestKhatam();
+
+        fireEvent.press(view.getByText("Masuk dari Profil"));
+
+        expect(onOpenTab).toHaveBeenCalledTimes(1);
+        expect(onOpenTab).toHaveBeenCalledWith("profile", {
+            returnTo: {
+                params: { returnTab: null, view: "khatam" },
+                tab: "ibadah",
+            },
+        });
+        expect(navState.activeTab).toBe("profile");
+        expect(navState.returnRoutes.profile).toEqual({
+            params: { returnTab: null, view: "khatam" },
+            tab: "ibadah",
+        });
+    });
+
+    test("hardware back from Profile lands on Khatam instead of Home", async () => {
+        const { view } = await renderGuestKhatam();
+        fireEvent.press(view.getByText("Masuk dari Profil"));
+
+        const backResult = hardwareBackState(navState);
+
+        expect(backResult.handled).toBe(true);
+        expect(backResult.state.activeTab).toBe("ibadah");
+        expect(backResult.state.internalRoutes.ibadah?.view).toBe("khatam");
+
+        const closed = hardwareBackState(backResult.state);
+        expect(closed.state.activeTab).toBe("ibadah");
+        expect(closed.state.internalRoutes.ibadah).toBeUndefined();
+    });
+
+    test("the Profile header back arrow reopens Khatam without a Profile detour", async () => {
+        const { view } = await renderGuestKhatam();
+        fireEvent.press(view.getByText("Masuk dari Profil"));
+        const route = navState.returnRoutes.profile;
+
+        const reopened = openTabState(navState, route.tab, route.params).state;
+
+        expect(reopened.activeTab).toBe("ibadah");
+        expect(reopened.internalRoutes.ibadah?.view).toBe("khatam");
+        const closed = hardwareBackState(reopened);
+        expect(closed.state.activeTab).toBe("ibadah");
+        expect(closed.state.internalRoutes.ibadah).toBeUndefined();
     });
 });

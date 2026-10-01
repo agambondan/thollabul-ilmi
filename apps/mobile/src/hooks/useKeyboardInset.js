@@ -4,6 +4,8 @@ import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 
 const MissingInsetsContext = createContext(null);
 
+export const KeyboardInsetAppliedContext = createContext(false);
+
 export const getKeyboardInset = (event, bottomInset = 0) => {
     const height = Number(event?.endCoordinates?.height);
     if (!Number.isFinite(height) || height <= 0) return 0;
@@ -11,13 +13,16 @@ export const getKeyboardInset = (event, bottomInset = 0) => {
     return height + (Number.isFinite(inset) && inset > 0 ? inset : 0);
 };
 
-export function useKeyboardInset() {
+export function useKeyboardInset({ enabled = true } = {}) {
     const insets = useContext(SafeAreaInsetsContext ?? MissingInsetsContext);
     const bottomInset = insets?.bottom ?? 0;
     const [keyboardEvent, setKeyboardEvent] = useState(null);
 
     useEffect(() => {
-        if (Platform.OS !== "android") return undefined;
+        if (!enabled || Platform.OS !== "android") {
+            setKeyboardEvent(null);
+            return undefined;
+        }
 
         const showSubscription = Keyboard.addListener(
             "keyboardDidShow",
@@ -31,7 +36,7 @@ export function useKeyboardInset() {
             showSubscription.remove();
             hideSubscription.remove();
         };
-    }, []);
+    }, [enabled]);
 
-    return getKeyboardInset(keyboardEvent, bottomInset);
+    return enabled ? getKeyboardInset(keyboardEvent, bottomInset) : 0;
 }

@@ -7,11 +7,20 @@ import {
     Text,
     TextInput,
 } from "react-native";
-import { act, fireEvent, render } from "@testing-library/react-native";
+import {
+    act,
+    fireEvent,
+    render,
+    renderHook,
+} from "@testing-library/react-native";
 import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 
 import { Screen } from "../components/Screen";
 import { TabActivityProvider } from "../context/TabActivityContext";
+import {
+    KeyboardInsetAppliedContext,
+    useKeyboardInset,
+} from "../hooks/useKeyboardInset";
 
 const mounts = { probe: 0 };
 
@@ -235,5 +244,112 @@ describe("Screen keyboard avoidance (B20)", () => {
         subscriptions.forEach((subscription) => {
             expect(subscription.remove).toHaveBeenCalled();
         });
+    });
+
+    test.each([
+        ["scroll", <Screen key='scroll' title='Lokasi' />],
+        [
+            "list",
+            <Screen
+                key='list'
+                listData={[{ id: "a" }]}
+                listKeyExtractor={(item) => item.id}
+                renderListItem={({ item }) => <Text>{item.id}</Text>}
+                title='Lokasi'
+            />,
+        ],
+    ])(
+        "skips its own padding in %s mode when an ancestor applied the inset",
+        async (_mode, screen) => {
+            jest.replaceProperty(Platform, "OS", "android");
+            const view = renderWithInsets(
+                <KeyboardInsetAppliedContext.Provider value>
+                    {screen}
+                </KeyboardInsetAppliedContext.Provider>,
+                24,
+            );
+
+            await emitKeyboard("keyboardDidShow", {
+                endCoordinates: { height: 300 },
+            });
+
+            expect(rootPaddingBottom(view)).toBeUndefined();
+        },
+    );
+
+    test("still pads itself when the ancestor context says nothing was applied", async () => {
+        jest.replaceProperty(Platform, "OS", "android");
+        const view = renderWithInsets(
+            <KeyboardInsetAppliedContext.Provider value={false}>
+                <Screen title='Lokasi' />
+            </KeyboardInsetAppliedContext.Provider>,
+            24,
+        );
+
+        await emitKeyboard("keyboardDidShow", {
+            endCoordinates: { height: 300 },
+        });
+
+        expect(rootPaddingBottom(view)).toBe(324);
+    });
+});
+
+describe("useKeyboardInset enabled option (R1)", () => {
+    let handlers;
+
+    const emit = async (event, payload) => {
+        await act(async () => {
+            (handlers[event] ?? []).forEach((handler) => handler(payload));
+        });
+    };
+
+    beforeEach(() => {
+        handlers = {};
+        jest.spyOn(Keyboard, "addListener").mockImplementation(
+            (event, handler) => {
+                handlers[event] = [...(handlers[event] ?? []), handler];
+                return {
+                    remove: jest.fn(() => {
+                        handlers[event] = handlers[event].filter(
+                            (item) => item !== handler,
+                        );
+                    }),
+                };
+            },
+        );
+        jest.replaceProperty(Platform, "OS", "android");
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    test("returns 0 and never subscribes while disabled", async () => {
+        const { result } = renderHook(() =>
+            useKeyboardInset({ enabled: false }),
+        );
+
+        expect(handlers.keyboardDidShow).toBeUndefined();
+        await emit("keyboardDidShow", { endCoordinates: { height: 300 } });
+        expect(result.current).toBe(0);
+    });
+
+    test("subscribes once it is enabled and drops the subscription when disabled again", async () => {
+        const { rerender, result } = renderHook(
+            ({ enabled }) => useKeyboardInset({ enabled }),
+            { initialProps: { enabled: true } },
+        );
+        expect(handlers.keyboardDidShow).toHaveLength(1);
+
+        await emit("keyboardDidShow", { endCoordinates: { height: 300 } });
+        expect(result.current).toBe(300);
+
+        rerender({ enabled: false });
+        expect(handlers.keyboardDidShow).toHaveLength(0);
+        expect(result.current).toBe(0);
+
+        rerender({ enabled: true });
+        expect(handlers.keyboardDidShow).toHaveLength(1);
+        expect(result.current).toBe(0);
     });
 });

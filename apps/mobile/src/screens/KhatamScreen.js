@@ -36,6 +36,11 @@ const KHATAM_TARGET_OPTIONS = [
     { days: 365, label: "1 thn" },
 ];
 
+const KHATAM_RETURN_ROUTE = {
+    params: { returnTab: null, view: "khatam" },
+    tab: "ibadah",
+};
+
 const WEB_APP_KHATAM_BG = "#f8fafc";
 const WEB_APP_KHATAM_SURFACE = "#ffffff";
 const WEB_APP_KHATAM_BORDER = "#e5e7eb";
@@ -214,6 +219,9 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
         onOpenTab?.("quran", params);
     };
 
+    const openProfile = () =>
+        onOpenTab?.("profile", { returnTo: KHATAM_RETURN_ROUTE });
+
     const lastRead = formatLastRead(
         progress?.lastReadAt,
         t("khatam.lastReadUnavailable"),
@@ -285,7 +293,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                         </Text>
                         <Pressable
                             accessibilityRole='button'
-                            onPress={() => onOpenTab?.("profile")}
+                            onPress={openProfile}
                             style={styles.webAppPrimaryButton}
                         >
                             <Text style={styles.webAppPrimaryButtonText}>

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import {
     FlatList,
     KeyboardAvoidingView,
@@ -10,7 +10,10 @@ import {
     View,
 } from "react-native";
 import { useNotifyTabActivity } from "../context/TabActivityContext";
-import { useKeyboardInset } from "../hooks/useKeyboardInset";
+import {
+    KeyboardInsetAppliedContext,
+    useKeyboardInset,
+} from "../hooks/useKeyboardInset";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { getThemeColors, spacing } from "../theme";
 
@@ -36,7 +39,8 @@ export function Screen({
         isPaperLayout: !isWebAppLayout,
     });
     const notifyTabActivity = useNotifyTabActivity();
-    const keyboardInset = useKeyboardInset();
+    const keyboardInsetApplied = useContext(KeyboardInsetAppliedContext);
+    const keyboardInset = useKeyboardInset({ enabled: !keyboardInsetApplied });
     const keyboardStyle =
         keyboardInset > 0 ? { paddingBottom: keyboardInset } : null;
     const handleScrollActivity = useCallback(

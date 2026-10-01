@@ -4,10 +4,15 @@ import {
     Platform,
     StatusBar,
     StyleSheet,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { updateProfile } from "../api/auth";
 import { useSession } from "../context/SessionContext";
+import {
+    KeyboardInsetAppliedContext,
+    useKeyboardInset,
+} from "../hooks/useKeyboardInset";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { preferenceKeys, readPreference } from "../storage/preferences";
 import { getThemeColors } from "../theme";
@@ -33,6 +38,7 @@ export function WebAppShell({
     returnRoutes,
 }) {
     const { loading, session, signOut, updateCurrentUser, user } = useSession();
+    const keyboardInset = useKeyboardInset();
     const { t } = useMobileLocale();
     const { isDarkTheme, isWebAppLayout, setThemePreference, themePreference } =
         useLayoutMode();
@@ -153,8 +159,16 @@ export function WebAppShell({
                 keyboardVerticalOffset={0}
                 style={[styles.contentWrap, { backgroundColor: theme.bg }]}
             >
-                {children}
+                <KeyboardInsetAppliedContext.Provider value>
+                    {children}
+                </KeyboardInsetAppliedContext.Provider>
             </KeyboardAvoidingView>
+            {keyboardInset > 0 ? (
+                <View
+                    style={{ backgroundColor: theme.bg, height: keyboardInset }}
+                    testID='web-app-keyboard-inset'
+                />
+            ) : null}
             {keyboardVisible || hideChrome ? null : (
                 <MobileBottomNav
                     active={activeTab}

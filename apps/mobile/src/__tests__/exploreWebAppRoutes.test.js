@@ -46,7 +46,7 @@ jest.mock("../screens/TokohTarikhContent", () => {
 
 import React from "react";
 import { fireEvent, render } from "@testing-library/react-native";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { allFeatures } from "../data/mobileFeatures";
 import { renderExploreWebAppRoute } from "../screens/explore/ExploreWebAppRoutes";
@@ -433,6 +433,176 @@ describe("Explore web app reference list routes", () => {
         expect(openItemDetail).toHaveBeenCalledWith(
             expect.objectContaining({ id: "dzikir-2" }),
         );
+    });
+
+    test("does not carry the category chip or search text over to another reference list", () => {
+        const dzikirItems = [
+            {
+                id: "dzikir-1",
+                title: "Dzikir Pagi",
+                body: "Bacaan perlindungan pagi.",
+                raw: { category: "pagi" },
+            },
+            {
+                id: "dzikir-2",
+                title: "Dzikir Petang",
+                body: "Bacaan perlindungan petang.",
+                raw: { category: "petang" },
+            },
+        ];
+        const wiridItems = [
+            {
+                id: "wirid-1",
+                title: "Wirid Pagi",
+                body: "Wirid setelah subuh.",
+                raw: { category: "pagi" },
+            },
+            {
+                id: "wirid-2",
+                title: "Wirid Petang",
+                body: "Wirid setelah maghrib.",
+                raw: { category: "petang" },
+            },
+            {
+                id: "wirid-3",
+                title: "Wirid Tidur",
+                body: "Wirid sebelum tidur.",
+                raw: { category: "tidur" },
+            },
+        ];
+        const view = render(
+            <View>
+                {renderExploreWebAppRoute(
+                    baseContext(
+                        { key: "dzikir", type: "list" },
+                        { items: dzikirItems },
+                    ),
+                )}
+            </View>,
+        );
+
+        fireEvent.press(view.getAllByTestId("web-app-dzikir-category")[2]);
+        fireEvent.changeText(
+            view.getByTestId("web-app-dzikir-search"),
+            "petang",
+        );
+        expect(view.getByText("Menampilkan 1 dari 2 dzikir")).toBeTruthy();
+        expect(view.queryByText("Dzikir Pagi")).toBeNull();
+
+        view.rerender(
+            <View>
+                {renderExploreWebAppRoute(
+                    baseContext(
+                        { key: "wirid", type: "list" },
+                        { items: wiridItems },
+                    ),
+                )}
+            </View>,
+        );
+
+        expect(view.getByTestId("web-app-wirid-search").props.value).toBe("");
+        expect(view.getByText("3 wirid tersedia")).toBeTruthy();
+        expect(view.getByText("Wirid Pagi")).toBeTruthy();
+        expect(view.getByText("Wirid Petang")).toBeTruthy();
+        expect(view.getByText("Wirid Tidur")).toBeTruthy();
+    });
+
+    test("does not carry an Asmaul Husna search over to another reference list", () => {
+        const view = render(
+            <View>
+                {renderExploreWebAppRoute(
+                    baseContext(
+                        { key: "asmaul-husna", type: "list" },
+                        {
+                            items: [
+                                {
+                                    id: 54,
+                                    title: "Al-Qawiyy",
+                                    body: "Yang Maha Kuat",
+                                    raw: { name: "Al-Qawiyy", number: 54 },
+                                },
+                                {
+                                    id: 55,
+                                    title: "Al-Matin",
+                                    body: "Yang Maha Kokoh",
+                                    raw: { name: "Al-Matin", number: 55 },
+                                },
+                            ],
+                        },
+                    ),
+                )}
+            </View>,
+        );
+
+        fireEvent.changeText(
+            view.getByTestId("web-app-asmaul-husna-search"),
+            "kuat",
+        );
+        expect(view.queryByText("Al-Matin")).toBeNull();
+
+        view.rerender(
+            <View>
+                {renderExploreWebAppRoute(
+                    baseContext(
+                        { key: "sejarah", type: "list" },
+                        {
+                            items: [
+                                {
+                                    id: 1,
+                                    title: "Khulafaur Rasyidin",
+                                    body: "Masa empat khalifah pertama.",
+                                    raw: { category: "khulafa", year: 632 },
+                                },
+                            ],
+                        },
+                    ),
+                )}
+            </View>,
+        );
+
+        expect(view.getByTestId("web-app-sejarah-search").props.value).toBe("");
+        expect(view.getByText("Khulafaur Rasyidin")).toBeTruthy();
+    });
+
+    test("keeps the chip and search while the same reference list gets more items", () => {
+        const first = {
+            id: "dzikir-1",
+            title: "Dzikir Pagi",
+            body: "Bacaan perlindungan pagi.",
+            raw: { category: "pagi" },
+        };
+        const second = {
+            id: "dzikir-2",
+            title: "Dzikir Petang",
+            body: "Bacaan perlindungan petang.",
+            raw: { category: "petang" },
+        };
+        const feature = { key: "dzikir", type: "list" };
+        const view = render(
+            <View>
+                {renderExploreWebAppRoute(
+                    baseContext(feature, { items: [first] }),
+                )}
+            </View>,
+        );
+
+        fireEvent.changeText(
+            view.getByTestId("web-app-dzikir-search"),
+            "petang",
+        );
+        view.rerender(
+            <View>
+                {renderExploreWebAppRoute(
+                    baseContext(feature, { items: [first, second] }),
+                )}
+            </View>,
+        );
+
+        expect(view.getByTestId("web-app-dzikir-search").props.value).toBe(
+            "petang",
+        );
+        expect(view.getByText("Menampilkan 1 dari 2 dzikir")).toBeTruthy();
+        expect(view.getByText("Dzikir Petang")).toBeTruthy();
     });
 
     test("renders Amalan route as dashboard checklist and toggles an item", () => {

@@ -419,3 +419,146 @@ describe("Doa route filters cover pages that are not loaded yet (B5)", () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 });
+
+describe("Doa category chips match the API data (R3)", () => {
+    const apiDoa = (id, category, title) => ({
+        id,
+        title,
+        arabic: "",
+        body: "Terjemahan contoh",
+        meta: category,
+        raw: {
+            id,
+            category,
+            title,
+            arabic: "",
+            transliteration: "",
+            translation_text: "Terjemahan contoh",
+            source: "Sumber contoh",
+            translation_id: id + 100,
+            translation: {
+                id: id + 100,
+                idn: title,
+                latin_idn: "",
+                ar: "",
+                description_idn: "Terjemahan contoh",
+            },
+        },
+    });
+    const apiDoas = [
+        apiDoa(1, "pagi", "Doa Bangun Tidur"),
+        apiDoa(2, "pagi", "Doa Pagi (Ashabna)"),
+        apiDoa(3, "petang", "Doa Petang (Amsainaa)"),
+        apiDoa(4, "tidur", "Doa Sebelum Tidur"),
+        apiDoa(6, "makan", "Doa Sebelum Makan"),
+        apiDoa(8, "kamar_mandi", "Doa Masuk Kamar Mandi"),
+        apiDoa(10, "masjid", "Doa Masuk Masjid"),
+        apiDoa(12, "safar", "Doa Naik Kendaraan"),
+        apiDoa(14, "belajar", "Doa Sebelum Belajar"),
+        apiDoa(16, "umum", "Doa Kebaikan Dunia & Akhirat"),
+        apiDoa(4991, "dzikir_pagi", "Ayat Kursi (Pagi)"),
+    ];
+    const chipLabels = [
+        "Pagi",
+        "Petang",
+        "Makan",
+        "Tidur",
+        "Bangun",
+        "Kamar mandi",
+        "Masjid",
+        "Safar",
+        "Belajar",
+        "Umum",
+    ];
+
+    const renderDoaRoute = (items = apiDoas) =>
+        render(
+            <WebAppDoaRoute
+                error=''
+                items={items}
+                loading={false}
+                navigation={{ setHeader: jest.fn() }}
+                onLoadMore={jest.fn()}
+                onOpenItem={jest.fn()}
+                pagination={{ hasMore: false, loadingMore: false }}
+            />,
+        );
+
+    const pressChip = (view, label) => {
+        const chip = view
+            .getAllByTestId("web-app-doa-category")
+            .find((item) => within(item).queryByText(label) !== null);
+        fireEvent.press(chip);
+    };
+
+    test("the Bangun chip lists the wake-up doa that the API files under pagi", () => {
+        const view = renderDoaRoute();
+
+        pressChip(view, "Bangun");
+
+        expect(view.getAllByTestId("web-app-doa-card")).toHaveLength(1);
+        expect(view.getByText("Doa Bangun Tidur")).toBeTruthy();
+        expect(view.getByText("Menampilkan 1 dari 11 doa")).toBeTruthy();
+    });
+
+    test("the Pagi chip still lists the wake-up doa next to the other morning doas", () => {
+        const view = renderDoaRoute();
+
+        pressChip(view, "Pagi");
+
+        expect(view.getAllByTestId("web-app-doa-card")).toHaveLength(2);
+        expect(view.getByText("Doa Bangun Tidur")).toBeTruthy();
+        expect(view.getByText("Doa Pagi (Ashabna)")).toBeTruthy();
+    });
+
+    test.each(chipLabels)(
+        "the %s chip is never empty for API-shaped data",
+        (label) => {
+            const view = renderDoaRoute();
+
+            pressChip(view, label);
+
+            expect(
+                view.getAllByTestId("web-app-doa-card").length,
+            ).toBeGreaterThanOrEqual(1);
+            expect(view.queryByText("Tidak ada doa yang cocok.")).toBeNull();
+        },
+    );
+
+    test("does not treat titles that merely contain the letters of bangun as wake-up doas", () => {
+        const view = renderDoaRoute([
+            ...apiDoas,
+            apiDoa(99, "umum", "Catatan Bangunan"),
+        ]);
+
+        pressChip(view, "Bangun");
+
+        expect(view.getAllByTestId("web-app-doa-card")).toHaveLength(1);
+        expect(view.queryByText("Catatan Bangunan")).toBeNull();
+    });
+
+    test("also matches the API title when the display title differs", () => {
+        const view = renderDoaRoute([
+            { ...apiDoa(1, "pagi", "Doa Bangun Tidur"), title: "Judul lain" },
+            apiDoa(3, "petang", "Doa Petang (Amsainaa)"),
+        ]);
+
+        pressChip(view, "Bangun");
+
+        expect(view.getAllByTestId("web-app-doa-card")).toHaveLength(1);
+        expect(view.getByText("Judul lain")).toBeTruthy();
+    });
+
+    test("combines the Bangun chip with the search box", () => {
+        const view = renderDoaRoute();
+
+        pressChip(view, "Bangun");
+        fireEvent.changeText(view.getByTestId("web-app-doa-search"), "makan");
+
+        expect(view.getByText("Tidak ada doa yang cocok.")).toBeTruthy();
+
+        fireEvent.changeText(view.getByTestId("web-app-doa-search"), "tidur");
+
+        expect(view.getAllByTestId("web-app-doa-card")).toHaveLength(1);
+    });
+});

@@ -3580,6 +3580,7 @@ export function renderExploreWebAppRoute(context) {
                 error={error}
                 isDarkTheme={isDarkTheme}
                 items={items}
+                key={activeFeature.key}
                 loading={loading}
                 onLoadMore={loadMoreFeature}
                 onOpenItem={openItemDetail}

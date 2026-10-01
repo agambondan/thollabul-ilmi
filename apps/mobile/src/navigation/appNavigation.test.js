@@ -95,6 +95,31 @@ describe("openTabState", () => {
         );
         expect(nextState.returnRoutes.belajar).toBeUndefined();
     });
+
+    test("remembers the tab it was opened from when a view is requested", () => {
+        const { state } = openTabState(
+            initialState(),
+            "ibadah",
+            { view: "qibla" },
+            makeId,
+        );
+        expect(state.internalRoutes.ibadah.returnTab).toBe("home");
+    });
+
+    test("honors an explicit returnTab when a view is requested", () => {
+        const { state } = openTabState(
+            {
+                ...initialState(),
+                activeTab: "profile",
+                returnRoutes: { profile: { tab: "ibadah" } },
+            },
+            "ibadah",
+            { returnTab: null, view: "khatam" },
+            makeId,
+        );
+        expect(state.internalRoutes.ibadah.returnTab).toBeNull();
+        expect(state.returnRoutes.profile).toBeUndefined();
+    });
 });
 
 describe("openInternalViewState", () => {
@@ -366,6 +391,100 @@ describe("Ibadah hub feature rows", () => {
         expect(state.activeTab).toBe("ibadah");
         expect(state.internalRoutes.ibadah).toBeUndefined();
         expect(state.returnRoutes.belajar).toBeUndefined();
+    });
+});
+
+describe("Profile opened from Khatam", () => {
+    const khatamRoute = {
+        params: { returnTab: null, view: "khatam" },
+        tab: "ibadah",
+    };
+    const khatamState = () =>
+        openInternalViewState(
+            { ...initialState(), activeTab: "ibadah" },
+            "ibadah",
+            "khatam",
+            {},
+            makeId,
+        ).state;
+    const profileFromKhatam = () =>
+        openTabState(
+            khatamState(),
+            "profile",
+            { returnTo: khatamRoute },
+            makeId,
+        ).state;
+
+    test("records the Khatam view as the Profile return route", () => {
+        const state = profileFromKhatam();
+
+        expect(state.activeTab).toBe("profile");
+        expect(state.returnRoutes.profile).toEqual(khatamRoute);
+        expect(state.internalRoutes.ibadah?.view).toBe("khatam");
+    });
+
+    test("without a return route Profile goes back to Home", () => {
+        const state = openTabState(
+            khatamState(),
+            "profile",
+            null,
+            makeId,
+        ).state;
+
+        const backResult = hardwareBackState(state, makeId);
+
+        expect(backResult.handled).toBe(true);
+        expect(backResult.state.activeTab).toBe("home");
+    });
+
+    test("hardware back reopens Khatam and the next back lands on the Ibadah hub", () => {
+        let backResult = hardwareBackState(profileFromKhatam(), makeId);
+
+        expect(backResult.handled).toBe(true);
+        expect(backResult.state.activeTab).toBe("ibadah");
+        expect(backResult.state.internalRoutes.ibadah?.view).toBe("khatam");
+        expect(backResult.state.returnRoutes.profile).toBeUndefined();
+
+        backResult = hardwareBackState(backResult.state, makeId);
+
+        expect(backResult.handled).toBe(true);
+        expect(backResult.state.activeTab).toBe("ibadah");
+        expect(backResult.state.internalRoutes.ibadah).toBeUndefined();
+    });
+
+    test("the header back arrow reopens Khatam and Khatam still closes to the Ibadah hub", () => {
+        const profileState = profileFromKhatam();
+        const route = profileState.returnRoutes.profile;
+
+        const reopened = openTabState(
+            profileState,
+            route.tab,
+            route.params,
+            makeId,
+        ).state;
+
+        expect(reopened.activeTab).toBe("ibadah");
+        expect(reopened.internalRoutes.ibadah?.view).toBe("khatam");
+        expect(reopened.returnRoutes.profile).toBeUndefined();
+
+        const closed = hardwareBackState(reopened, makeId);
+
+        expect(closed.handled).toBe(true);
+        expect(closed.state.activeTab).toBe("ibadah");
+        expect(closed.state.internalRoutes.ibadah).toBeUndefined();
+    });
+
+    test("tapping the Ibadah tab from Profile drops the return route and keeps Khatam open", () => {
+        const state = openTabState(
+            profileFromKhatam(),
+            "ibadah",
+            null,
+            makeId,
+        ).state;
+
+        expect(state.activeTab).toBe("ibadah");
+        expect(state.returnRoutes.profile).toBeUndefined();
+        expect(state.internalRoutes.ibadah?.view).toBe("khatam");
     });
 });
 

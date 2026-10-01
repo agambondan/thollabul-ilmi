@@ -30,12 +30,24 @@ const DOA_CATEGORIES = [
     { value: "umum", labelKey: "explore.doa.category.general" },
 ];
 
+const DOA_CATEGORY_TITLE_PATTERNS = {
+    bangun: /\bbangun\b/,
+};
+
 const pickText = (...values) =>
     values.find((value) => typeof value === "string" && value.trim())?.trim() ??
     "";
 const getRaw = (item) => item?.raw ?? {};
 const getTranslation = (item) => getRaw(item)?.translation ?? {};
 const getCategory = (item) => getRaw(item)?.category ?? "";
+const matchesCategory = (item, category) => {
+    if (getCategory(item) === category) return true;
+    const pattern = DOA_CATEGORY_TITLE_PATTERNS[category];
+    if (!pattern) return false;
+    return [item?.title, getRaw(item).title].some((title) =>
+        pattern.test(normalizeSearchText(title)),
+    );
+};
 const getCategoryLabel = (value, t) => {
     const category = DOA_CATEGORIES.find((item) => item.value === value);
     return category ? t(category.labelKey) : value;
@@ -68,7 +80,7 @@ const hasAudio = (item) => Boolean(getRaw(item).audio_url ?? item?.audio_url);
 const filterDoas = (items, query, category, t) => {
     const normalizedQuery = normalizeSearchText(query);
     return items.filter((item) => {
-        if (category && getCategory(item) !== category) return false;
+        if (category && !matchesCategory(item, category)) return false;
         if (!normalizedQuery) return true;
         return normalizeSearchText(
             [
