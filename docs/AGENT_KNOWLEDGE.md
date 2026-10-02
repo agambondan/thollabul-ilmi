@@ -354,3 +354,34 @@ on-device sinkron: tulis ke file lewat `expo-file-system`
 bisa pakai `console.log` normal lewat Metro — belum dicoba sesi ini,
 tapi itu alternatif lebih cepat untuk dicoba duluan sebelum pindah ke
 file-based logging kalau sesi berikutnya butuh debugging serupa.
+
+---
+
+## Library book extraction: production DB `id` ≠ local DB `id` — match via `slug`
+
+Saat sinkronisasi data teks hasil OCR/ekstraksi buku perpustakaan (25 buku,
+3.690 halaman) dari lokal ke production VPS:
+
+- `library_book.id` **berbeda** di lokal vs production (auto-increment
+  tidak deterministik antar instance).
+- Pencocokan **wajib via `slug`** (unik & deterministik).
+- JSON dump (`/tmp/library_sync_data.json`) memuat `slug` + halaman teks
+  per buku.
+- Import di VPS via Python script yang:
+    1. Query `SELECT id, slug FROM library_book WHERE slug IN (...)` di
+       production
+    2. Bangun map `slug → prod_id`
+    3. `COPY library_book_extracted_text (book_id, page_number, text, extraction_method, extracted_at) FROM STDIN WITH (FORMAT csv)`
+    4. `UPDATE library_book SET extraction_status = 'done' WHERE id = ...`
+
+Direct SQL `psql` gagal karena karakter biner/Arab/tanda kutip di teks
+ekstraksi — `COPY ... FROM STDIN` (CSV via Python `psycopg2`) lebih
+aman dan performa tinggi.
+
+Verifikasi akhir:
+
+```sql
+SELECT count(*) FROM library_book_extracted_text;  -- 3690
+SELECT extraction_status, count(*) FROM library_book
+  WHERE format = 'pdf' GROUP BY extraction_status; -- done | 25
+```
