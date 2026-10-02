@@ -43,7 +43,7 @@ const getCurrentMinutes = () => {
     return now.getHours() * 60 + now.getMinutes();
 };
 
-export const findDuePrayer = (prayers, adjustments) => {
+export const findDuePrayer = (prayers, adjustments = {}) => {
     if (!prayers) return null;
     const ordered = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
     const currentMin = getCurrentMinutes();
@@ -146,8 +146,9 @@ export function usePrayerTimeMonitor() {
                     offlineToday ??
                     buildAdjustedPrayerTimes(schedule.prayers, settings.adjustments);
 
-                const duePrayer = findDuePrayer(prayers, settings.adjustments);
+                const duePrayer = findDuePrayer(prayers);
                 if (!duePrayer) return;
+                if (settings.selectedPrayers && !settings.selectedPrayers.includes(duePrayer)) return;
 
                 const alertKey = `${today()}:${duePrayer}`;
                 if (lastAlertRef.current === alertKey) return;

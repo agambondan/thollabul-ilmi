@@ -295,4 +295,82 @@ describe("usePrayerTimeMonitor hook", () => {
 
         expect(mockPlayerStop).toHaveBeenCalled();
     });
+
+    test("fires prayer time notification at adjusted time without double adjustment", async () => {
+        const base = new Date(2026, 8, 30, 18, 2, 0); // 18:00 + 2 = 18:02
+        jest.setSystemTime(base);
+
+        readPrayerReminderSettings.mockResolvedValueOnce({
+            enabled: true,
+            leadMinutes: 0,
+            selectedPrayers: ["fajr", "dhuhr", "asr", "maghrib", "isha"],
+            adjustments: { maghrib: 2 },
+            location: { lat: -6.2, lng: 106.8 },
+            scheduleCache: {
+                coords: { lat: -6.2, lng: 106.8 },
+                method: "kemenag",
+                madhab: "shafi",
+                prayers: {
+                    fajr: "04:30",
+                    dhuhr: "12:00",
+                    asr: "15:15",
+                    maghrib: "18:00",
+                    isha: "19:15",
+                },
+                updatedAt: Date.now(),
+            },
+        });
+
+        renderHook(() => usePrayerTimeMonitor());
+
+        await act(async () => {
+            jest.advanceTimersByTime(100);
+        });
+
+        expect(mockScheduleNotificationAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                content: expect.objectContaining({
+                    data: expect.objectContaining({
+                        prayer: "maghrib",
+                        type: "prayer_time",
+                    }),
+                }),
+                trigger: null,
+            }),
+        );
+    });
+
+    test("skips prayer notification if prayer is not in selectedPrayers", async () => {
+        const base = new Date(2026, 8, 30, 18, 0, 0); // Maghrib 18:00
+        jest.setSystemTime(base);
+
+        readPrayerReminderSettings.mockResolvedValueOnce({
+            enabled: true,
+            leadMinutes: 0,
+            selectedPrayers: ["fajr", "dhuhr", "asr", "isha"], // maghrib excluded
+            adjustments: {},
+            location: { lat: -6.2, lng: 106.8 },
+            scheduleCache: {
+                coords: { lat: -6.2, lng: 106.8 },
+                method: "kemenag",
+                madhab: "shafi",
+                prayers: {
+                    fajr: "04:30",
+                    dhuhr: "12:00",
+                    asr: "15:15",
+                    maghrib: "18:00",
+                    isha: "19:15",
+                },
+                updatedAt: Date.now(),
+            },
+        });
+
+        renderHook(() => usePrayerTimeMonitor());
+
+        await act(async () => {
+            jest.advanceTimersByTime(100);
+        });
+
+        expect(mockScheduleNotificationAsync).not.toHaveBeenCalled();
+    });
 });
