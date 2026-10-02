@@ -1,4 +1,4 @@
-import { ChevronDown, Menu, Search } from "lucide-react-native";
+import { BookOpen, ChevronDown, Menu, Search, User } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import {
@@ -86,7 +86,7 @@ export function MobileTopHeader({
 ) : (
             <View style={styles.brandGroup}>
                     <View style={[styles.logo, { backgroundColor: theme.primary }]}>
-                        <Text style={[styles.logoText, { color: theme.onPrimary }]}>ط</Text>
+                        <BookOpen color={theme.onPrimary} size={18} strokeWidth={2.4} />
                     </View>
                     <Text
                         style={[
@@ -110,13 +110,13 @@ export function MobileTopHeader({
                             borderless: true,
                         }}
                         onPress={onOpenSearch}
-                        style={styles.actionIconBtn}
+                        style={[styles.actionIconBtn, { backgroundColor: theme.primaryBg }]}
                         testID='mobile-top-header-search'
                     >
                             <Search
-                                color={theme.muted}
-                                size={19}
-                                strokeWidth={2}
+                                color={theme.primary}
+                                size={18}
+                                strokeWidth={2.2}
                             />
                     </Pressable>
                 ) : null}
@@ -129,13 +129,13 @@ export function MobileTopHeader({
                             borderless: true,
                         }}
                         onPress={onOpenMenu}
-                        style={styles.actionIconBtn}
+                        style={[styles.actionIconBtn, { backgroundColor: theme.primaryBg }]}
                         testID='mobile-top-header-menu'
                     >
                             <Menu
-                                color={theme.muted}
-                                size={19}
-                                strokeWidth={2}
+                                color={theme.primary}
+                                size={18}
+                                strokeWidth={2.2}
                             />
                     </Pressable>
                 ) : null}
@@ -157,7 +157,7 @@ export function MobileTopHeader({
                     </View>
                     <ChevronDown
                         color={theme.muted}
-                        size={17}
+                        size={16}
                         strokeWidth={2}
                         style={accountMenuOpen ? styles.chevronOpen : undefined}
                     />
@@ -195,10 +195,10 @@ const styles = StyleSheet.create({
     },
     logo: {
         alignItems: "center",
-        borderRadius: radius.sm,
-        height: 34,
+        borderRadius: 10,
+        height: 36,
         justifyContent: "center",
-        width: 34,
+        width: 36,
     },
     logoText: {
         fontSize: 18,
@@ -207,8 +207,8 @@ const styles = StyleSheet.create({
     },
     brandName: {
         flex: 1,
-        fontSize: 15,
-        fontWeight: "800",
+        fontSize: 17,
+        fontWeight: "700",
         letterSpacing: 0,
     },
     actions: {
@@ -222,9 +222,10 @@ const styles = StyleSheet.create({
     },
     actionIconBtn: {
         alignItems: "center",
-        height: touchTarget,
+        borderRadius: radius.full,
+        height: 38,
         justifyContent: "center",
-        width: touchTarget,
+        width: 38,
     },
     accountButton: {
         alignItems: "center",
@@ -234,15 +235,14 @@ const styles = StyleSheet.create({
     },
     avatar: {
         alignItems: "center",
-        borderRadius: 999,
-        height: touchTarget,
+        borderRadius: radius.full,
+        height: 36,
         justifyContent: "center",
-        width: touchTarget,
+        width: 36,
     },
     avatarText: {
-        color: "#ffffff",
-        fontSize: 12,
-        fontWeight: "900",
+        fontSize: 13,
+        fontWeight: "700",
         letterSpacing: 0,
     },
     chevronOpen: {

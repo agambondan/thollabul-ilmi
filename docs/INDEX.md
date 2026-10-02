@@ -89,6 +89,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [media/before-after/2026-10-01-belajar-hub-code-fixes-2/](./media/before-after/2026-10-01-belajar-hub-code-fixes-2/README.md)       | 4 pasang (B17-B19): paragraf Tentang Aplikasi & meta tema Terang ejaan app name, chip kategori mati Panduan Sholat, transliterasi tak terindeks pencarian Asmaul Husna                                     |
 | [media/before-after/2026-10-01-historical-map-layout-fixes/](./media/before-after/2026-10-01-historical-map-layout-fixes/README.md) | 2 pasang: standardisasi layout kartu & padding filter Peta Islam, detail modal AppModalSheet                                                                                                               |
 | [media/before-after/2026-10-02-web-ux-fixes/](./media/before-after/2026-10-02-web-ux-fixes/README.md)                               | 3 pasang: faraidh input label accessibility, kamus close button touch target, siroh back button touch target                                                                                               |     |
+| [media/before-after/2026-10-02-mobile-layout-redesign/](./media/before-after/2026-10-02-mobile-layout-redesign/README.md)           | 5 pasang: modern redesign Beranda, Ibadah, Belajar, Profil, dan Hadis sesuai token mobile.pen                                                                                                              |
 
 ---
 

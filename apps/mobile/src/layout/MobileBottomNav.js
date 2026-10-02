@@ -1,11 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
-    BarChart3,
     BookOpen,
     GraduationCap,
-    HandHeart,
-    LibraryBig,
+    HeartHandshake,
+    House,
+    ScrollText,
 } from "lucide-react-native";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { radius, spacing, touchTarget, getThemeColors } from "../theme";
@@ -13,19 +13,19 @@ import { hapticSelection } from "../utils/haptics";
 
 export const webDashboardBottomItems = [
     {
-        Icon: BarChart3,
+        Icon: House,
         key: "home",
         label: "Beranda",
         labelKey: "nav.dashboard",
     },
     { Icon: BookOpen, key: "quran", label: "Al-Quran", labelKey: "nav.quran" },
     {
-        Icon: LibraryBig,
+        Icon: ScrollText,
         key: "hadith",
         label: "Hadis",
         labelKey: "nav.hadith",
     },
-    { Icon: HandHeart, key: "ibadah", label: "Ibadah", labelKey: "nav.ibadah" },
+    { Icon: HeartHandshake, key: "ibadah", label: "Ibadah", labelKey: "nav.ibadah" },
     { Icon: GraduationCap, key: "belajar", label: "Belajar", labelKey: "nav.belajar" },
 ];
 
@@ -74,16 +74,20 @@ export function MobileBottomNav({
                             if (!selected) hapticSelection();
                             onChange?.(tab.key);
                         }}
-                        style={[
-                            styles.item,
-                            selected && { backgroundColor: activeBg },
-                        ]}
+                        style={styles.item}
                     >
-                        <Icon
-                            color={selected ? activeColor : inactiveColor}
-                            size={19}
-                            strokeWidth={selected ? 2.5 : 1.9}
-                        />
+                        <View
+                            style={[
+                                styles.iconWrap,
+                                selected && { backgroundColor: activeBg },
+                            ]}
+                        >
+                            <Icon
+                                color={selected ? activeColor : inactiveColor}
+                                size={20}
+                                strokeWidth={selected ? 2.3 : 1.9}
+                            />
+                        </View>
                         <Text
                             style={[
                                 styles.label,
@@ -111,13 +115,19 @@ const styles = StyleSheet.create({
     },
     item: {
         alignItems: "center",
-        borderRadius: radius.md,
         flex: 1,
-        gap: spacing.sm,
+        gap: 3,
         justifyContent: "center",
         minHeight: touchTarget,
-        paddingHorizontal: spacing.sm,
-        paddingVertical: spacing.sm,
+        paddingHorizontal: spacing.xs,
+        paddingVertical: 4,
+    },
+    iconWrap: {
+        alignItems: "center",
+        borderRadius: radius.full,
+        justifyContent: "center",
+        paddingHorizontal: 12,
+        paddingVertical: 4,
     },
     label: {
         fontSize: 10,
@@ -125,6 +135,6 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
     },
     labelActive: {
-        fontWeight: "800",
+        fontWeight: "700",
     },
 });

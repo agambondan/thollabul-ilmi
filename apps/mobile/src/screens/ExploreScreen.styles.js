@@ -7,6 +7,8 @@ const WEB_APP_EXPLORE_SURFACE = "#111827";
 const WEB_APP_EXPLORE_BORDER = "#243044";
 const WEB_APP_EXPLORE_ACCENT = "#34d399";
 const WEB_APP_EXPLORE_MUTED = "#94a3b8";
+const WEB_APP_EXPLORE_TEXT = "#cbd5e1";
+const WEB_APP_EXPLORE_TITLE = "#f8fafc";
 
 export const styles = StyleSheet.create({
     backToExplore: {
@@ -36,43 +38,45 @@ export const styles = StyleSheet.create({
     webAppCatalogHero: {
         backgroundColor: WEB_APP_EXPLORE_SURFACE,
         borderColor: WEB_APP_EXPLORE_BORDER,
-        borderRadius: radius.md,
+        borderRadius: 16,
         borderWidth: 1,
         padding: spacing.md,
     },
     webAppCatalogEyebrow: {
         color: WEB_APP_EXPLORE_ACCENT,
         fontSize: 11,
-        fontWeight: "900",
-        letterSpacing: 0,
+        fontWeight: "700",
+        letterSpacing: 0.5,
         marginBottom: spacing.xs,
     },
     webAppCatalogTitle: {
         color: "#f8fafc",
-        fontSize: 28,
-        fontWeight: "900",
+        fontSize: 26,
+        fontWeight: "700",
         letterSpacing: 0,
         lineHeight: 34,
     },
     webAppCatalogSubtitle: {
         color: WEB_APP_EXPLORE_MUTED,
         fontSize: 13,
+        fontWeight: "400",
         lineHeight: 20,
         marginTop: spacing.xs,
     },
     webAppCatalogSearch: {
-        backgroundColor: "#1e293b",
+        backgroundColor: WEB_APP_EXPLORE_SURFACE,
         borderColor: WEB_APP_EXPLORE_ACCENT,
         borderRadius: 12,
-        borderWidth: 2,
+        borderWidth: 1,
         justifyContent: "center",
         marginTop: spacing.md,
         minHeight: touchTarget,
         paddingHorizontal: spacing.md,
     },
     webAppCatalogInput: {
-        color: "#e2e8f0",
+        color: WEB_APP_EXPLORE_TEXT,
         fontSize: 14,
+        fontWeight: "400",
         minHeight: touchTarget,
         padding: 0,
     },

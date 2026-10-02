@@ -326,7 +326,7 @@ function WebAppHomeGreeting({
             <Text
                 style={[
                     styles.webAppGreetingTitle,
-                    { color: dashboardColors.title },
+                    { color: dashboardColors.ink },
                 ]}
             >{`Assalamu'alaikum, ${displayName}`}</Text>
             <Text
@@ -1230,15 +1230,15 @@ const styles = StyleSheet.create({
         marginBottom: spacing.lg,
     },
     webAppGreetingTitle: {
-        fontSize: 22,
-        fontWeight: "900",
+        fontSize: 24,
+        fontWeight: "700",
         letterSpacing: 0,
     },
     webAppGreetingDate: {
-        fontSize: 13,
-        fontWeight: "600",
+        fontSize: 14,
+        fontWeight: "400",
         letterSpacing: 0,
-        marginTop: spacing.xs,
+        marginTop: 4,
     },
     header: {
         alignItems: "center",
