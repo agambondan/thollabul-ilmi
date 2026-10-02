@@ -11,6 +11,7 @@ export const CLASSIC_REFERENCE_LIST_FEATURE_KEYS = new Set([
     "sejarah",
     "manasik",
     "jarh-tadil",
+    "perawi",
 ]);
 
 export function isClassicReferenceListFeature(feature) {
@@ -76,6 +77,19 @@ const REFERENCE_LIST_CONFIGS = {
         placeholder: "Cari perawi, penilai, atau tingkat...",
         unit: "penilaian",
     },
+    perawi: {
+        categories: [
+            "sahabat",
+            "tabiin",
+            "tabiut_tabiin",
+            "atbaut_tabiin",
+            "tabaqah_5",
+            "tabaqah_6",
+            "tabaqah_7",
+        ],
+        placeholder: "Cari perawi, kunyah, atau tabaqah...",
+        unit: "perawi",
+    },
 };
 
 const DOA_CATEGORIES = [
@@ -117,7 +131,14 @@ const canonicalCategory = (value) => CATEGORY_ALIASES[value] ?? value;
 const getGenericItemCategory = (item) => {
     const raw = getRaw(item);
     return canonicalCategory(
-        toSlug(raw.category ?? raw.jenis_nilai ?? raw.type ?? raw.occasion),
+        toSlug(
+            raw.category ??
+                raw.jenis_nilai ??
+                raw.tabaqah ??
+                raw.tingkat ??
+                raw.type ??
+                raw.occasion,
+        ),
     );
 };
 
