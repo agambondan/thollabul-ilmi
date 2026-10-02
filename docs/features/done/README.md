@@ -27,3 +27,4 @@ Folder ini berisi feature yang sudah ditutup.
 - [Peta Sirah Interaktif & Visual Faraidh](./peta-sirah-faraidh-visual.md)
 - [Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis](./perpustakaan-ekstraksi-konten-untuk-belajar.md)
 - [Semantic Search & Islamic RAG](./semantic-search-islamic-rag.md)
+- [Masjid & Radio Islamic Directory](./2026-09-08-masjid-radio-islamic-directory.md)
