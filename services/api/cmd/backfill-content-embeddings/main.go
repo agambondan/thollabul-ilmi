@@ -17,6 +17,7 @@ import (
 
 	"github.com/agambondan/islamic-explorer/app/config"
 	"github.com/agambondan/islamic-explorer/app/db"
+	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	service "github.com/agambondan/islamic-explorer/app/services"
@@ -28,10 +29,33 @@ import (
 func main() {
 	batchSize := flag.Int("batch", 250, "rows per SELECT batch")
 	limit := flag.Int("limit", 0, "max rows to process (0 = no limit); useful for smoke tests")
-	typesFlag := flag.String("types", "", "comma-separated content types to index (quran,hadith,tafsir,asbabun_nuzul,doa,fiqh,sirah,blog,kajian). Empty = all.")
+	typesFlag := flag.String("types", "", "comma-separated content types to index (quran,hadith,tafsir,asbabun_nuzul,doa,fiqh,sirah,blog,kajian,library). Empty = all.")
+	cleanFlag := flag.Bool("clean", false, "delete existing embeddings for selected content types before indexing")
+	envFlag := flag.String("environment", "local", "environment to load (local, development, staging, production, container)")
 	flag.Parse()
 
-	viper.AutomaticEnv()
+	// Load environment like main.go does
+	switch *envFlag {
+	case "development":
+		if err := lib.LoadEnvironmentLocalFlag(".env.development"); err != nil {
+			log.Fatalf("load .env.development: %v", err)
+		}
+	case "staging":
+		if err := lib.LoadEnvironmentLocalFlag(".env.staging"); err != nil {
+			log.Fatalf("load .env.staging: %v", err)
+		}
+	case "production":
+		if err := lib.LoadEnvironmentLocalFlag(".env.production"); err != nil {
+			log.Fatalf("load .env.production: %v", err)
+		}
+	case "container":
+		viper.AutomaticEnv()
+	default:
+		if err := lib.LoadEnvironmentLocalFlag(".env.local"); err != nil {
+			log.Fatalf("load .env.local: %v", err)
+		}
+	}
+
 	env := (&config.Environment{}).Init()
 	dbConn := db.NewPostgresql(env)
 	repos, err := repository.NewRepositories(dbConn, nil)
@@ -63,7 +87,7 @@ func main() {
 	totalIndexed := 0
 
 	for _, contentType := range selectedTypes {
-		count, err := indexContentType(ctx, dbConn, svc, contentType, *batchSize, *limit)
+		count, err := indexContentType(ctx, dbConn, svc, contentType, *batchSize, *limit, *cleanFlag)
 		if err != nil {
 			log.Printf("[%s] error: %v", contentType, err)
 			continue
@@ -75,7 +99,13 @@ func main() {
 	fmt.Printf("\nTotal indexed: %d chunks in %s\n", totalIndexed, time.Since(start).Round(time.Second))
 }
 
-func indexContentType(ctx context.Context, gdb *gorm.DB, svc service.ContentEmbeddingService, contentType string, batchSize, limit int) (int, error) {
+func indexContentType(ctx context.Context, gdb *gorm.DB, svc service.ContentEmbeddingService, contentType string, batchSize, limit int, clean bool) (int, error) {
+	if clean {
+		if err := gdb.Where("content_type = ?", contentType).Delete(&model.ContentEmbedding{}).Error; err != nil {
+			log.Printf("[%s] warning: failed to delete old embeddings: %v", contentType, err)
+		}
+	}
+
 	var chunks []ContentChunk
 	var err error
 
@@ -159,7 +189,7 @@ func blogContentID(id uuid.UUID) uint {
 
 func fetchQuranChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
 	var ayahs []model.Ayah
-	query := gdb.Model(&model.Ayah{}).Preload("Surah.Translation").Preload("Translation").Limit(batchSize)
+	query := gdb.Model(&model.Ayah{}).Preload("Surah.Translation").Preload("Translation")
 	if limit > 0 {
 		query = query.Limit(limit)
 	}
@@ -196,83 +226,124 @@ func fetchQuranChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error
 }
 
 func fetchHadithChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
-	var hadiths []model.Hadith
-	query := gdb.Model(&model.Hadith{}).Preload("Translation").Preload("Book.Translation").Limit(batchSize)
-	if limit > 0 {
-		query = query.Limit(limit)
-	}
-	if err := query.Find(&hadiths).Error; err != nil {
-		return nil, err
-	}
+	var chunks []ContentChunk
+	offset := 0
+	for {
+		var hadiths []model.Hadith
+		fetchLimit := batchSize
+		if limit > 0 && len(chunks)+fetchLimit > limit {
+			fetchLimit = limit - len(chunks)
+		}
+		if fetchLimit <= 0 {
+			break
+		}
 
-	chunks := make([]ContentChunk, 0, len(hadiths))
-	for _, h := range hadiths {
-		var textParts []string
-		var bookSlug string
-		if h.Book != nil {
-			bookSlug = safeString(h.Book.Slug)
-			if h.Book.Translation != nil {
-				textParts = append(textParts, "Kitab "+safeString(h.Book.Translation.Idn))
+		err := gdb.Model(&model.Hadith{}).
+			Preload("Translation").
+			Preload("Book.Translation").
+			Order("id asc").
+			Offset(offset).
+			Limit(fetchLimit).
+			Find(&hadiths).Error
+		if err != nil {
+			return nil, err
+		}
+		if len(hadiths) == 0 {
+			break
+		}
+
+		for _, h := range hadiths {
+			var textParts []string
+			var bookSlug string
+			if h.Book != nil {
+				bookSlug = safeString(h.Book.Slug)
+				if h.Book.Translation != nil {
+					textParts = append(textParts, "Kitab "+safeString(h.Book.Translation.Idn))
+				}
 			}
+			if h.Translation != nil {
+				textParts = append(textParts, safeString(h.Translation.Idn))
+				textParts = append(textParts, safeString(h.Translation.En))
+			}
+			chunks = append(chunks, ContentChunk{
+				ContentType: "hadith",
+				ContentID:   uint(safeInt(h.ID)),
+				Text:        strings.Join(textParts, " "),
+				Metadata: map[string]interface{}{
+					"book_id":    safeInt(h.BookID),
+					"book_slug":  bookSlug,
+					"chapter_id": safeInt(h.ChapterID),
+					"number":     safeInt(h.Number),
+					"grade":      hadithGradeString(h.Grade),
+				},
+			})
 		}
-		if h.Translation != nil {
-			textParts = append(textParts, safeString(h.Translation.Idn))
-			textParts = append(textParts, safeString(h.Translation.En))
+
+		offset += len(hadiths)
+		if limit > 0 && len(chunks) >= limit {
+			break
 		}
-		chunks = append(chunks, ContentChunk{
-			ContentType: "hadith",
-			ContentID:   uint(safeInt(h.ID)),
-			Text:        strings.Join(textParts, " "),
-			Metadata: map[string]interface{}{
-				"book_id":    safeInt(h.BookID),
-				"book_slug":  bookSlug,
-				"chapter_id": safeInt(h.ChapterID),
-				"number":     safeInt(h.Number),
-				"grade":      hadithGradeString(h.Grade),
-			},
-		})
 	}
 	return chunks, nil
 }
 
 func fetchTafsirChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
-	var tafsirs []model.Tafsir
-	query := gdb.Model(&model.Tafsir{}).
-		Preload("KemenagTranslation").
-		Preload("IbnuKatsirTranslation").
-		Preload("IbnuKatsirEnTranslation").
-		Limit(batchSize)
-	if limit > 0 {
-		query = query.Limit(limit)
-	}
-	if err := query.Find(&tafsirs).Error; err != nil {
-		return nil, err
-	}
-
-	chunks := make([]ContentChunk, 0, len(tafsirs))
-	for _, t := range tafsirs {
-		var textParts []string
-		if t.AyahID != nil {
-			textParts = append(textParts, fmt.Sprintf("Tafsir Ayat %d", *t.AyahID))
+	var chunks []ContentChunk
+	offset := 0
+	for {
+		var tafsirs []model.Tafsir
+		fetchLimit := batchSize
+		if limit > 0 && len(chunks)+fetchLimit > limit {
+			fetchLimit = limit - len(chunks)
 		}
-		textParts = append(textParts, safeString(t.KemenagTranslation.Idn))
-		textParts = append(textParts, safeString(t.IbnuKatsirTranslation.Idn))
-		textParts = append(textParts, safeString(t.IbnuKatsirEnTranslation.En))
-		chunks = append(chunks, ContentChunk{
-			ContentType: "tafsir",
-			ContentID:   uint(safeInt(t.ID)),
-			Text:        strings.Join(textParts, " "),
-			Metadata: map[string]interface{}{
-				"ayah_id": safeInt(t.AyahID),
-			},
-		})
+		if fetchLimit <= 0 {
+			break
+		}
+
+		err := gdb.Model(&model.Tafsir{}).
+			Preload("KemenagTranslation").
+			Preload("IbnuKatsirTranslation").
+			Preload("IbnuKatsirEnTranslation").
+			Order("id asc").
+			Offset(offset).
+			Limit(fetchLimit).
+			Find(&tafsirs).Error
+		if err != nil {
+			return nil, err
+		}
+		if len(tafsirs) == 0 {
+			break
+		}
+
+		for _, t := range tafsirs {
+			var textParts []string
+			if t.AyahID != nil {
+				textParts = append(textParts, fmt.Sprintf("Tafsir Ayat %d", *t.AyahID))
+			}
+			textParts = append(textParts, safeString(t.KemenagTranslation.Idn))
+			textParts = append(textParts, safeString(t.IbnuKatsirTranslation.Idn))
+			textParts = append(textParts, safeString(t.IbnuKatsirEnTranslation.En))
+			chunks = append(chunks, ContentChunk{
+				ContentType: "tafsir",
+				ContentID:   uint(safeInt(t.ID)),
+				Text:        strings.Join(textParts, " "),
+				Metadata: map[string]interface{}{
+					"ayah_id": safeInt(t.AyahID),
+				},
+			})
+		}
+
+		offset += len(tafsirs)
+		if limit > 0 && len(chunks) >= limit {
+			break
+		}
 	}
 	return chunks, nil
 }
 
 func fetchAsbabunNuzulChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
 	var items []model.AsbabunNuzul
-	query := gdb.Model(&model.AsbabunNuzul{}).Preload("Translation").Preload("Ayahs").Limit(batchSize)
+	query := gdb.Model(&model.AsbabunNuzul{}).Preload("Translation").Preload("Ayahs")
 	if limit > 0 {
 		query = query.Limit(limit)
 	}
@@ -314,7 +385,7 @@ func fetchAsbabunNuzulChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk
 
 func fetchDoaChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
 	var doas []model.Doa
-	query := gdb.Model(&model.Doa{}).Preload("Translation").Limit(batchSize)
+	query := gdb.Model(&model.Doa{}).Preload("Translation")
 	if limit > 0 {
 		query = query.Limit(limit)
 	}
@@ -344,7 +415,7 @@ func fetchDoaChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) 
 
 func fetchFiqhChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
 	var items []model.FiqhItem
-	query := gdb.Model(&model.FiqhItem{}).Preload("Category.Translation").Preload("Translation").Limit(batchSize)
+	query := gdb.Model(&model.FiqhItem{}).Preload("Category.Translation").Preload("Translation")
 	if limit > 0 {
 		query = query.Limit(limit)
 	}
@@ -382,7 +453,7 @@ func fetchFiqhChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error)
 
 func fetchSirahChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
 	var contents []model.SirohContent
-	query := gdb.Model(&model.SirohContent{}).Preload("Category.Translation").Preload("Translation").Limit(batchSize)
+	query := gdb.Model(&model.SirohContent{}).Preload("Category.Translation").Preload("Translation")
 	if limit > 0 {
 		query = query.Limit(limit)
 	}
@@ -420,7 +491,7 @@ func fetchSirahChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error
 
 func fetchBlogChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
 	var posts []model.BlogPost
-	query := gdb.Model(&model.BlogPost{}).Preload("Category.Translation").Preload("Translation").Limit(batchSize)
+	query := gdb.Model(&model.BlogPost{}).Preload("Category.Translation").Preload("Translation")
 	if limit > 0 {
 		query = query.Limit(limit)
 	}
@@ -451,40 +522,61 @@ func fetchBlogChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error)
 }
 
 func fetchKajianChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, error) {
-	var transcripts []model.KajianTranscript
-	query := gdb.Model(&model.KajianTranscript{}).Preload("Kajian").Limit(batchSize)
-	if limit > 0 {
-		query = query.Limit(limit)
-	}
-	if err := query.Find(&transcripts).Error; err != nil {
-		return nil, err
-	}
-
-	chunks := make([]ContentChunk, 0, len(transcripts))
-	for _, t := range transcripts {
-		var textParts []string
-		if t.Kajian != nil {
-			textParts = append(textParts, t.Kajian.Title)
-			if t.Kajian.Speaker != "" {
-				textParts = append(textParts, "Penceramah: "+t.Kajian.Speaker)
-			}
-			if t.Kajian.Topic != "" {
-				textParts = append(textParts, "Topik: "+t.Kajian.Topic)
-			}
+	var chunks []ContentChunk
+	offset := 0
+	for {
+		var transcripts []model.KajianTranscript
+		fetchLimit := batchSize
+		if limit > 0 && len(chunks)+fetchLimit > limit {
+			fetchLimit = limit - len(chunks)
 		}
-		textParts = append(textParts, t.Text)
-		chunks = append(chunks, ContentChunk{
-			ContentType: "kajian",
-			ContentID:   uint(safeInt(t.ID)),
-			Text:        strings.Join(textParts, " "),
-			Metadata: map[string]interface{}{
-				"kajian_id":     t.KajianID,
-				"video_id":      t.VideoID,
-				"start_seconds": t.StartSeconds,
-				"end_seconds":   t.EndSeconds,
-				"timestamp_url": t.TimestampURL,
-			},
-		})
+		if fetchLimit <= 0 {
+			break
+		}
+
+		err := gdb.Model(&model.KajianTranscript{}).
+			Preload("Kajian").
+			Order("id asc").
+			Offset(offset).
+			Limit(fetchLimit).
+			Find(&transcripts).Error
+		if err != nil {
+			return nil, err
+		}
+		if len(transcripts) == 0 {
+			break
+		}
+
+		for _, t := range transcripts {
+			var textParts []string
+			if t.Kajian != nil {
+				textParts = append(textParts, t.Kajian.Title)
+				if t.Kajian.Speaker != "" {
+					textParts = append(textParts, "Penceramah: "+t.Kajian.Speaker)
+				}
+				if t.Kajian.Topic != "" {
+					textParts = append(textParts, "Topik: "+t.Kajian.Topic)
+				}
+			}
+			textParts = append(textParts, t.Text)
+			chunks = append(chunks, ContentChunk{
+				ContentType: "kajian",
+				ContentID:   uint(safeInt(t.ID)),
+				Text:        strings.Join(textParts, " "),
+				Metadata: map[string]interface{}{
+					"kajian_id":     t.KajianID,
+					"video_id":      t.VideoID,
+					"start_seconds": t.StartSeconds,
+					"end_seconds":   t.EndSeconds,
+					"timestamp_url": t.TimestampURL,
+				},
+			})
+		}
+
+		offset += len(transcripts)
+		if limit > 0 && len(chunks) >= limit {
+			break
+		}
 	}
 	return chunks, nil
 }
@@ -501,9 +593,9 @@ func fetchLibraryChunks(gdb *gorm.DB, batchSize, limit int) ([]ContentChunk, err
 		Slug       string
 	}
 	var results []Result
-	q := gdb.Table("library_book_extracted_texts as et").
+	q := gdb.Table("library_book_extracted_text as et").
 		Select("et.id, et.library_book_id as book_id, et.page_number, et.text, b.title, b.author, b.category, b.slug").
-		Joins("JOIN library_books as b ON b.id = et.library_book_id").
+		Joins("JOIN library_book as b ON b.id = et.library_book_id").
 		Where("et.text != '' AND et.confident = true")
 
 	if limit > 0 {

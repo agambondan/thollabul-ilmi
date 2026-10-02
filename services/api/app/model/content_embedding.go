@@ -12,7 +12,7 @@ type ContentEmbedding struct {
 	ChunkText   string          `gorm:"type:text;not null" json:"chunk_text"`
 	Embedding   pgvector.Vector `gorm:"type:vector(256)" json:"embedding,omitempty"`
 	Metadata    string          `gorm:"type:jsonb;default:'{}'" json:"metadata,omitempty"`
-	Similarity  float32         `gorm:"-" json:"similarity,omitempty"`
+	Similarity  float32         `gorm:"->;type:float" json:"similarity,omitempty"`
 }
 
 func (ContentEmbedding) TableName() string {

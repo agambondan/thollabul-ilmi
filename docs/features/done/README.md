@@ -26,3 +26,4 @@ Folder ini berisi feature yang sudah ditutup.
 - [Asbabun Nuzul](./quran-asbabun-nuzul.md)
 - [Peta Sirah Interaktif & Visual Faraidh](./peta-sirah-faraidh-visual.md)
 - [Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis](./perpustakaan-ekstraksi-konten-untuk-belajar.md)
+- [Semantic Search & Islamic RAG](./semantic-search-islamic-rag.md)
