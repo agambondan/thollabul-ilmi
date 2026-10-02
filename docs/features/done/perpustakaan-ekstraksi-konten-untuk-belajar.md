@@ -157,6 +157,12 @@ ulama mu'tabar (lihat memori `feedback_islamic_data_sahih_only`).
 - Notes:
   - Opsi ringan (link modul Belajar ke buku Perpustakaan) terintegrasi via `RelatedBookID` di `LessonModule`.
   - Ekstraksi buku OCR dipisahkan via worker/script `services/api/scripts/ocr_library_books.go`.
+- Production Sync (2026-10-02):
+  - 25 buku PDF diekstrak lokal (OCR `pdftoppm` + Tesseract `ind+ara` untuk scan, `pdftotext` untuk PDF berteks).
+  - 3.690 halaman teks hasil ekstraksi disinkronkan ke database production (VPS `sumopod-1`, container `tholabul-ilmi-tholabul-ilmi-postgres-1`).
+  - Pencocokan buku via `slug` (bukan `id`) karena ID berbeda di lokal vs production.
+  - Dump JSON `/tmp/library_sync_data.json` (9.1 MB) → import via `COPY ... FROM STDIN WITH (FORMAT csv)` Python script.
+  - Verifikasi: `SELECT count(*) FROM library_book_extracted_text` → 3690 rows; `extraction_status = 'done'` untuk 25 buku.
 
 ## Source of Truth
 
