@@ -330,3 +330,27 @@ kali berharap konvergen. Satu kali `--write` lalu commit apa adanya;
 `--check` yang tetap merah pada file ini (khususnya bagian ini) adalah
 false-positive yang sudah diketahui, bukan tanda isi salah — verifikasi
 isi dengan `diff` yang mengabaikan whitespace, bukan `prettier --check`.
+
+---
+
+## `console.log` tidak sampai ke `adb logcat` di build release RN 0.81 Bridgeless
+
+Ditemukan saat investigasi B20 (`docs/reviews/2026-10-01-belajar-hub-deep-audit.md`,
+`2026-10-02`): `console.log` yang dipasang di `apps/mobile` untuk debugging
+runtime **tidak pernah muncul** di `adb logcat -s ReactNativeJS:V` sama
+sekali pada APK release — dikonfirmasi string log ada di bundle JS
+(`grep` ke `index.android.bundle`) tapi `logcat -b all` tetap kosong
+total. Kemungkinan besar perilaku RN 0.81 New Architecture/Bridgeless
+yang me-reroute `console.*` lewat jalur berbeda di build release
+(belum ditelusuri sampai ke kode native RN — kalau ada yang menemukan
+penyebab pastinya, update catatan ini).
+
+**Cara menyikapi:** jangan andalkan `console.log` + `logcat` untuk
+debugging timing/race di build release repo ini. Pindah ke logging
+on-device sinkron: tulis ke file lewat `expo-file-system`
+(`FileHandle`, append sinkron) di titik-titik yang mau diamati, lalu
+`adb pull` file itu setelah tiap trial buat dibaca. Build debug
+(`./gradlew assembleDebug` + Metro bundler jalan) kemungkinan masih
+bisa pakai `console.log` normal lewat Metro — belum dicoba sesi ini,
+tapi itu alternatif lebih cepat untuk dicoba duluan sebelum pindah ke
+file-based logging kalau sesi berikutnya butuh debugging serupa.
