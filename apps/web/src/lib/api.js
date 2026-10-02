@@ -395,9 +395,10 @@ export const libraryApi = {
     detail: (slug) =>
         fetch(`${API_URL}/api/v1/library/books/${encodeURIComponent(slug)}`),
     getPages: (slug, page) => {
-        const url = new URL(`${API_URL}/api/v1/library/books/${encodeURIComponent(slug)}/pages`);
-        if (page) url.searchParams.set("page", String(page));
-        return fetch(url.toString());
+        const query = page ? `?page=${encodeURIComponent(page)}` : "";
+        return fetch(
+            `${API_URL}/api/v1/library/books/${encodeURIComponent(slug)}/pages${query}`,
+        );
     },
 };
 
@@ -1077,6 +1078,11 @@ export const adminHadithAyahApi = buildResourceApi({
     listParam: "size=500",
 });
 
+export const adminMunasabahApi = buildResourceApi({
+    listPath: "/api/v1/munasabah",
+    listParam: "size=500",
+});
+
 export const adminTokohTarikhApi = buildResourceApi({
     listPath: "/api/v1/tokoh-tarikh",
     listParam: "page=1&size=200",
@@ -1096,6 +1102,79 @@ export const adminRadioIslamicApi = buildResourceApi({
     listPath: "/api/v1/radio-islamic",
     listParam: "size=100",
 });
+
+export const adminNotificationTemplateApi = buildResourceApi({
+    listPath: "/api/v1/notification-templates",
+    listParam: "",
+});
+
+export const adminAudioApi = buildResourceApi({
+    listPath: "/api/v1/audio/surah",
+    listParam: "",
+});
+
+export const adminSurahAudioApi = buildResourceApi({
+    listPath: "/api/v1/audio/surah",
+    listParam: "",
+});
+
+export const adminAyahAudioApi = buildResourceApi({
+    listPath: "/api/v1/audio/ayah",
+    listParam: "",
+});
+
+export const adminAyahApi = {
+    list: (surahNumber = 1, page = 0, size = 100) =>
+        authFetch(`/api/v1/ayah/surah/number/${surahNumber}?page=${page}&size=${size}`),
+    getById: (id) => authFetch(`/api/v1/ayah/${id}`),
+    update: (id, data) =>
+        authFetch(`/api/v1/ayah/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+    create: (data) =>
+        authFetch(`/api/v1/ayah`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+    delete: (id, scoped = "soft") =>
+        authFetch(`/api/v1/ayah/${id}/${scoped}`, { method: "DELETE" }),
+};
+
+export const adminSurahApi = {
+    list: () => authFetch(`/api/v1/surah`),
+    getById: (id) => authFetch(`/api/v1/surah/${id}`),
+    update: (id, data) =>
+        authFetch(`/api/v1/surah/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+};
+
+export const adminHadithApi = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return authFetch(`/api/v1/hadiths${qs ? `?${qs}` : ""}`);
+    },
+    getById: (id) => authFetch(`/api/v1/hadiths/${id}`),
+    update: (id, data) =>
+        authFetch(`/api/v1/hadiths/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+    create: (data) =>
+        authFetch(`/api/v1/hadiths`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+    delete: (id) =>
+        authFetch(`/api/v1/hadiths/${id}`, { method: "DELETE" }),
+};
 
 export const adminAdsApi = {
     list: () => authFetch("/api/v1/admin/ads"),

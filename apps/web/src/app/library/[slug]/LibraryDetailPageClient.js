@@ -19,7 +19,13 @@ import {
     BsFileEarmarkPdf,
     BsBook,
     BsBookmarkCheckFill,
+    BsEye,
+    BsFiletypeMd,
+    BsType,
+    BsDownload,
+    BsClipboard,
 } from "react-icons/bs";
+import ExtractedTextReader from "@/components/library/ExtractedTextReader";
 
 const normalizeBook = (data) => data?.data ?? data;
 const getProgressStatuses = (t) => [
@@ -75,6 +81,8 @@ export const LibraryDetailContent = ({
     const [activePageNum, setActivePageNum] = useState(1);
     const [readerTab, setReaderTab] = useState("auto");
     const [fontSize, setFontSize] = useState(16);
+    const [fontFamily, setFontFamily] = useState("serif");
+    const [readerViewMode, setReaderViewMode] = useState("doc");
     const [copiedPage, setCopiedPage] = useState(false);
     const splitRef = useRef(null);
     const lastHandleMouseDownRef = useRef(0);
@@ -670,7 +678,37 @@ export const LibraryDetailContent = ({
                                 </div>
 
                                 {currentTab === "text" && (
-                                    <div className='flex items-center gap-1'>
+                                    <div className='flex items-center gap-1.5'>
+                                        <div className='flex items-center rounded-md border border-gray-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-800 text-[11px] font-medium'>
+                                            <button
+                                                type='button'
+                                                onClick={() =>
+                                                    setFontFamily("serif")
+                                                }
+                                                className={`px-1.5 py-0.5 rounded font-serif ${
+                                                    fontFamily === "serif"
+                                                        ? "bg-emerald-700 text-white font-bold"
+                                                        : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                                }`}
+                                                title='Gaya tulisan Serif (Buku)'
+                                            >
+                                                Serif
+                                            </button>
+                                            <button
+                                                type='button'
+                                                onClick={() =>
+                                                    setFontFamily("sans")
+                                                }
+                                                className={`px-1.5 py-0.5 rounded font-sans ${
+                                                    fontFamily === "sans"
+                                                        ? "bg-emerald-700 text-white font-bold"
+                                                        : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                                }`}
+                                                title='Gaya tulisan Sans-Serif (Modern)'
+                                            >
+                                                Sans
+                                            </button>
+                                        </div>
                                         <button
                                             onClick={() =>
                                                 setFontSize((s) =>
@@ -789,41 +827,18 @@ export const LibraryDetailContent = ({
                                                     Tandai Hal {activePageNum}
                                                 </button>
                                             )}
-                                            <button
-                                                onClick={() =>
-                                                    copyPageText(
-                                                        currentPageData.text,
-                                                    )
-                                                }
-                                                title='Salin teks halaman ini'
-                                                className='inline-flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 hover:bg-gray-50 dark:border-slate-700 dark:hover:bg-slate-800'
-                                            >
-                                                {copiedPage ? (
-                                                    <>
-                                                        <BsCheck2 className='text-emerald-600' />
-                                                        Tersalin
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <BsFiles />
-                                                        Salin
-                                                    </>
-                                                )}
-                                            </button>
                                         </div>
                                     </div>
 
-                                    <div className='flex-1 overflow-y-auto p-5 md:p-6 bg-slate-50/50 dark:bg-slate-950/40'>
-                                        <div
-                                            className='whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200 select-text font-serif'
-                                            style={{
-                                                fontSize: `${fontSize}px`,
-                                                lineHeight: 1.85,
-                                            }}
-                                        >
-                                            {currentPageData.text}
-                                        </div>
-                                    </div>
+                                    <ExtractedTextReader
+                                        text={currentPageData.text}
+                                        pageNumber={activePageNum}
+                                        bookTitle={book?.title}
+                                        fontSize={fontSize}
+                                        fontFamily={fontFamily}
+                                        viewMode={readerViewMode}
+                                        onViewModeChange={setReaderViewMode}
+                                    />
                                 </div>
                             ) : currentTab === "pdf" && pdfUrl ? (
                                 <iframe
