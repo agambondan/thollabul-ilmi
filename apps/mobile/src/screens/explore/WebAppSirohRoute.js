@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     title: {
         color: "#111827",
         fontSize: 24,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 30,
     },
     subtitle: {
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     numberText: {
         color: "#1d4ed8",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     cardBody: {
         flex: 1,
@@ -319,10 +319,10 @@ const styles = StyleSheet.create({
     categoryBadge: {
         alignSelf: "flex-start",
         backgroundColor: "#dbeafe",
-        borderRadius: 999,
+        borderRadius: radius.full,
         color: "#1d4ed8",
         fontSize: 11,
-        fontWeight: "800",
+        fontWeight: "700",
         marginBottom: 5,
         paddingHorizontal: spacing.sm,
         paddingVertical: 3,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     cardTitle: {
         color: "#111827",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 19,
     },
     cardExcerpt: {
@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     emptyTitle: {
         color: "#111827",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "700",
         marginTop: spacing.sm,
         textAlign: "center",
     },
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     },
     loadMoreButton: {
         backgroundColor: "#2563eb",
-        borderRadius: 999,
+        borderRadius: radius.full,
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
     },
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     loadMoreText: {
         color: "#ffffff",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     rootDark: {
         backgroundColor: "#020617",

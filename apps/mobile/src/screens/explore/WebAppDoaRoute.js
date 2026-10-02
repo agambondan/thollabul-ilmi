@@ -517,15 +517,15 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#064e3b",
-        fontSize: 24,
-        fontWeight: "900",
-        lineHeight: 30,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
         textAlign: "center",
     },
     subtitle: {
         color: "#64748b",
-        fontSize: 14,
-        fontWeight: "600",
+        fontSize: 13,
+        fontWeight: "400",
         lineHeight: 20,
         marginTop: 4,
         textAlign: "center",
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
         color: "#111827",
         flex: 1,
         fontSize: 14,
-        fontWeight: "600",
+        fontWeight: "400",
         paddingVertical: 9,
     },
     categoryRow: {
@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
     },
     categoryChip: {
         backgroundColor: "#f1f5f9",
-        borderRadius: 10,
+        borderRadius: radius.full,
         paddingHorizontal: spacing.md,
         paddingVertical: 7,
         minHeight: 44,
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
     categoryChipText: {
         color: "#475569",
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "700",
     },
     categoryChipTextActive: {
         color: "#ffffff",
@@ -582,17 +582,17 @@ const styles = StyleSheet.create({
     countText: {
         color: "#94a3b8",
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     resetText: {
         color: "#047857",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     error: {
         color: "#b91c1c",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "600",
         marginTop: spacing.md,
     },
     state: {
@@ -603,13 +603,13 @@ const styles = StyleSheet.create({
     stateText: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
     },
     empty: {
         alignItems: "center",
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderRadius: 12,
         borderWidth: 1,
         marginTop: spacing.md,
         padding: spacing.lg,
@@ -617,13 +617,13 @@ const styles = StyleSheet.create({
     emptyTitle: {
         color: "#334155",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
         textAlign: "center",
     },
     emptyText: {
         color: "#94a3b8",
         fontSize: 12,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 18,
         marginTop: 4,
         textAlign: "center",
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderRadius: 10,
         borderWidth: 1,
         padding: spacing.md,
     },

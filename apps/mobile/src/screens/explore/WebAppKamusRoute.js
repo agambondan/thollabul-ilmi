@@ -274,9 +274,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#111827",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
     },
     subtitle: {
         color: "#6b7280",
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     searchButtonText: {
         color: "#ffffff",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     state: {
         alignItems: "center",
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     emptyTitle: {
         color: "#111827",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "700",
         marginTop: spacing.sm,
         textAlign: "center",
     },

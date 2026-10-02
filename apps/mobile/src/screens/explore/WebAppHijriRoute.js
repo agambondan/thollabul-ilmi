@@ -492,9 +492,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#111827",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
     },
     todayCard: {
         alignItems: "center",
@@ -506,20 +506,20 @@ const styles = StyleSheet.create({
     todayLabel: {
         color: "#a7f3d0",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
         marginBottom: spacing.sm,
     },
     todayArabic: {
         color: "#ffffff",
         fontSize: 26,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 34,
         textAlign: "center",
     },
     todayText: {
         color: "#d1fae5",
         fontSize: 15,
-        fontWeight: "800",
+        fontWeight: "700",
         marginTop: spacing.xs,
         textAlign: "center",
     },
@@ -547,25 +547,25 @@ const styles = StyleSheet.create({
     countdownEyebrow: {
         color: "#d1fae5",
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
         marginBottom: 3,
         textTransform: "uppercase",
     },
     countdownTitle: {
         color: "#ffffff",
         fontSize: 28,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 34,
     },
     countdownUnit: {
         color: "#d1fae5",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     countdownBody: {
         color: "#d1fae5",
         fontSize: 12,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 18,
         marginTop: 3,
     },
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     fastingTitle: {
         color: "#111827",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     fastingToday: {
         backgroundColor: "#ecfdf5",
@@ -598,19 +598,19 @@ const styles = StyleSheet.create({
     fastingTodayLabel: {
         color: "#047857",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
         marginBottom: 4,
     },
     fastingTodayText: {
         color: "#111827",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 19,
     },
     fastingEmptyText: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "600",
         lineHeight: 19,
     },
     upcomingList: {
@@ -619,7 +619,7 @@ const styles = StyleSheet.create({
     upcomingTitle: {
         color: "#64748b",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
         marginBottom: spacing.sm,
     },
     upcomingRow: {
@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
     upcomingDayText: {
         color: "#047857",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     upcomingTextWrap: {
         flex: 1,
@@ -650,7 +650,7 @@ const styles = StyleSheet.create({
     upcomingLabel: {
         color: "#111827",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 18,
     },
     upcomingDate: {
@@ -789,7 +789,7 @@ const styles = StyleSheet.create({
     eventDateBadge: {
         alignItems: "center",
         backgroundColor: "#ecfdf5",
-        borderRadius: 999,
+        borderRadius: radius.full,
         height: 34,
         justifyContent: "center",
         width: 34,
@@ -797,7 +797,7 @@ const styles = StyleSheet.create({
     eventDateText: {
         color: "#047857",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     eventMain: {
         flex: 1,
@@ -806,7 +806,7 @@ const styles = StyleSheet.create({
     eventMeta: {
         color: "#047857",
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
         marginBottom: 2,
     },
     eventTitle: {

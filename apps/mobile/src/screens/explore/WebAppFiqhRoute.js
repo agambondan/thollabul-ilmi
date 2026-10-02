@@ -459,9 +459,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#111827",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
     },
     titleDark: {
         color: "#f8fafc",
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
     count: {
         color: "#6b7280",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         marginTop: 2,
     },
     countDark: {
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     categoryPill: {
         backgroundColor: "#f3f4f6",
         borderColor: "#f3f4f6",
-        borderRadius: 999,
+        borderRadius: radius.full,
         borderWidth: 1,
         minHeight: 38,
         paddingHorizontal: spacing.md,
@@ -568,10 +568,10 @@ const styles = StyleSheet.create({
     },
     categoryBadge: {
         backgroundColor: "#ecfccb",
-        borderRadius: 4,
+        borderRadius: 8,
         color: "#4d7c0f",
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
         overflow: "hidden",
         paddingHorizontal: spacing.sm,
         paddingVertical: 4,
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     },
     categoryDash: {
         backgroundColor: "#d9f99d",
-        borderRadius: 999,
+        borderRadius: radius.full,
         height: 4,
         width: 18,
     },
@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
         color: "#111827",
         flex: 1,
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 20,
     },
     cardTitleDark: {
@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
     emptyTitle: {
         color: "#374151",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "700",
         marginTop: spacing.sm,
         textAlign: "center",
     },
@@ -692,7 +692,7 @@ const styles = StyleSheet.create({
     loadMoreButton: {
         backgroundColor: "#ffffff",
         borderColor: "#a7f3d0",
-        borderRadius: radius.sm,
+        borderRadius: radius.full,
         borderWidth: 1,
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.sm,
@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
     loadMoreText: {
         color: "#047857",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     loadMoreTextDark: {
         color: "#34d399",
