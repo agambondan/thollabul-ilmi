@@ -635,9 +635,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#064e3b",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
     },
     titleCentered: {
         textAlign: "center",
@@ -645,7 +645,7 @@ const styles = StyleSheet.create({
     subtitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "600",
+        fontWeight: "400",
         marginTop: 2,
     },
     subtitleCentered: {
@@ -724,7 +724,7 @@ const styles = StyleSheet.create({
     },
     quickPill: {
         backgroundColor: "#f1f5f9",
-        borderRadius: 999,
+        borderRadius: radius.full,
         paddingHorizontal: spacing.sm,
         paddingVertical: 7,
     },
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
     quickPillText: {
         color: "#64748b",
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "700",
     },
     quickPillTextDark: {
         color: "#94a3b8",
@@ -755,7 +755,7 @@ const styles = StyleSheet.create({
         color: "#111827",
         flex: 1,
         fontSize: 14,
-        fontWeight: "600",
+        fontWeight: "400",
         paddingVertical: 9,
     },
     surahGrid: {
@@ -767,7 +767,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: 12,
+        borderRadius: 10,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     surahNumber: {
         alignItems: "center",
         backgroundColor: "#d1fae5",
-        borderRadius: 10,
+        borderRadius: 8,
         height: 36,
         justifyContent: "center",
         width: 36,
@@ -792,7 +792,7 @@ const styles = StyleSheet.create({
     surahNumberText: {
         color: "#047857",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     surahNumberTextActive: {
         color: "#ffffff",
@@ -803,12 +803,12 @@ const styles = StyleSheet.create({
     surahName: {
         color: "#111827",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     surahMeaning: {
         color: "#94a3b8",
         fontSize: 11,
-        fontWeight: "700",
+        fontWeight: "400",
         marginTop: 2,
     },
     resultsHeader: {
@@ -820,8 +820,8 @@ const styles = StyleSheet.create({
     },
     resultsTitle: {
         color: "#111827",
-        fontSize: 16,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "700",
     },
     resultsCount: {
         color: "#64748b",
