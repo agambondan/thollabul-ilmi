@@ -1043,7 +1043,7 @@ const styles = StyleSheet.create({
     heroIcon: {
         alignItems: "center",
         backgroundColor: "#d1fae5",
-        borderRadius: 18,
+        borderRadius: 31,
         height: 62,
         justifyContent: "center",
         marginBottom: spacing.md,
@@ -1051,21 +1051,21 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#064e3b",
-        fontSize: 25,
-        fontWeight: "900",
-        lineHeight: 31,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
         textAlign: "center",
     },
     subtitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
         marginTop: spacing.xs,
         textAlign: "center",
     },
     notice: {
-        borderRadius: radius.lg,
+        borderRadius: 12,
         marginBottom: spacing.md,
         padding: spacing.md,
     },
@@ -1081,7 +1081,7 @@ const styles = StyleSheet.create({
     },
     noticeText: {
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "600",
         lineHeight: 18,
     },
     noticeTextAmber: {
@@ -1093,7 +1093,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: radius.xl,
+        borderRadius: 12,
         borderWidth: 1,
         gap: spacing.md,
         marginBottom: spacing.md,
@@ -1106,13 +1106,13 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         color: "#111827",
-        fontSize: 16,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "700",
     },
     sectionMeta: {
         color: "#047857",
-        fontSize: 12,
-        fontWeight: "900",
+        fontSize: 13,
+        fontWeight: "400",
     },
     field: {
         gap: 6,
@@ -1120,13 +1120,13 @@ const styles = StyleSheet.create({
     fieldLabel: {
         color: "#374151",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     inputShell: {
         alignItems: "center",
         backgroundColor: "#f9fafb",
         borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderRadius: 12,
         borderWidth: 1,
         flexDirection: "row",
         minHeight: 44,
@@ -1135,14 +1135,14 @@ const styles = StyleSheet.create({
     inputPrefix: {
         color: "#94a3b8",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
         marginRight: spacing.sm,
     },
     input: {
         color: "#111827",
         flex: 1,
         fontSize: 14,
-        fontWeight: "700",
+        fontWeight: "400",
         paddingVertical: spacing.sm,
     },
     hint: {
