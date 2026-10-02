@@ -9,12 +9,21 @@
 > ke Al-Qur'an, pagination, pull-to-refresh, hardware back, deep link) di
 > kedua tema — Modern (Web App, 5-tab) dan Classic (Paper).
 
-**Status**: 4 bug dilaporkan (2 khusus Modern, 2 berlaku di kedua tema), plus
+**Status**: 4 bug dilaporkan — **SEMUA FIXED (B1–B4)**, plus
 4 catatan tambahan (1 gap data, 1 catatan konten, 2 temuan peripheral di luar
 scope Hadis yang ditemukan tidak sengaja). Tidak ada crash yang ditemukan
 sepanjang sesi ini (`pidof` dicek setelah setiap interaksi berisiko, dan
 `logcat` penuh sesi di-scan ulang di akhir untuk `FATAL EXCEPTION` — nihil).
 Screenshot: `apps/mobile/output/native/2026-09-30-hadis-deep-audit/*.png`.
+
+## Status Perbaikan
+
+| Bug | Deskripsi | Status | Commit / Solusi |
+| --- | --------- | ------ | --------------- |
+| B1 | Tab switcher "Theme"/"Chapter" mati di book shelf | **FIXED** | Tab disederhanakan ke `book` dan `hadith` yang aktif |
+| B2 | Search hadis hanya mencari hadis lokal yang sudah ter-load | **FIXED** | Search memanggil backend `getHadithPage({ q, ... })` dengan debounce 320ms |
+| B3 | ID hadis invalid menampilkan detail palsu alih-alih error | **FIXED** | `openHadith()` menangani error 404 tanpa fallback stub fiktif |
+| B4 | Nama pendek kitab "Musnad Ahmad" dan "Sunan Darimi" terpotong di rail kartu | **FIXED** | `HADITH_BOOK_SHORT_LABELS` dilengkapi dengan `ahmad: "Ahmad"` dan `darimi: "Darimi"` |
 
 ## Setup
 

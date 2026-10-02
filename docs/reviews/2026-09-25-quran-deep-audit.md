@@ -396,3 +396,17 @@ Target Belajar personal).
 7. **C1/C2** — tidak mendesak, cukup dicatat untuk diskusi produk/konten.
 8. **C3** — di luar scope, tapi disarankan masuk antrean audit navigasi
    berikutnya (kemungkinan ada layar serupa lain).
+
+---
+
+## Status Perbaikan (2026-09-28)
+
+Semua 6 bug inti (B1–B6) sudah diperbaiki di commit `eec4c95f` dan C3 diperbaiki di commit `8d7611a0`, diverifikasi di emulator dan unit test (57 suite / 805 tests lulus).
+
+- **B1 → FIXED (search box focus)**: `ListHeaderComponent` di `QuranScreen` dipassing sebagai elemen stabil `renderQuranListHeader()` bukan referensi fungsi agar VirtualizedList tidak me-remount subtree TextInput tiap render.
+- **B2 → FIXED (navigasi mushaf CTA)**: CTA "Navigasi Mushaf" di Modern sekarang membuka `renderNavigatorPanel()` di dalam `AppModalSheet` (picker halaman 1-604 / hizb 1-240), tidak lagi hardcode halaman 1.
+- **B3 → FIXED (nama Arab terpotong)**: Ditambahkan `numberOfLines={2}` pada nama surah Arab di baris list Modern.
+- **B4 → FIXED (swipe ganti halaman mushaf)**: Ditambahkan `swipeGestureActiveRef` yang aktif saat drag horizontal >10px sehingga tap handler ayah tidak membuka Aksi Cepat saat swipe halaman.
+- **B5 → FIXED (back button Audio Range Panel)**: Tekanan tombol back saat Audio Range Panel sudah collapsed sekarang menutup panel (`stopRangeAudio()`) alih-alih me-re-expand.
+- **B6 → FIXED (ganti qari single ayah)**: `selectQari` dan `playAyahAudio` sekarang mendukung pergantian qari dan melanjutkan pemutaran single-ayah dengan qari baru tanpa berhenti diam-diam.
+- **C3 → FIXED (back button Target Belajar)**: Diperbaiki pada audit Belajar hub di commit `8d7611a0`.

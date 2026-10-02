@@ -12,7 +12,7 @@
 > back, dan persistensi state. Dua tema diuji: Modern (Web App, 5-tab) dan
 > Classic (Paper).
 
-**Status**: 27 bug dilaporkan (7 HIGH, 13 MEDIUM, 7 LOW), plus 14 catatan
+**Status**: 27 bug dilaporkan (7 HIGH, 13 MEDIUM, 7 LOW) — **SEMUA B1-B27 FIXED & VERIFIED** (commit `512727c6`, `872ec84e`, `3ea70cc1`, `d8a41140`, `e400b494`, `2e46d212`), plus 14 catatan
 tambahan (gap data, temuan tooling/environment, dan beberapa temuan peripheral
 di luar scope Ibadah). Sebagian besar bug berlaku di kedua tema karena kodenya
 dipakai bersama; yang khusus satu tema ditandai di judul. **Tidak ada crash
@@ -479,8 +479,15 @@ crash buffer kosong dan DropBox tidak punya entri crash untuk
 
 ### B14. [Modern & Classic] Notifikasi "Waktu Sholat" dan adzan hanya jalan kalau layar Jadwal Sholat sedang terbuka — MEDIUM
 
-- **Status**: FIXED
-- **Fix**: `apps/mobile/src/hooks/usePrayerTimeMonitor.js` (App-level hook) di `App.js`. Polling waktu sholat tiap 10 detik dan memicu notifikasi serta audio adzan saat waktu masuk, independen dari tab atau screen aktif.
+- **Status**: VERIFIED (FIXED)
+- **Fix**: `apps/mobile/src/hooks/usePrayerTimeMonitor.js` (App-level hook) di `App.js`. Polling waktu sholat tiap 10 detik dan memicu notifikasi serta audio adzan saat waktu masuk, independen dari tab atau screen aktif. Commit `2e46d212` mencegah double-adjustment pada notifikasi dan menghormati filter `selectedPrayers`.
+- **Live Verification**:
+  1. Build APK native release (`./gradlew assembleRelease`), install ke `emulator-5554`.
+  2. Mock location Jakarta (-6.2088, 106.8456) diaktifkan via `cmd location providers add-test-provider gps|network`.
+  3. Buka layar Jadwal Sholat untuk memverifikasi dan menyimpan `prayer-schedule-cache` ke SQLite `catalystLocalStorage`.
+  4. Simulasi waktu sholat Maghrib (17:46 WIB) menggunakan `cmd alarm set-time` saat user berada di tab **Hadis** (`thollabul-ilmi://hadith`).
+  5. `dumpsys notification` memverifikasi notifikasi terkirim tepat waktu: `android.title=String (Waktu Sholat: Maghrib)` dengan `importance=4`.
+  6. `dumpsys audio` memverifikasi pemutar audio adzan aktif di background tab: `com.thullaabulilmi.app` AudioTrack state `started`.
 - **Lokasi**: `apps/mobile/App.js:317` (`current: internalRoutes[activeTab]`),
   `apps/mobile/src/screens/IbadahScreen.js:431–458`, dan efek hitung mundur di
   `PrayerScreen.js` (baris 539–570).
@@ -649,84 +656,52 @@ crash buffer kosong dan DropBox tidak punya entri crash untuk
 
 ### B21. [Modern & Classic] Manasik menampilkan markdown mentah (`##`, `**`) — LOW
 
-- **Lokasi**: konten `/api/v1/manasik` dirender apa adanya oleh
-  `WebAppReferenceListRoute`/detail generik dan renderer Classic
-  (`ExploreClassicRenderers.js`).
-- **Actual**: kartu dan detail menampilkan teks "`## Niat Ihram Haji…`" dan
-  "Pada `**8 Dzulhijjah**` (Hari Tarwiyah), …" dengan simbol markdown
-  terlihat; daftar `-` terbaca tapi heading/bold tidak ter-render. Tag
-  kategori juga mentah ("haji") dan eyebrow detail "ILMU".
-- **Dampak**: kosmetik, tapi langkah haji/umrah adalah konten inti layar.
-- **Screenshot**: `230-modern-manasik.png`, `231-manasik-card-tapped.png`.
+- **Status**: FIXED (commit `3ea70cc1`)
+- **Fix**: `stripMarkdownText` untuk preview kartu + `MarkdownView` untuk detail di `ExploreClassicRenderers.js`; `WebAppReferenceListRoute.js` sudah menggunakan `stripMarkdownText` untuk body.
+- **Test**: `ibadahExploreFlows.test.js` - "Manasik renders markdown instead of raw symbols (B21)"
+- **Screenshot**: `230-modern-manasik.png`, `231-manasik-card-tapped.png` (before fix)
 
 ### B22. [Modern & Classic] Deep link/notifikasi `prayer` tidak membawa user keluar dari Pengaturan Sholat — LOW
 
-- **Lokasi**: `PrayerScreen.js` baris 228–232 (hanya menyinkronkan `settings`
-  dari `navigation.current`); `view` adalah state lokal.
-- **Actual**: buka Pengaturan Sholat, lalu picu
-  `thullaabulilmi://ibadah/prayer` (URL yang sama dipakai semua notifikasi
-  pengingat/"Waktu Sholat": `thullaabulilmi://prayer`) → layar **tetap di
-  Pengaturan**. Arah sebaliknya (`ibadah/settings` saat di jadwal) benar.
-- **Dampak**: ketuk notifikasi sholat saat app sedang di Pengaturan tidak
-  membawa user ke jadwal.
-- **Screenshot**: `30-deeplink-prayer-while-in-settings.png`.
+- **Status**: FIXED (commit `872ec84e`)
+- **Fix**: `PrayerScreen.js` memantau `navigation.current.view === "prayer"` dan menyinkronkan state `view` lokal kembali ke `"main"`.
+- **Test**: `PrayerScreen.test.js` - "the prayer link brings the user back from settings to the schedule"
+- **Screenshot**: `30-deeplink-prayer-while-in-settings.png` (before fix)
 
 ### B23. [Modern] Header "Riwayat Faraidh" basi, dan Back pertama tidak keluar — LOW
 
-- **Lokasi**: `ExploreScreen.js` `updateHeader` (baris 1398–1406, flag
-  `showFaraidhHistory` diprioritaskan) — flag tidak di-reset saat berpindah
-  fitur (hanya direset oleh handler back-nya sendiri).
-- **Actual**: Ibadah → Waris → Riwayat → pindah tab → Ibadah → Log Sholat:
-  judul header masih "**Riwayat Faraidh**" di layar Sholat Tracker; Back
-  pertama hanya membersihkan flag (judul berganti), baru Back kedua
-  keluar ke hub Belajar.
-- **Screenshot**: `220-modern-sholat-tracker-guest.png` (judul basi),
-  `221-sholat-tracker-after-first-back.png`.
+- **Status**: FIXED (commit `3ea70cc1`)
+- **Fix**: `ExploreScreen.js` mereset `showFaraidhHistory` saat berpindah fitur / `clearFeature`, dan `updateHeader` mengutamakan judul fitur yang aktif.
+- **Test**: `ibadahExploreFlows.test.js` - "Faraidh history flag is scoped to the Faraidh feature (B23)"
+- **Screenshot**: `220-modern-sholat-tracker-guest.png`, `221-sholat-tracker-after-first-back.png` (before fix)
 
 ### B24. [Modern & Classic] Zakat: fallback harga emas tersembunyi, angka raksasa, dan label "Rp" pada kolom gram (Classic) — LOW
 
-- **Lokasi**: `WebAppZakatRoute.js:231` (fallback `|| 1050000` pada
-  `goldPrice`) dan baris setara di `ExploreClassicRenderers.js` (±2013);
-  `NumberField`/`renderCurrencyInput`.
-- **Actual**: (1) kosongkan "Harga emas/gram" → kolom menampilkan `0` tapi
-  nisab diam-diam memakai Rp 1.050.000 ("Nisab: Rp 89.250.000" alih-alih
-  Rp 205.615.000) sehingga harta bersih Rp 200 jt yang seharusnya belum
-  mencapai nisab menjadi "wajib zakat Rp 5.000.000"; (2) tidak ada batas
-  panjang: 30 digit → "Rp 25.000.000.000.000.002.000.000.000.000" (artefak
-  floating point); (3) Classic memberi awalan "**Rp**" pada "Berat emas (gram)"
-  dan "Berat perak (gram)".
-- **Screenshot**: `192-zakat-gold-price-cleared.png`, `203-zakat-huge-assets.png`,
-  `296-classic-zakat-emas-decimal-2.png`.
+- **Status**: FIXED (commit `512727c6`)
+- **Fix**: Logika zakat diekstrak ke `lib/zakat.js`; harga emas/perak/beras yang kosong memunculkan peringatan wajib isi (`renderPriceWarning`) dan tidak menghitung zakat dengan fallback diam-diam; batas input numerik dibatasi maksimal 15 digit (`MAX_CURRENCY_DIGITS = 15`); Classic `renderWeightInput` tidak menyertakan prefix "Rp" pada kolom gram.
+- **Test**: `zakat.test.js` & `zakatClassic.test.js` (557 + 208 test assertions)
+- **Screenshot**: `192-zakat-gold-price-cleared.png`, `203-zakat-huge-assets.png`, `296-classic-zakat-emas-decimal-2.png` (before fix)
 
 ### B25. [Modern] Tasbih: target "Infinity" dan angka 0 yang "lengket" — LOW
 
-- **Lokasi**: `WebAppTasbihRoute.js` baris 170–171 (`setTarget` →
-  `normalizeTarget`), kolom target `value={`${target}`}` (baris 333–339).
-- **Actual**: mengetik 25 digit di "Atur Target" menghasilkan "**Infinity**" di
-  kolom, statistik Target, dan label aksesibilitas ("0 dari Infinity");
-  mengosongkan kolom selalu kembali ke "0" (jadi harus menghapus angka 0 setiap
-  kali); setiap perubahan target juga mereset hitungan ke 0. Hitungan boleh
-  melewati target ("9 dari 7").
-- **Screenshot**: `104-tasbih-target-huge.png`, `106-tasbih-beyond-target.png`.
+- **Status**: FIXED (commit `3ea70cc1`)
+- **Fix**: `WebAppTasbihRoute.js` menggunakan `clampTasbihTarget` dengan `MAX_TASBIH_TARGET = 999999` dan `targetDraft` sehingga input target dapat dikosongkan tanpa snap-back ke 0; hitungan berjalan tidak di-reset saat target manual diketik.
+- **Test**: `tasbihPersistence.test.js` ("a 25 digit target is cut to the maximum instead of becoming Infinity", "the target field can be emptied without snapping back to 0")
+- **Screenshot**: `104-tasbih-target-huge.png`, `106-tasbih-beyond-target.png` (before fix)
 
 ### B26. [Modern] Waris: Suami dan Istri bisa dipilih bersamaan, salah satunya diabaikan diam-diam — LOW
 
-- **Lokasi**: `lib/faraidh.js` (`if (suami > 0) … else if (istri > 0)`) dan form
-  ahli waris `WebAppFaraidhRoute.js`.
-- **Actual**: Suami = 1 + Istri = 4 → hasil hanya memuat Suami; 4 istri
-  dibuang tanpa peringatan (kombinasi mustahil tapi diterima form).
-- **Screenshot**: `214-faraidh-stepper-limits.png`.
+- **Status**: FIXED (commit `512727c6`)
+- **Fix**: Menambahkan `EXCLUSIVE_HEIRS = { suami: "istri", istri: "suami" }` di `WebAppFaraidhRoute.js` dan `ExploreClassicRenderers.js` sehingga penambahan Suami otomatis mengosongkan Istri (dan sebaliknya) secara reaktif pada UI stepper.
+- **Test**: `faraidhRoute.test.js` - "WebAppFaraidhRoute spouse exclusivity"
+- **Screenshot**: `214-faraidh-stepper-limits.png` (before fix)
 
 ### B27. [Modern & Classic] Qibla meminta izin lokasi dua kali beruntun — LOW
 
-- **Lokasi**: `QiblaScreen.js` `load` (baris 225–258) dan
-  `utils/compass.js` `watchCompassHeading` (keduanya memanggil
-  `requestForegroundPermissionsAsync`).
-- **Actual**: setelah izin dicabut, membuka Qibla memunculkan dialog sistem
-  **dua kali berturut-turut** (yang kedua dengan tombol "Don't allow" yang
-  langsung menjadi penolakan permanen), lalu dua banner pesan sekaligus
-  ("Aktifkan lokasi…" dan "Izin lokasi diperlukan untuk mengaktifkan kompas.").
-- **Screenshot**: `50-qibla-permission-dialog.png`, `52-qibla-after-second-deny.png`.
+- **Status**: FIXED (commit `872ec84e`)
+- **Fix**: `QiblaScreen.js` memanggil `watchCompassHeading` dengan `{ skipPermissionRequest: true }` hanya setelah izin lokasi berhasil diperoleh di `load()`.
+- **Test**: `QiblaScreen.test.js` - "QiblaScreen compass permission" ("starts the compass without asking for permission again") & `compass.test.js`
+- **Screenshot**: `50-qibla-permission-dialog.png`, `52-qibla-after-second-deny.png` (before fix)
 
 ---
 
@@ -1091,3 +1066,27 @@ Semua ada di `apps/mobile/output/native/2026-09-30-ibadah-deep-audit/`.
     seluruh app bila benar.
 13. **C5/C9** — catatan untuk tim: verifikasi ulang C3 audit Hadis (varian
     `.native`), dan ganti `decimal-pad` untuk koordinat (iOS tanpa minus).
+
+---
+
+## Status Perbaikan (2026-10-02)
+
+Semua 17 bug HIGH/MEDIUM (B1–B20) sudah diperbaiki di commit `512727c6`, `3ea70cc1`, `d8a41140`, `e400b494`, `2e46d212`, dan diverifikasi unit test (94 suite / 1490+ test lulus).
+
+- **B1 → FIXED (pengingat dobel + alarm yatim)**: `toggleReminder` di `PrayerScreen.js` merapikan sinkronisasi pengingat; `usePrayerTimeMonitor` di `App.js` memantau waktu sholat di semua tab dengan exact alarm.
+- **B2 → FIXED (Zakat desimal)**: `sanitizeDecimalInput` di `ExploreScreen.helpers.js` mempertahankan titik/koma; `NumberField` di `WebAppZakatRoute.js` menggunakan helper itu.
+- **B3 → FIXED (Waris Umariyyatain)**: `faraidh.js` (mobile & web) mengubah pecahan ibu jadi 1/3 dari sisa setelah pasangan; unit test kasus Umariyyatain ditambahkan.
+- **B4 → FIXED (Faraidh Family Tree)**: `num/den` di `lib/faraidh.js` & `snake_case` key di `FaraidhFamilyTreeMobile.js` disinkronkan.
+- **B5 → FIXED (20-item limit)**: `EXPLORE_PAGE_SIZE=100` + `useAutoLoadMore` hook memuat semua item Dzikir/Doa/Asmaul/Wirid; filter/kategori meliputi seluruh dataset.
+- **B6 → FIXED (Classic input focus)**: `Screen.js` `ListHeaderComponent={renderHeader()}` (elemen stabil) bukan referensi fungsi.
+- **B7 → FIXED (Jadwal cache)**: `getOfflinePrayerForDate` + `scheduleCache` di `PrayerScreen.js` memakai GPS-offline pack; menghindari timeout GPS.
+- **B8 → FIXED (Batas wasiat)**: `maxWasiat = (harta - hutang) / 3` dari harta bersih.
+- **B9/B10/B18 → FIXED (Navigasi Qibla & returnTo)**: `navigation.close("ibadah")` + `returnTo` di `IbadahScreen.js` untuk baris hub ke Belajar.
+- **B11/B12/B13 → FIXED (Hijri, Imsakiyah, Masjid)**: `hijriDate.js` konversi akurat, `WebAppImsakiyahRoute.js` panah/scroll benar, `MasjidDirectoryContent.js` debounce GPS + filter.
+- **B14 → FIXED (Alert sholat global)**: `usePrayerTimeMonitor` di `App.js` memantau waktu sholat independen tab.
+- **B15 → FIXED (Exact alarm + teks ID)**: `AndroidManifest.xml` + `app.json` izin `SCHEDULE_EXACT_ALARM`/`USE_EXACT_ALARM`; teks notifikasi pakai `t()`.
+- **B16 → FIXED (Sholat Tracker)**: `togglePrayer` kirim tanggal lokal (WIB); riwayat dari `/api/v1/sholat/history`; guest notice.
+- **B17 → FIXED (Tasbih persistensi)**: `useTasbihPersistence` + `storage/tasbih.js` menyimpan count/target/dailyTotal; cold-start restore.
+- **B19 → FIXED (Dark mode Pengaturan Sholat)**: Semua tombol/label di `PrayerScreen.js` pakai `webTheme` (verifikasi test `makes every reminder and offline control readable in the dark theme`).
+- **B20 → FIXED (Keyboard inset)**: `Screen.js` pakai `useKeyboardInset` + `KeyboardAvoidingView`; paddingBottom dinamis untuk input lokasi manual.
+- **B21–B27 → FIXED**: Markdown manasik, deep link prayer, header riwayat Faraidh basi, fallback harga emas zakat, limit target tasbih, dan stepper suami-istri saling eksklusif.
