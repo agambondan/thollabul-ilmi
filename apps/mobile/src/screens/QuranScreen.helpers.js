@@ -77,6 +77,7 @@ export const WEB_APP_QURAN_BG = colors.dark.bg;
 export const WEB_APP_QURAN_SURFACE = colors.dark.surfaceMuted;
 export const WEB_APP_QURAN_BORDER = colors.dark.border;
 export const WEB_APP_QURAN_MUTED = colors.dark.muted;
+export const WEB_APP_QURAN_TEXT = "#f8fafc";
 export const WEB_APP_QURAN_ACCENT = colors.dark.primary;
 export const WEB_APP_QURAN_ACCENT_BG = colors.dark.primaryBg;
 export const SURAH_PREFIX_PATTERN = /^\s*(سُورَةُ|سُورَة|سورة)\s+/u;

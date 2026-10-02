@@ -11,6 +11,7 @@ import {
     ActivityIndicator,
     Animated,
     Easing,
+    Keyboard,
     Pressable,
     StyleSheet,
     Text,
@@ -117,6 +118,7 @@ export function QiblaScreen({ navigation, onBack, isActive = true }) {
     onBackRef.current = onBack;
     const canGoBack = Boolean(onBack || navigation?.close);
     const goBack = useCallback(() => {
+        Keyboard.dismiss();
         if (onBackRef.current) {
             onBackRef.current();
             return;
@@ -1210,13 +1212,14 @@ const styles = StyleSheet.create({
     },
     webAppHeader: {
         alignItems: "center",
+        borderRadius: 16,
         marginBottom: spacing.lg,
         paddingTop: spacing.sm,
     },
     webAppIconBox: {
         alignItems: "center",
         backgroundColor: "#d1fae5",
-        borderRadius: 18,
+        borderRadius: 32,
         height: 64,
         justifyContent: "center",
         marginBottom: spacing.md,
@@ -1224,15 +1227,15 @@ const styles = StyleSheet.create({
     },
     webAppTitle: {
         color: "#064e3b",
-        fontSize: 28,
-        fontWeight: "900",
+        fontSize: 26,
+        fontWeight: "700",
         letterSpacing: 0,
         textAlign: "center",
     },
     webAppSubtitle: {
         color: "#64748b",
-        fontSize: 14,
-        fontWeight: "700",
+        fontSize: 13,
+        fontWeight: "400",
         lineHeight: 20,
         marginTop: spacing.xs,
         textAlign: "center",
@@ -1240,41 +1243,46 @@ const styles = StyleSheet.create({
     webAppMessage: {
         backgroundColor: "#fff7ed",
         borderColor: "#fed7aa",
-        borderRadius: 16,
+        borderRadius: 12,
         color: "#c2410c",
     },
     webAppPanel: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: 18,
+        borderRadius: 10,
         shadowOpacity: 0,
     },
     webAppCompassPanel: {
         alignItems: "stretch",
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: 22,
+        borderRadius: 16,
         paddingHorizontal: spacing.md,
         shadowOpacity: 0,
     },
     webAppCardTitle: {
         color: "#0f172a",
         fontSize: 15,
+        fontWeight: "700",
     },
     webAppCardMeta: {
         color: "#059669",
+        fontSize: 11,
+        fontWeight: "700",
+        letterSpacing: 0.5,
     },
     webAppMuted: {
         color: "#64748b",
-        fontWeight: "700",
+        fontWeight: "400",
     },
     webAppManualInput: {
         backgroundColor: "#f8fafc",
         borderColor: "#d1d5db",
+        borderRadius: 12,
     },
     webAppButton: {
         backgroundColor: "#047857",
-        borderRadius: 14,
+        borderRadius: 12,
     },
     webAppLoading: {
         alignItems: "center",
@@ -1283,7 +1291,7 @@ const styles = StyleSheet.create({
     webAppLoadingText: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "400",
         marginTop: spacing.sm,
     },
     webAppCompass: {
@@ -1293,34 +1301,37 @@ const styles = StyleSheet.create({
     },
     webAppDegrees: {
         color: "#047857",
+        fontWeight: "700",
     },
     webAppDirectionLabel: {
         color: "#64748b",
+        fontWeight: "700",
     },
     webAppMetric: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: 18,
+        borderRadius: 10,
         minHeight: 112,
         padding: spacing.md,
     },
     webAppMetricLabel: {
         color: "#64748b",
         fontSize: 11,
-        fontWeight: "800",
+        fontWeight: "700",
     },
     webAppMetricValue: {
         color: "#047857",
+        fontWeight: "700",
     },
     webAppMetricValueSmall: {
         color: "#047857",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppLocationCard: {
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: 18,
+        borderRadius: 10,
         borderWidth: 1,
         marginBottom: spacing.md,
         padding: spacing.md,
@@ -1333,15 +1344,15 @@ const styles = StyleSheet.create({
     },
     webAppLocationTitle: {
         color: "#64748b",
-        fontSize: 12,
-        fontWeight: "900",
-        letterSpacing: 0,
+        fontSize: 11,
+        fontWeight: "700",
+        letterSpacing: 0.5,
         textTransform: "uppercase",
     },
     webAppLocationText: {
         color: "#334155",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
     },
     webAppGpsNote: {

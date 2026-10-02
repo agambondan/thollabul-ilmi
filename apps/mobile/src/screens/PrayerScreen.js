@@ -2856,7 +2856,7 @@ const styles = StyleSheet.create({
     webAppSettingsHero: {
         backgroundColor: WEB_APP_PRAYER_SURFACE,
         borderColor: WEB_APP_PRAYER_BORDER,
-        borderRadius: 20,
+        borderRadius: 16,
         borderWidth: 1,
         marginBottom: spacing.md,
         padding: spacing.lg,
@@ -2864,7 +2864,7 @@ const styles = StyleSheet.create({
     webAppHeroIcon: {
         alignItems: "center",
         backgroundColor: WEB_APP_PRAYER_ACCENT_SOFT,
-        borderRadius: 18,
+        borderRadius: 32,
         height: 64,
         justifyContent: "center",
         marginBottom: spacing.md,
@@ -2873,40 +2873,41 @@ const styles = StyleSheet.create({
     webAppHeroIconText: {
         color: WEB_APP_PRAYER_ACCENT,
         fontSize: 20,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppEyebrow: {
         color: WEB_APP_PRAYER_ACCENT,
         fontSize: 11,
-        fontWeight: "900",
-        letterSpacing: 0,
+        fontWeight: "700",
+        letterSpacing: 0.5,
         marginBottom: spacing.xs,
+        textTransform: "uppercase",
     },
     webAppHeroTitle: {
         color: WEB_APP_PRAYER_TEXT,
-        fontSize: 28,
-        fontWeight: "900",
+        fontSize: 26,
+        fontWeight: "700",
         letterSpacing: 0,
         textAlign: "center",
     },
     webAppHeroDate: {
         color: WEB_APP_PRAYER_MUTED,
         fontSize: 14,
-        fontWeight: "700",
+        fontWeight: "400",
         marginTop: spacing.xs,
         textAlign: "center",
     },
     webAppHeroMeta: {
         color: WEB_APP_PRAYER_MUTED,
-        fontSize: 12,
-        fontWeight: "800",
+        fontSize: 13,
+        fontWeight: "400",
         marginTop: spacing.xs,
         textAlign: "center",
     },
     webAppCard: {
         backgroundColor: WEB_APP_PRAYER_SURFACE,
         borderColor: WEB_APP_PRAYER_BORDER,
-        borderRadius: 18,
+        borderRadius: 12,
         shadowOpacity: 0,
     },
     webAppCardTitle: {
@@ -2919,7 +2920,7 @@ const styles = StyleSheet.create({
     webAppMutedText: {
         color: WEB_APP_PRAYER_MUTED,
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
         marginBottom: spacing.sm,
     },
@@ -2942,13 +2943,13 @@ const styles = StyleSheet.create({
     webAppCountdownLabel: {
         color: WEB_APP_PRAYER_MUTED,
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "700",
         textAlign: "center",
     },
     webAppCountdownTime: {
         color: WEB_APP_PRAYER_ACCENT,
         fontSize: 18,
-        fontWeight: "900",
+        fontWeight: "700",
         letterSpacing: 0,
     },
     webAppAdzanStopBtn: {
@@ -2964,12 +2965,12 @@ const styles = StyleSheet.create({
     webAppAdzanStopText: {
         color: "#ffffff",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppScheduleCard: {
         backgroundColor: WEB_APP_PRAYER_SURFACE,
         borderColor: "#eef2f7",
-        borderRadius: 18,
+        borderRadius: 12,
         borderWidth: 1,
         marginBottom: spacing.md,
         overflow: "hidden",
@@ -2981,13 +2982,13 @@ const styles = StyleSheet.create({
     },
     webAppScheduleTitle: {
         color: WEB_APP_PRAYER_TEXT,
-        fontSize: 16,
-        fontWeight: "900",
+        fontSize: 18,
+        fontWeight: "700",
     },
     webAppScheduleMeta: {
         color: WEB_APP_PRAYER_MUTED,
-        fontSize: 12,
-        fontWeight: "800",
+        fontSize: 13,
+        fontWeight: "400",
         marginTop: 2,
     },
     webAppPrayerRow: {

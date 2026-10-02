@@ -9,6 +9,7 @@ import {
     WEB_APP_QURAN_BORDER,
     WEB_APP_QURAN_MUTED,
     WEB_APP_QURAN_SURFACE,
+    WEB_APP_QURAN_TEXT,
 } from "./QuranScreen.helpers";
 import { ISLAMIC_STAR_BADGE_STROKE } from "./QuranScreen.helpers";
 
@@ -80,7 +81,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#ffffff",
         borderColor: "#e5e7eb",
-        borderRadius: 18,
+        borderRadius: 16,
         borderWidth: 1,
         marginBottom: spacing.md,
         padding: spacing.lg,
@@ -138,14 +139,15 @@ export const styles = StyleSheet.create({
     webAppReaderEyebrow: {
         color: WEB_APP_QURAN_ACCENT,
         fontSize: 11,
-        fontWeight: "900",
-        letterSpacing: 0,
+        fontWeight: "700",
+        letterSpacing: 0.5,
         marginBottom: spacing.xs,
         textTransform: "uppercase",
     },
     webAppReaderTitle: {
         color: "#111827",
-        fontSize: 24,
+        fontSize: 26,
+        fontWeight: "700",
         textAlign: "left",
     },
     readerSubtitle: {
@@ -156,7 +158,7 @@ export const styles = StyleSheet.create({
     },
     webAppReaderSubtitle: {
         color: "#64748b",
-        fontWeight: "700",
+        fontWeight: "400",
     },
     webAppReaderArabicTitle: {
         color: "#111827",
@@ -194,7 +196,7 @@ export const styles = StyleSheet.create({
     webAppSurahPagerButtonText: {
         color: WEB_APP_QURAN_ACCENT,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     readerLoadingMore: {
         alignItems: "center",
@@ -215,7 +217,35 @@ export const styles = StyleSheet.create({
         fontWeight: "900",
         marginBottom: spacing.sm,
     },
-    webAppQuranHeader: {
+    webAppQuranHero: {
+        alignItems: "flex-start",
+        backgroundColor: WEB_APP_QURAN_SURFACE,
+        borderColor: WEB_APP_QURAN_BORDER,
+        borderRadius: 16,
+        borderWidth: 1,
+        marginBottom: spacing.lg,
+        padding: spacing.lg,
+    },
+    webAppQuranHeroEyebrow: {
+        color: WEB_APP_QURAN_ACCENT,
+        fontSize: 11,
+        fontWeight: "700",
+        letterSpacing: 0.5,
+        marginBottom: spacing.xs,
+        textTransform: "uppercase",
+    },
+    webAppQuranHeroTitle: {
+        color: WEB_APP_QURAN_TEXT,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
+        marginBottom: spacing.xs,
+    },
+    webAppQuranHeroSubtitle: {
+        color: WEB_APP_QURAN_MUTED,
+        fontSize: 13,
+        fontWeight: "400",
+        lineHeight: 20,
         marginBottom: spacing.md,
     },
     webAppQuranArabicTitle: {
@@ -229,15 +259,16 @@ export const styles = StyleSheet.create({
     },
     webAppQuranTitle: {
         color: "#f8fafc",
-        fontSize: 28,
-        fontWeight: "900",
+        fontSize: 26,
+        fontWeight: "700",
         letterSpacing: 0,
         lineHeight: 34,
         marginBottom: spacing.xs,
     },
     webAppQuranSubtitle: {
         color: WEB_APP_QURAN_MUTED,
-        fontSize: 14,
+        fontSize: 13,
+        fontWeight: "400",
         lineHeight: 20,
         marginBottom: spacing.md,
     },
@@ -262,8 +293,8 @@ export const styles = StyleSheet.create({
     webAppQuranSearch: {
         alignItems: "center",
         backgroundColor: WEB_APP_QURAN_SURFACE,
-        borderColor: "#475569",
-        borderRadius: 11,
+        borderColor: WEB_APP_QURAN_BORDER,
+        borderRadius: 12,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
@@ -274,6 +305,7 @@ export const styles = StyleSheet.create({
         color: "#e2e8f0",
         flex: 1,
         fontSize: 14,
+        fontWeight: "400",
         minHeight: touchTarget,
         padding: 0,
     },
@@ -281,7 +313,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: WEB_APP_QURAN_BG,
         borderColor: "#059669",
-        borderRadius: 10,
+        borderRadius: 12,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
@@ -303,7 +335,7 @@ export const styles = StyleSheet.create({
     webAppMushafCtaTitle: {
         color: WEB_APP_QURAN_ACCENT,
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 20,
     },
     webAppMushafCtaSubtitle: {
@@ -405,7 +437,7 @@ export const styles = StyleSheet.create({
     webAppSurahNumberBadge: {
         alignItems: "center",
         backgroundColor: WEB_APP_QURAN_ACCENT_BG,
-        borderRadius: 4,
+        borderRadius: 8,
         height: touchTarget,
         justifyContent: "center",
         marginRight: spacing.md,
@@ -414,7 +446,7 @@ export const styles = StyleSheet.create({
     webAppSurahNumberText: {
         color: WEB_APP_QURAN_ACCENT,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     surahInfo: {
         flex: 1,
@@ -439,7 +471,7 @@ export const styles = StyleSheet.create({
         color: "#f8fafc",
         flexShrink: 1,
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 20,
     },
     surahMeta: {
@@ -470,7 +502,7 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         lineHeight: 38,
         marginLeft: spacing.sm,
-        maxWidth: "34%",
+        maxWidth: "42%",
         textAlign: "right",
         writingDirection: "rtl",
     },
