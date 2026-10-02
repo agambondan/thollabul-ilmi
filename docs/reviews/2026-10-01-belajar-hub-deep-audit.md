@@ -1341,6 +1341,22 @@ light palette."` — ejaan **"Thullabul"** (satu l, bukan dua) — tampil di
 - **Screenshot**: `007-tentang-aplikasi-open2.png`, `038-tampilan-dark-B13.png`
   (crop: `zoom-about-desc.png`, `zoom-terang-meta.png` di scratchpad sesi
   ini, tidak disalin ke folder output).
+- **LIVE-CONFIRMED 2026-10-02** (release APK, emulator, Modern & Classic,
+  ID & EN): keempat lokasi residual dikonfirmasi benar sudah terpakai
+  `APP_NAME`. (1) Tentang Aplikasi body ID: "Thullaabul Ilmi adalah
+  aplikasi Islamic knowledge..." — benar
+  (`002-tentang-aplikasi.png`). (2) Body EN: "Thullaabul Ilmi is an
+  Islamic knowledge app..." — benar (`008-about-app-en.png`). (3) Profil
+  → Tampilan → Terang, ID & EN: "Palet terang klasik Thullaabul Ilmi."
+  / "Classic Thullaabul Ilmi light palette." — benar
+  (`004-tampilan.png`, `006-english-selected.png`). (4) Share-text Zakat
+  (Maal, Rp300.000.000 → Rp7.500.000) via share-sheet Android: "Dihitung
+  via Thullaabul Ilmi" — benar (`025-zakat-share3.png`). (5) Share-text
+  Faraidh (Estate Rp500.000.000, 1 istri → Rp125.000.000), juga dicek
+  kali ini (sesi lalu tidak sempat): "Dihitung via Thullaabul Ilmi" —
+  benar (`033-faraidh-share2.png`). Share dibatalkan sebelum benar-benar
+  terkirim ke aplikasi lain. **4/4 lokasi FIXED**, tidak ada ejaan
+  salah tersisa.
 
 ### B18. [Modern & Classic; BARU, ditemukan saat live-verify B14] Kategori Panduan Sholat (Wudhu/Sholat/Sunnah/Dzikir/Umum) 100% tidak pernah menampilkan hasil — API tidak pernah mengirim field kategori — MEDIUM
 
@@ -1395,6 +1411,15 @@ translation.{id,idn,ar}` — **tidak ada satu pun** field `category`,
   (ketiganya 0 hasil), `065-classic-semua-reset-check.png` (kontras,
   "Semua" benar 12), `090-classic-dzikir-setelahsholat-chip.png` (kontras,
   Dzikir chip berfungsi normal).
+- **LIVE-CONFIRMED 2026-10-02**: Panduan Sholat dicek di Modern ("Prayer
+  Guide", header "12 guides available",
+  `034-panduan-sholat-modern.png`) dan Classic ("Panduan Sholat", "12
+  panduan tersedia", `038-panduan-sholat-classic.png`) — **kedua layout
+  tidak lagi menampilkan chip kategori sama sekali** (sebelumnya 6 chip
+  Semua/Wudhu/Sholat/Sunnah/Dzikir/Umum, 5 di antaranya selalu 0 hasil).
+  Daftar 12 langkah (Niat, Takbiratul Ihram, Doa Iftitah, Membaca
+  Al-Fatihah, dst.) tampil normal tanpa filter kategori. **FIXED di
+  kedua layout.**
 
 ### B19. [Modern & Classic; BARU, ditemukan saat live-verify B14] Pencarian Asmaul Husna tidak mengindeks nama transliterasi ("Rahman", "Ar-Rahman") — hanya cocok dengan arti Indonesia — MEDIUM
 
@@ -1440,6 +1465,17 @@ translation_id, translation.{id,idn,ar}` — field `transliteration` (mis.
   tiap skema API alih-alih satu daftar generik untuk semua fitur.
 - **Screenshot**: `073-classic-asmaul-search-rahman.png` (0 hasil, salah),
   `074-classic-asmaul-search-pengasih.png` (2 hasil, benar via arti).
+- **LIVE-CONFIRMED 2026-10-02**: dicek di Classic & Modern. Transliterasi
+  di Classic: "rahman" → "Menampilkan 1 dari 99 nama" (Yang Maha
+  Pengasih/Ar-Rahman, `040-asmaul-search-rahman.png`); "malik" → 2 hasil
+  (Al-Malik, Malikul Mulk, `041-asmaul-search-malik.png`); "aziz" → 1
+  hasil (Al-Aziz, `042-asmaul-search-aziz.png`). Diulang di Modern:
+  "rahman" → 1 hasil juga benar (`047-asmaul-modern-rahman.png`).
+  Regresi dicek: "pengasih" (arti Indonesia) tetap 2 hasil (Ar-Rahman,
+  Ar-Rauf) seperti sebelum fix — **tidak ada regresi**
+  (`043-asmaul-search-pengasih.png`). Placeholder search box ikut
+  diperbarui jadi "Cari nama Allah, arti, atau transliterasi...". **FIXED
+  di kedua layout.**
 
 ### B20. [Classic; BARU, ditemukan saat live-verify B14 — kemungkinan besar bug lama, baru sering ketemu karena B14 menambah banyak search box baru] TabBar Classic bisa hilang permanen setelah search box difokus lalu dinavigasi-keluar — MEDIUM
 
@@ -1497,6 +1533,95 @@ translation_id, translation.{id,idn,ar}` — field `transliteration` (mis.
   Arab), `081-hwback-from-kamus-arab.png` (masih hilang setelah hardware
   back), `082-relaunch-restore-tabbar.png` (deep-link saja tidak cukup),
   `083-force-restart-check.png` (force-stop+relaunch memulihkan).
+- **LIVE-CONFIRMED WITH ISSUE 2026-10-02**: sesi live-verify ini mengalami
+  **2 insiden interferensi eksternal terkonfirmasi** di tengah pengujian
+  (sesuai peringatan brief soal sesi agent lain yang bisa menyentuh
+  emulator yang sama): (1) `com.thullaabulilmi.app` ter-**reinstall**
+  di tengah sesi (`dumpsys package` menunjukkan `lastUpdateTime`
+  berubah jadi 13:39:33 WIB, disertai dialog Android "Open with"
+  duplikat yang mengungkap package lama `com.anonymous.thullaabulilmimobile`
+  ikut terpasang); (2) preferensi in-app (layout/bahasa) sempat ter-reset
+  ke default tanpa ada reinstall baru (kemungkinan `pm clear` atau
+  interaksi concurrent lain). Temuan "TabBar hilang" yang muncul PERSIS
+  di sekitar kedua insiden ini dibuang dari analisis (confounded, bukan
+  bukti valid).
+
+                      Setelah device diverifikasi stabil (`lastUpdateTime` tidak berubah
+                      lagi), race diuji ulang bersih, disiplin (setiap hasil dicek via
+                      screenshot + `uiautomator dump`, tanpa gesture tambahan yang ambigu):
+                      **4 percobaan valid** (1 percobaan lain di fitur Doa dibuang karena
+                      confounded oleh insiden #2 pertengahan jalan) — Dzikir instant-back
+                      (PASS), Dzikir 300ms-delay (PASS), Asmaul Husna 800ms-delay (**FAIL —
+                      reproduce**), Asmaul Husna 800ms-delay diulang persis (PASS). Jadi
+                      **1 dari 4 percobaan valid mereproduksi bug** (25%, turun drastis dari
+                      "3× berulang konsisten dalam 1 sesi" di temuan asli pra-fix — fix
+                      JELAS mengurangi frekuensi race, tapi belum menutup total).
+
+                      Repro presisi yang FAIL: buka Asmaul Husna (Classic) via deep-link,
+                      fokus search box, ketik "aziz", tunggu ~800ms, tekan hardware-back
+                      (back pertama hanya dismiss keyboard — teks "aziz" masih ada, bukan
+                      navigasi; tekan back KEDUA baru navigasi ke hub Belajar) → TabBar
+                      hilang total, dikonfirmasi BUKAN sekadar tak-ter-render (uiautomator
+                      dump: 0 node dengan content-desc tab apa pun di area y>2100, identik
+                      dengan sifat bug asli). **Deep-link `thullaabulilmi://belajar` ke tab
+                      yang sama GAGAL memulihkan** pada kejadian ini (dicoba 2×, tunggu
+                      hingga 2.5 detik) — ini **bertentangan dengan catatan fix Sesi 5**
+                      yang menyebut kasus deep-link "fixed eksplisit" via
+                      `setKeyboardVisible(false)` tanpa syarat di `handleDeepLink`
+                      (`App.js:224`). Belum jelas apakah baris itu benar ter-eksekusi saat
+                      deep-link diproses ulang oleh `Linking` listener pada skenario ini,
+                      atau ada gap lain — perlu logging runtime untuk memastikan.
+
+                      **Catatan render TERPISAH (bukan bagian race B20 ini, ditemukan tidak
+                      sengaja saat investigasi)**: pada cold-start APK maupun segera
+                      setelah kembali dari layar fitur ke hub, TabBar Classic kadang tidak
+                      ter-paint sampai ada 1 interaksi scroll — dikonfirmasi berulang kali,
+                      TIDAK terkait `keyboardVisible` (node TabBar tetap ADA di
+                      `uiautomator dump` dan tap di areanya tetap berfungsi/menavigasi, cuma
+                      visual belum ter-paint — beda sifat dari race asli yang node-nya
+                      benar-benar hilang dari tree). Kemungkinan terkait log
+                      `ReactHost: Unhandled SoftException ... onWindowFocusChange ...
+
+              context is not ready` yang ditemukan di logcat sesi ini (RN
+              New Architecture/Bridgeless timing quirk). Di luar scope investigasi
+              sesi ini untuk ditelusuri lebih jauh.
+
+                      **Celah residual (`HadithScreen.js`/`ProfileScreen.js`/
+                      `QiblaScreen.js`/`HomeScreen.js`)**: dikonfirmasi BENAR ADA secara
+                      kode — `QiblaScreen.js:308` (`if (!isActive || !isWebAppLayout ||
+
+              !navigation?.setHeader) return;`) membuktikan `setHeader` HANYA
+
+    dipanggil di Modern (`isWebAppLayout`); Classic memakai
+    `IconActionButton onPress={goBack}`miliknya sendiri (baris 291-296,
+    label "Kembali ke Ibadah") yang tidak pernah lewat`headerConfig`,
+    sehingga tidak tertangkap `useEffect`penangkal di`App.js:129-131`.
+    **Tidak sempat direproduksi live** sesi ini — input manual
+    lat/lng Qibla (dua `TextInput` di baris 523/548) tersembunyi begitu
+    GPS berhasil resolve lokasi (emulator ini akhirnya dapat lokasi
+    "Kecamatan Setiabudi" pertengahan sesi), dan input ganti password di
+    ProfileScreen butuh akun login (di luar scope sesi guest-only).
+    Dikonfirmasi via pembacaan kode, bukan device — sesuai ekspektasi
+    brief ("don't be surprised if it does").
+
+                      **Kesimpulan jujur**: race B20 **belum tertutup 100%** — masih bisa
+                      terjadi (1/4 percobaan valid), meski jelas jauh lebih jarang dari
+                      sebelum fix. Deep-link-recovery TIDAK bekerja seperti diklaim pada
+                      kejadian yang berhasil direproduksi sesi ini. Confidence bahwa race
+                      "closed": **RENDAH-SEDANG** — sampel masih kecil, dan reliabilitas
+                      temuan ini sendiri terganggu interferensi eksternal yang terjadi
+                      berulang selama sesi. Rekomendasi: sesi fix terpisah yang (a)
+                      menambah logging runtime di sekitar `keyboardDidHide` vs
+                      transisi/navigasi untuk pastikan akar masalah persis, (b) re-test
+                      deep-link recovery dengan logging untuk pastikan
+                      `setKeyboardVisible(false)` benar ter-eksekusi, (c) tutup celah
+                      residual 4 screen itu dengan memanggil reset yang sama dari
+                      `goBack`/`onPress` lokalnya, bukan hanya dari `setHeader`.
+                      Screenshot sesi ini: folder
+                      `apps/mobile/output/native/2026-10-01-b17-b20-live-verify/` —
+                      `071-b20-retry-attempt1.png` (PASS), `072`/`073` (PASS, 2 tahap
+                      back), `079`/`080` (FAIL — reproduce, dump dicek di `ui_attempt4.xml`
+                      scratchpad), `081` (deep-link recovery gagal), `085` (ulang, PASS).
 
 ---
 
@@ -2226,7 +2351,8 @@ ada akses emulator selama sesi 5):
   sama). B18: `categories` Panduan Sholat dikosongkan di kedua layout
   (sama seperti pola `asmaul-husna` yang sudah `categories: []`) sampai
   API beneran mengirim field kategori.
-- **B20 → FIXED, commit `5c5c0a44`.** Mekanisme sebenarnya ditemukan
+- **B20 → PARTIALLY FIXED (lihat "Live-verify 2026-10-02" di bawah),
+  commit `5c5c0a44`.** Mekanisme sebenarnya ditemukan
   lebih spesifik dari hipotesis sesi 4: trigger utamanya BUKAN
   perpindahan tab, tapi `ExploreScreen` menutup `activeFeature`-nya
   sendiri (state komponen lokal, sama seperti temuan B12) — transisi ini
@@ -2246,6 +2372,20 @@ ada akses emulator selama sesi 5):
   terpisah yang menyentuh keempat file layar itu.
 
 **Verifikasi**: full suite mobile `npx jest --runInBand` hijau di tiap
-commit (94 suite / 1489 test di commit terakhir). **Belum live-verify** —
-perlu sesi emulator terpisah sebelum build APK berikutnya dianggap final
-untuk B17-B20, termasuk celah residual B20 di atas.
+commit (94 suite / 1489 test di commit terakhir).
+
+**Live-verify 2026-10-02**: sudah dilakukan (lihat entri
+"LIVE-CONFIRMED"/"LIVE-CONFIRMED WITH ISSUE" di tiap bug B17-B20 di
+atas). Ringkasan: B17 FIXED penuh (4/4 lokasi), B18 FIXED penuh (kedua
+layout), B19 FIXED penuh (kedua layout, tanpa regresi), B20 **belum
+tertutup 100%** — race masih bisa reproduce (1 dari 4 percobaan valid
+dalam sesi ini), dan deep-link-recovery tidak bekerja seperti diklaim
+pada kejadian yang berhasil direproduksi. Sesi ini juga mengalami 2
+insiden interferensi eksternal (reinstall APK + reset preferensi
+in-app di tengah pengujian) yang mengaburkan sebagian temuan awal
+tapi tidak mengubah kesimpulan akhir (race B20 dikonfirmasi ulang di
+window yang stabil/bebas interferensi). Celah residual B20 (4 layar
+dengan tombol back sendiri) dikonfirmasi benar ada secara kode, belum
+sempat direproduksi live karena kendala reachability (GPS resolve,
+butuh akun login). Detail lengkap, repro steps, dan rekomendasi lanjut
+ada di entri B20 di atas.

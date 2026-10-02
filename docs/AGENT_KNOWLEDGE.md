@@ -312,3 +312,21 @@ mekanisme di `App.js` cuma mengamati `activeTab`/`internalRoutes` buat
 tahu "layar barusan berubah", dia TIDAK akan melihat transisi internal
 `ExploreScreen` — pakai `headerConfig` (via `setHeader`) sebagai sinyal
 tambahan kalau itu yang sebenarnya ingin diketahui.
+
+---
+
+## Prettier markdown bisa berosilasi (tidak idempotent) di list bersarang dalam
+
+Ditemukan di `docs/reviews/2026-10-01-belajar-hub-deep-audit.md` (entri
+detail B20, paragraf lanjutan bernomor di dalam satu item bullet,
+dipisah baris kosong). `npx prettier --write` berulang-ulang pada file
+ini **tidak konvergen** — dua hasil berbeda bergantian muncul tiap kali
+dijalankan (dibuktikan dengan membandingkan md5sum dua `--write`
+berturut-turut). Ini bug non-idempotency Prettier pada printer markdown
+untuk pola nesting tertentu, bukan kesalahan isi/konten.
+
+**Cara menyikapi:** jangan buang waktu menjalankan `--write` berulang
+kali berharap konvergen. Satu kali `--write` lalu commit apa adanya;
+`--check` yang tetap merah pada file ini (khususnya bagian ini) adalah
+false-positive yang sudah diketahui, bukan tanda isi salah — verifikasi
+isi dengan `diff` yang mengabaikan whitespace, bukan `prettier --check`.
