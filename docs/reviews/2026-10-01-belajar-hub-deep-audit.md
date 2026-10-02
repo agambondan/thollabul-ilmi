@@ -555,6 +555,10 @@ Tilawah (...) adalah sujud satu kali...` — tanda `##` (heading markdown)
   klaim asli) — **B4 kini resmi berstatus "separuh-FIXED, separuh-TETAP
   BY DESIGN"** (bukan lagi "belum sempat diverifikasi"), karena
   `ClassicAppShell.js` tidak pernah disentuh komit manapun sejauh ini.
+  *(Update 2026-10-03)*: Integrasi fitur referensi Classic (`referenceListFilter.js`)
+  kini melengkapi akses `perawi` (kategori tabaqah, pencarian, dan render kartu)
+  sehingga ketiga fitur (Tokoh Tarikh, Peta Islam, Perawi Hadis) dapat diakses
+  lancar dari Beranda Classic (`home.menu.more` → Direktori Fitur) maupun tab Belajar.
 
 ### B5. [Modern; BLOCKED — belum sempat dikonfirmasi live] 3 baris "Akses Cepat" hamburger menyala "selected" bersamaan, bukan hanya yang sedang dibuka — LOW
 
