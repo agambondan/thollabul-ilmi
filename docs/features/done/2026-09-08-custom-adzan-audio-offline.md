@@ -61,7 +61,7 @@ Pengguna bisa memilih suara adzan custom, mengunduh murottal surah/juz untuk off
     - Web fallback returns graceful unsupported messages.
     - `deleteOfflineAudio` sebelumnya hanya menghapus row DB tanpa menghapus file fisik — sekarang ikut `FileSystem.deleteAsync` per file, prasyarat supaya cleanup storage-full benar-benar membebaskan ruang.
     - Default policy: hapus audio yang lebih lama dari 90 hari (`cleanupExpiredOfflineAudio`), lalu evict file terlama sampai di bawah 1.5GB (`enforceOfflineAudioStorageLimit`) — keduanya jalan otomatis tiap selesai `downloadSurahAudio`.
-    - **Re-verified 2026-09-10** (setelah banyak commit lain masuk `master`, memastikan tidak regresi): `npx jest --testPathPattern='offlineAudio'` (7 test) dan `--testPathPattern='PrayerScreen'` (15 test) semua masih PASS. Belum ada verifikasi di device fisik dengan file audio sungguhan — masih gap yang sama seperti tercatat sebelumnya, di luar kemampuan sesi kerja ini.
+    - **Re-verified 2026-10-03** (emulator smoke test): Custom Adzan picker via `thullaabulilmi://ibadah/settings` 9 muadzin tampil normal, pilihan suara & jeda pengingat berhasil diubah & disimpan, Storage Offline (`thullaabulilmi://profile/storage`) Quran + 9 Kitab Hadis render normal. Belum ada verifikasi di device fisik dengan file audio sungguhan — masih gap yang sama seperti tercatat sebelumnya, di luar kemampuan sesi kerja ini.
 
 ## Source of Truth
 

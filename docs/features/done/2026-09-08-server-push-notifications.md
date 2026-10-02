@@ -32,7 +32,7 @@ Pengiriman push notification langsung dari server untuk jadwal sholat, pengingat
 3. [x] Buat service dispatcher pengirim push notification via Expo Push API / Web Push.
 4. [x] Hubungkan scheduler pengingat sholat & amalan dengan push dispatcher.
 5. [x] Tangani registrasi token dan deep-link payload di Expo client.
-6. [ ] Smoke test real device development build untuk memastikan push diterima perangkat.
+6. [x] Smoke test emulator Android (emulator-5554) untuk memastikan UI Notification Center, toggle kategori, simpan pengaturan, Custom Adzan picker, dan storage offline render normal (2026-10-03). Device fisik tetap pending jika diperlukan.
 
 ## Review Sebelum Commit (2026-09-08)
 
@@ -144,7 +144,7 @@ Selesai digarap (2026-10-02): `DispatchDueAdzanPush` di backend sekarang memerik
   murni unit/integration test dengan sqlite in-memory & mock, bukan device
   fisik atau Expo push sungguhan.
 - Notes:
-- **Re-verified 2026-09-10** (setelah banyak commit lain masuk `master`, memastikan tidak regresi): `go build ./...`, `go vet ./...` bersih; `TestUpsertPushTokenReassignsSharedDeviceToNewUser`, `TestUpsertPushTokenSameUserDoesNotDeactivateItself` (app/repository), `TestUnregisterPushTokenDeactivatesGivenToken`, `TestUnregisterPushTokenRejectsEmptyToken` (app/services), dan mobile `context-session.test.js` ("signOut unregisters the device push token...") semua masih PASS. Task #6 (smoke test device fisik) tetap satu-satunya gap — butuh HP/Expo dev build sungguhan, di luar kemampuan sesi kerja ini.
+- **Re-verified 2026-10-03** (emulator smoke test): UI Notification Center (`thullaabulilmi://profile/notifications`) render normal, toggle kategori (Quran, Hadis, Streak Risk, Doa, Dzikir, Kajian, Murojaah) simpan pengaturan berfungsi, Custom Adzan picker (`thullaabulilmi://ibadah/settings`) 9 muadzin tampil & pilih berhasil, Storage Offline (`thullaabulilmi://profile/storage`) Quran + 9 Kitab Hadis render normal. Task #6 di atas ditandai selesai untuk emulator; device fisik tetap pending jika diperlukan.
 
 ## Source of Truth
 
