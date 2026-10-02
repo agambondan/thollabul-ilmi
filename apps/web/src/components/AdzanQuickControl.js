@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
+import { adzanSoundApi, notificationApi, uploadWithProgress } from "@/lib/api";
 import {
     ADZAN_SOUNDS,
     resolveAdzanSoundSrc,
@@ -106,6 +106,19 @@ export default function AdzanQuickControl({
             );
         }
         updateSetting("notifAdzan", next);
+        if (isAuthenticated) {
+            notificationApi
+                .updateSettings({
+                    settings: [
+                        {
+                            type: "adzan",
+                            time: "00:00",
+                            is_active: next,
+                        },
+                    ],
+                })
+                .catch(() => {});
+        }
     };
 
     const stop = () => {

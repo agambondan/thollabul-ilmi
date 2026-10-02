@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
-import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
+import { adzanSoundApi, notificationApi, uploadWithProgress } from "@/lib/api";
 import {
     ADZAN_SOUNDS,
     resolveAdzanSoundSrc,
     useSettings,
 } from "@/lib/useSettings";
 import { fireAdzanNotification } from "@/lib/adzanNotification";
+import { ensurePushSubscriptionRegistered } from "@/lib/pushSubscription";
 import { PRAYER_MADHABS, PRAYER_METHODS } from "@/lib/prayerTimes";
 import { useTheme } from "@/lib/useTheme";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
@@ -103,7 +104,23 @@ export default function SettingsPage() {
             toast.error(t("settings.notif_denied"));
             return;
         }
+        if (next) {
+            ensurePushSubscriptionRegistered({ isAuthenticated: true }).catch(
+                () => {},
+            );
+        }
         updateSetting("notifAdzan", next);
+        notificationApi
+            .updateSettings({
+                settings: [
+                    {
+                        type: "adzan",
+                        time: "00:00",
+                        is_active: next,
+                    },
+                ],
+            })
+            .catch(() => {});
     };
 
     const [isPlayingPreview, setIsPlayingPreview] = useState(false);

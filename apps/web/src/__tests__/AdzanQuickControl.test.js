@@ -3,9 +3,11 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { SettingsProvider } from "@/lib/useSettings";
 import AdzanQuickControl from "@/components/AdzanQuickControl";
 import { ensurePushSubscriptionRegistered } from "@/lib/pushSubscription";
+import { notificationApi } from "@/lib/api";
 
 jest.mock("@/lib/api", () => ({
     adzanSoundApi: { list: jest.fn().mockResolvedValue({ ok: false }) },
+    notificationApi: { updateSettings: jest.fn().mockResolvedValue({ ok: true }) },
     uploadWithProgress: jest.fn(),
 }));
 
@@ -59,6 +61,15 @@ describe("AdzanQuickControl notif toggle", () => {
         await waitFor(() => {
             expect(ensurePushSubscriptionRegistered).toHaveBeenCalledWith({
                 isAuthenticated: true,
+            });
+            expect(notificationApi.updateSettings).toHaveBeenCalledWith({
+                settings: [
+                    {
+                        type: "adzan",
+                        time: "00:00",
+                        is_active: true,
+                    },
+                ],
             });
         });
     });

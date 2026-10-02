@@ -61,6 +61,14 @@ const defaultSettings = [
         type: "daily_hadith",
     },
     {
+        body: "Pengingat masuk waktu sholat fardhu.",
+        is_active: true,
+        label: "Pengingat Adzan",
+        serverSync: true,
+        time: "00:00",
+        type: "adzan",
+    },
+    {
         body: "Jaga streak belajarmu agar tidak putus.",
         is_active: true,
         label: "Streak Risk",
