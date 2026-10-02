@@ -69,4 +69,45 @@ Dosa-dosa besar adalah apa yang dilarang oleh Allah dan Rasul-Nya.
         expect(screen.getByText(/DOSA-DOSA BESAR/)).toBeInTheDocument();
         expect(screen.getByText(/Sihir/)).toBeInTheDocument();
     });
+
+    test("handles full width toggle and shows reading statistics", () => {
+        const handleFullWidthChange = jest.fn();
+        render(
+            <ExtractedTextReader
+                text={sampleText}
+                pageNumber={7}
+                totalPages={313}
+                bookTitle="Al-Kaba'ir"
+                viewMode="raw"
+                isFullWidth={false}
+                onFullWidthChange={handleFullWidthChange}
+            />,
+        );
+
+        expect(screen.getByText(/Halaman 7 dari 313/)).toBeInTheDocument();
+        expect(screen.getByText(/kata/)).toBeInTheDocument();
+
+        const fullWidthBtn = screen.getByTitle(/Mode Lebar Penuh/);
+        fireEvent.click(fullWidthBtn);
+        expect(handleFullWidthChange).toHaveBeenCalledWith(true);
+    });
+
+    test("switches paper theme to sepia and dark", () => {
+        const { container } = render(
+            <ExtractedTextReader
+                text={sampleText}
+                pageNumber={7}
+                bookTitle="Al-Kaba'ir"
+                viewMode="doc"
+            />,
+        );
+
+        const sepiaBtn = screen.getByTitle(/Tema Kertas Sepia/);
+        fireEvent.click(sepiaBtn);
+        expect(container.querySelector(".bg-\\[\\#faf6ee\\]")).toBeInTheDocument();
+
+        const darkBtn = screen.getByTitle(/Tema Gelap/);
+        fireEvent.click(darkBtn);
+        expect(container.querySelector(".bg-slate-950")).toBeInTheDocument();
+    });
 });

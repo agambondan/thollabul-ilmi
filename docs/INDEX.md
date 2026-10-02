@@ -91,6 +91,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [media/before-after/2026-10-02-web-ux-fixes/](./media/before-after/2026-10-02-web-ux-fixes/README.md)                               | 3 pasang: faraidh input label accessibility, kamus close button touch target, siroh back button touch target                                                                                               |
 | [media/before-after/2026-10-02-mobile-layout-redesign/](./media/before-after/2026-10-02-mobile-layout-redesign/README.md)           | 5 pasang: modern redesign Beranda, Ibadah, Belajar, Profil, dan Hadis sesuai token mobile.pen                                                                                                              |
 | [media/before-after/2026-10-02-library-extracted-text-markdown/](./media/before-after/2026-10-02-library-extracted-text-markdown/README.md) | 1 pasang: formatting Dokumen Rapi, mode Markdown (.md), teks asli, font serif/sans, unduh .md pada pembaca buku perpustakaan                                                                               |
+| [media/before-after/2026-10-02-library-reader-fullwidth-study-mode/](./media/before-after/2026-10-02-library-reader-fullwidth-study-mode/README.md) | 3 pasang: mode Lebar Penuh (Full Width / Fokus Belajar), tema kertas sepia & gelap, kolom baca terpusat ergonomis pada pembaca perpustakaan |
 
 ---
 

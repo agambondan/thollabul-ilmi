@@ -24,6 +24,8 @@ import {
     BsType,
     BsDownload,
     BsClipboard,
+    BsFullscreen,
+    BsFullscreenExit,
 } from "react-icons/bs";
 import ExtractedTextReader from "@/components/library/ExtractedTextReader";
 
@@ -83,6 +85,7 @@ export const LibraryDetailContent = ({
     const [fontSize, setFontSize] = useState(16);
     const [fontFamily, setFontFamily] = useState("serif");
     const [readerViewMode, setReaderViewMode] = useState("doc");
+    const [isFullWidth, setIsFullWidth] = useState(false);
     const [copiedPage, setCopiedPage] = useState(false);
     const splitRef = useRef(null);
     const lastHandleMouseDownRef = useRef(0);
@@ -118,6 +121,22 @@ export const LibraryDetailContent = ({
             window.removeEventListener("mouseup", onUp);
         };
     }, [isDragging, updatePreviewPct]);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            const tag = e.target?.tagName?.toLowerCase();
+            if (tag === "input" || tag === "textarea" || tag === "select") return;
+
+            if (e.key === "f" || e.key === "F") {
+                setIsFullWidth((prev) => !prev);
+            } else if (e.key === "Escape" && isFullWidth) {
+                setIsFullWidth(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isFullWidth]);
 
     const hydratedSlugRef = useRef(
         initialNormalizedBook &&
@@ -315,7 +334,7 @@ export const LibraryDetailContent = ({
 
     return (
         <ContentWidth
-            compact={showPreview ? "max-w-7xl" : "max-w-4xl"}
+            compact={isFullWidth ? "max-w-none" : showPreview ? "max-w-7xl" : "max-w-4xl"}
             className='px-4'
         >
             <Link
@@ -325,6 +344,30 @@ export const LibraryDetailContent = ({
                 {t("library.back_to_library") || "← Kembali ke perpustakaan"}
             </Link>
 
+            {isFullWidth && (
+                <div className='mb-4 flex items-center justify-between gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm dark:border-emerald-800/50 dark:bg-emerald-950/30'>
+                    <div className='flex items-center gap-2'>
+                        <BsBook className='text-emerald-700 dark:text-emerald-400' size={20} />
+                        <div>
+                            <p className='font-semibold text-emerald-900 dark:text-emerald-200'>
+                                Mode Fokus Belajar
+                            </p>
+                            <p className='text-xs text-emerald-700 dark:text-emerald-400'>
+                                {book?.title}
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setIsFullWidth(false)}
+                        title='Kembali ke tampilan split (Esc)'
+                        className='inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 dark:border-emerald-800/50 dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-emerald-950/30'
+                    >
+                        <BsFullscreenExit size={13} />
+                        Kembali ke Split View
+                    </button>
+                </div>
+            )}
+
             {error || !book ? (
                 <div className='rounded-xl border border-red-100 bg-red-50 px-4 py-8 text-center text-sm text-red-700 dark:text-red-400 dark:border-red-900/40 dark:bg-red-950/30'>
                     {t("library.not_found_or_error") ||
@@ -333,21 +376,22 @@ export const LibraryDetailContent = ({
             ) : (
                 <div
                     className={
-                        showPreview
+                        showPreview && !isFullWidth
                             ? "grid gap-6 lg:gap-0 lg:grid-cols-[minmax(0,1fr)_8px_minmax(280px,1fr)] lg:items-start"
                             : ""
                     }
                     ref={splitRef}
                     style={
-                        showPreview && isDesktop
+                        showPreview && !isFullWidth && isDesktop
                             ? {
                                   gridTemplateColumns: `minmax(0,1fr) 8px ${previewPct}%`,
                               }
                             : undefined
                     }
                 >
-                    <article className='rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900'>
-                        <div className='p-5 md:p-8'>
+                    {!isFullWidth && (
+                        <article className='rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900'>
+                            <div className='p-5 md:p-8'>
                             <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
                                 <div>
                                     <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400'>
@@ -620,7 +664,8 @@ export const LibraryDetailContent = ({
                             </div>
                         </div>
                     </article>
-                    {showPreview && (
+                    )}
+                    {showPreview && !isFullWidth && (
                         <div
                             className='hidden select-none lg:flex lg:h-[calc(100vh-2rem)] lg:cursor-col-resize lg:items-stretch lg:justify-center lg:self-stretch lg:sticky lg:top-4'
                             onMouseDown={(event) => {
@@ -646,7 +691,13 @@ export const LibraryDetailContent = ({
                         </div>
                     )}
                     {showPreview && (
-                        <div className='flex flex-col h-[75vh] overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]'>
+                        <div
+                            className={`flex flex-col ${
+                                isFullWidth
+                                    ? "w-full min-h-[85vh] lg:h-[calc(100vh-2rem)]"
+                                    : "h-[75vh] lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]"
+                            } overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900`}
+                        >
                             <div className='flex items-center justify-between border-b border-gray-100 bg-gray-50/90 px-3 py-2 dark:border-slate-800 dark:bg-slate-950/70'>
                                 <div className='flex items-center gap-1.5'>
                                     {hasTextReader && (
@@ -730,6 +781,34 @@ export const LibraryDetailContent = ({
                                             className='rounded-md border border-gray-200 bg-white px-2 py-0.5 text-xs font-bold text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200'
                                         >
                                             A+
+                                        </button>
+                                        <button
+                                            type='button'
+                                            onClick={() =>
+                                                setIsFullWidth((prev) => !prev)
+                                            }
+                                            className={`hidden sm:inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-semibold hover:bg-gray-100 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-200 ${
+                                                isFullWidth
+                                                    ? "border-emerald-600 text-emerald-700 dark:text-emerald-400"
+                                                    : ""
+                                            }`}
+                                            title={
+                                                isFullWidth
+                                                    ? "Kembali ke tampilan split (Esc / F)"
+                                                    : "Mode Lebar Penuh / Fokus Belajar (F)"
+                                            }
+                                        >
+                                            {isFullWidth ? (
+                                                <>
+                                                    <BsFullscreenExit size={12} />
+                                                    <span>Split</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <BsFullscreen size={12} />
+                                                    <span>Lebar Penuh</span>
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 )}
@@ -833,11 +912,14 @@ export const LibraryDetailContent = ({
                                     <ExtractedTextReader
                                         text={currentPageData.text}
                                         pageNumber={activePageNum}
+                                        totalPages={sortedPages.length}
                                         bookTitle={book?.title}
                                         fontSize={fontSize}
                                         fontFamily={fontFamily}
                                         viewMode={readerViewMode}
                                         onViewModeChange={setReaderViewMode}
+                                        isFullWidth={isFullWidth}
+                                        onFullWidthChange={setIsFullWidth}
                                     />
                                 </div>
                             ) : currentTab === "pdf" && pdfUrl ? (
