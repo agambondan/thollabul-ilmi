@@ -623,14 +623,14 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#111827",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
     },
     subtitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
         marginTop: 3,
     },
@@ -646,12 +646,12 @@ const styles = StyleSheet.create({
     progressLabel: {
         color: "#64748b",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     progressScore: {
         color: "#047857",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     progressScoreDark: {
         color: "#34d399",

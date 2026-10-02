@@ -725,7 +725,7 @@ const localStyles = StyleSheet.create({
     },
     categoryTabText: {
         fontSize: 12,
-        fontWeight: "600",
+        fontWeight: "700",
         color: colors.textSecondary,
     },
     categoryTabTextActive: {
@@ -733,7 +733,7 @@ const localStyles = StyleSheet.create({
     },
     moduleSummaryCard: {
         padding: spacing.md,
-        borderRadius: radius.md,
+        borderRadius: 10,
         backgroundColor: "#f8fafc",
         borderWidth: 1,
         borderColor: "#e2e8f0",
@@ -745,7 +745,7 @@ const localStyles = StyleSheet.create({
         justifyContent: "space-between",
     },
     moduleSummaryTitle: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: "700",
         color: colors.textPrimary,
     },
@@ -799,7 +799,7 @@ const localStyles = StyleSheet.create({
     stepCard: {
         padding: spacing.lg,
         gap: spacing.md,
-        borderRadius: radius.lg,
+        borderRadius: 10,
         borderWidth: 1,
         borderColor: "#e5e7eb",
     },
@@ -810,12 +810,12 @@ const localStyles = StyleSheet.create({
     },
     stepBadge: {
         fontSize: 12,
-        fontWeight: "600",
+        fontWeight: "700",
         color: colors.primary,
         backgroundColor: colors.primaryLight || "#ecfdf5",
         paddingHorizontal: spacing.sm,
         paddingVertical: 2,
-        borderRadius: radius.sm,
+        borderRadius: 8,
     },
     stepTitle: {
         fontSize: 18,
