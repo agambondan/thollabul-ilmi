@@ -17,9 +17,7 @@ Redesain visual modern 5 layar utama aplikasi mobile (`apps/mobile`) sesuai spes
 | State | Commit SHA | Pesan |
 |-------|------------|-------|
 | **Before** | `4d28b225` | `docs(agent-knowledge): console.log never reaches logcat on RN 0.81 release builds` |
-| **After** | *(working tree, belum commit)* | Redesign layout modern 5 layar mobile |
-
-> Catatan: perubahan "after" berada di working tree (belum di-commit). Setelah commit, README ini harus diperbarui dengan SHA commit yang benar.
+| **After** | `ff3c6eec` | `feat(mobile): redesign modern layout for 5 main screens per mobile.pen tokens` |
 
 ## Lingkungan Pengujian
 
