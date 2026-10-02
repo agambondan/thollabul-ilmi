@@ -360,8 +360,7 @@ describe("PrayerScreen reminders with real scheduling", () => {
 
         fireEvent.press(reminderToggle(view));
         fireEvent.press(reminderToggle(view));
-        await settle();
-        await settle();
+        await settleIdle();
 
         expect(reminderEntries()).toHaveLength(0);
         expect(mockStore.size).toBe(0);

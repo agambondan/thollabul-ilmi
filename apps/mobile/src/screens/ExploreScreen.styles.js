@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     backToExploreText: {
         color: colors.primary,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppCatalogRoot: {
         backgroundColor: WEB_APP_EXPLORE_BG,
@@ -101,7 +101,7 @@ export const styles = StyleSheet.create({
         alignSelf: "flex-start",
         backgroundColor: "#1e293b",
         borderColor: WEB_APP_EXPLORE_BORDER,
-        borderRadius: 999,
+        borderRadius: radius.full,
         borderWidth: 1,
         marginBottom: spacing.md,
         minHeight: touchTarget,
@@ -111,7 +111,7 @@ export const styles = StyleSheet.create({
     webAppBookmarksBackText: {
         color: "#d1fae5",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppBookmarksTitleRow: {
         alignItems: "flex-start",
@@ -123,11 +123,11 @@ export const styles = StyleSheet.create({
     webAppBookmarksCount: {
         backgroundColor: "#1e293b",
         borderColor: WEB_APP_EXPLORE_BORDER,
-        borderRadius: 999,
+        borderRadius: radius.full,
         borderWidth: 1,
         color: WEB_APP_EXPLORE_MUTED,
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
         overflow: "hidden",
         paddingHorizontal: spacing.sm,
         paddingVertical: 5,
@@ -139,7 +139,7 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         color: "#fecaca",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
         lineHeight: 18,
         marginTop: spacing.md,
         padding: spacing.md,
@@ -159,7 +159,7 @@ export const styles = StyleSheet.create({
     webAppBookmarksStateText: {
         color: WEB_APP_EXPLORE_MUTED,
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     webAppBookmarksEmpty: {
         alignItems: "center",
@@ -175,7 +175,7 @@ export const styles = StyleSheet.create({
     webAppBookmarksEmptyTitle: {
         color: "#f8fafc",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "700",
         marginTop: spacing.sm,
     },
     webAppBookmarksEmptyText: {
@@ -202,14 +202,14 @@ export const styles = StyleSheet.create({
     webAppBookmarksGroupTitle: {
         color: "#cbd5e1",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
         letterSpacing: 0,
         textTransform: "uppercase",
     },
     webAppBookmarksGroupCount: {
         color: WEB_APP_EXPLORE_MUTED,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppBookmarkCard: {
         backgroundColor: WEB_APP_EXPLORE_SURFACE,
@@ -239,19 +239,19 @@ export const styles = StyleSheet.create({
     webAppBookmarkType: {
         color: WEB_APP_EXPLORE_ACCENT,
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
         letterSpacing: 0,
         textTransform: "uppercase",
     },
     webAppBookmarkRef: {
         color: WEB_APP_EXPLORE_MUTED,
         fontSize: 11,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     webAppBookmarkTitle: {
         color: "#f8fafc",
         fontSize: 15,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 20,
     },
     webAppBookmarkText: {
@@ -263,7 +263,7 @@ export const styles = StyleSheet.create({
     webAppBookmarkSlug: {
         color: WEB_APP_EXPLORE_MUTED,
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "600",
         marginTop: spacing.xs,
     },
     webAppBookmarkFooter: {
@@ -277,12 +277,12 @@ export const styles = StyleSheet.create({
         color: WEB_APP_EXPLORE_MUTED,
         flex: 1,
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     webAppBookmarkManage: {
         backgroundColor: "#1e293b",
         borderColor: WEB_APP_EXPLORE_BORDER,
-        borderRadius: 999,
+        borderRadius: radius.full,
         borderWidth: 1,
         minHeight: touchTarget,
         paddingHorizontal: spacing.md,
@@ -291,7 +291,7 @@ export const styles = StyleSheet.create({
     webAppBookmarkManageText: {
         color: "#d1fae5",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppNotesSearch: {
         backgroundColor: "#1e293b",

@@ -620,12 +620,12 @@ export const styles = StyleSheet.create({
     sectionLinkText: {
         color: colors.primary,
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     sectionLabel: {
         color: colors.muted,
         fontSize: 11,
-        fontWeight: "800",
+        fontWeight: "600",
         letterSpacing: 1,
         marginBottom: spacing.sm,
         textTransform: "uppercase",
@@ -749,7 +749,7 @@ export const styles = StyleSheet.create({
     emptyAchievementTitle: {
         color: colors.ink,
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
         textAlign: "center",
     },
     emptyAchievementText: {
@@ -817,7 +817,7 @@ export const styles = StyleSheet.create({
     achievementStatePill: {
         backgroundColor: colors.bg,
         borderColor: colors.faint,
-        borderRadius: 999,
+        borderRadius: radius.full,
         borderWidth: 1,
         paddingHorizontal: spacing.sm,
         paddingVertical: 4,
@@ -829,7 +829,7 @@ export const styles = StyleSheet.create({
     achievementStateText: {
         color: colors.muted,
         fontSize: 10,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     achievementStateTextUnlocked: {
         color: "#047857",
@@ -844,23 +844,23 @@ export const styles = StyleSheet.create({
     achievementProgressLabel: {
         color: colors.muted,
         fontSize: 11,
-        fontWeight: "800",
+        fontWeight: "700",
         textTransform: "uppercase",
     },
     achievementProgressValue: {
         color: colors.primaryDark,
         fontSize: 11,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     achievementProgressTrack: {
         backgroundColor: colors.faint,
-        borderRadius: 999,
+        borderRadius: radius.full,
         height: 8,
         overflow: "hidden",
     },
     achievementProgressFill: {
         backgroundColor: colors.primary,
-        borderRadius: 999,
+        borderRadius: radius.full,
         height: "100%",
     },
     achievementRewardRow: {
@@ -964,7 +964,7 @@ export const styles = StyleSheet.create({
     choiceLabel: {
         color: colors.ink,
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     choiceLabelActive: {
         color: colors.primaryDark,
@@ -1023,7 +1023,7 @@ export const styles = StyleSheet.create({
     formButtonText: {
         color: colors.onPrimary,
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     formButtonDanger: {
         backgroundColor: "#fef2f2",
@@ -1034,7 +1034,7 @@ export const styles = StyleSheet.create({
     formButtonDangerText: {
         color: colors.danger,
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     sessionDeviceCard: {
         alignItems: "center",
@@ -1064,7 +1064,7 @@ export const styles = StyleSheet.create({
     sessionDeviceTitle: {
         color: colors.ink,
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     sessionDeviceMeta: {
         color: colors.muted,
@@ -1094,7 +1094,7 @@ export const styles = StyleSheet.create({
     sessionListTitle: {
         color: colors.ink,
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     sessionListMeta: {
         color: colors.muted,
@@ -1103,10 +1103,10 @@ export const styles = StyleSheet.create({
     },
     sessionCurrentPill: {
         backgroundColor: "#dcfce7",
-        borderRadius: 999,
+        borderRadius: radius.full,
         color: colors.primary,
         fontSize: 10,
-        fontWeight: "900",
+        fontWeight: "700",
         overflow: "hidden",
         paddingHorizontal: spacing.sm,
         paddingVertical: 4,
@@ -1115,7 +1115,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#fee2e2",
         borderColor: "#fecaca",
-        borderRadius: 999,
+        borderRadius: radius.full,
         borderWidth: 1,
         justifyContent: "center",
         minHeight: touchTarget,
@@ -1124,7 +1124,7 @@ export const styles = StyleSheet.create({
     sessionRevokeText: {
         color: colors.danger,
         fontSize: 10,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     settingsStatus: {
         color: colors.primary,

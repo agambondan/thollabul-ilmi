@@ -634,9 +634,9 @@ const styles = StyleSheet.create({
     },
     title: {
         color: "#111827",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        fontSize: 26,
+        fontWeight: "700",
+        lineHeight: 34,
     },
     titleDark: {
         color: "#f8fafc",
@@ -644,7 +644,7 @@ const styles = StyleSheet.create({
     count: {
         color: "#6b7280",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         marginTop: 2,
     },
     countDark: {
@@ -667,6 +667,7 @@ const styles = StyleSheet.create({
     input: {
         color: "#111827",
         fontSize: 14,
+        fontWeight: "400",
         minHeight: 42,
         padding: 0,
     },
@@ -682,7 +683,7 @@ const styles = StyleSheet.create({
     tabaqahPill: {
         backgroundColor: "#f3f4f6",
         borderColor: "#f3f4f6",
-        borderRadius: 8,
+        borderRadius: radius.full,
         borderWidth: 1,
         minHeight: 30,
         paddingHorizontal: spacing.md,
@@ -699,7 +700,7 @@ const styles = StyleSheet.create({
     tabaqahPillText: {
         color: "#4b5563",
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "700",
     },
     tabaqahPillTextDark: {
         color: "#94a3b8",
@@ -716,7 +717,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: "#ffffff",
         borderColor: "#f3f4f6",
-        borderRadius: radius.md,
+        borderRadius: 10,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.md,
@@ -729,7 +730,7 @@ const styles = StyleSheet.create({
     icon: {
         alignItems: "center",
         backgroundColor: "#ccfbf1",
-        borderRadius: 12,
+        borderRadius: 20,
         height: 40,
         justifyContent: "center",
         width: 40,

@@ -2415,7 +2415,7 @@ export function QuranScreen({
                     ) : null
                 }
                 ListFooterComponent={renderQuranListFooter()}
-                ListHeaderComponent={renderQuranListHeader()}
+                ListHeaderComponent={renderQuranListHeader}
                 onMomentumScrollBegin={handleScrollActivity}
                 onScroll={handleScrollActivity}
                 onScrollBeginDrag={handleScrollActivity}

@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     webAppEmptyTitle: {
         color: "#f8fafc",
         fontSize: 16,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     webAppGrid: {
         flexDirection: "row",

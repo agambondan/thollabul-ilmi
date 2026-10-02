@@ -463,6 +463,9 @@ describe("ProfileScreen", () => {
                 "current-refresh",
             ),
         );
+        await waitFor(() =>
+            expect(getByLabelText("Keluar dari sesi login 2")).toBeTruthy(),
+        );
 
         fireEvent.press(getByLabelText("Keluar dari sesi login 2"));
 
