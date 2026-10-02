@@ -14,6 +14,7 @@ import {
     Keyboard,
     Platform,
     StyleSheet,
+    TextInput,
     View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -54,6 +55,7 @@ import {
 import { createScopedNavigation } from "./src/navigation/scopedNavigation";
 
 const TAB_KEYS = ["home", "quran", "hadith", "ibadah", "belajar", "profile"];
+const RESET_KEYBOARD_GRACE_MS = 500;
 
 export default function App() {
     useEffect(() => {
@@ -127,8 +129,48 @@ export default function App() {
     }, []);
 
     useEffect(() => {
+        if (!keyboardVisible) return undefined;
+
+        const intervalId = setInterval(() => {
+            if (
+                TextInput.State?.currentlyFocusedInput &&
+                !TextInput.State.currentlyFocusedInput()
+            ) {
+                setKeyboardVisible(false);
+            }
+        }, 800);
+
+        return () => clearInterval(intervalId);
+    }, [keyboardVisible]);
+
+    const resetGraceTimerRef = useRef(null);
+    const resetKeyboardVisibleWithGrace = useCallback(() => {
         setKeyboardVisible(false);
-    }, [activeTab, internalRoutes, headerConfig]);
+        if (resetGraceTimerRef.current) {
+            clearTimeout(resetGraceTimerRef.current);
+        }
+        resetGraceTimerRef.current = setTimeout(() => {
+            resetGraceTimerRef.current = null;
+            if (!TextInput.State.currentlyFocusedInput()) {
+                setKeyboardVisible(false);
+            }
+        }, RESET_KEYBOARD_GRACE_MS);
+    }, []);
+
+    useEffect(() => {
+        resetKeyboardVisibleWithGrace();
+        return () => {
+            if (resetGraceTimerRef.current) {
+                clearTimeout(resetGraceTimerRef.current);
+                resetGraceTimerRef.current = null;
+            }
+        };
+    }, [
+        activeTab,
+        internalRoutes,
+        headerConfig,
+        resetKeyboardVisibleWithGrace,
+    ]);
 
     const getNavigationState = useCallback(
         () => ({
@@ -161,6 +203,8 @@ export default function App() {
 
     const openTab = useCallback(
         (requestedTab, requestedParams = null) => {
+            Keyboard.dismiss();
+            resetKeyboardVisibleWithGrace();
             const result = openTabState(
                 getNavigationState(),
                 requestedTab,
@@ -171,11 +215,17 @@ export default function App() {
                 setBelajarContentResetKey((key) => key + 1);
             }
         },
-        [applyNavigationState, getNavigationState],
+        [
+            applyNavigationState,
+            getNavigationState,
+            resetKeyboardVisibleWithGrace,
+        ],
     );
 
     const openInternalView = useCallback(
         (requestedTab, view, params = {}) => {
+            Keyboard.dismiss();
+            resetKeyboardVisibleWithGrace();
             const result = openInternalViewState(
                 getNavigationState(),
                 requestedTab,
@@ -184,19 +234,32 @@ export default function App() {
             );
             applyNavigationState(result.state);
         },
-        [applyNavigationState, getNavigationState],
+        [
+            applyNavigationState,
+            getNavigationState,
+            resetKeyboardVisibleWithGrace,
+        ],
     );
 
     const closeInternalView = useCallback(
         (tab = activeTab) => {
+            Keyboard.dismiss();
+            resetKeyboardVisibleWithGrace();
             const result = closeInternalViewState(getNavigationState(), tab);
             applyNavigationState(result.state);
         },
-        [activeTab, applyNavigationState, getNavigationState],
+        [
+            activeTab,
+            applyNavigationState,
+            getNavigationState,
+            resetKeyboardVisibleWithGrace,
+        ],
     );
 
     const closeAndOpenTab = useCallback(
         (tabToClose, requestedTab, requestedParams = null) => {
+            Keyboard.dismiss();
+            resetKeyboardVisibleWithGrace();
             const result = closeInternalViewThenOpenTabState(
                 getNavigationState(),
                 tabToClose,
@@ -205,59 +268,77 @@ export default function App() {
             );
             applyNavigationState(result.state);
         },
-        [applyNavigationState, getNavigationState],
+        [
+            applyNavigationState,
+            getNavigationState,
+            resetKeyboardVisibleWithGrace,
+        ],
     );
 
     const resetInternalViews = useCallback(() => {
+        Keyboard.dismiss();
+        resetKeyboardVisibleWithGrace();
         setInternalRoutes({});
         setReturnRoutes({});
-    }, []);
+    }, [resetKeyboardVisibleWithGrace]);
 
-    const handleDeepLink = useCallback((url) => {
-        const rawTarget = parseDeepLink(url);
-        if (!rawTarget) return;
+    const handleDeepLink = useCallback(
+        (url) => {
+            const rawTarget = parseDeepLink(url);
+            if (!rawTarget) return;
 
-        const normalized = normalizeTabRequest(rawTarget.tab, rawTarget.params);
-        const target = { ...rawTarget, ...normalized };
-        if (!target) return;
+            const normalized = normalizeTabRequest(
+                rawTarget.tab,
+                rawTarget.params,
+            );
+            const target = { ...rawTarget, ...normalized };
+            if (!target) return;
 
-        setKeyboardVisible(false);
-        setReturnRoutes((current) => {
-            const next = { ...current };
-            delete next[target.tab];
-            delete next[activeTabRef.current];
-            return next;
-        });
-        setActiveTab(target.tab);
-        if (target.params?.view) {
-            setInternalRoutes((current) => ({
-                ...current,
-                [target.tab]: {
-                    id: `${Date.now()}:${target.tab}:${target.params.view}`,
-                    params: target.params,
-                    view: target.params.view,
-                },
-            }));
-        }
-        setDeepLinkTarget({
-            ...target,
-            id: `${Date.now()}:${url}`,
-            url,
-        });
-    }, []);
+            resetKeyboardVisibleWithGrace();
+            setReturnRoutes((current) => {
+                const next = { ...current };
+                delete next[target.tab];
+                delete next[activeTabRef.current];
+                return next;
+            });
+            setActiveTab(target.tab);
+            if (target.params?.view) {
+                setInternalRoutes((current) => ({
+                    ...current,
+                    [target.tab]: {
+                        id: `${Date.now()}:${target.tab}:${target.params.view}`,
+                        params: target.params,
+                        view: target.params.view,
+                    },
+                }));
+            }
+            setDeepLinkTarget({
+                ...target,
+                id: `${Date.now()}:${url}`,
+                url,
+            });
+        },
+        [resetKeyboardVisibleWithGrace],
+    );
 
     // Registered ONCE — reads from refs to avoid stale closures.
     // Priority: screen sub-nav → internal cross-tab route → go to Home → OS handle (minimize).
     useEffect(() => {
         const sub = BackHandler.addEventListener("hardwareBackPress", () => {
             Keyboard.dismiss();
-            if (screenBackRef.current?.()) return true;
+            const screenHandled = screenBackRef.current?.();
+            resetKeyboardVisibleWithGrace();
+            if (screenHandled) return true;
             const result = hardwareBackState(getNavigationState());
             applyNavigationState(result.state);
             return result.handled;
         });
         return () => sub.remove();
-    }, [applyNavigationState, getNavigationState]);
+    }, [
+        applyNavigationState,
+        getNavigationState,
+        resetKeyboardVisibleWithGrace,
+    ]);
 
     useEffect(() => {
         let mounted = true;
@@ -340,11 +421,16 @@ export default function App() {
     }, []);
     const clearBack = useCallback(() => {
         screenBackRef.current = null;
-    }, []);
+        resetKeyboardVisibleWithGrace();
+    }, [resetKeyboardVisibleWithGrace]);
 
-    const setHeaderConfig = useCallback((config) => {
-        setHeaderConfigState(config);
-    }, []);
+    const setHeaderConfig = useCallback(
+        (config) => {
+            setHeaderConfigState(config);
+            resetKeyboardVisibleWithGrace();
+        },
+        [resetKeyboardVisibleWithGrace],
+    );
 
     const navigation = useMemo(
         () => ({

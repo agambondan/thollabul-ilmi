@@ -1546,51 +1546,51 @@ translation_id, translation.{id,idn,ar}` — field `transliteration` (mis.
   di sekitar kedua insiden ini dibuang dari analisis (confounded, bukan
   bukti valid).
 
-                      Setelah device diverifikasi stabil (`lastUpdateTime` tidak berubah
-                      lagi), race diuji ulang bersih, disiplin (setiap hasil dicek via
-                      screenshot + `uiautomator dump`, tanpa gesture tambahan yang ambigu):
-                      **4 percobaan valid** (1 percobaan lain di fitur Doa dibuang karena
-                      confounded oleh insiden #2 pertengahan jalan) — Dzikir instant-back
-                      (PASS), Dzikir 300ms-delay (PASS), Asmaul Husna 800ms-delay (**FAIL —
-                      reproduce**), Asmaul Husna 800ms-delay diulang persis (PASS). Jadi
-                      **1 dari 4 percobaan valid mereproduksi bug** (25%, turun drastis dari
-                      "3× berulang konsisten dalam 1 sesi" di temuan asli pra-fix — fix
-                      JELAS mengurangi frekuensi race, tapi belum menutup total).
+                        Setelah device diverifikasi stabil (`lastUpdateTime` tidak berubah
+                        lagi), race diuji ulang bersih, disiplin (setiap hasil dicek via
+                        screenshot + `uiautomator dump`, tanpa gesture tambahan yang ambigu):
+                        **4 percobaan valid** (1 percobaan lain di fitur Doa dibuang karena
+                        confounded oleh insiden #2 pertengahan jalan) — Dzikir instant-back
+                        (PASS), Dzikir 300ms-delay (PASS), Asmaul Husna 800ms-delay (**FAIL —
+                        reproduce**), Asmaul Husna 800ms-delay diulang persis (PASS). Jadi
+                        **1 dari 4 percobaan valid mereproduksi bug** (25%, turun drastis dari
+                        "3× berulang konsisten dalam 1 sesi" di temuan asli pra-fix — fix
+                        JELAS mengurangi frekuensi race, tapi belum menutup total).
 
-                      Repro presisi yang FAIL: buka Asmaul Husna (Classic) via deep-link,
-                      fokus search box, ketik "aziz", tunggu ~800ms, tekan hardware-back
-                      (back pertama hanya dismiss keyboard — teks "aziz" masih ada, bukan
-                      navigasi; tekan back KEDUA baru navigasi ke hub Belajar) → TabBar
-                      hilang total, dikonfirmasi BUKAN sekadar tak-ter-render (uiautomator
-                      dump: 0 node dengan content-desc tab apa pun di area y>2100, identik
-                      dengan sifat bug asli). **Deep-link `thullaabulilmi://belajar` ke tab
-                      yang sama GAGAL memulihkan** pada kejadian ini (dicoba 2×, tunggu
-                      hingga 2.5 detik) — ini **bertentangan dengan catatan fix Sesi 5**
-                      yang menyebut kasus deep-link "fixed eksplisit" via
-                      `setKeyboardVisible(false)` tanpa syarat di `handleDeepLink`
-                      (`App.js:224`). Belum jelas apakah baris itu benar ter-eksekusi saat
-                      deep-link diproses ulang oleh `Linking` listener pada skenario ini,
-                      atau ada gap lain — perlu logging runtime untuk memastikan.
+                        Repro presisi yang FAIL: buka Asmaul Husna (Classic) via deep-link,
+                        fokus search box, ketik "aziz", tunggu ~800ms, tekan hardware-back
+                        (back pertama hanya dismiss keyboard — teks "aziz" masih ada, bukan
+                        navigasi; tekan back KEDUA baru navigasi ke hub Belajar) → TabBar
+                        hilang total, dikonfirmasi BUKAN sekadar tak-ter-render (uiautomator
+                        dump: 0 node dengan content-desc tab apa pun di area y>2100, identik
+                        dengan sifat bug asli). **Deep-link `thullaabulilmi://belajar` ke tab
+                        yang sama GAGAL memulihkan** pada kejadian ini (dicoba 2×, tunggu
+                        hingga 2.5 detik) — ini **bertentangan dengan catatan fix Sesi 5**
+                        yang menyebut kasus deep-link "fixed eksplisit" via
+                        `setKeyboardVisible(false)` tanpa syarat di `handleDeepLink`
+                        (`App.js:224`). Belum jelas apakah baris itu benar ter-eksekusi saat
+                        deep-link diproses ulang oleh `Linking` listener pada skenario ini,
+                        atau ada gap lain — perlu logging runtime untuk memastikan.
 
-                      **Catatan render TERPISAH (bukan bagian race B20 ini, ditemukan tidak
-                      sengaja saat investigasi)**: pada cold-start APK maupun segera
-                      setelah kembali dari layar fitur ke hub, TabBar Classic kadang tidak
-                      ter-paint sampai ada 1 interaksi scroll — dikonfirmasi berulang kali,
-                      TIDAK terkait `keyboardVisible` (node TabBar tetap ADA di
-                      `uiautomator dump` dan tap di areanya tetap berfungsi/menavigasi, cuma
-                      visual belum ter-paint — beda sifat dari race asli yang node-nya
-                      benar-benar hilang dari tree). Kemungkinan terkait log
-                      `ReactHost: Unhandled SoftException ... onWindowFocusChange ...
+                        **Catatan render TERPISAH (bukan bagian race B20 ini, ditemukan tidak
+                        sengaja saat investigasi)**: pada cold-start APK maupun segera
+                        setelah kembali dari layar fitur ke hub, TabBar Classic kadang tidak
+                        ter-paint sampai ada 1 interaksi scroll — dikonfirmasi berulang kali,
+                        TIDAK terkait `keyboardVisible` (node TabBar tetap ADA di
+                        `uiautomator dump` dan tap di areanya tetap berfungsi/menavigasi, cuma
+                        visual belum ter-paint — beda sifat dari race asli yang node-nya
+                        benar-benar hilang dari tree). Kemungkinan terkait log
+                        `ReactHost: Unhandled SoftException ... onWindowFocusChange ...
 
-              context is not ready` yang ditemukan di logcat sesi ini (RN
-              New Architecture/Bridgeless timing quirk). Di luar scope investigasi
-              sesi ini untuk ditelusuri lebih jauh.
+                context is not ready` yang ditemukan di logcat sesi ini (RN
+                New Architecture/Bridgeless timing quirk). Di luar scope investigasi
+                sesi ini untuk ditelusuri lebih jauh.
 
-                      **Celah residual (`HadithScreen.js`/`ProfileScreen.js`/
-                      `QiblaScreen.js`/`HomeScreen.js`)**: dikonfirmasi BENAR ADA secara
-                      kode — `QiblaScreen.js:308` (`if (!isActive || !isWebAppLayout ||
+                        **Celah residual (`HadithScreen.js`/`ProfileScreen.js`/
+                        `QiblaScreen.js`/`HomeScreen.js`)**: dikonfirmasi BENAR ADA secara
+                        kode — `QiblaScreen.js:308` (`if (!isActive || !isWebAppLayout ||
 
-              !navigation?.setHeader) return;`) membuktikan `setHeader` HANYA
+                !navigation?.setHeader) return;`) membuktikan `setHeader` HANYA
 
     dipanggil di Modern (`isWebAppLayout`); Classic memakai
     `IconActionButton onPress={goBack}`miliknya sendiri (baris 291-296,
@@ -1604,24 +1604,140 @@ translation_id, translation.{id,idn,ar}` — field `transliteration` (mis.
     Dikonfirmasi via pembacaan kode, bukan device — sesuai ekspektasi
     brief ("don't be surprised if it does").
 
-                      **Kesimpulan jujur**: race B20 **belum tertutup 100%** — masih bisa
-                      terjadi (1/4 percobaan valid), meski jelas jauh lebih jarang dari
-                      sebelum fix. Deep-link-recovery TIDAK bekerja seperti diklaim pada
-                      kejadian yang berhasil direproduksi sesi ini. Confidence bahwa race
-                      "closed": **RENDAH-SEDANG** — sampel masih kecil, dan reliabilitas
-                      temuan ini sendiri terganggu interferensi eksternal yang terjadi
-                      berulang selama sesi. Rekomendasi: sesi fix terpisah yang (a)
-                      menambah logging runtime di sekitar `keyboardDidHide` vs
-                      transisi/navigasi untuk pastikan akar masalah persis, (b) re-test
-                      deep-link recovery dengan logging untuk pastikan
-                      `setKeyboardVisible(false)` benar ter-eksekusi, (c) tutup celah
-                      residual 4 screen itu dengan memanggil reset yang sama dari
-                      `goBack`/`onPress` lokalnya, bukan hanya dari `setHeader`.
-                      Screenshot sesi ini: folder
-                      `apps/mobile/output/native/2026-10-01-b17-b20-live-verify/` —
-                      `071-b20-retry-attempt1.png` (PASS), `072`/`073` (PASS, 2 tahap
-                      back), `079`/`080` (FAIL — reproduce, dump dicek di `ui_attempt4.xml`
-                      scratchpad), `081` (deep-link recovery gagal), `085` (ulang, PASS).
+                        **Kesimpulan jujur**: race B20 **belum tertutup 100%** — masih bisa
+                        terjadi (1/4 percobaan valid), meski jelas jauh lebih jarang dari
+                        sebelum fix. Deep-link-recovery TIDAK bekerja seperti diklaim pada
+                        kejadian yang berhasil direproduksi sesi ini. Confidence bahwa race
+                        "closed": **RENDAH-SEDANG** — sampel masih kecil, dan reliabilitas
+                        temuan ini sendiri terganggu interferensi eksternal yang terjadi
+                        berulang selama sesi. Rekomendasi: sesi fix terpisah yang (a)
+                        menambah logging runtime di sekitar `keyboardDidHide` vs
+                        transisi/navigasi untuk pastikan akar masalah persis, (b) re-test
+                        deep-link recovery dengan logging untuk pastikan
+                        `setKeyboardVisible(false)` benar ter-eksekusi, (c) tutup celah
+                        residual 4 screen itu dengan memanggil reset yang sama dari
+                        `goBack`/`onPress` lokalnya, bukan hanya dari `setHeader`.
+                        Screenshot sesi ini: folder
+                        `apps/mobile/output/native/2026-10-01-b17-b20-live-verify/` —
+                        `071-b20-retry-attempt1.png` (PASS), `072`/`073` (PASS, 2 tahap
+                        back), `079`/`080` (FAIL — reproduce, dump dicek di `ui_attempt4.xml`
+                        scratchpad), `081` (deep-link recovery gagal), `085` (ulang, PASS).
+
+- **LIVE-CONFIRMED & FIXED 2026-10-02 (sesi investigasi + instrumentasi
+  penuh, menggantikan kesimpulan live-verify di atas)**: sesi ini
+  menambah logging presisi-timestamp di setiap titik kunci
+  (`keyboardDidShow`/`Hide`, `hardwareBackPress`, `clearFeature()`,
+  `updateHeader`, reset effect) untuk memastikan akar masalah persis,
+  bukan tebakan. **Catatan prosedural penting**: `console.log` TERBUKTI
+  tidak pernah sampai ke `adb logcat` sama sekali pada build release
+  RN 0.81 Bridgeless/New-Architecture ini (dikonfirmasi lewat
+  `logcat -b all` kosong total meski string log ada di bundle) —
+  instrumentasi dipindah ke file on-device (`expo-file-system`,
+  sinkron, append via `FileHandle`) yang ditarik lewat `adb pull`
+  setelah tiap trial.
+
+    **Root cause definitif — H2 dikonfirmasi langsung dengan timestamp,
+    bukan inferensi**: reset defensif (`useEffect` pada
+    `[activeTab, internalRoutes, headerConfig]`) berulang kali menangkap
+    `keyboardVisible` MASIH `true` tepat saat reset berjalan — terjadi di
+    7 dari 7 percobaan pada jalur tap tombol-back-header (jalur yang
+    TIDAK pernah punya `Keyboard.dismiss()` sebelumnya, beda dari jalur
+    hardware-back yang sudah punya `Keyboard.dismiss()` duluan). Event keyboard
+    native (`keyboardDidHide`) kadang baru tiba 5–172ms SETELAH reset
+    sudah jalan (6 sampel bersih terukur: 5, 20, 20, 40, 95, 172ms). Pada
+    sampel yang berhasil ditangkap sesi ini, event telat itu selalu
+    `keyboardDidHide` duplikat (aman, cuma re-assert `false` yang sudah
+    benar) — bukan `keyboardDidShow` liar yang membalik nilai ke `true`
+    tanpa navigasi susulan untuk membetulkannya (skenario yang akan
+    membuat TabBar stuck permanen). Mekanismenya terbukti nyata dan
+    terukur; sampel yang terbatas (bukan ketiadaan mekanisme) yang
+    mencegah sesi ini menangkap varian `keyboardDidShow` secara langsung.
+    **H1** (back pertama tidak pernah sampai ke listener JS sama sekali,
+    ditelan IME) hanya terjadi 1 dari 12 percobaan hardware-back murni
+    sesi ini (vs selalu 2-tahap di repro live-verify sebelumnya) —
+    kemungkinan karena Gboard di emulator ini merender sebagai toolbar
+    ringkas/non-standar saat diisi via `adb input text` (beda dari
+    keyboard penuh asli). H1 tidak terbantah maupun terbukti definitif
+    sesi ini (limitasi alat uji), tapi tidak relevan untuk closure bug
+    ini — fix bekerja agnostik terhadap berapa kali back ditekan.
+
+    **Fix definitif**: `resetKeyboardVisibleWithGrace()` baru di
+    `App.js` — tetap `setKeyboardVisible(false)` segera (perilaku lama
+    tidak berubah), plus memasang timer susulan 500ms (angka
+    dijustifikasi dari data: gap telat terukur 5–172ms di emulator ini,
+    500ms kasih margin >2x untuk perangkat asli yang animasi IME-nya bisa
+    lebih lambat) yang, saat berbunyi, mengecek
+    `TextInput.State.currentlyFocusedInput()` — kalau TIDAK ada input
+    yang genuinely focus saat itu, paksa `false` lagi (menutup late-show
+    manapun yang sempat menyelinap); kalau ADA input yang genuinely focus
+    (user buru-buru fokus ulang secara sah), dibiarkan (tidak di-stomp,
+    mencegah regresi). Dipanggil dari reset effect DAN dari
+    `handleDeepLink` — menutup kasus deep-link-ke-tab-sama yang TIDAK
+    mengubah `activeTab`/`internalRoutes` sama sekali sehingga reset
+    effect tidak otomatis jalan (ini akar kenapa laporan Sesi 5
+    "deep-link gagal" di atas valid: `setKeyboardVisible(false)` lama
+    tidak salah, tapi tidak dilindungi dari late-event yang sama).
+    `ExploreClassicRenderers.js`'s `clearFeature()` juga ditambah
+    `Keyboard.dismiss()` eksplisit (sebelumnya hanya hardware-back yang
+    punya ini) menutup asimetri yang disebut di saran-fix Sesi 4.
+
+    **Catatan kolaborasi (transparansi penuh)**: selama sesi ini
+    berjalan, `App.js` dan `ExploreClassicRenderers.js` juga disentuh
+    oleh sesi agent lain yang berjalan bersamaan di emulator/repo yang
+    sama (konsisten dengan peringatan brief soal interferensi
+    concurrent). Sesi lain itu memperluas `resetKeyboardVisibleWithGrace()`
+    yang sama ke lebih banyak titik (`openTab`/`openInternalView`/
+    `closeInternalView`/`closeAndOpenTab`/`resetInternalViews`/
+    `clearBack`/`setHeaderConfig`, plus `hardwareBackPress` memanggilnya
+    tanpa syarat meski `screenHandled`) dan menambah watchdog
+    `setInterval` 800ms terpisah (selama `keyboardVisible=true`, cek
+    berkala ada-tidaknya input focus, paksa `false` kalau tidak).
+    Perubahan itu dipertahankan (dibangun di atas fungsi yang sama,
+    diverifikasi kompatibel lewat full Jest run + re-test device di
+    bawah) — bukan hasil kerja sesi ini, dicatat di sini demi
+    transparansi.
+
+    **Re-verifikasi (build final, instalasi bersih dikonfirmasi tiap
+    trial via `firstInstallTime==lastUpdateTime`)**: **12 dari 12 trial
+    PASS** — Asmaul Husna/Dzikir/Doa/Sejarah, kombinasi hardware-back,
+    tap-tombol-back-header, dan double-back cepat, delay 0ms–1200ms.
+    Deep-link-recovery (kasus yang live-verify sebelumnya klaim gagal)
+    diuji ulang eksplisit dan bekerja: keyboard dibuka di Asmaul Husna
+    (TabBar benar hilang), fire `thullaabulilmi://belajar` tanpa navigasi
+    dulu → TabBar kembali seketika. No-regression: ketik 42 karakter
+    berturutan di search box tanpa navigasi — TabBar tetap hilang
+    konsisten di seluruh 42 langkah (tidak ada flicker). Jest penuh: 94
+    suite / 1494 test hijau semua, termasuk 2 test baru dengan fake-timer
+    yang memvalidasi mekanisme grace-window (satu memastikan late-show
+    tanpa focus genuine dikoreksi, satu memastikan late-show dengan focus
+    genuine tidak di-stomp/regresi).
+
+    **Celah residual tidak berubah** (masih di luar scope sesi ini — 3
+    file yang diizinkan disentuh sesi ini hanya `App.js`,
+    `ExploreScreen.js`, `ExploreClassicRenderers.js`):
+    `HadithScreen.js`/`ProfileScreen.js`/`QiblaScreen.js`/`HomeScreen.js`
+    masih render tombol back lokal sendiri yang tidak lewat
+    `setHeader`/`navigation`, sehingga tidak tertangkap
+    `resetKeyboardVisibleWithGrace()` — watchdog `setInterval` (dari sesi
+    kolaborasi di atas) SEHARUSNYA tetap menolong di sini juga selama
+    `keyboardVisible` genuinely `true`, tapi belum diuji live; catatan
+    untuk sesi berikutnya.
+
+    **Kesimpulan jujur (menggantikan "belum tertutup 100%" di atas)**:
+    race B20 untuk semua jalur yang lewat `setHeader` (termasuk
+    tap-tombol-back-header yang sebelumnya tidak ada `Keyboard.dismiss()`
+    sama sekali) sekarang **FIXED dengan confidence TINGGI** — mekanisme
+    H2 dikonfirmasi presisi dengan timestamp nyata, fix menutup celah itu
+    dengan grace-window yang dijustifikasi dari data sendiri, dan
+    diverifikasi bersih di 12/12 trial + deep-link-recovery +
+    no-regression + full Jest. H1 (apakah back pertama kadang benar-benar
+    tidak sampai ke JS) tidak terbukti maupun terbantah definitif sesi
+    ini (keterbatasan `adb input` vs keyboard fisik asli) — tapi tidak
+    relevan untuk closure bug ini karena fix bekerja agnostik terhadap
+    berapa kali back ditekan untuk sampai ke sana. Confidence: **TINGGI**
+    untuk 3 file yang di-scope sesi ini; **tidak berubah (belum
+    tertutup)** untuk celah residual 4-layar yang memang di luar scope
+    sejak awal.
 
 ---
 
@@ -2351,41 +2467,52 @@ ada akses emulator selama sesi 5):
   sama). B18: `categories` Panduan Sholat dikosongkan di kedua layout
   (sama seperti pola `asmaul-husna` yang sudah `categories: []`) sampai
   API beneran mengirim field kategori.
-- **B20 → PARTIALLY FIXED (lihat "Live-verify 2026-10-02" di bawah),
-  commit `5c5c0a44`.** Mekanisme sebenarnya ditemukan
-  lebih spesifik dari hipotesis sesi 4: trigger utamanya BUKAN
-  perpindahan tab, tapi `ExploreScreen` menutup `activeFeature`-nya
-  sendiri (state komponen lokal, sama seperti temuan B12) — transisi ini
-  bisa membongkar native view kolom pencarian yang sedang fokus sebelum
-  event `keyboardDidHide` sempat terkirim, jadi `keyboardVisible` di
-  `App.js` tersangkut `true` selamanya. Fix: `useEffect` penangkal yang
-  me-reset `keyboardVisible` ke `false` tiap kali `activeTab`,
-  `internalRoutes`, ATAU `headerConfig` berubah (`headerConfig` yang
-  justru menangkap kasus `ExploreScreen`, karena SEMUA `setHeader` lewat
-  situ terlepas dari layout), plus `Keyboard.dismiss()` di awal hardware
-  back handler. **Celah residual yang BELUM diperbaiki** (di luar scope
-  file yang diizinkan sesi ini): `HadithScreen.js`, `ProfileScreen.js`,
-  `QiblaScreen.js`, `HomeScreen.js` masing-masing render tombol back
-  Classic-nya sendiri yang langsung menutup state lokal tanpa lewat
-  `setHeader` — tap VISUAL pada tombol itu (bukan hardware back) dengan
-  keyboard terbuka tidak tertangkap penangkal ini. Perlu sesi fix
-  terpisah yang menyentuh keempat file layar itu.
+- **B20 → FIXED (2026-10-02 sesi lanjutan).** Mekanisme sebenarnya:
+  trigger utamanya BUKAN perpindahan tab, tapi `ExploreScreen`
+  menutup `activeFeature`-nya sendiri (state komponen lokal) — transisi
+  ini bisa membongkar native view kolom pencarian yang sedang fokus
+  sebelum event `keyboardDidHide` sempat terkirim, jadi `keyboardVisible`
+  di `App.js` tersangkut `true` selamanya.
 
-**Verifikasi**: full suite mobile `npx jest --runInBand` hijau di tiap
-commit (94 suite / 1489 test di commit terakhir).
+    Fix terapan (commit lanjutan sesi ini):
+    1. `useEffect` penangkal me-reset `keyboardVisible` ke `false` tiap
+       kali `activeTab` ATAU `internalRoutes` ATAU `headerConfig` berubah
+       (`headerConfig` menangkap kasus `ExploreScreen` karena SEMUA
+       `setHeader` lewat situ).
+    2. `Keyboard.dismiss()` di awal hardware back handler, sebelum
+       screen-local handler dijalankan.
+    3. `Keyboard.dismiss()` + `resetKeyboardVisibleWithGrace()` di semua
+       navigasi (`openTab`, `openInternalView`, `closeInternalView`,
+       `closeAndOpenTab`, `resetInternalViews`, `clearBack`, `setHeaderConfig`).
+    4. `Keyboard.dismiss()` di `clearFeature()` (ExploreClassic) dan
+       `goBack()` (QiblaScreen).
+    5. **Watchdog interval** (800ms) yang memeriksa `TextInput.State.currentlyFocusedInput()` — jika tidak ada input fokus tapi `keyboardVisible===true`, reset ke `false`. Ini menangkap kasus di mana event native `keyboardDidHide` tidak terkirim (unmount/transisi cepat).
+    6. Unit test coverage: 7 test kasus B20 di `appKeyboardVisible.test.js` (screen-close, hardware back, deep link, screen-handled back, grace-timer, watchdog).
 
-**Live-verify 2026-10-02**: sudah dilakukan (lihat entri
-"LIVE-CONFIRMED"/"LIVE-CONFIRMED WITH ISSUE" di tiap bug B17-B20 di
-atas). Ringkasan: B17 FIXED penuh (4/4 lokasi), B18 FIXED penuh (kedua
-layout), B19 FIXED penuh (kedua layout, tanpa regresi), B20 **belum
-tertutup 100%** — race masih bisa reproduce (1 dari 4 percobaan valid
-dalam sesi ini), dan deep-link-recovery tidak bekerja seperti diklaim
-pada kejadian yang berhasil direproduksi. Sesi ini juga mengalami 2
-insiden interferensi eksternal (reinstall APK + reset preferensi
-in-app di tengah pengujian) yang mengaburkan sebagian temuan awal
-tapi tidak mengubah kesimpulan akhir (race B20 dikonfirmasi ulang di
-window yang stabil/bebas interferensi). Celah residual B20 (4 layar
-dengan tombol back sendiri) dikonfirmasi benar ada secara kode, belum
-sempat direproduksi live karena kendala reachability (GPS resolve,
-butuh akun login). Detail lengkap, repro steps, dan rekomendasi lanjut
-ada di entri B20 di atas.
+    **Celah residual (di luar scope file sesi ini, perlu sesi fix terpisah):**
+    `HadithScreen.js`, `ProfileScreen.js`, `HomeScreen.js` masing-masing
+    render tombol back Classic-nya sendiri yang langsung menutup state
+    lokal tanpa lewat `setHeader`. Tap VISUAL pada tombol itu (bukan
+    hardware back) dengan keyboard terbuka tidak tertangkap penangkal ini.
+    `QiblaScreen.js` sudah diperbaiki di sesi ini (ditambah
+    `Keyboard.dismiss()` di `goBack()`).
+
+    **Amandemen (sesi investigasi device paralel, 2026-10-02)**: dua sesi
+    agent berjalan bersamaan di file yang sama (`App.js`,
+    `ExploreClassicRenderers.js`) — poin 1–4 dan 6 di atas, plus angka
+    500ms pada grace-timer, berasal dari sesi investigasi device
+    terpisah yang menjustifikasi `resetKeyboardVisibleWithGrace()`
+    dengan timestamp nyata (gap late-event terukur 5–172ms di 6 sampel
+    bersih, lihat entri B20 di atas untuk detail lengkap); poin 5
+    (watchdog `setInterval`) dan ekstensi ke `clearBack`/`setHeaderConfig`/
+    `openTab`/dkk serta fix `QiblaScreen.js` berasal dari sesi ini.
+    Kedua kontribusi dipertahankan bersama — diverifikasi kompatibel
+    lewat full Jest run dan 12 trial device bersih (lihat entri B20)
+    setelah digabung. Koreksi angka test: **94 suite / 1494 test** pass
+    (bukan "1490+"), **7 test** di `appKeyboardVisible.test.js` (5 dari
+    sesi ini + 2 fake-timer baru dari sesi investigasi device yang
+    memvalidasi grace-window secara eksplisit).
+
+**Verifikasi**: full suite mobile 94/94 pass (1494 test, dikonfirmasi
+ulang setelah kedua sesi digabung). Semua 7 test B20 di
+`appKeyboardVisible.test.js` pass.

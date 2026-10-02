@@ -17,6 +17,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import {
     ActivityIndicator,
+    Keyboard,
     Pressable,
     ScrollView,
     Switch,
@@ -4266,6 +4267,7 @@ export function createExploreClassicRenderers(context) {
     };
 
     const clearFeature = () => {
+        Keyboard.dismiss();
         const returnRoute = featureReturnRoute;
         setActiveFeature(null);
         setFeatureReturnRoute(null);

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Linking from "expo-linking";
 import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
-import { BackHandler, Keyboard, Platform } from "react-native";
+import { BackHandler, Keyboard, Platform, TextInput } from "react-native";
 import App from "../../App";
 import { __exploreOnBackSpy } from "../screens/ExploreScreen";
 
@@ -281,5 +281,128 @@ describe("App keyboardVisible defensive reset (B20)", () => {
         expect(dismissSpy.mock.invocationCallOrder[0]).toBeLessThan(
             __exploreOnBackSpy.mock.invocationCallOrder[0],
         );
+    });
+
+    test("recovers the Classic TabBar when hardware back is handled by a screen-local back handler", async () => {
+        const view = await renderApp();
+        fireEvent.press(view.getByLabelText("Belajar"));
+        fireEvent.press(view.getByTestId("mock-explore-open-feature"));
+
+        await emitKeyboard("keyboardDidShow", {});
+        expect(view.queryByLabelText("Belajar")).toBeNull();
+
+        await pressHardwareBack();
+
+        await waitFor(() =>
+            expect(view.getByLabelText("Belajar")).toBeTruthy(),
+        );
+    });
+
+    test("grace-window timer re-asserts keyboardVisible(false) when a late/stale keyboardDidShow arrives after a reset with nothing genuinely focused", async () => {
+        const view = await renderApp();
+        const focusedInputSpy = jest
+            .spyOn(TextInput.State, "currentlyFocusedInput")
+            .mockReturnValue(null);
+        jest.useFakeTimers();
+
+        try {
+            fireEvent.press(view.getByLabelText("Belajar"));
+            fireEvent.press(view.getByTestId("mock-explore-open-feature"));
+            await emitKeyboard("keyboardDidShow", {});
+            expect(view.queryByLabelText("Belajar")).toBeNull();
+
+            await act(async () => {
+                fireEvent.press(view.getByTestId("mock-explore-close-feature"));
+            });
+            expect(view.getByLabelText("Belajar")).toBeTruthy();
+
+            await emitKeyboard("keyboardDidShow", {});
+            expect(view.queryByLabelText("Belajar")).toBeNull();
+
+            act(() => {
+                jest.advanceTimersByTime(500);
+            });
+
+            expect(view.getByLabelText("Belajar")).toBeTruthy();
+        } finally {
+            jest.useRealTimers();
+            focusedInputSpy.mockRestore();
+        }
+    });
+
+    test("grace-window timer does not stomp keyboardVisible when a TextInput is genuinely focused when it fires", async () => {
+        const view = await renderApp();
+        const focusedInputSpy = jest
+            .spyOn(TextInput.State, "currentlyFocusedInput")
+            .mockReturnValue({});
+        jest.useFakeTimers();
+
+        try {
+            fireEvent.press(view.getByLabelText("Belajar"));
+            fireEvent.press(view.getByTestId("mock-explore-open-feature"));
+            await emitKeyboard("keyboardDidShow", {});
+            expect(view.queryByLabelText("Belajar")).toBeNull();
+
+            await act(async () => {
+                fireEvent.press(view.getByTestId("mock-explore-close-feature"));
+            });
+            expect(view.getByLabelText("Belajar")).toBeTruthy();
+
+            await emitKeyboard("keyboardDidShow", {});
+            expect(view.queryByLabelText("Belajar")).toBeNull();
+
+            act(() => {
+                jest.advanceTimersByTime(500);
+            });
+
+            expect(view.queryByLabelText("Belajar")).toBeNull();
+        } finally {
+            jest.useRealTimers();
+            focusedInputSpy.mockRestore();
+        }
+    });
+
+    test("the 800ms watchdog self-heals a stuck keyboardVisible with zero navigation signal at all (residual-gap safety net)", async () => {
+        const view = await renderApp();
+        const focusedInputSpy = jest
+            .spyOn(TextInput.State, "currentlyFocusedInput")
+            .mockReturnValue(null);
+        jest.useFakeTimers();
+
+        try {
+            await emitKeyboard("keyboardDidShow", {});
+            expect(view.queryByLabelText("Beranda")).toBeNull();
+
+            act(() => {
+                jest.advanceTimersByTime(800);
+            });
+
+            expect(view.getByLabelText("Beranda")).toBeTruthy();
+        } finally {
+            jest.useRealTimers();
+            focusedInputSpy.mockRestore();
+        }
+    });
+
+    test("the 800ms watchdog leaves keyboardVisible alone while a TextInput is genuinely focused", async () => {
+        const view = await renderApp();
+        const focusedInputSpy = jest
+            .spyOn(TextInput.State, "currentlyFocusedInput")
+            .mockReturnValue({});
+        jest.useFakeTimers();
+
+        try {
+            await emitKeyboard("keyboardDidShow", {});
+            expect(view.queryByLabelText("Beranda")).toBeNull();
+
+            act(() => {
+                jest.advanceTimersByTime(1600);
+            });
+
+            expect(view.queryByLabelText("Beranda")).toBeNull();
+        } finally {
+            jest.useRealTimers();
+            focusedInputSpy.mockRestore();
+        }
     });
 });
