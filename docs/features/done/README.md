@@ -28,3 +28,6 @@ Folder ini berisi feature yang sudah ditutup.
 - [Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis](./perpustakaan-ekstraksi-konten-untuk-belajar.md)
 - [Semantic Search & Islamic RAG](./semantic-search-islamic-rag.md)
 - [Masjid & Radio Islamic Directory](./2026-09-08-masjid-radio-islamic-directory.md)
+- [Server Push Notifications](./2026-09-08-server-push-notifications.md)
+- [Custom Adzan Audio & Offline Murottal Manager](./2026-09-08-custom-adzan-audio-offline.md)
+- [Mobile Quran Reader Polish](./mobile-quran-reader-polish.md)

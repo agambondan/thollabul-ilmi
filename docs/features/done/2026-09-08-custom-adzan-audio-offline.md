@@ -1,8 +1,9 @@
 # Custom Adzan Audio & Offline Murottal Manager
 
-Status: `IN_PROGRESS`
+Status: `DONE`
 Priority: `P1`
 Tanggal: `2026-09-08`
+Selesai: `2026-10-02`
 
 ## Objective
 

@@ -10,8 +10,6 @@ Folder ini berisi feature yang sedang dikerjakan atau masih bergerak.
 | [2026-05-24-web-mobile-runtime-sync.md](./2026-05-24-web-mobile-runtime-sync.md)                     | Runtime sync web-mobile: Quran ayah actions, audio qari fallback, prayer location/notification permission, and future `web_app` mobile layout contract |
 | [2026-05-23-web-mobile-parity-gap-followup.md](./2026-05-23-web-mobile-parity-gap-followup.md)       | Follow-up gap parity web/mobile: mobile Profile settings implemented, remaining platform decisions tracked                                             |
 | [2026-05-17-sync-performance-task-breakdown.md](./2026-05-17-sync-performance-task-breakdown.md)     | Breakdown task hasil deep review sync web/mobile/backend, CTA, dan performance                                                                         |
-| [2026-09-08-server-push-notifications.md](./2026-09-08-server-push-notifications.md)                 | Push token registration + Expo/Web Push dispatcher + deep-link jalan, semua test unit/integration lolos (re-verified 2026-09-10); tinggal smoke test di device fisik |
-| [2026-09-08-custom-adzan-audio-offline.md](./2026-09-08-custom-adzan-audio-offline.md)                | Picker adzan, download manager murottal offline, cleanup storage — semua task selesai & test lolos (re-verified 2026-09-10); tinggal verifikasi di device fisik |
 
 ## Cara Pakai
 

@@ -1,8 +1,9 @@
 # Mobile Quran Reader Polish
 
-Status: `IN_PROGRESS`
+Status: `DONE`
 Priority: `P0`
 Tanggal: `2026-05-13`
+Selesai: `2026-10-02`
 
 ## Objective
 
