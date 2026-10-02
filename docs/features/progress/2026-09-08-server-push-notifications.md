@@ -94,10 +94,7 @@ perubahan perilaku) dan sekarang juga dipanggil dari `toggleNotif()` di
 `AdzanQuickControl.js` saat user menyalakan toggle dan izin notifikasi
 granted.
 
-Belum digarap (di luar scope laporan ini): `DispatchDueAdzanPush` di backend
-mengirim ke semua token aktif tanpa cek preferensi `notifAdzan` user — toggle
-OFF di web tidak benar-benar menghentikan push dari server. Default
-`notifAdzan` adalah `true`, jadi ini tidak memengaruhi bug yang dilaporkan.
+Selesai digarap (2026-10-02): `DispatchDueAdzanPush` di backend sekarang memeriksa `FindDisabledUserIDs(model.NotificationTypeAdzan)`, dan toggle `notifAdzan` di web (`AdzanQuickControl.js` & `settings/page.js`) serta mobile (`NotificationCenter.js`) mensinkronkan preferensi ke backend via `notificationApi.updateSettings` / `saveNotificationSettings`. Default `notifAdzan` adalah `true`, dan toggle OFF akan menghentikan pengiriman push adzan dari server.
 
 **Verifikasi:**
 
