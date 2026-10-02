@@ -1227,18 +1227,21 @@ const styles = StyleSheet.create({
         paddingTop: spacing.lg,
     },
     webAppGreeting: {
+        alignItems: "flex-start",
         marginBottom: spacing.lg,
     },
     webAppGreetingTitle: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: "700",
         letterSpacing: 0,
+        color: "#111827",
     },
     webAppGreetingDate: {
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: "400",
         letterSpacing: 0,
         marginTop: 4,
+        color: "#64748b",
     },
     header: {
         alignItems: "center",
@@ -1468,6 +1471,7 @@ const styles = StyleSheet.create({
         marginBottom: spacing.sm,
     },
     webAppIconTile: {
+        borderRadius: 20,
     },
     webAppActionTile: {
     },
@@ -1482,12 +1486,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: colors.surfaceMuted,
         borderColor: colors.faint,
-        borderRadius: radius.md,
+        borderRadius: 20,
         borderWidth: 1,
-        height: 42,
+        height: 40,
         justifyContent: "center",
         marginBottom: spacing.sm,
-        width: 42,
+        width: 40,
     },
     menuLabel: {
         color: colors.ink,
