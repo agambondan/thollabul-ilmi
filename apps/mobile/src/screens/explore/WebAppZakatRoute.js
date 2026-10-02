@@ -19,7 +19,11 @@ import {
     mergeCalculatorHistory,
     saveCalculatorHistory,
 } from "../../storage/calculatorHistory";
-import { APP_NAME, colors, radius, spacing, touchTarget } from "../../theme";
+import { APP_NAME, radius, spacing, touchTarget } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 import {
     formatCurrency,
     formatDecimalValue,
@@ -946,8 +950,8 @@ const styles = StyleSheet.create({
     },
     tab: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.lg,
+        borderColor: "#e2e8f0",
+        borderRadius: radius.full,
         borderWidth: 1,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
@@ -966,19 +970,20 @@ const styles = StyleSheet.create({
     },
     tabText: {
         color: "#64748b",
-        fontSize: 13,
-        fontWeight: "900",
+        fontSize: 12,
+        fontWeight: "700",
     },
     tabTextDark: {
         color: "#94a3b8",
     },
     tabTextActive: {
         color: "#ffffff",
+        fontWeight: "700",
     },
     card: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.xl,
+        borderColor: "#e2e8f0",
+        borderRadius: 16,
         borderWidth: 1,
         gap: spacing.md,
         padding: spacing.lg,
@@ -1042,13 +1047,13 @@ const styles = StyleSheet.create({
     fieldLabel: {
         color: "#374151",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     inputShell: {
         alignItems: "center",
         backgroundColor: "#f9fafb",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderWidth: 1,
         flexDirection: "row",
         minHeight: 44,
@@ -1061,7 +1066,7 @@ const styles = StyleSheet.create({
     inputPrefix: {
         color: "#94a3b8",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
         marginRight: spacing.sm,
     },
     input: {

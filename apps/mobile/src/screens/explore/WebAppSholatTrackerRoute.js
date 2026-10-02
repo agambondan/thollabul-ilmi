@@ -5,6 +5,10 @@ import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
+import {
     PRAYER_ITEMS,
     getLocalDateKey,
     shiftLocalDateKey,
@@ -431,25 +435,25 @@ const styles = StyleSheet.create({
         minWidth: 0,
     },
     title: {
-        color: "#111827",
+        color: "#0f172a",
         fontSize: 22,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 28,
     },
     subtitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
         marginTop: 3,
     },
     progressCard: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
+        borderColor: "#e2e8f0",
         borderRadius: radius.lg,
         borderWidth: 1,
-        marginBottom: spacing.lg,
-        padding: spacing.lg,
+        marginBottom: spacing.md,
+        padding: spacing.md,
     },
     progressTop: {
         alignItems: "center",
@@ -460,46 +464,46 @@ const styles = StyleSheet.create({
     progressTitle: {
         color: "#374151",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     progressCount: {
         color: "#047857",
-        fontSize: 26,
-        fontWeight: "900",
-        lineHeight: 32,
+        fontSize: 24,
+        fontWeight: "700",
+        lineHeight: 30,
     },
     progressTrack: {
-        backgroundColor: "#e5e7eb",
+        backgroundColor: "#e2e8f0",
         borderRadius: 999,
-        height: 12,
+        height: 10,
         overflow: "hidden",
     },
     progressFill: {
-        backgroundColor: "#10b981",
+        backgroundColor: "#059669",
         borderRadius: 999,
         height: "100%",
     },
     progressText: {
         color: "#94a3b8",
         fontSize: 12,
-        fontWeight: "800",
-        marginTop: 7,
+        fontWeight: "600",
+        marginTop: 6,
     },
     prayerList: {
         gap: spacing.sm,
-        marginBottom: spacing.xl,
+        marginBottom: spacing.lg,
     },
     prayerRow: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
+        borderColor: "#e2e8f0",
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.md,
-        minHeight: 62,
-        paddingHorizontal: spacing.lg,
-        paddingVertical: spacing.md,
+        minHeight: 56,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
     },
     prayerRowDone: {
         backgroundColor: "#ecfdf5",
@@ -507,18 +511,18 @@ const styles = StyleSheet.create({
     },
     prayerLabel: {
         color: "#374151",
-        fontSize: 16,
-        fontWeight: "900",
+        fontSize: 15,
+        fontWeight: "700",
     },
     prayerLabelDone: {
         color: "#047857",
     },
     weekCard: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
+        borderColor: "#e2e8f0",
         borderRadius: radius.lg,
         borderWidth: 1,
-        marginBottom: spacing.lg,
+        marginBottom: spacing.md,
         overflow: "hidden",
     },
     cardHeader: {

@@ -4,6 +4,10 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 import { getExploreItemKey } from "../ExploreScreen.helpers";
 
 export const WEB_APP_TOOL_ROUTE_CONFIGS = {};
@@ -102,10 +106,10 @@ const styles = StyleSheet.create({
     iconWrap: {
         alignItems: "center",
         backgroundColor: "#ecfdf5",
-        borderRadius: 14,
-        height: 46,
+        borderRadius: 16,
+        height: 48,
         justifyContent: "center",
-        width: 46,
+        width: 48,
     },
     headerText: {
         flex: 1,
@@ -114,19 +118,19 @@ const styles = StyleSheet.create({
     eyebrow: {
         color: "#047857",
         fontSize: 11,
-        fontWeight: "900",
-        letterSpacing: 0,
+        fontWeight: "700",
+        letterSpacing: 0.5,
     },
     title: {
         color: "#0f172a",
         fontSize: 24,
-        fontWeight: "900",
+        fontWeight: "700",
         lineHeight: 30,
     },
     subtitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
         marginTop: 2,
     },
@@ -138,19 +142,19 @@ const styles = StyleSheet.create({
     },
     stateText: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderWidth: 1,
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
         padding: spacing.md,
         textAlign: "center",
     },
     error: {
-        backgroundColor: "#fef3c7",
-        borderRadius: radius.md,
-        color: "#92400e",
+        backgroundColor: "#fef2f2",
+        borderRadius: 12,
+        color: "#991b1b",
         fontSize: 12,
         fontWeight: "700",
         lineHeight: 17,

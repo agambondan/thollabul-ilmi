@@ -18,6 +18,10 @@ import {
     getExploreItemKey,
 } from "../ExploreScreen.helpers";
 import { radius, spacing } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 
 const getRaw = (item) => item?.raw ?? item ?? {};
 const getCount = (item) => Number(getRaw(item).count ?? 0);
@@ -559,29 +563,29 @@ const styles = StyleSheet.create({
     },
     summaryTile: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.lg,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderWidth: 1,
         flex: 1,
         padding: spacing.md,
     },
     summaryValue: {
         color: "#047857",
-        fontSize: 24,
-        fontWeight: "900",
-        lineHeight: 29,
+        fontSize: 22,
+        fontWeight: "700",
+        lineHeight: 28,
     },
     summaryLabel: {
         color: "#64748b",
         fontSize: 11,
-        fontWeight: "800",
+        fontWeight: "600",
         marginTop: 2,
     },
     stateCard: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.lg,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderWidth: 1,
         gap: spacing.sm,
         padding: spacing.lg,
@@ -589,14 +593,14 @@ const styles = StyleSheet.create({
     stateText: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     errorText: {
-        backgroundColor: "#fef3c7",
-        borderRadius: radius.md,
-        color: "#92400e",
+        backgroundColor: "#fef2f2",
+        borderRadius: 12,
+        color: "#991b1b",
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "700",
         lineHeight: 17,
         marginBottom: spacing.md,
         padding: spacing.md,
@@ -604,8 +608,8 @@ const styles = StyleSheet.create({
     emptyCard: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.xl,
+        borderColor: "#e2e8f0",
+        borderRadius: 16,
         borderWidth: 1,
         gap: spacing.sm,
         padding: spacing.xl,
@@ -613,7 +617,7 @@ const styles = StyleSheet.create({
     emptyTitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
     },
     linkButton: {
         padding: spacing.xs,

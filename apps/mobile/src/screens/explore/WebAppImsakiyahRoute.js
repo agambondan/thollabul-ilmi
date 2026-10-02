@@ -14,6 +14,10 @@ import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
 import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
+import {
     IMSAKIYAH_MONTH_WINDOW,
     currentImsakiyahMonth,
     imsakiyahMonthDistance,
@@ -392,7 +396,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#ecfdf5",
         borderColor: "#a7f3d0",
-        borderRadius: radius.sm,
+        borderRadius: 10,
         borderWidth: 1,
         justifyContent: "center",
         minHeight: 40,
@@ -401,12 +405,12 @@ const styles = StyleSheet.create({
     retryButtonText: {
         color: "#047857",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     table: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderWidth: 1,
         overflow: "hidden",
     },

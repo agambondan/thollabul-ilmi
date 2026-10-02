@@ -13,6 +13,10 @@ import { Card } from "../../components/Card";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors, radius, spacing } from "../../theme";
 import { deleteJson, postJson, requestJson } from "../../api/client";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 
 export function WebAppKomunitasRoute({
     feature,

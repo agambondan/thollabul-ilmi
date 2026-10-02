@@ -11,6 +11,10 @@ import {
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 
 const getFeedReference = (item = {}, t) => {
     const raw = item?.raw ?? {};
@@ -409,7 +413,7 @@ const styles = StyleSheet.create({
     headerIcon: {
         alignItems: "center",
         backgroundColor: "#d1fae5",
-        borderRadius: radius.md,
+        borderRadius: 20,
         height: 64,
         justifyContent: "center",
         marginBottom: spacing.md,
@@ -419,9 +423,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#064e3b",
     },
     title: {
-        color: "#111827",
+        color: "#0f172a",
         fontSize: 24,
-        fontWeight: "900",
+        fontWeight: "700",
         letterSpacing: 0,
         lineHeight: 30,
         textAlign: "center",
@@ -430,9 +434,10 @@ const styles = StyleSheet.create({
         color: "#f8fafc",
     },
     subtitle: {
-        color: "#6b7280",
-        fontSize: 14,
-        lineHeight: 20,
+        color: "#64748b",
+        fontSize: 13,
+        fontWeight: "400",
+        lineHeight: 19,
         marginTop: spacing.xs,
         textAlign: "center",
     },
@@ -442,8 +447,8 @@ const styles = StyleSheet.create({
     createBox: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderStyle: "dashed",
         borderWidth: 2,
         justifyContent: "center",
@@ -456,16 +461,16 @@ const styles = StyleSheet.create({
         borderColor: "#334155",
     },
     createText: {
-        color: "#6b7280",
+        color: "#64748b",
         fontSize: 13,
-        fontWeight: "800",
+        fontWeight: "600",
         textAlign: "center",
     },
     createTextDark: {
         color: "#94a3b8",
     },
     notice: {
-        color: "#b91c1c",
+        color: "#ef4444",
         fontSize: 12,
         fontWeight: "700",
         lineHeight: 18,
@@ -478,9 +483,9 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.md,
     },
     stateText: {
-        color: "#6b7280",
+        color: "#94a3b8",
         fontSize: 12,
-        fontWeight: "700",
+        fontWeight: "600",
     },
     stateTextDark: {
         color: "#94a3b8",
@@ -493,8 +498,8 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderColor: "#e2e8f0",
+        borderRadius: 12,
         borderWidth: 1,
         padding: spacing.md,
     },
@@ -510,7 +515,7 @@ const styles = StyleSheet.create({
     },
     avatar: {
         alignItems: "center",
-        backgroundColor: "#d1fae5",
+        backgroundColor: "#ecfdf5",
         borderRadius: 20,
         height: 40,
         justifyContent: "center",

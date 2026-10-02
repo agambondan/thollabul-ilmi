@@ -11,6 +11,10 @@ import {
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 
 function LeaderboardRow({
     activeMeta,
@@ -217,23 +221,23 @@ const styles = StyleSheet.create({
         marginBottom: spacing.lg,
     },
     title: {
-        color: "#111827",
-        fontSize: 20,
-        fontWeight: "900",
+        color: "#0f172a",
+        fontSize: 22,
+        fontWeight: "700",
         letterSpacing: 0,
-        lineHeight: 26,
+        lineHeight: 28,
     },
     tabs: {
-        backgroundColor: "#f3f4f6",
-        borderRadius: 8,
+        backgroundColor: "#f1f5f9",
+        borderRadius: 12,
         flexDirection: "row",
         gap: 4,
-        marginBottom: spacing.xl,
+        marginBottom: spacing.lg,
         padding: 4,
     },
     tab: {
         alignItems: "center",
-        borderRadius: 6,
+        borderRadius: 8,
         flex: 1,
         justifyContent: "center",
         minHeight: 36,
@@ -249,13 +253,14 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
     },
     tabText: {
-        color: "#6b7280",
-        fontSize: 14,
+        color: "#64748b",
+        fontSize: 13,
         fontWeight: "600",
         textAlign: "center",
     },
     tabTextActive: {
         color: "#047857",
+        fontWeight: "700",
     },
     list: {
         gap: spacing.sm,
@@ -263,12 +268,12 @@ const styles = StyleSheet.create({
     row: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderColor: "#f3f4f6",
+        borderColor: "#e2e8f0",
         borderRadius: 12,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.sm,
-        minHeight: 72,
+        minHeight: 68,
         padding: spacing.md,
     },
     rowTop: {
@@ -304,23 +309,23 @@ const styles = StyleSheet.create({
     rankText: {
         color: "#047857",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     rankTextTop: {
-        color: "#fbbf24",
+        color: "#f59e0b",
     },
     score: {
-        color: "#6b7280",
+        color: "#64748b",
         fontSize: 14,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     scoreTop: {
-        color: "#fbbf24",
+        color: "#f59e0b",
     },
     unit: {
-        color: "#9ca3af",
+        color: "#94a3b8",
         fontSize: 11,
-        fontWeight: "700",
+        fontWeight: "600",
     },
     state: {
         alignItems: "center",
@@ -329,14 +334,14 @@ const styles = StyleSheet.create({
         minHeight: 160,
     },
     stateText: {
-        color: "#9ca3af",
+        color: "#94a3b8",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "600",
     },
     notice: {
         backgroundColor: "#fffbeb",
         borderColor: "#fde68a",
-        borderRadius: 8,
+        borderRadius: 10,
         borderWidth: 1,
         color: "#92400e",
         fontSize: 13,

@@ -11,6 +11,10 @@ import {
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { radius, spacing } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 
 const getRaw = (item) => item?.raw ?? {};
 const pickLabel = (item, index, t) =>
@@ -223,25 +227,25 @@ const styles = StyleSheet.create({
         paddingBottom: spacing.xl,
     },
     header: {
-        marginBottom: spacing.lg,
+        marginBottom: spacing.md,
     },
     title: {
-        color: "#111827",
-        fontSize: 22,
-        fontWeight: "900",
-        lineHeight: 28,
+        color: "#0f172a",
+        fontSize: 24,
+        fontWeight: "700",
+        lineHeight: 30,
     },
     subtitle: {
         color: "#64748b",
         fontSize: 13,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 19,
         marginTop: spacing.xs,
     },
     progressCard: {
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
-        borderRadius: radius.md,
+        borderColor: "#e2e8f0",
+        borderRadius: radius.lg,
         borderWidth: 1,
         marginBottom: spacing.md,
         padding: spacing.md,
@@ -255,28 +259,28 @@ const styles = StyleSheet.create({
     progressLabel: {
         color: "#374151",
         fontSize: 13,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     progressCount: {
         color: "#047857",
-        fontSize: 24,
-        fontWeight: "900",
+        fontSize: 22,
+        fontWeight: "700",
     },
     progressTrack: {
-        backgroundColor: "#e5e7eb",
+        backgroundColor: "#e2e8f0",
         borderRadius: 999,
-        height: 12,
+        height: 10,
         overflow: "hidden",
     },
     progressFill: {
-        backgroundColor: "#10b981",
+        backgroundColor: "#059669",
         borderRadius: 999,
         height: "100%",
     },
     progressPercent: {
         color: "#94a3b8",
         fontSize: 12,
-        fontWeight: "800",
+        fontWeight: "600",
         marginTop: 6,
     },
     state: {
@@ -336,12 +340,12 @@ const styles = StyleSheet.create({
     row: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        borderColor: "#e5e7eb",
+        borderColor: "#e2e8f0",
         borderRadius: radius.md,
         borderWidth: 1,
         flexDirection: "row",
         gap: spacing.md,
-        minHeight: 58,
+        minHeight: 56,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.md,
     },
@@ -350,10 +354,10 @@ const styles = StyleSheet.create({
         borderColor: "#a7f3d0",
     },
     rowText: {
-        color: "#374151",
+        color: "#334155",
         flex: 1,
         fontSize: 14,
-        fontWeight: "800",
+        fontWeight: "600",
         lineHeight: 20,
     },
     rowTextDone: {

@@ -25,7 +25,11 @@ import {
 } from "../../api/forum";
 import { useLayoutModePreference } from "../../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
-import { colors, getThemeColors, iconStroke, radius, spacing } from "../../theme";
+import { iconStroke, radius, spacing } from "../../theme";
+import {
+    createExploreWebAppThemeStyles,
+    getExploreWebAppTheme,
+} from "./ExploreWebAppTheme";
 
 const formatCount = (value) => Number(value ?? 0).toLocaleString("id-ID");
 
@@ -966,15 +970,15 @@ const styles = StyleSheet.create({
     },
     iconWrap: {
         alignItems: "center",
-        backgroundColor: "#dbeafe",
-        borderRadius: 16,
+        backgroundColor: "#d1fae5",
+        borderRadius: 20,
         height: 64,
         justifyContent: "center",
         marginBottom: spacing.sm,
         width: 64,
     },
     iconWrapDark: {
-        backgroundColor: "#1e3a5f",
+        backgroundColor: "#064e3b",
     },
     title: {
         color: "#111827",
@@ -1064,7 +1068,7 @@ const styles = StyleSheet.create({
     },
     askButton: {
         alignItems: "center",
-        backgroundColor: "#2563eb",
+        backgroundColor: "#059669",
         borderRadius: 12,
         flexDirection: "row",
         gap: 5,
@@ -1136,17 +1140,17 @@ const styles = StyleSheet.create({
         marginTop: spacing.sm,
     },
     tag: {
-        backgroundColor: "#eff6ff",
-        borderRadius: 6,
-        color: "#2563eb",
+        backgroundColor: "#ecfdf5",
+        borderRadius: 999,
+        color: "#059669",
         fontSize: 11,
         fontWeight: "800",
-        paddingHorizontal: 7,
+        paddingHorizontal: 9,
         paddingVertical: 3,
     },
     tagDark: {
-        backgroundColor: "#1e3a5f",
-        color: "#93c5fd",
+        backgroundColor: "#064e3b",
+        color: "#6ee7b7",
     },
     metaRow: {
         alignItems: "center",
@@ -1235,12 +1239,12 @@ const styles = StyleSheet.create({
         minHeight: 44,
     },
     routeLinkText: {
-        color: "#2563eb",
+        color: "#059669",
         fontSize: 12,
         fontWeight: "900",
     },
     routeLinkTextDark: {
-        color: "#93c5fd",
+        color: "#34d399",
     },
     panelTitle: {
         color: "#111827",
@@ -1274,7 +1278,7 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         alignItems: "center",
-        backgroundColor: "#2563eb",
+        backgroundColor: "#059669",
         borderRadius: 12,
         paddingVertical: 12,
     },
@@ -1300,7 +1304,7 @@ const styles = StyleSheet.create({
     },
     voteButton: {
         alignItems: "center",
-        backgroundColor: "#eff6ff",
+        backgroundColor: "#ecfdf5",
         borderRadius: 10,
         flexDirection: "row",
         gap: 5,
@@ -1310,15 +1314,15 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     voteButtonDark: {
-        backgroundColor: "#1e3a5f",
+        backgroundColor: "#064e3b",
     },
     voteButtonText: {
-        color: "#1e40af",
+        color: "#047857",
         fontSize: 12,
         fontWeight: "900",
     },
     voteButtonTextDark: {
-        color: "#93c5fd",
+        color: "#6ee7b7",
     },
     sectionTitle: {
         color: "#111827",
@@ -1357,7 +1361,7 @@ const styles = StyleSheet.create({
     },
     smallVoteButton: {
         backgroundColor: "#ffffff",
-        borderColor: "#dbeafe",
+        borderColor: "#a7f3d0",
         borderRadius: 9,
         borderWidth: 1,
         justifyContent: "center",
@@ -1367,7 +1371,7 @@ const styles = StyleSheet.create({
     },
     smallVoteButtonDark: {
         backgroundColor: "#1e293b",
-        borderColor: "#334155",
+        borderColor: "#065f46",
     },
     answerInput: {
         marginTop: spacing.md,

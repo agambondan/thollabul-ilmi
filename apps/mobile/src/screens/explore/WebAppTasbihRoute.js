@@ -564,8 +564,8 @@ const styles = StyleSheet.create({
     },
     neutralButton: {
         alignItems: "center",
-        backgroundColor: "#f3f4f6",
-        borderRadius: radius.md,
+        backgroundColor: "#f1f5f9",
+        borderRadius: 12,
         flexDirection: "row",
         gap: spacing.xs,
         minHeight: 44,
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
     neutralButtonText: {
         color: "#374151",
         fontSize: 12,
-        fontWeight: "900",
+        fontWeight: "700",
     },
     neutralButtonTextDark: {
         color: "#f1f5f9",
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     dangerButton: {
         alignItems: "center",
         backgroundColor: "#fef2f2",
-        borderRadius: radius.md,
+        borderRadius: 12,
         flexDirection: "row",
         gap: spacing.xs,
         minHeight: 44,
