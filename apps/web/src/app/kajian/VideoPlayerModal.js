@@ -61,17 +61,26 @@ export default function VideoPlayerModal({ kajian, onClose }) {
                                 : ""}
                         </p>
                     </div>
-                    <a
-                        href={kajian.url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium flex-shrink-0'
-                    >
-                        <span className='text-base' aria-hidden='true'>
-                            ▶
-                        </span>
-                        YouTube
-                    </a>
+                    <div className='flex items-center gap-2 shrink-0'>
+                        <a
+                            href={kajian.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium flex-shrink-0'
+                        >
+                            <span className='text-base' aria-hidden='true'>
+                                ▶
+                            </span>
+                            YouTube
+                        </a>
+                        <button
+                            type='button'
+                            onClick={onClose}
+                            className='px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 text-xs font-medium transition-colors'
+                        >
+                            Tutup
+                        </button>
+                    </div>
                 </div>
             </div>
         </ModalShell>

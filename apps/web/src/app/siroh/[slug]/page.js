@@ -78,7 +78,7 @@ export default async function SirohDetailPage(props) {
                 <ContentWidth compact='max-w-3xl' className='px-4 py-8'>
                     <Link
                         href='/siroh'
-                        className='inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 hover:dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors mb-6'
+                        className='inline-flex items-center gap-1.5 min-h-9 px-3 py-1.5 -ml-3 rounded-lg text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors mb-6'
                     >
                         ← Kembali ke Siroh
                     </Link>

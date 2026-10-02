@@ -158,8 +158,10 @@ export function KamusContent({ initialWords = [] }) {
                             )}
                         </div>
                         <button
+                            type='button'
                             onClick={() => setSelected(null)}
-                            className='text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            aria-label={t("common.close") || "Tutup"}
+                            className='w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-emerald-100/60 dark:hover:bg-emerald-900/40 transition-colors'
                         >
                             ✕
                         </button>

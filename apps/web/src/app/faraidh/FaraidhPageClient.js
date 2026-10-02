@@ -489,13 +489,13 @@ export function FaraidhContent() {
                                         {fields.map((field) => (
                                             <div key={field.key}>
                                                 <label
-                                                    htmlFor='page-field-1'
+                                                    htmlFor={`page-heir-${field.key}`}
                                                     className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
                                                 >
                                                     {heirLabel(field.key, lang)}
                                                 </label>
                                                 <input
-                                                    id='page-field-1'
+                                                    id={`page-heir-${field.key}`}
                                                     type='number'
                                                     min='0'
                                                     max={field.max}

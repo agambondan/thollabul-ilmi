@@ -211,20 +211,23 @@ func seedDoaFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedDoaFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.Doa{
-			Category:        model.DoaCategory(r.Category),
-			Title:           r.Title,
-			Arabic:          r.Arabic,
-			Transliteration: r.Transliteration,
-			TranslationText: r.TranslationText,
-			Source:          r.Source,
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.Doa{
+				Category:        model.DoaCategory(r.Category),
+				Title:           r.Title,
+				Arabic:          r.Arabic,
+				Transliteration: r.Transliteration,
+				TranslationText: r.TranslationText,
+				Source:          r.Source,
+			}
+		tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "category"}, {Name: "title"}},
+				DoUpdates: clause.AssignmentColumns([]string{"arabic", "transliteration", "translation", "source"}),
+			}).Create(&item)
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "category"}, {Name: "title"}},
-			DoUpdates: clause.AssignmentColumns([]string{"arabic", "transliteration", "translation", "source"}),
-		}).Create(&item)
-	}
+		return nil
+	})
 }
 
 // ── Asmaul Husna ──────────────────────────────────────────────────────────────
@@ -243,20 +246,23 @@ func seedAsmaUlHusnaFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedAsmaUlHusnaFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.AsmaUlHusna{
-			Number:          r.Number,
-			Arabic:          r.Arabic,
-			Transliteration: r.Transliteration,
-			Indonesian:      r.Indonesian,
-			English:         r.English,
-			Meaning:         r.Meaning,
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.AsmaUlHusna{
+				Number:          r.Number,
+				Arabic:          r.Arabic,
+				Transliteration: r.Transliteration,
+				Indonesian:      r.Indonesian,
+				English:         r.English,
+				Meaning:         r.Meaning,
+			}
+			tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "number"}},
+				DoUpdates: clause.AssignmentColumns([]string{"arabic", "transliteration", "indonesian", "english", "meaning"}),
+			}).Create(&item)
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "number"}},
-			DoUpdates: clause.AssignmentColumns([]string{"arabic", "transliteration", "indonesian", "english", "meaning"}),
-		}).Create(&item)
-	}
+		return nil
+	})
 }
 
 // ── Amalan Item ───────────────────────────────────────────────────────────────
@@ -272,13 +278,16 @@ func seedAmalanItemFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedAmalanItemFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.AmalanItem{Name: r.Name, Description: r.Description, Category: model.AmalanCategory(r.Category)}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "name"}, {Name: "category"}},
-			DoUpdates: clause.AssignmentColumns([]string{"description", "category"}),
-		}).Create(&item)
-	}
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.AmalanItem{Name: r.Name, Description: r.Description, Category: model.AmalanCategory(r.Category)}
+			tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "name"}, {Name: "category"}},
+				DoUpdates: clause.AssignmentColumns([]string{"description", "category"}),
+			}).Create(&item)
+		}
+		return nil
+	})
 }
 
 // ── Dzikir ────────────────────────────────────────────────────────────────────
@@ -300,23 +309,26 @@ func seedDzikirFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedDzikirFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.Dzikir{
-			Category:        model.DzikirCategory(r.Category),
-			Title:           r.Title,
-			Arabic:          r.Arabic,
-			Transliteration: r.Transliteration,
-			TranslationText: r.TranslationText,
-			Count:           r.Count,
-			Fadhilah:        r.Fadhilah,
-			Source:          r.Source,
-			Occasion:        r.Occasion,
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.Dzikir{
+				Category:        model.DzikirCategory(r.Category),
+				Title:           r.Title,
+				Arabic:          r.Arabic,
+				Transliteration: r.Transliteration,
+				TranslationText: r.TranslationText,
+				Count:           r.Count,
+				Fadhilah:        r.Fadhilah,
+				Source:          r.Source,
+				Occasion:        r.Occasion,
+			}
+			tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "category"}, {Name: "title"}},
+				DoUpdates: clause.AssignmentColumns([]string{"arabic", "transliteration", "translation", "count", "fadhilah", "source", "occasion"}),
+			}).Create(&item)
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "category"}, {Name: "title"}},
-			DoUpdates: clause.AssignmentColumns([]string{"arabic", "transliteration", "translation", "count", "fadhilah", "source", "occasion"}),
-		}).Create(&item)
-	}
+		return nil
+	})
 }
 
 // ── Sholat Guide ──────────────────────────────────────────────────────────────
@@ -337,22 +349,25 @@ func seedSholatGuideFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedSholatGuideFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.SholatGuide{
-			Step:            r.Step,
-			Title:           r.Title,
-			Arabic:          r.Arabic,
-			Transliteration: r.Transliteration,
-			TranslationText: r.TranslationText,
-			Description:     r.Description,
-			Source:          r.Source,
-			Notes:           r.Notes,
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.SholatGuide{
+				Step:            r.Step,
+				Title:           r.Title,
+				Arabic:          r.Arabic,
+				Transliteration: r.Transliteration,
+				TranslationText: r.TranslationText,
+				Description:     r.Description,
+				Source:          r.Source,
+				Notes:           r.Notes,
+			}
+			tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "step"}},
+				DoUpdates: clause.AssignmentColumns([]string{"title", "arabic", "transliteration", "translation", "description", "source", "notes"}),
+			}).Create(&item)
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "step"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "arabic", "transliteration", "translation", "description", "source", "notes"}),
-		}).Create(&item)
-	}
+		return nil
+	})
 }
 
 // ── Fiqh Category ─────────────────────────────────────────────────────────────
@@ -368,13 +383,16 @@ func seedFiqhCategoriesFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedFiqhCategoriesFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.FiqhCategory{Name: r.Name, Slug: r.Slug, Description: r.Description}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"name", "description"}),
-		}).Create(&item)
-	}
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.FiqhCategory{Name: r.Name, Slug: r.Slug, Description: r.Description}
+			tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "slug"}},
+				DoUpdates: clause.AssignmentColumns([]string{"name", "description"}),
+			}).Create(&item)
+		}
+		return nil
+	})
 }
 
 // ── Fiqh Item ─────────────────────────────────────────────────────────────────
@@ -440,13 +458,16 @@ func seedSirohCategoriesFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedSirohCategoriesFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.SirohCategory{Title: r.Title, Slug: r.Slug, Order: r.Order}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", `"order"`}),
-		}).Create(&item)
-	}
+	_ = db.Transaction(func(tx *gorm.DB) error {
+		for _, r := range rows {
+			item := model.SirohCategory{Title: r.Title, Slug: r.Slug, Order: r.Order}
+			tx.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "slug"}},
+				DoUpdates: clause.AssignmentColumns([]string{"title", `"order"`}),
+			}).Create(&item)
+		}
+		return nil
+	})
 }
 
 // ── Siroh Content ─────────────────────────────────────────────────────────────

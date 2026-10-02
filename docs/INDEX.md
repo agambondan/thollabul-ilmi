@@ -86,7 +86,8 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [media/before-after/2026-10-01-belajar-hub-fixes/](./media/before-after/2026-10-01-belajar-hub-fixes/README.md)                 | 6 pasang: amalan guest error, lessons markdown, blog excerpt markdown, hamburger highlight, search nav highlight, quiz progress title                                                                      |
 | [media/before-after/2026-10-01-tokoh-tarikh-layout-fixes/](./media/before-after/2026-10-01-tokoh-tarikh-layout-fixes/README.md) | 2 pasang: standardisasi padding & badge era daftar Tokoh Tarikh, migrasi modal detail ke AppModalSheet                                                                                                     |
 | [media/before-after/2026-10-01-belajar-hub-code-fixes/](./media/before-after/2026-10-01-belajar-hub-code-fixes/README.md)       | 8 pasang (B10-B16): nama app, toggle Book/Hadith ID, hero Belajar EN, tab Belajar nyangkut di Doa, kontras label dark mode, search/filter Classic, tombol tutup Global Search, highlight hamburger Lainnya |
-| [media/before-after/2026-10-01-historical-map-layout-fixes/](./media/before-after/2026-10-01-historical-map-layout-fixes/README.md)       | 2 pasang: standardisasi layout kartu & padding filter Peta Islam, detail modal AppModalSheet |
+| [media/before-after/2026-10-01-historical-map-layout-fixes/](./media/before-after/2026-10-01-historical-map-layout-fixes/README.md)       | 2 pasang: standardisasi layout kartu & padding filter Peta Islam, detail modal AppModalSheet
+| [media/before-after/2026-10-02-web-ux-fixes/](./media/before-after/2026-10-02-web-ux-fixes/README.md)       | 3 pasang: faraidh input label accessibility, kamus close button touch target, siroh back button touch target | |
 
 ---
 
