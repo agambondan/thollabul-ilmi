@@ -3,7 +3,7 @@
 > Tujuan: menjaga parity fitur web (public + dashboard) dan mobile agar agent
 > berikutnya tidak menganggap baseline lama sebagai status current.
 
-Last verified: 2026-05-30
+Last verified: 2026-10-02
 
 ## Source Of Truth
 
@@ -11,7 +11,7 @@ Last verified: 2026-05-30
 - Route parity checker: `node scripts/check-feature-parity.js`
 - Web package shortcut: `cd apps/web && npm run check:feature-parity`
 - Web route UI audit: `cd apps/web && npm run test:e2e:routes`
-    - Runs `tests/flows/all-routes-ui-audit.spec.js` against the 154 current
+    - Runs `tests/flows/all-routes-ui-audit.spec.js` against current
       `src/app` page routes.
     - The GitHub `web-e2e` job runs the full Playwright suite through
       `npm run test:e2e`, so this audit is part of routine CI.
@@ -32,11 +32,11 @@ Current checker output:
 
 ```text
 Feature parity check passed.
-- manifest features: 50
-- manifest utility routes: 14
-- mobile feature keys: 43
-- web app routes scanned: 154
-- dashboard page routes scanned: 64
+- manifest features: 54
+- manifest utility routes: 18
+- mobile feature keys: 46
+- web app routes scanned: 188
+- dashboard page routes scanned: 70
 ```
 
 Current route UI audit output:

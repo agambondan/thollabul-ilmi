@@ -48,6 +48,21 @@ const NAV_GROUPS = [
         titleKey: "admin.group.content",
         links: [
             {
+                href: "/admin/surah",
+                label: "Surah Al-Quran",
+                icon: <BsBook />,
+            },
+            {
+                href: "/admin/ayah",
+                label: "Ayat Al-Quran",
+                icon: <BsFileText />,
+            },
+            {
+                href: "/admin/hadis",
+                label: "Hadis Nabawi",
+                icon: <BsBookHalf />,
+            },
+            {
                 href: "/admin/blog",
                 labelKey: "admin.nav.blog",
                 icon: <BsFileText />,
@@ -76,6 +91,16 @@ const NAV_GROUPS = [
                 href: "/admin/asbabun-nuzul",
                 labelKey: "admin.nav.asbabun",
                 icon: <BsBookmark />,
+            },
+            {
+                href: "/admin/munasabah",
+                label: "Munasabah",
+                icon: <BsGrid />,
+            },
+            {
+                href: "/admin/audio",
+                label: "Audio Murotal",
+                icon: <BsFileText />,
             },
             {
                 href: "/admin/reminders",
@@ -221,6 +246,11 @@ const NAV_GROUPS = [
                 href: "/admin/push",
                 label: "Push Notification",
                 icon: <BsBellFill />,
+            },
+            {
+                href: "/admin/notification-templates",
+                label: "Template Notifikasi",
+                icon: <BsFileText />,
             },
             {
                 href: "/admin/whatsapp",

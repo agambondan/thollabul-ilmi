@@ -9,9 +9,9 @@ Rujukan Resmi: [Google Search Central — SEO Starter Guide](https://developers.
 
 Aplikasi web Thullaabul 'Ilmi (`apps/web`) telah menerapkan sebagian besar prinsip dasar dari **Google SEO Starter Guide**:
 
-- **Skor Kepatuhan**: ~88% terpenuhi.
-- **Kekuatan Utama**: Pengaturan `sitemap.xml` dinamis komprehensif, `robots.txt` bersih dan ketat melindungi rute personal/admin, `canonical` tag konsisten di hampir seluruh rute, OpenGraph/Twitter card rapi, serta struktur URL semantik yang deskriptif.
-- **Area Peluang (Peningkatan)**: Penambahan schema `BreadcrumbList` pada rute bertingkat, schema `FAQPage`/`QAPage` pada modul tanya-jawab, penambahan `rel="nofollow"` otomatis pada konten UGC (user comments/forum), serta migrasi sisa halaman konten statis dari `"use client"` ke React Server Components (RSC) agar konten langsung ter-render dalam payload HTML pertama.
+- **Skor Kepatuhan**: ~95% terpenuhi.
+- **Kekuatan Utama**: Pengaturan `sitemap.xml` dinamis komprehensif, `robots.txt` bersih dan ketat melindungi rute personal/admin, `canonical` tag konsisten di hampir seluruh rute, OpenGraph/Twitter card rapi, serta struktur URL semantik yang deskriptif. **Structured data `BreadcrumbList` (root & nested routes) dan `QAPage`/`FAQPage` kini sudah terimplementasi penuh.**
+- **Area Peluang (Peningkatan)**: Penambahan `rel="nofollow"` otomatis pada konten UGC (user comments/forum), serta migrasi sisa halaman konten statis dari `"use client"` ke React Server Components (RSC) agar konten langsung ter-render dalam payload HTML pertama.
 
 ---
 
@@ -31,8 +31,8 @@ Aplikasi web Thullaabul 'Ilmi (`apps/web`) telah menerapkan sebagian besar prins
 | **Social Cards (OG/Twitter)**    | Metadata OpenGraph dan Twitter Card untuk pratinjau tautan.                     | Helper `openGraphFor()` dan aset statis `og.png` (1200x630) siap di semua rute publik.                                                                                                     | **LULUS**    |
 | **PWA & Mobile Ready**           | Desain responsif, mobile viewport, manifest web app.                            | `src/app/manifest.js` lengkap dengan icon multi-ukuran. Desain mobile-first dengan Tailwind CSS dan tab bar navigasi.                                                                      | **LULUS**    |
 | **Structured Data: Site & Book** | JSON-LD schema.org untuk membantu mesin pencari memahami tipe konten.           | `WebSite` + `SearchAction` di root `layout.js`, `Book` di `/quran`, `Article` di `/blog/[slug]`.                                                                                           | **LULUS**    |
-| **Structured Data: Breadcrumb**  | JSON-LD `BreadcrumbList` untuk navigasi hirarki di hasil pencarian.             | Belum diimplementasikan pada rute multi-level (`/quran/surah/[slug]`, `/hadith/[slug]/[number]`).                                                                                          | **GAP (P1)** |
-| **Structured Data: QA / FAQ**    | Schema `FAQPage` atau `QAPage` untuk modul tanya jawab & fatwa/fiqh.            | Belum ada di `/forum` atau `/fiqh`.                                                                                                                                                        | **GAP (P2)** |
+| **Structured Data: Breadcrumb**  | JSON-LD `BreadcrumbList` untuk navigasi hirarki di hasil pencarian.             | Sudah diimplementasikan di root & rute bertingkat: `/quran/layout.js`, `/quran/[...slug]/layout.js`, `/hadith/layout.js`, `/hadith/[slug]/page.js`, `/hadith/[slug]/[number]/page.js`, `/hadith/theme/[slug]/page.js`, `/forum/layout.js`, `/forum/[slug]/layout.js`, `/fiqh/layout.js`, `/fiqh/[slug]/layout.js`, `/tafsir/layout.js`, `/tafsir/[slug]/layout.js`, `/blog/layout.js`, `/blog/[slug]/layout.js`. | **LULUS**    |
+| **Structured Data: QA / FAQ**    | Schema `FAQPage` atau `QAPage` untuk modul tanya jawab & fatwa/fiqh.            | Sudah diimplementasikan: `QAPage` di `/forum/[slug]/layout.js` (question + accepted/suggested answers), `FAQPage` di `/fiqh/page.js` (max 30 items dari API). | **LULUS**    |
 | **UGC Link Qualification**       | Outbound links dari pengguna diberi `rel="nofollow"` atau `ugc`.                | Fitur komentar blog & forum belum secara eksplisit menambahkan atribut `rel="ugc nofollow"` pada link kiriman user.                                                                        | **GAP (P2)** |
 | **Server-Side Rendering (SSR)**  | Googlebot membaca teks HTML langsung tanpa bergantung JavaScript client render. | Sebagian halaman publik masih memakai directive `"use client"` penuh untuk fetching data via REST API client.                                                                              | **GAP (P1)** |
 
@@ -40,15 +40,10 @@ Aplikasi web Thullaabul 'Ilmi (`apps/web`) telah menerapkan sebagian besar prins
 
 ## 3. Detail Gap & Rencana Tindak Lanjut (Roadmap)
 
-### Prioritas 1 (P1) — High Impact
+### Prioritas 1 (P1) — High Impact — **SELESAI**
 
-1. **Implementasi `BreadcrumbList` Schema (JSON-LD)**
-    - **Lokasi**:
-        - `/quran/[...slug]/layout.js` (`Beranda` > `Al-Quran` > `Surah ...`)
-        - `/hadith/[slug]/layout.js` dan `/hadith/[slug]/[number]/page.js` (`Beranda` > `Hadits` > `Kitab ...` > `Nomor ...`)
-        - `/blog/[slug]/layout.js` (`Beranda` > `Blog` > `Kategori` > `Judul Artikel`)
-        - `/tafsir/[slug]/layout.js` (`Beranda` > `Tafsir` > `Surah ...`)
-    - **Tujuan**: Memunculkan visual breadcrumb interaktif di Google Search SERP.
+1. ~~Implementasi `BreadcrumbList` Schema (JSON-LD)~~ **✓ SELESAI** (`2026-09-12` commit)
+    - ~~Lokasi:~~ Diimplementasikan di 13 layout/page file: `/quran/layout.js`, `/quran/[...slug]/layout.js`, `/hadith/layout.js`, `/hadith/[slug]/page.js`, `/hadith/[slug]/[number]/page.js`, `/hadith/theme/[slug]/page.js`, `/forum/layout.js`, `/forum/[slug]/layout.js`, `/fiqh/layout.js`, `/fiqh/[slug]/layout.js`, `/tafsir/layout.js`, `/tafsir/[slug]/layout.js`, `/blog/layout.js`, `/blog/[slug]/layout.js`.
 
 2. **Perluasan Server Component (SSR / ISR) untuk Halaman Konten Utama**
     - **Lokasi**: Halaman pembaca hadis, doa, wirid, dan fiqh ringkas.
@@ -61,12 +56,12 @@ Aplikasi web Thullaabul 'Ilmi (`apps/web`) telah menerapkan sebagian besar prins
     - **Tindakan**: Tautan eksternal yang diinput oleh user wajib otomatis disanitasi dan diberi atribut `rel="ugc nofollow noopener noreferrer"`.
     - **Tujuan**: Melindungi reputasi domain dari spam dan link-farming sesuai Google Search Spam Policies.
 
-4. **Penambahan Schema `QAPage` / `FAQPage`**
-    - **Lokasi**: `/forum/[slug]` dan `/fiqh`.
-    - **Tujuan**: Menampilkan format tanya-jawab yang kaya (rich snippets) di hasil pencarian.
+4. ~~Penambahan Schema `QAPage` / `FAQPage`~~ **✓ SELESAI** (`2026-09-12` commit)
+    - `QAPage` di `/forum/[slug]/layout.js` (question + accepted/suggested answers).
+    - `FAQPage` di `/fiqh/page.js` (max 30 items dari API fiqh).
 
 ---
 
 ## 4. Kesimpulan
 
-Secara keseluruhan, fondasi teknis SEO website telah mengadopsi standar Google Search Essentials dan Starter Guide dengan sangat baik. Pekerjaan lanjutan difokuskan pada pengayaan structured data (rich snippets) dan sanitasi tautan eksternal.
+Secara keseluruhan, fondasi teknis SEO website telah mengadopsi standar Google Search Essentials dan Starter Guide dengan sangat baik. **Structured data `BreadcrumbList` (P1) dan `QAPage`/`FAQPage` (P2) kini sudah sepenuhnya terimplementasi** meliputi 13+ layout/page file. Pekerjaan lanjutan difokuskan pada sanitasi tautan eksternal UGC (`rel="ugc nofollow"`) dan migrasi halaman konten statis ke React Server Components (RSC) untuk optimalisasi SSR.

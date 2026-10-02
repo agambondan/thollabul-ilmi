@@ -552,10 +552,14 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	// Audio Murotal (public read, admin write)
 	master.Get("/audio/manifest", newAudioController.GetManifest)
+	master.Get("/audio/surah", admin, newAudioController.FindAllSurahAudio)
 	master.Get("/audio/surah/:surahId", newAudioController.FindSurahAudio)
+	master.Get("/audio/ayah", admin, newAudioController.FindAllAyahAudio)
 	master.Get("/audio/ayah/:ayahId", newAudioController.FindAyahAudio)
 	master.Post("/audio/surah", admin, newAudioController.AddSurahAudio)
+	master.Put("/audio/surah/:id", admin, newAudioController.UpdateSurahAudio)
 	master.Post("/audio/ayah", admin, newAudioController.AddAyahAudio)
+	master.Put("/audio/ayah/:id", admin, newAudioController.UpdateAyahAudio)
 	master.Delete("/audio/surah/:id", admin, newAudioController.DeleteSurahAudio)
 	master.Delete("/audio/ayah/:id", admin, newAudioController.DeleteAyahAudio)
 
@@ -936,13 +940,18 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/komunitas/chat/:id", jwt, newChatController.Delete)
 
 	// Munasabah (public read, editor/admin write)
+	master.Get("/munasabah", newMunasabahController.FindAll)
+	master.Get("/munasabah/:id", newMunasabahController.FindByID)
 	master.Get("/munasabah/ayah/:ayahId", newMunasabahController.FindByAyahID)
 	master.Post("/munasabah", middlewares.EditorOrAdminMiddleware(), newMunasabahController.Create)
+	master.Put("/munasabah/:id", middlewares.EditorOrAdminMiddleware(), newMunasabahController.Update)
 	master.Delete("/munasabah/:id", middlewares.EditorOrAdminMiddleware(), newMunasabahController.Delete)
 
 	// Notification Templates (admin)
 	master.Get("/notification-templates", admin, newNotificationTemplateController.FindAll)
+	master.Get("/notification-templates/:id", admin, newNotificationTemplateController.FindByID)
 	master.Post("/notification-templates", admin, newNotificationTemplateController.Create)
+	master.Put("/notification-templates/:id", middlewares.EditorOrAdminMiddleware(), newNotificationTemplateController.Update)
 	master.Delete("/notification-templates/:id", admin, newNotificationTemplateController.Delete)
 
 	// Tokoh Tarikh (public read, admin write)

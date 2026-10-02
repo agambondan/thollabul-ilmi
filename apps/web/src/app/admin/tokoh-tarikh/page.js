@@ -49,6 +49,7 @@ export default function AdminTokohTarikhPage() {
                 { key: "tahun_lahir", label: "Tahun Lahir", type: "text" },
                 { key: "tahun_wafat", label: "Tahun Wafat", type: "text" },
                 { key: "image_url", label: "URL Foto", type: "text" },
+                { key: "source", label: "Sumber (Kitab Rujukan)", type: "text", placeholder: "Contoh: Ar-Raheeq Al-Makhtum, Sirah Ibnu Hisyam" },
                 {
                     key: "biografi",
                     label: "Biografi",

@@ -103,15 +103,12 @@ waktu`.
 ### F-04 - Dokumentasi Sync Lama Sudah Stale
 
 Priority: `P2`
-Status: `OPEN`
+Status: `FIXED`
 Area: `docs`
 
-`docs/WEB_MOBILE_SYNC.md` masih menyebut beberapa fitur sebagai missing atau
-kurang sync, contohnya Forum Q&A, Tokoh Tarikh, Peta Interaktif, dan beberapa
-fitur lain yang sudah ditutup dalam task 1-11 dan follow-up ini. Ini berisiko
-membuat agent berikutnya mengerjakan ulang scope yang sudah selesai.
+`docs/WEB_MOBILE_SYNC.md` sudah dimutakhirkan mengikuti `feature-manifest.json` dan checker parity terkini (54 features, 18 utility routes, 46 mobile feature keys, 188 web routes, 70 dashboard routes).
 
-Rekomendasi:
+Fix:
 
 - Refresh `docs/WEB_MOBILE_SYNC.md` dari manifest terbaru.
 - Tandai bagian lama sebagai historical baseline jika tidak ingin dihapus.
@@ -120,14 +117,12 @@ Rekomendasi:
 ### F-05 - Manifest Belum Mencakup Route Profil Sebagai Route-Level Surface
 
 Priority: `P3`
-Status: `OPEN`
+Status: `FIXED`
 Area: `docs`, `apps/web`
 
-Audit route menunjukkan `/profile`, `/dashboard/profile`, dan `/contact`
-tidak masuk feature manifest. Ini bukan fitur konten utama, tetapi tetap
-route-level surface yang sering dipakai CTA account/support.
+Section `utilityRoutes` sudah tersedia di `feature-manifest.json` mencakup `/profile`, `/dashboard/profile`, `/contact`, `/dashboard`, dll.
 
-Rekomendasi:
+Fix:
 
 - Tambahkan section `surfaces` atau `utilityRoutes` di manifest supaya parity
   checker tidak perlu hardcode exception.

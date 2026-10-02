@@ -36,6 +36,7 @@ import { ImBook } from "react-icons/im";
 import { FaQuran } from "react-icons/fa";
 import {
     MdFlag,
+    MdFormatListBulleted,
     MdMosque,
     MdOutlineAutoStories,
     MdOutlinePlayLesson,

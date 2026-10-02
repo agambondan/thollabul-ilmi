@@ -1,4 +1,4 @@
-import { openGraphFor, SITE_URL } from "@/lib/site";
+import { openGraphFor, serializeJsonLd, SITE_URL } from "@/lib/site";
 
 export const metadata = {
     alternates: { canonical: "/blog" },
@@ -22,6 +22,25 @@ const collectionJsonLd = {
     },
 };
 
+const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Beranda",
+            item: `${SITE_URL}/`,
+        },
+        {
+            "@type": "ListItem",
+            position: 2,
+            name: "Blog Islami",
+            item: `${SITE_URL}/blog`,
+        },
+    ],
+};
+
 export default function BlogLayout({ children }) {
     return (
         <>
@@ -29,6 +48,12 @@ export default function BlogLayout({ children }) {
                 type='application/ld+json'
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(collectionJsonLd),
+                }}
+            />
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
                 }}
             />
             {children}

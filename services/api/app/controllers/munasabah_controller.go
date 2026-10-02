@@ -11,7 +11,10 @@ import (
 
 type MunasabahController interface {
 	Create(ctx *fiber.Ctx) error
+	FindAll(ctx *fiber.Ctx) error
+	FindByID(ctx *fiber.Ctx) error
 	FindByAyahID(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -33,6 +36,26 @@ func (c *munasabahController) Create(ctx *fiber.Ctx) error {
 	return lib.OK(ctx, result)
 }
 
+func (c *munasabahController) FindAll(ctx *fiber.Ctx) error {
+	items, err := c.svc.FindAll()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{"items": items})
+}
+
+func (c *munasabahController) FindByID(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	item, err := c.svc.FindByID(id)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, item)
+}
+
 func (c *munasabahController) FindByAyahID(ctx *fiber.Ctx) error {
 	id, err := strconv.Atoi(ctx.Params("ayahId"))
 	if err != nil {
@@ -43,6 +66,22 @@ func (c *munasabahController) FindByAyahID(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, fiber.Map{"items": items})
+}
+
+func (c *munasabahController) Update(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	data := new(model.Munasabah)
+	if err := lib.BodyParser(ctx, data); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	result, err := c.svc.Update(id, data)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, result)
 }
 
 func (c *munasabahController) Delete(ctx *fiber.Ctx) error {

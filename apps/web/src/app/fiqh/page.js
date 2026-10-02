@@ -1,5 +1,6 @@
 import Section from "@/components/Section";
 import FiqhClient from "./FiqhClient";
+import { serializeJsonLd, SITE_URL } from "@/lib/site";
 
 export const revalidate = 86400;
 
@@ -38,17 +39,37 @@ async function getInitialFiqhData() {
         return {
             categories: Array.isArray(categories) ? categories : [],
             groupedItems,
+            items,
         };
     } catch {
-        return { categories: [], groupedItems: {} };
+        return { categories: [], groupedItems: {}, items: [] };
     }
 }
 
 export default async function FiqhPage() {
-    const { categories, groupedItems } = await getInitialFiqhData();
+    const { categories, groupedItems, items } = await getInitialFiqhData();
+
+    const faqPageJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: items.slice(0, 30).map((item) => ({
+            "@type": "Question",
+            name: item.title,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: item.content,
+            },
+        })),
+    };
 
     return (
         <main className='min-h-screen flex flex-col'>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(faqPageJsonLd),
+                }}
+            />
             <Section>
                 <FiqhClient
                     initialCategories={categories}

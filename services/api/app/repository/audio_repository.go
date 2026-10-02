@@ -7,10 +7,14 @@ import (
 
 type AudioRepository interface {
 	FindManifest() (*model.AudioManifest, error)
+	FindAllSurahAudio() ([]model.SurahAudio, error)
 	FindSurahAudioBySurahID(int) ([]model.SurahAudio, error)
+	FindAllAyahAudio() ([]model.AyahAudio, error)
 	FindAyahAudioByAyahID(int) ([]model.AyahAudio, error)
 	SaveSurahAudio(*model.SurahAudio) (*model.SurahAudio, error)
+	UpdateSurahAudio(int, *model.SurahAudio) (*model.SurahAudio, error)
 	SaveAyahAudio(*model.AyahAudio) (*model.AyahAudio, error)
+	UpdateAyahAudio(int, *model.AyahAudio) (*model.AyahAudio, error)
 	DeleteSurahAudio(int) error
 	DeleteAyahAudio(int) error
 }
@@ -121,6 +125,40 @@ func (r *audioRepo) FindAyahAudioByAyahID(ayahID int) ([]model.AyahAudio, error)
 	var list []model.AyahAudio
 	err := r.db.Where("ayah_id = ?", ayahID).Find(&list).Error
 	return list, err
+}
+
+func (r *audioRepo) FindAllSurahAudio() ([]model.SurahAudio, error) {
+	var list []model.SurahAudio
+	err := r.db.Order("surah_id ASC, qari_slug ASC").Find(&list).Error
+	return list, err
+}
+
+func (r *audioRepo) FindAllAyahAudio() ([]model.AyahAudio, error) {
+	var list []model.AyahAudio
+	err := r.db.Order("ayah_id ASC, qari_slug ASC").Find(&list).Error
+	return list, err
+}
+
+func (r *audioRepo) UpdateSurahAudio(id int, a *model.SurahAudio) (*model.SurahAudio, error) {
+	if err := r.db.Model(&model.SurahAudio{}).Where("id = ?", id).Updates(a).Error; err != nil {
+		return nil, err
+	}
+	var updated model.SurahAudio
+	if err := r.db.First(&updated, id).Error; err != nil {
+		return nil, err
+	}
+	return &updated, nil
+}
+
+func (r *audioRepo) UpdateAyahAudio(id int, a *model.AyahAudio) (*model.AyahAudio, error) {
+	if err := r.db.Model(&model.AyahAudio{}).Where("id = ?", id).Updates(a).Error; err != nil {
+		return nil, err
+	}
+	var updated model.AyahAudio
+	if err := r.db.First(&updated, id).Error; err != nil {
+		return nil, err
+	}
+	return &updated, nil
 }
 
 func (r *audioRepo) SaveSurahAudio(a *model.SurahAudio) (*model.SurahAudio, error) {

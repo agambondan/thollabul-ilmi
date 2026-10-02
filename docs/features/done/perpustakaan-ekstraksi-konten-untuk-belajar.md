@@ -54,82 +54,83 @@ ulama mu'tabar (lihat memori `feedback_islamic_data_sahih_only`).
 ## Task List
 
 1. **Deteksi & ekstraksi teks per buku**
-   - Untuk PDF berteks: ekstrak langsung (`pdftotext` atau library Go setara,
-     mis. `pdfcpu`/`unipdf`) per halaman.
-   - Untuk PDF hasil scan (tidak ada layer teks — cek dengan mencoba ekstraksi
-     dulu, kalau hasil kosong berarti scan): perlu OCR.
-   - Simpan hasil di tabel baru, misalnya `library_book_extracted_text`
-     (book_id, page_number, text, extraction_method, extracted_at) —
-     per halaman, bukan satu blob per buku, supaya sitasi halaman ke sumber
-     tetap bisa dilacak.
+    - Untuk PDF berteks: ekstrak langsung (`pdftotext` atau library Go setara,
+      mis. `pdfcpu`/`unipdf`) per halaman.
+    - Untuk PDF hasil scan (tidak ada layer teks — cek dengan mencoba ekstraksi
+      dulu, kalau hasil kosong berarti scan): perlu OCR.
+    - Simpan hasil di tabel baru, misalnya `library_book_extracted_text`
+      (book_id, page_number, text, extraction_method, extracted_at) —
+      per halaman, bukan satu blob per buku, supaya sitasi halaman ke sumber
+      tetap bisa dilacak.
 
-   **Hasil spike (2026-09-18)** — sudah dicoba langsung, bukan asumsi:
-   - PDF berteks ("Tiga Landasan Utama", 39 halaman): `pdftotext -layout`
-     hasilnya bersih 100%, termasuk teks Arab yang ikut ke-embed di layer
-     teks (bukan gambar). Tidak perlu OCR sama sekali untuk kategori ini —
-     kemungkinan besar mayoritas buku baru di Perpustakaan (yang diunduh
-     dari archive.org sebagai "Text PDF") masuk kategori ini.
-   - PDF hasil scan ("Sepuluh Pembatal Keislaman", 68 halaman, scan 300dpi):
-     dites pakai Tesseract 4.1.1 + `tesseract-ocr-ind` + `tesseract-ocr-ara`.
-     - Teks Indonesia (termasuk layout 2 kolom): akurasi sangat tinggi,
-       ~99%, salah hanya di simbol khusus (ﷺ terbaca "£") dan sesekali
-       1 huruf. **Aman dipakai.**
-     - Teks Arab berharakat (dites pada kutipan QS Al-Kahfi:110) hasilnya
-       **rusak total** — bukan cuma typo, tapi karakter acak yang sama
-       sekali tidak merepresentasikan ayat aslinya. Tesseract (bahkan
-       dengan language pack `ara`) tidak cukup untuk teks Arab
-       ber-tashkeel/harakat dalam scan lama. **Tidak boleh dipakai
-       untuk konten Al-Qur'an/hadits — risiko salah kutip ayat suci.**
-   - **Implikasi strategi**: jangan coba OCR teks Arab sama sekali. Setiap
-     kutipan dalil di buku hampir selalu disertai rujukan yang justru
-     ke-OCR dengan baik karena huruf Latin (contoh di atas: teks Indonesia
-     "(Al-Kahfi : 110)" terbaca sempurna oleh OCR meski ayat Arab di
-     atasnya rusak). Jadi alurnya: OCR hanya untuk teks Indonesia, lalu
-     kalau ketemu pola rujukan ayat/hadits (regex sederhana: nama surah +
-     nomor ayat, atau "HR. <perawi>"), **ambil teks Arab & terjemahan
-     resminya dari data Quran/Hadits yang sudah ada di database aplikasi
-     ini** (bukan dari hasil OCR) — datanya sudah shahih dan sudah
-     divalidasi, jauh lebih aman daripada mempercayai OCR untuk teks
-     suci. Bagian Arab yang gagal di-OCR cukup dilewati/diabaikan saat
-     parsing, bukan dipaksakan.
-   - **Temuan tambahan (task #2, dites di buku produksi asli)**: "punya
-     text layer" ternyata TIDAK berarti "text layer-nya bisa dipercaya".
-     Bulughul Maram (sudah live di Perpustakaan, 332 halaman) punya text
-     layer, tapi sebagian besar halamannya keluar acak/rusak — dicek
-     silang dengan `pdftotext` (poppler, bukan cuma library Go kita) dan
-     hasilnya SAMA rusaknya, jadi ini bukan keterbatasan tooling, memang
-     text layer di file PDF sumbernya sendiri sudah korup (kemungkinan
-     bekas OCR jelek yang di-embed oleh yang men-digitisasi dulu).
-     **Konsekuensi**: deteksi "kosong = perlu OCR" saja tidak cukup, perlu
-     tambahan pengecekan kualitas per halaman (mis. rasio kemunculan kata
-     umum Bahasa Indonesia seperti "yang/dan/ini/untuk/dari" sebagai kata
-     utuh) — halaman yang lolos cek "ada teks" tapi gagal cek kualitas
-     ditandai status `low_confidence`, bukan otomatis `done`, supaya tidak
-     ada draft Belajar/Quiz yang diam-diam dibangun dari teks sampah.
-   - `POST /library/books/:id/extract` (admin) — proses async (bisa lama
-     untuk buku besar/hasil scan), dengan status field di `LibraryBook`
-     (`extraction_status`: none/processing/done/failed) supaya admin panel
-     bisa polling progres.
-3. **Generate draft modul Belajar / soal Quiz dari teks hasil ekstraksi**
-   - Pilih & rujuk potongan teks (per bab/topik, bukan seluruh buku sekaligus
-     — konteks LLM terbatas dan hasil lebih presisi per potongan kecil).
-   - Cek `docs/setup/ai-providers.md` untuk provider LLM yang sudah
-     dikonfigurasi di project ini sebelum menambah provider baru.
-   - Prompt harus eksplisit: **hanya merangkum/mengutip yang benar-benar ada
-     di teks sumber, dilarang menambah klaim/dalil yang tidak ada di sumber**
-     — draft harus menyertakan kutipan halaman sumber untuk setiap poin,
-     supaya reviewer bisa cross-check langsung ke buku asli.
-   - Output generate harus berstatus `draft`/`pending_review`, TIDAK PERNAH
-     langsung `published` — lihat Acceptance Criteria.
-4. **UI review admin**
-   - Halaman baru (atau tab di admin Belajar/Quiz yang sudah ada) yang
-     menampilkan draft hasil generate berdampingan dengan kutipan halaman
-     sumber PDF, dengan aksi: edit manual, setujui & publish, atau tolak.
-5. **Rollout bertahap**
-   - Uji coba di 1-2 buku pendek dan tidak kontroversial dulu (misal "Tiga
-     Landasan Utama" atau "Sepuluh Pembatal Keislaman" — keduanya sudah di
-     Perpustakaan, singkat, isinya sudah baku/tidak memerlukan penafsiran
-     rumit) sebelum diperluas ke buku lain.
+    **Hasil spike (2026-09-18)** — sudah dicoba langsung, bukan asumsi:
+    - PDF berteks ("Tiga Landasan Utama", 39 halaman): `pdftotext -layout`
+      hasilnya bersih 100%, termasuk teks Arab yang ikut ke-embed di layer
+      teks (bukan gambar). Tidak perlu OCR sama sekali untuk kategori ini —
+      kemungkinan besar mayoritas buku baru di Perpustakaan (yang diunduh
+      dari archive.org sebagai "Text PDF") masuk kategori ini.
+    - PDF hasil scan ("Sepuluh Pembatal Keislaman", 68 halaman, scan 300dpi):
+      dites pakai Tesseract 4.1.1 + `tesseract-ocr-ind` + `tesseract-ocr-ara`.
+        - Teks Indonesia (termasuk layout 2 kolom): akurasi sangat tinggi,
+          ~99%, salah hanya di simbol khusus (ﷺ terbaca "£") dan sesekali
+          1 huruf. **Aman dipakai.**
+        - Teks Arab berharakat (dites pada kutipan QS Al-Kahfi:110) hasilnya
+          **rusak total** — bukan cuma typo, tapi karakter acak yang sama
+          sekali tidak merepresentasikan ayat aslinya. Tesseract (bahkan
+          dengan language pack `ara`) tidak cukup untuk teks Arab
+          ber-tashkeel/harakat dalam scan lama. **Tidak boleh dipakai
+          untuk konten Al-Qur'an/hadits — risiko salah kutip ayat suci.**
+    - **Implikasi strategi**: jangan coba OCR teks Arab sama sekali. Setiap
+      kutipan dalil di buku hampir selalu disertai rujukan yang justru
+      ke-OCR dengan baik karena huruf Latin (contoh di atas: teks Indonesia
+      "(Al-Kahfi : 110)" terbaca sempurna oleh OCR meski ayat Arab di
+      atasnya rusak). Jadi alurnya: OCR hanya untuk teks Indonesia, lalu
+      kalau ketemu pola rujukan ayat/hadits (regex sederhana: nama surah +
+      nomor ayat, atau "HR. <perawi>"), **ambil teks Arab & terjemahan
+      resminya dari data Quran/Hadits yang sudah ada di database aplikasi
+      ini** (bukan dari hasil OCR) — datanya sudah shahih dan sudah
+      divalidasi, jauh lebih aman daripada mempercayai OCR untuk teks
+      suci. Bagian Arab yang gagal di-OCR cukup dilewati/diabaikan saat
+      parsing, bukan dipaksakan.
+    - **Temuan tambahan (task #2, dites di buku produksi asli)**: "punya
+      text layer" ternyata TIDAK berarti "text layer-nya bisa dipercaya".
+      Bulughul Maram (sudah live di Perpustakaan, 332 halaman) punya text
+      layer, tapi sebagian besar halamannya keluar acak/rusak — dicek
+      silang dengan `pdftotext` (poppler, bukan cuma library Go kita) dan
+      hasilnya SAMA rusaknya, jadi ini bukan keterbatasan tooling, memang
+      text layer di file PDF sumbernya sendiri sudah korup (kemungkinan
+      bekas OCR jelek yang di-embed oleh yang men-digitisasi dulu).
+      **Konsekuensi**: deteksi "kosong = perlu OCR" saja tidak cukup, perlu
+      tambahan pengecekan kualitas per halaman (mis. rasio kemunculan kata
+      umum Bahasa Indonesia seperti "yang/dan/ini/untuk/dari" sebagai kata
+      utuh) — halaman yang lolos cek "ada teks" tapi gagal cek kualitas
+      ditandai status `low_confidence`, bukan otomatis `done`, supaya tidak
+      ada draft Belajar/Quiz yang diam-diam dibangun dari teks sampah.
+    - `POST /library/books/:id/extract` (admin) — proses async (bisa lama
+      untuk buku besar/hasil scan), dengan status field di `LibraryBook`
+      (`extraction_status`: none/processing/done/failed) supaya admin panel
+      bisa polling progres.
+
+2. **Generate draft modul Belajar / soal Quiz dari teks hasil ekstraksi**
+    - Pilih & rujuk potongan teks (per bab/topik, bukan seluruh buku sekaligus
+      — konteks LLM terbatas dan hasil lebih presisi per potongan kecil).
+    - Cek `docs/setup/ai-providers.md` untuk provider LLM yang sudah
+      dikonfigurasi di project ini sebelum menambah provider baru.
+    - Prompt harus eksplisit: **hanya merangkum/mengutip yang benar-benar ada
+      di teks sumber, dilarang menambah klaim/dalil yang tidak ada di sumber**
+      — draft harus menyertakan kutipan halaman sumber untuk setiap poin,
+      supaya reviewer bisa cross-check langsung ke buku asli.
+    - Output generate harus berstatus `draft`/`pending_review`, TIDAK PERNAH
+      langsung `published` — lihat Acceptance Criteria.
+3. **UI review admin**
+    - Halaman baru (atau tab di admin Belajar/Quiz yang sudah ada) yang
+      menampilkan draft hasil generate berdampingan dengan kutipan halaman
+      sumber PDF, dengan aksi: edit manual, setujui & publish, atau tolak.
+4. **Rollout bertahap**
+    - Uji coba di 1-2 buku pendek dan tidak kontroversial dulu (misal "Tiga
+      Landasan Utama" atau "Sepuluh Pembatal Keislaman" — keduanya sudah di
+      Perpustakaan, singkat, isinya sudah baku/tidak memerlukan penafsiran
+      rumit) sebelum diperluas ke buku lain.
 
 ## Acceptance Criteria
 
@@ -148,21 +149,21 @@ ulama mu'tabar (lihat memori `feedback_islamic_data_sahih_only`).
 ## Evidence
 
 - Commands:
-  - `go test -v ./app/lib ./app/repository -run "TestExtractPDFPages|TestLibraryBookRepositoryExtractedPages"` (PASS)
-  - `npm --prefix apps/web test -- src/__tests__/AdminLibraryFilterSort.test.js` (PASS, 8/8 tests)
-  - `node scripts/check-feature-parity.js` (PASS)
+    - `go test -v ./app/lib ./app/repository -run "TestExtractPDFPages|TestLibraryBookRepositoryExtractedPages"` (PASS)
+    - `npm --prefix apps/web test -- src/__tests__/AdminLibraryFilterSort.test.js` (PASS, 8/8 tests)
+    - `node scripts/check-feature-parity.js` (PASS)
 - Web smoke:
-  - Ekstraksi PDF layer teks berjalan via `POST /api/v1/library/books/:id/extract`.
-  - Halaman admin `/admin/library` menampilkan modal ekstraksi lengkap dengan daftar halaman, status lolos cek kualitas vs perlu verifikasi, form inline edit teks halaman manual, peringatan lisensi, bangkitkan draft modul belajar / soal kuis, serta aksi simpan ke modul belajar & bank kuis.
+    - Ekstraksi PDF layer teks berjalan via `POST /api/v1/library/books/:id/extract`.
+    - Halaman admin `/admin/library` menampilkan modal ekstraksi lengkap dengan daftar halaman, status lolos cek kualitas vs perlu verifikasi, form inline edit teks halaman manual, peringatan lisensi, bangkitkan draft modul belajar / soal kuis, serta aksi simpan ke modul belajar & bank kuis.
 - Notes:
-  - Opsi ringan (link modul Belajar ke buku Perpustakaan) terintegrasi via `RelatedBookID` di `LessonModule`.
-  - Ekstraksi buku OCR dipisahkan via worker/script `services/api/scripts/ocr_library_books.go`.
+    - Opsi ringan (link modul Belajar ke buku Perpustakaan) terintegrasi via `RelatedBookID` di `LessonModule`.
+    - Ekstraksi buku OCR dipisahkan via worker/script `services/api/scripts/ocr_library_books.go`.
 - Production Sync (2026-10-02):
-  - 25 buku PDF diekstrak lokal (OCR `pdftoppm` + Tesseract `ind+ara` untuk scan, `pdftotext` untuk PDF berteks).
-  - 3.690 halaman teks hasil ekstraksi disinkronkan ke database production (VPS `sumopod-1`, container `tholabul-ilmi-tholabul-ilmi-postgres-1`).
-  - Pencocokan buku via `slug` (bukan `id`) karena ID berbeda di lokal vs production.
-  - Dump JSON `/tmp/library_sync_data.json` (9.1 MB) → import via `COPY ... FROM STDIN WITH (FORMAT csv)` Python script.
-  - Verifikasi: `SELECT count(*) FROM library_book_extracted_text` → 3690 rows; `extraction_status = 'done'` untuk 25 buku.
+    - 25 buku PDF diekstrak lokal (OCR `pdftoppm` + Tesseract `ind+ara` untuk scan, `pdftotext` untuk PDF berteks).
+    - 3.690 halaman teks hasil ekstraksi disinkronkan ke database production (VPS `sumopod-1`, container `tholabul-ilmi-tholabul-ilmi-postgres-1`).
+    - Pencocokan buku via `slug` (bukan `id`) karena ID berbeda di lokal vs production.
+    - Dump JSON `/tmp/library_sync_data.json` (9.1 MB) → import via `COPY ... FROM STDIN WITH (FORMAT csv)` Python script.
+    - Verifikasi: `SELECT count(*) FROM library_book_extracted_text` → 3690 rows; `extraction_status = 'done'` untuk 25 buku.
 
 ## Source of Truth
 

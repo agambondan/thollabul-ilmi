@@ -37,6 +37,7 @@ func (s *tokohTarikhService) Create(req *model.CreateTokohTarikhRequest) (*model
 		Kontribusi: req.Kontribusi,
 		Kategori:   req.Kategori,
 		ImageURL:   req.ImageURL,
+		Source:     req.Source,
 	}
 	result, err := s.repo.Save(t)
 	if err == nil && s.cache != nil {
@@ -92,6 +93,7 @@ func (s *tokohTarikhService) Update(id int, req *model.CreateTokohTarikhRequest)
 		Kontribusi: req.Kontribusi,
 		Kategori:   req.Kategori,
 		ImageURL:   req.ImageURL,
+		Source:     req.Source,
 	}
 	result, err := s.repo.Update(id, t)
 	if err == nil && s.cache != nil {

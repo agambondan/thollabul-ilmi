@@ -11,10 +11,14 @@ import (
 
 type AudioController interface {
 	GetManifest(ctx *fiber.Ctx) error
+	FindAllSurahAudio(ctx *fiber.Ctx) error
 	FindSurahAudio(ctx *fiber.Ctx) error
+	FindAllAyahAudio(ctx *fiber.Ctx) error
 	FindAyahAudio(ctx *fiber.Ctx) error
 	AddSurahAudio(ctx *fiber.Ctx) error
+	UpdateSurahAudio(ctx *fiber.Ctx) error
 	AddAyahAudio(ctx *fiber.Ctx) error
+	UpdateAyahAudio(ctx *fiber.Ctx) error
 	DeleteSurahAudio(ctx *fiber.Ctx) error
 	DeleteAyahAudio(ctx *fiber.Ctx) error
 }
@@ -42,6 +46,22 @@ func (c *audioController) GetManifest(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, manifest)
+}
+
+func (c *audioController) FindAllSurahAudio(ctx *fiber.Ctx) error {
+	list, err := c.svc.FindAllSurahAudio()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{"items": list})
+}
+
+func (c *audioController) FindAllAyahAudio(ctx *fiber.Ctx) error {
+	list, err := c.svc.FindAllAyahAudio()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{"items": list})
 }
 
 // FindSurahAudio
@@ -113,6 +133,22 @@ func (c *audioController) AddSurahAudio(ctx *fiber.Ctx) error {
 	return lib.OK(ctx, result)
 }
 
+func (c *audioController) UpdateSurahAudio(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	a := new(model.SurahAudio)
+	if err := lib.BodyParser(ctx, a); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	result, err := c.svc.UpdateSurahAudio(id, a)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, result)
+}
+
 // AddAyahAudio
 // @Summary Add ayah audio
 // @Description Add audio recording for a specific ayah
@@ -132,6 +168,22 @@ func (c *audioController) AddAyahAudio(ctx *fiber.Ctx) error {
 	result, err := c.svc.AddAyahAudio(a)
 	if err != nil {
 		return lib.ErrorConflict(ctx, err)
+	}
+	return lib.OK(ctx, result)
+}
+
+func (c *audioController) UpdateAyahAudio(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	a := new(model.AyahAudio)
+	if err := lib.BodyParser(ctx, a); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	result, err := c.svc.UpdateAyahAudio(id, a)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, result)
 }

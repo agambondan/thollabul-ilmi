@@ -7,7 +7,10 @@ import (
 
 type MunasabahService interface {
 	Create(req *model.CreateMunasabahRequest) (*model.Munasabah, error)
+	FindAll() ([]model.Munasabah, error)
+	FindByID(int) (*model.Munasabah, error)
 	FindByAyahID(int) ([]model.Munasabah, error)
+	Update(int, *model.Munasabah) (*model.Munasabah, error)
 	Delete(int) error
 }
 
@@ -28,8 +31,20 @@ func (s *munasabahService) Create(req *model.CreateMunasabahRequest) (*model.Mun
 	return s.repo.Save(m)
 }
 
+func (s *munasabahService) FindAll() ([]model.Munasabah, error) {
+	return s.repo.FindAll()
+}
+
+func (s *munasabahService) FindByID(id int) (*model.Munasabah, error) {
+	return s.repo.FindByID(id)
+}
+
 func (s *munasabahService) FindByAyahID(ayahID int) ([]model.Munasabah, error) {
 	return s.repo.FindByAyahID(ayahID)
+}
+
+func (s *munasabahService) Update(id int, m *model.Munasabah) (*model.Munasabah, error) {
+	return s.repo.Update(id, m)
 }
 
 func (s *munasabahService) Delete(id int) error {

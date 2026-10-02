@@ -11,7 +11,9 @@ import (
 
 type NotificationTemplateController interface {
 	FindAll(ctx *fiber.Ctx) error
+	FindByID(ctx *fiber.Ctx) error
 	Create(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -31,6 +33,18 @@ func (c *notificationTemplateController) FindAll(ctx *fiber.Ctx) error {
 	return lib.OK(ctx, fiber.Map{"items": items})
 }
 
+func (c *notificationTemplateController) FindByID(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	item, err := c.svc.FindByID(id)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, item)
+}
+
 func (c *notificationTemplateController) Create(ctx *fiber.Ctx) error {
 	req := new(model.CreateNotificationTemplateRequest)
 	if err := lib.BodyParser(ctx, req); err != nil {
@@ -39,6 +53,22 @@ func (c *notificationTemplateController) Create(ctx *fiber.Ctx) error {
 	result, err := c.svc.Create(req)
 	if err != nil {
 		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, result)
+}
+
+func (c *notificationTemplateController) Update(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	req := new(model.CreateNotificationTemplateRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	result, err := c.svc.Update(id, req)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, result)
 }

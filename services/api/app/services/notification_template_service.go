@@ -7,8 +7,10 @@ import (
 
 type NotificationTemplateService interface {
 	FindAll() ([]model.NotificationTemplate, error)
+	FindByID(int) (*model.NotificationTemplate, error)
 	FindByCode(string) (*model.NotificationTemplate, error)
 	Create(req *model.CreateNotificationTemplateRequest) (*model.NotificationTemplate, error)
+	Update(id int, req *model.CreateNotificationTemplateRequest) (*model.NotificationTemplate, error)
 	Delete(int) error
 }
 
@@ -24,6 +26,10 @@ func (s *notificationTemplateService) FindAll() ([]model.NotificationTemplate, e
 	return s.repo.FindAll()
 }
 
+func (s *notificationTemplateService) FindByID(id int) (*model.NotificationTemplate, error) {
+	return s.repo.FindByID(id)
+}
+
 func (s *notificationTemplateService) FindByCode(code string) (*model.NotificationTemplate, error) {
 	return s.repo.FindByCode(code)
 }
@@ -36,6 +42,16 @@ func (s *notificationTemplateService) Create(req *model.CreateNotificationTempla
 		Channel: req.Channel,
 	}
 	return s.repo.Save(t)
+}
+
+func (s *notificationTemplateService) Update(id int, req *model.CreateNotificationTemplateRequest) (*model.NotificationTemplate, error) {
+	t := &model.NotificationTemplate{
+		Code:    req.Code,
+		Title:   req.Title,
+		Body:    req.Body,
+		Channel: req.Channel,
+	}
+	return s.repo.Update(id, t)
 }
 
 func (s *notificationTemplateService) Delete(id int) error {

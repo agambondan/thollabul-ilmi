@@ -92,6 +92,35 @@ export default async function ForumQuestionLayout(props) {
           }
         : null;
 
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Forum Diskusi",
+                item: `${SITE_URL}/forum`,
+            },
+            ...(slug
+                ? [
+                      {
+                          "@type": "ListItem",
+                          position: 3,
+                          name: question?.title || slug,
+                          item: `${SITE_URL}/forum/${slug}`,
+                      },
+                  ]
+                : []),
+        ],
+    };
+
     return (
         <>
             {qAPageJsonLd && (
@@ -102,6 +131,12 @@ export default async function ForumQuestionLayout(props) {
                     }}
                 />
             )}
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
             {children}
         </>
     );

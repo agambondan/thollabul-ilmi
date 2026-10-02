@@ -10,7 +10,10 @@ import (
 
 type MunasabahRepository interface {
 	Save(*model.Munasabah) (*model.Munasabah, error)
+	FindAll() ([]model.Munasabah, error)
+	FindByID(int) (*model.Munasabah, error)
 	FindByAyahID(int) ([]model.Munasabah, error)
+	Update(int, *model.Munasabah) (*model.Munasabah, error)
 	Delete(int) error
 }
 
@@ -153,6 +156,53 @@ func (r *munasabahRepo) FindByAyahID(ayahID int) ([]model.Munasabah, error) {
 		items = append(items, *m)
 	}
 	return items, rows.Err()
+}
+
+func (r *munasabahRepo) FindAll() ([]model.Munasabah, error) {
+	sqlStr := fmt.Sprintf("%s WHERE m.deleted_at IS NULL ORDER BY m.id ASC LIMIT 500", munasabahSelectSQL)
+	rows, err := r.db.Raw(sqlStr).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var items []model.Munasabah
+	for rows.Next() {
+		m, err := r.scanRow(rows)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, *m)
+	}
+	return items, rows.Err()
+}
+
+func (r *munasabahRepo) FindByID(id int) (*model.Munasabah, error) {
+	sqlStr := fmt.Sprintf("%s WHERE m.id = ? AND m.deleted_at IS NULL", munasabahSelectSQL)
+	rows, err := r.db.Raw(sqlStr, id).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+		return nil, gorm.ErrRecordNotFound
+	}
+	return r.scanRow(rows)
+}
+
+func (r *munasabahRepo) Update(id int, m *model.Munasabah) (*model.Munasabah, error) {
+	if _, err := r.FindByID(id); err != nil {
+		return nil, err
+	}
+	m.ID = &id
+	if err := r.db.Updates(m).Error; err != nil {
+		return nil, err
+	}
+	return r.FindByID(id)
 }
 
 func (r *munasabahRepo) Delete(id int) error {

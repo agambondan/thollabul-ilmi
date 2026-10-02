@@ -1,7 +1,7 @@
 # Audit Gap CRUD Admin untuk Data Dinamis
 
-Status: `IN_PROGRESS` (Gelombang 1, 2 & 3 selesai, lihat Todo Implementasi)
-Tanggal: `2026-09-07`
+Status: `SELESAI` (Seluruh Gelombang 1, 2, 3, 4, 5 tuntas)
+Tanggal: `2026-09-07` (Updated: `2026-10-02`)
 
 ## Ringkasan
 
@@ -62,18 +62,18 @@ jangan jadikan acuan status terkini.
 
 | Fitur                                      | Endpoint write                               | Catatan                                                                          |
 | ------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| Quran core: ayah/surah/juz                 | `/ayah`, `/surah`, `/juz`                    | Admin API ada. UI belum ada, tapi risiko edit tinggi karena data Quran sensitif. |
-| Hadith core: books/themes/chapters/hadiths | `/books`, `/themes`, `/chapters`, `/hadiths` | Admin API ada. UI belum ada.                                                     |
+| Quran core: ayah/surah/juz                 | `/ayah`, `/surah`, `/juz`                    | **Selesai (2026-10-02)**: `/admin/surah` & `/admin/ayah`. Editor metadata surah & atribut ayat non-destruktif. |
+| Hadith core: books/themes/chapters/hadiths | `/books`, `/themes`, `/chapters`, `/hadiths` | **Selesai (2026-10-02)**: `/admin/hadis`. Editor derajat keshahihan, perawi/sanad, dan catatan takhrij. |
 | Ilmu Rijal: perawi                         | `/perawi`                                    | **Selesai (2026-09-11)**: `/admin/perawi`. Sempat ada bug field `biografis` tidak pernah ter-serialize (`json:"-"`) — sudah diperbaiki, plus opsi dropdown status/tabaqah disamakan dengan enum backend. |
 | Jarh wa Ta'dil                             | `/jarh-tadil`                                | **Selesai (2026-09-11)**: `/admin/jarh-tadil`. Sama seperti perawi, field `teks_nilai`/`catatan` sempat tidak ter-serialize — sudah diperbaiki. |
 | Sanad & mata sanad                         | `/sanad`, `/mata-sanad`                      | **Selesai (2026-09-11)**: `/admin/sanad`. Halaman sudah ada sebelumnya tapi rusak total (`list()` salah endpoint, backend belum punya `GET /sanad`) — sudah ditambah endpoint list + editor mata sanad nested. |
 | Takhrij                                    | `/takhrij`                                   | **Selesai (2026-09-11)**: `/admin/takhrij` (baru).                              |
 | Hadith-Ayah cross-reference                | `/hadith-ayahs`                              | **Selesai (2026-09-11)**: `/admin/hadith-ayah` (baru). Backend ditambah `GET /hadith-ayahs` (list), `GET /hadith-ayahs/:id`, `PUT /hadith-ayahs/:id` yang sebelumnya belum ada. |
-| Munasabah                                  | `/munasabah`                                 | Admin API ada. Belum ada UI.                                                     |
-| Tokoh Tarikh                               | `/tokoh-tarikh`                              | Create/delete API ada. Belum ada UI; update API juga belum terlihat.             |
-| Peta Islam / Locations                     | `/locations`                                 | Create/delete API ada. Belum ada UI; update API juga belum terlihat.             |
-| Audio Murotal                              | `/audio/surah`, `/audio/ayah`                | Admin API ada. Belum ada UI.                                                     |
-| Notification Templates                     | `/notification-templates`                    | Admin API ada. Belum ada UI.                                                     |
+| Munasabah                                  | `/munasabah`                                 | **Selesai (2026-10-02)**: `/admin/munasabah`. Backend dilengkapi `FindAll`, `FindByID`, `Update` (sebelumnya hanya search by ayah + create/delete). |
+| Tokoh Tarikh                               | `/tokoh-tarikh`                              | **Selesai (2026-10-02)**: `/admin/tokoh-tarikh`. Bug field `biografi` & `kontribusi` yang sebelumnya `json:"-"` diperbaiki menjadi serialized, `source` (kitab rujukan) ditambahkan ke model/request/form. |
+| Peta Islam / Locations                     | `/locations`                                 | **Selesai (2026-10-02)**: `/admin/locations`. Full CRUD API & UI terhubung dan terverifikasi. |
+| Audio Murotal                              | `/audio/surah`, `/audio/ayah`                | **Selesai (2026-10-02)**: `/admin/audio`. Backend dilengkapi `FindAll` & `Update` untuk Surah & Ayah audio, UI tab switcher terhubung. |
+| Notification Templates                     | `/notification-templates`                    | **Selesai (2026-10-02)**: `/admin/notification-templates`. Backend dilengkapi `FindByID` & `Update`. |
 
 ### P2 — Data dinamis, tapi CRUD admin penuh belum tentu perlu
 
@@ -140,20 +140,20 @@ dianggap final secara UX).
 
 ### Gelombang 4 — Quran/Hadith core editor
 
-- [ ] Evaluasi apakah Quran core perlu admin UI atau hanya correction workflow.
-- [ ] Jika perlu, buat editor read-heavy dengan confirmation kuat untuk ayah/surah/juz.
-- [ ] Buat editor books/themes/chapters/hadiths.
-- [ ] Tambah diff preview sebelum menyimpan konten agama sensitif.
+- [x] Evaluasi apakah Quran core perlu admin UI atau hanya correction workflow.
+- [x] Jika perlu, buat editor read-heavy dengan confirmation kuat untuk ayah/surah/juz.
+- [x] Buat editor books/themes/chapters/hadiths.
+- [x] Tambah diff preview sebelum menyimpan konten agama sensitif.
 
 ### Gelombang 5 — Konten pelengkap
 
-- [ ] Tambah UI admin `munasabah`.
-- [ ] Tambah UI admin `tokoh-tarikh`.
-- [ ] Lengkapi update API untuk `tokoh-tarikh` bila belum ada.
-- [ ] Tambah UI admin `locations`.
-- [ ] Lengkapi update API untuk `locations` bila belum ada.
-- [ ] Tambah UI admin `audio`.
-- [ ] Tambah UI admin `notification-templates`.
+- [x] Tambah UI admin `munasabah` + lengkapi backend list (`GET /munasabah`), get by ID (`GET /munasabah/:id`), dan update (`PUT /munasabah/:id`).
+- [x] Tambah UI admin `tokoh-tarikh` + fix bug field `biografi` & `kontribusi` yang sebelumnya `json:"-"` serta tambahkan field `source` (kitab rujukan).
+- [x] Lengkapi update API untuk `tokoh-tarikh` bila belum ada. (Sudah ada & dimutakhirkan dengan field `source`).
+- [x] Tambah UI admin `locations`. (Sudah ada & terverifikasi penuh).
+- [x] Lengkapi update API untuk `locations` bila belum ada. (Sudah ada).
+- [x] Tambah UI admin `audio` + lengkapi backend list (`GET /audio/surah`, `GET /audio/ayah`) & update (`PUT /audio/surah/:id`, `PUT /audio/ayah/:id`).
+- [x] Tambah UI admin `notification-templates` + lengkapi backend get by ID (`GET /notification-templates/:id`) & update (`PUT /notification-templates/:id`).
 
 ## Catatan Keputusan
 

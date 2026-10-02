@@ -6,8 +6,8 @@ type TokohTarikh struct {
 	Era           string       `json:"era" gorm:"type:varchar(100);index"` // Sahabat, Tabi'in, Tabi'ut Tabi'in, dll
 	TahunLahir    string       `json:"tahun_lahir,omitempty" gorm:"type:varchar(20)"`
 	TahunWafat    string       `json:"tahun_wafat,omitempty" gorm:"type:varchar(20)"`
-	Biografi      string       `json:"-" gorm:"type:text;not null"`
-	Kontribusi    string       `json:"-" gorm:"type:text"`
+	Biografi      string       `json:"biografi" gorm:"type:text;not null"`
+	Kontribusi    string       `json:"kontribusi,omitempty" gorm:"type:text"`
 	Kategori      string       `json:"kategori" gorm:"type:varchar(100);index"` // ulama, ilmuwan, sahabat, khalifah, dll
 	ImageURL      string       `json:"image_url,omitempty" gorm:"type:varchar(500)"`
 	Source        string       `json:"source,omitempty" gorm:"type:text"` // kitab rujukan: Ar-Raheeq Al-Makhtum, Sirah Ibnu Hisyam, dll
@@ -24,4 +24,5 @@ type CreateTokohTarikhRequest struct {
 	Kontribusi string `json:"kontribusi"`
 	Kategori   string `json:"kategori"`
 	ImageURL   string `json:"image_url"`
+	Source     string `json:"source"`
 }
