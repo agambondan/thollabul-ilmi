@@ -25,3 +25,4 @@ Folder ini berisi feature yang sudah ditutup.
 - [Siroh Nabawiyah](./siroh-nabawiyah.md)
 - [Asbabun Nuzul](./quran-asbabun-nuzul.md)
 - [Peta Sirah Interaktif & Visual Faraidh](./peta-sirah-faraidh-visual.md)
+- [Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis](./perpustakaan-ekstraksi-konten-untuk-belajar.md)

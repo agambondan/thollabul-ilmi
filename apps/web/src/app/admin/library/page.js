@@ -11,7 +11,7 @@ import {
     Tr,
 } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
-import { adminLibraryApi, uploadWithProgress, parseApiError } from "@/lib/api";
+import { adminLibraryApi, uploadWithProgress, parseApiError, authFetch, adminQuizApi } from "@/lib/api";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -166,6 +166,9 @@ const AdminLibraryPage = () => {
     const [draftEndPage, setDraftEndPage] = useState(5);
     const [draftResult, setDraftResult] = useState(null);
     const [draftLoading, setDraftLoading] = useState(false);
+    const [editingPageNum, setEditingPageNum] = useState(null);
+    const [editingPageText, setEditingPageText] = useState("");
+    const [savingPageText, setSavingPageText] = useState(false);
 
     const load = async () => {
         setLoading(true);
@@ -258,6 +261,107 @@ const AdminLibraryPage = () => {
             const data = await res.json();
             setDraftResult(data?.data ?? data);
             fb("admin:success", "Draft materi/soal berhasil dibangkitkan");
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        } finally {
+            setDraftLoading(false);
+        }
+    };
+
+    const handleEditPage = (page) => {
+        setEditingPageNum(page.page_number);
+        setEditingPageText(page.text);
+    };
+
+    const handleSavePageText = async () => {
+        if (!extractModalBook || editingPageNum === null) return;
+        setSavingPageText(true);
+        try {
+            const res = await adminLibraryApi.upsertExtractedText(extractModalBook.id ?? extractModalBook._id, {
+                pages: [{ page_number: editingPageNum, text: editingPageText }],
+            });
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal menyimpan teks halaman"));
+            setExtractedPages((prev) =>
+                prev.map((p) =>
+                    p.page_number === editingPageNum
+                        ? { ...p, text: editingPageText, confident: true, extraction_method: "ocr_manual" }
+                        : p
+                )
+            );
+            setEditingPageNum(null);
+            setEditingPageText("");
+            fb("admin:success", "Teks halaman tersimpan");
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        } finally {
+            setSavingPageText(false);
+        }
+    };
+
+    const handleSaveLessonDraft = async () => {
+        if (!extractModalBook || !draftResult?.lesson_steps?.length) return;
+        setDraftLoading(true);
+        try {
+            const baseTitle = extractModalBook.title;
+            const slugBase = baseTitle
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/(^-|-$)/g, "");
+            const res = await authFetch("/api/v1/lessons", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: `Modul: ${baseTitle}`,
+                    slug: `modul-${slugBase}`,
+                    description: `Modul belajar yang dibangkitkan dari buku "${baseTitle}" (Hlm. ${draftResult.start_page}-${draftResult.end_page})`,
+                    category: extractModalBook.category || "Aqidah",
+                    level: "Pemula",
+                    related_book_id: extractModalBook.id ?? extractModalBook._id,
+                    steps: draftResult.lesson_steps.map((s, i) => ({
+                        step_order: i + 1,
+                        kind: "teori",
+                        title: s.title,
+                        body: s.body,
+                        dalil: s.dalil || "",
+                        tip: s.tip || "",
+                        source_citation: s.source_citation,
+                        source_page: s.source_page,
+                    })),
+                }),
+            });
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal menyimpan modul belajar"));
+            fb("admin:success", "Modul belajar berhasil dibuat");
+            setDraftResult(null);
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        } finally {
+            setDraftLoading(false);
+        }
+    };
+
+    const handleSaveQuizDraft = async () => {
+        if (!extractModalBook || !draftResult?.quiz_items?.length) return;
+        setDraftLoading(true);
+        try {
+            let saved = 0;
+            for (const q of draftResult.quiz_items) {
+                const res = await adminQuizApi.create({
+                    type: q.type,
+                    question_text: q.question_text,
+                    options: [
+                        q.correct_answer,
+                        "Pernyataan yang bertentangan dengan kaidah mu'tabar",
+                        "Pendapat yang tidak memiliki landasan dalil",
+                        "Ketentuan yang telah dinasakh secara mutlak",
+                    ],
+                    correct_answer: q.correct_answer,
+                    explanation: q.explanation,
+                    difficulty: q.difficulty || "medium",
+                    source: q.source_citation,
+                });
+                if (res.ok) saved++;
+            }
+            fb("admin:success", `${saved} soal quiz tersimpan ke bank soal`);
+            setDraftResult(null);
         } catch (err) {
             fb("admin:mutation-error", err.message);
         } finally {
@@ -1255,6 +1359,12 @@ const AdminLibraryPage = () => {
                     </div>
 
                     <div className='space-y-4 p-5'>
+                        {extractModalBook.license_status && extractModalBook.license_status !== "verified" && (
+                            <div className='rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900 dark:border-amber-700/50 dark:bg-amber-950/40 dark:text-amber-200'>
+                                <strong>⚠️ Peringatan Lisensi ({extractModalBook.license_status}):</strong> Konten hasil ekstraksi mewarisi status lisensi buku sumber. Mohon pastikan hak publikasi dan keakuratan materi sebelum merilis ke publik.
+                            </div>
+                        )}
+
                         {extractModalBook.extraction_error && (
                             <div className='rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300'>
                                 <strong>Catatan Kualitas:</strong> {extractModalBook.extraction_error}
@@ -1298,19 +1408,59 @@ const AdminLibraryPage = () => {
                                             <span className='font-bold text-gray-700 dark:text-gray-200'>
                                                 Halaman {p.page_number}
                                             </span>
-                                            <span
-                                                className={`rounded px-2 py-0.5 text-[10px] font-semibold ${
-                                                    p.confident
-                                                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-                                                        : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-                                                }`}
-                                            >
-                                                {p.confident ? "Lolos Cek Kualitas" : "Perlu Verifikasi"}
-                                            </span>
+                                            <div className='flex items-center gap-2'>
+                                                <span
+                                                    className={`rounded px-2 py-0.5 text-[10px] font-semibold ${
+                                                        p.confident
+                                                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                                                            : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                                                    }`}
+                                                >
+                                                    {p.confident ? "Lolos Cek Kualitas" : "Perlu Verifikasi"}
+                                                </span>
+                                                {editingPageNum !== p.page_number && (
+                                                    <button
+                                                        type='button'
+                                                        className='rounded px-2 py-0.5 text-[11px] text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20'
+                                                        onClick={() => handleEditPage(p)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
-                                        <p className='line-clamp-4 font-mono text-[11px] leading-relaxed text-gray-600 dark:text-gray-300'>
-                                            {p.text}
-                                        </p>
+                                        {editingPageNum === p.page_number ? (
+                                            <div className='mt-2 space-y-2'>
+                                                <textarea
+                                                    rows={5}
+                                                    className={`${inputClass} font-mono text-xs`}
+                                                    value={editingPageText}
+                                                    onChange={(e) => setEditingPageText(e.target.value)}
+                                                />
+                                                <div className='flex justify-end gap-2'>
+                                                    <button
+                                                        type='button'
+                                                        className='rounded px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700'
+                                                        onClick={() => setEditingPageNum(null)}
+                                                        disabled={savingPageText}
+                                                    >
+                                                        Batal
+                                                    </button>
+                                                    <button
+                                                        type='button'
+                                                        className='rounded bg-emerald-600 px-3 py-1 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50'
+                                                        onClick={handleSavePageText}
+                                                        disabled={savingPageText}
+                                                    >
+                                                        {savingPageText ? "Menyimpan..." : "Simpan Koreksi"}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className='line-clamp-4 font-mono text-[11px] leading-relaxed text-gray-600 dark:text-gray-300'>
+                                                {p.text}
+                                            </p>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -1408,6 +1558,31 @@ const AdminLibraryPage = () => {
                                             </p>
                                         </div>
                                     ))}
+                                </div>
+                            )}
+
+                            {draftResult && (
+                                <div className='mt-4 flex flex-wrap gap-2 justify-end'>
+                                    {draftResult.target === "lesson" && draftResult.lesson_steps?.length > 0 && (
+                                        <button
+                                            type='button'
+                                            className='rounded bg-emerald-600 px-4 py-2 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50'
+                                            onClick={handleSaveLessonDraft}
+                                            disabled={draftLoading}
+                                        >
+                                            {draftLoading ? "Menyimpan..." : "Simpan sebagai Modul Belajar"}
+                                        </button>
+                                    )}
+                                    {draftResult.target === "quiz" && draftResult.quiz_items?.length > 0 && (
+                                        <button
+                                            type='button'
+                                            className='rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-500 disabled:opacity-50'
+                                            onClick={handleSaveQuizDraft}
+                                            disabled={draftLoading}
+                                        >
+                                            {draftLoading ? "Menyimpan..." : "Simpan ke Bank Soal Quiz"}
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>

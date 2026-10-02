@@ -226,7 +226,8 @@ func (s *libraryBookService) ExtractText(id int) error {
 	pages := make([]model.LibraryBookExtractedText, 0, len(extracted))
 	confidentCount, lowConfidenceCount := 0, 0
 	for _, p := range extracted {
-		if strings.TrimSpace(p.Text) == "" {
+		clean := strings.ReplaceAll(p.Text, "\x00", "")
+		if strings.TrimSpace(clean) == "" {
 			continue
 		}
 		if p.Confident {
@@ -237,7 +238,7 @@ func (s *libraryBookService) ExtractText(id int) error {
 		pages = append(pages, model.LibraryBookExtractedText{
 			LibraryBookID:    id,
 			PageNumber:       p.Number,
-			Text:             p.Text,
+			Text:             clean,
 			ExtractionMethod: "pdf_text_layer",
 			Confident:        p.Confident,
 		})

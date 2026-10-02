@@ -33,7 +33,12 @@ var commonIndonesianWords = []string{
 }
 
 func ExtractPDFPages(data []byte) ([]ExtractedPage, error) {
-	r, err := pdf.NewReader(bytes.NewReader(data), int64(len(data)))
+	cleaned := bytes.TrimRight(data, "\x00\r\n ")
+	if idx := bytes.LastIndex(cleaned, []byte("startxref ")); idx >= 0 && idx > len(cleaned)-100 {
+		cleaned = append(cleaned[:idx+9], append([]byte("\n"), cleaned[idx+10:]...)...)
+	}
+
+	r, err := pdf.NewReader(bytes.NewReader(cleaned), int64(len(cleaned)))
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +65,7 @@ func extractPageText(page pdf.Page) (result string) {
 	defer func() {
 		if r := recover(); r != nil {
 			fallback, _ := page.GetPlainText(nil)
-			result = strings.TrimSpace(fallback)
+			result = strings.ReplaceAll(strings.TrimSpace(fallback), "\x00", "")
 		}
 	}()
 
@@ -150,7 +155,7 @@ func extractPageText(page pdf.Page) (result string) {
 		hasPrev = true
 	}
 
-	return strings.TrimSpace(out.String())
+	return strings.ReplaceAll(strings.TrimSpace(out.String()), "\x00", "")
 }
 
 func formatLine(l *textLine) string {

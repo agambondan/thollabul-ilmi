@@ -84,6 +84,65 @@ func TestLibraryBookRepositoryResourceLifecycle(t *testing.T) {
 	}
 }
 
+func TestLibraryBookRepositoryExtractedPages(t *testing.T) {
+	db := newLibraryBookRepositoryTestDB(t)
+	if err := db.AutoMigrate(&model.LibraryBookExtractedText{}); err != nil {
+		t.Fatalf("migrate extracted text: %v", err)
+	}
+	repo := NewLibraryBookRepository(db, paginate.New())
+	createLibraryBookRepositoryTestBook(t, db, "extracted-book", model.LibraryBookStatusPublished)
+
+	book, err := repo.FindBySlugAny("extracted-book")
+	if err != nil {
+		t.Fatalf("find book: %v", err)
+	}
+	bookID := *book.ID
+
+	pages := []model.LibraryBookExtractedText{
+		{LibraryBookID: bookID, PageNumber: 1, Text: "Halaman 1 pembahasan tauhid.", ExtractionMethod: "pdf_text_layer", Confident: true},
+		{LibraryBookID: bookID, PageNumber: 2, Text: "Halaman 2 dalil rukun iman.", ExtractionMethod: "pdf_text_layer", Confident: true},
+		{LibraryBookID: bookID, PageNumber: 3, Text: "Halaman 3 kesimpulan.", ExtractionMethod: "pdf_text_layer", Confident: false},
+	}
+	if err := repo.SaveExtractedPages(bookID, pages); err != nil {
+		t.Fatalf("save extracted pages: %v", err)
+	}
+
+	found, err := repo.FindExtractedPages(bookID)
+	if err != nil {
+		t.Fatalf("find extracted pages: %v", err)
+	}
+	if len(found) != 3 {
+		t.Fatalf("expected 3 pages, got %d", len(found))
+	}
+
+	between, err := repo.FindExtractedPagesBetween(bookID, 1, 2)
+	if err != nil {
+		t.Fatalf("find pages between: %v", err)
+	}
+	if len(between) != 2 {
+		t.Fatalf("expected 2 pages between 1 and 2, got %d", len(between))
+	}
+
+	// Upsert page 3 with manual correction
+	upsertPages := []model.LibraryBookExtractedText{
+		{LibraryBookID: bookID, PageNumber: 3, Text: "Halaman 3 kesimpulan terkoreksi manual.", ExtractionMethod: "ocr_manual", Confident: true},
+	}
+	if err := repo.UpsertExtractedPages(upsertPages); err != nil {
+		t.Fatalf("upsert extracted pages: %v", err)
+	}
+
+	foundAfter, err := repo.FindExtractedPages(bookID)
+	if err != nil {
+		t.Fatalf("find after upsert: %v", err)
+	}
+	if len(foundAfter) != 3 {
+		t.Fatalf("expected 3 pages after upsert, got %d", len(foundAfter))
+	}
+	if foundAfter[2].Text != "Halaman 3 kesimpulan terkoreksi manual." || !foundAfter[2].Confident {
+		t.Fatalf("expected corrected text on page 3, got %#v", foundAfter[2])
+	}
+}
+
 func newLibraryBookRepositoryTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 	// Mirror the app's naming strategy (app/db/postgresql.go) so queries that

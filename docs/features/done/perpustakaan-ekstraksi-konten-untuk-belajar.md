@@ -1,8 +1,9 @@
 # Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis
 
-Status: `TODO`
+Status: `DONE`
 Priority: `P2`
 Tanggal: `2026-09-18`
+Selesai: `2026-10-02`
 
 ## Objective
 
@@ -146,12 +147,16 @@ ulama mu'tabar (lihat memori `feedback_islamic_data_sahih_only`).
 
 ## Evidence
 
-- Commands: (belum ada, masih tahap TODO)
-- Device/API/Web smoke: (belum ada, masih tahap TODO)
-- Notes: Opsi ringan (link modul Belajar ke buku Perpustakaan tanpa ekstraksi
-  konten) sudah diimplementasikan lebih dulu sebagai langkah awal — lihat
-  `RelatedBookID` di `services/api/app/model/lesson.go` dan blok "Bacaan
-  Lanjutan" di `apps/web/src/app/dashboard/belajar/lessons/LessonsContent.js`.
+- Commands:
+  - `go test -v ./app/lib ./app/repository -run "TestExtractPDFPages|TestLibraryBookRepositoryExtractedPages"` (PASS)
+  - `npm --prefix apps/web test -- src/__tests__/AdminLibraryFilterSort.test.js` (PASS, 8/8 tests)
+  - `node scripts/check-feature-parity.js` (PASS)
+- Web smoke:
+  - Ekstraksi PDF layer teks berjalan via `POST /api/v1/library/books/:id/extract`.
+  - Halaman admin `/admin/library` menampilkan modal ekstraksi lengkap dengan daftar halaman, status lolos cek kualitas vs perlu verifikasi, form inline edit teks halaman manual, peringatan lisensi, bangkitkan draft modul belajar / soal kuis, serta aksi simpan ke modul belajar & bank kuis.
+- Notes:
+  - Opsi ringan (link modul Belajar ke buku Perpustakaan) terintegrasi via `RelatedBookID` di `LessonModule`.
+  - Ekstraksi buku OCR dipisahkan via worker/script `services/api/scripts/ocr_library_books.go`.
 
 ## Source of Truth
 

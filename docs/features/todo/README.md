@@ -11,4 +11,4 @@ kerja, tetapi belum mulai aktif.
 
 ## Task List
 
-- [Ekstraksi Konten Ebook untuk Belajar & Quiz Otomatis](./perpustakaan-ekstraksi-konten-untuk-belajar.md) (P2)
+*(Belum ada task pending)*

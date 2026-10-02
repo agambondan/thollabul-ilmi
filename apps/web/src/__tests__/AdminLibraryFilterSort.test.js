@@ -16,7 +16,15 @@ jest.mock("@/lib/api", () => ({
         delete: jest.fn(),
         clearResource: jest.fn(),
         clearCover: jest.fn(),
+        getExtractedText: jest.fn(),
+        extractText: jest.fn(),
+        upsertExtractedText: jest.fn(),
+        generateDraft: jest.fn(),
     },
+    adminQuizApi: {
+        create: jest.fn(),
+    },
+    authFetch: jest.fn(),
     uploadWithProgress: jest.fn(),
     parseApiError: jest.fn(),
 }));
@@ -205,5 +213,198 @@ describe("Admin Library page — filter and sort", () => {
         );
         expect(categorySelect).toBeInTheDocument();
         expect(categorySelect.value).toBe("Kisah Para Nabi");
+    });
+
+    test("extract modal shows license warning for unverified book", async () => {
+        adminLibraryApi.list.mockReset();
+        adminLibraryApi.list.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                items: [
+                    {
+                        id: 99,
+                        title: "Buku Unverified",
+                        slug: "buku-unverified",
+                        author: "Penulis",
+                        category: "Aqidah",
+                        format: "pdf",
+                        status: "published",
+                        license_status: "unverified",
+                    },
+                ],
+            }),
+        });
+        adminLibraryApi.getExtractedText.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ data: [] }),
+        });
+
+        render(<AdminLibraryPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        const extractButtons = screen.getAllByRole("button", {
+            name: /Ekstrak Teks/,
+        });
+        fireEvent.click(extractButtons[0]);
+
+        await waitFor(() => {
+            expect(screen.getByText(/Peringatan Lisensi/)).toBeInTheDocument();
+        });
+    });
+
+    test("editing and saving extracted page text updates the page", async () => {
+        adminLibraryApi.list.mockReset();
+        adminLibraryApi.list.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                items: [
+                    {
+                        id: 101,
+                        title: "Buku Page Edit",
+                        slug: "buku-page-edit",
+                        author: "Penulis",
+                        category: "Aqidah",
+                        format: "pdf",
+                        status: "published",
+                        license_status: "verified",
+                    },
+                ],
+            }),
+        });
+        adminLibraryApi.getExtractedText.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                data: [
+                    {
+                        page_number: 1,
+                        text: "Teks halaman pertama sebelum diedit",
+                        confident: true,
+                    },
+                ],
+            }),
+        });
+        adminLibraryApi.upsertExtractedText.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ updated: 1 }),
+        });
+
+        render(<AdminLibraryPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        const extractButtons = screen.getAllByRole("button", {
+            name: /Ekstrak Teks/,
+        });
+        fireEvent.click(extractButtons[0]);
+
+        await waitFor(() => {
+            expect(screen.getByText("Teks halaman pertama sebelum diedit")).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+        const dialog = screen.getByRole("dialog");
+        const textarea = within(dialog).getByRole("textbox");
+        fireEvent.change(textarea, { target: { value: "Teks halaman pertama setelah diedit" } });
+
+        fireEvent.click(screen.getByRole("button", { name: "Simpan Koreksi" }));
+
+        await waitFor(() => {
+            expect(adminLibraryApi.upsertExtractedText).toHaveBeenCalledWith(101, {
+                pages: [{ page_number: 1, text: "Teks halaman pertama setelah diedit" }],
+            });
+            expect(screen.getByText("Teks halaman pertama setelah diedit")).toBeInTheDocument();
+        });
+    });
+
+    test("generates and saves lesson draft to lessons API", async () => {
+        const { authFetch } = require("@/lib/api");
+        adminLibraryApi.list.mockReset();
+        adminLibraryApi.list.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                items: [
+                    {
+                        id: 102,
+                        title: "Tiga Landasan Utama",
+                        slug: "tiga-landasan-utama",
+                        author: "Syaikh Muhammad",
+                        category: "Aqidah",
+                        format: "pdf",
+                        source_type: "uploaded",
+                        status: "published",
+                        license_status: "verified",
+                    },
+                ],
+            }),
+        });
+        adminLibraryApi.getExtractedText.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                data: [
+                    { page_number: 1, text: "Bab Pertama: Mengenal Allah", confident: true },
+                ],
+            }),
+        });
+        adminLibraryApi.generateDraft.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                data: {
+                    target: "lesson",
+                    book_id: 102,
+                    book_title: "Tiga Landasan Utama",
+                    start_page: 1,
+                    end_page: 1,
+                    lesson_steps: [
+                        {
+                            title: "Bab Pertama: Mengenal Allah",
+                            kind: "teori",
+                            body: "Mengenal Allah dengan dalil-dalil-Nya",
+                            dalil: "QS. Al-Baqarah: 21",
+                            source_citation: "Buku: Tiga Landasan Utama, Halaman: 1",
+                            source_page: 1,
+                        },
+                    ],
+                },
+            }),
+        });
+        authFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ data: { id: 1 } }),
+        });
+
+        render(<AdminLibraryPage />);
+        await waitFor(() => {
+            expect(screen.getByRole("table")).toBeInTheDocument();
+        });
+
+        const extractButtons = screen.getAllByRole("button", {
+            name: /Ekstrak Teks/,
+        });
+        fireEvent.click(extractButtons[0]);
+
+        await waitFor(() => {
+            expect(screen.getByText("Bab Pertama: Mengenal Allah")).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByText("Bangkitkan Draft"));
+
+        await waitFor(() => {
+            expect(screen.getByRole("button", { name: "Simpan sebagai Modul Belajar" })).toBeInTheDocument();
+        });
+
+        const saveBtn = screen.getByRole("button", { name: "Simpan sebagai Modul Belajar" });
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(authFetch).toHaveBeenCalledWith(
+                "/api/v1/lessons",
+                expect.objectContaining({
+                    method: "POST",
+                })
+            );
+        });
     });
 });
