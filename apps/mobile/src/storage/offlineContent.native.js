@@ -12,6 +12,7 @@ const DB_NAME = "tholabul_offline.db";
 const MAIN_PACK_TYPES = ["quran_surah", "quran_ayah", "hadith"];
 const HADITH_PAGE_SIZE = 100;
 const HADITH_SAFETY_MAX_PAGES = 5000;
+const HADITH_BATCH_INSERT_SIZE = 25;
 const PRAYER_PACK_DAYS = 30;
 const OFFLINE_AUDIO_MAX_AGE_DAYS = 90;
 const OFFLINE_AUDIO_MAX_BYTES = 1.5 * 1024 * 1024 * 1024;
@@ -496,9 +497,18 @@ const saveHadithPack = async ({
                 page: String(page),
             });
             if (updatedAfter) params.set("updated_after", updatedAfter);
-            const payload = await requestJson(
-                `/api/v1/hadiths/book/${encodeURIComponent(book.slug)}?${params.toString()}`,
-            );
+            let payload;
+            try {
+                payload = await requestJson(
+                    `/api/v1/hadiths/book/${encodeURIComponent(book.slug)}?${params.toString()}`,
+                );
+            } catch (error) {
+                const msg = updatedAfter
+                    ? `Gagal cek update ${book.name} halaman ${page + 1}: ${error.message}`
+                    : `Gagal unduh ${book.name} halaman ${page + 1}: ${error.message}`;
+                onProgress?.({ label: msg, phase: "error", value: 0 });
+                throw new Error(msg);
+            }
             const items = pickItems(payload)
                 .map(normalizeHadith)
                 .filter((item) => item.id);
@@ -511,17 +521,22 @@ const saveHadithPack = async ({
                         totalPages,
                 ) || totalPages;
 
-            for (const hadith of items) {
-                await upsertItem(
-                    db,
-                    "hadith",
-                    `hadith:${book.slug}:${hadith.id}`,
-                    {
-                        ...hadith,
-                        bookName: hadith.bookName ?? book.name,
-                        bookSlug: hadith.bookSlug ?? book.slug,
-                    },
-                    savedAt,
+            for (let i = 0; i < items.length; i += HADITH_BATCH_INSERT_SIZE) {
+                const batch = items.slice(i, i + HADITH_BATCH_INSERT_SIZE);
+                await Promise.all(
+                    batch.map((hadith) =>
+                        upsertItem(
+                            db,
+                            "hadith",
+                            `hadith:${book.slug}:${hadith.id}`,
+                            {
+                                ...hadith,
+                                bookName: hadith.bookName ?? book.name,
+                                bookSlug: hadith.bookSlug ?? book.slug,
+                            },
+                            savedAt,
+                        ),
+                    ),
                 );
             }
 

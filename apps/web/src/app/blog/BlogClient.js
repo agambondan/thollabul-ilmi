@@ -111,6 +111,7 @@ export default function BlogClient({
     const [sort, setSort] = useState("newest");
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
     const sentinelRef = useRef(null);
+    const initialFetchDone = useRef(false);
 
     const fetchPage = (pageNum, append) => {
         if (append) setIsLoadingMore(true);
@@ -147,9 +148,14 @@ export default function BlogClient({
     }, [initialCategories.length]);
 
     useEffect(() => {
+        if (initialPosts.length === 0 && !initialFetchDone.current) {
+            initialFetchDone.current = true;
+            fetchPage(0, false);
+            return;
+        }
         if (page === 0) return;
         fetchPage(page, true);
-    }, [page]);
+    }, [page, initialPosts.length]);
 
     useEffect(() => {
         const el = sentinelRef.current;
