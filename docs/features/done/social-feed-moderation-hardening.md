@@ -1,6 +1,6 @@
 # Social Feed Moderation Hardening
 
-Status: `IN_PROGRESS`
+Status: `DONE`
 Priority: `P2`
 Tanggal: `2026-05-14`
 

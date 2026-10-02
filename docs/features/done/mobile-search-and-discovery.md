@@ -1,6 +1,6 @@
 # Mobile Search and Discovery
 
-Status: `IN_PROGRESS`
+Status: `DONE`
 Priority: `P1`
 Tanggal: `2026-05-13`
 

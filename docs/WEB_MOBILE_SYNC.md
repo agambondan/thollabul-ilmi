@@ -21,12 +21,12 @@ Last verified: 2026-10-02
     - The GitHub `mobile-test` job runs the full Jest suite, so this audit is
       covered by routine mobile CI.
 - Review history:
-    - `docs/features/progress/2026-05-24-web-mobile-runtime-sync.md`
+    - `docs/features/done/2026-05-24-web-mobile-runtime-sync.md`
     - `docs/reviews/2026-05-23-web-mobile-feature-parity-deep-review.md`
-    - `docs/features/progress/2026-05-23-web-mobile-parity-gap-followup.md`
+    - `docs/features/done/2026-05-23-web-mobile-parity-gap-followup.md`
     - `docs/reviews/2026-05-17-web-mobile-performance-sync-deep-review.md`
     - `docs/reviews/2026-05-17-followup-journey-cta-sync-review.md`
-    - `docs/features/progress/2026-05-17-sync-performance-task-breakdown.md`
+    - `docs/features/done/2026-05-17-sync-performance-task-breakdown.md`
 
 Current checker output:
 

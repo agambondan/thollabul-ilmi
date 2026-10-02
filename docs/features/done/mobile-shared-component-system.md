@@ -1,6 +1,6 @@
 # Mobile Shared Component System
 
-Status: `IN_PROGRESS`
+Status: `DONE`
 Priority: `P0`
 Tanggal: `2026-05-13`
 
