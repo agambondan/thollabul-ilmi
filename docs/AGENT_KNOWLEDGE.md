@@ -385,3 +385,20 @@ SELECT count(*) FROM library_book_extracted_text;  -- 3690
 SELECT extraction_status, count(*) FROM library_book
   WHERE format = 'pdf' GROUP BY extraction_status; -- done | 25
 ```
+
+---
+
+## GORM `Updates(structPtr)` mengabaikan zero-value (`false`, `0`, `""`) pada Update Admin
+
+Gotcha umum GORM: saat memanggil `db.Model(&entity{}).Where("id = ?", id).Updates(structPtr)`,
+GORM **hanya meng-update kolom yang non-zero value**. Nilai `false` pada boolean (mis. `is_active: false`),
+angka `0`, atau string kosong `""` dianggap tidak diisi dan dilewati dari query SQL `UPDATE`.
+
+- **Dampak nyata**: Jika endpoint `PUT` menerima JSON berisi `{"is_active": false}`, nilai di DB
+  **tetap `true`** — admin tidak bisa menonaktifkan status melalui generic struct update.
+- **Solusi**:
+  1. Gunakan `.Select("col1", "col2", ...)` eksplisit sebelum `.Updates(structPtr)`, ATAU
+  2. Gunakan `map[string]interface{}{"is_active": false}` alih-alih pointer struct, ATAU
+  3. Sediakan endpoint aksi khusus (mis. `PATCH /resource/:id/toggle` atau `DELETE /resource/:id`).
+- Lihat detail audit di [`reviews/2026-10-03-admin-crud-security-audit.md`](./reviews/2026-10-03-admin-crud-security-audit.md).
+
