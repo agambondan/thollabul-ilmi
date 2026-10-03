@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.thullaabulilmi.app",
+      "bundleIdentifier": "com.thollabulilmi.app",
       "buildNumber": "1",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Thullaabul Ilmi uses your location to calculate prayer times and Qibla direction."
@@ -36,7 +36,7 @@
         "backgroundColor": "#065f46"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.thullaabulilmi.app",
+      "package": "com.thollabulilmi.app",
       "versionCode": 1
     },
     "web": {
