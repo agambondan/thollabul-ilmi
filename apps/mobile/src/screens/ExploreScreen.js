@@ -227,7 +227,6 @@ import {
     getBlogCategoryOptionLabel,
     getBlogCategoryOptionValue,
     getBlogCategoryValue,
-    normalizeBlogCategoryOptions,
     getBlogCategories,
     getFilteredBlogItems,
     getFeedReference,
@@ -278,7 +277,7 @@ export function ExploreScreen({
     const { session } = useSession();
     const { showError, showInfo, showSuccess } = useFeedback();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
-    const { t } = useMobileLocale();
+    const { language, t } = useMobileLocale();
     const webAppExploreTheme = isDarkTheme
         ? WEB_APP_EXPLORE_THEMES.dark
         : WEB_APP_EXPLORE_THEMES.light;
@@ -693,9 +692,7 @@ export function ExploreScreen({
                     nextItems = postsResult.value.items;
                     setBlogCategoryOptions(
                         categoriesResult.status === "fulfilled"
-                            ? normalizeBlogCategoryOptions(
-                                  categoriesResult.value,
-                              )
+                            ? categoriesResult.value
                             : [],
                     );
                     setPagination({
@@ -1158,7 +1155,12 @@ export function ExploreScreen({
     const openSource = useCallback(
         async (item) => {
             const raw = item?.raw ?? {};
-            const sourceUrl = raw.source_url || raw.url || raw.link;
+            const blogSourceUrl =
+                activeFeature?.key === "blog" && raw.slug
+                    ? `https://thollabulilmi.site/blog/${raw.slug}`
+                    : "";
+            const sourceUrl =
+                raw.source_url || raw.url || raw.link || blogSourceUrl;
             if (sourceUrl) {
                 try {
                     await safeOpenURL(sourceUrl);
@@ -1194,7 +1196,7 @@ export function ExploreScreen({
                 }
             }
         },
-        [onOpenTab, t],
+        [activeFeature?.key, onOpenTab, t],
     );
 
     const runDictionarySearch = useCallback(async (queryOverride) => {
@@ -1500,7 +1502,10 @@ export function ExploreScreen({
                 return true;
             };
         } else if (activeFeature) {
-            title = activeFeature.title;
+            title =
+                activeFeature.key === "blog"
+                    ? t("explore.blog.title")
+                    : activeFeature.title;
             featureKey = activeFeature.key;
             onBack = () => {
                 clearFeatureRef.current?.();
@@ -1604,6 +1609,8 @@ export function ExploreScreen({
         renderLibraryProgressFilters,
     } = createExploreClassicRenderers({
         activeFeature,
+        language,
+        t,
         activeNoteRef,
         bookPages,
         activeBookPage,
@@ -1821,6 +1828,8 @@ export function ExploreScreen({
     if (isWebAppLayout) {
         const webAppRoute = renderExploreWebAppRoute({
             activeFeature,
+            language,
+            t,
             answers,
             asmaulCounts,
             asmaulFlashcardRevealed,

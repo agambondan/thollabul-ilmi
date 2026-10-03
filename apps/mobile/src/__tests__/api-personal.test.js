@@ -241,6 +241,19 @@ describe("personal api", () => {
             expect(result).toEqual([{ id: 1, content: "note" }]);
         });
 
+        test("getNotes calls ref_slug endpoint for article notes (Blog)", async () => {
+            requestJson.mockResolvedValueOnce({ items: [] });
+            await getNotes({
+                refType: "article",
+                refId: "958fe3e3-f7f5-42d7-be14-401b34fc249d",
+                refSlug: "adab-menuntut-ilmu",
+            });
+            expect(requestJson).toHaveBeenCalledWith(
+                "/api/v1/notes?ref_type=article&ref_slug=adab-menuntut-ilmu",
+                { auth: true },
+            );
+        });
+
         test("getNotesByType calls correct endpoint", async () => {
             requestJson.mockResolvedValueOnce([]);
             await getNotesByType("surah");
@@ -262,6 +275,25 @@ describe("personal api", () => {
             expect(postJson).toHaveBeenCalledWith(
                 "/api/v1/notes",
                 { ref_type: "surah", ref_id: "1", content: "My note" },
+                { auth: true },
+            );
+        });
+
+        test("createNote sends ref_slug instead of ref_id for article notes (Blog)", async () => {
+            postJson.mockResolvedValueOnce({});
+            await createNote({
+                refType: "article",
+                refId: "958fe3e3-f7f5-42d7-be14-401b34fc249d",
+                refSlug: "adab-menuntut-ilmu",
+                content: "Catatan artikel",
+            });
+            expect(postJson).toHaveBeenCalledWith(
+                "/api/v1/notes",
+                {
+                    ref_type: "article",
+                    ref_slug: "adab-menuntut-ilmu",
+                    content: "Catatan artikel",
+                },
                 { auth: true },
             );
         });

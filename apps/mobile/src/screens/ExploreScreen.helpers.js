@@ -154,13 +154,13 @@ export const formatNoteDate = (value = "") => {
         year: "numeric",
     });
 };
-export const formatBlogDate = (value = "") => {
+export const formatBlogDate = (value = "", language = "idn") => {
     if (!value) return "";
     const parsed = new Date(
         `${value}`.includes("T") ? value : `${value}T00:00:00`,
     );
     if (Number.isNaN(parsed.getTime())) return `${value}`;
-    return parsed.toLocaleDateString("id-ID", {
+    return parsed.toLocaleDateString(language === "en" ? "en-US" : "id-ID", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -806,51 +806,69 @@ export const getBlogTitle = (item = {}, index = 0) => {
 export const getBlogExcerpt = (item = {}) => {
     const raw = getBlogRaw(item);
     const translation = raw.translation ?? {};
-    return stripHtmlText(
-        stripMarkdownText(
-            pickText(
-                item.body,
-                translation.excerpt_idn,
-                translation.excerpt_en,
-                translation.description_idn,
-                translation.description_en,
-                raw.excerpt,
-                raw.summary,
-                raw.description,
-            ),
-        ),
+    const curated = pickText(
+        raw.excerpt,
+        raw.summary,
+        translation.excerpt_idn,
+        translation.excerpt_en,
+        translation.description_idn,
+        translation.description_en,
+        raw.description,
     );
+    const fallback = curated ? "" : `${item.body ?? ""}`.slice(0, 160);
+    return stripHtmlText(stripMarkdownText(curated || fallback));
 };
 export const getBlogAuthor = (item = {}) => {
     const raw = getBlogRaw(item);
     return toTextValue(raw.author || raw.user || raw.writer);
 };
-export const getBlogCategoryLabel = (item = {}) => {
+export const getBlogCategoryLabel = (item = {}, language = "idn") => {
     const raw = getBlogRaw(item);
     const category =
         raw.category ?? raw.category_name ?? raw.categoryName ?? item.meta;
     if (typeof category === "string") return category;
-    return pickText(
-        category?.name,
-        category?.title,
-        category?.label,
-        category?.translation?.idn,
-        category?.translation?.en,
-        category?.slug,
-    );
+    return language === "en"
+        ? pickText(
+              category?.translation?.en,
+              category?.translation?.name_en,
+              category?.name,
+              category?.title,
+              category?.label,
+              category?.translation?.idn,
+              category?.slug,
+          )
+        : pickText(
+              category?.name,
+              category?.title,
+              category?.label,
+              category?.translation?.idn,
+              category?.translation?.en,
+              category?.slug,
+          );
 };
-export const getBlogCategoryOptionLabel = (category = {}) => {
+export const getBlogCategoryOptionLabel = (category = {}, language = "idn") => {
     if (typeof category === "string") return category;
-    return pickText(
-        category.name,
-        category.title,
-        category.label,
-        category.translation?.idn,
-        category.translation?.en,
-        category.translation?.name_idn,
-        category.translation?.name_en,
-        category.slug,
-    );
+    return language === "en"
+        ? pickText(
+              category.translation?.en,
+              category.translation?.name_en,
+              category.name,
+              category.title,
+              category.label,
+              category.translation?.idn,
+              category.translation?.name_idn,
+              category.slug,
+          )
+        : pickText(
+              category.name,
+              category.title,
+              category.label,
+              category.translation?.idn,
+              category.translation?.en,
+              category.translation?.name_idn,
+              category.translation?.name_en,
+              category.slug,
+          );
 };
 export const getBlogCategoryOptionValue = (category = {}) => {
     if (typeof category === "string") return category;
@@ -863,22 +881,25 @@ export const getBlogCategoryValue = (item = {}) => {
     if (typeof category === "string") return category;
     return `${category?.slug ?? category?.id ?? getBlogCategoryLabel(item) ?? ""}`;
 };
-export const normalizeBlogCategoryOptions = (categories = []) => {
+export const normalizeBlogCategoryOptions = (
+    categories = [],
+    language = "idn",
+) => {
     const map = new Map();
     categories.forEach((category) => {
         const value = getBlogCategoryOptionValue(category);
-        const label = getBlogCategoryOptionLabel(category);
+        const label = getBlogCategoryOptionLabel(category, language);
         if (value && label && !map.has(value.toLowerCase())) {
             map.set(value.toLowerCase(), { label, value });
         }
     });
     return Array.from(map.values());
 };
-export const getBlogCategories = (items = []) => {
+export const getBlogCategories = (items = [], language = "idn") => {
     const map = new Map();
     items.forEach((item) => {
         const value = getBlogCategoryValue(item);
-        const label = getBlogCategoryLabel(item);
+        const label = getBlogCategoryLabel(item, language);
         if (value && label && !map.has(value.toLowerCase())) {
             map.set(value.toLowerCase(), { label, value });
         }

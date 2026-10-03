@@ -81,9 +81,12 @@ import {
     TAFSIR_SOURCE_LABELS,
     digitsOnly,
     emptyUserWirdForm,
+    formatBlogDate,
     formatCurrency,
     formatNoteDate,
     formatNumericInput,
+    getBlogAuthor,
+    getBlogRaw,
     getExploreItemKey,
     getFeedReference,
     getItemRef,
@@ -197,9 +200,13 @@ function ClassicReferenceListContent({ feature, items, renderCard }) {
     );
 }
 
+const BLOG_RETURN_ROUTE = { tab: "belajar", params: { featureKey: "blog" } };
+
 export function createExploreClassicRenderers(context) {
     const {
         activeFeature,
+        language,
+        t,
         activeNoteRef,
         bookPages = [],
         activeBookPage = 1,
@@ -395,6 +402,14 @@ export function createExploreClassicRenderers(context) {
         isDark: isDarkTheme,
         isPaperLayout: !isWebAppLayout,
     });
+
+    const getBlogDisplayMeta = (item) => {
+        const raw = getBlogRaw(item);
+        const publishedAt = raw.published_at ?? raw.publishedAt ?? raw.created_at;
+        return [getBlogAuthor(item), formatBlogDate(publishedAt, language)]
+            .filter(Boolean)
+            .join(" · ");
+    };
 
     const renderCurrencyInput = ({
         label,
@@ -660,10 +675,16 @@ export function createExploreClassicRenderers(context) {
                 ? libraryProgressMap[String(bookId)]
                 : null;
         const isManasikItem = activeFeature?.key === "manasik";
-        const cardMeta = isManasikItem ? titleCaseLabel(item.meta) : item.meta;
-        const cardBody = isManasikItem
-            ? stripMarkdownText(item.body)
-            : item.body;
+        const isBlogItem = activeFeature?.key === "blog";
+        const cardMeta = isManasikItem
+            ? titleCaseLabel(item.meta)
+            : isBlogItem
+              ? getBlogDisplayMeta(item)
+              : item.meta;
+        const cardBody =
+            isManasikItem || isBlogItem
+                ? stripMarkdownText(item.body)
+                : item.body;
 
         return (
             <ContentCard
@@ -749,13 +770,17 @@ export function createExploreClassicRenderers(context) {
         const ref = getItemRef(activeFeature, item);
         const key = refKey(ref.refType, ref.refId);
         const isBookmarked = Boolean(bookmarks[key]);
+        const sheetSubtitle =
+            activeFeature?.key === "blog"
+                ? getBlogDisplayMeta(item) || item.title
+                : item.meta || item.title;
 
         return (
             <AppActionSheet
                 onClose={() =>
                     setItemActionSheet({ visible: false, item: null })
                 }
-                subtitle={item.meta || item.title}
+                subtitle={sheetSubtitle}
                 title='Aksi Cepat'
                 visible={visible}
             >
@@ -954,15 +979,21 @@ export function createExploreClassicRenderers(context) {
         const ref = getItemRef(activeFeature, selectedItem);
         const noteKey = refKey(ref.refType, ref.refId);
         const canAddNote =
-            ["ayah", "hadith", "library", "library_book"].includes(ref.refType) &&
-            Number.isFinite(Number(ref.refId)) &&
-            Number(ref.refId) > 0;
+            (["ayah", "hadith", "library", "library_book"].includes(
+                ref.refType,
+            ) &&
+                Number.isFinite(Number(ref.refId)) &&
+                Number(ref.refId) > 0) ||
+            (ref.refType === "article" &&
+                Boolean(getBlogRaw(selectedItem).slug));
         const isLibraryDetail = activeFeature?.key === "library";
         const isBlogDetail = activeFeature?.key === "blog";
         const isManasikDetail = activeFeature?.key === "manasik";
         const detailMeta = isManasikDetail
             ? titleCaseLabel(selectedItem.meta)
-            : selectedItem.meta;
+            : isBlogDetail
+              ? getBlogDisplayMeta(selectedItem)
+              : selectedItem.meta;
         const blogContent = selectedItem?.raw?.content || selectedItem?.body || "";
         const handleBlogLink = (url = "") => {
             const cleanUrl = String(url).trim();
@@ -973,6 +1004,7 @@ export function createExploreClassicRenderers(context) {
                 onOpenTab("quran", {
                     surahNumber: Number(quranMatch[1]),
                     ayahNumber: quranMatch[2] ? Number(quranMatch[2]) : null,
+                    returnTo: BLOG_RETURN_ROUTE,
                 });
                 return;
             }
@@ -980,16 +1012,18 @@ export function createExploreClassicRenderers(context) {
                 /^\/hadith\/([a-zA-Z0-9_-]+)\/(\d+)/i,
             );
             if (hadithMatch && onOpenTab) {
-                const hadithNumber = Number(hadithMatch[2]);
                 onOpenTab("hadith", {
                     bookSlug: hadithMatch[1].toLowerCase(),
-                    hadithNumber,
-                    hadithId: hadithNumber,
+                    hadithNumber: Number(hadithMatch[2]),
+                    returnTo: BLOG_RETURN_ROUTE,
                 });
                 return;
             }
             if (/^\/doa(?:\/|$)/i.test(cleanUrl) && onOpenTab) {
-                onOpenTab("belajar", { featureKey: "doa" });
+                onOpenTab("belajar", {
+                    featureKey: "doa",
+                    returnTo: BLOG_RETURN_ROUTE,
+                });
                 return;
             }
             if (/^https?:\/\//i.test(cleanUrl)) {
@@ -1466,13 +1500,18 @@ export function createExploreClassicRenderers(context) {
                     ) : null}
                     {renderTafsirContent()}
                     <View style={styles.detailMetaPanel}>
-                        <Text style={styles.detailTitle}>Info</Text>
+                        <Text style={styles.detailTitle}>
+                            {t("explore.detail.info")}
+                        </Text>
                         <Text style={styles.detailLine}>
                             {detailMeta || activeFeature?.title}
                         </Text>
-                        {ref.refId ? (
+                        {ref.refId && !isBlogDetail ? (
                             <Text style={styles.detailLine}>
-                                Rujukan: {ref.refType} #{ref.refId}
+                                {t("explore.detail.ref", {
+                                    refType: ref.refType,
+                                    refId: ref.refId,
+                                })}
                             </Text>
                         ) : null}
                     </View>
@@ -1498,12 +1537,20 @@ export function createExploreClassicRenderers(context) {
                     ) : null}
                     <ActionPill
                         Icon={ExternalLink}
-                        label='Buka sumber'
+                        label={t("explore.detail.openSource")}
                         onPress={() => openSource(selectedItem)}
                     />
                 </View>
                 {canAddNote && activeNoteRef === noteKey ? (
-                    <NotesPanel refType={ref.refType} refId={ref.refId} />
+                    <NotesPanel
+                        refType={ref.refType}
+                        refId={ref.refId}
+                        refSlug={
+                            isBlogDetail
+                                ? getBlogRaw(selectedItem).slug
+                                : undefined
+                        }
+                    />
                 ) : null}
             </>
         );
@@ -1520,7 +1567,7 @@ export function createExploreClassicRenderers(context) {
                     <View style={styles.webAppDetailHeader}>
                         <Pressable
                             accessibilityRole='button'
-                            accessibilityLabel='Kembali ke daftar'
+                            accessibilityLabel={t("explore.detail.backToList")}
                             onPress={closeDetailView}
                             style={styles.webAppDetailBack}
                             testID='web-app-detail-back'
@@ -1531,11 +1578,14 @@ export function createExploreClassicRenderers(context) {
                                 strokeWidth={2.4}
                             />
                             <Text style={styles.webAppDetailBackText}>
-                                Kembali
+                                {t("explore.detail.back")}
                             </Text>
                         </Pressable>
                         <Text style={styles.webAppDetailEyebrow}>
-                            {(activeFeature?.group || "Detail").toUpperCase()}
+                            {t(
+                                activeFeature?.groupLabelKey ??
+                                    "explore.groups.detail",
+                            ).toUpperCase()}
                         </Text>
                         <Text style={styles.webAppDetailTitle}>
                             {selectedItem.title}
@@ -1556,7 +1606,7 @@ export function createExploreClassicRenderers(context) {
                 actions={
                     <IconActionButton
                         Icon={ArrowLeft}
-                        label='Kembali'
+                        label={t("explore.detail.back")}
                         onPress={closeDetailView}
                     />
                 }

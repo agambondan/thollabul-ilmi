@@ -15,7 +15,7 @@ import { colors, getThemeColors, radius, spacing } from "../theme";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { CardTitle } from "./Card";
 
-export function NotesPanel({ refType, refId }) {
+export function NotesPanel({ refType, refId, refSlug }) {
     const { user } = useSession();
     const { showError, showSuccess } = useFeedback();
     const { t } = useMobileLocale();
@@ -33,20 +33,20 @@ export function NotesPanel({ refType, refId }) {
     const PREVIEW_COUNT = 5;
 
     const load = useCallback(async () => {
-        if (!user || !refId) {
+        if (!user || (!refId && !refSlug)) {
             setItems([]);
             return;
         }
 
         setLoading(true);
         try {
-            setItems(await getNotes({ refType, refId }));
+            setItems(await getNotes({ refType, refId, refSlug }));
         } catch {
             setItems([]);
         } finally {
             setLoading(false);
         }
-    }, [refId, refType, user]);
+    }, [refId, refSlug, refType, user]);
 
     const resetForm = () => {
         setContent("");
@@ -77,6 +77,7 @@ export function NotesPanel({ refType, refId }) {
                 const created = await createNote({
                     refType,
                     refId,
+                    refSlug,
                     content: nextContent,
                 });
                 setItems((current) => [created, ...current]);

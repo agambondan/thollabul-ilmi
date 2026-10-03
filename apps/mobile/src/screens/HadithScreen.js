@@ -22,6 +22,7 @@ import { AppImage } from "../components/AppImage";
 import {
     getAyahsForHadith,
     getHadithBooks,
+    getHadithByBookSlugNumber,
     getHadithDetail,
     getHadithPage,
     getRelatedHadiths,
@@ -1214,8 +1215,20 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     }, [query, selectedBook, hadithSource, load]);
 
     useEffect(() => {
-        const hadithId = deepLinkTarget?.params?.hadithId;
         if (handledDeepLinkId.current === deepLinkTarget?.id) return;
+        const params = deepLinkTarget?.params;
+        const bookSlug = params?.bookSlug;
+        const hadithNumber = Number(params?.hadithNumber);
+
+        if (bookSlug && Number.isFinite(hadithNumber) && hadithNumber > 0) {
+            handledDeepLinkId.current = deepLinkTarget.id;
+            getHadithByBookSlugNumber(bookSlug, hadithNumber)
+                .then((resolved) => openHadith(resolved))
+                .catch(() => showError(t("hadith.detailLoadError")));
+            return;
+        }
+
+        const hadithId = params?.hadithId;
         if (!hadithId) return;
 
         handledDeepLinkId.current = deepLinkTarget.id;

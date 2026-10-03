@@ -115,4 +115,39 @@ describe("NotesPanel", () => {
             refId: "42",
         });
     });
+
+    test("loads notes by refSlug for article (Blog) notes with no numeric refId", async () => {
+        await renderNotesPanel({
+            refType: "article",
+            refId: null,
+            refSlug: "adab-menuntut-ilmu",
+        });
+        expect(getNotes).toHaveBeenCalledWith({
+            refType: "article",
+            refId: null,
+            refSlug: "adab-menuntut-ilmu",
+        });
+    });
+
+    test("creates an article note with refSlug instead of refId on submit", async () => {
+        const createdNote = { id: "5", content: "Catatan artikel" };
+        createNote.mockResolvedValue(createdNote);
+        const { findByPlaceholderText, findByText } = await renderNotesPanel({
+            refType: "article",
+            refId: "958fe3e3-f7f5-42d7-be14-401b34fc249d",
+            refSlug: "adab-menuntut-ilmu",
+        });
+        const input = await findByPlaceholderText("Tulis catatan personal...");
+        fireEvent.changeText(input, "Catatan artikel");
+        const saveButton = await findByText("Simpan catatan");
+        fireEvent.press(saveButton);
+        await waitFor(() => {
+            expect(createNote).toHaveBeenCalledWith({
+                refType: "article",
+                refId: "958fe3e3-f7f5-42d7-be14-401b34fc249d",
+                refSlug: "adab-menuntut-ilmu",
+                content: "Catatan artikel",
+            });
+        });
+    });
 });

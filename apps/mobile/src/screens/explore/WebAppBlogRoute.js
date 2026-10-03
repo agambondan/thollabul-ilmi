@@ -24,6 +24,7 @@ const BlogCard = memo(function BlogCard({
     getTitle,
     isDark,
     item,
+    onLongPress,
     onOpen,
 }) {
     const raw = getRaw(item);
@@ -38,12 +39,16 @@ const BlogCard = memo(function BlogCard({
         raw.image_url,
         raw.image,
     ].find((value) => typeof value === "string" && value.trim());
+    const title = getTitle(item);
+    const accessibilityLabel = [title, category].filter(Boolean).join(", ");
 
     return (
         <Pressable
             accessibilityHint='Tekan untuk membaca artikel blog'
+            accessibilityLabel={accessibilityLabel}
             accessibilityRole='button'
             hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
+            onLongPress={onLongPress ? () => onLongPress(item) : undefined}
             onPress={() => onOpen(item)}
             style={[styles.card, isDark && styles.cardDark]}
             testID='web-app-blog-card'
@@ -67,7 +72,7 @@ const BlogCard = memo(function BlogCard({
                     numberOfLines={2}
                     style={[styles.title, isDark && styles.titleDark]}
                 >
-                    {getTitle(item)}
+                    {title}
                 </Text>
                 {getExcerpt(item) ? (
                     <Text
@@ -118,6 +123,7 @@ export function WebAppBlogRoute({
     getTitle,
     hasItems,
     loading,
+    onLongPressItem,
     onOpenItem,
     onRetry,
     onSelectCategory,
@@ -157,6 +163,7 @@ export function WebAppBlogRoute({
                 getTitle={(entry) => getTitle(entry, index)}
                 isDark={isDark}
                 item={item}
+                onLongPress={onLongPressItem}
                 onOpen={onOpenItem}
             />
         ),
@@ -169,6 +176,7 @@ export function WebAppBlogRoute({
             getRaw,
             getTitle,
             isDark,
+            onLongPressItem,
             onOpenItem,
         ],
     );

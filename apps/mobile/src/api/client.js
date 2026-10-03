@@ -834,6 +834,13 @@ export const normalizeHadith = (item) => ({
     sanad: item.sanad ?? "",
 });
 
+export const getHadithByBookSlugNumber = async (bookSlug, number) => {
+    const payload = await requestJson(
+        `/api/v1/hadiths/book/${encodeURIComponent(bookSlug)}/number/${encodeURIComponent(number)}`,
+    );
+    return normalizeHadith(payload?.data ?? payload);
+};
+
 export const normalizeDictionary = (item) => ({
     id: item.id ?? item.term,
     title: item.term ?? item.title ?? "Istilah",

@@ -8,6 +8,7 @@ import {
     normalizeDictionary,
     normalizePerawi,
     normalizeKajian,
+    getHadithByBookSlugNumber,
     requestJson,
     setUnauthorizedHandler,
 } from "../api/client";
@@ -486,5 +487,55 @@ describe("requestJson 401 retry", () => {
         expect(callCount).toBe(4);
         expect(a).toEqual({ data: "ok" });
         expect(b).toEqual({ data: "ok" });
+    });
+});
+
+describe("getHadithByBookSlugNumber", () => {
+    beforeEach(() => {
+        readSession.mockReset();
+        readSession.mockResolvedValue(null);
+        global.fetch = jest.fn();
+    });
+
+    test("resolves the hadith at the given book slug + per-book number, not a global id lookup", async () => {
+        global.fetch.mockResolvedValueOnce({
+            ok: true,
+            status: 200,
+            json: async () => ({
+                data: {
+                    id: 1201,
+                    number: 1414,
+                    book: { slug: "abudaud", name: "Sunan Abu Daud" },
+                    translation: {
+                        arab: "Sajada wajhiya lilladzii khalaqahu",
+                        text_en: "My face prostrates to the One who created it",
+                    },
+                },
+            }),
+        });
+
+        const result = await getHadithByBookSlugNumber("abudaud", 1414);
+
+        const [calledUrl] = global.fetch.mock.calls[0];
+        expect(calledUrl).toContain("/api/v1/hadiths/book/abudaud/number/1414");
+        expect(calledUrl).not.toContain("/api/v1/hadiths/1414");
+        expect(result.id).toBe(1201);
+        expect(result.number).toBe(1414);
+        expect(result.bookSlug).toBe("abudaud");
+    });
+
+    test("URL-encodes a book slug with special characters", async () => {
+        global.fetch.mockResolvedValueOnce({
+            ok: true,
+            status: 200,
+            json: async () => ({ data: { id: 1, number: 1 } }),
+        });
+
+        await getHadithByBookSlugNumber("abu dawud", 1);
+
+        const [calledUrl] = global.fetch.mock.calls[0];
+        expect(calledUrl).toContain(
+            "/api/v1/hadiths/book/abu%20dawud/number/1",
+        );
     });
 });

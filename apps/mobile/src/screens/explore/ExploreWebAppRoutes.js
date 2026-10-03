@@ -80,6 +80,7 @@ import {
     getTilawahPages,
     getTilawahSummary,
     getTilawahSurah,
+    normalizeBlogCategoryOptions,
     normalizeBookmarkType,
     normalizeSearchText,
 } from "../ExploreScreen.helpers";
@@ -142,6 +143,8 @@ function BelajarHubHero({ themeStyles }) {
 export function renderExploreWebAppRoute(context) {
     const {
         activeFeature,
+        language,
+        t,
         answers,
         asmaulCounts,
         asmaulFlashcardRevealed,
@@ -3618,8 +3621,8 @@ export function renderExploreWebAppRoute(context) {
 
     if (activeFeature?.key === "blog") {
         const categories = blogCategoryOptions.length
-            ? blogCategoryOptions
-            : getBlogCategories(visibleItems);
+            ? normalizeBlogCategoryOptions(blogCategoryOptions, language)
+            : getBlogCategories(visibleItems, language);
         const filteredBlog = getFilteredBlogItems(
             visibleItems,
             blogSearch,
@@ -3633,9 +3636,11 @@ export function renderExploreWebAppRoute(context) {
                 categories={categories}
                 error={error}
                 filteredItems={filteredBlog}
-                formatDate={formatBlogDate}
+                formatDate={(value) => formatBlogDate(value, language)}
                 getAuthor={getBlogAuthor}
-                getCategoryLabel={getBlogCategoryLabel}
+                getCategoryLabel={(item) =>
+                    getBlogCategoryLabel(item, language)
+                }
                 getExcerpt={getBlogExcerpt}
                 getItemKey={getExploreItemKey}
                 getRaw={getBlogRaw}
@@ -3644,6 +3649,9 @@ export function renderExploreWebAppRoute(context) {
                 isDarkTheme={isDarkTheme}
                 loading={loading}
                 navigation={navigation}
+                onLongPressItem={(item) =>
+                    setItemActionSheet({ visible: true, item })
+                }
                 onOpenItem={openItemDetail}
                 onRetry={() => loadFeature(activeFeature)}
                 onSearch={setBlogSearch}

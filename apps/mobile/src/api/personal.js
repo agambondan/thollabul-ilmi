@@ -200,11 +200,13 @@ export const getPrayerHistory = async ({ from, to } = {}) => {
     return pickItems(payload);
 };
 
-export const getNotes = async ({ refType, refId }) => {
-    const payload = await requestJson(
-        `/api/v1/notes?ref_type=${refType}&ref_id=${refId}`,
-        { auth: true },
-    );
+export const getNotes = async ({ refType, refId, refSlug }) => {
+    const query = refSlug
+        ? `ref_type=${refType}&ref_slug=${encodeURIComponent(refSlug)}`
+        : `ref_type=${refType}&ref_id=${refId}`;
+    const payload = await requestJson(`/api/v1/notes?${query}`, {
+        auth: true,
+    });
     return pickItems(payload);
 };
 
@@ -215,14 +217,12 @@ export const getNotesByType = async (refType) => {
     return pickItems(payload);
 };
 
-export const createNote = async ({ refType, refId, content }) =>
+export const createNote = async ({ refType, refId, refSlug, content }) =>
     postJson(
         "/api/v1/notes",
-        {
-            ref_type: refType,
-            ref_id: refId,
-            content,
-        },
+        refSlug
+            ? { ref_type: refType, ref_slug: refSlug, content }
+            : { ref_type: refType, ref_id: refId, content },
         { auth: true },
     );
 

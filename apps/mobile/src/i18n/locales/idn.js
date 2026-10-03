@@ -327,6 +327,16 @@ export const idn = {
         "explore.forum.voteCount": "{count} suara",
         "explore.forum.voteError": "Gagal memberi suara.",
         "explore.forum.voteLoginRequired": "Buka Profil untuk memberi suara.",
+        "explore.detail.back": "Kembali",
+        "explore.detail.backToList": "Kembali ke daftar",
+        "explore.detail.info": "Info",
+        "explore.detail.openSource": "Buka sumber",
+        "explore.detail.ref": "Rujukan: {refType} #{refId}",
+        "explore.groups.alat": "Alat",
+        "explore.groups.bacaan": "Bacaan",
+        "explore.groups.detail": "Detail",
+        "explore.groups.ilmu": "Ilmu",
+        "explore.groups.personal": "Personal",
         "explore.tafsir.asbabunEmpty":
             "Data asbabun nuzul untuk surah ini belum tersedia. Coba pilih contoh lain.",
         "explore.tafsir.asbabunInitial":

@@ -324,6 +324,16 @@ export const en = {
         "explore.forum.voteCount": "{count} votes",
         "explore.forum.voteError": "Vote could not be submitted.",
         "explore.forum.voteLoginRequired": "Open Profile to sign in and vote.",
+        "explore.detail.back": "Back",
+        "explore.detail.backToList": "Back to list",
+        "explore.detail.info": "Info",
+        "explore.detail.openSource": "Open source",
+        "explore.detail.ref": "Reference: {refType} #{refId}",
+        "explore.groups.alat": "Tools",
+        "explore.groups.bacaan": "Recitation",
+        "explore.groups.detail": "Detail",
+        "explore.groups.ilmu": "Knowledge",
+        "explore.groups.personal": "Personal",
         "explore.tafsir.asbabunEmpty":
             "Asbabun nuzul data for this surah is not available yet. Try another example.",
         "explore.tafsir.asbabunInitial":

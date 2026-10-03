@@ -13,6 +13,7 @@ jest.mock("../hooks/useLayoutModePreference", () => ({
 jest.mock("../api/client", () => ({
     getAyahsForHadith: jest.fn(),
     getHadithBooks: jest.fn(),
+    getHadithByBookSlugNumber: jest.fn(),
     getHadithPage: jest.fn(),
     getHadithDetail: jest.fn(),
     getHadithSanad: jest.fn(),
@@ -812,5 +813,67 @@ describe("HadithScreen", () => {
 
         expect(await findByText("Detail Hadis")).toBeTruthy();
         expect(await findByText("Valid detail text")).toBeTruthy();
+    });
+
+    test("Blog citation deep link (bookSlug+hadithNumber) resolves via book-slug+number, not the citation number as a global id", async () => {
+        const resolved = mockHadithItem(1201, {
+            number: 1414,
+            bookSlug: "abudaud",
+            translation:
+                "Sajada wajhiya lilladzii khalaqahu (hadis yang benar dikutip).",
+        });
+        clientApi.getHadithByBookSlugNumber.mockResolvedValue(resolved);
+        clientApi.getHadithDetail.mockResolvedValue(resolved);
+
+        const { findByText } = render(
+            <HadithScreen
+                isActive
+                deepLinkTarget={{
+                    id: "dl-citation",
+                    params: { bookSlug: "abudaud", hadithNumber: 1414 },
+                }}
+            />,
+        );
+
+        expect(
+            await findByText(
+                "Sajada wajhiya lilladzii khalaqahu (hadis yang benar dikutip).",
+            ),
+        ).toBeTruthy();
+        expect(clientApi.getHadithByBookSlugNumber).toHaveBeenCalledWith(
+            "abudaud",
+            1414,
+        );
+        expect(clientApi.getHadithDetail).toHaveBeenCalledWith(1201);
+        expect(clientApi.getHadithDetail).not.toHaveBeenCalledWith(1414);
+    });
+
+    test("Blog citation deep link shows a load error instead of a fabricated stub when book-slug+number lookup fails", async () => {
+        clientApi.getHadithByBookSlugNumber.mockRejectedValue(
+            Object.assign(new Error("Request failed: 404"), { status: 404 }),
+        );
+        const showError = jest.fn();
+        useFeedback.mockReturnValue({
+            showError,
+            showInfo: jest.fn(),
+            showSuccess: jest.fn(),
+        });
+
+        render(
+            <HadithScreen
+                isActive
+                deepLinkTarget={{
+                    id: "dl-citation-404",
+                    params: { bookSlug: "abu-daud", hadithNumber: 1414 },
+                }}
+            />,
+        );
+
+        await waitFor(() => {
+            expect(showError).toHaveBeenCalledWith(
+                "Detail hadis belum bisa dimuat.",
+            );
+        });
+        expect(clientApi.getHadithDetail).not.toHaveBeenCalled();
     });
 });

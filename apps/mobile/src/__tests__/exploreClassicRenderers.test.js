@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { fireEvent, render } from "@testing-library/react-native";
 import { createExploreClassicRenderers } from "../screens/explore/ExploreClassicRenderers";
 
 jest.mock("lucide-react-native", () => {
@@ -86,5 +86,94 @@ describe("createExploreClassicRenderers", () => {
         const { getByText } = render(renderers.renderDetailScreen());
 
         expect(getByText("Bismillah bab taharah")).toBeTruthy();
+    });
+
+    test("Blog hadith citation link resolves by book-slug+number (not global id) and sets returnTo to Blog", () => {
+        const onOpenTab = jest.fn();
+        const context = {
+            activeFeature: {
+                key: "blog",
+                type: "list",
+                title: "Artikel",
+                refType: "article",
+                group: "Ilmu",
+                groupLabelKey: "explore.groups.ilmu",
+            },
+            selectedItem: {
+                id: "958fe3e3-f7f5-42d7-be14-401b34fc249d",
+                title: "Panduan Lengkap Sujud Tilawah",
+                body: "placeholder",
+                raw: {
+                    slug: "panduan-sujud-tilawah",
+                    content:
+                        "Dalilnya adalah [HR. Abu Dawud no. 1414](/hadith/abudaud/1414).",
+                },
+            },
+            onOpenTab,
+            isDarkTheme: false,
+            isWebAppLayout: false,
+            t: (k) => k,
+            language: "idn",
+            bookmarks: [],
+            notes: [],
+        };
+
+        const renderers = createExploreClassicRenderers(context);
+        const { getByText } = render(renderers.renderDetailScreen());
+
+        fireEvent.press(getByText("HR. Abu Dawud no. 1414"));
+
+        expect(onOpenTab).toHaveBeenCalledWith("hadith", {
+            bookSlug: "abudaud",
+            hadithNumber: 1414,
+            returnTo: { tab: "belajar", params: { featureKey: "blog" } },
+        });
+    });
+
+    test("Blog quran and doa citation links also set returnTo to Blog for back navigation", () => {
+        const onOpenTab = jest.fn();
+        const context = {
+            activeFeature: {
+                key: "blog",
+                type: "list",
+                title: "Artikel",
+                refType: "article",
+                group: "Ilmu",
+                groupLabelKey: "explore.groups.ilmu",
+            },
+            selectedItem: {
+                id: "41266737-aaaa-bbbb-cccc-000000000000",
+                title: "Hijrah Nabi",
+                body: "placeholder",
+                raw: {
+                    slug: "hijrah-nabi",
+                    content:
+                        "Baca [QS. Al-Baqarah](/quran/2).\n\nJuga [doa safar](/doa/safar).",
+                },
+            },
+            onOpenTab,
+            isDarkTheme: false,
+            isWebAppLayout: false,
+            t: (k) => k,
+            language: "idn",
+            bookmarks: [],
+            notes: [],
+        };
+
+        const renderers = createExploreClassicRenderers(context);
+        const { getByText } = render(renderers.renderDetailScreen());
+
+        fireEvent.press(getByText("QS. Al-Baqarah"));
+        expect(onOpenTab).toHaveBeenCalledWith("quran", {
+            surahNumber: 2,
+            ayahNumber: null,
+            returnTo: { tab: "belajar", params: { featureKey: "blog" } },
+        });
+
+        fireEvent.press(getByText("doa safar"));
+        expect(onOpenTab).toHaveBeenCalledWith("belajar", {
+            featureKey: "doa",
+            returnTo: { tab: "belajar", params: { featureKey: "blog" } },
+        });
     });
 });

@@ -2,6 +2,7 @@ export const featureGroups = [
     {
         key: "bacaan",
         label: "Bacaan",
+        labelKey: "explore.groups.bacaan",
         features: [
             {
                 key: "doa",
@@ -50,6 +51,7 @@ export const featureGroups = [
     {
         key: "ilmu",
         label: "Ilmu",
+        labelKey: "explore.groups.ilmu",
         features: [
             {
                 key: "asmaul-husna",
@@ -185,6 +187,7 @@ export const featureGroups = [
                 title: "Artikel",
                 subtitle: "Tulisan dan pembaruan",
                 type: "list",
+                refType: "article",
                 endpoint: "/api/v1/blog/posts?page=0&size=20",
             },
             {
@@ -214,6 +217,7 @@ export const featureGroups = [
     {
         key: "alat",
         label: "Alat",
+        labelKey: "explore.groups.alat",
         features: [
             {
                 key: "kamus",
@@ -263,6 +267,7 @@ export const featureGroups = [
     {
         key: "personal",
         label: "Personal",
+        labelKey: "explore.groups.personal",
         features: [
             {
                 key: "sholat-tracker",
@@ -345,6 +350,7 @@ export const allFeatures = featureGroups.flatMap((group) =>
     group.features.map((feature) => ({
         ...feature,
         group: group.label,
+        groupLabelKey: group.labelKey,
     })),
 );
 

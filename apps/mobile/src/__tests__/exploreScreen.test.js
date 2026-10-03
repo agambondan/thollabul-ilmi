@@ -433,6 +433,8 @@ jest.mock("../data/mobileFeatures", () => {
             title: "Artikel",
             subtitle: "Tulisan dan pembaruan",
             group: "Ilmu",
+            groupLabelKey: "explore.groups.ilmu",
+            refType: "article",
             type: "list",
             endpoint: "/api/v1/blog/posts?page=0&size=20",
         },
@@ -2790,7 +2792,7 @@ describe("ExploreScreen", () => {
         });
     });
 
-    test("opens Blog detail without exposing unsupported Catatan action in classic layout", async () => {
+    test("opens Blog detail and allows Catatan action via slug-based note in classic layout", async () => {
         useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
         useSession.mockReturnValue({
             ...mockUseSession(),
@@ -2817,13 +2819,12 @@ describe("ExploreScreen", () => {
         });
         personalApi.getBookmarks.mockResolvedValue([]);
 
-        const { getByTestId, getByText, queryByTestId } =
-            await renderExploreScreen({
-                deepLinkTarget: {
-                    id: "blog-route",
-                    params: { featureKey: "blog" },
-                },
-            });
+        const { getByTestId, getByText } = await renderExploreScreen({
+            deepLinkTarget: {
+                id: "blog-route",
+                params: { featureKey: "blog" },
+            },
+        });
 
         await waitFor(() => {
             expect(getByTestId("explore-classic-surface")).toBeTruthy();
@@ -2834,9 +2835,17 @@ describe("ExploreScreen", () => {
 
         await waitFor(() => {
             expect(getByText("Adab Menuntut Ilmu")).toBeTruthy();
-            expect(getByText("Ringkasan adab bagi penuntut ilmu.")).toBeTruthy();
+            expect(
+                getByText("Ringkasan adab bagi penuntut ilmu."),
+            ).toBeTruthy();
             expect(getByTestId("pill-Buka sumber")).toBeTruthy();
-            expect(queryByTestId("pill-Catatan")).toBeNull();
+            expect(getByTestId("pill-Catatan")).toBeTruthy();
+        });
+
+        fireEvent.press(getByTestId("pill-Catatan"));
+
+        await waitFor(() => {
+            expect(getByTestId("notes-panel")).toBeTruthy();
         });
     });
 
