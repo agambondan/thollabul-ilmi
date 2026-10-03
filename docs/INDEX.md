@@ -38,6 +38,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [MOBILE_IA_APPROACH_A.md](./MOBILE_IA_APPROACH_A.md)                                                     | Proposal pembanding (bukan acuan, sudah dilebur ke Final)                                                                                      |
 | [MOBILE_INFORMATION_ARCHITECTURE_APPROACH_CODEX.md](./MOBILE_INFORMATION_ARCHITECTURE_APPROACH_CODEX.md) | Proposal pembanding Codex (bukan acuan, sudah dilebur ke Final)                                                                                |
 | [MOBILE_IA_FINAL.md](./MOBILE_IA_FINAL.md)                                                               | Alias → lihat MOBILE_IA_FINAL_APPROACH.md                                                                                                      |
+| [MOBILE_STORE_RELEASE_GUIDE.md](./mobile/MOBILE_STORE_RELEASE_GUIDE.md)                                 | **← Panduan lengkap rilis ke Google Play Store & Apple App Store (AAB, signing, screenshots, closed test, EAS build)**                         |
 
 ---
 
