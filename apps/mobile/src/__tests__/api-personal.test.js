@@ -84,6 +84,20 @@ describe("personal api", () => {
             );
         });
 
+        test("addBookmark sends ref_slug instead of ref_id for article bookmarks (Blog)", async () => {
+            postJson.mockResolvedValueOnce({});
+            await addBookmark({
+                refType: "article",
+                refId: "958fe3e3-f7f5-42d7-be14-401b34fc249d",
+                refSlug: "adab-menuntut-ilmu",
+            });
+            expect(postJson).toHaveBeenCalledWith(
+                "/api/v1/bookmarks",
+                { ref_type: "article", ref_slug: "adab-menuntut-ilmu" },
+                { auth: true },
+            );
+        });
+
         test("deleteBookmark calls deleteJson", async () => {
             deleteJson.mockResolvedValueOnce({});
             await deleteBookmark(42);

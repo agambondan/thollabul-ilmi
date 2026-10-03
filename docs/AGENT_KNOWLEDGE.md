@@ -573,12 +573,14 @@ yang sama akan dianggap satu identitas oleh index.
 
 ---
 
-## Bookmark untuk Blog/artikel: mobile `addBookmark()` masih mengirim `ref_id` non-numerik, belum pernah diuji dengan akun login
+## Bookmark untuk Blog/artikel: mobile `addBookmark()` masih mengirim `ref_id` non-numerik, belum pernah diuji dengan akun login — FIXED 2026-10-03
 
 Temuan sampingan saat mengerjakan [`reviews/2026-10-03-blog-deep-audit.md`](./reviews/2026-10-03-blog-deep-audit.md)
-(B3 + re-enable Catatan), **belum diperbaiki** — di luar scope sesi itu,
-dicatat di sini supaya tidak hilang. Berbeda dari (tapi berhubungan dengan)
-temuan "unique index 3 kolom" di atas.
+(B3 + re-enable Catatan). **Sudah diperbaiki** di commit langsung setelah
+sesi fix utama (bukan di scope aslinya, ditutup begitu ketahuan supaya B3
+tidak mengirim user login ke dinding 400 yang baru jadi *reachable* persis
+gara-gara tombol long-press yang B3 tambahkan). Berbeda dari (tapi
+berhubungan dengan) temuan "unique index 3 kolom" di atas.
 
 `apps/mobile/src/api/personal.js`'s `addBookmark({ refType, refId })` SELALU
 mengirim `{ ref_type: refType, ref_id: refId }` ke `POST /api/v1/bookmarks` —
@@ -604,9 +606,14 @@ alur ini sebagai **guest** (Tamu) — tombol Bookmark untuk Blog di Classic
 "berfungsi benar" di audit itu cuma berarti menampilkan pesan "silakan
 login", request POST sungguhan ke backend tidak pernah terkirim/diuji.
 
-**Kalau menggarap ini nanti**: mirror pola yang sudah ada di
-`createNote`/`getNotes` (`api/personal.js`, sesi 2026-10-03) — kirim
-`ref_slug` alih-alih `ref_id` saat `refType === "article"`, dan cek dulu
-status terbaru "unique index 3 kolom" di atas (kemungkinan sudah diperbaiki
-backend saat kamu membaca ini).
+**Fix yang diterapkan**: mirror pola yang sudah ada di `createNote`/`getNotes`
+(`api/personal.js`) persis seperti saran di atas — `addBookmark({ refType,
+refId, refSlug })` sekarang mengirim `{ ref_type, ref_slug }` (tanpa `ref_id`
+sama sekali) saat `refSlug` ada, exclusive-or dengan bentuk lama; call site
+`toggleBookmark` (`ExploreScreen.js`) mengisi `refSlug` dari
+`getBlogRaw(item)?.slug` saat `ref.refType === "article"`. Backend sudah
+siap menerima bentuk ini sejak sesi yang sama (lihat "unique index 3 kolom"
+di atas — sudah diperbaiki, bukan lagi "kemungkinan"). Diverifikasi lewat
+test baru di `api-personal.test.js` (`addBookmark sends ref_slug instead of
+ref_id for article bookmarks`) + full suite 94/94 / 1518/1518 tetap hijau.
 

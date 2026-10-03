@@ -36,24 +36,20 @@ export const getBookmarks = async () => {
     return pickItems(payload);
 };
 
-export const addBookmark = async ({ refType, refId }) =>
-    withOfflineQueue(
-        () =>
-            postJson(
-                "/api/v1/bookmarks",
-                {
-                    ref_type: refType,
-                    ref_id: refId,
-                },
-                { auth: true },
-            ),
+export const addBookmark = async ({ refType, refId, refSlug }) => {
+    const body = refSlug
+        ? { ref_type: refType, ref_slug: refSlug }
+        : { ref_type: refType, ref_id: refId };
+    return withOfflineQueue(
+        () => postJson("/api/v1/bookmarks", body, { auth: true }),
         {
             type: "bookmark_add",
             endpoint: "/api/v1/bookmarks",
             method: "POST",
-            payload: { ref_type: refType, ref_id: refId },
+            payload: body,
         },
     );
+};
 
 export const deleteBookmark = async (id) =>
     withOfflineQueue(

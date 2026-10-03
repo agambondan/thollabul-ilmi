@@ -439,6 +439,25 @@ hadithNumber`), padahal keduanya adalah ruang penomoran yang berbeda total
 - **Screenshot**: tidak ada efek untuk didokumentasikan di Modern (negative
   result); pembanding Classic: `027-classic-aksi-sheet.png`,
   `030-bookmark-result.png`.
+- **Addendum (ditemukan & ditutup setelah fix awal landed)**: membuka entry
+  point ini membuat sebuah bug backend-compat yang sebelumnya *unreachable*
+  jadi reachable — `api/personal.js`'s `addBookmark()` selalu mengirim
+  `ref_id` (UUID string untuk Blog) dan tidak pernah mengirim `ref_slug`,
+  padahal backend mewajibkan `ref_slug` untuk `ref_type: "article"`. Semua
+  audit sebelumnya cuma menguji jalur ini sebagai **guest** (pesan login,
+  POST sungguhan tidak pernah terkirim), jadi gak pernah ketahuan. Kalau B3
+  di-ship tanpa ini, user yang SUDAH login akan dapat 400 begitu tap
+  "Bookmark" dari sheet "Aksi Cepat" — downgrade dari "fitur tidak ada" jadi
+  "fitur ada tapi rusak". Diperbaiki: `addBookmark` sekarang menerima
+  `refSlug` dan mengirim `{ ref_type, ref_slug }` (tanpa `ref_id`) saat
+  tersedia, persis pola `createNote` yang sudah dibuat sesi ini;
+  `toggleBookmark` (`ExploreScreen.js`) mengisi `refSlug` dari
+  `getBlogRaw(item)?.slug`. Detail lengkap:
+  [`AGENT_KNOWLEDGE.md`](../AGENT_KNOWLEDGE.md#bookmark-untuk-blogartikel-mobile-addbookmark-masih-mengirim-ref_id-non-numerik-belum-pernah-diuji-dengan-akun-login--fixed-2026-10-03).
+  Test baru: `api-personal.test.js`, full suite 94/94 / 1518/1518 tetap
+  hijau. Tidak ada screenshot baru (perubahan ini di lapisan request API,
+  bukan UI — UI-nya sendiri sudah dibuktikan lewat `030-bookmark-result.png`
+  di atas, untuk Classic/guest).
 
 ### B4. [Modern & Classic] Info artikel menampilkan status mentah "published", bukan penulis/tanggal — MEDIUM — ✅ FIXED (`7471637d`)
 

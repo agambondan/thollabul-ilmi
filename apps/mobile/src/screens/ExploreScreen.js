@@ -900,6 +900,8 @@ export function ExploreScreen({
         }
 
         const ref = getItemRef(activeFeature, item);
+        const refSlug =
+            ref.refType === "article" ? getBlogRaw(item)?.slug : undefined;
         const key = refKey(ref.refType, ref.refId);
         setSavingBookmark(key);
         setError("");
@@ -915,7 +917,7 @@ export function ExploreScreen({
                 });
                 showSuccess(t("explore.bookmarkRemoved"));
             } else {
-                const created = await addBookmark(ref);
+                const created = await addBookmark({ ...ref, refSlug });
                 setBookmarks((current) => ({
                     ...current,
                     [key]: created?.data ?? created,
