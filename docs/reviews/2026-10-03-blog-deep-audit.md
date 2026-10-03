@@ -360,6 +360,28 @@ hadithNumber`), padahal keduanya adalah ruang penomoran yang berbeda total
 - **Screenshot**: `013-after-tap-buka-sumber.png` (artikel sebelum tap, teks
   kutipan "HR. Abu Dawud no. 1414" terlihat), `015-after-tap-hadith-link.png`
   (hasil: "Sunan Abu Daud No. 1201", topik berbeda total).
+- **Addendum — slug "abu-daud" → "abudaud" dikoreksi**: dikonfirmasi ulang
+  langsung ke API produksi (`GET
+  /api/v1/hadiths/book/abudaud/number/1414` → 200, slug asli di respons
+  `"book":{"slug":"abudaud",...}`; `/book/abu-daud/...` → 404). Ditemukan
+  **23 occurrence** total dari pola `/hadith/abu-daud/<nomor>` di dua seeder
+  konten Blog (`services/api/app/db/migrations/seeder_tier4_blog_articles.go`,
+  22, dan `seeder_tier4.go`'s `seedBlogPosts`, 1) — semua diganti ke
+  `/hadith/abudaud/<nomor>` secara literal (nomor kutipan itu sendiri sudah
+  benar per artikel, dikonfirmasi lewat spot-check 6 nomor acak ke API
+  produksi, semua 200). Karena seeder di proyek ini **insert-only** (lihat
+  entry terkait di [`AGENT_KNOWLEDGE.md`](../AGENT_KNOWLEDGE.md)), 8 baris
+  `blog_post.content` dan 8 baris `translation.description_idn` yang sudah
+  ter-seed di Postgres dev lokal juga ditambal langsung (UPDATE
+  ter-verifikasi lewat dry-run transaksi yang di-rollback dulu, baru
+  commit). **Residual kecil, sengaja tidak disentuh**: 14 baris
+  `content_embeddings.chunk_text` (index pencarian semantik turunan, bukan
+  sumber konten) masih menyimpan teks lama — bukan mekanisme yang dipakai
+  B1 (link sitasi tidak membaca tabel ini), akan ikut benar sendiri begitu
+  pipeline embedding re-index ulang. **Database produksi belum disentuh**
+  sama sekali (di luar scope "local dev only" sesi ini) — konten Blog yang
+  live di `https://api.thollabulilmi.site` masih mengandung slug salah
+  sampai proses deploy/migrasi data yang sesuai dijalankan terpisah.
 
 ### B2. [Modern & Classic] Hardware back setelah tap link sitasi dari Blog TIDAK kembali ke artikel — nyasar ke daftar kitab Hadis — HIGH — ✅ FIXED (`7471637d`, lihat catatan "tidak ada bukti visual" di README bukti)
 

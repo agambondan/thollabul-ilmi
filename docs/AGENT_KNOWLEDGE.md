@@ -617,3 +617,29 @@ di atas — sudah diperbaiki, bukan lagi "kemungkinan"). Diverifikasi lewat
 test baru di `api-personal.test.js` (`addBookmark sends ref_slug instead of
 ref_id for article bookmarks`) + full suite 94/94 / 1518/1518 tetap hijau.
 
+---
+
+## Tabel `content_embeddings` itu turunan (chunk_text + vector berpasangan) — jangan di-UPDATE langsung kayak tabel konten biasa
+
+Ditemukan saat menutup residual "slug abu-daud → abudaud" di
+[`reviews/2026-10-03-blog-deep-audit.md`](./reviews/2026-10-03-blog-deep-audit.md#b1).
+Sapuan `UPDATE ... SET content = REPLACE(...)` yang benar untuk
+`blog_post.content` dan `translation.description_idn` (sumber kebenaran,
+insert-only seeder — lihat entry "Peringatan penting" di atas) **sengaja
+TIDAK** diterapkan ke `content_embeddings.chunk_text` walau 14 baris di
+tabel itu juga mengandung string lama yang sama persis.
+
+Alasan: `content_embeddings` punya kolom `embedding vector(256)` yang
+dihitung DARI isi `chunk_text` oleh pipeline indexing terpisah (bukan oleh
+seeder yang sama). Menambal `chunk_text` lewat SQL mentah tanpa
+menghitung ulang `embedding` akan membuat teks dan vektornya tidak sinkron
+— vektor lama tetap "mewakili" teks yang sudah berubah. Untuk satu typo
+slug di tengah link sitasi (dampak semantik ke embedding nyaris nol),
+risiko membuat ketidaksinkronan baru lebih besar dari manfaat menambal
+manual. **Default aman**: tabel-tabel `_embeddings`/index turunan serupa
+dibiarkan apa adanya setelah sumber aslinya diperbaiki — akan otomatis
+benar sendiri begitu pipeline re-index berikutnya jalan. Kalau butuh fix
+segera (mis. karena dipakai langsung untuk ranking pencarian yang user
+lihat), cari dan jalankan pipeline regenerasi embedding-nya, jangan
+`UPDATE` teksnya saja.
+

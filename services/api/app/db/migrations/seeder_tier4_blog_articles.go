@@ -40,13 +40,13 @@ Secara anatomis, tubuh manusia tersusun atas 360 persendian yang setiap harinya 
 Rasulullah ﷺ bersabda:
 
 > "Dalam tubuh manusia terdapat 360 persendian, dan ia wajib bersedekah untuk setiap sendinya.' Para sahabat bertanya: 'Siapakah yang mampu melakukan hal itu, wahai Nabi Allah?' Beliau menjawab: 'Menimbun dahak di masjid (membersihkannya) atau menyingkirkan gangguan dari jalanan. Jika engkau tidak mampu, maka dua rakaat Dhuha sudah mencukupimu.'"
-> *([HR. Abu Dawud no. 5242](/hadith/abu-daud/5242), dishahihkan oleh Syaikh Al-Albani)*
+> *([HR. Abu Dawud no. 5242](/hadith/abudaud/5242), dishahihkan oleh Syaikh Al-Albani)*
 
 ### 2. Dicukupi Kebutuhan Hidup hingga Akhir Hari
 Dalam hadits Qudsi, Allah Subhanahu wa Ta'ala berfirman:
 
 > "Wahai anak Adam, janganlah sekali-kali engkau malas mengerjakan empat rakaat pada awal siang (sholat Dhuha), niscaya Aku akan mencukupimu pada akhir harimu."
-> *([HR. Abu Dawud no. 1289](/hadith/abu-daud/1289) dan [HR. At-Tirmidzi no. 475](/hadith/tirmidzi/475))*
+> *([HR. Abu Dawud no. 1289](/hadith/abudaud/1289) dan [HR. At-Tirmidzi no. 475](/hadith/tirmidzi/475))*
 
 Para ulama menafsirkan kecukupan ini meliputi kecukupan rezeki, perlindungan dari mara bahaya, ketenangan jiwa, serta kemudahan dalam menyelesaikan urusan harian.
 
@@ -212,7 +212,7 @@ Imam Ahmad bin Hanbal rahimahullah pernah ditanya: *"Apakah niat yang benar dala
 Rasulullah ﷺ memberikan peringatan keras terhadap orang yang menuntut ilmu demi motif duniawi:
 
 > "Barangsiapa yang menuntut ilmu yang seharusnya untuk mencari wajah Allah, tetapi ia tidak menuntutnya melainkan untuk mendapatkan bagian dari dunia, maka ia tidak akan mencium harumnya surga pada hari kiamat."
-> *([HR. Abu Dawud no. 3664](/hadith/abu-daud/3664), dishahihkan oleh Syaikh Al-Albani)*
+> *([HR. Abu Dawud no. 3664](/hadith/abudaud/3664), dishahihkan oleh Syaikh Al-Albani)*
 
 ### 2. Menyegerakan Pengamalan Ilmu
 Ilmu yang tidak diamalkan akan menjadi bumerang dan hujjah yang memberatkan pemiliknya di pengadilan akhirat. 
@@ -225,7 +225,7 @@ Penuntut ilmu tidak akan pernah meraih kemanfaatan ilmu jika ia bersikap sombong
 - Duduklah dengan tenang, sopan, dan penuh perhatian dalam majelis ta'lim.
 - Jangan memotong penjelasan guru sebelum dipersilakan.
 - Hindari menyebarkan aib atau kesalahan lidah guru; jika guru keliru, luruskan dengan santun secara empat mata.
-- Senantiasa mendoakan ampunan dan kebaikan bagi guru yang telah membimbing kita *([HR. Abu Dawud no. 1672](/hadith/abu-daud/1672))*.
+- Senantiasa mendoakan ampunan dan kebaikan bagi guru yang telah membimbing kita *([HR. Abu Dawud no. 1672](/hadith/abudaud/1672))*.
 
 ### 4. Menjauhi Debat Kusir (*Al-Mira'* dan *Al-Jidal*)
 Banyak orang tergelincir ketika telah memiliki sedikit wawasan fiqih lalu gemar berdebat di media sosial untuk pamer kepintaran atau merendahkan saudaranya.
@@ -233,7 +233,7 @@ Banyak orang tergelincir ketika telah memiliki sedikit wawasan fiqih lalu gemar 
 Nabi Muhammad ﷺ bersabda:
 
 > "Aku menjamin sebuah rumah di pinggir surga bagi orang yang meninggalkan perdebatan meskipun ia berada di pihak yang benar."
-> *([HR. Abu Dawud no. 4800](/hadith/abu-daud/4800), dinilai hasan oleh Syaikh Al-Albani)*
+> *([HR. Abu Dawud no. 4800](/hadith/abudaud/4800), dinilai hasan oleh Syaikh Al-Albani)*
 
 ### 5. Memuliakan Kitab, Mushaf, dan Catatan Ilmu
 Imam Al-Burhan Az-Zarnuji dalam kitab monumentalnya *Ta'limul Muta'allim* menekankan agar penuntut ilmu tidak mengambil kitab kecuali dalam keadaan suci, tidak menjulurkan kaki ke arah kitab, dan menjaga lembaran catatan dari kotoran.
@@ -370,7 +370,7 @@ Anak adalah karunia terindah sekaligus amanah terberat bagi setiap orang tua mus
 Nabi Muhammad ﷺ meletakkan cetak biru (*blueprint*) pendidikan sholat bagi anak dalam sabda beliau:
 
 > "Perintahkanlah anak-anak kalian untuk mendirikan sholat ketika mereka berusia tujuh tahun, dan pukullah mereka (dengan pukulan mendidik tanpa melukai) jika meninggalkannya ketika mereka berusia sepuluh tahun, serta pisahkanlah tempat tidur mereka."
-> *([HR. Abu Dawud no. 495](/hadith/abu-daud/495), dishahihkan oleh Syaikh Al-Albani)*
+> *([HR. Abu Dawud no. 495](/hadith/abudaud/495), dishahihkan oleh Syaikh Al-Albani)*
 
 Perhatikan rentang waktu antara usia 7 tahun hingga 10 tahun: terdapat rentang waktu **3 tahun penuh** (setara dengan 1.095 hari atau lebih dari **5.400 kali waktu sholat**). Ini membuktikan bahwa pendidikan sholat menuntut kesabaran ekstra, ribuan kali pengingat penuh kasih, dan keteladanan konsisten, bukan kemarahan instan.
 
@@ -446,7 +446,7 @@ Imam Al-Qurthubi mengisahkan bahwa suatu ketika ada seseorang mengadu kepada Ima
 Rasulullah ﷺ bersabda:
 
 > "Barangsiapa memperbanyak istighfar, niscaya Allah menjadikan untuk setiap kesedihannya kelapangan, untuk setiap kesempitannya jalan keluar, dan memberinya rezeki dari arah yang tidak disangka-sangka."
-> *([HR. Abu Dawud no. 1518](/hadith/abu-daud/1518) dan [HR. Ibnu Majah no. 3819](/hadith/ibnu-majah/3819))*
+> *([HR. Abu Dawud no. 1518](/hadith/abudaud/1518) dan [HR. Ibnu Majah no. 3819](/hadith/ibnu-majah/3819))*
 
 ### 3. Menghapus Karat dan Noda Hitam di Dalam Hati
 Setiap perbuatan dosa akan menitikkan noda hitam pada hati seorang hamba. Jika ia beristighfar dan bertaubat, noda hitam tersebut akan terhapus dan hatinya kembali berkilau bersih *([HR. Tirmidzi no. 3334](/hadith/tirmidzi/3334))*.
@@ -465,7 +465,7 @@ Allah Subhanahu wa Ta'ala berfirman:
    > *Astaghfirullah* (Aku memohon ampun kepada Allah) atau *Astaghfirullah wa atuubu ilaih*.
 2. **Lafadz Penghapus Dosa Besar:**
    > *Astaghfirullahal 'adzim alladzi laa ilaha illa huwal hayyul qayyumu wa atuubu ilaih.*
-   > Barangsiapa mengucapkannya, diampuni dosanya meskipun ia pernah lari dari medan perang *([HR. Abu Dawud no. 1517](/hadith/abu-daud/1517))*.
+   > Barangsiapa mengucapkannya, diampuni dosanya meskipun ia pernah lari dari medan perang *([HR. Abu Dawud no. 1517](/hadith/abudaud/1517))*.
 3. **Sayyidul Istighfar (Penghulu Segala Istighfar):**
    > *Allahumma Anta Robbii laa ilaha illa Anta, kholaqtanii wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika mastatho'tu. A'uudzu bika min syarri maa shona'tu, abuu-u laka bini'matika 'alayya, wa abuu-u bidzanbii faghfirlii fa-innahu laa yaghfirudz-dzunuuba illa Anta.*
    > Rasulullah ﷺ menjamin bahwa barangsiapa membacanya di petang hari lalu meninggal malam itu, atau membacanya di pagi hari lalu meninggal siang itu, ia termasuk penghuni surga *([HR. Bukhari no. 6306](/hadith/bukhari/6306))*.
@@ -527,10 +527,10 @@ Berbeda dengan puasa wajib Ramadan yang mengharuskan seseorang berniat sebelum t
 
 ### 2. Adab Berbuka Puasa
 - **Menyegerakan Berbuka:** Segera berbuka saat adzan Maghrib berkumandang *([HR. Bukhari no. 1957](/hadith/bukhari/1957))*.
-- **Menu Pembuka:** Membuka dengan kurma basah (*ruthab*), jika tidak ada maka kurma kering (*tamr*), dan jika tidak ada maka dengan beberapa teguk air putih *([HR. Abu Dawud no. 2356](/hadith/abu-daud/2356))*.
+- **Menu Pembuka:** Membuka dengan kurma basah (*ruthab*), jika tidak ada maka kurma kering (*tamr*), dan jika tidak ada maka dengan beberapa teguk air putih *([HR. Abu Dawud no. 2356](/hadith/abudaud/2356))*.
 - **Doa Berbuka yang Shahih:**
   > *Dzahabazh-zhoma'u wabtallatil-'uruuqu wa tsabatal-ajru insyaa Allah.*
-  > "Telah hilang rasa dahaga, telah basah urat-urat, dan telah tetap pahala insya Allah." *([HR. Abu Dawud no. 2357](/hadith/abu-daud/2357))*
+  > "Telah hilang rasa dahaga, telah basah urat-urat, dan telah tetap pahala insya Allah." *([HR. Abu Dawud no. 2357](/hadith/abudaud/2357))*
 
 Jadikanlah puasa Senin Kamis sebagai benteng pertahanan ruhiyah dan kebugaran jasmani kita sepanjang tahun.`,
 		},
@@ -557,7 +557,7 @@ Allah Subhanahu wa Ta'ala berfirman:
 Harta simpanan (uang tabungan, deposito, emas, perak, dan surat berharga likuid) wajib dikeluarkan zakatnya apabila memenuhi dua parameter:
 
 ### 1. Mencapai Nisab (Batas Minimal Harta)
-Nisab zakat harta uang simpanan disetarakan dengan harga **85 gram emas murni (24 karat)**, merujuk pada hadits Ali bin Abi Thalib radhiyallahu 'anhu *([HR. Abu Dawud no. 1573](/hadith/abu-daud/1573))*.
+Nisab zakat harta uang simpanan disetarakan dengan harga **85 gram emas murni (24 karat)**, merujuk pada hadits Ali bin Abi Thalib radhiyallahu 'anhu *([HR. Abu Dawud no. 1573](/hadith/abudaud/1573))*.
 - Jika harga emas saat ini adalah Rp 1.400.000 / gram, maka nisab zakat mal adalah:
   > **Nisab = 85 gram × Rp 1.400.000 = Rp 119.000.000,-**
 
@@ -703,20 +703,20 @@ Dari Abu Hurairah radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
 Berdasarkan penelitian dalil shahih dan hasan, terdapat 15 ayat sajdah yang disepakati oleh jumhur ulama:
 
 1. **Surah Al-A'raf (7:206)** — *([HR. Bukhari no. 1075](/hadith/bukhari/1075) dan [HR. Muslim no. 575](/hadith/muslim/575))*
-2. **Surah Ar-Ra'd (13:15)** — *([HR. Abu Dawud no. 1407](/hadith/abu-daud/1407), dishahihkan Al-Albani)*
+2. **Surah Ar-Ra'd (13:15)** — *([HR. Abu Dawud no. 1407](/hadith/abudaud/1407), dishahihkan Al-Albani)*
 3. **Surah An-Nahl (16:50)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077))*
 4. **Surah Al-Isra' (17:109)** — *([HR. Bukhari no. 1072](/hadith/bukhari/1072))*
-5. **Surah Maryam (19:58)** — *([HR. Abu Dawud no. 1408](/hadith/abu-daud/1408), dishahihkan Al-Albani)*
+5. **Surah Maryam (19:58)** — *([HR. Abu Dawud no. 1408](/hadith/abudaud/1408), dishahihkan Al-Albani)*
 6. **Surah Al-Hajj Ayat Pertama (22:18)** — *([HR. Bukhari no. 1074](/hadith/bukhari/1074))*
-7. **Surah Al-Hajj Ayat Kedua (22:77)** — *([HR. Abu Dawud no. 1409](/hadith/abu-daud/1409))*
-8. **Surah Al-Furqan (25:60)** — *([HR. Abu Dawud no. 1410](/hadith/abu-daud/1410))*
+7. **Surah Al-Hajj Ayat Kedua (22:77)** — *([HR. Abu Dawud no. 1409](/hadith/abudaud/1409))*
+8. **Surah Al-Furqan (25:60)** — *([HR. Abu Dawud no. 1410](/hadith/abudaud/1410))*
 9. **Surah An-Naml (27:26)** — *([HR. Bukhari no. 1075](/hadith/bukhari/1075))*
 10. **Surah As-Sajdah (32:15)** — *([HR. Bukhari no. 1076](/hadith/bukhari/1076))*
-11. **Surah Shad (38:24)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077), [HR. Abu Dawud no. 1409](/hadith/abu-daud/1409) dan [HR. Abu Dawud no. 1410](/hadith/abu-daud/1410))*
+11. **Surah Shad (38:24)** — *([HR. Bukhari no. 1077](/hadith/bukhari/1077), [HR. Abu Dawud no. 1409](/hadith/abudaud/1409) dan [HR. Abu Dawud no. 1410](/hadith/abudaud/1410))*
 12. **Surah Fushshilat (41:38)** — *([HR. Muslim no. 581](/hadith/muslim/581))*
 13. **Surah An-Najm (53:62)** — *([HR. Bukhari no. 1070](/hadith/bukhari/1070))*
-14. **Surah Al-Insyiqaq (84:21)** — *([HR. Bukhari no. 1074](/hadith/bukhari/1074), [HR. Abu Dawud no. 1407](/hadith/abu-daud/1407) dan [HR. Abu Dawud no. 1408](/hadith/abu-daud/1408))*
-15. **Surah Al-'Alaq (96:19)** — *([HR. Abu Dawud no. 1407](/hadith/abu-daud/1407) dan [HR. Abu Dawud no. 1413](/hadith/abu-daud/1413))*
+14. **Surah Al-Insyiqaq (84:21)** — *([HR. Bukhari no. 1074](/hadith/bukhari/1074), [HR. Abu Dawud no. 1407](/hadith/abudaud/1407) dan [HR. Abu Dawud no. 1408](/hadith/abudaud/1408))*
+15. **Surah Al-'Alaq (96:19)** — *([HR. Abu Dawud no. 1407](/hadith/abudaud/1407) dan [HR. Abu Dawud no. 1413](/hadith/abudaud/1413))*
 
 ---
 
@@ -746,7 +746,7 @@ Berdasarkan penelitian dalil shahih dan hasan, terdapat 15 ayat sajdah yang dise
 > *Sajada wajhiya lilladzii khalaqahu wa syaqqa sam'ahu wa basharahu bihawlihi wa quwwatih, fatabaarakallaahu ahsanul khaaliqiin.*
 >
 > "Wajahku bersujud kepada Dzat yang menciptakannya, membukakan pendengaran dan penglihatannya dengan daya dan kekuatan-Nya. Maka Maha Suci Allah sebaik-baik Pencipta."
-> *([HR. Abu Dawud no. 1414](/hadith/abu-daud/1414), [HR. At-Tirmidzi no. 580](/hadith/tirmidzi/580), hadits shahih)*
+> *([HR. Abu Dawud no. 1414](/hadith/abudaud/1414), [HR. At-Tirmidzi no. 580](/hadith/tirmidzi/580), hadits shahih)*
 
 ### 2. Doa Riwayat Ibnu Abbas radhiyallahu 'anhuma
 

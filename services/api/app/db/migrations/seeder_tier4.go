@@ -218,7 +218,7 @@ Maka jangan pernah merasa minder atau putus asa jika lidah masih kaku dalam mela
 Tingkatan surga seseorang berbanding lurus dengan banyaknya hafalan dan tilawah yang dilakukannya dengan tartil.
 
 > "Akan dikatakan kepada pembaca Al-Quran (pada hari kiamat): 'Bacalah, naiklah, dan tartilkanlah sebagaimana engkau mentartilkannya sewaktu di dunia. Karena kedudukanmu berada pada akhir ayat yang engkau baca.'"
-> *([HR. Abu Dawud no. 1464](/hadith/abu-daud/1464) dan [HR. At-Tirmidzi no. 2914](/hadith/tirmidzi/2914))*
+> *([HR. Abu Dawud no. 1464](/hadith/abudaud/1464) dan [HR. At-Tirmidzi no. 2914](/hadith/tirmidzi/2914))*
 
 ### 5. Menjadi Rumah yang Bercahaya dan Dipenuhi Ketenangan
 Rumah yang di dalamnya dibacakan kalam ilahi akan dikunjungi para malaikat, dijauhi setan, dilapangkan bagi penghuninya, dan dipenuhi keberkahan. Sebaliknya, rumah yang sunyi dari bacaan Al-Quran ibarat kuburan yang gelap gulita.
