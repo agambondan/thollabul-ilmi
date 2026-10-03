@@ -266,6 +266,8 @@ const id = {
     "link.search": "Cari",
     "link.dev": "Dev",
     "link.contact": "Kontak",
+    "link.privacy": "Kebijakan Privasi",
+    "link.terms": "Syarat & Ketentuan",
     "link.notifications": "Notifikasi",
     "link.profile": "Profil",
     "link.dashboard": "Dashboard",

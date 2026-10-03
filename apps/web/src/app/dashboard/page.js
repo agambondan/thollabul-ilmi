@@ -208,6 +208,8 @@ const DashboardPage = () => {
     }, [isAuthenticated, authLoading]);
 
     const lastMuhasabah = muhasabahList[0] ?? null;
+    const donePrayerCount = PRAYERS.filter((p) => !!prayerLog[prayerKey(p)]).length;
+    const amalanDoneCount = amalanItems.filter((a) => a.done).length;
 
     if (authLoading) return null;
 

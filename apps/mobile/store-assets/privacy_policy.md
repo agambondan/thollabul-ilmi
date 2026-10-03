@@ -1,8 +1,8 @@
 # Privacy Policy — Thullaabul Ilmi
 
-**Effective Date:** 2024-01-01
-**Last Updated:** 2024-01-01
-**Version:** 1.0
+**Effective Date:** 2026-10-01
+**Last Updated:** 2026-10-01
+**Version:** 1.1
 
 ---
 
@@ -19,7 +19,7 @@ Aplikasi ini **tidak menjual data pengguna** dan **tidak menampilkan iklan**.
 ### 2.1 Data yang Anda Berikan Secara Sukarela
 | Data | Tujuan | Disimpan Di |
 |------|--------|-------------|
-| Email, nama, password (saat registrasi) | Autentikasi akun, sinkron progres | Backend server (Firebase/Node.js) |
+| Email, nama, password (saat registrasi) | Autentikasi akun, sinkron progres | Backend server (Node.js/PostgreSQL) |
 | Foto profil (opsional) | Personalisasi akun | Cloud storage (Firebase Storage) |
 
 ### 2.2 Data yang Dikumpulkan Otomatis (Dengan Izin)
@@ -53,7 +53,7 @@ Data digunakan **hanya** untuk:
 | Penerima | Data | Alasan |
 |----------|------|--------|
 | Firebase Authentication | Email, password hash, UID | Login / register |
-| Firestore / Realtime Database | Profil user, progres sinkron | Multi-device sync |
+| Backend API (Node.js/PostgreSQL) | Profil user, progres sinkron | Multi-device sync |
 | Google Play Services | FCM token | Push notification |
 | **Tidak ada pihak ketiga** untuk analitik/iklan | — | — |
 
@@ -108,8 +108,10 @@ Perubahan material akan diberitahu via:
 ## 10. Hubungi Kami
 
 **Data Protection Officer:** Firman Alamsyah
-**Email:** privacy@thullaabulilmi.com (placeholder)
+**Email:** privacy@thullaabulilmi.com
 **Alamat:** Jakarta, Indonesia
+
+**Privacy Policy Online:** https://thollabulilmi.site/privacy
 
 ---
 

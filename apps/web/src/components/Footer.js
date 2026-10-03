@@ -76,6 +76,7 @@ const Footer = () => {
                 { label: t("link.quiz"), href: "/quiz" },
                 { label: t("link.leaderboard"), href: "/leaderboard" },
                 { label: t("link.contact"), href: "/contact" },
+                { label: t("link.privacy"), href: "/privacy" },
                 { label: t("link.radio_islamic"), href: "/radio-islamic" },
                 {
                     label: t("link.browser_extension") ?? "Browser Extension",

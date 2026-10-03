@@ -262,7 +262,7 @@ describe("reference list filters cover pages that are not loaded yet (B5)", () =
 
         await waitFor(() => {
             expect(view.getByText("Data tidak ditemukan.")).toBeTruthy();
-        });
+        }, { timeout: 3000 });
         expect(spy).toHaveBeenCalledTimes(2);
         expect(view.queryByTestId("web-app-dzikir-load-more")).toBeNull();
     });

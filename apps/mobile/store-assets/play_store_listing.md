@@ -68,9 +68,9 @@ Education → Books & Reference
 Al-Qur'an, Quran, Hadits, Hadith, Sholat, Prayer, Kiblat, Qibla, Islam, Muslim, Tafsir, Sirah, Khatam, Hafalan, Dhikr, Tasbih, Doa, Faraidh, Zakat, Imsakiyah, Hijri
 
 ## Contact
-- Website: https://thullaabulilmi.com (placeholder)
-- Email: support@thullaabulilmi.com (placeholder)
-- Privacy Policy: https://thullaabulilmi.com/privacy (placeholder)
+- Website: https://thollabulilmi.site
+- Email: halo@thollabulilmi.site
+- Privacy Policy: https://thollabulilmi.site/privacy
 
 ## Content Rating
 Everyone (IARC questionnaire → no violence, no mature content, no gambling)

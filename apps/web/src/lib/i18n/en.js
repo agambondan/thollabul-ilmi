@@ -272,6 +272,8 @@ const en = {
     "link.search": "Search",
     "link.dev": "Dev",
     "link.contact": "Contact",
+    "link.privacy": "Privacy Policy",
+    "link.terms": "Terms & Conditions",
     "link.notifications": "Notifications",
     "link.profile": "Profile",
     "link.dashboard": "Dashboard",
