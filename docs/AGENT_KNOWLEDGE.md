@@ -571,3 +571,42 @@ masuk ke composite unique index kalau index itu dipakai untuk membedakan
 baris antar `ref_type`. Kalau tidak, semua baris dengan field zero-value
 yang sama akan dianggap satu identitas oleh index.
 
+---
+
+## Bookmark untuk Blog/artikel: mobile `addBookmark()` masih mengirim `ref_id` non-numerik, belum pernah diuji dengan akun login
+
+Temuan sampingan saat mengerjakan [`reviews/2026-10-03-blog-deep-audit.md`](./reviews/2026-10-03-blog-deep-audit.md)
+(B3 + re-enable Catatan), **belum diperbaiki** — di luar scope sesi itu,
+dicatat di sini supaya tidak hilang. Berbeda dari (tapi berhubungan dengan)
+temuan "unique index 3 kolom" di atas.
+
+`apps/mobile/src/api/personal.js`'s `addBookmark({ refType, refId })` SELALU
+mengirim `{ ref_type: refType, ref_id: refId }` ke `POST /api/v1/bookmarks` —
+tidak pernah mengirim `ref_slug`, dan tidak ada percabangan untuk tipe
+konten yang id-nya bukan integer (Blog pakai UUID). Backend
+(`bookmark_controller.go`) mewajibkan `ref_slug` (bukan `ref_id`) untuk
+`ref_type: "article"` lewat jalur `AddBySlug`. Dua akibat kalau mobile
+mencoba bookmark artikel Blog hari ini (setelah `mobileFeatures.js`'s blog
+feature mendapat `refType: "article"` dari sesi fix ini):
+
+1. `ref_id` yang dikirim adalah UUID string (dari `getItemRef`'s fallback
+   `Number.isFinite(numericId) ? numericId : rawId`) — field Go `RefID int`
+   di request struct backend akan GAGAL unmarshal JSON sebelum validasi
+   `ref_type` apa pun sempat jalan → 400, bukan error yang jelas.
+2. Walau (1) diperbaiki (`ref_id` dihilangkan/`0` saat `ref_slug` dikirim,
+   persis pola yang sudah dipakai `createNote` di `api/personal.js` setelah
+   sesi ini), `ref_slug` itu sendiri tidak pernah dikirim sama sekali hari
+   ini — jadi backend akan menolak dengan "ref_slug is required for article
+   bookmarks".
+
+**Kenapa belum ketahuan dari audit manapun**: audit 2026-10-03 hanya menguji
+alur ini sebagai **guest** (Tamu) — tombol Bookmark untuk Blog di Classic
+"berfungsi benar" di audit itu cuma berarti menampilkan pesan "silakan
+login", request POST sungguhan ke backend tidak pernah terkirim/diuji.
+
+**Kalau menggarap ini nanti**: mirror pola yang sudah ada di
+`createNote`/`getNotes` (`api/personal.js`, sesi 2026-10-03) — kirim
+`ref_slug` alih-alih `ref_id` saat `refType === "article"`, dan cek dulu
+status terbaru "unique index 3 kolom" di atas (kemungkinan sudah diperbaiki
+backend saat kamu membaca ini).
+
