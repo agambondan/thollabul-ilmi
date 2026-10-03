@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -90,6 +91,75 @@ func TestBookmarkRepositorySaveRestoresExistingSoftDeletedReference(t *testing.T
 	}
 	if restored.Color != "amber" || restored.Label != "Baru" {
 		t.Fatalf("expected restored metadata, got color=%q label=%q", restored.Color, restored.Label)
+	}
+}
+
+func TestBookmarkRepositorySaveAllowsTwoDistinctArticleBookmarks(t *testing.T) {
+	db := newBookmarkTestDB(t)
+	repo := NewBookmarkRepository(db)
+	userID := uuid.New()
+
+	first, err := repo.Save(&model.Bookmark{
+		BaseUUID: model.BaseUUID{ID: uuid.New()},
+		UserID:   userID,
+		RefType:  model.BookmarkArticle,
+		RefSlug:  "artikel-pertama",
+	})
+	if err != nil {
+		t.Fatalf("save first article bookmark: %v", err)
+	}
+
+	second, err := repo.Save(&model.Bookmark{
+		BaseUUID: model.BaseUUID{ID: uuid.New()},
+		UserID:   userID,
+		RefType:  model.BookmarkArticle,
+		RefSlug:  "artikel-kedua",
+	})
+	if err != nil {
+		t.Fatalf("save second (distinct) article bookmark: %v", err)
+	}
+	if first.ID == second.ID {
+		t.Fatalf("expected distinct bookmark ids, got same id %s", first.ID)
+	}
+
+	all, err := repo.FindByUserID(userID)
+	if err != nil {
+		t.Fatalf("find by user: %v", err)
+	}
+	if len(all) != 2 {
+		t.Fatalf("expected 2 independent article bookmarks, got %d", len(all))
+	}
+	slugs := map[string]bool{}
+	for _, b := range all {
+		slugs[b.RefSlug] = true
+	}
+	if !slugs["artikel-pertama"] || !slugs["artikel-kedua"] {
+		t.Fatalf("expected both article slugs present, got %+v", slugs)
+	}
+}
+
+func TestBookmarkRepositorySaveRejectsDuplicateNumericRef(t *testing.T) {
+	db := newBookmarkTestDB(t)
+	repo := NewBookmarkRepository(db)
+	userID := uuid.New()
+
+	if _, err := repo.Save(&model.Bookmark{
+		BaseUUID: model.BaseUUID{ID: uuid.New()},
+		UserID:   userID,
+		RefType:  model.BookmarkAyah,
+		RefID:    10,
+	}); err != nil {
+		t.Fatalf("save first ayah bookmark: %v", err)
+	}
+
+	_, err := repo.Save(&model.Bookmark{
+		BaseUUID: model.BaseUUID{ID: uuid.New()},
+		UserID:   userID,
+		RefType:  model.BookmarkAyah,
+		RefID:    10,
+	})
+	if !errors.Is(err, gorm.ErrDuplicatedKey) {
+		t.Fatalf("expected duplicated key error for repeated ayah ref, got %v", err)
 	}
 }
 

@@ -7,7 +7,7 @@ import (
 )
 
 type NoteRepository interface {
-	FindByUser(userID uuid.UUID, refType model.NoteRefType, refID int) ([]model.Note, error)
+	FindByUser(userID uuid.UUID, refType model.NoteRefType, refID int, refSlug string) ([]model.Note, error)
 	FindByID(id int) (*model.Note, error)
 	Create(n *model.Note) (*model.Note, error)
 	Update(id int, userID uuid.UUID, n *model.Note) (*model.Note, error)
@@ -20,7 +20,7 @@ func NewNoteRepository(db *gorm.DB) NoteRepository {
 	return &noteRepository{db}
 }
 
-func (r *noteRepository) FindByUser(userID uuid.UUID, refType model.NoteRefType, refID int) ([]model.Note, error) {
+func (r *noteRepository) FindByUser(userID uuid.UUID, refType model.NoteRefType, refID int, refSlug string) ([]model.Note, error) {
 	var items []model.Note
 	q := r.db.Where("user_id = ?", userID)
 	if refType != "" {
@@ -28,6 +28,9 @@ func (r *noteRepository) FindByUser(userID uuid.UUID, refType model.NoteRefType,
 	}
 	if refID > 0 {
 		q = q.Where("ref_id = ?", refID)
+	}
+	if refSlug != "" {
+		q = q.Where("ref_slug = ?", refSlug)
 	}
 	return items, q.Order("created_at DESC").Limit(200).Find(&items).Error
 }

@@ -212,6 +212,7 @@ func (s *Repositories) Migrations() error {
 	migrations.DropTahlilTables(s.db)
 	migrations.DropLegacyNonCanonicalHadithBooks(s.db)
 	migrations.PreMigrateKajianVideoID(s.db)
+	migrations.PreMigrateBookmarkRefSlugIndex(s.db)
 	// Extensions must exist before AutoMigrate runs -- the ContentEmbedding
 	// model's Embedding column is gorm:"type:vector(...)", so AutoMigrate
 	// fails with "type vector does not exist" if pgvector isn't created yet.

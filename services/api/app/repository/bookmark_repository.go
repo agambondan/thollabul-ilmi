@@ -28,7 +28,7 @@ func NewBookmarkRepository(db *gorm.DB) BookmarkRepository {
 func (r *bookmarkRepo) Save(b *model.Bookmark) (*model.Bookmark, error) {
 	var existing model.Bookmark
 	err := r.db.Unscoped().
-		Where("user_id = ? AND ref_type = ? AND ref_id = ?", b.UserID, b.RefType, b.RefID).
+		Where("user_id = ? AND ref_type = ? AND ref_id = ? AND ref_slug = ?", b.UserID, b.RefType, b.RefID, b.RefSlug).
 		First(&existing).Error
 	if err == nil {
 		if existing.DeletedAt.Valid {

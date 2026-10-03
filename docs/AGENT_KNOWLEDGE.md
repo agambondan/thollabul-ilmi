@@ -402,3 +402,49 @@ angka `0`, atau string kosong `""` dianggap tidak diisi dan dilewati dari query 
   3. Sediakan endpoint aksi khusus (mis. `PATCH /resource/:id/toggle` atau `DELETE /resource/:id`).
 - Lihat detail audit di [`reviews/2026-10-03-admin-crud-security-audit.md`](./reviews/2026-10-03-admin-crud-security-audit.md).
 
+---
+
+## Bookmark artikel: unique index 3 kolom bikin semua bookmark artikel satu user tabrakan
+
+`model.Bookmark` punya dua "identitas" berbeda tergantung `ref_type`: numerik
+(`ayah`/`hadith`/`library_book`, pakai `RefID`) dan slug (`article`, pakai
+`RefSlug`, `RefID` dibiarkan zero-value `0`). Unique index
+`idx_bookmark_user_ref` sebelumnya cuma `(user_id, ref_type, ref_id)` — tidak
+ikut `ref_slug`.
+
+**Dampak nyata**: karena setiap bookmark artikel punya `ref_id = 0`, SEMUA
+bookmark artikel milik satu user jatuh ke tuple `(user_id, "article", 0)`
+yang sama persis. Efeknya di `bookmark_repository.go` `Save()`:
+
+- Bookmark artikel kedua (slug berbeda) dianggap "duplicate" (`gorm.ErrDuplicatedKey`), ATAU
+- Kalau bookmark artikel pertama kebetulan soft-deleted, `Save()` me-resurrect row LAMA itu tapi nimpa `ref_slug`-nya ke slug yang BARU — bookmark lama diam-diam "pindah" nunjuk ke artikel lain.
+
+User pada praktiknya cuma bisa punya **satu** bookmark artikel aktif,
+sepanjang waktu. Tidak ketahuan dari audit manapun sebelumnya karena belum
+ada yang coba bookmark dua artikel berbeda dalam satu sesi pengujian.
+
+**Fix** (commit lihat git log `model/bookmark.go` + `app/db/migrations/migration_bookmark_ref_slug_index.go`):
+
+1. Index diperlebar jadi 4 kolom `(user_id, ref_type, ref_id, ref_slug)` —
+   tag `uniqueIndex:idx_bookmark_user_ref` ditambahkan ke field `RefSlug`
+   juga. Untuk `ayah`/`hadith`/`library_book`, `ref_slug` selalu `""` di
+   setiap baris → index 4 kolom berperilaku identik dengan index 3 kolom
+   lama, tidak ada regresi.
+2. `Save()`'s lookup query ditambah `AND ref_slug = ?` supaya pengecekan
+   duplikat/resurrect mengunci ke tuple lengkap, bukan cuma 3 kolom lama.
+3. **GORM `AutoMigrate` tidak bisa mengubah index yang sudah ada di bawah
+   nama yang sama** — kalau index `idx_bookmark_user_ref` sudah ada di DB
+   (walau kolomnya beda dari tag struct sekarang), `AutoMigrate` menganggap
+   "sudah ada", tidak mengganti definisinya. Makanya wajib ada langkah raw
+   SQL eksplisit: `PreMigrateBookmarkRefSlugIndex` men-drop index lama
+   (`DROP INDEX IF EXISTS`, idempoten) sebelum `AutoMigrate` jalan, supaya
+   `AutoMigrate` bikin ulang index itu dari definisi 4 kolom yang baru. Pola
+   ini sudah ada presedennya di `PreMigrateKajianVideoID` — ikuti pola yang
+   sama kalau nemu kasus serupa (ubah/lebarkan unique index yang sudah live).
+
+**Pelajaran untuk fitur serupa ke depan**: field opsional (`RefSlug`,
+`RefID`, dsb.) yang nilainya zero-value untuk sebagian `ref_type` WAJIB ikut
+masuk ke composite unique index kalau index itu dipakai untuk membedakan
+baris antar `ref_type`. Kalau tidak, semua baris dengan field zero-value
+yang sama akan dianggap satu identitas oleh index.
+

@@ -27,6 +27,7 @@ func NewNoteController(services *service.Services) NoteController {
 // @Produce json
 // @Param ref_type query string false "Filter by reference type"
 // @Param ref_id query int false "Filter by reference ID"
+// @Param ref_slug query string false "Filter by reference slug (article)"
 // @Success 200 {object} lib.Response
 // @Failure 401 {object} lib.Response
 // @Failure 500 {object} lib.Response
@@ -38,7 +39,8 @@ func (c *noteController) FindAll(ctx *fiber.Ctx) error {
 	}
 	refType := model.NoteRefType(ctx.Query("ref_type"))
 	refID, _ := strconv.Atoi(ctx.Query("ref_id"))
-	items, err := c.svc.FindByUser(userID, refType, refID)
+	refSlug := ctx.Query("ref_slug")
+	items, err := c.svc.FindByUser(userID, refType, refID, refSlug)
 	if err != nil {
 		return lib.ErrorInternal(ctx)
 	}
@@ -63,6 +65,13 @@ func (c *noteController) Create(ctx *fiber.Ctx) error {
 	req := new(model.CreateNoteRequest)
 	if err := lib.BodyParser(ctx, req); err != nil {
 		return lib.ErrorBadRequest(ctx, err)
+	}
+	if req.RefType == model.NoteRefTypeArticle {
+		if req.RefSlug == nil || *req.RefSlug == "" {
+			return lib.ErrorBadRequest(ctx, "ref_slug is required for article notes")
+		}
+	} else if req.RefID <= 0 {
+		return lib.ErrorBadRequest(ctx, "ref_id is required")
 	}
 	item, err := c.svc.Create(userID, req)
 	if err != nil {
