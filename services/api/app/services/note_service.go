@@ -34,11 +34,14 @@ func (s *noteService) Create(userID uuid.UUID, req *model.CreateNoteRequest) (*m
 	n := &model.Note{
 		UserID:  userID,
 		RefType: req.RefType,
-		RefID:   req.RefID,
 		Content: req.Content,
 	}
-	if req.RefSlug != nil {
-		n.RefSlug = *req.RefSlug
+	if req.RefType == model.NoteRefTypeArticle {
+		if req.RefSlug != nil {
+			n.RefSlug = *req.RefSlug
+		}
+	} else {
+		n.RefID = req.RefID
 	}
 	return s.repo.Create(n)
 }
