@@ -3630,33 +3630,36 @@ export function renderExploreWebAppRoute(context) {
         );
 
         return (
-            <WebAppBlogRoute
-                blogCategory={blogCategory}
-                blogSearch={blogSearch}
-                categories={categories}
-                error={error}
-                filteredItems={filteredBlog}
-                formatDate={(value) => formatBlogDate(value, language)}
-                getAuthor={getBlogAuthor}
-                getCategoryLabel={(item) =>
-                    getBlogCategoryLabel(item, language)
-                }
-                getExcerpt={getBlogExcerpt}
-                getItemKey={getExploreItemKey}
-                getRaw={getBlogRaw}
-                getTitle={getBlogTitle}
-                hasItems={Boolean(visibleItems.length)}
-                isDarkTheme={isDarkTheme}
-                loading={loading}
-                navigation={navigation}
-                onLongPressItem={(item) =>
-                    setItemActionSheet({ visible: true, item })
-                }
-                onOpenItem={openItemDetail}
-                onRetry={() => loadFeature(activeFeature)}
-                onSearch={setBlogSearch}
-                onSelectCategory={setBlogCategory}
-            />
+            <>
+                <WebAppBlogRoute
+                    blogCategory={blogCategory}
+                    blogSearch={blogSearch}
+                    categories={categories}
+                    error={error}
+                    filteredItems={filteredBlog}
+                    formatDate={(value) => formatBlogDate(value, language)}
+                    getAuthor={getBlogAuthor}
+                    getCategoryLabel={(item) =>
+                        getBlogCategoryLabel(item, language)
+                    }
+                    getExcerpt={getBlogExcerpt}
+                    getItemKey={getExploreItemKey}
+                    getRaw={getBlogRaw}
+                    getTitle={getBlogTitle}
+                    hasItems={Boolean(visibleItems.length)}
+                    isDarkTheme={isDarkTheme}
+                    loading={loading}
+                    navigation={navigation}
+                    onLongPressItem={(item) =>
+                        setItemActionSheet({ visible: true, item })
+                    }
+                    onOpenItem={openItemDetail}
+                    onRetry={() => loadFeature(activeFeature)}
+                    onSearch={setBlogSearch}
+                    onSelectCategory={setBlogCategory}
+                />
+                {renderItemActionSheet()}
+            </>
         );
     }
 
