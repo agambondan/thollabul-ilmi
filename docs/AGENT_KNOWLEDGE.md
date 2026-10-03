@@ -404,6 +404,129 @@ angka `0`, atau string kosong `""` dianggap tidak diisi dan dilewati dari query 
 
 ---
 
+## Sitasi hadis per-kitab (nomor urut dalam kitab) ≠ id global database
+
+Ditemukan saat memperbaiki B1 di [`reviews/2026-10-03-blog-deep-audit.md`](./reviews/2026-10-03-blog-deep-audit.md):
+kode yang mengonsumsi link sitasi hadis dari markdown (format
+`/hadith/<book-slug>/<number>`, dipakai di konten Blog/artikel) sempat
+memperlakukan `<number>` sebagai **id global** `hadiths.id` alih-alih **nomor
+urut hadis di dalam kitab tersebut** — dua ruang penomoran yang sama sekali
+berbeda dan kebetulan tumpang tindih secara numerik. Contoh nyata: sitasi
+"HR. Bukhari no. 1073" (nomor per-kitab) memakai id global 1073 akan membuka
+hadis **Sunan Abu Daud No. 3322** ("Oaths and Vows") — kitab dan topik yang
+sama sekali tidak berhubungan.
+
+Backend sudah menyediakan endpoint yang benar untuk kasus ini:
+`GET /api/v1/hadiths/book/:slug/number/:number` (`FindByBookSlugNumber`,
+`services/api/app/controllers/hadith_controller.go`) — selalu pakai endpoint
+ini saat sumber datanya adalah **sitasi/kutipan** (nomor per-kitab), dan
+pakai `GET /api/v1/hadiths/:id` hanya saat sumbernya memang id global asli
+(mis. dari bookmark/note yang menyimpan `ref_id` numerik). Mobile: fungsi
+`getHadithByBookSlugNumber` ditambahkan di `apps/mobile/src/api/client.js`
+untuk endpoint ini; `HadithScreen.js`'s efek deep-link sekarang mencabangkan
+dua jalur (`bookSlug`+`hadithNumber` → resolve per-kitab; `hadithId` saja →
+jalur lama, dipertahankan untuk pemanggil lain seperti bookmark/global
+search yang memang mengirim id global asli).
+
+**Jebakan tambahan yang ditemukan sekaligus (belum diperbaiki, di luar
+kemampuan sisi mobile):** slug kitab di dalam KONTEN artikel bisa tidak
+cocok dengan slug asli backend — "abu-daud" (pakai tanda hubung) di konten
+vs "abudaud" (tanpa tanda hubung) di database. Ini bug data/seed, bukan bug
+kode navigasi; endpoint per-kitab+nomor akan 404 untuk buku yang slug-nya
+tidak cocok walau kodenya sudah benar.
+
+---
+
+## Modern (Web App) action sheet: `onLongPress` saja tidak cukup, wajib pasang `{renderItemActionSheet()}` juga
+
+Pola long-press→Aksi Cepat di layout Modern (`ExploreWebAppRoutes.js`)
+terdiri dari **dua bagian terpisah yang gampang lupa salah satunya**:
+
+1. Trigger: `onLongPress={() => setItemActionSheet({ visible: true, item })}`
+   di kartu/baris item (state di-lift ke `ExploreScreen.js`).
+2. Render: `{renderItemActionSheet()}` (fungsi dari
+   `createExploreClassicRenderers`, meski namanya "Classic" dipakai juga oleh
+   Modern) harus dipanggil sebagai sibling JSX **di tempat yang sama** route
+   itu me-return elemennya — pola ini sudah dipakai di 9 route Modern lain
+   (grep `renderItemActionSheet()` di `ExploreWebAppRoutes.js`).
+
+Memasang trigger (1) tanpa (2) membuat `itemActionSheet` state berubah
+dengan benar tapi **tidak pernah ada komponen yang merender modalnya** —
+tidak ada error, tidak ada warning, tap/long-press terasa seperti tidak
+melakukan apa pun. Insiden nyata: commit pertama B3 (audit Blog
+2026-10-03, `7471637d`) memasang `onLongPressItem` di `WebAppBlogRoute`
+tapi lupa (2); ketahuan sendiri saat verifikasi live sesi yang sama
+(long-press kartu Blog tidak memunculkan apa pun walau kode "kelihatan
+benar"), diperbaiki di commit susulan `4ebca457`. Saat menambahkan
+long-press/Aksi Cepat ke route Modern baru, selalu copy KEDUA bagian pola
+ini, dan verifikasi live (bukan hanya baca kode) — interaksi "tidak
+terjadi apa-apa" ini persis jenis bug yang lolos dari review kode biasa.
+
+---
+
+## Testing fitur personal (Notes/Bookmark) terhadap API lokal butuh rebuild image, bukan cuma `docker-up`
+
+`make docker-up` (`docker compose up -d --build`) biasanya cukup, tapi kalau
+container API lokal **sudah berjalan lama** (dimulai sebelum commit backend
+yang mau diuji ada), `--build` tidak otomatis membuatnya memakai kode
+terbaru — compose tidak rebuild image yang containernya sudah `Up` kecuali
+dipaksa. Insiden nyata: saat menguji re-enable Catatan untuk Blog (audit
+2026-10-03), container `tholabul-ilmi-tholabul-ilmi-api-1` sudah berjalan 3
+jam (`docker inspect ... .State.StartedAt`), sementara commit backend yang
+menambahkan `ref_slug` pada Notes (`2717c551`) baru ada ~2 jam SETELAH
+container itu start — artinya API yang sedang berjalan masih memakai skema
+lama (`Note` tanpa `RefSlug`) meski `go build ./...` dari source lokal
+sudah sukses dan kelihatan "siap".
+
+**Cara memastikan API lokal benar-benar memakai kode terbaru sebelum
+verifikasi live:** bandingkan `git log -1 --format=%cI <commit-backend>`
+dengan `docker inspect <container> --format '{{.State.StartedAt}}'` — kalau
+commit lebih baru dari waktu start container, rebuild dan restart SURGICAL
+(hanya service yang berubah, jangan sentuh service lain yang mungkin dipakai
+sesi lain secara bersamaan):
+`docker compose build <nama-service> && docker compose up -d --no-deps <nama-service>`.
+Nama service ada di `docker-compose.yaml` (`tholabul-ilmi-api`, bukan nama
+container `tholabul-ilmi-tholabul-ilmi-api-1`). `--no-deps` penting supaya
+postgres/redis/minio/web yang mungkin sedang dipakai sesi lain tidak ikut
+di-recreate.
+
+---
+
+## Mengganti preference layout (Classic/Web App) atau bahasa untuk screenshot otomatis: wajib lewat UI sungguhan, localStorage injeksi tidak berpengaruh
+
+Preferensi `app-layout-mode`/`app-language` disimpan lewat `AsyncStorage`
+(`apps/mobile/src/storage/preferences.js`, key `tholabul:pref:*`). Di Expo
+web export, `@react-native-async-storage/async-storage` **tidak**
+menyimpan ke `window.localStorage` dengan key yang sama persis — mencoba
+`localStorage.setItem("tholabul:pref:app-layout-mode", JSON.stringify("classic"))`
+lalu reload **tidak mengubah apa pun** yang kelihatan dari luar (dicek:
+`Object.keys(window.localStorage)` sebelum preferensi apa pun diset cuma
+berisi `tholabul:mobile-visitor-id`, bukan prefix `tholabul:pref:`) — app
+tetap memakai default (`web_app`/`idn`). Tidak ada file `.web.js` khusus di
+`node_modules/@react-native-async-storage/async-storage` untuk dicek lebih
+lanjut; kemungkinan besar dia pakai IndexedDB di balik layar lewat
+polyfill/bundling Metro, bukan localStorage langsung.
+
+**Cara yang benar dan sudah terbukti (dipakai di beberapa folder
+before-after sebelumnya):** simulasikan navigasi UI sungguhan — buka menu
+akun (`mobile-top-header-profile` → `mobile-account-menu-item-profile` →
+label "Buka pengaturan profil"/"Open profile settings" → "Tampilan"/
+"Appearance" → klik "Classic") untuk layout, atau `mobile-account-menu-language-en`
++ `mobile-account-menu-close` untuk bahasa. **Urutan penting**: lakukan
+switch bahasa SEBELUM switch layout kalau butuh keduanya sekaligus — setelah
+masuk ke Classic, testID/label gaya Modern (`mobile-top-header-profile`,
+dropdown akun) tidak lagi bisa diandalkan untuk navigasi lebih lanjut
+(header Classic di halaman Beranda pakai komponen beda, `HomeDashboardContent.js`'s
+`home-classic-header`, yang langsung `onOpenTab("profile")` tanpa dropdown
+menu sama sekali) — jadi urutan "English dulu baru Classic" menghindari
+butuh menavigasi dropdown akun gaya Modern lagi setelah sudah pindah ke
+Classic. Juga: tab bawah Classic (`TabBar.js`) tidak mengikuti toggle bahasa
+sama sekali (tetap "Belajar" dkk. walau Bahasa = English) — gap i18n
+terpisah, bukan sesuatu yang perlu "diperbaiki" di skrip capture, cukup
+dipakai labelnya apa adanya saat masih Classic.
+
+---
+
 ## Bookmark artikel: unique index 3 kolom bikin semua bookmark artikel satu user tabrakan
 
 `model.Bookmark` punya dua "identitas" berbeda tergantung `ref_type`: numerik

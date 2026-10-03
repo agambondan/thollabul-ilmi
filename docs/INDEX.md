@@ -93,6 +93,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [media/before-after/2026-10-02-mobile-layout-redesign/](./media/before-after/2026-10-02-mobile-layout-redesign/README.md)           | 5 pasang: modern redesign Beranda, Ibadah, Belajar, Profil, dan Hadis sesuai token mobile.pen                                                                                                              |
 | [media/before-after/2026-10-02-library-extracted-text-markdown/](./media/before-after/2026-10-02-library-extracted-text-markdown/README.md) | 1 pasang: formatting Dokumen Rapi, mode Markdown (.md), teks asli, font serif/sans, unduh .md pada pembaca buku perpustakaan                                                                               |
 | [media/before-after/2026-10-02-library-reader-fullwidth-study-mode/](./media/before-after/2026-10-02-library-reader-fullwidth-study-mode/README.md) | 3 pasang: mode Lebar Penuh (Full Width / Fokus Belajar), tema kertas sepia & gelap, kolom baca terpusat ergonomis pada pembaca perpustakaan |
+| [media/before-after/2026-10-03-blog-audit-fixes/](./media/before-after/2026-10-03-blog-audit-fixes/README.md)                       | 9 pasang (B1,B3-B10): hadis sitasi salah total, markdown mentah Classic, meta "published", excerpt body-penuh, bookmark long-press Modern, "Buka sumber" mati, i18n chrome detail Inggris, header/kategori Modern, re-enable Catatan via `ref_slug`                                                       |
 
 ---
 
